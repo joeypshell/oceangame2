@@ -125,6 +125,7 @@ python tools/check_map_parity.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-loop
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-route
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
 & 'C:\Program Files\Git\cmd\git.exe' diff --check
 ```
 
@@ -167,7 +168,7 @@ Current issue state as of 2026-07-05:
 - Open: #29 `Terrain visual polish pass for accepted production slice`
 - Open: #28 `Improve full-sketch conversion fidelity tooling`
 - Open: #27 `Refine salvage and object semantics in map JSON`
-- Open: #26 `Add first scoped hazard interaction`
+- Closed: #26 first scoped hazard interaction
 - Closed: #25 player swim feel and collision clearance for production slice
 - Closed: #24 production slice preview shortcut and capture route
 - Closed: #23 first production slice JSON from selected full sketch region
@@ -196,6 +197,7 @@ Current issue state as of 2026-07-05:
 
 Recent important commits:
 
+- `3f08ce5` Add scoped hazard interaction
 - `53438f0` Tune production slice swim clearance
 - `bd77145` Add production slice preview shortcut
 - `a55e3de` Add first production slice map
@@ -226,7 +228,7 @@ Recent important commits:
 - `production_slice_01` is the first focused slice from the full sketch's top-center entry hub; it preserves the selected topology, seals left/right/bottom crop edges, fills unreachable conversion pockets, and adds authored boat spawn, salvage, hazards, route markers, and camera tests.
 - Collision is rectangular per terrain block; player collision is tuned smaller than the placeholder body art for production-slice clearance.
 - Salvage has a minimal collect-return-complete-reset loop.
-- Hazards are visual markers only.
+- Hazards now have a tiny scoped interaction: touching one bumps the player back to spawn, briefly tints the player, and restores held/unbanked salvage to the map.
 - There is no health, oxygen, inventory screen, upgrade economy, or real enemy behavior yet.
 - Background art is still rough and secondary to proving terrain readability.
 - The source map/grid can be shown with `--show-debug-overlay`, but normal preview should be terrain-first.
@@ -242,7 +244,7 @@ w: 72
 h: 84
 ```
 
-After #25, the next logical work is #26 to add the first scoped hazard interaction against `production_slice_01`.
+After #26, the next logical work is #27 to refine map JSON entity semantics and validation.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 
