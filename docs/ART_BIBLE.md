@@ -68,6 +68,15 @@ Normal gameplay previews should use small readable in-world props instead of abs
 - Simple yellow diamonds and red squares are allowed only as debug/review overlay markers.
 - Entity behavior remains driven by JSON `type`; `kind` selects the first-pass visual variant.
 
+## Current Boat Entry Pass
+
+Production-style `boat_spawn` visuals should read as the top-water start and return craft, not as an abstract rectangle:
+
+- Use restrained warm hull colors, pale deck/hatch accents, and small teal glass/details.
+- Keep the authored boat rectangle legible as the extraction area.
+- Place the hatch/tether cue at the authored `entry_x`/`entry_y` cell so player spawn remains visually tied to source data.
+- Do not use the boat visual to redefine collision, spawn, or extraction bounds by eye.
+
 ## Forbidden Styles
 
 Avoid these in the first prototype:

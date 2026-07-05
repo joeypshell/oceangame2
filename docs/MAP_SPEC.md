@@ -78,7 +78,7 @@ A `boat_spawn` entity has these required fields:
 
 `x`, `y`, `w`, and `h` describe the boat/extraction rectangle in tile coordinates. `entry_x` and `entry_y` describe the open-water cell where the player actually starts and re-enters the map. The entry cell must be inside the boat rectangle, inside map bounds, non-solid, and reachable through open water.
 
-Existing base/extraction zones remain valid. When a `boat_spawn` is present, runtime extraction checks also treat the boat rectangle as a valid return point.
+Existing base/extraction zones remain valid. When a `boat_spawn` is present, runtime extraction checks also treat the boat rectangle as a valid return point. Production-style maps should render the boat rectangle as a readable surface craft, hatch, dock, or similar top-water marker so players can identify both expedition entry and salvage return without relying on debug overlays.
 
 ## Entity Semantics
 

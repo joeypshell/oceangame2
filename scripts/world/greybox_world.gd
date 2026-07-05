@@ -5,6 +5,9 @@ const COLOR_GRID := Color(0.85, 0.98, 1.0, 0.22)
 const COLOR_SOLID := Color(0.15, 0.20, 0.25, 1.0)
 const COLOR_BASE := Color(0.95, 0.78, 0.48, 0.92)
 const COLOR_BOAT := Color(0.96, 0.66, 0.20, 0.92)
+const COLOR_BOAT_DARK := Color(0.22, 0.16, 0.10, 1.0)
+const COLOR_BOAT_LIGHT := Color(1.0, 0.86, 0.40, 1.0)
+const COLOR_BOAT_GLASS := Color(0.36, 0.91, 0.96, 0.88)
 const COLOR_BACKGROUND := Color(0.08, 0.39, 0.58, 0.18)
 const COLOR_MARKER := Color(1.0, 1.0, 1.0, 0.10)
 const COLOR_SALVAGE := Color(1.0, 0.80, 0.22, 1.0)
@@ -659,26 +662,85 @@ func _add_marker(marker_name: String, center: Vector2, color: Color, radius: flo
 
 
 func _add_boat_marker(marker_name: String, item: Dictionary) -> Node2D:
+	var rect := _entity_rect_from_item(item)
+	var entry_local := _boat_entry_center(item) - rect.position
+
 	var root := Node2D.new()
 	root.name = marker_name
+	root.position = rect.position
 	root.z_index = 7
 	_marker_root.add_child(root)
 
-	var rect := _entity_rect_from_item(item)
-	var hull := Polygon2D.new()
-	hull.name = "Hull"
-	hull.position = rect.position
-	hull.color = COLOR_BOAT
-	hull.polygon = PackedVector2Array([
-		Vector2(0, rect.size.y * 0.28),
-		Vector2(rect.size.x, rect.size.y * 0.28),
-		Vector2(rect.size.x * 0.82, rect.size.y),
-		Vector2(rect.size.x * 0.18, rect.size.y),
-	])
-	root.add_child(hull)
+	var return_field := _add_local_polygon(root, "ExtractionField", _rect_points(rect.size), Color(1.0, 0.92, 0.68, 0.16))
+	return_field.position = rect.size * 0.5
+	return_field.z_index = 0
 
-	var entry_marker := _add_marker("%sEntry" % marker_name, _boat_entry_center(item), COLOR_BASE, 16.0)
-	entry_marker.z_index = 8
+	var hull_shadow := _add_local_polygon(root, "HullShadow", PackedVector2Array([
+		Vector2(rect.size.x * 0.05, rect.size.y * 0.36),
+		Vector2(rect.size.x * 0.95, rect.size.y * 0.36),
+		Vector2(rect.size.x * 0.82, rect.size.y * 1.24),
+		Vector2(rect.size.x * 0.18, rect.size.y * 1.24),
+	]), COLOR_BOAT_DARK)
+	hull_shadow.z_index = 1
+
+	var hull := _add_local_polygon(root, "Hull", PackedVector2Array([
+		Vector2(rect.size.x * 0.02, rect.size.y * 0.16),
+		Vector2(rect.size.x * 0.98, rect.size.y * 0.16),
+		Vector2(rect.size.x * 0.84, rect.size.y * 1.04),
+		Vector2(rect.size.x * 0.16, rect.size.y * 1.04),
+	]), COLOR_BOAT)
+	hull.z_index = 2
+
+	var rim := _add_local_line(root, "DeckRim", PackedVector2Array([
+		Vector2(rect.size.x * 0.08, rect.size.y * 0.20),
+		Vector2(rect.size.x * 0.92, rect.size.y * 0.20),
+	]), COLOR_BOAT_LIGHT, 3.0)
+	rim.z_index = 4
+
+	var cabin_width := minf(rect.size.x * 0.30, 72.0)
+	var cabin_center_x := clampf(entry_local.x + 58.0, cabin_width * 0.5 + 8.0, rect.size.x - cabin_width * 0.5 - 8.0)
+	var cabin := _add_local_polygon(root, "Cabin", _rect_points(Vector2(cabin_width, rect.size.y * 0.54)), Color(0.90, 0.79, 0.57, 0.96))
+	cabin.position = Vector2(cabin_center_x, rect.size.y * 0.36)
+	cabin.z_index = 3
+
+	var cabin_window := _add_local_polygon(root, "CabinWindow", _rect_points(Vector2(cabin_width * 0.45, rect.size.y * 0.20)), COLOR_BOAT_GLASS)
+	cabin_window.position = cabin.position + Vector2(0, -rect.size.y * 0.02)
+	cabin_window.z_index = 4
+
+	var hatch := _add_local_polygon(root, "EntryHatch", _rect_points(Vector2(30, 10)), COLOR_BASE)
+	hatch.position = Vector2(entry_local.x, rect.size.y * 0.38)
+	hatch.z_index = 5
+
+	var tether_bottom := rect.size.y * 3.8
+	var entry_glow := _add_local_line(root, "EntryGlow", PackedVector2Array([
+		Vector2(entry_local.x, rect.size.y * 0.46),
+		Vector2(entry_local.x, tether_bottom),
+	]), Color(1.0, 0.92, 0.52, 0.30), 16.0)
+	entry_glow.z_index = 3
+
+	var tether_left := entry_local.x - 6.0
+	var tether_right := entry_local.x + 6.0
+	var entry_tether_left := _add_local_line(root, "EntryTetherLeft", PackedVector2Array([
+		Vector2(tether_left, rect.size.y * 0.46),
+		Vector2(tether_left, tether_bottom),
+	]), COLOR_BASE, 2.0)
+	entry_tether_left.z_index = 5
+
+	var entry_tether_right := _add_local_line(root, "EntryTetherRight", PackedVector2Array([
+		Vector2(tether_right, rect.size.y * 0.46),
+		Vector2(tether_right, tether_bottom),
+	]), COLOR_BASE, 3.0)
+	entry_tether_right.z_index = 5
+
+	for rung_index in range(1, 7):
+		var rung_y := rect.size.y * 0.55 + float(rung_index) * 14.0
+		if rung_y >= tether_bottom:
+			break
+		var rung := _add_local_line(root, "EntryTetherRung%s" % rung_index, PackedVector2Array([
+			Vector2(tether_left, rung_y),
+			Vector2(tether_right, rung_y),
+		]), COLOR_BOAT_LIGHT, 2.0)
+		rung.z_index = 6
 	return root
 
 
