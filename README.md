@@ -33,6 +33,8 @@ Build a small side-view salvage game that proves:
 - [Asset Manifest](docs/ASSET_MANIFEST.md)
 - [Milestones](docs/MILESTONES.md)
 - [OceanGame Migration Notes](docs/OCEANGAME_MIGRATION.md)
+- [Current Architecture](docs/current/ARCHITECTURE.md)
+- [Tooling](docs/current/TOOLING.md)
 
 ## Locked Visual Direction
 
@@ -46,6 +48,8 @@ Regenerate and validate the greybox preview with:
 python tools/render_greybox_map.py maps/cave_salvage_test_01.greybox.json references/greybox/cave_salvage_test_01.svg
 python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
 ```
+
+Run the current Godot greybox with `project.godot`. The root scene is `scenes/main/Main.tscn`.
 
 ## First Success Condition
 

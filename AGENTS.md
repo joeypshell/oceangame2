@@ -40,6 +40,10 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Maintain a rolling backlog of about 10 open actionable issues. When the queue drops well below that target, expand the roadmap or planning docs first, then create scoped issues from that plan. Do not pad the queue with vague epics, duplicate work, or intentionally deferred ideas.
 
+When a planning conversation identifies concrete next steps, create GitHub issues for them before or alongside implementation. Each issue should be independently actionable by a future agent. Prefer several small issues over one broad issue when the work spans map data, Godot implementation, art generation, validation, and documentation.
+
+If an issue is implemented immediately, still record the issue and close it with the commit hash and verification result. If work is deferred, leave the issue open with dependencies and acceptance criteria.
+
 Issues should include:
 
 - summary or user story
@@ -50,6 +54,8 @@ Issues should include:
 - verification steps
 
 Record durable decisions, blockers, commit hashes, and verification results in issue comments.
+
+Detailed workflow: `docs/GITHUB_ISSUE_WORKFLOW.md`
 
 ## Current Planned Structure
 
