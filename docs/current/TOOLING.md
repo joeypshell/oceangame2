@@ -60,6 +60,7 @@ Validate map reachability:
 python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
 python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
 python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
+python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
 ```
 
 Regenerate the SVG preview from source data:
@@ -68,7 +69,18 @@ Regenerate the SVG preview from source data:
 python tools/render_greybox_map.py maps/cave_salvage_test_01.greybox.json references/greybox/cave_salvage_test_01.svg
 python tools/render_greybox_map.py maps/cave_salvage_organic_01.greybox.json references/greybox/cave_salvage_organic_01.svg
 python tools/render_greybox_map.py maps/cave_tileset_test_01.greybox.json references/greybox/cave_tileset_test_01.svg
+python tools/render_greybox_map.py maps/full_cave_sketch_01.greybox.json references/greybox/full_cave_sketch_01.svg
 ```
+
+Regenerate the supplied full-map sketch topology draft:
+
+```bash
+python tools/convert_full_cave_sketch_map.py
+python tools/render_greybox_map.py maps/full_cave_sketch_01.greybox.json references/greybox/full_cave_sketch_01.svg
+python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
+```
+
+This draft converts `references/source_maps/full_cave_sketch_01.png` into topology only. White source regions become open water, gray/black source regions become solid terrain/collision, icons are ignored by filling small non-white holes, and the spawn is temporary until the boat/top-of-water spawn exists.
 
 Run whitespace checks:
 

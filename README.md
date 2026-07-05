@@ -58,6 +58,8 @@ Run the original comparison map locally with:
 
 The organic tileset stress-test map is [cave_tileset_test_01.greybox.json](maps/cave_tileset_test_01.greybox.json), with a generated preview at [cave_tileset_test_01.svg](references/greybox/cave_tileset_test_01.svg).
 
+The first supplied full-map topology conversion draft is [full_cave_sketch_01.greybox.json](maps/full_cave_sketch_01.greybox.json), converted from [full_cave_sketch_01.png](references/source_maps/full_cave_sketch_01.png), with a generated preview at [full_cave_sketch_01.svg](references/greybox/full_cave_sketch_01.svg). This is a topology-only draft and is not the default preview map.
+
 Regenerate and validate the greybox preview with:
 
 ```bash
@@ -69,6 +71,9 @@ python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
 python tools/generate_tileset_test_map.py
 python tools/render_greybox_map.py maps/cave_tileset_test_01.greybox.json references/greybox/cave_tileset_test_01.svg
 python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
+python tools/convert_full_cave_sketch_map.py
+python tools/render_greybox_map.py maps/full_cave_sketch_01.greybox.json references/greybox/full_cave_sketch_01.svg
+python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
 ```
 
 Run the current Godot greybox with `project.godot`. The root scene is `scenes/main/Main.tscn`.

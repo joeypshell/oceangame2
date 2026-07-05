@@ -23,6 +23,10 @@ Additional current map sources:
 - `maps/cave_tileset_test_01.greybox.json`
   - Organic stress-test map for TileSet terrain rendering.
   - Used to exercise jagged edges, winding tunnels, pillars, isolated cells, and pockets.
+- `maps/full_cave_sketch_01.greybox.json`
+  - Draft 0 topology-only conversion from `references/source_maps/full_cave_sketch_01.png`.
+  - Used to test whether a supplied full-map sketch can move through image conversion, JSON source, validation, SVG preview, and Godot preview.
+  - Not the default preview map.
 
 ## Scene Structure
 

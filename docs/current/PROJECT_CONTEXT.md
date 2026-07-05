@@ -25,6 +25,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Default preview map source: `maps/cave_salvage_organic_01.greybox.json`
 - Original comparison map source: `maps/cave_salvage_test_01.greybox.json`
 - Organic tileset stress-test map: `maps/cave_tileset_test_01.greybox.json`
+- Full-map sketch topology draft: `maps/full_cave_sketch_01.greybox.json`
 - Current terrain atlas: `assets/terrain_tiles/cave_tileset_v1.png`
 - Web export workflow: `.github/workflows/godot-web-export.yml`
 
@@ -108,6 +109,7 @@ Run these after relevant changes:
 python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
 python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
 python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
+python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --import
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1
 & 'C:\Program Files\Git\cmd\git.exe' diff --check
@@ -144,6 +146,8 @@ Current issue state as of 2026-07-05:
 
 - Open: #15 `Add preview review framing and version watermark`
 - Open: #16 `Add minimal salvage collection and extraction loop`
+- Open: #19 `Convert supplied full cave sketch into high-fidelity greybox map draft`
+- Open: #18 `Add JSON-to-Godot map render and collision parity check`
 - Closed: #17 web preview greybox terrain fallback regression
 - Closed: #14 organic map default preview workflow
 - Closed: #13 local Godot preview helper
@@ -180,6 +184,7 @@ Recent important commits:
 - Terrain art is still first-pass structural placeholder art.
 - `cave_salvage_organic_01` is the default preview map, but it is still a first playable organic source-map pass.
 - `cave_salvage_test_01` is preserved as the original rectangular comparison map.
+- `full_cave_sketch_01` is a topology-only draft conversion from a supplied full-map sketch; icons are intentionally ignored and the spawn is temporary.
 - Collision is rectangular per terrain block.
 - Salvage and hazards are visual markers only.
 - There is no scoring, inventory, health, oxygen, extraction loop, or real enemy behavior yet.
