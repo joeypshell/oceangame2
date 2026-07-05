@@ -28,6 +28,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Full-map sketch topology draft: `maps/full_cave_sketch_01.greybox.json`
 - Current terrain atlas: `assets/terrain_tiles/cave_tileset_v1.png`
 - Web export workflow: `.github/workflows/godot-web-export.yml`
+- Latest full-sketch evaluation: `docs/current/FULL_SKETCH_EVALUATION_01.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -156,6 +157,16 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-05:
 
+- Open: #30 `Expand current roadmap after first production slice decision`
+- Open: #29 `Terrain visual polish pass for accepted production slice`
+- Open: #28 `Improve full-sketch conversion fidelity tooling`
+- Open: #27 `Refine salvage and object semantics in map JSON`
+- Open: #26 `Add first scoped hazard interaction`
+- Open: #25 `Tune player swim feel and collision clearance for production slice`
+- Open: #24 `Add production slice preview shortcut and capture route`
+- Open: #23 `Create first production slice JSON from selected full sketch region`
+- Open: #22 `Add boat and top-water spawn/extraction model`
+- Open: #21 `Evaluate full sketch topology and choose first production slice`
 - Closed: #18 JSON-to-Godot map render and collision parity check
 - Closed: #16 minimal salvage collection and extraction loop
 - Closed: #15 preview review framing and version watermark
@@ -210,7 +221,16 @@ Recent important commits:
 
 ## Recommended Next Work
 
-The most logical next work is probably a small backlog expansion pass so the repo returns closer to about 10 open actionable issues, then a focused evaluation pass on whether the current organic map and full-sketch conversion are good enough to drive the next production map slice.
+The first full-sketch evaluation selected the top-center entry hub as the first production slice target:
+
+```text
+x: 58
+y: 0
+w: 72
+h: 84
+```
+
+The most logical next work is #22, adding the boat/top-water spawn and extraction model, followed by #23 to create the first production slice JSON from that selected region and #24 to add local preview/capture shortcuts for it.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 
