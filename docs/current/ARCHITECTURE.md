@@ -24,6 +24,7 @@ The Godot scene reads this JSON at runtime. Do not hand-tune in-engine terrain t
 - `scenes/world/GreyboxWorld.tscn`
   - Runtime renderer for the greybox map.
   - Creates a `TileMapLayer` visual from the source JSON.
+  - Places draft terrain art sprites over the source rectangles.
   - Creates `StaticBody2D` collision rectangles from the same terrain data.
   - Draws background silhouettes, route markers, extraction zone, salvage, hazards, and spawn markers.
 
@@ -41,7 +42,7 @@ The Godot scene reads this JSON at runtime. Do not hand-tune in-engine terrain t
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.
-  - Builds the runtime TileMapLayer and collision.
+  - Builds the runtime TileMapLayer, draft terrain art overlay, and collision.
   - Keeps visuals tied to source topology.
   - Exposes `camera_tests` from the source map for repeatable visual captures.
 
@@ -49,9 +50,19 @@ The Godot scene reads this JSON at runtime. Do not hand-tune in-engine terrain t
   - Basic side-view swimming controller.
   - Supports arrow keys and WASD.
 
+## Visual Layering
+
+The world intentionally separates authored topology from art:
+
+- `SourceTileMapLayer` is the faint runtime reference for the JSON grid.
+- `TerrainArt` contains draft PNG modules scaled over the same terrain rectangles.
+- `Collision` is generated only from the JSON terrain data.
+
+Art placement must not create, remove, or move collision.
+
 ## Current Limits
 
-- Terrain art is still greybox only.
+- Terrain art is a first-pass overlay and not final production placement.
 - Collision is rectangular per terrain block.
 - No gameplay scoring yet.
 - Salvage and hazards are visual markers only.

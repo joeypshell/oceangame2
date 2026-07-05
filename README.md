@@ -28,6 +28,7 @@ Build a small side-view salvage game that proves:
 - [Art Bible](docs/ART_BIBLE.md)
 - [Map Spec](docs/MAP_SPEC.md)
 - [Greybox Map 01](docs/planning/GREYBOX_MAP_01.md)
+- [Terrain Art Placement Pass 01](docs/planning/TERRAIN_ART_PLACEMENT.md)
 - [Visual Workflow](docs/VISUAL_WORKFLOW.md)
 - [Reference Standard](docs/REFERENCE_STANDARD.md)
 - [Asset Manifest](docs/ASSET_MANIFEST.md)

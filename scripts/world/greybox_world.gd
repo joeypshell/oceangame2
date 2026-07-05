@@ -8,6 +8,17 @@ const COLOR_BACKGROUND := Color(0.08, 0.39, 0.58, 0.18)
 const COLOR_MARKER := Color(1.0, 1.0, 1.0, 0.10)
 const COLOR_SALVAGE := Color(1.0, 0.80, 0.22, 1.0)
 const COLOR_HAZARD := Color(1.0, 0.22, 0.34, 1.0)
+const SOURCE_LAYER_ALPHA := 0.16
+const BACKGROUND_ART_ALPHA := 0.26
+const ARCH_ART_ALPHA := 0.72
+
+const TERRAIN_FLOOR_SHORT_TEXTURE := "res://assets/terrain/terrain_floor_short_01.png"
+const TERRAIN_FLOOR_LONG_TEXTURE := "res://assets/terrain/terrain_floor_long_01.png"
+const TERRAIN_WALL_LEFT_TEXTURE := "res://assets/terrain/terrain_wall_left_01.png"
+const TERRAIN_WALL_RIGHT_TEXTURE := "res://assets/terrain/terrain_wall_right_01.png"
+const TERRAIN_CEILING_TEXTURE := "res://assets/terrain/terrain_ceiling_01.png"
+const TERRAIN_ARCH_TEXTURE := "res://assets/terrain/terrain_arch_01.png"
+const BACKGROUND_ROCKS_TEXTURE := "res://assets/terrain/background_rocks_01.png"
 
 @export var map_path := "res://maps/cave_salvage_test_01.greybox.json"
 
@@ -18,6 +29,8 @@ var spawn_position := Vector2.ZERO
 var camera_tests: Array = []
 
 var _built := false
+var _background_root: Node2D
+var _art_root: Node2D
 var _solid_layer: TileMapLayer
 var _marker_root: Node2D
 var _collision_root: Node2D
@@ -41,17 +54,22 @@ func load_greybox() -> void:
 	map_pixel_size = Vector2(map_tile_size * tile_size)
 	camera_tests = map_data.get("camera_tests", [])
 
-	_marker_root = Node2D.new()
-	_marker_root.name = "Markers"
-	add_child(_marker_root)
+	_background_root = Node2D.new()
+	_background_root.name = "BackgroundArt"
+	add_child(_background_root)
+	_build_background(map_data.get("background", []))
+
+	_build_tilemap(map_data)
+	_build_terrain_art(map_data.get("terrain", []))
 
 	_collision_root = Node2D.new()
 	_collision_root.name = "Collision"
 	add_child(_collision_root)
-
-	_build_background(map_data.get("background", []))
-	_build_tilemap(map_data)
 	_build_collision(map_data.get("terrain", []))
+
+	_marker_root = Node2D.new()
+	_marker_root.name = "Markers"
+	add_child(_marker_root)
 	_build_zones(map_data.get("zones", []))
 	_build_entities(map_data.get("entities", []))
 	queue_redraw()
@@ -86,6 +104,7 @@ func _build_tilemap(map_data: Dictionary) -> void:
 	_solid_layer = TileMapLayer.new()
 	_solid_layer.name = "SourceTileMapLayer"
 	_solid_layer.tile_set = _create_greybox_tileset()
+	_solid_layer.modulate = Color(1.0, 1.0, 1.0, SOURCE_LAYER_ALPHA)
 	add_child(_solid_layer)
 
 	for terrain in map_data.get("terrain", []):
@@ -95,6 +114,59 @@ func _build_tilemap(map_data: Dictionary) -> void:
 	for zone in map_data.get("zones", []):
 		if zone.get("type", "") == "base":
 			_fill_tile_rect(_solid_layer, zone, Vector2i(1, 0))
+
+
+func _build_terrain_art(terrain_items: Array) -> void:
+	_art_root = Node2D.new()
+	_art_root.name = "TerrainArt"
+	add_child(_art_root)
+
+	for item in terrain_items:
+		if item.get("type", "") != "solid":
+			continue
+
+		var texture_path := _terrain_texture_for(item)
+		var sprite_name := "%sArt" % item.get("id", "Terrain")
+		_add_texture_rect(_art_root, texture_path, item, sprite_name)
+
+	_build_arch_overlay(terrain_items)
+
+
+func _terrain_texture_for(item: Dictionary) -> String:
+	var terrain_id := str(item.get("id", ""))
+	if terrain_id == "left_wall" or terrain_id == "central_arch_left_column":
+		return TERRAIN_WALL_LEFT_TEXTURE
+	if terrain_id == "right_wall" or terrain_id == "central_arch_right_column":
+		return TERRAIN_WALL_RIGHT_TEXTURE
+	if terrain_id.begins_with("ceiling"):
+		return TERRAIN_CEILING_TEXTURE
+	if terrain_id.begins_with("stalactite"):
+		if terrain_id.ends_with("right"):
+			return TERRAIN_WALL_RIGHT_TEXTURE
+		return TERRAIN_WALL_LEFT_TEXTURE
+	if terrain_id == "bottom_floor" or terrain_id == "base_floor" or terrain_id.ends_with("_shelf"):
+		if int(item.get("w", 0)) <= 15:
+			return TERRAIN_FLOOR_SHORT_TEXTURE
+		return TERRAIN_FLOOR_LONG_TEXTURE
+	if terrain_id == "central_arch_top":
+		return TERRAIN_CEILING_TEXTURE
+	return TERRAIN_FLOOR_LONG_TEXTURE
+
+
+func _build_arch_overlay(terrain_items: Array) -> void:
+	var arch_pieces: Array = []
+	for item in terrain_items:
+		if str(item.get("id", "")).begins_with("central_arch_"):
+			arch_pieces.append(item)
+
+	if arch_pieces.size() < 3:
+		return
+
+	var arch_rect := _union_rect(arch_pieces)
+	arch_rect["id"] = "central_arch_overlay"
+	var sprite := _add_texture_rect(_art_root, TERRAIN_ARCH_TEXTURE, arch_rect, "central_arch_overlay")
+	if sprite != null:
+		sprite.modulate = Color(1.0, 1.0, 1.0, ARCH_ART_ALPHA)
 
 
 func _create_greybox_tileset() -> TileSet:
@@ -144,8 +216,12 @@ func _build_background(items: Array) -> void:
 	for item in items:
 		var poly := _rect_polygon(item, COLOR_BACKGROUND)
 		poly.name = item.get("id", "Background")
-		poly.z_index = -20
-		add_child(poly)
+		_background_root.add_child(poly)
+
+		var sprite_name := "%sArt" % item.get("id", "Background")
+		var sprite := _add_texture_rect(_background_root, BACKGROUND_ROCKS_TEXTURE, item, sprite_name)
+		if sprite != null:
+			sprite.modulate = Color(1.0, 1.0, 1.0, BACKGROUND_ART_ALPHA)
 
 
 func _build_zones(zones: Array) -> void:
@@ -188,6 +264,60 @@ func _rect_polygon(item: Dictionary, color: Color) -> Polygon2D:
 		Vector2(0, size.y),
 	])
 	return poly
+
+
+func _add_texture_rect(parent: Node2D, texture_path: String, item: Dictionary, sprite_name: String) -> Sprite2D:
+	var texture := _load_png_texture(texture_path)
+	if texture == null:
+		return null
+
+	var texture_size := texture.get_size()
+	if texture_size == Vector2.ZERO:
+		push_warning("Terrain art texture has no size: %s" % texture_path)
+		return null
+
+	var sprite := Sprite2D.new()
+	sprite.name = sprite_name
+	sprite.texture = texture
+	sprite.centered = true
+	sprite.position = _rect_center(item)
+	sprite.scale = _rect_size(item) / texture_size
+	parent.add_child(sprite)
+	return sprite
+
+
+func _load_png_texture(texture_path: String) -> Texture2D:
+	var file := FileAccess.open(texture_path, FileAccess.READ)
+	if file == null:
+		push_warning("Unable to open terrain art texture: %s" % texture_path)
+		return null
+
+	var image := Image.new()
+	var error := image.load_png_from_buffer(file.get_buffer(file.get_length()))
+	if error != OK:
+		push_warning("Unable to decode terrain art texture: %s" % texture_path)
+		return null
+
+	return ImageTexture.create_from_image(image)
+
+
+func _union_rect(items: Array) -> Dictionary:
+	var min_x := INF
+	var min_y := INF
+	var max_x := -INF
+	var max_y := -INF
+	for item in items:
+		min_x = min(min_x, float(item["x"]))
+		min_y = min(min_y, float(item["y"]))
+		max_x = max(max_x, float(item["x"]) + float(item["w"]))
+		max_y = max(max_y, float(item["y"]) + float(item["h"]))
+
+	return {
+		"x": min_x,
+		"y": min_y,
+		"w": max_x - min_x,
+		"h": max_y - min_y,
+	}
 
 
 func _add_marker(marker_name: String, center: Vector2, color: Color, radius: float) -> void:
