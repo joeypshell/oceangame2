@@ -131,13 +131,14 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-05:
 
-- Open: #5 `Add Godot headless smoke check workflow`
-- Open: #7 `Refine terrain overlay placement and dedicated cave modules`
+- Open: #12 `Author organic salvage cave map source pass`
 - Closed: #1 Godot greybox scene
 - Closed: #2 modular cave terrain asset kit
 - Closed: #3 terrain modules over greybox
 - Closed: #4 first in-engine visual baseline
+- Closed: #5 Godot headless smoke check workflow
 - Closed: #6 named camera visual capture workflow
+- Closed: #7 grid-aligned cave TileSet visual refinement
 - Closed: #8 first real cave TileSet terrain renderer
 - Closed: #9 exact-mask cave tileset upgrade and stress test
 - Closed: #10 Godot Web export preview pipeline
@@ -145,6 +146,8 @@ Current issue state as of 2026-07-05:
 
 Recent important commits:
 
+- `1a8ceb6` Refine cave tileset top edges
+- `90d1f10` Add Godot smoke workflow
 - `3c63de4` Package terrain assets in web export
 - `c6f6e6b` Fix web preview cave terrain rendering
 - `6f96fb1` Add Godot web export preview pipeline
@@ -165,10 +168,10 @@ Recent important commits:
 
 The most logical next work is probably one of:
 
-1. Implement issue #5 so CI also runs a Godot headless smoke check, not just Web export.
-2. Reframe or replace issue #7 now that the cave TileSet renderer exists; avoid going back to stretched terrain modules for gameplay terrain.
-3. Create a small issue to make the public preview more useful for visual review: start camera framing, title/version watermark, and maybe a simple view toggle.
-4. Create a gameplay-minimum issue: collect salvage, return to extraction, score, restart.
+1. Implement issue #12 so the main playable salvage map moves toward more organic cave topology and away from long rectangular terrain runs.
+2. Create a small issue to make the public preview more useful for visual review: start camera framing, title/version watermark, and maybe a simple view toggle.
+3. Create a gameplay-minimum issue: collect salvage, return to extraction, score, restart.
+4. Create a small backlog expansion pass so the repo returns to about 10 open actionable issues.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 
