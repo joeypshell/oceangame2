@@ -44,6 +44,14 @@ Capture the current named camera test views:
 
 This reads `camera_tests` from `maps/cave_salvage_test_01.greybox.json` and writes PNGs to `visual_captures/latest/`.
 
+Process locally generated raw chroma-key terrain assets into exact-size transparent draft PNGs:
+
+```bash
+python tools/process_terrain_kit.py
+```
+
+This expects local raw generations under `tmp/imagegen/terrain_raw/`, writes final modules to `assets/terrain/`, and writes the review sheet to `references/asset_reviews/terrain_kit_01.png`.
+
 ## Generated Files
 
 Do not commit:
