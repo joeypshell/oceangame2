@@ -139,9 +139,9 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-05:
 
-- Open: #14 `Expose organic map in preview workflow`
 - Open: #15 `Add preview review framing and version watermark`
 - Open: #16 `Add minimal salvage collection and extraction loop`
+- Closed: #14 organic map default preview workflow
 - Closed: #13 local Godot preview helper
 - Closed: #1 Godot greybox scene
 - Closed: #2 modular cave terrain asset kit
@@ -158,6 +158,7 @@ Current issue state as of 2026-07-05:
 
 Recent important commits:
 
+- `1ab4c27` Expose organic map as default preview
 - `d2cd895` Add organic salvage cave map pass
 - `367172e` Add local Godot preview helper
 - `1a8ceb6` Refine cave tileset top edges
