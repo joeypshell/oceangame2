@@ -73,9 +73,11 @@ Current terrain renderer:
 - Hides the source grid in normal preview mode.
 - Supports `--show-debug-overlay` for map debugging.
 
-The main scene also shows a compact preview overlay with map id, build label, and salvage progress. The minimal gameplay loop lets the player collect authored salvage, return to the extraction zone to complete the run, and press `R` to reset. Hazards are still visual-only.
+The main scene also shows a compact preview overlay with map id, build label, and salvage progress. The minimal gameplay loop lets the player collect authored salvage, return to the extraction zone to complete the run, and press `R` to reset. Hazards now have a small bump/reset interaction without a full health system.
 
 Maps may use either a legacy `spawn` entity or the newer `boat_spawn` entity. `boat_spawn` is the preferred top-water entry/extraction marker for production-style maps; the player starts at its `entry_x`/`entry_y` cell, and runtime extraction checks also accept its boat rectangle.
+
+The greybox validator now checks entity schema as well as reachability: unique lower_snake_case entity ids, supported entity types, required salvage/hazard kinds, coordinate bounds, exactly one player entry, and extraction requirements for playable salvage maps.
 
 Current map-loading helper:
 
@@ -167,7 +169,7 @@ Current issue state as of 2026-07-05:
 - Open: #30 `Expand current roadmap after first production slice decision`
 - Open: #29 `Terrain visual polish pass for accepted production slice`
 - Open: #28 `Improve full-sketch conversion fidelity tooling`
-- Open: #27 `Refine salvage and object semantics in map JSON`
+- Closed: #27 salvage and object semantics in map JSON
 - Closed: #26 first scoped hazard interaction
 - Closed: #25 player swim feel and collision clearance for production slice
 - Closed: #24 production slice preview shortcut and capture route
@@ -197,6 +199,7 @@ Current issue state as of 2026-07-05:
 
 Recent important commits:
 
+- `1940ab1` Refine greybox entity validation
 - `3f08ce5` Add scoped hazard interaction
 - `53438f0` Tune production slice swim clearance
 - `bd77145` Add production slice preview shortcut
@@ -244,7 +247,7 @@ w: 72
 h: 84
 ```
 
-After #26, the next logical work is #27 to refine map JSON entity semantics and validation.
+After #27, the next logical work is #28 to improve full-sketch conversion fidelity tooling.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 
