@@ -1,0 +1,102 @@
+name: Godot Web Export
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/godot-web-export.yml"
+      - "assets/**"
+      - "maps/**"
+      - "project.godot"
+      - "scenes/**"
+      - "scripts/**"
+      - "tools/write_web_export_preset.py"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "godot-web-preview"
+  cancel-in-progress: true
+
+env:
+  GODOT_VERSION: "4.7"
+  GODOT_STATUS: stable
+  EXPORT_TEMPLATE_ID: "4.7.stable"
+
+jobs:
+  web-export:
+    name: Build web export
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install archive tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y unzip
+
+      - name: Install Godot
+        run: |
+          curl -L -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-${GODOT_STATUS}/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64.zip"
+          unzip -q godot.zip -d godot-bin
+          chmod +x "godot-bin/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64"
+          sudo mv "godot-bin/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64" /usr/local/bin/godot
+          godot --headless --version
+
+      - name: Install Godot export templates
+        run: |
+          curl -L -o export_templates.tpz "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-${GODOT_STATUS}/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_export_templates.tpz"
+          mkdir -p "${HOME}/.local/share/godot/export_templates/${EXPORT_TEMPLATE_ID}"
+          unzip -q export_templates.tpz -d export_templates
+          cp -R export_templates/templates/* "${HOME}/.local/share/godot/export_templates/${EXPORT_TEMPLATE_ID}/"
+
+      - name: Generate web export preset
+        run: python tools/write_web_export_preset.py
+
+      - name: Export web build
+        run: |
+          mkdir -p exports/web
+          godot --headless --path . --export-release Web exports/web/index.html
+
+      - name: Upload web export artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: oceangame2-web-export
+          path: exports/web
+          if-no-files-found: error
+
+  deploy-pages:
+    name: Deploy GitHub Pages preview
+    needs: web-export
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    continue-on-error: true
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Download web export artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: oceangame2-web-export
+          path: exports/web
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: exports/web
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

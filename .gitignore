@@ -17,4 +17,9 @@ desktop.ini
 # Local captures and scratch output
 tmp/
 scratch/
+builds/
+exports/
 
+# Python caches
+__pycache__/
+*.pyc

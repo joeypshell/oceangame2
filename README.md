@@ -62,6 +62,12 @@ Current in-engine baseline screenshot: [001_greybox_in_engine.png](visual_baseli
 
 Current named camera captures are generated under [visual_captures/latest](visual_captures/latest).
 
+## Browser Preview
+
+GitHub Actions builds a Godot Web export in the `Godot Web Export` workflow. Download the `oceangame2-web-export` artifact from the latest run, or use the GitHub Pages preview at `https://joeypshell.github.io/oceangame2/` once Pages is enabled for GitHub Actions.
+
+Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The export writes to ignored `exports/web/` output and should be served over HTTP for testing.
+
 ## First Success Condition
 
 The first prototype succeeds when a small Godot scene can be captured as an approved baseline screenshot, then one targeted visual change can be made without damaging unrelated visuals.
