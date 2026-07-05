@@ -60,6 +60,12 @@ The organic tileset stress-test map is [cave_tileset_test_01.greybox.json](maps/
 
 The first supplied full-map topology conversion draft is [full_cave_sketch_01.greybox.json](maps/full_cave_sketch_01.greybox.json), converted from [full_cave_sketch_01.png](references/source_maps/full_cave_sketch_01.png), with a generated preview at [full_cave_sketch_01.svg](references/greybox/full_cave_sketch_01.svg). This is a topology-only draft and is not the default preview map.
 
+Run the full-map topology draft locally with:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -FullSketchMap
+```
+
 Regenerate and validate the greybox preview with:
 
 ```bash

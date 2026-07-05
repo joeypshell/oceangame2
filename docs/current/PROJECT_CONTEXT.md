@@ -75,6 +75,7 @@ Current map-loading helper:
 - Open the editor: `.\tools\open_godot_project.ps1`
 - Run the default organic map locally: `.\tools\open_godot_project.ps1 -Run`
 - Run the original comparison map locally: `.\tools\open_godot_project.ps1 -Run -OriginalMap`
+- Run the full-map sketch draft locally: `.\tools\open_godot_project.ps1 -Run -FullSketchMap`
 
 ## Web Preview Status
 

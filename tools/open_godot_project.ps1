@@ -5,6 +5,7 @@ param(
     [switch]$DebugOverlay,
     [switch]$OriginalMap,
     [switch]$OrganicMap,
+    [switch]$FullSketchMap,
     [switch]$CheckOnly
 )
 
@@ -43,14 +44,21 @@ $GodotExe = Resolve-GodotExecutable -RequestedPath $GodotPath
 
 if ($Run) {
     $GodotArgs = @("--path", $ProjectRoot)
-    if ($OriginalMap -and $OrganicMap) {
-        throw "Use either -OriginalMap or -OrganicMap, not both."
+    $MapShortcutCount = 0
+    if ($OriginalMap) { $MapShortcutCount += 1 }
+    if ($OrganicMap) { $MapShortcutCount += 1 }
+    if ($FullSketchMap) { $MapShortcutCount += 1 }
+    if ($MapShortcutCount -gt 1) {
+        throw "Use only one map shortcut: -OriginalMap, -OrganicMap, or -FullSketchMap."
     }
     if ($OriginalMap) {
         $MapPath = "res://maps/cave_salvage_test_01.greybox.json"
     }
     if ($OrganicMap) {
         $MapPath = "res://maps/cave_salvage_organic_01.greybox.json"
+    }
+    if ($FullSketchMap) {
+        $MapPath = "res://maps/full_cave_sketch_01.greybox.json"
     }
     if ($MapPath) {
         $GodotArgs += "--map-path=$MapPath"

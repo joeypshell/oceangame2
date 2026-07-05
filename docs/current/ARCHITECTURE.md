@@ -27,6 +27,7 @@ Additional current map sources:
   - Draft 0 topology-only conversion from `references/source_maps/full_cave_sketch_01.png`.
   - Used to test whether a supplied full-map sketch can move through image conversion, JSON source, validation, SVG preview, and Godot preview.
   - Not the default preview map.
+  - Load locally with `.\tools\open_godot_project.ps1 -Run -FullSketchMap`.
 
 ## Scene Structure
 

@@ -36,6 +36,12 @@ Run the organic salvage map explicitly:
 .\tools\open_godot_project.ps1 -Run -OrganicMap
 ```
 
+Run the full-map sketch topology draft:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -FullSketchMap
+```
+
 Run any map source by path:
 
 ```powershell
@@ -163,6 +169,14 @@ Capture the organic salvage map pass:
 ```
 
 This reads `camera_tests` from `maps/cave_salvage_organic_01.greybox.json` and writes PNGs to `visual_captures/organic_salvage/`.
+
+Capture the full-map sketch topology draft:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-full-sketch-map
+```
+
+This reads `camera_tests` from `maps/full_cave_sketch_01.greybox.json` and writes PNGs to `visual_captures/full_cave_sketch/`.
 
 Regenerate the cave tileset and organic stress-test map:
 

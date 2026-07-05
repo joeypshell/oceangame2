@@ -6,11 +6,13 @@ const DEFAULT_MAP_PATH := "res://maps/cave_salvage_organic_01.greybox.json"
 const ORIGINAL_MAP_PATH := "res://maps/cave_salvage_test_01.greybox.json"
 const TILESET_TEST_MAP_PATH := "res://maps/cave_tileset_test_01.greybox.json"
 const ORGANIC_MAP_PATH := "res://maps/cave_salvage_organic_01.greybox.json"
+const FULL_SKETCH_MAP_PATH := "res://maps/full_cave_sketch_01.greybox.json"
 const SCREENSHOT_PATH := "res://visual_baselines/001_greybox_in_engine.png"
 const CAMERA_TEST_CAPTURE_DIR := "res://visual_captures/latest"
 const ORIGINAL_CAPTURE_DIR := "res://visual_captures/original_salvage"
 const TILESET_TEST_CAPTURE_DIR := "res://visual_captures/tileset_test"
 const ORGANIC_CAPTURE_DIR := "res://visual_captures/organic_salvage"
+const FULL_SKETCH_CAPTURE_DIR := "res://visual_captures/full_cave_sketch"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 
 
@@ -20,6 +22,7 @@ func _ready() -> void:
 	var capture_original_map := _has_arg(user_args, engine_args, "--capture-original-map")
 	var capture_tileset_test := _has_arg(user_args, engine_args, "--capture-tileset-test")
 	var capture_organic_map := _has_arg(user_args, engine_args, "--capture-organic-map")
+	var capture_full_sketch_map := _has_arg(user_args, engine_args, "--capture-full-sketch-map")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
 
 	var world := WORLD_SCENE.instantiate()
@@ -29,6 +32,8 @@ func _ready() -> void:
 		world.map_path = TILESET_TEST_MAP_PATH
 	elif capture_organic_map:
 		world.map_path = ORGANIC_MAP_PATH
+	elif capture_full_sketch_map:
+		world.map_path = FULL_SKETCH_MAP_PATH
 	elif not requested_map_path.is_empty():
 		world.map_path = requested_map_path
 	else:
@@ -54,6 +59,8 @@ func _ready() -> void:
 		_capture_camera_tests_and_quit(world, TILESET_TEST_CAPTURE_DIR)
 	elif capture_organic_map:
 		_capture_camera_tests_and_quit(world, ORGANIC_CAPTURE_DIR)
+	elif capture_full_sketch_map:
+		_capture_camera_tests_and_quit(world, FULL_SKETCH_CAPTURE_DIR)
 
 
 func _capture_screenshot_and_quit() -> void:
