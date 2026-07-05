@@ -4,6 +4,7 @@ const COLOR_WATER := Color(0.08, 0.72, 0.92, 1.0)
 const COLOR_GRID := Color(0.85, 0.98, 1.0, 0.22)
 const COLOR_SOLID := Color(0.15, 0.20, 0.25, 1.0)
 const COLOR_BASE := Color(0.95, 0.78, 0.48, 0.92)
+const COLOR_BOAT := Color(0.96, 0.66, 0.20, 0.92)
 const COLOR_BACKGROUND := Color(0.08, 0.39, 0.58, 0.18)
 const COLOR_MARKER := Color(1.0, 1.0, 1.0, 0.10)
 const COLOR_SALVAGE := Color(1.0, 0.80, 0.22, 1.0)
@@ -53,6 +54,7 @@ var _built := false
 var _map_data := {}
 var _salvage_entities: Array = []
 var _extraction_zones: Array = []
+var _boat_entities: Array = []
 var _collected_salvage := {}
 var _salvage_nodes_by_id := {}
 var _background_root: Node2D
@@ -84,6 +86,7 @@ func load_greybox() -> void:
 	camera_tests = map_data.get("camera_tests", [])
 	_salvage_entities = []
 	_extraction_zones = []
+	_boat_entities = []
 	_collected_salvage = {}
 	_salvage_nodes_by_id = {}
 
@@ -136,6 +139,8 @@ func get_salvage_centers() -> Array:
 
 func get_extraction_center() -> Vector2:
 	if _extraction_zones.is_empty():
+		if not _boat_entities.is_empty():
+			return _boat_entry_center(_boat_entities[0])
 		return spawn_position
 	return _rect_center(_extraction_zones[0])
 
@@ -166,6 +171,9 @@ func reset_salvage() -> void:
 func is_inside_extraction(position: Vector2) -> bool:
 	for zone in _extraction_zones:
 		if _rect_from_item(zone).has_point(position):
+			return true
+	for boat in _boat_entities:
+		if _entity_rect_from_item(boat).has_point(position):
 			return true
 	return false
 
@@ -451,11 +459,19 @@ func _build_zones(zones: Array) -> void:
 
 
 func _build_entities(entities: Array) -> void:
+	var has_boat_spawn := _has_entity_type(entities, "boat_spawn")
 	for entity in entities:
 		var entity_type := str(entity.get("type", ""))
 		var center := _entity_center(entity)
 
-		if entity_type == "spawn":
+		if entity_type == "boat_spawn":
+			_boat_entities.append(entity)
+			spawn_position = _boat_entry_center(entity)
+			_add_boat_marker(str(entity.get("id", "BoatSpawn")), entity)
+		elif entity_type == "spawn":
+			if has_boat_spawn:
+				_add_marker("LegacyPlayerStart", center, COLOR_MARKER, 18.0)
+				continue
 			spawn_position = center
 			_add_marker("PlayerStart", center, COLOR_MARKER, 28.0)
 		elif entity_type == "salvage":
@@ -464,6 +480,13 @@ func _build_entities(entities: Array) -> void:
 			_salvage_nodes_by_id[salvage_id] = _add_diamond(salvage_id, center, COLOR_SALVAGE, 16.0)
 		elif entity_type == "hazard":
 			_add_marker(entity.get("id", "Hazard"), center, COLOR_HAZARD, 18.0)
+
+
+func _has_entity_type(entities: Array, entity_type: String) -> bool:
+	for entity in entities:
+		if str(entity.get("type", "")) == entity_type:
+			return true
+	return false
 
 
 func _rect_polygon(item: Dictionary, color: Color) -> Polygon2D:
@@ -548,6 +571,30 @@ func _add_marker(marker_name: String, center: Vector2, color: Color, radius: flo
 	return poly
 
 
+func _add_boat_marker(marker_name: String, item: Dictionary) -> Node2D:
+	var root := Node2D.new()
+	root.name = marker_name
+	root.z_index = 7
+	_marker_root.add_child(root)
+
+	var rect := _entity_rect_from_item(item)
+	var hull := Polygon2D.new()
+	hull.name = "Hull"
+	hull.position = rect.position
+	hull.color = COLOR_BOAT
+	hull.polygon = PackedVector2Array([
+		Vector2(0, rect.size.y * 0.28),
+		Vector2(rect.size.x, rect.size.y * 0.28),
+		Vector2(rect.size.x * 0.82, rect.size.y),
+		Vector2(rect.size.x * 0.18, rect.size.y),
+	])
+	root.add_child(hull)
+
+	var entry_marker := _add_marker("%sEntry" % marker_name, _boat_entry_center(item), COLOR_BASE, 16.0)
+	entry_marker.z_index = 8
+	return root
+
+
 func _add_diamond(marker_name: String, center: Vector2, color: Color, radius: float) -> Polygon2D:
 	var poly := Polygon2D.new()
 	poly.name = marker_name
@@ -581,5 +628,22 @@ func _rect_from_item(item: Dictionary) -> Rect2:
 	)
 
 
+func _entity_rect_from_item(item: Dictionary) -> Rect2:
+	return Rect2(
+		Vector2(float(item["x"]) * tile_size, float(item["y"]) * tile_size),
+		Vector2(
+			float(item.get("w", 1)) * tile_size,
+			float(item.get("h", 1)) * tile_size
+		)
+	)
+
+
 func _entity_center(item: Dictionary) -> Vector2:
 	return Vector2((float(item["x"]) + 0.5) * tile_size, (float(item["y"]) + 0.5) * tile_size)
+
+
+func _boat_entry_center(item: Dictionary) -> Vector2:
+	return Vector2(
+		(float(item.get("entry_x", item["x"])) + 0.5) * tile_size,
+		(float(item.get("entry_y", item["y"])) + 0.5) * tile_size
+	)

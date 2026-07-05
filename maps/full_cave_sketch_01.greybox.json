@@ -19,7 +19,7 @@
       "White source pixels are treated as playable open water.",
       "Gray and black source pixels are treated as solid terrain/collision.",
       "Small non-white holes fully enclosed by open water are filled to ignore icon/properties for topology draft 0.",
-      "Temporary spawn is only for validation until boat/top-of-water spawning exists."
+      "A boat_spawn entity marks the top-water entry/extraction point for validation and preview."
     ]
   },
   "units": {
@@ -30,7 +30,7 @@
   "legend": {
     "water": "Open swimmable space inferred from white source regions",
     "solid": "Collision terrain inferred from gray and black source regions",
-    "spawn": "Temporary validation spawn only",
+    "boat_spawn": "Top-water boat entry and extraction marker",
     "marker": "Non-gameplay annotation"
   },
   "terrain": [
@@ -2961,12 +2961,16 @@
   "background": [],
   "entities": [
     {
-      "id": "temporary_validation_spawn",
-      "type": "spawn",
+      "id": "surface_boat_entry",
+      "type": "boat_spawn",
       "x": 91,
       "y": 0,
+      "w": 8,
+      "h": 1,
+      "entry_x": 91,
+      "entry_y": 0,
       "facing": "right",
-      "intent": "Temporary spawn for reachability validation; replace with boat spawn later."
+      "intent": "Top-water boat spawn and extraction marker for the draft full-map topology."
     }
   ],
   "camera_tests": [
@@ -2976,6 +2980,13 @@
       "center_y": 80.5,
       "zoom": 0.13,
       "intent": "Whole-map topology review for the supplied high-fidelity cave sketch draft."
+    },
+    {
+      "id": "full_sketch_boat_entry",
+      "center_x": 95,
+      "center_y": 8,
+      "zoom": 0.55,
+      "intent": "Top-water boat_spawn entry and extraction marker review."
     },
     {
       "id": "full_sketch_upper_left",

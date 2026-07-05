@@ -98,7 +98,7 @@ python tools/render_greybox_map.py maps/full_cave_sketch_01.greybox.json referen
 python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
 ```
 
-This draft converts `references/source_maps/full_cave_sketch_01.png` into topology only. White source regions become open water, gray/black source regions become solid terrain/collision, icons are ignored by filling small non-white holes, and the spawn is temporary until the boat/top-of-water spawn exists.
+This draft converts `references/source_maps/full_cave_sketch_01.png` into topology only. White source regions become open water, gray/black source regions become solid terrain/collision, icons are ignored by filling small non-white holes, and a `boat_spawn` entity marks the top-water entry/extraction point.
 
 Run whitespace checks:
 

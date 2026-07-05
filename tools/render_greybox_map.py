@@ -15,6 +15,7 @@ COLORS = {
     "solid": "#26333f",
     "solid_edge": "#8ea9b5",
     "base": "#f2d6a2",
+    "boat": "#f0a33a",
     "background": "#237fad",
     "spawn": "#29d66f",
     "salvage": "#ffd34a",
@@ -35,6 +36,13 @@ def tile_rect(item: dict, tile_size: int) -> tuple[int, int, int, int]:
 
 def entity_center(item: dict, tile_size: int) -> tuple[float, float]:
     return ((float(item["x"]) + 0.5) * tile_size, (float(item["y"]) + 0.5) * tile_size)
+
+
+def boat_entry_center(item: dict, tile_size: int) -> tuple[float, float]:
+    return (
+        (float(item.get("entry_x", item["x"])) + 0.5) * tile_size,
+        (float(item.get("entry_y", item["y"])) + 0.5) * tile_size,
+    )
 
 
 def text(x: float, y: float, value: str, size: int = 28) -> str:
@@ -104,7 +112,20 @@ def render_svg(map_data: dict) -> str:
     for entity in map_data.get("entities", []):
         cx, cy = entity_center(entity, tile_size)
         entity_type = entity["type"]
-        if entity_type == "spawn":
+        if entity_type == "boat_spawn":
+            x, y, w, h = tile_rect(entity, tile_size)
+            points = [
+                (x, y + h * 0.28),
+                (x + w, y + h * 0.28),
+                (x + w * 0.82, y + h),
+                (x + w * 0.18, y + h),
+            ]
+            point_text = " ".join(f"{px:.1f},{py:.1f}" for px, py in points)
+            ex, ey = boat_entry_center(entity, tile_size)
+            parts.append(f'<polygon points="{point_text}" fill="{COLORS["boat"]}" stroke="#6e4210" stroke-width="5"/>')
+            parts.append(f'<circle cx="{ex}" cy="{ey}" r="16" fill="{COLORS["base"]}" stroke="#704e22" stroke-width="5"/>')
+            parts.append(text(x + 12, y + h + 28, "BOAT", 22))
+        elif entity_type == "spawn":
             parts.append(f'<circle cx="{cx}" cy="{cy}" r="18" fill="{COLORS["spawn"]}" stroke="#08351c" stroke-width="5"/>')
             parts.append(text(cx + 24, cy + 10, "START", 22))
         elif entity_type == "salvage":
@@ -126,7 +147,7 @@ def render_svg(map_data: dict) -> str:
         [
             f'<rect x="0" y="0" width="{width_px}" height="{height_px}" fill="url(#grid)"/>',
             text(24, 42, f'{map_data["id"]} - greybox source preview', 30),
-            text(24, height_px - 24, "cyan=open water | gray=solid | tan=extraction | green=start | yellow=salvage | red=hazard", 24),
+            text(24, height_px - 24, "cyan=open water | gray=solid | tan=extraction | orange=boat | green=start | yellow=salvage | red=hazard", 24),
             "</svg>",
             "",
         ]

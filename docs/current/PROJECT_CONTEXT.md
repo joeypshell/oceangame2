@@ -74,6 +74,8 @@ Current terrain renderer:
 
 The main scene also shows a compact preview overlay with map id, build label, and salvage progress. The minimal gameplay loop lets the player collect authored salvage, return to the extraction zone to complete the run, and press `R` to reset. Hazards are still visual-only.
 
+Maps may use either a legacy `spawn` entity or the newer `boat_spawn` entity. `boat_spawn` is the preferred top-water entry/extraction marker for production-style maps; the player starts at its `entry_x`/`entry_y` cell, and runtime extraction checks also accept its boat rectangle.
+
 Current map-loading helper:
 
 - Open the editor: `.\tools\open_godot_project.ps1`
@@ -212,7 +214,7 @@ Recent important commits:
 - Terrain art is still first-pass structural placeholder art.
 - `cave_salvage_organic_01` is the default preview map, but it is still a first playable organic source-map pass.
 - `cave_salvage_test_01` is preserved as the original rectangular comparison map.
-- `full_cave_sketch_01` is a topology-only draft conversion from a supplied full-map sketch; icons are intentionally ignored and the spawn is temporary.
+- `full_cave_sketch_01` is a topology-only draft conversion from a supplied full-map sketch; icons are intentionally ignored and the top-water `boat_spawn` is present for entry/extraction validation.
 - Collision is rectangular per terrain block.
 - Salvage has a minimal collect-return-complete-reset loop.
 - Hazards are visual markers only.
@@ -231,7 +233,7 @@ w: 72
 h: 84
 ```
 
-The most logical next work is #22, adding the boat/top-water spawn and extraction model, followed by #23 to create the first production slice JSON from that selected region and #24 to add local preview/capture shortcuts for it.
+The most logical next work after #22 is #23, creating the first production slice JSON from the selected region, followed by #24 to add local preview/capture shortcuts for it.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 

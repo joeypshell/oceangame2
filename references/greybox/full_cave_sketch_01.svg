@@ -377,9 +377,10 @@
 <rect x="3648" y="4800" width="160" height="192" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="4704" y="4896" width="352" height="96" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="0" y="4992" width="5056" height="160" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
-<circle cx="2928.0" cy="16.0" r="18" fill="#29d66f" stroke="#08351c" stroke-width="5"/>
-<text x="2952.0" y="26.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">START</text>
+<polygon points="2912.0,9.0 3168.0,9.0 3121.9,32.0 2958.1,32.0" fill="#f0a33a" stroke="#6e4210" stroke-width="5"/>
+<circle cx="2928.0" cy="16.0" r="16" fill="#f2d6a2" stroke="#704e22" stroke-width="5"/>
+<text x="2924.0" y="60.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">BOAT</text>
 <rect x="0" y="0" width="5056" height="5152" fill="url(#grid)"/>
 <text x="24.0" y="42.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="30" paint-order="stroke" stroke="#10384a" stroke-width="4">full_cave_sketch_01 - greybox source preview</text>
-<text x="24.0" y="5128.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">cyan=open water | gray=solid | tan=extraction | green=start | yellow=salvage | red=hazard</text>
+<text x="24.0" y="5128.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">cyan=open water | gray=solid | tan=extraction | orange=boat | green=start | yellow=salvage | red=hazard</text>
 </svg>

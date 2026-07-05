@@ -167,7 +167,7 @@ def open_components(open_cells: set[tuple[int, int]]) -> list[list[tuple[int, in
     return components
 
 
-def temporary_spawn(open_cells: set[tuple[int, int]], width_tiles: int) -> tuple[int, int]:
+def top_water_entry(open_cells: set[tuple[int, int]], width_tiles: int) -> tuple[int, int]:
     top_band_limit = max(1, int(width_tiles * 0.18))
     candidates = sorted(open_cells, key=lambda cell: (cell[1], abs(cell[0] - width_tiles // 2)))
     for x, y in candidates:
@@ -176,7 +176,7 @@ def temporary_spawn(open_cells: set[tuple[int, int]], width_tiles: int) -> tuple
     return candidates[0]
 
 
-def camera_tests(width_tiles: int, height_tiles: int) -> list[dict]:
+def camera_tests(width_tiles: int, height_tiles: int, boat_entry_x: int, boat_entry_y: int) -> list[dict]:
     return [
         {
             "id": "full_sketch_overview",
@@ -184,6 +184,13 @@ def camera_tests(width_tiles: int, height_tiles: int) -> list[dict]:
             "center_y": height_tiles / 2,
             "zoom": 0.13,
             "intent": "Whole-map topology review for the supplied high-fidelity cave sketch draft.",
+        },
+        {
+            "id": "full_sketch_boat_entry",
+            "center_x": boat_entry_x + 4,
+            "center_y": boat_entry_y + 8,
+            "zoom": 0.55,
+            "intent": "Top-water boat_spawn entry and extraction marker review.",
         },
         {
             "id": "full_sketch_upper_left",
@@ -219,7 +226,8 @@ def build_map() -> dict:
     cleaned_open_pixel_mask = fill_small_non_open_holes(open_pixel_mask, source_width, source_height)
     open_cells = rasterize_open_cells(cleaned_open_pixel_mask, source_width, source_height)
     components = open_components(open_cells)
-    spawn_x, spawn_y = temporary_spawn(set(components[0]), width_tiles)
+    boat_entry_x, boat_entry_y = top_water_entry(set(components[0]), width_tiles)
+    boat_width = min(8, width_tiles - boat_entry_x)
 
     return {
         "id": MAP_ID,
@@ -240,7 +248,7 @@ def build_map() -> dict:
                 "White source pixels are treated as playable open water.",
                 "Gray and black source pixels are treated as solid terrain/collision.",
                 "Small non-white holes fully enclosed by open water are filled to ignore icon/properties for topology draft 0.",
-                "Temporary spawn is only for validation until boat/top-of-water spawning exists.",
+                "A boat_spawn entity marks the top-water entry/extraction point for validation and preview.",
             ],
         },
         "units": {
@@ -251,7 +259,7 @@ def build_map() -> dict:
         "legend": {
             "water": "Open swimmable space inferred from white source regions",
             "solid": "Collision terrain inferred from gray and black source regions",
-            "spawn": "Temporary validation spawn only",
+            "boat_spawn": "Top-water boat entry and extraction marker",
             "marker": "Non-gameplay annotation",
         },
         "terrain": merge_solid_cells_to_rects(open_cells, width_tiles, height_tiles),
@@ -269,15 +277,19 @@ def build_map() -> dict:
         "background": [],
         "entities": [
             {
-                "id": "temporary_validation_spawn",
-                "type": "spawn",
-                "x": spawn_x,
-                "y": spawn_y,
+                "id": "surface_boat_entry",
+                "type": "boat_spawn",
+                "x": boat_entry_x,
+                "y": boat_entry_y,
+                "w": boat_width,
+                "h": 1,
+                "entry_x": boat_entry_x,
+                "entry_y": boat_entry_y,
                 "facing": "right",
-                "intent": "Temporary spawn for reachability validation; replace with boat spawn later.",
+                "intent": "Top-water boat spawn and extraction marker for the draft full-map topology.",
             }
         ],
-        "camera_tests": camera_tests(width_tiles, height_tiles),
+        "camera_tests": camera_tests(width_tiles, height_tiles, boat_entry_x, boat_entry_y),
         "review_questions": [
             "Does the converted topology preserve the major room, corridor, and loop structure from the source sketch?",
             "Did icon removal accidentally open or close any meaningful passages?",

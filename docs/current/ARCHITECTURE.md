@@ -26,6 +26,7 @@ Additional current map sources:
 - `maps/full_cave_sketch_01.greybox.json`
   - Draft 0 topology-only conversion from `references/source_maps/full_cave_sketch_01.png`.
   - Used to test whether a supplied full-map sketch can move through image conversion, JSON source, validation, SVG preview, and Godot preview.
+  - Uses a `boat_spawn` entity for the top-water entry/extraction marker.
   - Not the default preview map.
   - Load locally with `.\tools\open_godot_project.ps1 -Run -FullSketchMap`.
 
@@ -34,14 +35,14 @@ Additional current map sources:
 - `scenes/main/Main.tscn`
   - Root scene.
   - Instantiates the greybox world and player.
-  - Places the player at the JSON spawn position.
+  - Places the player at the JSON `spawn` position or `boat_spawn` entry cell.
 
 - `scenes/world/GreyboxWorld.tscn`
   - Runtime renderer for the greybox map.
   - Creates a `TileMapLayer` visual from the source JSON.
   - Creates a visible cave `TileMapLayer` from grid-aligned terrain tiles.
   - Creates `StaticBody2D` collision rectangles from the same terrain data.
-  - Draws background silhouettes, route markers, extraction zone, salvage, hazards, and spawn markers.
+  - Draws background silhouettes, route markers, extraction zones, boat spawns, salvage, hazards, and spawn markers.
 
 - `scenes/player/Player.tscn`
   - Basic placeholder diver/sub-style player.

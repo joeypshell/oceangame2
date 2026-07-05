@@ -26,7 +26,7 @@ Limits:
 
 - The full map is too large for the next production pass.
 - Icons are intentionally ignored, so salvage, hazards, landmarks, and doors must be reauthored in JSON.
-- The current spawn is temporary validation data, not the real boat/top-water spawn.
+- The draft has a `boat_spawn` marker for validation and preview, but still needs a focused production slice with authored gameplay objects.
 - Some curved sketch corridors become stair-stepped tile corridors; this is acceptable for a draft but should be cleaned in source data or converter output for any production slice.
 - The current terrain art makes the full map readable, but repeated tile identity is obvious at overview scale.
 
@@ -52,7 +52,6 @@ Why it works:
 
 Risks:
 
-- It needs the boat/top-water spawn model before it becomes the true default production map.
 - The slice boundary must be chosen carefully so route edges do not feel like arbitrary cutoffs.
 
 ### Candidate B: Upper-Left Room Cluster
@@ -104,9 +103,9 @@ Use Candidate A, the top-center entry hub, as the first production slice target.
 
 Recommended order:
 
-1. Implement #22 boat and top-water spawn/extraction model.
-2. Implement #23 first production slice JSON from the top-center entry hub.
-3. Implement #24 production slice preview shortcut and capture route.
+1. Implement #23 first production slice JSON from the top-center entry hub.
+2. Implement #24 production slice preview shortcut and capture route.
+3. Implement #25 player swim feel and collision clearance for the production slice.
 
 Rationale:
 
@@ -125,5 +124,5 @@ python tools/check_map_parity.py maps/full_cave_sketch_01.greybox.json
 Results:
 
 - Full-sketch captures regenerated successfully.
-- `full_cave_sketch_01` passed reachability validation from temporary spawn `(91, 0)`.
+- `full_cave_sketch_01` passed reachability validation from boat entry `(91, 0)`.
 - `full_cave_sketch_01` passed Godot terrain/collision parity with 14908 terrain cells and 364 collision rectangles.

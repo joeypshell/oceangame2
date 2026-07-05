@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate basic greybox map reachability from the player spawn."""
+"""Validate basic greybox map reachability from the player entry cell."""
 
 from __future__ import annotations
 
@@ -21,6 +21,41 @@ def neighbors(x: int, y: int) -> tuple[tuple[int, int], ...]:
     return ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1))
 
 
+def spawn_cell(entity: dict) -> tuple[int, int]:
+    if entity.get("type") == "boat_spawn":
+        return (int(entity["entry_x"]), int(entity["entry_y"]))
+    return (int(entity["x"]), int(entity["y"]))
+
+
+def validate_boat_spawn(entity: dict, solid: set[tuple[int, int]], width: int, height: int) -> list[str]:
+    failures: list[str] = []
+    required_fields = ("x", "y", "w", "h", "entry_x", "entry_y")
+    for field in required_fields:
+        if field not in entity:
+            failures.append(f"{entity.get('id', 'boat_spawn')} is missing required boat_spawn field {field}.")
+    if failures:
+        return failures
+
+    entry = spawn_cell(entity)
+    if entry[0] < 0 or entry[1] < 0 or entry[0] >= width or entry[1] >= height:
+        failures.append(f"{entity['id']} entry is outside map bounds at {entry}.")
+        return failures
+    if entry in solid:
+        failures.append(f"{entity['id']} entry is inside solid terrain at {entry}.")
+
+    boat_cells = rect_cells(entity)
+    out_of_bounds = [
+        cell for cell in boat_cells if cell[0] < 0 or cell[1] < 0 or cell[0] >= width or cell[1] >= height
+    ]
+    if out_of_bounds:
+        failures.append(f"{entity['id']} boat extraction rectangle extends outside map bounds. Sample: {out_of_bounds[:4]}")
+    if entry not in boat_cells:
+        failures.append(f"{entity['id']} entry {entry} is outside the boat extraction rectangle.")
+    if not boat_cells - solid:
+        failures.append(f"{entity['id']} boat extraction rectangle has no open cells.")
+    return failures
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("map_json", type=Path)
@@ -37,12 +72,22 @@ def main() -> int:
         if terrain.get("type") == "solid":
             solid.update(rect_cells(terrain))
 
-    spawn_entities = [entity for entity in map_data.get("entities", []) if entity.get("type") == "spawn"]
+    spawn_entities = [
+        entity for entity in map_data.get("entities", []) if entity.get("type") in ("spawn", "boat_spawn")
+    ]
     if len(spawn_entities) != 1:
-        print(f"Expected exactly one spawn entity, found {len(spawn_entities)}.")
+        print(f"Expected exactly one spawn or boat_spawn entity, found {len(spawn_entities)}.")
         return 1
 
-    spawn = (int(spawn_entities[0]["x"]), int(spawn_entities[0]["y"]))
+    failures: list[str] = []
+    if spawn_entities[0].get("type") == "boat_spawn":
+        failures.extend(validate_boat_spawn(spawn_entities[0], solid, width, height))
+    if failures:
+        for failure in failures:
+            print(failure)
+        return 1
+
+    spawn = spawn_cell(spawn_entities[0])
     if spawn in solid:
         print(f"Spawn {spawn_entities[0]['id']} is inside solid terrain at {spawn}.")
         return 1
@@ -68,9 +113,8 @@ def main() -> int:
         print(f"Found {len(unreachable)} unreachable open tiles. Sample: {sample}")
         return 1
 
-    failures: list[str] = []
     for entity in map_data.get("entities", []):
-        point = (int(entity["x"]), int(entity["y"]))
+        point = spawn_cell(entity) if entity.get("type") == "boat_spawn" else (int(entity["x"]), int(entity["y"]))
         if point in solid:
             failures.append(f"{entity['id']} is inside solid terrain at {point}.")
         elif point not in reachable:
@@ -90,7 +134,7 @@ def main() -> int:
             print(failure)
         return 1
 
-    print(f"{map_data['id']} passed reachability validation from spawn {spawn}.")
+    print(f"{map_data['id']} passed reachability validation from entry {spawn}.")
     return 0
 
 
