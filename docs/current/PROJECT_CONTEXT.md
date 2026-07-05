@@ -168,7 +168,7 @@ Current issue state as of 2026-07-05:
 
 - Open: #30 `Expand current roadmap after first production slice decision`
 - Open: #29 `Terrain visual polish pass for accepted production slice`
-- Open: #28 `Improve full-sketch conversion fidelity tooling`
+- Closed: #28 full-sketch conversion fidelity tooling
 - Closed: #27 salvage and object semantics in map JSON
 - Closed: #26 first scoped hazard interaction
 - Closed: #25 player swim feel and collision clearance for production slice
@@ -199,6 +199,7 @@ Current issue state as of 2026-07-05:
 
 Recent important commits:
 
+- `686c8b9` Add full sketch conversion review artifact
 - `1940ab1` Refine greybox entity validation
 - `3f08ce5` Add scoped hazard interaction
 - `53438f0` Tune production slice swim clearance
@@ -248,7 +249,7 @@ w: 72
 h: 84
 ```
 
-After #27, the next logical work is #28 to improve full-sketch conversion fidelity tooling.
+After #28, the next logical work is #29 to perform a targeted terrain visual polish pass for the accepted production slice.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 
