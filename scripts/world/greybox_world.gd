@@ -137,6 +137,52 @@ func get_salvage_centers() -> Array:
 	return centers
 
 
+func find_open_path(start_position: Vector2, target_position: Vector2) -> Array:
+	var start := _position_to_cell(start_position)
+	var target := _position_to_cell(target_position)
+	var solid_cells := _solid_cells_from_terrain(_map_data.get("terrain", []))
+	if solid_cells.has(start) or solid_cells.has(target):
+		return []
+
+	var queue: Array[Vector2i] = [start]
+	var cursor := 0
+	var came_from := {start: start}
+	while cursor < queue.size():
+		var cell: Vector2i = queue[cursor]
+		cursor += 1
+		if cell == target:
+			break
+
+		for neighbor in [
+			cell + Vector2i.RIGHT,
+			cell + Vector2i.LEFT,
+			cell + Vector2i.DOWN,
+			cell + Vector2i.UP,
+		]:
+			if neighbor.x < 0 or neighbor.y < 0 or neighbor.x >= map_tile_size.x or neighbor.y >= map_tile_size.y:
+				continue
+			if solid_cells.has(neighbor) or came_from.has(neighbor):
+				continue
+			came_from[neighbor] = cell
+			queue.append(neighbor)
+
+	if not came_from.has(target):
+		return []
+
+	var cells: Array[Vector2i] = []
+	var current := target
+	while current != start:
+		cells.append(current)
+		current = came_from[current]
+	cells.append(start)
+	cells.reverse()
+
+	var path := []
+	for cell in cells:
+		path.append(_cell_center(cell))
+	return path
+
+
 func get_extraction_center() -> Vector2:
 	if _extraction_zones.is_empty():
 		if not _boat_entities.is_empty():
@@ -640,6 +686,17 @@ func _entity_rect_from_item(item: Dictionary) -> Rect2:
 
 func _entity_center(item: Dictionary) -> Vector2:
 	return Vector2((float(item["x"]) + 0.5) * tile_size, (float(item["y"]) + 0.5) * tile_size)
+
+
+func _position_to_cell(position: Vector2) -> Vector2i:
+	return Vector2i(
+		clampi(int(floor(position.x / tile_size)), 0, map_tile_size.x - 1),
+		clampi(int(floor(position.y / tile_size)), 0, map_tile_size.y - 1)
+	)
+
+
+func _cell_center(cell: Vector2i) -> Vector2:
+	return Vector2((float(cell.x) + 0.5) * tile_size, (float(cell.y) + 0.5) * tile_size)
 
 
 func _boat_entry_center(item: Dictionary) -> Vector2:

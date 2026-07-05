@@ -40,6 +40,7 @@ func _ready() -> void:
 	var capture_production_slice_map := _has_arg(user_args, engine_args, "--capture-production-slice-map")
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
+	var smoke_production_slice_route := _has_arg(user_args, engine_args, "--smoke-production-slice-route")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
 	var parity_output_path := _arg_value(user_args, engine_args, "--parity-output")
 
@@ -54,6 +55,8 @@ func _ready() -> void:
 	elif capture_full_sketch_map:
 		world.map_path = FULL_SKETCH_MAP_PATH
 	elif capture_production_slice_map:
+		world.map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_production_slice_route:
 		world.map_path = PRODUCTION_SLICE_MAP_PATH
 	elif not requested_map_path.is_empty():
 		world.map_path = requested_map_path
@@ -83,6 +86,9 @@ func _ready() -> void:
 
 	if smoke_salvage_loop:
 		_smoke_salvage_loop_and_quit()
+		return
+	if smoke_production_slice_route:
+		await _smoke_production_slice_route_and_quit()
 		return
 
 	if _has_arg(user_args, engine_args, "--capture-greybox-screenshot"):
@@ -152,6 +158,63 @@ func _smoke_salvage_loop_and_quit() -> void:
 
 	print("Salvage loop smoke passed: collected, banked, completed, and reset %d salvage." % completed_total)
 	get_tree().quit()
+
+
+func _smoke_production_slice_route_and_quit() -> void:
+	if _world.map_id != "production_slice_01":
+		push_error("Production slice route smoke loaded unexpected map: %s" % _world.map_id)
+		get_tree().quit(1)
+		return
+	if not _player.has_method("swim_in_direction"):
+		push_error("Production slice route smoke requires player swim_in_direction().")
+		get_tree().quit(1)
+		return
+
+	_player.set_physics_process(false)
+	var targets := []
+	for salvage in _world.get_salvage_centers():
+		targets.append(salvage["center"])
+	targets.append(_world.get_extraction_center())
+
+	for target in targets:
+		var reached := await _swim_to_target(target)
+		if not reached:
+			get_tree().quit(1)
+			return
+		_process(0.0)
+
+	if not _run_complete:
+		push_error("Production slice route smoke did not complete after swimming through salvage route.")
+		get_tree().quit(1)
+		return
+
+	var completed_total := _total_salvage
+	_reset_run()
+	print("Production slice route smoke passed: swam to %d salvage and returned to boat extraction." % completed_total)
+	get_tree().quit()
+
+
+func _swim_to_target(target: Vector2) -> bool:
+	var path: Array = _world.find_open_path(_player.global_position, target)
+	if path.is_empty():
+		push_error("No open-water path from %s to %s." % [_player.global_position, target])
+		return false
+
+	for waypoint_value in path:
+		var waypoint: Vector2 = waypoint_value
+		var frames_at_waypoint := 0
+		while _player.global_position.distance_to(waypoint) > 4.0:
+			var direction: Vector2 = (waypoint - _player.global_position).normalized()
+			_player.swim_in_direction(direction, 1.0 / 60.0)
+			frames_at_waypoint += 1
+			if frames_at_waypoint > 120:
+				push_error("Timed out swimming toward waypoint %s from %s." % [waypoint, _player.global_position])
+				return false
+			await get_tree().physics_frame
+
+	_player.swim_in_direction(Vector2.ZERO, 1.0 / 60.0)
+	await get_tree().physics_frame
+	return true
 
 
 func _unhandled_input(event: InputEvent) -> void:

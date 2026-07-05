@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_player"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
-size = Vector2(42, 24)
+size = Vector2(26, 18)
 
 [sub_resource type="Gradient" id="Gradient_light"]
 offsets = PackedFloat32Array(0, 1)

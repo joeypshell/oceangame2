@@ -52,7 +52,7 @@ Additional current map sources:
 
 - `scenes/player/Player.tscn`
   - Basic placeholder diver/sub-style player.
-  - Uses `CharacterBody2D` with free-swim movement.
+  - Uses `CharacterBody2D` with free-swim movement tuned to `200 px/s`, `820 px/s^2` acceleration, `1100 px/s^2` deceleration, and a `26x18 px` collision rectangle for the first production slice.
   - Contains the active `Camera2D`.
 
 ## Scripts
@@ -75,6 +75,7 @@ Additional current map sources:
 - `scripts/player/player_controller.gd`
   - Basic side-view swimming controller.
   - Supports arrow keys and WASD.
+  - Exposes `swim_in_direction()` so smoke checks can exercise the same movement math without keyboard input.
 
 ## Visual Layering
 
@@ -90,7 +91,7 @@ Art placement must not create, remove, or move collision.
 ## Current Limits
 
 - Terrain tile art is a first-pass structural placeholder, not final production art.
-- Collision is rectangular per terrain block.
+- Terrain collision is rectangular per terrain block, and the player collision shape is intentionally smaller than the placeholder body art to reduce snagging in one-tile-ish production-slice passages.
 - Minimal salvage collection, extraction completion, and restart loop exists.
 - Hazards are visual markers only.
 - First screenshot baseline is committed at `visual_baselines/001_greybox_in_engine.png`.

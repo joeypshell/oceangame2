@@ -1,13 +1,15 @@
 extends CharacterBody2D
 
-@export var swim_speed := 220.0
-@export var acceleration := 900.0
-@export var deceleration := 1200.0
+@export var swim_speed := 200.0
+@export var acceleration := 820.0
+@export var deceleration := 1100.0
 
 
 func _physics_process(delta: float) -> void:
-	var direction := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-	direction += _wasd_vector()
+	swim_in_direction(_input_direction(), delta)
+
+
+func swim_in_direction(direction: Vector2, delta: float) -> void:
 	if direction.length() > 1.0:
 		direction = direction.normalized()
 
@@ -18,6 +20,12 @@ func _physics_process(delta: float) -> void:
 
 	if direction.x != 0.0:
 		scale.x = 1.0 if direction.x > 0.0 else -1.0
+
+
+func _input_direction() -> Vector2:
+	var direction := Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	direction += _wasd_vector()
+	return direction
 
 
 func set_camera_limits(world_rect: Rect2) -> void:
