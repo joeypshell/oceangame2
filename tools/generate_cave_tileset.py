@@ -109,13 +109,38 @@ def draw_base(draw: ImageDraw.ImageDraw, variant: int = 0) -> None:
 
 
 def draw_top_edge(draw: ImageDraw.ImageDraw, variant: int = 0) -> None:
-    lift = variant % 3
-    points = [(0, 2 + lift), (6, 0), (15, 2 + lift), (26, 1), (31, 4), (31, 9), (0, 9)]
+    profiles = [
+        {
+            "top": [(0, 4), (5, 2), (11, 3), (18, 1), (25, 2), (31, 4)],
+            "bottom": [(31, 9), (23, 10), (16, 8), (8, 10), (0, 9)],
+            "highlights": [(2, 4, 8, 3), (16, 4, 26, 3)],
+            "chips": [(10, 7, 14, 9), (25, 6, 28, 8)],
+        },
+        {
+            "top": [(0, 5), (4, 3), (10, 1), (17, 3), (24, 2), (31, 5)],
+            "bottom": [(31, 10), (26, 8), (19, 11), (11, 9), (4, 10), (0, 8)],
+            "highlights": [(1, 5, 7, 4), (12, 4, 18, 4), (22, 4, 29, 5)],
+            "chips": [(7, 6, 11, 8), (18, 8, 23, 10)],
+        },
+        {
+            "top": [(0, 3), (7, 1), (13, 3), (20, 2), (27, 1), (31, 3)],
+            "bottom": [(31, 8), (28, 10), (21, 9), (13, 11), (5, 8), (0, 10)],
+            "highlights": [(3, 3, 10, 3), (18, 4, 27, 3)],
+            "chips": [(13, 7, 17, 9), (22, 6, 26, 8)],
+        },
+    ]
+    profile = profiles[variant % len(profiles)]
+    points = profile["top"] + profile["bottom"]
     draw.polygon(points, fill=SAND)
-    draw.line((2, 3, 29, 3), fill=SAND_LIGHT, width=2)
-    draw.line((0, 10, 31, 12), fill=ROCK_SHADOW, width=3)
-    if variant:
-        draw.rectangle((7 + variant * 3, 5, 10 + variant * 3, 7), fill=(187, 165, 118, 255))
+
+    for highlight in profile["highlights"]:
+        draw.line(highlight, fill=SAND_LIGHT, width=2)
+
+    for chip in profile["chips"]:
+        draw.rectangle(chip, fill=(187, 165, 118, 255))
+
+    shadow_points = [(0, 10), (7, 12), (15, 10), (24, 12), (31, 11), (31, 14), (0, 14)]
+    draw.polygon(shadow_points, fill=ROCK_SHADOW)
 
 
 def draw_bottom_edge(draw: ImageDraw.ImageDraw, variant: int = 0) -> None:
