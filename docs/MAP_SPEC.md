@@ -2,62 +2,57 @@
 
 ## Purpose
 
-The map must be a data source, not a screenshot to imitate. The game scene should render from the authored map data so the in-game result can match the plan.
+The map must be a data source, not a screenshot to imitate. The game scene should render from authored map data so the in-game result can match the plan.
 
 ## First Map
 
-Working name: `salvage_test_01`
+Working name: `cave_salvage_test_01`
 
 Recommended size:
 
-- Width: 40 tiles.
-- Height: 25 tiles.
+- Width: about 80 tiles.
+- Height: about 45 tiles.
 - Tile size: 32x32 pixels.
+
+This is the gameplay/collision grid, not the final visible art scale.
 
 ## Required Areas
 
 The first map should include:
 
 - Dock or base zone.
-- Open water navigation area.
-- Shallow water transition.
-- Small island or sandbar.
-- Rock barrier.
+- Open water swim corridor.
+- Modular cave floors, walls, ceilings, ledges, and arches.
+- Safe return/extraction point.
 - Salvage cluster.
 - Hazard cluster.
 - Clear return path.
+- Background depth silhouettes that do not affect collision.
 
 ## Placeholder Tile Meanings
 
 Use simple greybox colors before final art:
 
-- Deep water: dark blue.
-- Shallow water: cyan.
-- Sand or island: tan.
-- Rock or blocker: gray.
-- Dock: brown.
+- Open water: cyan or blue.
+- Solid collision terrain: dark gray.
+- One-way/pass-through ledge if used: purple.
+- Base/extraction: brown or white.
 - Salvage: yellow.
 - Hazard: red.
 - Player start: green.
 
 ## Source Of Truth Options
 
-Choose one for the prototype:
+Use Godot `TileMapLayer` for the first prototype.
 
-- Godot TileMapLayer.
-- LDtk.
-- Tiled.
-- JSON grid.
-
-The first implementation should use the simplest option that keeps the map editable and reviewable.
+The TileMapLayer is the source of truth for gameplay topology. Large generated terrain modules can be placed over it for visuals, but they must not redefine collision by eye.
 
 ## Map Acceptance Criteria
 
 The map is accepted when:
 
-- The player start, dock, salvage, hazards, and blockers match the map spec.
+- The player start, extraction point, salvage, hazards, and blockers match the map spec.
 - The map is navigable.
 - The camera framing makes hazards readable.
 - The greybox screenshot is saved as a baseline.
-- Replacing greybox tiles with art does not change gameplay layout.
-
+- Replacing greybox tiles with large art modules does not change gameplay layout.

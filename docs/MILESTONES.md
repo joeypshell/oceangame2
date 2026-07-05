@@ -34,7 +34,7 @@ Done when:
 
 - Salvage can be collected.
 - Hazards can damage or end the run.
-- Returning to dock banks score.
+- Returning to the base or extraction point banks score.
 - Restart works.
 - UI shows the core state.
 
@@ -52,4 +52,3 @@ Done when:
 
 - The visual workflow has either passed or failed clearly.
 - The team decides whether to expand this prototype, revise the art pipeline, or restart with a better visual constraint.
-

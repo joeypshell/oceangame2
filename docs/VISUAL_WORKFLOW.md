@@ -6,11 +6,11 @@ The project should never ask for a whole scene to be regenerated to fix one visu
 
 ## Workflow Order
 
-1. Lock camera, tile size, and map size.
+1. Lock camera, collision grid, art module sizes, and map size.
 2. Build a greybox map.
 3. Save a greybox baseline screenshot.
-4. Create a tiny approved tile kit.
-5. Replace greybox terrain with tiles.
+4. Create a small approved terrain-module kit.
+5. Cover greybox terrain with large generated modules.
 6. Add approved props.
 7. Add player and UI.
 8. Save a visual baseline screenshot.
@@ -47,13 +47,12 @@ Every visual change should state:
 Example:
 
 ```text
-Target issue: shallow water is too close in value to deep water.
-Affected assets: shallow_water_01.png.
-Untouched assets: player, dock, rocks, salvage, hazards, UI.
-Expected difference: shallow water reads brighter while layout and props remain unchanged.
+Target issue: cave terrain top edges do not read clearly against the water.
+Affected assets: terrain_floor_long_01.png and terrain_floor_short_01.png.
+Untouched assets: player, sub, salvage crates, hazards, UI, map collision.
+Expected difference: playable surfaces read more clearly while layout and props remain unchanged.
 ```
 
 ## Failure Condition
 
 A revision fails if it improves the target issue but also damages unrelated visuals, changes the map layout, changes perspective, changes scale, or introduces incompatible detail.
-
