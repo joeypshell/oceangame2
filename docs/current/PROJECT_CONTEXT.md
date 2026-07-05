@@ -156,9 +156,9 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-05:
 
-- Open: #15 `Add preview review framing and version watermark`
-- Open: #16 `Add minimal salvage collection and extraction loop`
-- Open: #18 `Add JSON-to-Godot map render and collision parity check`
+- Closed: #18 JSON-to-Godot map render and collision parity check
+- Closed: #16 minimal salvage collection and extraction loop
+- Closed: #15 preview review framing and version watermark
 - Closed: #20 full sketch map local preview workflow
 - Closed: #19 full-map sketch topology draft conversion
 - Closed: #17 web preview greybox terrain fallback regression
@@ -179,6 +179,7 @@ Current issue state as of 2026-07-05:
 
 Recent important commits:
 
+- `918d0e1` Add parity checks preview overlay and salvage loop
 - `46a833b` Expose full sketch map preview workflow
 - `7bd6d65` Add full cave sketch map draft
 - `9c9abd8` Import Godot assets before smoke check
