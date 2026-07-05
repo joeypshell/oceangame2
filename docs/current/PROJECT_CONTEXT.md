@@ -26,6 +26,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Original comparison map source: `maps/cave_salvage_test_01.greybox.json`
 - Organic tileset stress-test map: `maps/cave_tileset_test_01.greybox.json`
 - Full-map sketch topology draft: `maps/full_cave_sketch_01.greybox.json`
+- First production slice source: `maps/production_slice_01.greybox.json`
 - Current terrain atlas: `assets/terrain_tiles/cave_tileset_v1.png`
 - Web export workflow: `.github/workflows/godot-web-export.yml`
 - Latest full-sketch evaluation: `docs/current/FULL_SKETCH_EVALUATION_01.md`
@@ -82,6 +83,7 @@ Current map-loading helper:
 - Run the default organic map locally: `.\tools\open_godot_project.ps1 -Run`
 - Run the original comparison map locally: `.\tools\open_godot_project.ps1 -Run -OriginalMap`
 - Run the full-map sketch draft locally: `.\tools\open_godot_project.ps1 -Run -FullSketchMap`
+- Run the first production slice by path: `.\tools\open_godot_project.ps1 -Run -MapPath "res://maps/production_slice_01.greybox.json"`
 
 ## Web Preview Status
 
@@ -117,6 +119,7 @@ python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
 python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
 python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
 python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
+python tools/validate_greybox_map.py maps/production_slice_01.greybox.json
 python tools/check_map_parity.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --import
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1
@@ -216,6 +219,7 @@ Recent important commits:
 - `cave_salvage_organic_01` is the default preview map, but it is still a first playable organic source-map pass.
 - `cave_salvage_test_01` is preserved as the original rectangular comparison map.
 - `full_cave_sketch_01` is a topology-only draft conversion from a supplied full-map sketch; icons are intentionally ignored and the top-water `boat_spawn` is present for entry/extraction validation.
+- `production_slice_01` is the first focused slice from the full sketch's top-center entry hub; it preserves the selected topology, seals left/right/bottom crop edges, fills unreachable conversion pockets, and adds authored boat spawn, salvage, hazards, route markers, and camera tests.
 - Collision is rectangular per terrain block.
 - Salvage has a minimal collect-return-complete-reset loop.
 - Hazards are visual markers only.
@@ -234,7 +238,7 @@ w: 72
 h: 84
 ```
 
-The most logical next work after #22 is #23, creating the first production slice JSON from the selected region, followed by #24 to add local preview/capture shortcuts for it.
+After #23, the next logical work is #24 to add local preview/capture shortcuts for `production_slice_01`.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 

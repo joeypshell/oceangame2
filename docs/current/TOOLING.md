@@ -67,6 +67,7 @@ python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
 python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
 python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
 python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
+python tools/validate_greybox_map.py maps/production_slice_01.greybox.json
 ```
 
 Check that Godot's runtime terrain and collision match the authored JSON source:
@@ -88,6 +89,7 @@ python tools/render_greybox_map.py maps/cave_salvage_test_01.greybox.json refere
 python tools/render_greybox_map.py maps/cave_salvage_organic_01.greybox.json references/greybox/cave_salvage_organic_01.svg
 python tools/render_greybox_map.py maps/cave_tileset_test_01.greybox.json references/greybox/cave_tileset_test_01.svg
 python tools/render_greybox_map.py maps/full_cave_sketch_01.greybox.json references/greybox/full_cave_sketch_01.svg
+python tools/render_greybox_map.py maps/production_slice_01.greybox.json references/greybox/production_slice_01.svg
 ```
 
 Regenerate the supplied full-map sketch topology draft:
@@ -99,6 +101,16 @@ python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
 ```
 
 This draft converts `references/source_maps/full_cave_sketch_01.png` into topology only. White source regions become open water, gray/black source regions become solid terrain/collision, icons are ignored by filling small non-white holes, and a `boat_spawn` entity marks the top-water entry/extraction point.
+
+Regenerate the first focused production slice:
+
+```bash
+python tools/create_production_slice_map.py
+python tools/render_greybox_map.py maps/production_slice_01.greybox.json references/greybox/production_slice_01.svg
+python tools/validate_greybox_map.py maps/production_slice_01.greybox.json
+```
+
+This slice is generated from `maps/full_cave_sketch_01.greybox.json` using bounds `x=58, y=0, w=72, h=84`. It keeps the top-water shaft open for `boat_spawn`, seals left/right/bottom crop edges, and fills unreachable open pockets created by the high-fidelity sketch conversion.
 
 Run whitespace checks:
 

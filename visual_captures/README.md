@@ -8,6 +8,8 @@
 
 `visual_captures/full_cave_sketch/` contains generated screenshots from the supplied full-map sketch topology draft.
 
+`visual_captures/production_slice_01/` contains generated screenshots from the first focused production slice. Until the dedicated shortcut lands, run it with `--map-path=res://maps/production_slice_01.greybox.json --capture-camera-tests` and copy the generated `visual_captures/latest/` images into this folder.
+
 These captures are not automatically approved baselines. They are review artifacts used to compare the current in-engine result against `visual_baselines/` and the art direction docs.
 
 Preview captures include the compact review overlay with map id, build label, and salvage progress.

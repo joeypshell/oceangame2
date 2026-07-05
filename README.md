@@ -66,6 +66,12 @@ Run the full-map topology draft locally with:
 .\tools\open_godot_project.ps1 -Run -FullSketchMap
 ```
 
+The first focused production-slice source is [production_slice_01.greybox.json](maps/production_slice_01.greybox.json), generated from the top-center entry hub of the full sketch. It has a generated preview at [production_slice_01.svg](references/greybox/production_slice_01.svg), a top-water `boat_spawn`, authored salvage, hazards, and named camera tests. Run it locally with:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -MapPath "res://maps/production_slice_01.greybox.json"
+```
+
 Regenerate and validate the greybox preview with:
 
 ```bash
@@ -80,6 +86,9 @@ python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
 python tools/convert_full_cave_sketch_map.py
 python tools/render_greybox_map.py maps/full_cave_sketch_01.greybox.json references/greybox/full_cave_sketch_01.svg
 python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
+python tools/create_production_slice_map.py
+python tools/render_greybox_map.py maps/production_slice_01.greybox.json references/greybox/production_slice_01.svg
+python tools/validate_greybox_map.py maps/production_slice_01.greybox.json
 ```
 
 Run the current Godot greybox with `project.godot`. The root scene is `scenes/main/Main.tscn`.

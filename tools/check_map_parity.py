@@ -18,6 +18,7 @@ DEFAULT_MAPS = [
     ROOT / "maps" / "cave_salvage_test_01.greybox.json",
     ROOT / "maps" / "cave_tileset_test_01.greybox.json",
     ROOT / "maps" / "full_cave_sketch_01.greybox.json",
+    ROOT / "maps" / "production_slice_01.greybox.json",
 ]
 WINDOWS_GODOT_CANDIDATES = [
     Path(r"C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe"),
