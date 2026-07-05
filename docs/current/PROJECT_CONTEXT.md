@@ -138,7 +138,9 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-05:
 
-- Open: #12 `Author organic salvage cave map source pass`
+- Open: #14 `Expose organic map in preview workflow`
+- Open: #15 `Add preview review framing and version watermark`
+- Open: #16 `Add minimal salvage collection and extraction loop`
 - Closed: #13 local Godot preview helper
 - Closed: #1 Godot greybox scene
 - Closed: #2 modular cave terrain asset kit
@@ -151,9 +153,11 @@ Current issue state as of 2026-07-05:
 - Closed: #9 exact-mask cave tileset upgrade and stress test
 - Closed: #10 Godot Web export preview pipeline
 - Closed: #11 web preview cave terrain rendering fix
+- Closed: #12 organic salvage cave map source pass
 
 Recent important commits:
 
+- `d2cd895` Add organic salvage cave map pass
 - `367172e` Add local Godot preview helper
 - `1a8ceb6` Refine cave tileset top edges
 - `90d1f10` Add Godot smoke workflow
@@ -178,10 +182,10 @@ Recent important commits:
 
 The most logical next work is probably one of:
 
-1. Finish issue #12 verification and decide whether to promote `cave_salvage_organic_01` to the default preview map or keep it as a selectable comparison map.
-2. Create a small issue to make the public preview more useful for visual review: start camera framing, title/version watermark, and maybe a simple view toggle.
-3. Create a gameplay-minimum issue: collect salvage, return to extraction, score, restart.
-4. Create a small backlog expansion pass so the repo returns to about 10 open actionable issues.
+1. Implement issue #14 to decide whether `cave_salvage_organic_01` becomes the default preview map or remains a selectable comparison map.
+2. Implement issue #15 to make visual review easier with map/build context and stable framing.
+3. Implement issue #16 for the first tiny salvage collection/extraction loop.
+4. Create a small backlog expansion pass so the repo returns closer to about 10 open actionable issues.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 
