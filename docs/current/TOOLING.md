@@ -58,6 +58,7 @@ Validate map reachability:
 
 ```bash
 python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
+python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
 python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
 ```
 
@@ -65,6 +66,7 @@ Regenerate the SVG preview from source data:
 
 ```bash
 python tools/render_greybox_map.py maps/cave_salvage_test_01.greybox.json references/greybox/cave_salvage_test_01.svg
+python tools/render_greybox_map.py maps/cave_salvage_organic_01.greybox.json references/greybox/cave_salvage_organic_01.svg
 python tools/render_greybox_map.py maps/cave_tileset_test_01.greybox.json references/greybox/cave_tileset_test_01.svg
 ```
 
