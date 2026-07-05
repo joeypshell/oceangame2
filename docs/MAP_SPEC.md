@@ -101,6 +101,7 @@ Every authored entity must include:
 ```
 
 `salvage` entities require `kind`. Current valid-style examples are `crate`, `wreck_fragment`, `relic`, and `stress_marker`. `stress_marker` is reserved for renderer/test maps and is not treated as a production salvage objective.
+Production previews may use `kind` to choose first-pass prop art, but collection behavior is still determined by `type: "salvage"`.
 
 ```json
 {
@@ -113,6 +114,7 @@ Every authored entity must include:
 ```
 
 `hazard` entities require `kind`. Current valid-style examples are `mine`, `jellyfish`, and `stress_marker`.
+Production previews may use `kind` to choose first-pass prop art, but hazard behavior is still determined by `type: "hazard"`.
 
 ```json
 {

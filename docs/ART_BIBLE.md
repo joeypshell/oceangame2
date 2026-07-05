@@ -59,6 +59,15 @@ Expected screenshot differences after this pass:
 
 Exact color values are not locked yet. They should be locked after the first approved visual target.
 
+## Current Entity Prop Pass
+
+Normal gameplay previews should use small readable in-world props instead of abstract debug markers:
+
+- Salvage uses warm ochre/copper/yellow accents and should read as crates, wreck fragments, or relics.
+- Hazards reserve red/magenta and dark warning silhouettes, currently mines and jellyfish.
+- Simple yellow diamonds and red squares are allowed only as debug/review overlay markers.
+- Entity behavior remains driven by JSON `type`; `kind` selects the first-pass visual variant.
+
 ## Forbidden Styles
 
 Avoid these in the first prototype:

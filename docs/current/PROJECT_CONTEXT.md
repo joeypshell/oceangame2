@@ -167,13 +167,13 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-05:
 
-- Open: [#34](https://github.com/joeypshell/oceangame2/issues/34) `Replace placeholder salvage and hazard squares with readable props`
 - Open: [#35](https://github.com/joeypshell/oceangame2/issues/35) `Add boat spawn visual and top-water entry framing`
 - Open: [#36](https://github.com/joeypshell/oceangame2/issues/36) `Add accepted production slice visual baseline workflow`
 - Open: [#37](https://github.com/joeypshell/oceangame2/issues/37) `Clarify entity marker meanings in debug review mode`
 - Open: [#38](https://github.com/joeypshell/oceangame2/issues/38) `Tune production slice camera framing and capture set`
 - Open: [#39](https://github.com/joeypshell/oceangame2/issues/39) `Prototype scoped expedition pressure for production slice`
 - Open: [#40](https://github.com/joeypshell/oceangame2/issues/40) `Select and author second production slice from full sketch`
+- Closed: #34 readable salvage and hazard props
 - Closed: #33 production-slice topology artifact cleanup
 - Closed: #32 production slice source-render-collision review artifact
 - Closed: #31 production slice promoted to default preview
@@ -250,7 +250,8 @@ Recent important commits:
 - Hazards now have a tiny scoped interaction: touching one bumps the player back to spawn, briefly tints the player, and restores held/unbanked salvage to the map.
 - There is no health, oxygen, inventory screen, upgrade economy, or real enemy behavior yet.
 - Background art is still rough and secondary to proving terrain readability.
-- The source map/grid can be shown with `--show-debug-overlay`, but normal preview should be terrain-first.
+- Normal preview uses first-pass readable salvage and hazard props instead of abstract marker shapes.
+- The source map/grid and simple entity debug markers can be shown with `--show-debug-overlay`, but normal preview should be terrain-first.
 
 ## Recommended Next Work
 
@@ -275,7 +276,7 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. [#34](https://github.com/joeypshell/oceangame2/issues/34) and [#35](https://github.com/joeypshell/oceangame2/issues/35) replace confusing placeholder entity markers with readable salvage/hazard and boat-entry visuals.
+1. [#35](https://github.com/joeypshell/oceangame2/issues/35) adds readable boat-entry visuals and top-water framing.
 2. [#36](https://github.com/joeypshell/oceangame2/issues/36) locks an accepted production-slice visual baseline before larger visual changes.
 3. [#37](https://github.com/joeypshell/oceangame2/issues/37) and [#38](https://github.com/joeypshell/oceangame2/issues/38) improve debug marker review and capture framing.
 4. [#39](https://github.com/joeypshell/oceangame2/issues/39) adds one scoped pressure mechanic only after visual/source validation is stable.
