@@ -144,6 +144,7 @@ Current issue state as of 2026-07-05:
 
 - Open: #15 `Add preview review framing and version watermark`
 - Open: #16 `Add minimal salvage collection and extraction loop`
+- Closed: #17 web preview greybox terrain fallback regression
 - Closed: #14 organic map default preview workflow
 - Closed: #13 local Godot preview helper
 - Closed: #1 Godot greybox scene
@@ -161,6 +162,8 @@ Current issue state as of 2026-07-05:
 
 Recent important commits:
 
+- `9c9abd8` Import Godot assets before smoke check
+- `9c4f34a` Prevent web preview greybox fallback
 - `1ab4c27` Expose organic map as default preview
 - `d2cd895` Add organic salvage cave map pass
 - `367172e` Add local Godot preview helper
