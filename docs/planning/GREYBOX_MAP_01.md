@@ -31,9 +31,21 @@ The central arch and bottom route are meant to test whether the map feels like s
 
 - Does the map leave enough open water to feel like swimming?
 - Does the central arch create useful route identity without blocking readability?
+- Are all intended open-water gameplay areas accessible from the player start?
+- Are all salvage, hazards, and return/extraction routes reachable?
 - Are the hazards creating pressure without making the first test map annoying?
 - Are the solid regions easy to imagine as large generated terrain modules?
 - Is the map small enough for the first Godot greybox implementation?
+
+## Accessibility Check
+
+Map topology is not accepted by visual inspection alone. After any source-map edit, run:
+
+```bash
+python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
+```
+
+The check must pass before converting the map into Godot or adding art modules. If a pocket or vista should be inaccessible, represent it as `background` or another explicit decorative type instead of ordinary open gameplay space.
 
 ## Next Step
 

@@ -20,6 +20,7 @@ Keep guidance practical and compact. Add rules only when they prevent repeated m
 - Keep changes scoped to the issue.
 - For gameplay/backlog work, apply the roadmap north-star filter: the change should create curiosity, pressure, payoff, remembered-place progress, meaningful route choice, or a reason to try another expedition; otherwise treat it as tooling/polish and keep it proportional.
 - For map/terrain work, do not visually interpret screenshots or hand-tune Godot polygons as topology fixes. Update the machine-readable source map or converter, regenerate runtime geometry and previews, then use Godot/Playwright screenshots only as final rendering confirmation.
+- For map/topology work, validate player accessibility from the spawn. All intended open areas, salvage, hazards, and return/extraction zones must be reachable unless explicitly marked decorative/background-only.
 - If new work appears, create or request a follow-up issue instead of expanding the ticket.
 - Do not revert unrelated user changes.
 - Do not commit generated files, local caches, secrets, or build output.
@@ -61,4 +62,3 @@ These paths are part of the intended project shape and should be created when th
 - Agent workflow docs: `docs/GITHUB_ISSUE_WORKFLOW.md`, `docs/AGENT_HANDOFF_TEMPLATE.md`
 - GitHub Actions: `.github/workflows/godot-smoke.yml`
 - MCP tooling: `.mcp/oceangame-context-server.mjs`, `.mcp/oceangame-context.example.json`, `docs/current/TOOLING.md`
-
