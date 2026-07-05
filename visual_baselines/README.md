@@ -21,3 +21,27 @@ Regenerate locally with:
 ```
 
 Named current-state camera captures are generated separately under `visual_captures/latest/`.
+
+## Production Slice 01 Accepted
+
+Folder: `production_slice_01_accepted/`
+
+Represents:
+
+- accepted comparison target for the first focused production slice
+- four named camera views copied from `visual_captures/production_slice_01/`
+- current readable cave terrain, salvage/hazard props, boat entry, preview UI, and capture framing
+
+Accept or refresh this baseline with:
+
+```powershell
+python tools/manage_production_slice_baseline.py accept
+```
+
+Compare current captures against it with:
+
+```powershell
+python tools/manage_production_slice_baseline.py compare
+```
+
+The comparison sheet is written to `references/asset_reviews/production_slice_01_visual_baseline_review.png`. Update this baseline only after the production slice is intentionally accepted. For unexpected visual differences, keep this baseline fixed and create a follow-up issue.

@@ -36,6 +36,34 @@ Suggested names:
 005_revision_test.png
 ```
 
+## Accepted Production Slice Baseline
+
+The first accepted production-slice baseline lives under:
+
+```text
+visual_baselines/production_slice_01_accepted/
+```
+
+Accept the current production-slice captures only after a reviewer agrees that the current visuals are the comparison target for future changes:
+
+```bash
+python tools/manage_production_slice_baseline.py accept
+```
+
+Render a baseline/current/difference review sheet with:
+
+```bash
+python tools/manage_production_slice_baseline.py compare
+```
+
+This writes:
+
+```text
+references/asset_reviews/production_slice_01_visual_baseline_review.png
+```
+
+Update the accepted baseline when the team intentionally approves a new visual state. If a targeted visual change has unexpected differences, keep the baseline fixed and create a follow-up issue describing the regression or disputed change.
+
 ## Revision Rule
 
 Every visual change should state:

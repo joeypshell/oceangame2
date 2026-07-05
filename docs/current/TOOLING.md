@@ -235,6 +235,22 @@ Capture the first production slice:
 
 This reads `camera_tests` from `maps/production_slice_01.greybox.json` and writes PNGs to `visual_captures/production_slice_01/`.
 
+Accept the current production-slice captures as the named visual baseline:
+
+```bash
+python tools/manage_production_slice_baseline.py accept
+```
+
+This copies the four production-slice captures into `visual_baselines/production_slice_01_accepted/` and writes a small manifest. Only run it after the current visuals are intentionally accepted as the comparison target.
+
+Render the accepted-baseline comparison sheet:
+
+```bash
+python tools/manage_production_slice_baseline.py compare
+```
+
+This writes `references/asset_reviews/production_slice_01_visual_baseline_review.png`, showing accepted baseline, current capture, and difference columns for the key production-slice views. If the difference column reveals an unexpected visual change, keep the baseline fixed and create a follow-up issue.
+
 Generate the production slice source/render/collision review sheet:
 
 ```bash
