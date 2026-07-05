@@ -108,6 +108,8 @@ python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
 
 This draft converts `references/source_maps/full_cave_sketch_01.png` into topology only. White source regions become open water, gray/black source regions become solid terrain/collision, icons are ignored by filling small non-white holes, and a `boat_spawn` entity marks the top-water entry/extraction point.
 
+The converter also writes `references/greybox/full_cave_sketch_01_conversion_review.png`, a side-by-side review sheet showing the source thumbnail, generated open/solid tiles, and source-plus-generated overlay. It prints and embeds conversion stats such as open tiles, filled icon pixels, open components, thin corridor tiles, edge transitions, and open boundary tiles.
+
 Regenerate the first focused production slice:
 
 ```bash

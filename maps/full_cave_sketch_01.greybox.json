@@ -15,11 +15,27 @@
     "open_components": [
       10530
     ],
+    "conversion_stats": {
+      "raw_open_pixels": 1465055,
+      "filled_icon_pixels": 36600,
+      "open_tiles": 10530,
+      "solid_tiles": 14908,
+      "open_tile_ratio": 0.4139,
+      "open_component_count": 1,
+      "largest_open_components": [
+        10530
+      ],
+      "thin_corridor_tiles": 459,
+      "open_solid_edge_transitions": 2749,
+      "open_boundary_tiles": 27
+    },
+    "review_artifact": "references/greybox/full_cave_sketch_01_conversion_review.png",
     "notes": [
       "White source pixels are treated as playable open water.",
       "Gray and black source pixels are treated as solid terrain/collision.",
       "Small non-white holes fully enclosed by open water are filled to ignore icon/properties for topology draft 0.",
-      "A boat_spawn entity marks the top-water entry/extraction point for validation and preview."
+      "A boat_spawn entity marks the top-water entry/extraction point for validation and preview.",
+      "The conversion review artifact compares the source thumbnail, generated tile classification, and overlay."
     ]
   },
   "units": {

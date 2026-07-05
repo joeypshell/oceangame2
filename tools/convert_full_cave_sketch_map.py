@@ -8,13 +8,14 @@ import math
 from collections import deque
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_IMAGE = ROOT / "references" / "source_maps" / "full_cave_sketch_01.png"
 MAP_PATH = ROOT / "maps" / "full_cave_sketch_01.greybox.json"
 PREVIEW_PATH = ROOT / "references" / "greybox" / "full_cave_sketch_01.svg"
+REVIEW_PATH = ROOT / "references" / "greybox" / "full_cave_sketch_01_conversion_review.png"
 
 MAP_ID = "full_cave_sketch_01"
 GODOT_TILE_SIZE_PX = 32
@@ -22,6 +23,10 @@ SOURCE_PIXELS_PER_TILE = 12
 OPEN_PIXEL_THRESHOLD = 245
 OPEN_TILE_FRACTION = 0.45
 ICON_HOLE_FILL_LIMIT_PX = 9000
+REVIEW_TILE_SCALE = 6
+REVIEW_PANEL_GAP = 18
+REVIEW_HEADER_HEIGHT = 30
+REVIEW_FOOTER_HEIGHT = 104
 
 
 def is_open_white(pixel: tuple[int, int, int]) -> bool:
@@ -167,6 +172,66 @@ def open_components(open_cells: set[tuple[int, int]]) -> list[list[tuple[int, in
     return components
 
 
+def conversion_stats(
+    raw_open_pixel_mask: bytearray,
+    cleaned_open_pixel_mask: bytearray,
+    open_cells: set[tuple[int, int]],
+    components: list[list[tuple[int, int]]],
+    width_tiles: int,
+    height_tiles: int,
+) -> dict:
+    tile_count = width_tiles * height_tiles
+    raw_open_pixels = sum(raw_open_pixel_mask)
+    cleaned_open_pixels = sum(cleaned_open_pixel_mask)
+    return {
+        "raw_open_pixels": raw_open_pixels,
+        "filled_icon_pixels": cleaned_open_pixels - raw_open_pixels,
+        "open_tiles": len(open_cells),
+        "solid_tiles": tile_count - len(open_cells),
+        "open_tile_ratio": round(len(open_cells) / tile_count, 4),
+        "open_component_count": len(components),
+        "largest_open_components": [len(component) for component in components[:8]],
+        "thin_corridor_tiles": count_thin_corridor_tiles(open_cells),
+        "open_solid_edge_transitions": count_open_solid_edge_transitions(open_cells, width_tiles, height_tiles),
+        "open_boundary_tiles": count_open_boundary_tiles(open_cells, width_tiles, height_tiles),
+    }
+
+
+def count_thin_corridor_tiles(open_cells: set[tuple[int, int]]) -> int:
+    total = 0
+    for x, y in open_cells:
+        open_neighbors = sum(
+            neighbor in open_cells
+            for neighbor in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1))
+        )
+        if open_neighbors <= 2:
+            total += 1
+    return total
+
+
+def count_open_solid_edge_transitions(
+    open_cells: set[tuple[int, int]], width_tiles: int, height_tiles: int
+) -> int:
+    transitions = 0
+    for y in range(height_tiles):
+        for x in range(width_tiles):
+            is_open = (x, y) in open_cells
+            for nx, ny in ((x + 1, y), (x, y + 1)):
+                if nx >= width_tiles or ny >= height_tiles:
+                    continue
+                if ((nx, ny) in open_cells) != is_open:
+                    transitions += 1
+    return transitions
+
+
+def count_open_boundary_tiles(open_cells: set[tuple[int, int]], width_tiles: int, height_tiles: int) -> int:
+    return sum(
+        1
+        for x, y in open_cells
+        if x == 0 or y == 0 or x == width_tiles - 1 or y == height_tiles - 1
+    )
+
+
 def top_water_entry(open_cells: set[tuple[int, int]], width_tiles: int) -> tuple[int, int]:
     top_band_limit = max(1, int(width_tiles * 0.18))
     candidates = sorted(open_cells, key=lambda cell: (cell[1], abs(cell[0] - width_tiles // 2)))
@@ -216,7 +281,115 @@ def camera_tests(width_tiles: int, height_tiles: int, boat_entry_x: int, boat_en
     ]
 
 
-def build_map() -> dict:
+def draw_review_label(draw: ImageDraw.ImageDraw, xy: tuple[int, int], value: str) -> None:
+    font = ImageFont.load_default()
+    x, y = xy
+    bbox = draw.textbbox((x, y), value, font=font)
+    draw.rectangle((bbox[0] - 4, bbox[1] - 3, bbox[2] + 4, bbox[3] + 3), fill=(8, 18, 24))
+    draw.text((x, y), value, fill=(235, 250, 255), font=font)
+
+
+def draw_major_grid(draw: ImageDraw.ImageDraw, width_tiles: int, height_tiles: int, scale: int) -> None:
+    grid_color = (255, 255, 255, 46)
+    for x in range(0, width_tiles + 1, 10):
+        px = x * scale
+        draw.line((px, 0, px, height_tiles * scale), fill=grid_color)
+    for y in range(0, height_tiles + 1, 10):
+        py = y * scale
+        draw.line((0, py, width_tiles * scale, py), fill=grid_color)
+
+
+def draw_boat_marker(draw: ImageDraw.ImageDraw, map_data: dict, offset_x: int, offset_y: int, scale: int) -> None:
+    for entity in map_data.get("entities", []):
+        if entity.get("type") != "boat_spawn":
+            continue
+        x = offset_x + int(entity["x"]) * scale
+        y = offset_y + int(entity["y"]) * scale
+        w = int(entity["w"]) * scale
+        h = int(entity["h"]) * scale
+        draw.rectangle((x, y, x + w, y + h), outline=(255, 184, 70), width=2)
+        entry_x = offset_x + int(entity["entry_x"]) * scale + scale // 2
+        entry_y = offset_y + int(entity["entry_y"]) * scale + scale // 2
+        draw.ellipse((entry_x - 4, entry_y - 4, entry_x + 4, entry_y + 4), fill=(255, 212, 90))
+
+
+def generated_tile_panel(open_cells: set[tuple[int, int]], width_tiles: int, height_tiles: int, scale: int) -> Image.Image:
+    panel = Image.new("RGBA", (width_tiles * scale, height_tiles * scale), (36, 48, 60, 255))
+    draw = ImageDraw.Draw(panel, "RGBA")
+    for x, y in open_cells:
+        draw.rectangle(
+            (x * scale, y * scale, (x + 1) * scale - 1, (y + 1) * scale - 1),
+            fill=(38, 186, 232, 255),
+        )
+    draw_major_grid(draw, width_tiles, height_tiles, scale)
+    return panel
+
+
+def overlay_panel(
+    source_panel: Image.Image, open_cells: set[tuple[int, int]], width_tiles: int, height_tiles: int, scale: int
+) -> Image.Image:
+    overlay = source_panel.convert("RGBA")
+    draw = ImageDraw.Draw(overlay, "RGBA")
+    for y in range(height_tiles):
+        for x in range(width_tiles):
+            fill = (15, 195, 245, 112) if (x, y) in open_cells else (12, 22, 30, 126)
+            draw.rectangle((x * scale, y * scale, (x + 1) * scale - 1, (y + 1) * scale - 1), fill=fill)
+    draw_major_grid(draw, width_tiles, height_tiles, scale)
+    return overlay
+
+
+def write_conversion_review_artifact(
+    image: Image.Image,
+    open_cells: set[tuple[int, int]],
+    map_data: dict,
+    stats: dict,
+    output_path: Path,
+) -> None:
+    width_tiles = int(map_data["units"]["width_tiles"])
+    height_tiles = int(map_data["units"]["height_tiles"])
+    scale = REVIEW_TILE_SCALE
+    panel_width = width_tiles * scale
+    panel_height = height_tiles * scale
+    canvas_width = panel_width * 3 + REVIEW_PANEL_GAP * 2
+    canvas_height = REVIEW_HEADER_HEIGHT + panel_height + REVIEW_FOOTER_HEIGHT
+
+    source_panel = image.resize((width_tiles, height_tiles), Image.Resampling.LANCZOS)
+    source_panel = source_panel.resize((panel_width, panel_height), Image.Resampling.NEAREST).convert("RGBA")
+    generated_panel = generated_tile_panel(open_cells, width_tiles, height_tiles, scale)
+    combined_panel = overlay_panel(source_panel, open_cells, width_tiles, height_tiles, scale)
+
+    canvas = Image.new("RGB", (canvas_width, canvas_height), (18, 24, 30))
+    panel_offsets = [
+        0,
+        panel_width + REVIEW_PANEL_GAP,
+        panel_width * 2 + REVIEW_PANEL_GAP * 2,
+    ]
+    for offset, panel in zip(panel_offsets, [source_panel, generated_panel, combined_panel]):
+        canvas.paste(panel.convert("RGB"), (offset, REVIEW_HEADER_HEIGHT))
+
+    draw = ImageDraw.Draw(canvas)
+    draw_review_label(draw, (8, 9), "Source sketch thumbnail")
+    draw_review_label(draw, (panel_offsets[1] + 8, 9), "Generated open/solid tiles")
+    draw_review_label(draw, (panel_offsets[2] + 8, 9), "Source + generated overlay")
+    draw_boat_marker(draw, map_data, panel_offsets[1], REVIEW_HEADER_HEIGHT, scale)
+    draw_boat_marker(draw, map_data, panel_offsets[2], REVIEW_HEADER_HEIGHT, scale)
+
+    footer_y = REVIEW_HEADER_HEIGHT + panel_height + 12
+    stat_lines = [
+        f"open tiles: {stats['open_tiles']} / {width_tiles * height_tiles} ({stats['open_tile_ratio']})",
+        f"filled icon/non-white pixels: {stats['filled_icon_pixels']}",
+        f"open components: {stats['open_component_count']} largest={stats['largest_open_components'][:4]}",
+        f"thin corridor tiles: {stats['thin_corridor_tiles']} | open-solid edge transitions: {stats['open_solid_edge_transitions']}",
+        f"open boundary tiles: {stats['open_boundary_tiles']} | tile scale: {SOURCE_PIXELS_PER_TILE} source px per tile",
+    ]
+    for index, line in enumerate(stat_lines):
+        draw.text((12, footer_y + index * 16), line, fill=(225, 238, 242), font=ImageFont.load_default())
+
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    canvas.save(output_path)
+
+
+def build_map() -> tuple[dict, Image.Image, set[tuple[int, int]], dict]:
     image = Image.open(SOURCE_IMAGE).convert("RGB")
     source_width, source_height = image.size
     width_tiles = math.ceil(source_width / SOURCE_PIXELS_PER_TILE)
@@ -226,10 +399,11 @@ def build_map() -> dict:
     cleaned_open_pixel_mask = fill_small_non_open_holes(open_pixel_mask, source_width, source_height)
     open_cells = rasterize_open_cells(cleaned_open_pixel_mask, source_width, source_height)
     components = open_components(open_cells)
+    stats = conversion_stats(open_pixel_mask, cleaned_open_pixel_mask, open_cells, components, width_tiles, height_tiles)
     boat_entry_x, boat_entry_y = top_water_entry(set(components[0]), width_tiles)
     boat_width = min(8, width_tiles - boat_entry_x)
 
-    return {
+    map_data = {
         "id": MAP_ID,
         "version": 0,
         "purpose": (
@@ -244,11 +418,14 @@ def build_map() -> dict:
             "open_tile_fraction": OPEN_TILE_FRACTION,
             "icon_hole_fill_limit_px": ICON_HOLE_FILL_LIMIT_PX,
             "open_components": [len(component) for component in components[:8]],
+            "conversion_stats": stats,
+            "review_artifact": "references/greybox/full_cave_sketch_01_conversion_review.png",
             "notes": [
                 "White source pixels are treated as playable open water.",
                 "Gray and black source pixels are treated as solid terrain/collision.",
                 "Small non-white holes fully enclosed by open water are filled to ignore icon/properties for topology draft 0.",
                 "A boat_spawn entity marks the top-water entry/extraction point for validation and preview.",
+                "The conversion review artifact compares the source thumbnail, generated tile classification, and overlay.",
             ],
         },
         "units": {
@@ -297,13 +474,24 @@ def build_map() -> dict:
             "Should future passes split this into authored regions or preserve the whole-map scale?",
         ],
     }
+    return map_data, image, open_cells, stats
 
 
 def main() -> int:
-    map_data = build_map()
+    map_data, image, open_cells, stats = build_map()
     MAP_PATH.parent.mkdir(parents=True, exist_ok=True)
     MAP_PATH.write_text(json.dumps(map_data, indent=2) + "\n", encoding="utf-8")
+    write_conversion_review_artifact(image, open_cells, map_data, stats, REVIEW_PATH)
     print(f"Wrote {MAP_PATH.relative_to(ROOT)}")
+    print(f"Wrote {REVIEW_PATH.relative_to(ROOT)}")
+    print(
+        "Conversion stats: "
+        f"open_tiles={stats['open_tiles']} "
+        f"solid_tiles={stats['solid_tiles']} "
+        f"components={stats['open_component_count']} "
+        f"thin_corridor_tiles={stats['thin_corridor_tiles']} "
+        f"edge_transitions={stats['open_solid_edge_transitions']}"
+    )
     print(f"Render preview with: python tools/render_greybox_map.py {MAP_PATH.relative_to(ROOT)} {PREVIEW_PATH.relative_to(ROOT)}")
     return 0
 
