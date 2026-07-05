@@ -6,6 +6,8 @@ Issue: #3
 
 This pass proves that generated modular terrain art can be layered over the runtime greybox without changing map topology, collision, or reachability.
 
+Issue #8 supersedes this approach for seam-critical floors, walls, ceilings, and corners. Large generated modules should now be treated as background or landmark decoration unless converted into grid-compatible terrain tiles.
+
 The source of truth remains:
 
 ```text
@@ -21,6 +23,8 @@ maps/cave_salvage_test_01.greybox.json
 - `TerrainArt`: draft sprites scaled over those same terrain rectangles.
 
 Art sprites are not collision, and they do not define gameplay space.
+
+This rule remains valid for background and landmark decoration, but no longer describes the primary terrain renderer.
 
 ## Current Mapping
 

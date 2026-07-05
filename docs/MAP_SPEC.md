@@ -34,7 +34,7 @@ The first map should include:
 
 - Base or extraction zone.
 - Open water swim corridor.
-- Modular cave floors, walls, ceilings, ledges, and arches.
+- Grid-aligned cave floors, walls, ceilings, ledges, and arch-like terrain.
 - Safe return/extraction point.
 - Salvage cluster.
 - Hazard cluster.
@@ -57,7 +57,7 @@ Use simple greybox colors before final art:
 
 Use Godot `TileMapLayer` for the first prototype.
 
-The TileMapLayer is the source of truth for gameplay topology. Large generated terrain modules can be placed over it for visuals, but they must not redefine collision by eye.
+The TileMapLayer is the source of truth for gameplay topology and visible core terrain. Large generated terrain modules can be used as background or landmark decoration, but seam-critical gameplay terrain should be rendered from grid-aligned tiles rather than stretched over greybox rectangles.
 
 ## Accessibility Rule
 
@@ -87,4 +87,4 @@ The map is accepted when:
 - No intended gameplay area, collectible, hazard, or return path is accidentally inaccessible.
 - The camera framing makes hazards readable.
 - The greybox screenshot is saved as a baseline.
-- Replacing greybox tiles with large art modules does not change gameplay layout.
+- Replacing greybox tiles with grid-aligned terrain art does not change gameplay layout.

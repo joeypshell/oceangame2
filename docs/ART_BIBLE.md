@@ -16,7 +16,8 @@ Use it for modular underwater cave terrain, broad readable rock shapes, clear bl
 
 - Camera: side-view 2D.
 - Gameplay/collision grid: 32x32 pixels.
-- Terrain art modules: larger AI-generated chunks such as 128x128, 256x128, 256x256, and 512x256.
+- Seam-critical terrain art: 32x32 grid-aligned tiles selected by `TileMapLayer`.
+- Large art modules: background silhouettes, landmarks, and non-collision decoration.
 - Initial map size: one compact underwater cave test area.
 - Player size: Dave-the-Diver-like side-view scale; the diver should read clearly but leave generous open water around them.
 - Default view: enough space to see swim paths, hazards, salvage, and terrain openings before reaching them.
@@ -29,7 +30,7 @@ Use it for modular underwater cave terrain, broad readable rock shapes, clear bl
 - Outlines: optional soft edge accents; avoid heavy black outlines unless the full style commits to them.
 - Detail: readable at gameplay zoom first, attractive second.
 - Color: limited ocean palette with strong contrast between interactive and background objects.
-- Terrain should be modular and asset-friendly: floor chunks, wall chunks, ceiling chunks, arches, ledges, corners, and background silhouettes.
+- Terrain should be modular and asset-friendly: grid-aligned floors, walls, ceilings, corners, and background silhouettes.
 - Decorative coral, seaweed, crates, lamps, wreckage, and bubbles should be separate props, not baked into every terrain chunk.
 
 ## Suggested Palette Roles
@@ -54,29 +55,35 @@ Avoid these in the first prototype:
 - Perspective drift between assets.
 - Mixed top-down and side-view assets.
 - Retro SNES/pixel cave style.
-- Visible small repeated square terrain tiles.
+- Final terrain that reads as obvious repeated square tiles. Temporary grid-readable test tiles are acceptable while proving terrain rules.
 - Generic mobile platformer identity: coins, stars, ladders, and crowded collectible trails.
 - Dramatic lighting that hides gameplay information.
 - Whole-scene redraws to fix one asset.
 
 ## AI Asset Strategy
 
-Use AI generation for larger clean illustrated modules, not tiny seamless tiles as final visible art.
+Use AI generation against exact tile masks or controlled tile sheets for seam-critical terrain. Use larger clean illustrated modules for backgrounds, landmarks, and non-collision decoration.
 
-Recommended first terrain modules:
+Recommended first terrain tile cases:
 
-- floor platform short
-- floor platform long
+- solid fill
+- fill variant
+- top floor edge
+- bottom ceiling edge
 - left wall
 - right wall
 - ceiling
 - inside corner
 - outside corner
-- arch
-- ledge
-- background rock silhouette
+- narrow/isolated collision terrain
 
-Godot `TileMapLayer` should carry the collision/source map. Generated terrain modules should visually cover or decorate that source map without changing the gameplay topology.
+Recommended large modules:
+
+- background rock silhouette
+- distant arch or ruin
+- non-collision ledge decoration
+
+Godot `TileMapLayer` should carry the visible grid-aligned terrain for core collision shapes. Generated large modules may decorate the source map, but they must not redefine collision by eye or be stretched to fit gameplay terrain.
 
 ## Asset Approval Rule
 

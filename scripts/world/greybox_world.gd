@@ -8,17 +8,24 @@ const COLOR_BACKGROUND := Color(0.08, 0.39, 0.58, 0.18)
 const COLOR_MARKER := Color(1.0, 1.0, 1.0, 0.10)
 const COLOR_SALVAGE := Color(1.0, 0.80, 0.22, 1.0)
 const COLOR_HAZARD := Color(1.0, 0.22, 0.34, 1.0)
-const SOURCE_LAYER_ALPHA := 0.16
+const SOURCE_LAYER_ALPHA := 0.08
 const BACKGROUND_ART_ALPHA := 0.26
-const ARCH_ART_ALPHA := 0.72
 
-const TERRAIN_FLOOR_SHORT_TEXTURE := "res://assets/terrain/terrain_floor_short_01.png"
-const TERRAIN_FLOOR_LONG_TEXTURE := "res://assets/terrain/terrain_floor_long_01.png"
-const TERRAIN_WALL_LEFT_TEXTURE := "res://assets/terrain/terrain_wall_left_01.png"
-const TERRAIN_WALL_RIGHT_TEXTURE := "res://assets/terrain/terrain_wall_right_01.png"
-const TERRAIN_CEILING_TEXTURE := "res://assets/terrain/terrain_ceiling_01.png"
-const TERRAIN_ARCH_TEXTURE := "res://assets/terrain/terrain_arch_01.png"
+const CAVE_TILESET_TEXTURE := "res://assets/terrain_tiles/cave_tileset_v1.png"
 const BACKGROUND_ROCKS_TEXTURE := "res://assets/terrain/background_rocks_01.png"
+const CAVE_TILESET_COLUMNS := 8
+const CAVE_TILESET_ROWS := 3
+const TERRAIN_SOURCE_ID := 0
+const MASK_TOP := 1
+const MASK_RIGHT := 2
+const MASK_BOTTOM := 4
+const MASK_LEFT := 8
+const FILL_VARIANT_COORD := Vector2i(0, 2)
+const INNER_TOP_LEFT_COORD := Vector2i(1, 2)
+const INNER_TOP_RIGHT_COORD := Vector2i(2, 2)
+const INNER_BOTTOM_LEFT_COORD := Vector2i(3, 2)
+const INNER_BOTTOM_RIGHT_COORD := Vector2i(4, 2)
+const NO_SPECIAL_COORD := Vector2i(-1, -1)
 
 @export var map_path := "res://maps/cave_salvage_test_01.greybox.json"
 
@@ -30,8 +37,8 @@ var camera_tests: Array = []
 
 var _built := false
 var _background_root: Node2D
-var _art_root: Node2D
 var _solid_layer: TileMapLayer
+var _terrain_layer: TileMapLayer
 var _marker_root: Node2D
 var _collision_root: Node2D
 
@@ -60,7 +67,7 @@ func load_greybox() -> void:
 	_build_background(map_data.get("background", []))
 
 	_build_tilemap(map_data)
-	_build_terrain_art(map_data.get("terrain", []))
+	_build_cave_terrain_layer(map_data.get("terrain", []))
 
 	_collision_root = Node2D.new()
 	_collision_root.name = "Collision"
@@ -116,57 +123,84 @@ func _build_tilemap(map_data: Dictionary) -> void:
 			_fill_tile_rect(_solid_layer, zone, Vector2i(1, 0))
 
 
-func _build_terrain_art(terrain_items: Array) -> void:
-	_art_root = Node2D.new()
-	_art_root.name = "TerrainArt"
-	add_child(_art_root)
+func _build_cave_terrain_layer(terrain_items: Array) -> void:
+	_terrain_layer = TileMapLayer.new()
+	_terrain_layer.name = "CaveTerrainTileMapLayer"
+	_terrain_layer.tile_set = _create_cave_tileset()
+	add_child(_terrain_layer)
 
+	var solid_cells := _solid_cells_from_terrain(terrain_items)
+	for cell in solid_cells.keys():
+		_terrain_layer.set_cell(cell, TERRAIN_SOURCE_ID, _terrain_atlas_coords(cell, solid_cells))
+
+
+func _create_cave_tileset() -> TileSet:
+	var texture := _load_png_texture(CAVE_TILESET_TEXTURE)
+	if texture == null:
+		push_error("Unable to create cave TileSet; missing texture %s" % CAVE_TILESET_TEXTURE)
+		return TileSet.new()
+
+	var source := TileSetAtlasSource.new()
+	source.texture = texture
+	source.texture_region_size = Vector2i(tile_size, tile_size)
+	for y in range(CAVE_TILESET_ROWS):
+		for x in range(CAVE_TILESET_COLUMNS):
+			source.create_tile(Vector2i(x, y))
+
+	var tile_set := TileSet.new()
+	tile_set.tile_size = Vector2i(tile_size, tile_size)
+	tile_set.add_source(source, TERRAIN_SOURCE_ID)
+	return tile_set
+
+
+func _solid_cells_from_terrain(terrain_items: Array) -> Dictionary:
+	var solid_cells := {}
 	for item in terrain_items:
 		if item.get("type", "") != "solid":
 			continue
-
-		var texture_path := _terrain_texture_for(item)
-		var sprite_name := "%sArt" % item.get("id", "Terrain")
-		_add_texture_rect(_art_root, texture_path, item, sprite_name)
-
-	_build_arch_overlay(terrain_items)
+		for y in range(int(item["y"]), int(item["y"]) + int(item["h"])):
+			for x in range(int(item["x"]), int(item["x"]) + int(item["w"])):
+				solid_cells[Vector2i(x, y)] = true
+	return solid_cells
 
 
-func _terrain_texture_for(item: Dictionary) -> String:
-	var terrain_id := str(item.get("id", ""))
-	if terrain_id == "left_wall" or terrain_id == "central_arch_left_column":
-		return TERRAIN_WALL_LEFT_TEXTURE
-	if terrain_id == "right_wall" or terrain_id == "central_arch_right_column":
-		return TERRAIN_WALL_RIGHT_TEXTURE
-	if terrain_id.begins_with("ceiling"):
-		return TERRAIN_CEILING_TEXTURE
-	if terrain_id.begins_with("stalactite"):
-		if terrain_id.ends_with("right"):
-			return TERRAIN_WALL_RIGHT_TEXTURE
-		return TERRAIN_WALL_LEFT_TEXTURE
-	if terrain_id == "bottom_floor" or terrain_id == "base_floor" or terrain_id.ends_with("_shelf"):
-		if int(item.get("w", 0)) <= 15:
-			return TERRAIN_FLOOR_SHORT_TEXTURE
-		return TERRAIN_FLOOR_LONG_TEXTURE
-	if terrain_id == "central_arch_top":
-		return TERRAIN_CEILING_TEXTURE
-	return TERRAIN_FLOOR_LONG_TEXTURE
+func _terrain_atlas_coords(cell: Vector2i, solid_cells: Dictionary) -> Vector2i:
+	var mask := 0
+	if not _is_solid_cell(cell + Vector2i.UP, solid_cells):
+		mask |= MASK_TOP
+	if not _is_solid_cell(cell + Vector2i.RIGHT, solid_cells):
+		mask |= MASK_RIGHT
+	if not _is_solid_cell(cell + Vector2i.DOWN, solid_cells):
+		mask |= MASK_BOTTOM
+	if not _is_solid_cell(cell + Vector2i.LEFT, solid_cells):
+		mask |= MASK_LEFT
+
+	if mask == 0:
+		var inner_coord := _inner_corner_atlas_coords(cell, solid_cells)
+		if inner_coord != NO_SPECIAL_COORD:
+			return inner_coord
+		if (cell.x + cell.y) % 5 == 0:
+			return FILL_VARIANT_COORD
+
+	return Vector2i(mask % CAVE_TILESET_COLUMNS, mask / CAVE_TILESET_COLUMNS)
 
 
-func _build_arch_overlay(terrain_items: Array) -> void:
-	var arch_pieces: Array = []
-	for item in terrain_items:
-		if str(item.get("id", "")).begins_with("central_arch_"):
-			arch_pieces.append(item)
+func _inner_corner_atlas_coords(cell: Vector2i, solid_cells: Dictionary) -> Vector2i:
+	if not _is_solid_cell(cell + Vector2i.UP + Vector2i.LEFT, solid_cells):
+		return INNER_TOP_LEFT_COORD
+	if not _is_solid_cell(cell + Vector2i.UP + Vector2i.RIGHT, solid_cells):
+		return INNER_TOP_RIGHT_COORD
+	if not _is_solid_cell(cell + Vector2i.DOWN + Vector2i.LEFT, solid_cells):
+		return INNER_BOTTOM_LEFT_COORD
+	if not _is_solid_cell(cell + Vector2i.DOWN + Vector2i.RIGHT, solid_cells):
+		return INNER_BOTTOM_RIGHT_COORD
+	return NO_SPECIAL_COORD
 
-	if arch_pieces.size() < 3:
-		return
 
-	var arch_rect := _union_rect(arch_pieces)
-	arch_rect["id"] = "central_arch_overlay"
-	var sprite := _add_texture_rect(_art_root, TERRAIN_ARCH_TEXTURE, arch_rect, "central_arch_overlay")
-	if sprite != null:
-		sprite.modulate = Color(1.0, 1.0, 1.0, ARCH_ART_ALPHA)
+func _is_solid_cell(cell: Vector2i, solid_cells: Dictionary) -> bool:
+	if cell.x < 0 or cell.y < 0 or cell.x >= map_tile_size.x or cell.y >= map_tile_size.y:
+		return true
+	return solid_cells.has(cell)
 
 
 func _create_greybox_tileset() -> TileSet:
@@ -299,25 +333,6 @@ func _load_png_texture(texture_path: String) -> Texture2D:
 		return null
 
 	return ImageTexture.create_from_image(image)
-
-
-func _union_rect(items: Array) -> Dictionary:
-	var min_x := INF
-	var min_y := INF
-	var max_x := -INF
-	var max_y := -INF
-	for item in items:
-		min_x = min(min_x, float(item["x"]))
-		min_y = min(min_y, float(item["y"]))
-		max_x = max(max_x, float(item["x"]) + float(item["w"]))
-		max_y = max(max_y, float(item["y"]) + float(item["h"]))
-
-	return {
-		"x": min_x,
-		"y": min_y,
-		"w": max_x - min_x,
-		"h": max_y - min_y,
-	}
 
 
 func _add_marker(marker_name: String, center: Vector2, color: Color, radius: float) -> void:

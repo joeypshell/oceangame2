@@ -9,13 +9,14 @@ The project should never ask for a whole scene to be regenerated to fix one visu
 1. Lock camera, collision grid, art module sizes, and map size.
 2. Build a greybox map.
 3. Save a greybox baseline screenshot.
-4. Create a small approved terrain-module kit.
-5. Cover greybox terrain with large generated modules.
-6. Add approved props.
-7. Add player and UI.
-8. Save a visual baseline screenshot.
-9. Make one targeted visual revision.
-10. Compare against the baseline.
+4. Create a small grid-aligned terrain tileset for seam-critical cave terrain.
+5. Render greybox terrain through `TileMapLayer` tile selection.
+6. Add large generated modules only as background or landmark decoration.
+7. Add approved props.
+8. Add player and UI.
+9. Save a visual baseline screenshot.
+10. Make one targeted visual revision.
+11. Compare against the baseline.
 
 ## Baseline Screenshots
 
@@ -60,3 +61,5 @@ A revision fails if it improves the target issue but also damages unrelated visu
 ## Terrain Placement Rule
 
 In-engine terrain art should be placed from the machine-readable map data. Do not hand-tune collision, routes, or topology in Godot to make an asset fit. If art reveals a real layout problem, update `maps/cave_salvage_test_01.greybox.json`, regenerate previews/captures, and rerun the accessibility validator.
+
+Core floors, walls, ceilings, and corners should use grid-aligned terrain tiles. Do not non-uniformly scale seam-critical terrain sprites to fit greybox rectangles. Large generated modules are for background silhouettes, landmarks, and non-collision decoration unless they are converted into tile-compatible pieces.

@@ -24,7 +24,7 @@ The Godot scene reads this JSON at runtime. Do not hand-tune in-engine terrain t
 - `scenes/world/GreyboxWorld.tscn`
   - Runtime renderer for the greybox map.
   - Creates a `TileMapLayer` visual from the source JSON.
-  - Places draft terrain art sprites over the source rectangles.
+  - Creates a visible cave `TileMapLayer` from grid-aligned terrain tiles.
   - Creates `StaticBody2D` collision rectangles from the same terrain data.
   - Draws background silhouettes, route markers, extraction zone, salvage, hazards, and spawn markers.
 
@@ -42,7 +42,7 @@ The Godot scene reads this JSON at runtime. Do not hand-tune in-engine terrain t
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.
-  - Builds the runtime TileMapLayer, draft terrain art overlay, and collision.
+  - Builds the runtime source TileMapLayer, cave terrain TileMapLayer, background art, and collision.
   - Keeps visuals tied to source topology.
   - Exposes `camera_tests` from the source map for repeatable visual captures.
 
@@ -55,14 +55,15 @@ The Godot scene reads this JSON at runtime. Do not hand-tune in-engine terrain t
 The world intentionally separates authored topology from art:
 
 - `SourceTileMapLayer` is the faint runtime reference for the JSON grid.
-- `TerrainArt` contains draft PNG modules scaled over the same terrain rectangles.
+- `CaveTerrainTileMapLayer` contains 32x32 terrain tiles selected from neighboring solid cells.
+- `BackgroundArt` may use larger non-collision modules for silhouettes and landmarks.
 - `Collision` is generated only from the JSON terrain data.
 
 Art placement must not create, remove, or move collision.
 
 ## Current Limits
 
-- Terrain art is a first-pass overlay and not final production placement.
+- Terrain tile art is a first-pass structural placeholder, not final production art.
 - Collision is rectangular per terrain block.
 - No gameplay scoring yet.
 - Salvage and hazards are visual markers only.

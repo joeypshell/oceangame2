@@ -33,8 +33,8 @@ When the project identifies a sequence like:
 
 1. build Godot greybox
 2. validate map accessibility
-3. generate terrain modules
-4. place art over the greybox
+3. generate terrain tiles
+4. render terrain art from the greybox
 5. capture visual baselines
 
 create separate issues for the meaningful work items. Link the issue to the relevant docs, source maps, reference images, and validation tools.
