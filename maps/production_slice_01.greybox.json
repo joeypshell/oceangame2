@@ -21,16 +21,90 @@
         "bottom"
       ],
       "filled_unreachable_open_cells": 32,
+      "filled_open_cells_after_targeted_cleanup": 0,
+      "removed_solid_tips": [
+        {
+          "x": 2,
+          "y": 79
+        },
+        {
+          "x": 13,
+          "y": 66
+        },
+        {
+          "x": 29,
+          "y": 27
+        },
+        {
+          "x": 35,
+          "y": 32
+        },
+        {
+          "x": 35,
+          "y": 78
+        },
+        {
+          "x": 46,
+          "y": 35
+        },
+        {
+          "x": 58,
+          "y": 80
+        },
+        {
+          "x": 60,
+          "y": 78
+        },
+        {
+          "x": 64,
+          "y": 38
+        }
+      ],
+      "filled_open_notches": [
+        {
+          "x": 1,
+          "y": 22
+        },
+        {
+          "x": 1,
+          "y": 23
+        },
+        {
+          "x": 1,
+          "y": 24
+        },
+        {
+          "x": 1,
+          "y": 45
+        },
+        {
+          "x": 1,
+          "y": 80
+        },
+        {
+          "x": 28,
+          "y": 27
+        },
+        {
+          "x": 34,
+          "y": 33
+        },
+        {
+          "x": 59,
+          "y": 80
+        }
+      ],
       "notes": [
         "The top edge remains open around the source's water-surface shaft for boat entry.",
         "Left, right, and bottom crop edges are sealed so the player cannot leave the focused slice.",
         "Unreachable open pockets from the high-fidelity sketch conversion are filled as solid terrain.",
+        "Targeted cleanup removes isolated one-cell solid tips and fills one-cell open notches visible in the production-slice source/render review.",
         "The original full sketch map is left untouched for comparison."
       ]
     },
     "stats": {
       "cropped_solid_cells_before_cleanup": 3228,
-      "solid_cells_after_cleanup": 3346
+      "solid_cells_after_cleanup": 3345
     }
   },
   "units": {
@@ -472,19 +546,11 @@
       "h": 1
     },
     {
-      "id": "solid_y22_x00_00",
+      "id": "solid_y22_x00_14",
       "type": "solid",
       "x": 0,
       "y": 22,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "id": "solid_y22_x02_14",
-      "type": "solid",
-      "x": 2,
-      "y": 22,
-      "w": 13,
+      "w": 15,
       "h": 1
     },
     {
@@ -504,19 +570,11 @@
       "h": 1
     },
     {
-      "id": "solid_y23_x00_00",
+      "id": "solid_y23_x00_13",
       "type": "solid",
       "x": 0,
       "y": 23,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "id": "solid_y23_x02_13",
-      "type": "solid",
-      "x": 2,
-      "y": 23,
-      "w": 12,
+      "w": 14,
       "h": 1
     },
     {
@@ -536,19 +594,11 @@
       "h": 1
     },
     {
-      "id": "solid_y24_x00_00",
+      "id": "solid_y24_x00_05",
       "type": "solid",
       "x": 0,
       "y": 24,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "id": "solid_y24_x02_05",
-      "type": "solid",
-      "x": 2,
-      "y": 24,
-      "w": 4,
+      "w": 6,
       "h": 1
     },
     {
@@ -624,19 +674,11 @@
       "h": 1
     },
     {
-      "id": "solid_y27_x10_27",
+      "id": "solid_y27_x10_28",
       "type": "solid",
       "x": 10,
       "y": 27,
-      "w": 18,
-      "h": 1
-    },
-    {
-      "id": "solid_y27_x29_29",
-      "type": "solid",
-      "x": 29,
-      "y": 27,
-      "w": 1,
+      "w": 19,
       "h": 1
     },
     {
@@ -800,14 +842,6 @@
       "h": 1
     },
     {
-      "id": "solid_y32_x35_35",
-      "type": "solid",
-      "x": 35,
-      "y": 32,
-      "w": 1,
-      "h": 1
-    },
-    {
       "id": "solid_y32_x38_47",
       "type": "solid",
       "x": 38,
@@ -832,19 +866,11 @@
       "h": 1
     },
     {
-      "id": "solid_y33_x25_33",
+      "id": "solid_y33_x25_35",
       "type": "solid",
       "x": 25,
       "y": 33,
-      "w": 9,
-      "h": 1
-    },
-    {
-      "id": "solid_y33_x35_35",
-      "type": "solid",
-      "x": 35,
-      "y": 33,
-      "w": 1,
+      "w": 11,
       "h": 1
     },
     {
@@ -917,14 +943,6 @@
       "x": 25,
       "y": 35,
       "w": 19,
-      "h": 1
-    },
-    {
-      "id": "solid_y35_x46_46",
-      "type": "solid",
-      "x": 46,
-      "y": 35,
-      "w": 1,
       "h": 1
     },
     {
@@ -1048,11 +1066,11 @@
       "h": 1
     },
     {
-      "id": "solid_y38_x64_71",
+      "id": "solid_y38_x65_71",
       "type": "solid",
-      "x": 64,
+      "x": 65,
       "y": 38,
-      "w": 8,
+      "w": 7,
       "h": 1
     },
     {
@@ -1232,19 +1250,11 @@
       "h": 1
     },
     {
-      "id": "solid_y45_x00_00",
+      "id": "solid_y45_x00_35",
       "type": "solid",
       "x": 0,
       "y": 45,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "id": "solid_y45_x02_35",
-      "type": "solid",
-      "x": 2,
-      "y": 45,
-      "w": 34,
+      "w": 36,
       "h": 1
     },
     {
@@ -1720,11 +1730,11 @@
       "h": 1
     },
     {
-      "id": "solid_y66_x13_26",
+      "id": "solid_y66_x14_26",
       "type": "solid",
-      "x": 13,
+      "x": 14,
       "y": 66,
-      "w": 14,
+      "w": 13,
       "h": 1
     },
     {
@@ -2080,22 +2090,6 @@
       "h": 1
     },
     {
-      "id": "solid_y78_x35_35",
-      "type": "solid",
-      "x": 35,
-      "y": 78,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "id": "solid_y78_x60_60",
-      "type": "solid",
-      "x": 60,
-      "y": 78,
-      "w": 1,
-      "h": 1
-    },
-    {
       "id": "solid_y78_x71_71",
       "type": "solid",
       "x": 71,
@@ -2107,14 +2101,6 @@
       "id": "solid_y79_x00_00",
       "type": "solid",
       "x": 0,
-      "y": 79,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "id": "solid_y79_x02_02",
-      "type": "solid",
-      "x": 2,
       "y": 79,
       "w": 1,
       "h": 1
@@ -2144,19 +2130,11 @@
       "h": 1
     },
     {
-      "id": "solid_y80_x00_00",
+      "id": "solid_y80_x00_02",
       "type": "solid",
       "x": 0,
       "y": 80,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "id": "solid_y80_x02_02",
-      "type": "solid",
-      "x": 2,
-      "y": 80,
-      "w": 1,
+      "w": 3,
       "h": 1
     },
     {
@@ -2168,19 +2146,11 @@
       "h": 1
     },
     {
-      "id": "solid_y80_x58_58",
+      "id": "solid_y80_x59_65",
       "type": "solid",
-      "x": 58,
+      "x": 59,
       "y": 80,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "id": "solid_y80_x60_65",
-      "type": "solid",
-      "x": 60,
-      "y": 80,
-      "w": 6,
+      "w": 7,
       "h": 1
     },
     {

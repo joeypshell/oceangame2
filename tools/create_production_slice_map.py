@@ -17,6 +17,28 @@ TILE_SIZE = 32
 BOAT_ENTRY_SOURCE = (91, 0)
 BOAT_WIDTH = 8
 
+TARGETED_REMOVE_SOLID_CELLS = {
+    (29, 27),
+    (35, 32),
+    (46, 35),
+    (64, 38),
+    (13, 66),
+    (35, 78),
+    (60, 78),
+    (2, 79),
+    (58, 80),
+}
+TARGETED_FILL_OPEN_CELLS = {
+    (1, 22),
+    (1, 23),
+    (1, 24),
+    (28, 27),
+    (34, 33),
+    (1, 45),
+    (1, 80),
+    (59, 80),
+}
+
 
 def rect_cells(item: dict) -> set[tuple[int, int]]:
     return {
@@ -87,6 +109,26 @@ def fill_unreachable_open_cells(solid: set[tuple[int, int]], entry: tuple[int, i
     return len(unreachable)
 
 
+def apply_targeted_topology_cleanup(solid: set[tuple[int, int]]) -> dict:
+    removed_solid_tips: list[tuple[int, int]] = []
+    filled_open_notches: list[tuple[int, int]] = []
+
+    for cell in sorted(TARGETED_REMOVE_SOLID_CELLS):
+        if cell in solid:
+            solid.remove(cell)
+            removed_solid_tips.append(cell)
+
+    for cell in sorted(TARGETED_FILL_OPEN_CELLS):
+        if cell not in solid:
+            solid.add(cell)
+            filled_open_notches.append(cell)
+
+    return {
+        "removed_solid_tips": removed_solid_tips,
+        "filled_open_notches": filled_open_notches,
+    }
+
+
 def row_run_terrain(cells: set[tuple[int, int]]) -> list[dict]:
     terrain: list[dict] = []
     width = SLICE_BOUNDS["w"]
@@ -120,6 +162,8 @@ def build_map_data(source_map: dict) -> dict:
     before_cleanup_solid_count = len(solid)
     seal_slice_edges(solid)
     filled_open_cells = fill_unreachable_open_cells(solid, entry)
+    targeted_cleanup = apply_targeted_topology_cleanup(solid)
+    filled_after_targeted_cleanup = fill_unreachable_open_cells(solid, entry)
 
     return {
         "id": "production_slice_01",
@@ -136,10 +180,18 @@ def build_map_data(source_map: dict) -> dict:
             "cleanup": {
                 "sealed_edges": ["left", "right", "bottom"],
                 "filled_unreachable_open_cells": filled_open_cells,
+                "filled_open_cells_after_targeted_cleanup": filled_after_targeted_cleanup,
+                "removed_solid_tips": [
+                    {"x": x, "y": y} for x, y in targeted_cleanup["removed_solid_tips"]
+                ],
+                "filled_open_notches": [
+                    {"x": x, "y": y} for x, y in targeted_cleanup["filled_open_notches"]
+                ],
                 "notes": [
                     "The top edge remains open around the source's water-surface shaft for boat entry.",
                     "Left, right, and bottom crop edges are sealed so the player cannot leave the focused slice.",
                     "Unreachable open pockets from the high-fidelity sketch conversion are filled as solid terrain.",
+                    "Targeted cleanup removes isolated one-cell solid tips and fills one-cell open notches visible in the production-slice source/render review.",
                     "The original full sketch map is left untouched for comparison.",
                 ],
             },
