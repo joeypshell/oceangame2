@@ -108,6 +108,7 @@ Run these after relevant changes:
 python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
 python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
 python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --import
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1
 & 'C:\Program Files\Git\cmd\git.exe' diff --check
 ```

@@ -57,6 +57,22 @@ jobs:
           sudo mv "godot-bin/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64" /usr/local/bin/godot
           godot --headless --version
 
+      - name: Import Godot assets
+        run: |
+          set +e
+          godot --headless --path . --import 2>&1 | tee godot-import.log
+          godot_status=${PIPESTATUS[0]}
+          set -e
+
+          if [ "${godot_status}" -ne 0 ]; then
+            exit "${godot_status}"
+          fi
+
+          if grep -E "SCRIPT ERROR|ERROR:" godot-import.log; then
+            echo "Godot reported errors during asset import."
+            exit 1
+          fi
+
       - name: Check whitespace
         run: git diff --check
 
