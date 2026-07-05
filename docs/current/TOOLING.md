@@ -16,13 +16,21 @@ Run the current project scene locally:
 .\tools\open_godot_project.ps1 -Run
 ```
 
+The current default preview map is `maps/cave_salvage_organic_01.greybox.json`.
+
 Run with the source map/grid overlay visible:
 
 ```powershell
 .\tools\open_godot_project.ps1 -Run -DebugOverlay
 ```
 
-Run the organic salvage map pass locally:
+Run the original rectangular salvage map for comparison:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -OriginalMap
+```
+
+Run the organic salvage map explicitly:
 
 ```powershell
 .\tools\open_godot_project.ps1 -Run -OrganicMap
@@ -103,8 +111,16 @@ Capture the current named camera test views:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-camera-tests
 ```
 
-This reads `camera_tests` from `maps/cave_salvage_test_01.greybox.json` and writes PNGs to `visual_captures/latest/`.
+This reads `camera_tests` from the default preview map, currently `maps/cave_salvage_organic_01.greybox.json`, and writes PNGs to `visual_captures/latest/`.
 Normal gameplay and capture views hide the greybox source grid. Add `--show-debug-overlay` when you specifically need the source TileMap/grid overlay for map debugging.
+
+Capture the original rectangular salvage map comparison views:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-original-map
+```
+
+This reads `camera_tests` from `maps/cave_salvage_test_01.greybox.json` and writes PNGs to `visual_captures/original_salvage/`.
 
 Capture the organic tileset stress-test views:
 

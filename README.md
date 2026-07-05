@@ -42,12 +42,18 @@ Build a small side-view salvage game that proves:
 
 The current primary direction is [visual_direction_b_modular_cave.png](references/visual/visual_direction_b_modular_cave.png): clean side-view underwater cave terrain built from a grid-aligned TileMap terrain renderer, with larger generated modules reserved for background silhouettes and landmarks.
 
-The first greybox source map is [cave_salvage_test_01.greybox.json](maps/cave_salvage_test_01.greybox.json), with a generated preview at [cave_salvage_test_01.svg](references/greybox/cave_salvage_test_01.svg).
+The original greybox source map is [cave_salvage_test_01.greybox.json](maps/cave_salvage_test_01.greybox.json), with a generated preview at [cave_salvage_test_01.svg](references/greybox/cave_salvage_test_01.svg). It remains available as a comparison map.
 
-The first organic playable salvage map source pass is [cave_salvage_organic_01.greybox.json](maps/cave_salvage_organic_01.greybox.json), with a generated preview at [cave_salvage_organic_01.svg](references/greybox/cave_salvage_organic_01.svg). Run it locally with:
+The current default preview map is the first organic playable salvage map source pass: [cave_salvage_organic_01.greybox.json](maps/cave_salvage_organic_01.greybox.json), with a generated preview at [cave_salvage_organic_01.svg](references/greybox/cave_salvage_organic_01.svg). Run it locally with:
 
 ```powershell
-.\tools\open_godot_project.ps1 -Run -OrganicMap
+.\tools\open_godot_project.ps1 -Run
+```
+
+Run the original comparison map locally with:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -OriginalMap
 ```
 
 The organic tileset stress-test map is [cave_tileset_test_01.greybox.json](maps/cave_tileset_test_01.greybox.json), with a generated preview at [cave_tileset_test_01.svg](references/greybox/cave_tileset_test_01.svg).

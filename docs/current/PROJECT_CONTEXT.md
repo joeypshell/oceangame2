@@ -22,8 +22,8 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Public preview: `https://joeypshell.github.io/oceangame2/`
 - Engine: Godot 4.7, GDScript
 - Main scene: `scenes/main/Main.tscn`
-- Main map source: `maps/cave_salvage_test_01.greybox.json`
-- Organic playable map source: `maps/cave_salvage_organic_01.greybox.json`
+- Default preview map source: `maps/cave_salvage_organic_01.greybox.json`
+- Original comparison map source: `maps/cave_salvage_test_01.greybox.json`
 - Organic tileset stress-test map: `maps/cave_tileset_test_01.greybox.json`
 - Current terrain atlas: `assets/terrain_tiles/cave_tileset_v1.png`
 - Web export workflow: `.github/workflows/godot-web-export.yml`
@@ -72,8 +72,8 @@ Current terrain renderer:
 Current map-loading helper:
 
 - Open the editor: `.\tools\open_godot_project.ps1`
-- Run the default map locally: `.\tools\open_godot_project.ps1 -Run`
-- Run the organic salvage map locally: `.\tools\open_godot_project.ps1 -Run -OrganicMap`
+- Run the default organic map locally: `.\tools\open_godot_project.ps1 -Run`
+- Run the original comparison map locally: `.\tools\open_godot_project.ps1 -Run -OriginalMap`
 
 ## Web Preview Status
 
@@ -104,6 +104,7 @@ Run these after relevant changes:
 
 ```powershell
 python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
+python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
 python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1
 & 'C:\Program Files\Git\cmd\git.exe' diff --check
@@ -170,8 +171,8 @@ Recent important commits:
 ## Known Limits
 
 - Terrain art is still first-pass structural placeholder art.
-- The default map is mostly rectilinear compared with the eventual organic cave goal.
-- `cave_salvage_organic_01` is a first playable organic source-map pass, but it is not yet promoted to the default public preview.
+- `cave_salvage_organic_01` is the default preview map, but it is still a first playable organic source-map pass.
+- `cave_salvage_test_01` is preserved as the original rectangular comparison map.
 - Collision is rectangular per terrain block.
 - Salvage and hazards are visual markers only.
 - There is no scoring, inventory, health, oxygen, extraction loop, or real enemy behavior yet.
@@ -182,10 +183,9 @@ Recent important commits:
 
 The most logical next work is probably one of:
 
-1. Implement issue #14 to decide whether `cave_salvage_organic_01` becomes the default preview map or remains a selectable comparison map.
-2. Implement issue #15 to make visual review easier with map/build context and stable framing.
-3. Implement issue #16 for the first tiny salvage collection/extraction loop.
-4. Create a small backlog expansion pass so the repo returns closer to about 10 open actionable issues.
+1. Implement issue #15 to make visual review easier with map/build context and stable framing.
+2. Implement issue #16 for the first tiny salvage collection/extraction loop.
+3. Create a small backlog expansion pass so the repo returns closer to about 10 open actionable issues.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 

@@ -6,20 +6,20 @@ The current project is a minimal Godot 4.7 greybox for testing the side-view und
 
 ## Source Of Truth
 
-The authored map source is:
+The current default preview map source is:
 
 ```text
-maps/cave_salvage_test_01.greybox.json
+maps/cave_salvage_organic_01.greybox.json
 ```
 
 The Godot scene reads this JSON at runtime. Do not hand-tune in-engine terrain topology without updating the source map.
 
 Additional current map sources:
 
-- `maps/cave_salvage_organic_01.greybox.json`
-  - First playable organic salvage map pass.
-  - Less rectangular than the default map, with carved pockets, ledges, a lower return loop, and a right-side salvage destination.
-  - Load locally with `.\tools\open_godot_project.ps1 -Run -OrganicMap`.
+- `maps/cave_salvage_test_01.greybox.json`
+  - Original rectangular salvage test map.
+  - Preserved for comparison with the current organic default.
+  - Load locally with `.\tools\open_godot_project.ps1 -Run -OriginalMap`.
 - `maps/cave_tileset_test_01.greybox.json`
   - Organic stress-test map for TileSet terrain rendering.
   - Used to exercise jagged edges, winding tunnels, pillars, isolated cells, and pockets.

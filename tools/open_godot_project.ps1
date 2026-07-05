@@ -3,6 +3,7 @@ param(
     [string]$MapPath = "",
     [switch]$Run,
     [switch]$DebugOverlay,
+    [switch]$OriginalMap,
     [switch]$OrganicMap,
     [switch]$CheckOnly
 )
@@ -42,6 +43,12 @@ $GodotExe = Resolve-GodotExecutable -RequestedPath $GodotPath
 
 if ($Run) {
     $GodotArgs = @("--path", $ProjectRoot)
+    if ($OriginalMap -and $OrganicMap) {
+        throw "Use either -OriginalMap or -OrganicMap, not both."
+    }
+    if ($OriginalMap) {
+        $MapPath = "res://maps/cave_salvage_test_01.greybox.json"
+    }
     if ($OrganicMap) {
         $MapPath = "res://maps/cave_salvage_organic_01.greybox.json"
     }

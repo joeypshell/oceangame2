@@ -2,11 +2,13 @@ extends Node2D
 
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
-const DEFAULT_MAP_PATH := "res://maps/cave_salvage_test_01.greybox.json"
+const DEFAULT_MAP_PATH := "res://maps/cave_salvage_organic_01.greybox.json"
+const ORIGINAL_MAP_PATH := "res://maps/cave_salvage_test_01.greybox.json"
 const TILESET_TEST_MAP_PATH := "res://maps/cave_tileset_test_01.greybox.json"
 const ORGANIC_MAP_PATH := "res://maps/cave_salvage_organic_01.greybox.json"
 const SCREENSHOT_PATH := "res://visual_baselines/001_greybox_in_engine.png"
 const CAMERA_TEST_CAPTURE_DIR := "res://visual_captures/latest"
+const ORIGINAL_CAPTURE_DIR := "res://visual_captures/original_salvage"
 const TILESET_TEST_CAPTURE_DIR := "res://visual_captures/tileset_test"
 const ORGANIC_CAPTURE_DIR := "res://visual_captures/organic_salvage"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
@@ -15,12 +17,15 @@ const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 func _ready() -> void:
 	var user_args := OS.get_cmdline_user_args()
 	var engine_args := OS.get_cmdline_args()
+	var capture_original_map := _has_arg(user_args, engine_args, "--capture-original-map")
 	var capture_tileset_test := _has_arg(user_args, engine_args, "--capture-tileset-test")
 	var capture_organic_map := _has_arg(user_args, engine_args, "--capture-organic-map")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
 
 	var world := WORLD_SCENE.instantiate()
-	if capture_tileset_test:
+	if capture_original_map:
+		world.map_path = ORIGINAL_MAP_PATH
+	elif capture_tileset_test:
 		world.map_path = TILESET_TEST_MAP_PATH
 	elif capture_organic_map:
 		world.map_path = ORGANIC_MAP_PATH
@@ -43,6 +48,8 @@ func _ready() -> void:
 		_capture_screenshot_and_quit()
 	elif _has_arg(user_args, engine_args, "--capture-camera-tests"):
 		_capture_camera_tests_and_quit(world, CAMERA_TEST_CAPTURE_DIR)
+	elif capture_original_map:
+		_capture_camera_tests_and_quit(world, ORIGINAL_CAPTURE_DIR)
 	elif capture_tileset_test:
 		_capture_camera_tests_and_quit(world, TILESET_TEST_CAPTURE_DIR)
 	elif capture_organic_map:
