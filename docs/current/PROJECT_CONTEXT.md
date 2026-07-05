@@ -124,6 +124,7 @@ python tools/check_map_parity.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --import
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-loop
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-route
 & 'C:\Program Files\Git\cmd\git.exe' diff --check
 ```
 
@@ -167,7 +168,7 @@ Current issue state as of 2026-07-05:
 - Open: #28 `Improve full-sketch conversion fidelity tooling`
 - Open: #27 `Refine salvage and object semantics in map JSON`
 - Open: #26 `Add first scoped hazard interaction`
-- Open: #25 `Tune player swim feel and collision clearance for production slice`
+- Closed: #25 player swim feel and collision clearance for production slice
 - Closed: #24 production slice preview shortcut and capture route
 - Closed: #23 first production slice JSON from selected full sketch region
 - Closed: #22 boat and top-water spawn/extraction model
@@ -195,6 +196,7 @@ Current issue state as of 2026-07-05:
 
 Recent important commits:
 
+- `53438f0` Tune production slice swim clearance
 - `bd77145` Add production slice preview shortcut
 - `a55e3de` Add first production slice map
 - `6e18c02` Add boat spawn extraction model
@@ -222,7 +224,7 @@ Recent important commits:
 - `cave_salvage_test_01` is preserved as the original rectangular comparison map.
 - `full_cave_sketch_01` is a topology-only draft conversion from a supplied full-map sketch; icons are intentionally ignored and the top-water `boat_spawn` is present for entry/extraction validation.
 - `production_slice_01` is the first focused slice from the full sketch's top-center entry hub; it preserves the selected topology, seals left/right/bottom crop edges, fills unreachable conversion pockets, and adds authored boat spawn, salvage, hazards, route markers, and camera tests.
-- Collision is rectangular per terrain block.
+- Collision is rectangular per terrain block; player collision is tuned smaller than the placeholder body art for production-slice clearance.
 - Salvage has a minimal collect-return-complete-reset loop.
 - Hazards are visual markers only.
 - There is no health, oxygen, inventory screen, upgrade economy, or real enemy behavior yet.
@@ -240,7 +242,7 @@ w: 72
 h: 84
 ```
 
-After #24, the next logical work is #25 to tune player swim feel and collision clearance against `production_slice_01`.
+After #25, the next logical work is #26 to add the first scoped hazard interaction against `production_slice_01`.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 
