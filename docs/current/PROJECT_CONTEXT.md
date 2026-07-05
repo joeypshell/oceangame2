@@ -168,7 +168,7 @@ Current issue state as of 2026-07-05:
 - Open: #27 `Refine salvage and object semantics in map JSON`
 - Open: #26 `Add first scoped hazard interaction`
 - Open: #25 `Tune player swim feel and collision clearance for production slice`
-- Open: #24 `Add production slice preview shortcut and capture route`
+- Closed: #24 production slice preview shortcut and capture route
 - Closed: #23 first production slice JSON from selected full sketch region
 - Closed: #22 boat and top-water spawn/extraction model
 - Closed: #21 full sketch topology evaluation and first production slice selection
@@ -195,6 +195,7 @@ Current issue state as of 2026-07-05:
 
 Recent important commits:
 
+- `bd77145` Add production slice preview shortcut
 - `a55e3de` Add first production slice map
 - `6e18c02` Add boat spawn extraction model
 - `44e758f` Evaluate full sketch production slice
