@@ -25,7 +25,7 @@ The map tests:
 
 The player starts at the left extraction zone. From there, they can move upward toward the left shelf, push into the central swim corridor, collect salvage on the central shelf, then choose whether to continue to the right-side salvage or drop into the lower return route.
 
-The central arch and bottom route are meant to test whether the map feels like swimming through a cave instead of jumping between platformer islands.
+The central arch and bottom route are meant to test whether the map feels like swimming through a cave instead of jumping between platformer islands. The arch is raised enough to keep the lower return route connected.
 
 ## Review Questions
 
@@ -38,3 +38,10 @@ The central arch and bottom route are meant to test whether the map feels like s
 ## Next Step
 
 After review, convert this source into the first Godot `TileMapLayer` greybox scene. The scene should preserve the JSON topology exactly before any visual terrain modules are added.
+
+Run these checks after any map edit:
+
+```bash
+python tools/render_greybox_map.py maps/cave_salvage_test_01.greybox.json references/greybox/cave_salvage_test_01.svg
+python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
+```

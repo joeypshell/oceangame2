@@ -29,8 +29,8 @@
 <rect x="2144" y="160" width="64" height="128" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="160" y="1056" width="576" height="192" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="160" y="672" width="480" height="128" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
-<rect x="896" y="896" width="160" height="352" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
-<rect x="1440" y="896" width="160" height="352" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="896" y="896" width="160" height="160" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="1440" y="896" width="160" height="160" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="896" y="800" width="704" height="96" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="992" y="640" width="640" height="128" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="1856" y="384" width="544" height="160" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>

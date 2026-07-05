@@ -40,6 +40,13 @@ The current primary direction is [visual_direction_b_modular_cave.png](reference
 
 The first greybox source map is [cave_salvage_test_01.greybox.json](maps/cave_salvage_test_01.greybox.json), with a generated preview at [cave_salvage_test_01.svg](references/greybox/cave_salvage_test_01.svg).
 
+Regenerate and validate the greybox preview with:
+
+```bash
+python tools/render_greybox_map.py maps/cave_salvage_test_01.greybox.json references/greybox/cave_salvage_test_01.svg
+python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
+```
+
 ## First Success Condition
 
 The first prototype succeeds when a small Godot scene can be captured as an approved baseline screenshot, then one targeted visual change can be made without damaging unrelated visuals.
