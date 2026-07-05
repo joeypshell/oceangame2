@@ -235,6 +235,14 @@ Capture the first production slice:
 
 This reads `camera_tests` from `maps/production_slice_01.greybox.json` and writes PNGs to `visual_captures/production_slice_01/`.
 
+Generate the production slice source/render/collision review sheet:
+
+```bash
+python tools/render_map_review.py maps/production_slice_01.greybox.json references/greybox/production_slice_01_source_render_collision_review.png --godot-capture visual_captures/production_slice_01/production_slice_overview.png
+```
+
+This writes `references/greybox/production_slice_01_source_render_collision_review.png`, comparing authored JSON topology, expected collision rectangles from the JSON terrain source, and the Godot rendered overview capture. Run `python tools/check_map_parity.py maps/production_slice_01.greybox.json` alongside it to verify Godot runtime terrain/collision cells match the source.
+
 Regenerate the cave tileset and organic stress-test map:
 
 ```bash
