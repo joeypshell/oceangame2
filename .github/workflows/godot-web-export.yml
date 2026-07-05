@@ -13,6 +13,7 @@ on:
       - "scenes/**"
       - "scripts/**"
       - "tools/check_web_preview.cjs"
+      - "tools/write_build_info.py"
       - "tools/write_web_export_preset.py"
 
 permissions:
@@ -57,6 +58,9 @@ jobs:
           mkdir -p "${HOME}/.local/share/godot/export_templates/${EXPORT_TEMPLATE_ID}"
           unzip -q export_templates.tpz -d export_templates
           cp -R export_templates/templates/* "${HOME}/.local/share/godot/export_templates/${EXPORT_TEMPLATE_ID}/"
+
+      - name: Write build info
+        run: python tools/write_build_info.py --sha "${GITHUB_SHA}" --ref "${GITHUB_REF_NAME}"
 
       - name: Generate web export preset
         run: python tools/write_web_export_preset.py

@@ -10,6 +10,8 @@
 
 These captures are not automatically approved baselines. They are review artifacts used to compare the current in-engine result against `visual_baselines/` and the art direction docs.
 
+Preview captures include the compact review overlay with map id, build label, and salvage progress.
+
 Regenerate named camera captures with:
 
 ```powershell

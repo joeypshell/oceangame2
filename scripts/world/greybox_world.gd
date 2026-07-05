@@ -44,10 +44,17 @@ const NO_SPECIAL_COORD := Vector2i(-1, -1)
 var tile_size := 32
 var map_tile_size := Vector2i.ZERO
 var map_pixel_size := Vector2.ZERO
+var map_id := ""
+var map_version := ""
 var spawn_position := Vector2.ZERO
 var camera_tests: Array = []
 
 var _built := false
+var _map_data := {}
+var _salvage_entities: Array = []
+var _extraction_zones: Array = []
+var _collected_salvage := {}
+var _salvage_nodes_by_id := {}
 var _background_root: Node2D
 var _solid_layer: TileMapLayer
 var _terrain_layer: TileMapLayer
@@ -68,10 +75,17 @@ func load_greybox() -> void:
 	if map_data.is_empty():
 		return
 
+	_map_data = map_data
+	map_id = str(map_data.get("id", "unknown_map"))
+	map_version = _display_version(map_data.get("version", ""))
 	tile_size = int(map_data["units"]["tile_size_px"])
 	map_tile_size = Vector2i(int(map_data["units"]["width_tiles"]), int(map_data["units"]["height_tiles"]))
 	map_pixel_size = Vector2(map_tile_size * tile_size)
 	camera_tests = map_data.get("camera_tests", [])
+	_salvage_entities = []
+	_extraction_zones = []
+	_collected_salvage = {}
+	_salvage_nodes_by_id = {}
 
 	_background_root = Node2D.new()
 	_background_root.name = "BackgroundArt"
@@ -92,6 +106,82 @@ func load_greybox() -> void:
 	_build_zones(map_data.get("zones", []))
 	_build_entities(map_data.get("entities", []))
 	queue_redraw()
+
+
+func get_map_label() -> String:
+	if map_version.is_empty():
+		return map_id
+	return "%s v%s" % [map_id, map_version]
+
+
+func _display_version(value) -> String:
+	if typeof(value) == TYPE_FLOAT and is_equal_approx(value, float(int(value))):
+		return str(int(value))
+	return str(value)
+
+
+func get_total_salvage_count() -> int:
+	return _salvage_entities.size()
+
+
+func get_salvage_centers() -> Array:
+	var centers := []
+	for entity in _salvage_entities:
+		centers.append({
+			"id": str(entity.get("id", "salvage")),
+			"center": _entity_center(entity),
+		})
+	return centers
+
+
+func get_extraction_center() -> Vector2:
+	if _extraction_zones.is_empty():
+		return spawn_position
+	return _rect_center(_extraction_zones[0])
+
+
+func collect_salvage_near(position: Vector2, radius_px: float) -> String:
+	for entity in _salvage_entities:
+		var salvage_id := str(entity.get("id", "salvage"))
+		if _collected_salvage.get(salvage_id, false):
+			continue
+		if position.distance_to(_entity_center(entity)) > radius_px:
+			continue
+
+		_collected_salvage[salvage_id] = true
+		if _salvage_nodes_by_id.has(salvage_id):
+			var salvage_node := _salvage_nodes_by_id[salvage_id] as Node2D
+			salvage_node.visible = false
+		return salvage_id
+	return ""
+
+
+func reset_salvage() -> void:
+	_collected_salvage = {}
+	for salvage_id in _salvage_nodes_by_id.keys():
+		var salvage_node := _salvage_nodes_by_id[salvage_id] as Node2D
+		salvage_node.visible = true
+
+
+func is_inside_extraction(position: Vector2) -> bool:
+	for zone in _extraction_zones:
+		if _rect_from_item(zone).has_point(position):
+			return true
+	return false
+
+
+func get_runtime_parity_report() -> Dictionary:
+	return {
+		"map_path": map_path,
+		"map_id": map_id,
+		"map_version": map_version,
+		"tile_size_px": tile_size,
+		"width_tiles": map_tile_size.x,
+		"height_tiles": map_tile_size.y,
+		"terrain_cells": _sorted_cell_arrays(_terrain_layer.get_used_cells()),
+		"collision_rects": _collision_rects_from_runtime(),
+		"collision_cells": _sorted_cell_arrays(_collision_cells_from_runtime()),
+	}
 
 
 func _draw() -> void:
@@ -284,6 +374,55 @@ func _build_collision(terrain_items: Array) -> void:
 		_collision_root.add_child(body)
 
 
+func _collision_rects_from_runtime() -> Array:
+	var rects := []
+	if _collision_root == null:
+		return rects
+
+	for body_node in _collision_root.get_children():
+		if not body_node is StaticBody2D:
+			continue
+		var body := body_node as StaticBody2D
+		for shape_node in body.get_children():
+			if not shape_node is CollisionShape2D:
+				continue
+			var collision := shape_node as CollisionShape2D
+			if not collision.shape is RectangleShape2D:
+				continue
+			var rectangle := collision.shape as RectangleShape2D
+			var size := rectangle.size
+			var center := body.position + collision.position
+			rects.append({
+				"id": body.name,
+				"x": int(round((center.x - size.x * 0.5) / tile_size)),
+				"y": int(round((center.y - size.y * 0.5) / tile_size)),
+				"w": int(round(size.x / tile_size)),
+				"h": int(round(size.y / tile_size)),
+			})
+
+	rects.sort_custom(func(a, b): return int(a["x"]) < int(b["x"]) if int(a["y"]) == int(b["y"]) else int(a["y"]) < int(b["y"]))
+	return rects
+
+
+func _collision_cells_from_runtime() -> Array:
+	var cells := []
+	for rect in _collision_rects_from_runtime():
+		for y in range(int(rect["y"]), int(rect["y"]) + int(rect["h"])):
+			for x in range(int(rect["x"]), int(rect["x"]) + int(rect["w"])):
+				cells.append(Vector2i(x, y))
+	return cells
+
+
+func _sorted_cell_arrays(cells: Array) -> Array:
+	var sorted_cells := cells.duplicate()
+	sorted_cells.sort_custom(func(a, b): return a.x < b.x if a.y == b.y else a.y < b.y)
+
+	var output := []
+	for cell in sorted_cells:
+		output.append([cell.x, cell.y])
+	return output
+
+
 func _build_background(items: Array) -> void:
 	for item in items:
 		var poly := _rect_polygon(item, COLOR_BACKGROUND)
@@ -299,6 +438,7 @@ func _build_background(items: Array) -> void:
 func _build_zones(zones: Array) -> void:
 	for zone in zones:
 		if zone.get("type", "") == "base":
+			_extraction_zones.append(zone)
 			var base := _rect_polygon(zone, Color(1.0, 0.92, 0.68, 0.30))
 			base.name = zone.get("id", "Base")
 			base.z_index = 5
@@ -319,7 +459,9 @@ func _build_entities(entities: Array) -> void:
 			spawn_position = center
 			_add_marker("PlayerStart", center, COLOR_MARKER, 28.0)
 		elif entity_type == "salvage":
-			_add_diamond(entity.get("id", "Salvage"), center, COLOR_SALVAGE, 16.0)
+			_salvage_entities.append(entity)
+			var salvage_id := str(entity.get("id", "Salvage"))
+			_salvage_nodes_by_id[salvage_id] = _add_diamond(salvage_id, center, COLOR_SALVAGE, 16.0)
 		elif entity_type == "hazard":
 			_add_marker(entity.get("id", "Hazard"), center, COLOR_HAZARD, 18.0)
 
@@ -391,7 +533,7 @@ func _packaged_texture(texture_path: String) -> Texture2D:
 			return null
 
 
-func _add_marker(marker_name: String, center: Vector2, color: Color, radius: float) -> void:
+func _add_marker(marker_name: String, center: Vector2, color: Color, radius: float) -> Polygon2D:
 	var poly := Polygon2D.new()
 	poly.name = marker_name
 	poly.position = center
@@ -403,9 +545,10 @@ func _add_marker(marker_name: String, center: Vector2, color: Color, radius: flo
 		Vector2(-radius, radius),
 	])
 	_marker_root.add_child(poly)
+	return poly
 
 
-func _add_diamond(marker_name: String, center: Vector2, color: Color, radius: float) -> void:
+func _add_diamond(marker_name: String, center: Vector2, color: Color, radius: float) -> Polygon2D:
 	var poly := Polygon2D.new()
 	poly.name = marker_name
 	poly.position = center
@@ -417,6 +560,7 @@ func _add_diamond(marker_name: String, center: Vector2, color: Color, radius: fl
 		Vector2(-radius, 0),
 	])
 	_marker_root.add_child(poly)
+	return poly
 
 
 func _rect_center(item: Dictionary) -> Vector2:
@@ -428,6 +572,13 @@ func _rect_center(item: Dictionary) -> Vector2:
 
 func _rect_size(item: Dictionary) -> Vector2:
 	return Vector2(float(item["w"]) * tile_size, float(item["h"]) * tile_size)
+
+
+func _rect_from_item(item: Dictionary) -> Rect2:
+	return Rect2(
+		Vector2(float(item["x"]) * tile_size, float(item["y"]) * tile_size),
+		_rect_size(item)
+	)
 
 
 func _entity_center(item: Dictionary) -> Vector2:

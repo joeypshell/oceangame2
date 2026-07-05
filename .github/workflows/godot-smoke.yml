@@ -81,6 +81,10 @@ jobs:
           python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
           python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
           python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
+          python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
+
+      - name: Check Godot map parity
+        run: python tools/check_map_parity.py
 
       - name: Run Godot headless smoke check
         run: |
@@ -95,6 +99,22 @@ jobs:
 
           if grep -E "SCRIPT ERROR|ERROR:" godot-smoke.log; then
             echo "Godot reported errors during headless smoke check."
+            exit 1
+          fi
+
+      - name: Run salvage loop smoke check
+        run: |
+          set +e
+          godot --headless --path . --quit-after 1 --smoke-salvage-loop 2>&1 | tee godot-salvage-loop.log
+          godot_status=${PIPESTATUS[0]}
+          set -e
+
+          if [ "${godot_status}" -ne 0 ]; then
+            exit "${godot_status}"
+          fi
+
+          if grep -E "SCRIPT ERROR|ERROR:" godot-salvage-loop.log; then
+            echo "Godot reported errors during salvage loop smoke check."
             exit 1
           fi
 

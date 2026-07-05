@@ -69,6 +69,18 @@ python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
 python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
 ```
 
+Check that Godot's runtime terrain and collision match the authored JSON source:
+
+```bash
+python tools/check_map_parity.py
+```
+
+Check one map only:
+
+```bash
+python tools/check_map_parity.py maps/cave_salvage_organic_01.greybox.json
+```
+
 Regenerate the SVG preview from source data:
 
 ```bash
@@ -99,9 +111,20 @@ Run the Godot headless launch smoke check on this Windows setup:
 ```powershell
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --import
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-loop
 ```
 
 The import command is important on a fresh clone or CI checkout because `.godot/` and `*.import` files are intentionally untracked. The headless command can exit `0` even when script errors appear in output, so treat `SCRIPT ERROR` or `ERROR:` lines as failures.
+
+The salvage-loop smoke check loads the default organic map, collects all authored salvage through the same runtime methods used in play, returns to extraction, confirms completion, resets, and exits.
+
+Generate optional local build metadata for the preview overlay:
+
+```bash
+python tools/write_build_info.py
+```
+
+This writes ignored `build_info.json`. The web export workflow generates that file from `GITHUB_SHA` before export, so the public preview can identify the deployed commit.
 
 Build a local Web export preview:
 

@@ -67,8 +67,11 @@ Current terrain renderer:
 - Builds `CaveTerrainTileMapLayer` from solid cells in the JSON map.
 - Selects 32x32 terrain atlas tiles from neighbor masks.
 - Keeps collision generated from JSON terrain rectangles.
+- Exposes a headless parity report so tooling can compare Godot terrain/collision cells with the JSON source.
 - Hides the source grid in normal preview mode.
 - Supports `--show-debug-overlay` for map debugging.
+
+The main scene also shows a compact preview overlay with map id, build label, and salvage progress. The minimal gameplay loop lets the player collect authored salvage, return to the extraction zone to complete the run, and press `R` to reset. Hazards are still visual-only.
 
 Current map-loading helper:
 
@@ -111,8 +114,10 @@ python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
 python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
 python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
 python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
+python tools/check_map_parity.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --import
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-loop
 & 'C:\Program Files\Git\cmd\git.exe' diff --check
 ```
 
@@ -196,18 +201,15 @@ Recent important commits:
 - `cave_salvage_test_01` is preserved as the original rectangular comparison map.
 - `full_cave_sketch_01` is a topology-only draft conversion from a supplied full-map sketch; icons are intentionally ignored and the spawn is temporary.
 - Collision is rectangular per terrain block.
-- Salvage and hazards are visual markers only.
-- There is no scoring, inventory, health, oxygen, extraction loop, or real enemy behavior yet.
+- Salvage has a minimal collect-return-complete-reset loop.
+- Hazards are visual markers only.
+- There is no health, oxygen, inventory screen, upgrade economy, or real enemy behavior yet.
 - Background art is still rough and secondary to proving terrain readability.
 - The source map/grid can be shown with `--show-debug-overlay`, but normal preview should be terrain-first.
 
 ## Recommended Next Work
 
-The most logical next work is probably one of:
-
-1. Implement issue #15 to make visual review easier with map/build context and stable framing.
-2. Implement issue #16 for the first tiny salvage collection/extraction loop.
-3. Create a small backlog expansion pass so the repo returns closer to about 10 open actionable issues.
+The most logical next work is probably a small backlog expansion pass so the repo returns closer to about 10 open actionable issues, then a focused evaluation pass on whether the current organic map and full-sketch conversion are good enough to drive the next production map slice.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 

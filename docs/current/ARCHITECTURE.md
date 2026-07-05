@@ -55,12 +55,15 @@ Additional current map sources:
   - Applies camera bounds from the world map size.
   - Supports visual capture flags for the baseline screenshot and named camera-test captures.
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
+  - Shows compact preview review context and salvage progress.
+  - Supports headless map parity and salvage-loop smoke checks.
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.
   - Builds the runtime source TileMapLayer, cave terrain TileMapLayer, background art, and collision.
   - Keeps visuals tied to source topology.
   - Exposes `camera_tests` from the source map for repeatable visual captures.
+  - Exposes runtime terrain/collision parity data and authored salvage/extraction positions.
 
 - `scripts/player/player_controller.gd`
   - Basic side-view swimming controller.
@@ -81,6 +84,6 @@ Art placement must not create, remove, or move collision.
 
 - Terrain tile art is a first-pass structural placeholder, not final production art.
 - Collision is rectangular per terrain block.
-- No gameplay scoring yet.
-- Salvage and hazards are visual markers only.
+- Minimal salvage collection, extraction completion, and restart loop exists.
+- Hazards are visual markers only.
 - First screenshot baseline is committed at `visual_baselines/001_greybox_in_engine.png`.

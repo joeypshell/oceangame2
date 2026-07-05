@@ -13,7 +13,19 @@ const ORIGINAL_CAPTURE_DIR := "res://visual_captures/original_salvage"
 const TILESET_TEST_CAPTURE_DIR := "res://visual_captures/tileset_test"
 const ORGANIC_CAPTURE_DIR := "res://visual_captures/organic_salvage"
 const FULL_SKETCH_CAPTURE_DIR := "res://visual_captures/full_cave_sketch"
+const BUILD_INFO_PATH := "res://build_info.json"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
+const SALVAGE_COLLECTION_RADIUS := 34.0
+
+var _world
+var _player
+var _review_label: Label
+var _status_label: Label
+var _held_salvage := 0
+var _banked_salvage := 0
+var _total_salvage := 0
+var _run_complete := false
+var _last_status_note := ""
 
 
 func _ready() -> void:
@@ -23,9 +35,13 @@ func _ready() -> void:
 	var capture_tileset_test := _has_arg(user_args, engine_args, "--capture-tileset-test")
 	var capture_organic_map := _has_arg(user_args, engine_args, "--capture-organic-map")
 	var capture_full_sketch_map := _has_arg(user_args, engine_args, "--capture-full-sketch-map")
+	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
+	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
+	var parity_output_path := _arg_value(user_args, engine_args, "--parity-output")
 
 	var world := WORLD_SCENE.instantiate()
+	_world = world
 	if capture_original_map:
 		world.map_path = ORIGINAL_MAP_PATH
 	elif capture_tileset_test:
@@ -42,12 +58,27 @@ func _ready() -> void:
 	add_child(world)
 	world.load_greybox()
 
+	if check_map_parity:
+		_write_parity_report_and_quit(world, parity_output_path)
+		return
+
 	var player := PLAYER_SCENE.instantiate()
+	_player = player
 	player.position = world.spawn_position
 	add_child(player)
 
 	if player.has_method("set_camera_limits"):
 		player.set_camera_limits(Rect2(Vector2.ZERO, world.map_pixel_size))
+	if player.has_method("snap_camera"):
+		player.snap_camera()
+
+	_total_salvage = world.get_total_salvage_count()
+	_create_review_overlay(world)
+	_update_status_label()
+
+	if smoke_salvage_loop:
+		_smoke_salvage_loop_and_quit()
+		return
 
 	if _has_arg(user_args, engine_args, "--capture-greybox-screenshot"):
 		_capture_screenshot_and_quit()
@@ -61,6 +92,182 @@ func _ready() -> void:
 		_capture_camera_tests_and_quit(world, ORGANIC_CAPTURE_DIR)
 	elif capture_full_sketch_map:
 		_capture_camera_tests_and_quit(world, FULL_SKETCH_CAPTURE_DIR)
+
+
+func _process(_delta: float) -> void:
+	if _world == null or _player == null:
+		return
+	if _run_complete:
+		_update_status_label()
+		return
+
+	var collected_salvage: String = _world.collect_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
+	if not collected_salvage.is_empty():
+		_held_salvage += 1
+		_last_status_note = "Collected %s" % collected_salvage
+
+	if _held_salvage > 0 and _world.is_inside_extraction(_player.global_position):
+		_banked_salvage += _held_salvage
+		_held_salvage = 0
+		if _total_salvage > 0 and _banked_salvage >= _total_salvage:
+			_run_complete = true
+			_last_status_note = "Run complete"
+		else:
+			_last_status_note = "Banked salvage"
+
+	_update_status_label()
+
+
+func _smoke_salvage_loop_and_quit() -> void:
+	if _total_salvage <= 0:
+		push_error("Salvage loop smoke requires a map with authored salvage.")
+		get_tree().quit(1)
+		return
+
+	for salvage in _world.get_salvage_centers():
+		_player.global_position = salvage["center"]
+		_process(0.0)
+
+	_player.global_position = _world.get_extraction_center()
+	_process(0.0)
+
+	if not _run_complete:
+		push_error("Salvage loop smoke did not complete after collecting and returning.")
+		get_tree().quit(1)
+		return
+
+	var completed_total := _total_salvage
+	_reset_run()
+	if _held_salvage != 0 or _banked_salvage != 0 or _run_complete:
+		push_error("Salvage loop smoke reset left stale run state.")
+		get_tree().quit(1)
+		return
+
+	print("Salvage loop smoke passed: collected, banked, completed, and reset %d salvage." % completed_total)
+	get_tree().quit()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not event is InputEventKey:
+		return
+
+	var key_event := event as InputEventKey
+	if key_event.pressed and not key_event.echo and key_event.keycode == KEY_R:
+		_reset_run()
+
+
+func _reset_run() -> void:
+	if _world == null or _player == null:
+		return
+
+	_world.reset_salvage()
+	_held_salvage = 0
+	_banked_salvage = 0
+	_run_complete = false
+	_last_status_note = "Reset"
+	_player.position = _world.spawn_position
+	if _player.has_method("reset_motion"):
+		_player.reset_motion()
+	if _player.has_method("snap_camera"):
+		_player.snap_camera()
+	_update_status_label()
+
+
+func _create_review_overlay(world: Node) -> void:
+	var canvas := CanvasLayer.new()
+	canvas.name = "ReviewOverlay"
+	add_child(canvas)
+
+	var panel := PanelContainer.new()
+	panel.name = "ReviewPanel"
+	panel.position = Vector2(12, 12)
+	panel.custom_minimum_size = Vector2(260, 0)
+
+	var panel_style := StyleBoxFlat.new()
+	panel_style.bg_color = Color(0.02, 0.07, 0.10, 0.70)
+	panel_style.border_color = Color(0.72, 0.92, 1.0, 0.22)
+	panel_style.set_border_width_all(1)
+	panel_style.set_corner_radius_all(6)
+	panel.add_theme_stylebox_override("panel", panel_style)
+	canvas.add_child(panel)
+
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 10)
+	margin.add_theme_constant_override("margin_top", 8)
+	margin.add_theme_constant_override("margin_right", 10)
+	margin.add_theme_constant_override("margin_bottom", 8)
+	panel.add_child(margin)
+
+	var stack := VBoxContainer.new()
+	stack.add_theme_constant_override("separation", 4)
+	margin.add_child(stack)
+
+	_review_label = Label.new()
+	_review_label.add_theme_color_override("font_color", Color(0.84, 0.96, 1.0, 0.95))
+	_review_label.add_theme_font_size_override("font_size", 13)
+	_review_label.text = "Map %s\nBuild %s" % [world.get_map_label(), _build_label()]
+	stack.add_child(_review_label)
+
+	_status_label = Label.new()
+	_status_label.add_theme_color_override("font_color", Color(1.0, 0.88, 0.45, 0.98))
+	_status_label.add_theme_font_size_override("font_size", 14)
+	stack.add_child(_status_label)
+
+
+func _update_status_label() -> void:
+	if _status_label == null:
+		return
+
+	if _total_salvage <= 0:
+		_status_label.text = "Salvage 0/0"
+		return
+
+	var prompt := ""
+	if _run_complete:
+		prompt = "Complete - press R"
+	elif _held_salvage > 0:
+		prompt = "Return to extraction"
+	elif not _last_status_note.is_empty():
+		prompt = _last_status_note
+
+	_status_label.text = "Salvage %d/%d  Held %d\n%s" % [
+		_banked_salvage,
+		_total_salvage,
+		_held_salvage,
+		prompt,
+	]
+
+
+func _build_label() -> String:
+	var file := FileAccess.open(BUILD_INFO_PATH, FileAccess.READ)
+	if file == null:
+		return "local"
+
+	var parsed = JSON.parse_string(file.get_as_text())
+	if typeof(parsed) != TYPE_DICTIONARY:
+		return "local"
+
+	var git_sha := str(parsed.get("git_sha", ""))
+	if git_sha.is_empty():
+		return str(parsed.get("version", "local"))
+	if git_sha.length() > 7:
+		return git_sha.substr(0, 7)
+	return git_sha
+
+
+func _write_parity_report_and_quit(world: Node, output_path: String) -> void:
+	var report_json := JSON.stringify(world.get_runtime_parity_report(), "\t")
+	if output_path.is_empty():
+		print(report_json)
+	else:
+		var file := FileAccess.open(output_path, FileAccess.WRITE)
+		if file == null:
+			push_error("Unable to write parity report: %s" % output_path)
+			get_tree().quit(1)
+			return
+		file.store_string(report_json)
+		print("Wrote map parity report: %s" % output_path)
+	get_tree().quit()
 
 
 func _capture_screenshot_and_quit() -> void:

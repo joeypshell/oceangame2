@@ -28,6 +28,15 @@ func set_camera_limits(world_rect: Rect2) -> void:
 	camera.limit_bottom = int(world_rect.end.y)
 
 
+func reset_motion() -> void:
+	velocity = Vector2.ZERO
+
+
+func snap_camera() -> void:
+	var camera := $Camera2D as Camera2D
+	camera.reset_smoothing()
+
+
 func _wasd_vector() -> Vector2:
 	var x := 0.0
 	var y := 0.0
