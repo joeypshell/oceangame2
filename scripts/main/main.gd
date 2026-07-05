@@ -20,6 +20,7 @@ func _ready() -> void:
 		world.map_path = TILESET_TEST_MAP_PATH
 	else:
 		world.map_path = DEFAULT_MAP_PATH
+	world.show_debug_overlay = _has_arg(user_args, engine_args, "--show-debug-overlay")
 	add_child(world)
 	world.load_greybox()
 

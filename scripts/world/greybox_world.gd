@@ -37,6 +37,7 @@ const INNER_BOTTOM_RIGHT_COORD := Vector2i(4, 2)
 const NO_SPECIAL_COORD := Vector2i(-1, -1)
 
 @export var map_path := "res://maps/cave_salvage_test_01.greybox.json"
+@export var show_debug_overlay := false
 
 var tile_size := 32
 var map_tile_size := Vector2i.ZERO
@@ -96,6 +97,9 @@ func _draw() -> void:
 		return
 
 	draw_rect(Rect2(Vector2.ZERO, map_pixel_size), COLOR_WATER)
+	if not show_debug_overlay:
+		return
+
 	for x in range(0, int(map_pixel_size.x) + 1, tile_size):
 		draw_line(Vector2(x, 0), Vector2(x, map_pixel_size.y), COLOR_GRID)
 	for y in range(0, int(map_pixel_size.y) + 1, tile_size):
@@ -121,6 +125,7 @@ func _build_tilemap(map_data: Dictionary) -> void:
 	_solid_layer.name = "SourceTileMapLayer"
 	_solid_layer.tile_set = _create_greybox_tileset()
 	_solid_layer.modulate = Color(1.0, 1.0, 1.0, SOURCE_LAYER_ALPHA)
+	_solid_layer.visible = show_debug_overlay
 	add_child(_solid_layer)
 
 	for terrain in map_data.get("terrain", []):
@@ -352,6 +357,10 @@ func _add_texture_rect(parent: Node2D, texture_path: String, item: Dictionary, s
 
 
 func _load_png_texture(texture_path: String) -> Texture2D:
+	var resource := load(texture_path)
+	if resource is Texture2D:
+		return resource
+
 	var file := FileAccess.open(texture_path, FileAccess.READ)
 	if file == null:
 		push_warning("Unable to open terrain art texture: %s" % texture_path)

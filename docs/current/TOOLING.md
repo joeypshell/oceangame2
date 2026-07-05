@@ -60,6 +60,7 @@ Capture the current named camera test views:
 ```
 
 This reads `camera_tests` from `maps/cave_salvage_test_01.greybox.json` and writes PNGs to `visual_captures/latest/`.
+Normal gameplay and capture views hide the greybox source grid. Add `--show-debug-overlay` when you specifically need the source TileMap/grid overlay for map debugging.
 
 Capture the organic tileset stress-test views:
 
