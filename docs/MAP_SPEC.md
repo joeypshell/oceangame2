@@ -80,6 +80,58 @@ A `boat_spawn` entity has these required fields:
 
 Existing base/extraction zones remain valid. When a `boat_spawn` is present, runtime extraction checks also treat the boat rectangle as a valid return point.
 
+## Entity Semantics
+
+Every authored entity must include:
+
+- `id`: unique lower_snake_case identifier within the map's `entities` list.
+- `type`: one of `spawn`, `boat_spawn`, `salvage`, or `hazard`.
+- `x`, `y`: integer tile coordinates for point entities.
+
+`spawn` is a legacy point entity:
+
+```json
+{
+  "id": "player_start",
+  "type": "spawn",
+  "x": 9,
+  "y": 31,
+  "facing": "right"
+}
+```
+
+`salvage` entities require `kind`. Current valid-style examples are `crate`, `wreck_fragment`, `relic`, and `stress_marker`. `stress_marker` is reserved for renderer/test maps and is not treated as a production salvage objective.
+
+```json
+{
+  "id": "salvage_center_crossing",
+  "type": "salvage",
+  "x": 46,
+  "y": 30,
+  "kind": "wreck_fragment"
+}
+```
+
+`hazard` entities require `kind`. Current valid-style examples are `mine`, `jellyfish`, and `stress_marker`.
+
+```json
+{
+  "id": "hazard_crossing_choke",
+  "type": "hazard",
+  "x": 52,
+  "y": 34,
+  "kind": "mine"
+}
+```
+
+Validation expectations:
+
+- Entity ids must be unique.
+- Entity ids and kinds use lower_snake_case.
+- Entity coordinates must be inside map bounds, non-solid, and reachable from the player entry cell.
+- Maps must define exactly one `spawn` or `boat_spawn`.
+- Playable salvage maps must define a base extraction zone or use `boat_spawn` extraction. Renderer stress-test maps may use `stress_marker` salvage without an extraction zone.
+
 ## Source Of Truth Options
 
 Use Godot `TileMapLayer` for the first prototype.
