@@ -2,7 +2,7 @@ extends Node2D
 
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
-const DEFAULT_MAP_PATH := "res://maps/cave_salvage_organic_01.greybox.json"
+const DEFAULT_MAP_PATH := "res://maps/production_slice_01.greybox.json"
 const ORIGINAL_MAP_PATH := "res://maps/cave_salvage_test_01.greybox.json"
 const TILESET_TEST_MAP_PATH := "res://maps/cave_tileset_test_01.greybox.json"
 const ORGANIC_MAP_PATH := "res://maps/cave_salvage_organic_01.greybox.json"

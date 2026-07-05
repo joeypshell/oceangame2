@@ -44,10 +44,16 @@ The current primary direction is [visual_direction_b_modular_cave.png](reference
 
 The original greybox source map is [cave_salvage_test_01.greybox.json](maps/cave_salvage_test_01.greybox.json), with a generated preview at [cave_salvage_test_01.svg](references/greybox/cave_salvage_test_01.svg). It remains available as a comparison map.
 
-The current default preview map is the first organic playable salvage map source pass: [cave_salvage_organic_01.greybox.json](maps/cave_salvage_organic_01.greybox.json), with a generated preview at [cave_salvage_organic_01.svg](references/greybox/cave_salvage_organic_01.svg). Run it locally with:
+The current default preview map is the first focused production slice: [production_slice_01.greybox.json](maps/production_slice_01.greybox.json), with a generated preview at [production_slice_01.svg](references/greybox/production_slice_01.svg). Run it locally with:
 
 ```powershell
 .\tools\open_godot_project.ps1 -Run
+```
+
+Run the first organic playable salvage map explicitly with:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -OrganicMap
 ```
 
 Run the original comparison map locally with:
@@ -66,7 +72,7 @@ Run the full-map topology draft locally with:
 .\tools\open_godot_project.ps1 -Run -FullSketchMap
 ```
 
-The first focused production-slice source is [production_slice_01.greybox.json](maps/production_slice_01.greybox.json), generated from the top-center entry hub of the full sketch. It has a generated preview at [production_slice_01.svg](references/greybox/production_slice_01.svg), a top-water `boat_spawn`, authored salvage, hazards, and named camera tests. Run it locally with:
+The first focused production-slice source is generated from the top-center entry hub of the full sketch. It has a top-water `boat_spawn`, authored salvage, hazards, and named camera tests. It can also be selected explicitly with:
 
 ```powershell
 .\tools\open_godot_project.ps1 -Run -ProductionSliceMap
@@ -97,7 +103,7 @@ The preview shows compact review context in the upper-left corner with the loade
 
 Current in-engine baseline screenshot: [001_greybox_in_engine.png](visual_baselines/001_greybox_in_engine.png)
 
-Current named camera captures are generated under [visual_captures/latest](visual_captures/latest).
+Current named camera captures are generated under [visual_captures/latest](visual_captures/latest) from the default production slice.
 
 ## Browser Preview
 

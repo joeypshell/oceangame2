@@ -16,7 +16,7 @@ Run the current project scene locally:
 .\tools\open_godot_project.ps1 -Run
 ```
 
-The current default preview map is `maps/cave_salvage_organic_01.greybox.json`.
+The current default preview map is `maps/production_slice_01.greybox.json`.
 
 Run with the source map/grid overlay visible:
 
@@ -138,7 +138,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 
 The import command is important on a fresh clone or CI checkout because `.godot/` and `*.import` files are intentionally untracked. The headless command can exit `0` even when script errors appear in output, so treat `SCRIPT ERROR` or `ERROR:` lines as failures.
 
-The salvage-loop smoke check loads the default organic map, collects all authored salvage through the same runtime methods used in play, returns to extraction, confirms completion, resets, and exits.
+The salvage-loop smoke check loads the default production slice, collects all authored salvage through the same runtime methods used in play, returns to extraction, confirms completion, resets, and exits.
 
 The production-slice route smoke loads `production_slice_01`, asks the world for open-water paths to each authored salvage point and back to the boat, swims the player through those paths with the normal movement controller, confirms completion, resets, and exits.
 
@@ -192,7 +192,7 @@ Capture the current named camera test views:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-camera-tests
 ```
 
-This reads `camera_tests` from the default preview map, currently `maps/cave_salvage_organic_01.greybox.json`, and writes PNGs to `visual_captures/latest/`.
+This reads `camera_tests` from the default preview map, currently `maps/production_slice_01.greybox.json`, and writes PNGs to `visual_captures/latest/`.
 Normal gameplay and capture views hide the greybox source grid. Add `--show-debug-overlay` when you specifically need the source TileMap/grid overlay for map debugging.
 
 Capture the original rectangular salvage map comparison views:
