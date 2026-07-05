@@ -37,11 +37,13 @@ The Godot scene reads this JSON at runtime. Do not hand-tune in-engine terrain t
 - `scripts/main/main.gd`
   - Loads world and player scenes.
   - Applies camera bounds from the world map size.
+  - Supports visual capture flags for the baseline screenshot and named camera-test captures.
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.
   - Builds the runtime TileMapLayer and collision.
   - Keeps visuals tied to source topology.
+  - Exposes `camera_tests` from the source map for repeatable visual captures.
 
 - `scripts/player/player_controller.gd`
   - Basic side-view swimming controller.

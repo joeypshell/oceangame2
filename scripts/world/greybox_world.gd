@@ -15,6 +15,7 @@ var tile_size := 32
 var map_tile_size := Vector2i.ZERO
 var map_pixel_size := Vector2.ZERO
 var spawn_position := Vector2.ZERO
+var camera_tests: Array = []
 
 var _built := false
 var _solid_layer: TileMapLayer
@@ -38,6 +39,7 @@ func load_greybox() -> void:
 	tile_size = int(map_data["units"]["tile_size_px"])
 	map_tile_size = Vector2i(int(map_data["units"]["width_tiles"]), int(map_data["units"]["height_tiles"]))
 	map_pixel_size = Vector2(map_tile_size * tile_size)
+	camera_tests = map_data.get("camera_tests", [])
 
 	_marker_root = Node2D.new()
 	_marker_root.name = "Markers"

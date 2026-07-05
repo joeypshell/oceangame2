@@ -53,6 +53,8 @@ Run the current Godot greybox with `project.godot`. The root scene is `scenes/ma
 
 Current in-engine baseline screenshot: [001_greybox_in_engine.png](visual_baselines/001_greybox_in_engine.png)
 
+Current named camera captures are generated under [visual_captures/latest](visual_captures/latest).
+
 ## First Success Condition
 
 The first prototype succeeds when a small Godot scene can be captured as an approved baseline screenshot, then one targeted visual change can be made without damaging unrelated visuals.

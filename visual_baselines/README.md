@@ -19,3 +19,5 @@ Regenerate locally with:
 ```powershell
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 5 --capture-greybox-screenshot
 ```
+
+Named current-state camera captures are generated separately under `visual_captures/latest/`.
