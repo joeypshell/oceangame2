@@ -43,7 +43,7 @@ Open `http://127.0.0.1:8060/` after the server starts. Do not open `exports/web/
 
 If the local export reports missing `web_nothreads_*` templates, install the Godot 4.7 export templates through the editor or use the GitHub Actions artifact; CI installs templates during the workflow.
 
-GitHub Actions builds the same preview in `Godot Web Export`. Download the `oceangame2-web-export` artifact from the workflow run when you need to inspect a build. The workflow also attempts a GitHub Pages deploy from `main`; if repository Pages settings are configured for GitHub Actions, the latest preview should be available at `https://joeypshell.github.io/oceangame2/`.
+GitHub Actions builds the same preview in `Godot Web Export`. Download the `oceangame2-web-export` artifact from the workflow run when you need to inspect a build. The workflow also attempts to enable and deploy GitHub Pages from `main`; if repository or organization settings block automatic enablement, configure Pages to build from GitHub Actions. The latest preview should then be available at `https://joeypshell.github.io/oceangame2/`.
 
 Capture the current greybox screenshot baseline:
 
