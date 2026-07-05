@@ -1,0 +1,4 @@
+interface:
+  display_name: "Resolve GitHub Issues"
+  short_description: "Resolve selected repo issues"
+  default_prompt: "Use $resolve-github-issues to resolve the next selected GitHub issues in this repository."
