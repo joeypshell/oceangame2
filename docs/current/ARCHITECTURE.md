@@ -63,7 +63,7 @@ Additional current map sources:
   - Supports visual capture flags for the baseline screenshot and named camera-test captures.
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
   - Shows compact preview review context and salvage progress.
-  - Supports headless map parity and salvage-loop smoke checks.
+  - Supports headless map parity, salvage-loop, production-slice route, and hazard-interaction smoke checks.
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.
@@ -93,5 +93,5 @@ Art placement must not create, remove, or move collision.
 - Terrain tile art is a first-pass structural placeholder, not final production art.
 - Terrain collision is rectangular per terrain block, and the player collision shape is intentionally smaller than the placeholder body art to reduce snagging in one-tile-ish production-slice passages.
 - Minimal salvage collection, extraction completion, and restart loop exists.
-- Hazards are visual markers only.
+- Hazards bump the player back to spawn, briefly tint the player, and restore any held/unbanked salvage to the map.
 - First screenshot baseline is committed at `visual_baselines/001_greybox_in_engine.png`.

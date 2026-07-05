@@ -53,6 +53,7 @@ var camera_tests: Array = []
 var _built := false
 var _map_data := {}
 var _salvage_entities: Array = []
+var _hazard_entities: Array = []
 var _extraction_zones: Array = []
 var _boat_entities: Array = []
 var _collected_salvage := {}
@@ -85,6 +86,7 @@ func load_greybox() -> void:
 	map_pixel_size = Vector2(map_tile_size * tile_size)
 	camera_tests = map_data.get("camera_tests", [])
 	_salvage_entities = []
+	_hazard_entities = []
 	_extraction_zones = []
 	_boat_entities = []
 	_collected_salvage = {}
@@ -135,6 +137,23 @@ func get_salvage_centers() -> Array:
 			"center": _entity_center(entity),
 		})
 	return centers
+
+
+func get_hazard_centers() -> Array:
+	var centers := []
+	for entity in _hazard_entities:
+		centers.append({
+			"id": str(entity.get("id", "hazard")),
+			"center": _entity_center(entity),
+		})
+	return centers
+
+
+func get_hazard_near(position: Vector2, radius_px: float) -> String:
+	for entity in _hazard_entities:
+		if position.distance_to(_entity_center(entity)) <= radius_px:
+			return str(entity.get("id", "hazard"))
+	return ""
 
 
 func find_open_path(start_position: Vector2, target_position: Vector2) -> Array:
@@ -212,6 +231,15 @@ func reset_salvage() -> void:
 	for salvage_id in _salvage_nodes_by_id.keys():
 		var salvage_node := _salvage_nodes_by_id[salvage_id] as Node2D
 		salvage_node.visible = true
+
+
+func restore_salvage(salvage_ids: Array) -> void:
+	for salvage_id in salvage_ids:
+		var id := str(salvage_id)
+		_collected_salvage.erase(id)
+		if _salvage_nodes_by_id.has(id):
+			var salvage_node := _salvage_nodes_by_id[id] as Node2D
+			salvage_node.visible = true
 
 
 func is_inside_extraction(position: Vector2) -> bool:
@@ -525,6 +553,7 @@ func _build_entities(entities: Array) -> void:
 			var salvage_id := str(entity.get("id", "Salvage"))
 			_salvage_nodes_by_id[salvage_id] = _add_diamond(salvage_id, center, COLOR_SALVAGE, 16.0)
 		elif entity_type == "hazard":
+			_hazard_entities.append(entity)
 			_add_marker(entity.get("id", "Hazard"), center, COLOR_HAZARD, 18.0)
 
 

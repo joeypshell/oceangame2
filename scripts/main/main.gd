@@ -18,6 +18,9 @@ const PRODUCTION_SLICE_CAPTURE_DIR := "res://visual_captures/production_slice_01
 const BUILD_INFO_PATH := "res://build_info.json"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 const SALVAGE_COLLECTION_RADIUS := 34.0
+const HAZARD_CONTACT_RADIUS := 30.0
+const HAZARD_COOLDOWN_SECONDS := 1.0
+const HAZARD_FEEDBACK_SECONDS := 0.45
 
 var _world
 var _player
@@ -26,6 +29,10 @@ var _status_label: Label
 var _held_salvage := 0
 var _banked_salvage := 0
 var _total_salvage := 0
+var _held_salvage_ids: Array[String] = []
+var _hazard_cooldown_seconds := 0.0
+var _hazard_feedback_seconds := 0.0
+var _hazard_interactions_enabled := true
 var _run_complete := false
 var _last_status_note := ""
 
@@ -41,6 +48,7 @@ func _ready() -> void:
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
 	var smoke_production_slice_route := _has_arg(user_args, engine_args, "--smoke-production-slice-route")
+	var smoke_hazard_interaction := _has_arg(user_args, engine_args, "--smoke-hazard-interaction")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
 	var parity_output_path := _arg_value(user_args, engine_args, "--parity-output")
 
@@ -57,6 +65,8 @@ func _ready() -> void:
 	elif capture_production_slice_map:
 		world.map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_route:
+		world.map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_hazard_interaction:
 		world.map_path = PRODUCTION_SLICE_MAP_PATH
 	elif not requested_map_path.is_empty():
 		world.map_path = requested_map_path
@@ -90,6 +100,9 @@ func _ready() -> void:
 	if smoke_production_slice_route:
 		await _smoke_production_slice_route_and_quit()
 		return
+	if smoke_hazard_interaction:
+		_smoke_hazard_interaction_and_quit()
+		return
 
 	if _has_arg(user_args, engine_args, "--capture-greybox-screenshot"):
 		_capture_screenshot_and_quit()
@@ -107,21 +120,33 @@ func _ready() -> void:
 		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_CAPTURE_DIR)
 
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
 	if _world == null or _player == null:
 		return
+	_update_hazard_feedback(delta)
 	if _run_complete:
 		_update_status_label()
 		return
 
+	if _hazard_cooldown_seconds > 0.0:
+		_hazard_cooldown_seconds = maxf(0.0, _hazard_cooldown_seconds - delta)
+	elif _hazard_interactions_enabled:
+		var hazard_id: String = _world.get_hazard_near(_player.global_position, HAZARD_CONTACT_RADIUS)
+		if not hazard_id.is_empty():
+			_handle_hazard_hit(hazard_id)
+			_update_status_label()
+			return
+
 	var collected_salvage: String = _world.collect_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
 	if not collected_salvage.is_empty():
 		_held_salvage += 1
+		_held_salvage_ids.append(collected_salvage)
 		_last_status_note = "Collected %s" % collected_salvage
 
 	if _held_salvage > 0 and _world.is_inside_extraction(_player.global_position):
 		_banked_salvage += _held_salvage
 		_held_salvage = 0
+		_held_salvage_ids = []
 		if _total_salvage > 0 and _banked_salvage >= _total_salvage:
 			_run_complete = true
 			_last_status_note = "Run complete"
@@ -171,6 +196,7 @@ func _smoke_production_slice_route_and_quit() -> void:
 		return
 
 	_player.set_physics_process(false)
+	_hazard_interactions_enabled = false
 	var targets := []
 	for salvage in _world.get_salvage_centers():
 		targets.append(salvage["center"])
@@ -191,6 +217,47 @@ func _smoke_production_slice_route_and_quit() -> void:
 	var completed_total := _total_salvage
 	_reset_run()
 	print("Production slice route smoke passed: swam to %d salvage and returned to boat extraction." % completed_total)
+	get_tree().quit()
+
+
+func _smoke_hazard_interaction_and_quit() -> void:
+	var salvage: Array = _world.get_salvage_centers()
+	var hazards: Array = _world.get_hazard_centers()
+	if salvage.is_empty() or hazards.is_empty():
+		push_error("Hazard smoke requires authored salvage and hazard entities.")
+		get_tree().quit(1)
+		return
+
+	_player.global_position = salvage[0]["center"]
+	_process(0.0)
+	if _held_salvage != 1 or _held_salvage_ids.is_empty():
+		push_error("Hazard smoke could not collect setup salvage.")
+		get_tree().quit(1)
+		return
+
+	var collected_id := _held_salvage_ids[0]
+	_player.global_position = hazards[0]["center"]
+	_hazard_cooldown_seconds = 0.0
+	_process(0.0)
+	if _held_salvage != 0 or not _held_salvage_ids.is_empty():
+		push_error("Hazard smoke did not drop held salvage.")
+		get_tree().quit(1)
+		return
+	if _player.global_position.distance_to(_world.spawn_position) > 2.0:
+		push_error("Hazard smoke did not return player to spawn.")
+		get_tree().quit(1)
+		return
+
+	_player.global_position = salvage[0]["center"]
+	_hazard_cooldown_seconds = 0.0
+	_process(0.0)
+	if _held_salvage != 1 or _held_salvage_ids[0] != collected_id:
+		push_error("Hazard smoke did not restore dropped salvage for recollection.")
+		get_tree().quit(1)
+		return
+
+	_reset_run()
+	print("Hazard interaction smoke passed: hit hazard, reset to spawn, restored dropped salvage, and recollected it.")
 	get_tree().quit()
 
 
@@ -232,15 +299,48 @@ func _reset_run() -> void:
 
 	_world.reset_salvage()
 	_held_salvage = 0
+	_held_salvage_ids = []
 	_banked_salvage = 0
+	_hazard_cooldown_seconds = 0.0
+	_hazard_feedback_seconds = 0.0
+	_hazard_interactions_enabled = true
 	_run_complete = false
 	_last_status_note = "Reset"
+	_player.modulate = Color.WHITE
 	_player.position = _world.spawn_position
 	if _player.has_method("reset_motion"):
 		_player.reset_motion()
 	if _player.has_method("snap_camera"):
 		_player.snap_camera()
 	_update_status_label()
+
+
+func _handle_hazard_hit(hazard_id: String) -> void:
+	if not _held_salvage_ids.is_empty():
+		_world.restore_salvage(_held_salvage_ids)
+		_held_salvage_ids = []
+		_held_salvage = 0
+		_last_status_note = "Hazard hit - dropped salvage"
+	else:
+		_last_status_note = "Hazard hit - reset"
+
+	_hazard_cooldown_seconds = HAZARD_COOLDOWN_SECONDS
+	_hazard_feedback_seconds = HAZARD_FEEDBACK_SECONDS
+	_player.global_position = _world.spawn_position
+	if _player.has_method("reset_motion"):
+		_player.reset_motion()
+	if _player.has_method("snap_camera"):
+		_player.snap_camera()
+
+
+func _update_hazard_feedback(delta: float) -> void:
+	if _player == null:
+		return
+	if _hazard_feedback_seconds <= 0.0:
+		_player.modulate = Color.WHITE
+		return
+	_hazard_feedback_seconds = maxf(0.0, _hazard_feedback_seconds - delta)
+	_player.modulate = Color(1.0, 0.58, 0.58, 1.0)
 
 
 func _create_review_overlay(world: Node) -> void:
