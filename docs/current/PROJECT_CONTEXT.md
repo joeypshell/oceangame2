@@ -128,6 +128,12 @@ Capture the organic tileset stress-test views:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-tileset-test
 ```
 
+Capture the full-map sketch topology draft views:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-full-sketch-map
+```
+
 For local Web export:
 
 ```powershell
@@ -148,6 +154,7 @@ Current issue state as of 2026-07-05:
 - Open: #15 `Add preview review framing and version watermark`
 - Open: #16 `Add minimal salvage collection and extraction loop`
 - Open: #18 `Add JSON-to-Godot map render and collision parity check`
+- Closed: #20 full sketch map local preview workflow
 - Closed: #19 full-map sketch topology draft conversion
 - Closed: #17 web preview greybox terrain fallback regression
 - Closed: #14 organic map default preview workflow
@@ -167,6 +174,7 @@ Current issue state as of 2026-07-05:
 
 Recent important commits:
 
+- `46a833b` Expose full sketch map preview workflow
 - `7bd6d65` Add full cave sketch map draft
 - `9c9abd8` Import Godot assets before smoke check
 - `9c4f34a` Prevent web preview greybox fallback
