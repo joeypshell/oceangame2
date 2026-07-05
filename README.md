@@ -51,6 +51,8 @@ python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
 
 Run the current Godot greybox with `project.godot`. The root scene is `scenes/main/Main.tscn`.
 
+Current in-engine baseline screenshot: [001_greybox_in_engine.png](visual_baselines/001_greybox_in_engine.png)
+
 ## First Success Condition
 
 The first prototype succeeds when a small Godot scene can be captured as an approved baseline screenshot, then one targeted visual change can be made without damaging unrelated visuals.

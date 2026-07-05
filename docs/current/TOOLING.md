@@ -28,6 +28,14 @@ Run the Godot headless launch smoke check on this Windows setup:
 
 The headless command can exit `0` even when script errors appear in output, so treat `SCRIPT ERROR` or `ERROR:` lines as failures.
 
+Capture the current greybox screenshot baseline:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 5 --capture-greybox-screenshot
+```
+
+Do not use `--headless` for screenshot capture on this local setup. Headless uses Godot's dummy renderer here, so the viewport texture is unavailable. Use headless for smoke checks and non-headless for visual capture.
+
 ## Generated Files
 
 Do not commit:

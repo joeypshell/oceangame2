@@ -53,4 +53,4 @@ The Godot scene reads this JSON at runtime. Do not hand-tune in-engine terrain t
 - Collision is rectangular per terrain block.
 - No gameplay scoring yet.
 - Salvage and hazards are visual markers only.
-- No screenshot baseline is committed yet.
+- First screenshot baseline is committed at `visual_baselines/001_greybox_in_engine.png`.
