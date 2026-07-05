@@ -169,7 +169,7 @@ Current issue state as of 2026-07-05:
 - Open: #26 `Add first scoped hazard interaction`
 - Open: #25 `Tune player swim feel and collision clearance for production slice`
 - Open: #24 `Add production slice preview shortcut and capture route`
-- Open: #23 `Create first production slice JSON from selected full sketch region`
+- Closed: #23 first production slice JSON from selected full sketch region
 - Closed: #22 boat and top-water spawn/extraction model
 - Closed: #21 full sketch topology evaluation and first production slice selection
 - Closed: #18 JSON-to-Godot map render and collision parity check
@@ -195,6 +195,7 @@ Current issue state as of 2026-07-05:
 
 Recent important commits:
 
+- `a55e3de` Add first production slice map
 - `6e18c02` Add boat spawn extraction model
 - `44e758f` Evaluate full sketch production slice
 - `918d0e1` Add parity checks preview overlay and salvage loop
