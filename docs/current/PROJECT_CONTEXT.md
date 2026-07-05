@@ -83,7 +83,7 @@ Current map-loading helper:
 - Run the default organic map locally: `.\tools\open_godot_project.ps1 -Run`
 - Run the original comparison map locally: `.\tools\open_godot_project.ps1 -Run -OriginalMap`
 - Run the full-map sketch draft locally: `.\tools\open_godot_project.ps1 -Run -FullSketchMap`
-- Run the first production slice by path: `.\tools\open_godot_project.ps1 -Run -MapPath "res://maps/production_slice_01.greybox.json"`
+- Run the first production slice locally: `.\tools\open_godot_project.ps1 -Run -ProductionSliceMap`
 
 ## Web Preview Status
 
@@ -239,7 +239,7 @@ w: 72
 h: 84
 ```
 
-After #23, the next logical work is #24 to add local preview/capture shortcuts for `production_slice_01`.
+After #24, the next logical work is #25 to tune player swim feel and collision clearance against `production_slice_01`.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 

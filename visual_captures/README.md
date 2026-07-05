@@ -8,7 +8,7 @@
 
 `visual_captures/full_cave_sketch/` contains generated screenshots from the supplied full-map sketch topology draft.
 
-`visual_captures/production_slice_01/` contains generated screenshots from the first focused production slice. Until the dedicated shortcut lands, run it with `--map-path=res://maps/production_slice_01.greybox.json --capture-camera-tests` and copy the generated `visual_captures/latest/` images into this folder.
+`visual_captures/production_slice_01/` contains generated screenshots from the first focused production slice.
 
 These captures are not automatically approved baselines. They are review artifacts used to compare the current in-engine result against `visual_baselines/` and the art direction docs.
 
@@ -45,3 +45,11 @@ Regenerate full-map sketch draft captures with:
 ```
 
 Those named views come from `camera_tests` in `maps/full_cave_sketch_01.greybox.json`.
+
+Regenerate first production-slice captures with:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-production-slice-map
+```
+
+Those named views come from `camera_tests` in `maps/production_slice_01.greybox.json`.

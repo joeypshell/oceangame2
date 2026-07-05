@@ -7,12 +7,14 @@ const ORIGINAL_MAP_PATH := "res://maps/cave_salvage_test_01.greybox.json"
 const TILESET_TEST_MAP_PATH := "res://maps/cave_tileset_test_01.greybox.json"
 const ORGANIC_MAP_PATH := "res://maps/cave_salvage_organic_01.greybox.json"
 const FULL_SKETCH_MAP_PATH := "res://maps/full_cave_sketch_01.greybox.json"
+const PRODUCTION_SLICE_MAP_PATH := "res://maps/production_slice_01.greybox.json"
 const SCREENSHOT_PATH := "res://visual_baselines/001_greybox_in_engine.png"
 const CAMERA_TEST_CAPTURE_DIR := "res://visual_captures/latest"
 const ORIGINAL_CAPTURE_DIR := "res://visual_captures/original_salvage"
 const TILESET_TEST_CAPTURE_DIR := "res://visual_captures/tileset_test"
 const ORGANIC_CAPTURE_DIR := "res://visual_captures/organic_salvage"
 const FULL_SKETCH_CAPTURE_DIR := "res://visual_captures/full_cave_sketch"
+const PRODUCTION_SLICE_CAPTURE_DIR := "res://visual_captures/production_slice_01"
 const BUILD_INFO_PATH := "res://build_info.json"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 const SALVAGE_COLLECTION_RADIUS := 34.0
@@ -35,6 +37,7 @@ func _ready() -> void:
 	var capture_tileset_test := _has_arg(user_args, engine_args, "--capture-tileset-test")
 	var capture_organic_map := _has_arg(user_args, engine_args, "--capture-organic-map")
 	var capture_full_sketch_map := _has_arg(user_args, engine_args, "--capture-full-sketch-map")
+	var capture_production_slice_map := _has_arg(user_args, engine_args, "--capture-production-slice-map")
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
@@ -50,6 +53,8 @@ func _ready() -> void:
 		world.map_path = ORGANIC_MAP_PATH
 	elif capture_full_sketch_map:
 		world.map_path = FULL_SKETCH_MAP_PATH
+	elif capture_production_slice_map:
+		world.map_path = PRODUCTION_SLICE_MAP_PATH
 	elif not requested_map_path.is_empty():
 		world.map_path = requested_map_path
 	else:
@@ -92,6 +97,8 @@ func _ready() -> void:
 		_capture_camera_tests_and_quit(world, ORGANIC_CAPTURE_DIR)
 	elif capture_full_sketch_map:
 		_capture_camera_tests_and_quit(world, FULL_SKETCH_CAPTURE_DIR)
+	elif capture_production_slice_map:
+		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_CAPTURE_DIR)
 
 
 func _process(_delta: float) -> void:

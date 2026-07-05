@@ -69,7 +69,7 @@ Run the full-map topology draft locally with:
 The first focused production-slice source is [production_slice_01.greybox.json](maps/production_slice_01.greybox.json), generated from the top-center entry hub of the full sketch. It has a generated preview at [production_slice_01.svg](references/greybox/production_slice_01.svg), a top-water `boat_spawn`, authored salvage, hazards, and named camera tests. Run it locally with:
 
 ```powershell
-.\tools\open_godot_project.ps1 -Run -MapPath "res://maps/production_slice_01.greybox.json"
+.\tools\open_godot_project.ps1 -Run -ProductionSliceMap
 ```
 
 Regenerate and validate the greybox preview with:

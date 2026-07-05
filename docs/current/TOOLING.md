@@ -42,6 +42,12 @@ Run the full-map sketch topology draft:
 .\tools\open_godot_project.ps1 -Run -FullSketchMap
 ```
 
+Run the first production slice:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -ProductionSliceMap
+```
+
 Run any map source by path:
 
 ```powershell
@@ -212,6 +218,14 @@ Capture the full-map sketch topology draft:
 ```
 
 This reads `camera_tests` from `maps/full_cave_sketch_01.greybox.json` and writes PNGs to `visual_captures/full_cave_sketch/`.
+
+Capture the first production slice:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-production-slice-map
+```
+
+This reads `camera_tests` from `maps/production_slice_01.greybox.json` and writes PNGs to `visual_captures/production_slice_01/`.
 
 Regenerate the cave tileset and organic stress-test map:
 
