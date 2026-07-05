@@ -166,8 +166,18 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-05:
 
-- Open: #30 `Expand current roadmap after first production slice decision`
-- Open: #29 `Terrain visual polish pass for accepted production slice`
+- Open: [#31](https://github.com/joeypshell/oceangame2/issues/31) `Promote production slice to default preview`
+- Open: [#32](https://github.com/joeypshell/oceangame2/issues/32) `Add production slice source-render-collision review artifact`
+- Open: [#33](https://github.com/joeypshell/oceangame2/issues/33) `Clean production slice topology artifacts in source data`
+- Open: [#34](https://github.com/joeypshell/oceangame2/issues/34) `Replace placeholder salvage and hazard squares with readable props`
+- Open: [#35](https://github.com/joeypshell/oceangame2/issues/35) `Add boat spawn visual and top-water entry framing`
+- Open: [#36](https://github.com/joeypshell/oceangame2/issues/36) `Add accepted production slice visual baseline workflow`
+- Open: [#37](https://github.com/joeypshell/oceangame2/issues/37) `Clarify entity marker meanings in debug review mode`
+- Open: [#38](https://github.com/joeypshell/oceangame2/issues/38) `Tune production slice camera framing and capture set`
+- Open: [#39](https://github.com/joeypshell/oceangame2/issues/39) `Prototype scoped expedition pressure for production slice`
+- Open: [#40](https://github.com/joeypshell/oceangame2/issues/40) `Select and author second production slice from full sketch`
+- Closed: #30 roadmap expansion after first production slice decision
+- Closed: #29 terrain visual polish pass for accepted production slice
 - Closed: #28 full-sketch conversion fidelity tooling
 - Closed: #27 salvage and object semantics in map JSON
 - Closed: #26 first scoped hazard interaction
@@ -199,6 +209,7 @@ Current issue state as of 2026-07-05:
 
 Recent important commits:
 
+- `c2cc2e6` Polish production slice terrain tiles
 - `686c8b9` Add full sketch conversion review artifact
 - `1940ab1` Refine greybox entity validation
 - `3f08ce5` Add scoped hazard interaction
@@ -225,7 +236,7 @@ Recent important commits:
 
 ## Known Limits
 
-- Terrain art is still first-pass structural placeholder art.
+- Terrain art has a first targeted polish pass, but it is still structural prototype art rather than final production art.
 - `cave_salvage_organic_01` is the default preview map, but it is still a first playable organic source-map pass.
 - `cave_salvage_test_01` is preserved as the original rectangular comparison map.
 - `full_cave_sketch_01` is a topology-only draft conversion from a supplied full-map sketch; icons are intentionally ignored and the top-water `boat_spawn` is present for entry/extraction validation.
@@ -249,7 +260,26 @@ w: 72
 h: 84
 ```
 
-After #28, the next logical work is #29 to perform a targeted terrain visual polish pass for the accepted production slice.
+The first production slice is meant to test a focused version of the intended workflow: supplied full-sketch topology becomes JSON source data, Godot renders that source through grid-aligned terrain, collision remains source-derived, the player starts at a top-water boat entry, and a small collect-return route can be validated repeatedly.
+
+Accepted constraints for the next batch:
+
+- Do not move the entire full sketch into production yet; work from focused slices.
+- Keep `production_slice_01` bounded to the selected top-center entry hub region unless a source-data cleanup issue intentionally revises it.
+- Use `boat_spawn` as the preferred production-style entry and extraction model.
+- Keep gameplay scoped to movement, salvage, hazards, extraction, reset, and review UI until the visual pipeline is trustworthy.
+- Keep the visual target clean side-view underwater cave terrain with grid-aligned seam-critical tiles; fix individual assets or source data instead of regenerating whole scenes.
+
+Recommended next order:
+
+1. [#31](https://github.com/joeypshell/oceangame2/issues/31) promotes the production slice to the default preview after review acceptance.
+2. [#32](https://github.com/joeypshell/oceangame2/issues/32) adds a source-render-collision review artifact so JSON, rendered terrain, and collision stay easy to compare.
+3. [#33](https://github.com/joeypshell/oceangame2/issues/33) cleans source-data topology artifacts in `production_slice_01`.
+4. [#34](https://github.com/joeypshell/oceangame2/issues/34) and [#35](https://github.com/joeypshell/oceangame2/issues/35) replace confusing placeholder entity markers with readable salvage/hazard and boat-entry visuals.
+5. [#36](https://github.com/joeypshell/oceangame2/issues/36) locks an accepted production-slice visual baseline before larger visual changes.
+6. [#37](https://github.com/joeypshell/oceangame2/issues/37) and [#38](https://github.com/joeypshell/oceangame2/issues/38) improve debug marker review and capture framing.
+7. [#39](https://github.com/joeypshell/oceangame2/issues/39) adds one scoped pressure mechanic only after visual/source validation is stable.
+8. [#40](https://github.com/joeypshell/oceangame2/issues/40) selects a second production slice once the first slice workflow is accepted.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 

@@ -53,3 +53,22 @@ These are intentionally out of scope until the visual workflow is proven:
 ## Design Constraint
 
 Every gameplay feature must support the visual proof-of-concept. If a feature does not help test map readability, asset consistency, or scene composition, it waits.
+
+## Current Production Slice Constraints
+
+The current focused production source is:
+
+```text
+maps/production_slice_01.greybox.json
+```
+
+It is a bounded top-center entry hub slice from `maps/full_cave_sketch_01.greybox.json`, not an attempt to produce the whole full sketch at once.
+
+Accepted constraints for the next phase:
+
+- The player enters and extracts through the authored `boat_spawn` entity.
+- The first loop remains movement, salvage collection, hazard interaction, return to extraction, completion, and reset.
+- Terrain and collision remain generated from JSON source data.
+- Supplied sketch icons are ignored by terrain conversion until intentionally reauthored as JSON entities.
+- Visual changes should target individual assets, source map data, or renderer rules; do not regenerate the whole scene to fix one visual problem.
+- New gameplay pressure should stay scoped until the production-slice visual workflow is accepted.
