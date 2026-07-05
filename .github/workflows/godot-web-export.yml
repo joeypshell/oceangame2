@@ -83,22 +83,38 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
+      - name: Check GitHub Pages status
+        id: pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          status="$(curl -s -o /tmp/pages.json -w "%{http_code}" \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/pages")"
+          echo "status=${status}" >> "${GITHUB_OUTPUT}"
+          if [ "${status}" != "200" ]; then
+            echo "GitHub Pages is not enabled for this repository; skipping Pages deploy."
+          fi
+
       - name: Download web export artifact
+        if: steps.pages.outputs.status == '200'
         uses: actions/download-artifact@v4
         with:
           name: oceangame2-web-export
           path: exports/web
 
       - name: Configure GitHub Pages
+        if: steps.pages.outputs.status == '200'
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Upload Pages artifact
+        if: steps.pages.outputs.status == '200'
         uses: actions/upload-pages-artifact@v3
         with:
           path: exports/web
 
       - name: Deploy to GitHub Pages
+        if: steps.pages.outputs.status == '200'
         id: deployment
         uses: actions/deploy-pages@v4
