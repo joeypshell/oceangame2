@@ -33,6 +33,20 @@ Use it for modular underwater cave terrain, broad readable rock shapes, clear bl
 - Terrain should be modular and asset-friendly: grid-aligned floors, walls, ceilings, corners, and background silhouettes.
 - Decorative coral, seaweed, crates, lamps, wreckage, and bubbles should be separate props, not baked into every terrain chunk.
 
+## Current Terrain Tile Pass
+
+The `cave_tileset_v1` polish pass for the first production slice targets these visual defects:
+
+- large solid terrain masses reading as repeated square scratch tiles
+- pale sandy top edges overpowering the water and forming bright zipper lines
+- semi-transparent cyan-looking cracks showing through the rock texture
+
+Expected screenshot differences after this pass:
+
+- rock interiors read as broader blue-gray planes with lower-contrast accents
+- sandy top edges stay gameplay-readable but are thinner and more muted
+- map topology, tile-grid alignment, collision, salvage, hazards, and camera framing are unchanged
+
 ## Suggested Palette Roles
 
 - Water: clear cyan/blue gradient.
