@@ -23,6 +23,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Engine: Godot 4.7, GDScript
 - Main scene: `scenes/main/Main.tscn`
 - Main map source: `maps/cave_salvage_test_01.greybox.json`
+- Organic playable map source: `maps/cave_salvage_organic_01.greybox.json`
 - Organic tileset stress-test map: `maps/cave_tileset_test_01.greybox.json`
 - Current terrain atlas: `assets/terrain_tiles/cave_tileset_v1.png`
 - Web export workflow: `.github/workflows/godot-web-export.yml`
@@ -67,6 +68,12 @@ Current terrain renderer:
 - Keeps collision generated from JSON terrain rectangles.
 - Hides the source grid in normal preview mode.
 - Supports `--show-debug-overlay` for map debugging.
+
+Current map-loading helper:
+
+- Open the editor: `.\tools\open_godot_project.ps1`
+- Run the default map locally: `.\tools\open_godot_project.ps1 -Run`
+- Run the organic salvage map locally: `.\tools\open_godot_project.ps1 -Run -OrganicMap`
 
 ## Web Preview Status
 
@@ -132,6 +139,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 Current issue state as of 2026-07-05:
 
 - Open: #12 `Author organic salvage cave map source pass`
+- Closed: #13 local Godot preview helper
 - Closed: #1 Godot greybox scene
 - Closed: #2 modular cave terrain asset kit
 - Closed: #3 terrain modules over greybox
@@ -146,6 +154,7 @@ Current issue state as of 2026-07-05:
 
 Recent important commits:
 
+- `367172e` Add local Godot preview helper
 - `1a8ceb6` Refine cave tileset top edges
 - `90d1f10` Add Godot smoke workflow
 - `3c63de4` Package terrain assets in web export
@@ -157,7 +166,8 @@ Recent important commits:
 ## Known Limits
 
 - Terrain art is still first-pass structural placeholder art.
-- The map is mostly rectilinear compared with the eventual organic cave goal.
+- The default map is mostly rectilinear compared with the eventual organic cave goal.
+- `cave_salvage_organic_01` is a first playable organic source-map pass, but it is not yet promoted to the default public preview.
 - Collision is rectangular per terrain block.
 - Salvage and hazards are visual markers only.
 - There is no scoring, inventory, health, oxygen, extraction loop, or real enemy behavior yet.
@@ -168,7 +178,7 @@ Recent important commits:
 
 The most logical next work is probably one of:
 
-1. Implement issue #12 so the main playable salvage map moves toward more organic cave topology and away from long rectangular terrain runs.
+1. Finish issue #12 verification and decide whether to promote `cave_salvage_organic_01` to the default preview map or keep it as a selectable comparison map.
 2. Create a small issue to make the public preview more useful for visual review: start camera framing, title/version watermark, and maybe a simple view toggle.
 3. Create a gameplay-minimum issue: collect salvage, return to extraction, score, restart.
 4. Create a small backlog expansion pass so the repo returns to about 10 open actionable issues.

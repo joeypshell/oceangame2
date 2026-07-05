@@ -1,7 +1,9 @@
 param(
     [string]$GodotPath = $env:GODOT_EXE,
+    [string]$MapPath = "",
     [switch]$Run,
     [switch]$DebugOverlay,
+    [switch]$OrganicMap,
     [switch]$CheckOnly
 )
 
@@ -40,6 +42,12 @@ $GodotExe = Resolve-GodotExecutable -RequestedPath $GodotPath
 
 if ($Run) {
     $GodotArgs = @("--path", $ProjectRoot)
+    if ($OrganicMap) {
+        $MapPath = "res://maps/cave_salvage_organic_01.greybox.json"
+    }
+    if ($MapPath) {
+        $GodotArgs += "--map-path=$MapPath"
+    }
     if ($DebugOverlay) {
         $GodotArgs += "--show-debug-overlay"
     }

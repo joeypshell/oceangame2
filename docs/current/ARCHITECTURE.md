@@ -14,6 +14,16 @@ maps/cave_salvage_test_01.greybox.json
 
 The Godot scene reads this JSON at runtime. Do not hand-tune in-engine terrain topology without updating the source map.
 
+Additional current map sources:
+
+- `maps/cave_salvage_organic_01.greybox.json`
+  - First playable organic salvage map pass.
+  - Less rectangular than the default map, with carved pockets, ledges, a lower return loop, and a right-side salvage destination.
+  - Load locally with `.\tools\open_godot_project.ps1 -Run -OrganicMap`.
+- `maps/cave_tileset_test_01.greybox.json`
+  - Organic stress-test map for TileSet terrain rendering.
+  - Used to exercise jagged edges, winding tunnels, pillars, isolated cells, and pockets.
+
 ## Scene Structure
 
 - `scenes/main/Main.tscn`
@@ -39,6 +49,7 @@ The Godot scene reads this JSON at runtime. Do not hand-tune in-engine terrain t
   - Loads world and player scenes.
   - Applies camera bounds from the world map size.
   - Supports visual capture flags for the baseline screenshot and named camera-test captures.
+  - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.

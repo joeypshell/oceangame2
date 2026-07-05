@@ -22,6 +22,18 @@ Run with the source map/grid overlay visible:
 .\tools\open_godot_project.ps1 -Run -DebugOverlay
 ```
 
+Run the organic salvage map pass locally:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -OrganicMap
+```
+
+Run any map source by path:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -MapPath "res://maps/cave_salvage_organic_01.greybox.json"
+```
+
 If Godot is installed somewhere else, either set `GODOT_EXE` or pass `-GodotPath`:
 
 ```powershell
@@ -102,11 +114,20 @@ Capture the organic tileset stress-test views:
 
 This reads `camera_tests` from `maps/cave_tileset_test_01.greybox.json` and writes PNGs to `visual_captures/tileset_test/`.
 
+Capture the organic salvage map pass:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-organic-map
+```
+
+This reads `camera_tests` from `maps/cave_salvage_organic_01.greybox.json` and writes PNGs to `visual_captures/organic_salvage/`.
+
 Regenerate the cave tileset and organic stress-test map:
 
 ```bash
 python tools/generate_cave_tileset.py
 python tools/generate_tileset_test_map.py
+python tools/generate_organic_salvage_map.py
 ```
 
 Process locally generated raw chroma-key terrain assets into exact-size transparent draft PNGs:

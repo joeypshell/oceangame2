@@ -44,6 +44,12 @@ The current primary direction is [visual_direction_b_modular_cave.png](reference
 
 The first greybox source map is [cave_salvage_test_01.greybox.json](maps/cave_salvage_test_01.greybox.json), with a generated preview at [cave_salvage_test_01.svg](references/greybox/cave_salvage_test_01.svg).
 
+The first organic playable salvage map source pass is [cave_salvage_organic_01.greybox.json](maps/cave_salvage_organic_01.greybox.json), with a generated preview at [cave_salvage_organic_01.svg](references/greybox/cave_salvage_organic_01.svg). Run it locally with:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -OrganicMap
+```
+
 The organic tileset stress-test map is [cave_tileset_test_01.greybox.json](maps/cave_tileset_test_01.greybox.json), with a generated preview at [cave_tileset_test_01.svg](references/greybox/cave_tileset_test_01.svg).
 
 Regenerate and validate the greybox preview with:
@@ -51,6 +57,9 @@ Regenerate and validate the greybox preview with:
 ```bash
 python tools/render_greybox_map.py maps/cave_salvage_test_01.greybox.json references/greybox/cave_salvage_test_01.svg
 python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
+python tools/generate_organic_salvage_map.py
+python tools/render_greybox_map.py maps/cave_salvage_organic_01.greybox.json references/greybox/cave_salvage_organic_01.svg
+python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
 python tools/generate_tileset_test_map.py
 python tools/render_greybox_map.py maps/cave_tileset_test_01.greybox.json references/greybox/cave_tileset_test_01.svg
 python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
