@@ -14,13 +14,22 @@ const BACKGROUND_ART_ALPHA := 0.26
 const CAVE_TILESET_TEXTURE := "res://assets/terrain_tiles/cave_tileset_v1.png"
 const BACKGROUND_ROCKS_TEXTURE := "res://assets/terrain/background_rocks_01.png"
 const CAVE_TILESET_COLUMNS := 8
-const CAVE_TILESET_ROWS := 3
+const CAVE_TILESET_ROWS := 5
 const TERRAIN_SOURCE_ID := 0
 const MASK_TOP := 1
 const MASK_RIGHT := 2
 const MASK_BOTTOM := 4
 const MASK_LEFT := 8
-const FILL_VARIANT_COORD := Vector2i(0, 2)
+const FILL_COORDS := [Vector2i(0, 0), Vector2i(0, 2), Vector2i(5, 2), Vector2i(6, 2), Vector2i(7, 2)]
+const TOP_COORDS := [Vector2i(1, 0), Vector2i(0, 3), Vector2i(1, 3)]
+const RIGHT_COORDS := [Vector2i(2, 0), Vector2i(6, 3), Vector2i(7, 3)]
+const BOTTOM_COORDS := [Vector2i(4, 0), Vector2i(2, 3), Vector2i(3, 3)]
+const LEFT_COORDS := [Vector2i(0, 1), Vector2i(4, 3), Vector2i(5, 3)]
+const TOP_RIGHT_OUTER_COORDS := [Vector2i(3, 0), Vector2i(0, 4)]
+const LEFT_TOP_OUTER_COORDS := [Vector2i(1, 1), Vector2i(1, 4)]
+const RIGHT_BOTTOM_OUTER_COORDS := [Vector2i(6, 0), Vector2i(2, 4)]
+const BOTTOM_LEFT_OUTER_COORDS := [Vector2i(4, 1), Vector2i(3, 4)]
+const ISOLATED_COORDS := [Vector2i(7, 1), Vector2i(4, 4), Vector2i(5, 4)]
 const INNER_TOP_LEFT_COORD := Vector2i(1, 2)
 const INNER_TOP_RIGHT_COORD := Vector2i(2, 2)
 const INNER_BOTTOM_LEFT_COORD := Vector2i(3, 2)
@@ -179,10 +188,32 @@ func _terrain_atlas_coords(cell: Vector2i, solid_cells: Dictionary) -> Vector2i:
 		var inner_coord := _inner_corner_atlas_coords(cell, solid_cells)
 		if inner_coord != NO_SPECIAL_COORD:
 			return inner_coord
-		if (cell.x + cell.y) % 5 == 0:
-			return FILL_VARIANT_COORD
+		return _variant_coord(cell, FILL_COORDS)
 
+	if mask == MASK_TOP:
+		return _variant_coord(cell, TOP_COORDS)
+	if mask == MASK_RIGHT:
+		return _variant_coord(cell, RIGHT_COORDS)
+	if mask == MASK_BOTTOM:
+		return _variant_coord(cell, BOTTOM_COORDS)
+	if mask == MASK_LEFT:
+		return _variant_coord(cell, LEFT_COORDS)
+	if mask == (MASK_TOP | MASK_RIGHT):
+		return _variant_coord(cell, TOP_RIGHT_OUTER_COORDS)
+	if mask == (MASK_LEFT | MASK_TOP):
+		return _variant_coord(cell, LEFT_TOP_OUTER_COORDS)
+	if mask == (MASK_RIGHT | MASK_BOTTOM):
+		return _variant_coord(cell, RIGHT_BOTTOM_OUTER_COORDS)
+	if mask == (MASK_BOTTOM | MASK_LEFT):
+		return _variant_coord(cell, BOTTOM_LEFT_OUTER_COORDS)
+	if mask == (MASK_TOP | MASK_RIGHT | MASK_BOTTOM | MASK_LEFT):
+		return _variant_coord(cell, ISOLATED_COORDS)
 	return Vector2i(mask % CAVE_TILESET_COLUMNS, mask / CAVE_TILESET_COLUMNS)
+
+
+func _variant_coord(cell: Vector2i, coords: Array) -> Vector2i:
+	var index: int = abs((cell.x * 31 + cell.y * 17) % coords.size())
+	return coords[index]
 
 
 func _inner_corner_atlas_coords(cell: Vector2i, solid_cells: Dictionary) -> Vector2i:

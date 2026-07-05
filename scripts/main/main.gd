@@ -2,13 +2,24 @@ extends Node2D
 
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
+const DEFAULT_MAP_PATH := "res://maps/cave_salvage_test_01.greybox.json"
+const TILESET_TEST_MAP_PATH := "res://maps/cave_tileset_test_01.greybox.json"
 const SCREENSHOT_PATH := "res://visual_baselines/001_greybox_in_engine.png"
 const CAMERA_TEST_CAPTURE_DIR := "res://visual_captures/latest"
+const TILESET_TEST_CAPTURE_DIR := "res://visual_captures/tileset_test"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 
 
 func _ready() -> void:
+	var user_args := OS.get_cmdline_user_args()
+	var engine_args := OS.get_cmdline_args()
+	var capture_tileset_test := _has_arg(user_args, engine_args, "--capture-tileset-test")
+
 	var world := WORLD_SCENE.instantiate()
+	if capture_tileset_test:
+		world.map_path = TILESET_TEST_MAP_PATH
+	else:
+		world.map_path = DEFAULT_MAP_PATH
 	add_child(world)
 	world.load_greybox()
 
@@ -19,12 +30,12 @@ func _ready() -> void:
 	if player.has_method("set_camera_limits"):
 		player.set_camera_limits(Rect2(Vector2.ZERO, world.map_pixel_size))
 
-	var user_args := OS.get_cmdline_user_args()
-	var engine_args := OS.get_cmdline_args()
-	if "--capture-greybox-screenshot" in user_args or "--capture-greybox-screenshot" in engine_args:
+	if _has_arg(user_args, engine_args, "--capture-greybox-screenshot"):
 		_capture_screenshot_and_quit()
-	elif "--capture-camera-tests" in user_args or "--capture-camera-tests" in engine_args:
-		_capture_camera_tests_and_quit(world)
+	elif _has_arg(user_args, engine_args, "--capture-camera-tests"):
+		_capture_camera_tests_and_quit(world, CAMERA_TEST_CAPTURE_DIR)
+	elif capture_tileset_test:
+		_capture_camera_tests_and_quit(world, TILESET_TEST_CAPTURE_DIR)
 
 
 func _capture_screenshot_and_quit() -> void:
@@ -39,7 +50,7 @@ func _capture_screenshot_and_quit() -> void:
 	get_tree().quit()
 
 
-func _capture_camera_tests_and_quit(world: Node) -> void:
+func _capture_camera_tests_and_quit(world: Node, capture_dir: String) -> void:
 	var camera_tests: Array = world.camera_tests
 	if camera_tests.is_empty():
 		push_error("No camera_tests found in greybox map source.")
@@ -57,7 +68,7 @@ func _capture_camera_tests_and_quit(world: Node) -> void:
 	add_child(camera)
 	camera.make_current()
 
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(CAMERA_TEST_CAPTURE_DIR))
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(capture_dir))
 
 	for camera_test in camera_tests:
 		var view_id := _safe_filename(str(camera_test.get("id", "camera_test")))
@@ -65,17 +76,23 @@ func _capture_camera_tests_and_quit(world: Node) -> void:
 			float(camera_test.get("center_x", 0.0)) * world.tile_size,
 			float(camera_test.get("center_y", 0.0)) * world.tile_size
 		)
+		var zoom := float(camera_test.get("zoom", CAPTURE_ZOOM.x))
+		camera.zoom = Vector2(zoom, zoom)
 		camera.position = center
 
 		await get_tree().process_frame
 		await get_tree().process_frame
 
-		var output_path := "%s/%s.png" % [CAMERA_TEST_CAPTURE_DIR, view_id]
+		var output_path := "%s/%s.png" % [capture_dir, view_id]
 		var image := get_viewport().get_texture().get_image()
 		image.save_png(output_path)
 		print("Saved camera test capture: %s" % ProjectSettings.globalize_path(output_path))
 
 	get_tree().quit()
+
+
+func _has_arg(user_args: PackedStringArray, engine_args: PackedStringArray, value: String) -> bool:
+	return value in user_args or value in engine_args
 
 
 func _safe_filename(value: String) -> String:

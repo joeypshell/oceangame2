@@ -12,6 +12,12 @@ The source map remains:
 maps/cave_salvage_test_01.greybox.json
 ```
 
+The dedicated organic tileset stress-test map is:
+
+```text
+maps/cave_tileset_test_01.greybox.json
+```
+
 ## Runtime Rule
 
 `scripts/world/greybox_world.gd` now builds core terrain in this order:
@@ -75,8 +81,8 @@ Use large generated modules for:
 Follow-up: #9
 
 - The current tile art is a structural placeholder, not final production art.
-- The tile texture repeats visibly on long floors and walls; later passes should add more variants.
-- The current greybox uses hard rectangular terrain. Organic cave silhouettes will require either a richer tile set or a map simplification pass.
+- The atlas now includes multiple fill, edge, corner, and isolated-tile variants, but still needs a final AI-assisted production-art pass.
+- The organic stress-test map exercises jagged cave edges, diagonal stair steps, pillars, isolated islands, pockets, and a carved winding tunnel.
 - Stalactites are represented as grid terrain, not dedicated hanging-rock decoration yet.
 - The source `TileMapLayer` remains faintly visible for visual debugging.
 
@@ -86,10 +92,12 @@ Run:
 
 ```bash
 python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
+python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
 ```
 
 Then regenerate the named Godot captures:
 
 ```bash
 Godot_v4.7-stable_win64_console.exe --path . --quit-after 10 --capture-camera-tests
+Godot_v4.7-stable_win64_console.exe --path . --quit-after 10 --capture-tileset-test
 ```

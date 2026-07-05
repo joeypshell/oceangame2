@@ -30,13 +30,20 @@ references/asset_reviews/terrain_kit_01.png
 
 | Asset | Size | Purpose | Status | Notes |
 |---|---:|---|---|---|
-| `assets/terrain_tiles/cave_tileset_v1.png` | 256x96 | First grid-aligned cave terrain atlas | draft | 32x32 tiles; supports exposed-side masks, inner corners, and a fill variant. |
-| `assets/terrain_tiles/cave_tileset_v1_manifest.json` | n/a | Tile metadata | draft | Names atlas coordinates and mask semantics. |
+| `assets/terrain_tiles/cave_tileset_v1.png` | 256x160 | First grid-aligned cave terrain atlas | draft | 32x32 tiles; supports exposed-side masks, inner corners, isolated terrain, and fill/edge variants. |
+| `assets/terrain_tiles/cave_tileset_v1_manifest.json` | n/a | Tile metadata | draft | Names atlas coordinates, mask semantics, and variant tiles. |
 
 Review sheet:
 
 ```text
 references/asset_reviews/cave_tileset_v1_review.png
+```
+
+Stress-test source and captures:
+
+```text
+maps/cave_tileset_test_01.greybox.json
+visual_captures/tileset_test/
 ```
 
 ## Props

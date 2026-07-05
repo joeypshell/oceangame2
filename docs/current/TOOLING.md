@@ -6,12 +6,14 @@ Validate map reachability:
 
 ```bash
 python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
+python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
 ```
 
 Regenerate the SVG preview from source data:
 
 ```bash
 python tools/render_greybox_map.py maps/cave_salvage_test_01.greybox.json references/greybox/cave_salvage_test_01.svg
+python tools/render_greybox_map.py maps/cave_tileset_test_01.greybox.json references/greybox/cave_tileset_test_01.svg
 ```
 
 Run whitespace checks:
@@ -43,6 +45,21 @@ Capture the current named camera test views:
 ```
 
 This reads `camera_tests` from `maps/cave_salvage_test_01.greybox.json` and writes PNGs to `visual_captures/latest/`.
+
+Capture the organic tileset stress-test views:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-tileset-test
+```
+
+This reads `camera_tests` from `maps/cave_tileset_test_01.greybox.json` and writes PNGs to `visual_captures/tileset_test/`.
+
+Regenerate the cave tileset and organic stress-test map:
+
+```bash
+python tools/generate_cave_tileset.py
+python tools/generate_tileset_test_map.py
+```
 
 Process locally generated raw chroma-key terrain assets into exact-size transparent draft PNGs:
 

@@ -11,7 +11,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 TILE_SIZE = 32
 ATLAS_COLUMNS = 8
-ATLAS_ROWS = 3
+ATLAS_ROWS = 5
 
 ROOT = Path(__file__).resolve().parents[1]
 ASSET_DIR = ROOT / "assets" / "terrain_tiles"
@@ -49,55 +49,94 @@ MASK_NAMES = {
     15: "isolated",
 }
 
-SPECIAL_TILES = [
-    {"name": "fill_variant", "coord": [0, 2], "kind": "fill_variant"},
-    {"name": "inner_top_left", "coord": [1, 2], "kind": "inner_top_left"},
-    {"name": "inner_top_right", "coord": [2, 2], "kind": "inner_top_right"},
-    {"name": "inner_bottom_left", "coord": [3, 2], "kind": "inner_bottom_left"},
-    {"name": "inner_bottom_right", "coord": [4, 2], "kind": "inner_bottom_right"},
+EXTRA_TILES = [
+    {"name": "fill_variant_a", "coord": [0, 2], "mask": 0, "variant": 1},
+    {"name": "inner_top_left", "coord": [1, 2], "mask": 0, "variant": 1, "inner": "inner_top_left"},
+    {"name": "inner_top_right", "coord": [2, 2], "mask": 0, "variant": 1, "inner": "inner_top_right"},
+    {"name": "inner_bottom_left", "coord": [3, 2], "mask": 0, "variant": 1, "inner": "inner_bottom_left"},
+    {"name": "inner_bottom_right", "coord": [4, 2], "mask": 0, "variant": 1, "inner": "inner_bottom_right"},
+    {"name": "fill_variant_b", "coord": [5, 2], "mask": 0, "variant": 2},
+    {"name": "fill_variant_c", "coord": [6, 2], "mask": 0, "variant": 3},
+    {"name": "fill_variant_d", "coord": [7, 2], "mask": 0, "variant": 4},
+    {"name": "top_variant_a", "coord": [0, 3], "mask": 1, "variant": 1},
+    {"name": "top_variant_b", "coord": [1, 3], "mask": 1, "variant": 2},
+    {"name": "bottom_variant_a", "coord": [2, 3], "mask": 4, "variant": 1},
+    {"name": "bottom_variant_b", "coord": [3, 3], "mask": 4, "variant": 2},
+    {"name": "left_variant_a", "coord": [4, 3], "mask": 8, "variant": 1},
+    {"name": "left_variant_b", "coord": [5, 3], "mask": 8, "variant": 2},
+    {"name": "right_variant_a", "coord": [6, 3], "mask": 2, "variant": 1},
+    {"name": "right_variant_b", "coord": [7, 3], "mask": 2, "variant": 2},
+    {"name": "top_right_outer_variant", "coord": [0, 4], "mask": 3, "variant": 1},
+    {"name": "left_top_outer_variant", "coord": [1, 4], "mask": 9, "variant": 1},
+    {"name": "right_bottom_outer_variant", "coord": [2, 4], "mask": 6, "variant": 1},
+    {"name": "bottom_left_outer_variant", "coord": [3, 4], "mask": 12, "variant": 1},
+    {"name": "isolated_variant_a", "coord": [4, 4], "mask": 15, "variant": 1},
+    {"name": "isolated_variant_b", "coord": [5, 4], "mask": 15, "variant": 2},
 ]
 
 
 def draw_base(draw: ImageDraw.ImageDraw, variant: int = 0) -> None:
     draw.rectangle((0, 0, TILE_SIZE, TILE_SIZE), fill=ROCK_DARK)
-    offset = variant * 3
-    facets = [
-        [(2, 5), (14, 2), (22, 8), (13, 13)],
-        [(17, 3), (30, 5), (27, 16), (20, 14)],
-        [(3, 18), (11, 13), (18, 22), (8, 29)],
-        [(17, 19), (29, 16), (30, 30), (21, 28)],
-    ]
-    for index, points in enumerate(facets):
-        moved = [((x + offset + index) % TILE_SIZE, y) for x, y in points]
-        color = ROCK_MID if index % 2 == 0 else (30, 60, 74, 255)
-        draw.polygon(moved, fill=color)
-    draw.line((4, 14, 28, 14), fill=(48, 84, 99, 150), width=1)
-    draw.line((7, 24, 24, 22), fill=(17, 33, 43, 170), width=1)
+    for index in range(7):
+        seed = variant * 37 + index * 19
+        cx = 4 + seed % 24
+        cy = 4 + (seed * 7) % 24
+        w = 5 + seed % 8
+        h = 4 + (seed // 3) % 7
+        skew = (seed % 5) - 2
+        points = [
+            (max(1, cx - w // 2), max(1, cy - h // 2)),
+            (min(30, cx + w // 2 + skew), max(1, cy - h // 2 + 1)),
+            (min(30, cx + w // 2), min(30, cy + h // 2)),
+            (max(1, cx - w // 2 - skew), min(30, cy + h // 2 - 1)),
+        ]
+        color = ROCK_MID if (index + variant) % 3 else (30, 60, 74, 255)
+        draw.polygon(points, fill=color)
+
+    crack_count = 2 + variant % 3
+    for index in range(crack_count):
+        seed = variant * 23 + index * 13
+        x0 = 4 + seed % 22
+        y0 = 7 + (seed * 5) % 18
+        x1 = min(29, max(2, x0 + (seed % 9) - 4))
+        y1 = min(29, max(2, y0 + 4 + seed % 5))
+        draw.line((x0, y0, x1, y1), fill=(17, 33, 43, 150), width=1)
+
+    if variant % 2 == 0:
+        draw.line((3, 10 + variant % 8, 16, 12 + variant % 5), fill=(48, 84, 99, 120), width=1)
+    else:
+        draw.line((14, 22 - variant % 7, 29, 18 + variant % 5), fill=(48, 84, 99, 120), width=1)
 
 
-def draw_top_edge(draw: ImageDraw.ImageDraw) -> None:
-    points = [(0, 2), (6, 0), (15, 2), (26, 1), (31, 4), (31, 9), (0, 9)]
+def draw_top_edge(draw: ImageDraw.ImageDraw, variant: int = 0) -> None:
+    lift = variant % 3
+    points = [(0, 2 + lift), (6, 0), (15, 2 + lift), (26, 1), (31, 4), (31, 9), (0, 9)]
     draw.polygon(points, fill=SAND)
     draw.line((2, 3, 29, 3), fill=SAND_LIGHT, width=2)
     draw.line((0, 10, 31, 12), fill=ROCK_SHADOW, width=3)
+    if variant:
+        draw.rectangle((7 + variant * 3, 5, 10 + variant * 3, 7), fill=(187, 165, 118, 255))
 
 
-def draw_bottom_edge(draw: ImageDraw.ImageDraw) -> None:
-    points = [(0, 23), (31, 22), (31, 31), (0, 31)]
+def draw_bottom_edge(draw: ImageDraw.ImageDraw, variant: int = 0) -> None:
+    drop = variant % 3
+    points = [(0, 23 - drop), (31, 22 + drop), (31, 31), (0, 31)]
     draw.polygon(points, fill=ROCK_SHADOW)
     draw.line((3, 24, 28, 23), fill=(54, 91, 106, 255), width=2)
-    draw.polygon([(6, 24), (11, 31), (15, 24)], fill=(14, 29, 39, 255))
-    draw.polygon([(22, 23), (25, 31), (30, 24)], fill=(14, 29, 39, 255))
+    draw.polygon([(6 + variant, 24), (11 + variant, 31), (15 + variant, 24)], fill=(14, 29, 39, 255))
+    draw.polygon([(22 - variant, 23), (25 - variant, 31), (30 - variant, 24)], fill=(14, 29, 39, 255))
 
 
-def draw_left_edge(draw: ImageDraw.ImageDraw) -> None:
-    draw.polygon([(0, 0), (7, 2), (5, 13), (9, 22), (4, 31), (0, 31)], fill=ROCK_SHADOW)
-    draw.line((8, 4, 7, 28), fill=ROCK_LIGHT, width=2)
+def draw_left_edge(draw: ImageDraw.ImageDraw, variant: int = 0) -> None:
+    wiggle = variant % 3
+    draw.polygon([(0, 0), (7 + wiggle, 2), (5, 13), (9 + wiggle, 22), (4, 31), (0, 31)], fill=ROCK_SHADOW)
+    draw.line((8 + wiggle, 4, 7, 28), fill=ROCK_LIGHT, width=2)
 
 
-def draw_right_edge(draw: ImageDraw.ImageDraw) -> None:
-    draw.polygon([(31, 0), (24, 3), (26, 14), (22, 23), (27, 31), (31, 31)], fill=ROCK_SHADOW)
-    draw.line((23, 4, 24, 28), fill=ROCK_LIGHT, width=2)
+def draw_right_edge(draw: ImageDraw.ImageDraw, variant: int = 0) -> None:
+    wiggle = variant % 3
+    draw.polygon([(31, 0), (24 - wiggle, 3), (26, 14), (22 - wiggle, 23), (27, 31), (31, 31)], fill=ROCK_SHADOW)
+    draw.line((23 - wiggle, 4, 24, 28), fill=ROCK_LIGHT, width=2)
 
 
 def draw_inner_corner(draw: ImageDraw.ImageDraw, kind: str) -> None:
@@ -120,21 +159,22 @@ def draw_tile(mask: int, variant: int = 0) -> Image.Image:
     draw = ImageDraw.Draw(tile)
     draw_base(draw, variant)
     if mask & 1:
-        draw_top_edge(draw)
+        draw_top_edge(draw, variant)
     if mask & 2:
-        draw_right_edge(draw)
+        draw_right_edge(draw, variant)
     if mask & 4:
-        draw_bottom_edge(draw)
+        draw_bottom_edge(draw, variant)
     if mask & 8:
-        draw_left_edge(draw)
+        draw_left_edge(draw, variant)
     return tile
 
 
-def draw_special(kind: str) -> Image.Image:
-    tile = draw_tile(0, 1)
+def draw_extra_tile(item: dict) -> Image.Image:
+    tile = draw_tile(int(item["mask"]), int(item.get("variant", 0)))
     draw = ImageDraw.Draw(tile)
-    if kind != "fill_variant":
-        draw_inner_corner(draw, kind)
+    inner = item.get("inner")
+    if inner:
+        draw_inner_corner(draw, inner)
     return tile
 
 
@@ -164,10 +204,10 @@ def main() -> int:
             },
         })
 
-    for special in SPECIAL_TILES:
-        x, y = special["coord"]
-        atlas.alpha_composite(draw_special(special["kind"]), (x * TILE_SIZE, y * TILE_SIZE))
-        tiles.append(special)
+    for extra in EXTRA_TILES:
+        x, y = extra["coord"]
+        atlas.alpha_composite(draw_extra_tile(extra), (x * TILE_SIZE, y * TILE_SIZE))
+        tiles.append(extra)
 
     atlas.save(ATLAS_PATH)
     MANIFEST_PATH.write_text(
