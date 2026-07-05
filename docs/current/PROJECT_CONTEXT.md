@@ -88,6 +88,7 @@ The GitHub Pages source is configured for GitHub Actions publishing. The `Godot 
 - downloads Godot 4.7 and export templates
 - generates ignored `export_presets.cfg` with `tools/write_web_export_preset.py`
 - exports to ignored `exports/web/`
+- serves the export and runs `tools/check_web_preview.cjs` in Chromium to catch missing terrain assets before deploy
 - uploads the `oceangame2-web-export` artifact
 - deploys to GitHub Pages when Pages is enabled
 
@@ -95,6 +96,7 @@ Important fixed pitfall: Web exports did not package dynamically loaded PNG terr
 
 - preload terrain textures in `scripts/world/greybox_world.gd`
 - include `*.json,*.png,*.svg` in `tools/write_web_export_preset.py`
+- fail the web export workflow if the browser console reports missing terrain textures or TileSet creation errors
 
 If the browser preview ever shows only blue water, faint rectangles, markers, and no cave tiles, check browser logs for missing `res://assets/...png` warnings and verify the export package includes the assets.
 

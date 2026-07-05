@@ -97,7 +97,18 @@ Open `http://127.0.0.1:8060/` after the server starts. Do not open `exports/web/
 
 If the local export reports missing `web_nothreads_*` templates, install the Godot 4.7 export templates through the editor or use the GitHub Actions artifact; CI installs templates during the workflow.
 
-GitHub Actions builds the same preview in `Godot Web Export`. Download the `oceangame2-web-export` artifact from the workflow run when you need to inspect a build. The workflow also deploys GitHub Pages from `main` when Pages is already enabled for the repository. If the Pages job says it skipped deployment, open repository Settings, enable Pages, and set the source to GitHub Actions. The latest preview should then be available at `https://joeypshell.github.io/oceangame2/`.
+Verify a served Web export in Chromium:
+
+```powershell
+$env:NODE_PATH = "$env:TEMP\oceangame2-web-preview-check\node_modules"
+npm install --prefix "$env:TEMP\oceangame2-web-preview-check" playwright@1.55.0
+& "$env:TEMP\oceangame2-web-preview-check\node_modules\.bin\playwright.cmd" install chromium
+node tools/check_web_preview.cjs http://127.0.0.1:8060/
+```
+
+The check fails if the web preview logs `Unable to open terrain art texture`, `Unable to create cave TileSet`, `SCRIPT ERROR`, `ERROR:`, failed resource requests, or a missing Godot canvas.
+
+GitHub Actions builds the same preview in `Godot Web Export`. The workflow serves the exported build and runs `tools/check_web_preview.cjs` before uploading the artifact or deploying Pages. Download the `oceangame2-web-export` artifact from the workflow run when you need to inspect a build. The workflow also deploys GitHub Pages from `main` when Pages is already enabled for the repository. If the Pages job says it skipped deployment, open repository Settings, enable Pages, and set the source to GitHub Actions. The latest preview should then be available at `https://joeypshell.github.io/oceangame2/`.
 
 Capture the current greybox screenshot baseline:
 

@@ -81,7 +81,7 @@ Current named camera captures are generated under [visual_captures/latest](visua
 
 GitHub Actions builds a Godot Web export in the `Godot Web Export` workflow. Download the `oceangame2-web-export` artifact from the latest run, or use the GitHub Pages preview at `https://joeypshell.github.io/oceangame2/` once Pages is enabled for GitHub Actions.
 
-Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The export writes to ignored `exports/web/` output and should be served over HTTP for testing.
+Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The export writes to ignored `exports/web/` output and should be served over HTTP for testing. The export workflow also runs `tools/check_web_preview.cjs` in Chromium so missing terrain texture warnings fail CI before the Pages preview is deployed.
 
 ## First Success Condition
 

@@ -13,6 +13,8 @@ const BACKGROUND_ART_ALPHA := 0.26
 
 const CAVE_TILESET_TEXTURE := "res://assets/terrain_tiles/cave_tileset_v1.png"
 const BACKGROUND_ROCKS_TEXTURE := "res://assets/terrain/background_rocks_01.png"
+const CAVE_TILESET_TEXTURE_RESOURCE := preload("res://assets/terrain_tiles/cave_tileset_v1.png")
+const BACKGROUND_ROCKS_TEXTURE_RESOURCE := preload("res://assets/terrain/background_rocks_01.png")
 const CAVE_TILESET_COLUMNS := 8
 const CAVE_TILESET_ROWS := 5
 const TERRAIN_SOURCE_ID := 0
@@ -357,6 +359,14 @@ func _add_texture_rect(parent: Node2D, texture_path: String, item: Dictionary, s
 
 
 func _load_png_texture(texture_path: String) -> Texture2D:
+	var packaged_texture := _packaged_texture(texture_path)
+	if packaged_texture != null:
+		return packaged_texture
+
+	var resource := load(texture_path)
+	if resource is Texture2D:
+		return resource
+
 	var file := FileAccess.open(texture_path, FileAccess.READ)
 	if file == null:
 		push_warning("Unable to open terrain art texture: %s" % texture_path)
@@ -369,6 +379,16 @@ func _load_png_texture(texture_path: String) -> Texture2D:
 		return null
 
 	return ImageTexture.create_from_image(image)
+
+
+func _packaged_texture(texture_path: String) -> Texture2D:
+	match texture_path:
+		CAVE_TILESET_TEXTURE:
+			return CAVE_TILESET_TEXTURE_RESOURCE
+		BACKGROUND_ROCKS_TEXTURE:
+			return BACKGROUND_ROCKS_TEXTURE_RESOURCE
+		_:
+			return null
 
 
 func _add_marker(marker_name: String, center: Vector2, color: Color, radius: float) -> void:

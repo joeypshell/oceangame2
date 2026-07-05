@@ -12,6 +12,7 @@ on:
       - "project.godot"
       - "scenes/**"
       - "scripts/**"
+      - "tools/check_web_preview.cjs"
       - "tools/write_web_export_preset.py"
 
 permissions:
@@ -64,6 +65,39 @@ jobs:
         run: |
           mkdir -p exports/web
           godot --headless --path . --export-release Web exports/web/index.html
+
+      - name: Install Playwright
+        run: |
+          npm install --prefix "${RUNNER_TEMP}/web-preview-check" playwright@1.55.0
+          "${RUNNER_TEMP}/web-preview-check/node_modules/.bin/playwright" install --with-deps chromium
+
+      - name: Verify web preview runtime
+        env:
+          NODE_PATH: ${{ runner.temp }}/web-preview-check/node_modules
+          WEB_PREVIEW_SCREENSHOT: exports/web-preview-check.png
+        run: |
+          python -m http.server 8060 --directory exports/web > web-preview-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "${server_pid}"' EXIT
+
+          for _ in {1..30}; do
+            if curl -fsS http://127.0.0.1:8060/ > /dev/null; then
+              break
+            fi
+            sleep 1
+          done
+
+          node tools/check_web_preview.cjs http://127.0.0.1:8060/
+
+      - name: Upload web preview check artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-preview-check
+          path: |
+            exports/web-preview-check.png
+            web-preview-server.log
+          if-no-files-found: ignore
 
       - name: Upload web export artifact
         uses: actions/upload-artifact@v4
