@@ -2,6 +2,38 @@
 
 ## Local Checks
 
+Open the project in the Godot editor:
+
+```powershell
+.\tools\open_godot_project.ps1
+```
+
+Or double-click `open-godot.cmd` from the repository root.
+
+Run the current project scene locally:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run
+```
+
+Run with the source map/grid overlay visible:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -DebugOverlay
+```
+
+If Godot is installed somewhere else, either set `GODOT_EXE` or pass `-GodotPath`:
+
+```powershell
+.\tools\open_godot_project.ps1 -GodotPath "C:\Path\To\Godot_v4.7-stable_win64.exe"
+```
+
+Check which executable and project path the helper will use without launching Godot:
+
+```powershell
+.\tools\open_godot_project.ps1 -CheckOnly
+```
+
 Validate map reachability:
 
 ```bash
