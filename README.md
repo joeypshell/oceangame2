@@ -27,6 +27,7 @@ Build a small side-view salvage game that proves:
 - [Game Spec](docs/GAME_SPEC.md)
 - [Art Bible](docs/ART_BIBLE.md)
 - [Map Spec](docs/MAP_SPEC.md)
+- [Greybox Map 01](docs/planning/GREYBOX_MAP_01.md)
 - [Visual Workflow](docs/VISUAL_WORKFLOW.md)
 - [Reference Standard](docs/REFERENCE_STANDARD.md)
 - [Asset Manifest](docs/ASSET_MANIFEST.md)
@@ -36,6 +37,8 @@ Build a small side-view salvage game that proves:
 ## Locked Visual Direction
 
 The current primary direction is [visual_direction_b_modular_cave.png](references/visual/visual_direction_b_modular_cave.png): clean side-view underwater cave terrain built from large modular chunks over a simple collision/map grid.
+
+The first greybox source map is [cave_salvage_test_01.greybox.json](maps/cave_salvage_test_01.greybox.json), with a generated preview at [cave_salvage_test_01.svg](references/greybox/cave_salvage_test_01.svg).
 
 ## First Success Condition
 

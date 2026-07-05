@@ -8,6 +8,18 @@ The map must be a data source, not a screenshot to imitate. The game scene shoul
 
 Working name: `cave_salvage_test_01`
 
+Current source:
+
+```text
+maps/cave_salvage_test_01.greybox.json
+```
+
+Current preview:
+
+```text
+references/greybox/cave_salvage_test_01.svg
+```
+
 Recommended size:
 
 - Width: about 80 tiles.
