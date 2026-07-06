@@ -55,33 +55,29 @@ Done when:
 
 ## Current Roadmap Decision
 
-As of 2026-07-05, the first production slice has validated enough of the workflow to continue with focused slice production rather than restarting or attempting the whole full-map sketch at once.
+As of 2026-07-06, the project has validated the focused production-slice workflow across four different slice roles. See `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table and `docs/current/POST_SLICE_WORKFLOW_DECISION.md` for the phase decision.
 
-What `production_slice_01` is meant to test:
+The project should now move from "prove focused slice production" to "prove controlled visual revision."
 
-- a bounded slice from the supplied full sketch can become JSON source data
-- `boat_spawn` can serve as the production-style top-water entry and extraction model
-- terrain rendering and collision can stay tied to the JSON map source
-- the simple salvage, hazard, extraction, and reset loop works in a non-rectangular cave slice
-- targeted visual changes can be made by editing named assets or source data instead of regenerating the scene
+What the production-slice workflow has proven:
+
+- bounded regions from the supplied full sketch can become JSON source data
+- terrain rendering and collision can stay tied to authored source maps
+- both `boat_spawn` and in-water `spawn + base` entry/extraction models are reviewable
+- route smoke, camera captures, source/render/collision review, and visual baselines can be repeated across different topology roles
+- targeted visual changes can now be compared against accepted baselines instead of relying on memory or one-off screenshots
 
 Current constraints:
 
-- Keep map work slice-sized until the pipeline is accepted on `production_slice_01`.
+- Keep `production_slice_01` as the default preview map unless a separate default-preview decision changes it.
 - Preserve `maps/full_cave_sketch_01.greybox.json` as a topology draft and planning source.
-- Treat `maps/production_slice_01.greybox.json` as the first production-slice source.
 - Keep icons from the supplied sketch out of terrain conversion unless they are reauthored as JSON entities.
-- Keep gameplay pressure minimal until terrain readability, entity visuals, and source/render validation are stable.
+- Do not attempt whole-map productionization yet; keep map work slice-sized and source-derived.
+- Keep gameplay pressure minimal until controlled visual revision passes prove that assets and renderer changes can be made without damaging unrelated visuals.
+- Keep #52 and #53 as optional slice-03 post-baseline polish unless a future accepted-baseline replacement intentionally needs them.
 
 Next issue batch:
 
-- [#31](https://github.com/joeypshell/oceangame2/issues/31) promote the production slice to the default preview
-- [#32](https://github.com/joeypshell/oceangame2/issues/32) add a source-render-collision review artifact
-- [#33](https://github.com/joeypshell/oceangame2/issues/33) clean production-slice topology artifacts in source data
-- [#34](https://github.com/joeypshell/oceangame2/issues/34) replace placeholder salvage and hazard markers with readable props
-- [#35](https://github.com/joeypshell/oceangame2/issues/35) add boat-spawn visual and top-water entry framing
-- [#36](https://github.com/joeypshell/oceangame2/issues/36) add an accepted production-slice visual baseline workflow
-- [#37](https://github.com/joeypshell/oceangame2/issues/37) clarify entity marker meanings in debug review mode
-- [#38](https://github.com/joeypshell/oceangame2/issues/38) tune production-slice camera framing and capture set
-- [#39](https://github.com/joeypshell/oceangame2/issues/39) prototype one scoped expedition pressure mechanic
-- [#40](https://github.com/joeypshell/oceangame2/issues/40) select and author a second production slice after slice 01 is accepted
+- [#67](https://github.com/joeypshell/oceangame2/issues/67) refresh the roadmap after accepted production slices
+- [#68](https://github.com/joeypshell/oceangame2/issues/68) add an aggregate production-slice baseline comparison command
+- [#69](https://github.com/joeypshell/oceangame2/issues/69) plan the first controlled visual revision target
