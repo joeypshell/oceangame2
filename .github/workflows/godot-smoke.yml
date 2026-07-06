@@ -125,19 +125,28 @@ jobs:
 
       - name: Run scoring and cargo smoke check
         run: |
-          set +e
-          godot --headless --path . --quit-after 1 --smoke-cargo-capacity 2>&1 | tee godot-cargo-capacity.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
+          run_score_smoke() {
+            flag="$1"
+            label="$2"
+            log_path="godot-${label}.log"
 
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
+            set +e
+            godot --headless --path . --quit-after 1 "${flag}" 2>&1 | tee "${log_path}"
+            godot_status=${PIPESTATUS[0]}
+            set -e
 
-          if grep -E "SCRIPT ERROR|ERROR:" godot-cargo-capacity.log; then
-            echo "Godot reported errors during scoring and cargo smoke check."
-            exit 1
-          fi
+            if [ "${godot_status}" -ne 0 ]; then
+              exit "${godot_status}"
+            fi
+
+            if grep -E "SCRIPT ERROR|ERROR:" "${log_path}"; then
+              echo "Godot reported errors during ${label} smoke check."
+              exit 1
+            fi
+          }
+
+          run_score_smoke --smoke-cargo-capacity cargo-capacity
+          run_score_smoke --smoke-session-best-score session-best-score
 
       - name: Run map selector smoke check
         run: |

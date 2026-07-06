@@ -72,6 +72,7 @@ var _total_salvage := 0
 var _held_salvage_ids: Array[String] = []
 var _held_salvage_score := 0
 var _banked_score := 0
+var _session_best_scores_by_map := {}
 var _hazard_cooldown_seconds := 0.0
 var _hazard_feedback_seconds := 0.0
 var _hazard_interactions_enabled := true
@@ -109,6 +110,7 @@ func _ready() -> void:
 	var smoke_hazard_interaction := _has_arg(user_args, engine_args, "--smoke-hazard-interaction")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var smoke_cargo_capacity := _has_arg(user_args, engine_args, "--smoke-cargo-capacity")
+	var smoke_session_best_score := _has_arg(user_args, engine_args, "--smoke-session-best-score")
 	var smoke_route_choice := _has_arg(user_args, engine_args, "--smoke-route-choice")
 	var smoke_route_choice_metadata := _has_arg(user_args, engine_args, "--smoke-route-choice-metadata")
 	var smoke_expanded_route_choice := _has_arg(user_args, engine_args, "--smoke-expanded-route-choice")
@@ -160,6 +162,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_oxygen_pressure:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_session_best_score:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_route_choice:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_route_choice_metadata:
@@ -202,6 +206,7 @@ func _ready() -> void:
 		or smoke_hazard_interaction
 		or smoke_oxygen_pressure
 		or smoke_cargo_capacity
+		or smoke_session_best_score
 		or smoke_route_choice
 		or smoke_route_choice_metadata
 		or smoke_expanded_route_choice
@@ -245,6 +250,9 @@ func _ready() -> void:
 		return
 	if smoke_cargo_capacity:
 		_smoke_cargo_capacity_and_quit()
+		return
+	if smoke_session_best_score:
+		_smoke_session_best_score_and_quit()
 		return
 	if smoke_route_choice:
 		await _smoke_route_choice_and_quit()
@@ -410,6 +418,7 @@ func _process(delta: float) -> void:
 		_held_salvage_score = 0
 		if _total_salvage > 0 and _banked_salvage >= _total_salvage:
 			_run_complete = true
+			_record_session_best_score()
 			_last_status_note = "Run complete"
 		else:
 			_last_status_note = "Banked salvage"
@@ -461,6 +470,97 @@ func _smoke_salvage_loop_and_quit() -> void:
 		return
 
 	print("Salvage loop smoke passed: collected, banked %d score, completed, and reset %d salvage." % [completed_score, completed_total])
+	get_tree().quit()
+
+
+func _smoke_session_best_score_and_quit() -> void:
+	if _world.map_id != "production_slice_01":
+		push_error("Session best score smoke loaded unexpected map: %s" % _world.map_id)
+		get_tree().quit(1)
+		return
+	if _total_salvage <= 0:
+		push_error("Session best score smoke requires authored salvage.")
+		get_tree().quit(1)
+		return
+	if _session_best_score() != 0:
+		push_error("Session best score smoke expected a fresh map best of 0, got %d." % _session_best_score())
+		get_tree().quit(1)
+		return
+
+	_player.set_physics_process(false)
+	_hazard_interactions_enabled = false
+	var salvage_targets: Array = _world.get_salvage_centers()
+	var expected_score := 0
+	for salvage in salvage_targets:
+		expected_score += int(salvage.get("score", 0))
+		if _held_salvage >= HELD_SALVAGE_CAPACITY:
+			_player.global_position = _world.get_extraction_center()
+			_process(0.0)
+		_player.global_position = salvage["center"]
+		_process(0.0)
+
+	if _held_salvage > 0:
+		_player.global_position = _world.get_extraction_center()
+		_process(0.0)
+
+	if not _run_complete or _banked_score != expected_score:
+		push_error("Session best score smoke expected complete score %d, got complete=%s score=%d." % [expected_score, str(_run_complete), _banked_score])
+		get_tree().quit(1)
+		return
+	if _session_best_score() != expected_score:
+		push_error("Session best score smoke expected best score %d after completion, got %d." % [expected_score, _session_best_score()])
+		get_tree().quit(1)
+		return
+	if _result_panel == null or not _result_panel.visible or _result_label == null:
+		push_error("Session best score smoke did not show result panel after completion.")
+		get_tree().quit(1)
+		return
+	if _result_label.text.find("Score %d" % expected_score) == -1 or _result_label.text.find("Best %d" % expected_score) == -1:
+		push_error("Session best score smoke result panel did not show score and best: %s" % _result_label.text)
+		get_tree().quit(1)
+		return
+
+	_reset_run()
+	if _session_best_score() != expected_score:
+		push_error("Session best score smoke reset cleared best score; expected %d got %d." % [expected_score, _session_best_score()])
+		get_tree().quit(1)
+		return
+	if _result_panel != null and _result_panel.visible:
+		push_error("Session best score smoke reset left result panel visible.")
+		get_tree().quit(1)
+		return
+
+	var failure_score := expected_score + 100
+	_banked_score = failure_score
+	_banked_salvage = 1
+	_handle_oxygen_depleted()
+	_update_status_label()
+	if not _run_failed or _session_best_score() != expected_score:
+		push_error("Session best score smoke failure changed best score; failed=%s best=%d expected=%d." % [str(_run_failed), _session_best_score(), expected_score])
+		get_tree().quit(1)
+		return
+	if _result_label == null or _result_label.text.find("Score %d" % failure_score) == -1 or _result_label.text.find("Best %d" % expected_score) == -1:
+		push_error("Session best score smoke failure panel did not preserve best score: %s" % _result_label.text)
+		get_tree().quit(1)
+		return
+
+	_reset_run()
+	_load_playable_map(PRODUCTION_SLICE_02_MAP_PATH, false)
+	if _world.map_id != "production_slice_02" or _session_best_score() != 0:
+		push_error("Session best score smoke expected production_slice_02 best to start at 0, got map=%s best=%d." % [_world.map_id, _session_best_score()])
+		get_tree().quit(1)
+		return
+	_load_playable_map(PRODUCTION_SLICE_MAP_PATH, false)
+	if _world.map_id != "production_slice_01" or _session_best_score() != expected_score:
+		push_error("Session best score smoke expected production_slice_01 best %d after map reload, got map=%s best=%d." % [expected_score, _world.map_id, _session_best_score()])
+		get_tree().quit(1)
+		return
+
+	print("Session best score smoke passed: completed score=%d best=%d failure_score=%d map_scope=production_slice_01." % [
+		expected_score,
+		_session_best_score(),
+		failure_score,
+	])
 	get_tree().quit()
 
 
@@ -1329,6 +1429,29 @@ func _update_status_label() -> void:
 	_update_result_panel()
 
 
+func _session_best_map_key() -> String:
+	if _world == null:
+		return ""
+	if not str(_world.map_id).is_empty():
+		return str(_world.map_id)
+	return str(_world.map_path)
+
+
+func _session_best_score() -> int:
+	var key := _session_best_map_key()
+	if key.is_empty():
+		return 0
+	return int(_session_best_scores_by_map.get(key, 0))
+
+
+func _record_session_best_score() -> void:
+	var key := _session_best_map_key()
+	if key.is_empty():
+		return
+	if _banked_score > _session_best_score():
+		_session_best_scores_by_map[key] = _banked_score
+
+
 func _update_result_panel() -> void:
 	if _result_panel == null or _result_label == null:
 		return
@@ -1341,9 +1464,10 @@ func _update_result_panel() -> void:
 	var oxygen_text := "Oxygen %ds" % int(ceil(_oxygen_seconds))
 	if _run_failed:
 		oxygen_text = "Oxygen depleted"
-	_result_label.text = "%s\nScore %d\nSalvage %d/%d\n%s\nPress R to retry" % [
+	_result_label.text = "%s\nScore %d\nBest %d\nSalvage %d/%d\n%s\nPress R to retry" % [
 		title,
 		_banked_score,
+		_session_best_score(),
 		_banked_salvage,
 		_total_salvage,
 		oxygen_text,

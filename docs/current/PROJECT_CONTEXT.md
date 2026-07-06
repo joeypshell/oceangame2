@@ -118,7 +118,7 @@ Current terrain renderer:
 - Hides the source grid in normal preview mode.
 - Supports `--show-debug-overlay` for map debugging.
 
-The main scene also shows a compact preview overlay with map id, build label, banked score, salvage progress, held salvage capacity/score, and a scoped oxygen timer. A compact expedition result panel appears after run completion or oxygen failure with score, salvage, oxygen, and retry status. The minimal gameplay loop lets the player collect authored salvage, return to the extraction zone to complete the run, and press `R` to reset. Hazards now have a small bump/reset interaction without a full health system.
+The main scene also shows a compact preview overlay with map id, build label, banked score, salvage progress, held salvage capacity/score, and a scoped oxygen timer. A compact expedition result panel appears after run completion or oxygen failure with score, current map session-best score, salvage, oxygen, and retry status. The minimal gameplay loop lets the player collect authored salvage, return to the extraction zone to complete the run, and press `R` to reset. Hazards now have a small bump/reset interaction without a full health system.
 
 Maps may use either a legacy `spawn` entity or the newer `boat_spawn` entity. `boat_spawn` is the preferred top-water entry/extraction marker for production-style maps; the player starts at its `entry_x`/`entry_y` cell, and runtime extraction checks also accept its boat rectangle.
 
@@ -197,6 +197,7 @@ python tools/check_asset_manifest.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-cargo-capacity
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-route-choice
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-session-best-score
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-player-facing
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-movement-feel
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-feedback-overlay
@@ -449,9 +450,10 @@ Recent important commits:
 - `--smoke-route-choice-metadata` verifies the ordered `expanded_route_choice` metadata for production slice 01 without moving the player, including route-choice IDs, strictly increasing route order, positive valuable salvage score, and source-route availability from spawn and back to extraction.
 - `--smoke-expanded-route-choice` verifies the `expanded_route_choice` source metadata, swims through `salvage_lower_loop` and `salvage_deep_right_cache`, banks both valuable pickups at the boat, and reports targets, cargo, score, return, and oxygen.
 - `--smoke-cargo-capacity` fills the current two-pickup cargo capacity, verifies held score is not banked before extraction, verifies an extra nearby salvage stays available while full, banks held salvage/score at extraction, then verifies the blocked pickup can be collected after capacity frees up.
-- `--smoke-salvage-loop` also verifies the completion-only expedition result panel reports banked score and salvage totals after a full collect-return run.
+- `--smoke-session-best-score` completes a full collect-return run, verifies the result panel reports score and best score, verifies reset preserves the current map's best score, and verifies oxygen failure does not overwrite that best score.
+- `--smoke-salvage-loop` also verifies the completion-only expedition result panel reports banked score, best score, and salvage totals after a full collect-return run.
 - `--capture-feedback-overlay` writes `visual_captures/feedback_overlay/production_slice_01_feedback_overlay.png` as the focused review capture for the salvage/oxygen feedback overlay pass.
-- The `Godot Smoke` workflow runs the salvage loop, scoring/cargo smoke, all four production-slice route smokes, the default-slice route-choice smoke, the route-choice metadata smoke, the expanded route-choice smoke, and the player-facing smoke, so CI covers the default slice, its valuable salvage routes, cargo banking, the later reference slices, and the direction-change regression path.
+- The `Godot Smoke` workflow runs the salvage loop, scoring/cargo/best-score smoke, all four production-slice route smokes, the default-slice route-choice smoke, the route-choice metadata smoke, the expanded route-choice smoke, and the player-facing smoke, so CI covers the default slice, its valuable salvage routes, cargo banking, the later reference slices, and the direction-change regression path.
 - `production_slice_02` has five tuned camera captures: overview, relay entry, main chamber, lower terminal, and return route. Normal captures live in `visual_captures/production_slice_02/`; debug captures live in `visual_captures/production_slice_02_debug/`.
 - `production_slice_03` has five authored camera captures: overview, relay entry, stacked rooms, connector, and return route. Normal captures live in `visual_captures/production_slice_03/`; debug captures live in `visual_captures/production_slice_03_debug/`.
 - `production_slice_04` has five authored camera captures: overview, relay entry, lower-left loop, curved corridor, and return route. Normal captures live in `visual_captures/production_slice_04/`; debug captures live in `visual_captures/production_slice_04_debug/`.
@@ -478,7 +480,7 @@ Recent important commits:
 - Current oxygen pressure timing keeps a 90-second tank, starts `LOW` feedback at 35 seconds, and escalates to `CRITICAL` at 12 seconds.
 - Salvage map data may include optional `tier` values. Missing tiers default conceptually to `common`; the current supported tiers are `common` and `valuable`. Runtime score is tier-derived for now: `common` is worth 100 and `valuable` is worth 300.
 - Held salvage capacity is currently 2 pickups. Full cargo blocks additional collection without hiding or banking the blocked pickup, and returning to extraction frees capacity.
-- Run completion shows a compact result panel with final score, salvage banked, oxygen, and retry prompt. Oxygen depletion now shows the same result panel as a failed expedition and pauses the run until reset. The panel stays hidden during normal exploration.
+- Run completion shows a compact result panel with final score, current map session-best score, salvage banked, oxygen, and retry prompt. Oxygen depletion now shows the same result panel as a failed expedition and pauses the run until reset without overwriting session best. The panel stays hidden during normal exploration.
 - There is no health, inventory screen, upgrade economy, or real enemy behavior yet.
 - Background art is still rough and secondary to proving terrain readability.
 - Normal preview uses approved current-prototype sprite assets for salvage and hazard props, with procedural fallback if a sprite cannot be loaded.
