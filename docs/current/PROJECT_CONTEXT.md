@@ -127,8 +127,9 @@ The GitHub Pages source is configured for GitHub Actions publishing. The `Godot 
 
 - downloads Godot 4.7 and export templates
 - generates ignored `export_presets.cfg` with `tools/write_web_export_preset.py`
+- writes `build_info.json` and copies it beside `exports/web/index.html` as plain external Pages metadata
 - exports to ignored `exports/web/`
-- serves the export and runs `tools/check_web_preview.cjs` in Chromium to catch missing texture assets before deploy
+- serves the export and runs `tools/check_web_preview.cjs --expected-sha "${GITHUB_SHA}"` in Chromium to catch missing texture assets and stale build metadata before deploy
 - uploads the `oceangame2-web-export` artifact
 - deploys to GitHub Pages when Pages is enabled
 
@@ -139,6 +140,8 @@ Important fixed pitfall: Web exports did not package dynamically loaded PNG terr
 - fail the web export workflow if the browser console reports missing terrain textures or TileSet creation errors
 
 If the browser preview ever shows only blue water, faint rectangles, markers, no cave tiles, or fallback prop art, check browser logs for missing `res://assets/...png` warnings and verify the export package includes the assets.
+
+If the public preview looks stale, fetch `https://joeypshell.github.io/oceangame2/build_info.json` or run `tools/check_web_preview.cjs` with `--expected-sha` to compare the deployed external metadata with the expected commit.
 
 ## Current Validation Commands
 
@@ -206,7 +209,7 @@ Current issue state as of 2026-07-06:
 
 - Open: #84 plan Controlled Visual Revision 03 after the player/diver sprite pass is reviewed
 - Open: #83 add a controlled visual revision checklist/template
-- Open: #81 expose Web export build metadata so public-preview checks can detect stale Pages deploys
+- Closed: #81 exposes Web export build metadata so public-preview checks can detect stale Pages deploys
 - Closed: #80 validates committed asset manifest paths
 - Closed: #79 verified the public web preview after the player sprite pass
 - Closed: #78 accepted the player sprite baseline after implementation and review
@@ -406,10 +409,9 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Do #81 to harden public-preview verification against stale Pages deploys.
-2. Do #83 to capture the controlled visual-revision workflow as a checklist.
-3. Do #84 after the player pass public-preview verification has been absorbed into the next controlled visual-revision plan.
-4. Keep #52/#53 as optional post-baseline slice-03 improvement issues if the accepted slice-03 reference needs intentional camera or source cleanup.
+1. Do #83 to capture the controlled visual-revision workflow as a checklist.
+2. Do #84 after the player pass public-preview verification has been absorbed into the next controlled visual-revision plan.
+3. Keep #52/#53 as optional post-baseline slice-03 improvement issues if the accepted slice-03 reference needs intentional camera or source cleanup.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 

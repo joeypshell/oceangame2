@@ -4,7 +4,34 @@ const { chromium } = require("playwright");
 const fs = require("fs");
 const path = require("path");
 
-const targetUrl = process.argv[2] || "http://127.0.0.1:8060/";
+function parseArgs(argv) {
+	const parsed = {
+		targetUrl: "http://127.0.0.1:8060/",
+		expectedSha: process.env.WEB_PREVIEW_EXPECTED_SHA || "",
+	};
+	let targetSet = false;
+	for (let index = 0; index < argv.length; index += 1) {
+		const value = argv[index];
+		if (value === "--expected-sha") {
+			index += 1;
+			if (index >= argv.length) {
+				throw new Error("--expected-sha requires a value.");
+			}
+			parsed.expectedSha = argv[index];
+		} else if (value.startsWith("--expected-sha=")) {
+			parsed.expectedSha = value.slice("--expected-sha=".length);
+		} else if (!targetSet) {
+			parsed.targetUrl = value;
+			targetSet = true;
+		} else {
+			throw new Error(`Unexpected argument: ${value}`);
+		}
+	}
+	parsed.expectedSha = parsed.expectedSha.trim().toLowerCase();
+	return parsed;
+}
+
+const { targetUrl, expectedSha } = parseArgs(process.argv.slice(2));
 const screenshotPath = process.env.WEB_PREVIEW_SCREENSHOT || "exports/web-preview-check.png";
 
 const failurePatterns = [
@@ -17,9 +44,40 @@ const failurePatterns = [
 	/Failed loading resource/i,
 ];
 
+async function checkBuildMetadata() {
+	if (!expectedSha) {
+		return;
+	}
+	if (expectedSha.length < 7) {
+		throw new Error("--expected-sha must be at least 7 characters.");
+	}
+
+	const metadataUrl = new URL("build_info.json", targetUrl).toString();
+	const response = await fetch(metadataUrl, { cache: "no-store" });
+	if (!response.ok) {
+		throw new Error(`Unable to load build metadata at ${metadataUrl}: HTTP ${response.status}`);
+	}
+
+	const metadata = await response.json();
+	const actualSha = String(metadata.git_sha || "").toLowerCase();
+	const actualVersion = String(metadata.version || "").toLowerCase();
+	console.log(`Build metadata ${metadataUrl}`);
+	console.log(`Build git_sha ${actualSha || "(missing)"}`);
+	console.log(`Build version ${actualVersion || "(missing)"}`);
+
+	if (!actualSha) {
+		throw new Error("Build metadata is missing git_sha.");
+	}
+	if (!actualSha.startsWith(expectedSha) && actualVersion !== expectedSha) {
+		throw new Error(`Build metadata git_sha ${actualSha} does not match expected ${expectedSha}.`);
+	}
+}
+
 async function main() {
 	const messages = [];
 	const failedRequests = [];
+
+	await checkBuildMetadata();
 
 	const browser = await chromium.launch({ args: ["--no-sandbox"] });
 	try {

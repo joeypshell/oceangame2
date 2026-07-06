@@ -69,6 +69,7 @@ jobs:
         run: |
           mkdir -p exports/web
           godot --headless --path . --export-release Web exports/web/index.html
+          cp build_info.json exports/web/build_info.json
 
       - name: Install Playwright
         run: |
@@ -91,7 +92,7 @@ jobs:
             sleep 1
           done
 
-          node tools/check_web_preview.cjs http://127.0.0.1:8060/
+          node tools/check_web_preview.cjs http://127.0.0.1:8060/ --expected-sha "${GITHUB_SHA}"
 
       - name: Upload web preview check artifact
         if: always()
