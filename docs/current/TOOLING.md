@@ -264,6 +264,8 @@ The oxygen-pressure smoke loads `production_slice_01`, collects one salvage item
 
 The cargo-capacity smoke loads `production_slice_01`, fills the current two-pickup held capacity, confirms held score is not banked before extraction, confirms a third pickup remains available while cargo is full, banks held cargo/score at extraction, then confirms the blocked pickup can be collected after capacity frees up.
 
+The salvage-loop smoke also confirms the completion-only expedition result panel appears after a full collect-return run and reports the banked score and salvage totals.
+
 The player-facing smoke loads `production_slice_01`, asks the player controller to swim right, left, then right again, and confirms the root transform remains stable while only the player visual children flip. This catches one-frame double-facing regressions from flipping the whole `CharacterBody2D`.
 
 The movement-feel smoke loads `production_slice_01`, places the player in the first-route-choice open-water area, drives the real controller through start, stop, horizontal reversal, and diagonal input phases, and reports measured velocities for movement tuning review.

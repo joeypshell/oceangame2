@@ -60,6 +60,8 @@ var _player
 var _review_canvas: CanvasLayer
 var _review_label: Label
 var _status_label: Label
+var _result_panel: PanelContainer
+var _result_label: Label
 var _map_selector: OptionButton
 var _map_selector_enabled := false
 var _debug_overlay_enabled := false
@@ -335,6 +337,8 @@ func _clear_loaded_review_nodes() -> void:
 	_world = null
 	_review_label = null
 	_status_label = null
+	_result_panel = null
+	_result_label = null
 	_map_selector = null
 
 
@@ -416,6 +420,14 @@ func _smoke_salvage_loop_and_quit() -> void:
 
 	if not _run_complete:
 		push_error("Salvage loop smoke did not complete after collecting and returning.")
+		get_tree().quit(1)
+		return
+	if _result_panel == null or not _result_panel.visible or _result_label == null:
+		push_error("Salvage loop smoke did not show the expedition result panel on completion.")
+		get_tree().quit(1)
+		return
+	if _result_label.text.find("Score %d" % _banked_score) == -1 or _result_label.text.find("Salvage %d/%d" % [_banked_salvage, _total_salvage]) == -1:
+		push_error("Salvage loop smoke result panel did not report score/salvage: %s" % _result_label.text)
 		get_tree().quit(1)
 		return
 	if _banked_score != expected_score:
@@ -1017,6 +1029,38 @@ func _create_review_overlay(world: Node) -> void:
 	_status_label.add_theme_font_size_override("font_size", 14)
 	stack.add_child(_status_label)
 
+	_create_result_panel(canvas)
+
+
+func _create_result_panel(canvas: CanvasLayer) -> void:
+	var panel := PanelContainer.new()
+	panel.name = "ExpeditionResultPanel"
+	panel.position = Vector2(12, 204)
+	panel.custom_minimum_size = Vector2(260, 0)
+	panel.visible = false
+	_result_panel = panel
+
+	var panel_style := StyleBoxFlat.new()
+	panel_style.bg_color = Color(0.03, 0.09, 0.12, 0.82)
+	panel_style.border_color = Color(1.0, 0.88, 0.45, 0.34)
+	panel_style.set_border_width_all(1)
+	panel_style.set_corner_radius_all(6)
+	panel.add_theme_stylebox_override("panel", panel_style)
+	canvas.add_child(panel)
+
+	var margin := MarginContainer.new()
+	margin.add_theme_constant_override("margin_left", 10)
+	margin.add_theme_constant_override("margin_top", 8)
+	margin.add_theme_constant_override("margin_right", 10)
+	margin.add_theme_constant_override("margin_bottom", 8)
+	panel.add_child(margin)
+
+	_result_label = Label.new()
+	_result_label.add_theme_color_override("font_color", Color(0.95, 0.98, 1.0, 0.96))
+	_result_label.add_theme_font_size_override("font_size", 14)
+	_result_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	margin.add_child(_result_label)
+
 
 func _update_status_label() -> void:
 	if _status_label == null:
@@ -1024,6 +1068,7 @@ func _update_status_label() -> void:
 
 	if _total_salvage <= 0:
 		_status_label.text = "Score 0\nSalvage banked 0/0\nHeld 0/%d\nOxygen --" % HELD_SALVAGE_CAPACITY
+		_update_result_panel()
 		return
 
 	var prompt := ""
@@ -1054,6 +1099,23 @@ func _update_status_label() -> void:
 	]
 	if not prompt.is_empty():
 		_status_label.text += "\n%s" % prompt
+	_update_result_panel()
+
+
+func _update_result_panel() -> void:
+	if _result_panel == null or _result_label == null:
+		return
+	_result_panel.visible = _run_complete
+	if not _run_complete:
+		_result_label.text = ""
+		return
+
+	_result_label.text = "Expedition complete\nScore %d\nSalvage %d/%d\nOxygen %ds\nPress R to retry" % [
+		_banked_score,
+		_banked_salvage,
+		_total_salvage,
+		int(ceil(_oxygen_seconds)),
+	]
 
 
 func _build_label() -> String:
