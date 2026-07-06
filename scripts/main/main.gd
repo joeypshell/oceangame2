@@ -42,6 +42,8 @@ const HAZARD_COOLDOWN_SECONDS := 1.0
 const HAZARD_FEEDBACK_SECONDS := 0.45
 const OXYGEN_MAX_SECONDS := 90.0
 const OXYGEN_REFILL_SECONDS_PER_SECOND := 25.0
+const OXYGEN_LOW_WARNING_SECONDS := 35.0
+const OXYGEN_CRITICAL_WARNING_SECONDS := 12.0
 const REVIEW_MAP_OPTIONS := [
 	{"label": "Production 01", "path": PRODUCTION_SLICE_MAP_PATH},
 	{"label": "Production 02", "path": PRODUCTION_SLICE_02_MAP_PATH},
@@ -931,7 +933,9 @@ func _update_status_label() -> void:
 
 	var oxygen_seconds := int(ceil(_oxygen_seconds))
 	var oxygen_text := "Oxygen %ds" % oxygen_seconds
-	if _oxygen_seconds <= 15.0 and not _run_complete:
+	if _oxygen_seconds <= OXYGEN_CRITICAL_WARNING_SECONDS and not _run_complete:
+		oxygen_text = "Oxygen %ds CRITICAL" % oxygen_seconds
+	elif _oxygen_seconds <= OXYGEN_LOW_WARNING_SECONDS and not _run_complete:
 		oxygen_text = "Oxygen %ds LOW" % oxygen_seconds
 
 	_status_label.text = "Salvage banked %d/%d\nHeld %d\n%s" % [

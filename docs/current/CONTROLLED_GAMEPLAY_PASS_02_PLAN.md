@@ -54,6 +54,7 @@ The pass should make the route choice legible enough to evaluate locally and thr
 - The high-value target has a readable prototype visual distinction.
 - A deterministic route-choice probe can confirm the authored target is reachable, collectible, and returnable.
 - Oxygen pressure can be tuned against the accepted movement baseline so the deeper route creates mild pressure without becoming a hard fail-state maze.
+- The current pressure target keeps the 90-second tank, starts `LOW` feedback at 35 seconds, and escalates to `CRITICAL` at 12 seconds.
 
 ## Unacceptable Drift
 
