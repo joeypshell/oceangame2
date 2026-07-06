@@ -14,7 +14,7 @@ Detailed rationale remains in the slice decision, evaluation, and baseline docs 
 
 | Slice | Role | Source Bounds | Entry And Extraction | Preview Status | Baseline Status |
 |---|---|---:|---|---|---|
-| `production_slice_01` | Top-center entry hub and first-area onboarding slice | `x=58, y=0, w=72, h=84` | `boat_spawn` at top water | Default Godot and public preview map | Accepted baseline at `visual_baselines/production_slice_01_accepted/` |
+| `production_slice_01` | Top-center entry hub and first-area onboarding slice with `salvage_lower_loop` as the valuable route-choice payoff target | `x=58, y=0, w=72, h=84` | `boat_spawn` at top water | Default Godot and public preview map | Accepted baseline at `visual_baselines/production_slice_01_accepted/` |
 | `production_slice_02` | Lower-right later-game chamber route and relay-base proof | `x=88, y=78, w=66, h=72` | In-water `spawn` plus `base` relay extraction | Reference slice only | Accepted baseline at `visual_baselines/production_slice_02_accepted/` |
 | `production_slice_03` | Upper-left compact connector / landmark room-cluster slice | `x=0, y=8, w=76, h=82` | In-water `spawn` plus `base` relay extraction | Reference slice only | Accepted baseline at `visual_baselines/production_slice_03_accepted/` |
 | `production_slice_04` | Lower-left connector / return-loop slice with curved corridor movement | `x=0, y=86, w=88, h=50` | In-water `spawn` plus `base` relay extraction | Reference slice only | Accepted baseline at `visual_baselines/production_slice_04_accepted/` |

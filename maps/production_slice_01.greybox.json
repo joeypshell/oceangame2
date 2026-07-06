@@ -2321,7 +2321,9 @@
       "type": "salvage",
       "x": 30,
       "y": 67,
-      "kind": "relic"
+      "kind": "relic",
+      "tier": "valuable",
+      "intent": "Route-choice payoff target for the lower optional loop."
     },
     {
       "id": "salvage_return_branch",
