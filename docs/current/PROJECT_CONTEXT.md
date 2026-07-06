@@ -48,6 +48,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - First controlled visual-revision plan: `docs/current/CONTROLLED_VISUAL_REVISION_01_PLAN.md`
 - Second controlled visual-revision plan: `docs/current/CONTROLLED_VISUAL_REVISION_02_PLAN.md`
 - Third controlled visual-revision plan: `docs/current/CONTROLLED_VISUAL_REVISION_03_PLAN.md`
+- Fourth controlled visual-revision plan: `docs/current/CONTROLLED_VISUAL_REVISION_04_PLAN.md`
 - Controlled visual-revision checklist: `docs/current/CONTROLLED_VISUAL_REVISION_CHECKLIST.md`
 - Prop sprite baseline decision: `docs/current/PROP_SPRITE_BASELINE_DECISION.md`
 - Player sprite baseline decision: `docs/current/PLAYER_SPRITE_BASELINE_DECISION.md`
@@ -337,6 +338,7 @@ Recent important commits:
 - `docs/current/CONTROLLED_VISUAL_REVISION_01_PLAN.md` selects the first controlled visual-revision target: replace procedural salvage/hazard prop drawings with named committed sprite assets under #70.
 - `docs/current/CONTROLLED_VISUAL_REVISION_02_PLAN.md` selects the next controlled visual-revision target: replace the procedural player placeholder with a named committed `player_diver_01.png` sprite while preserving collision, movement, camera behavior, map data, and gameplay logic.
 - `docs/current/CONTROLLED_VISUAL_REVISION_03_PLAN.md` selects the next controlled visual-revision target: replace the procedural `boat_spawn` entry craft with a named committed `boat_spawn_01.png` sprite while preserving source-map boat entry/extraction semantics, player spawn, collision, movement, camera behavior, map data, and gameplay logic.
+- `docs/current/CONTROLLED_VISUAL_REVISION_04_PLAN.md` selects the next controlled visual-revision target: improve the non-collision background/depth layer with a named `background_rocks_02.png` variant while preserving maps, terrain tiles, collision, movement, camera behavior, gameplay logic, approved foreground sprites, and accepted baselines until review.
 - `docs/current/CONTROLLED_VISUAL_REVISION_CHECKLIST.md` is the reusable checklist for future controlled visual revisions, covering planning, source-of-truth constraints, capture comparison, baseline acceptance, Web preview verification, and follow-up issues.
 - `docs/current/PROP_SPRITE_BASELINE_DECISION.md` records #71: the prop sprites are approved for the current prototype, accepted baselines were updated for slices 02-04, and slice 01 baseline reconciliation was split into #75.
 - `docs/current/PLAYER_SPRITE_BASELINE_DECISION.md` records #78: the player sprite is approved for the current prototype, and accepted baselines were updated for slices 01-04.
