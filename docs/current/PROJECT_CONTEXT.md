@@ -30,7 +30,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Second production slice source: `maps/production_slice_02.greybox.json`
 - Third production slice source: `maps/production_slice_03.greybox.json`
 - Fourth production slice source: `maps/production_slice_04.greybox.json`
-- Current terrain atlas: `assets/terrain_tiles/cave_tileset_v1.png`
+- Current terrain atlas: `assets/terrain_tiles/cave_tileset_v2.png`
 - Web export workflow: `.github/workflows/godot-web-export.yml`
 - Latest full-sketch evaluation: `docs/current/FULL_SKETCH_EVALUATION_01.md`
 - Production-slice selection criteria: `docs/current/PRODUCTION_SLICE_SELECTION_CRITERIA.md`
