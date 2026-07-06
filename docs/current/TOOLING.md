@@ -260,7 +260,7 @@ The map-selector smoke loads the default map, reloads `production_slice_03`, the
 
 The hazard-interaction smoke loads `production_slice_01`, collects one salvage item, touches an authored hazard, confirms the player resets to spawn and the held salvage is restored, recollects it, resets, and exits.
 
-The oxygen-pressure smoke loads `production_slice_01`, collects one salvage item, forces oxygen depletion, confirms the player surfaces at spawn with held salvage restored, recollects it, returns to extraction, confirms oxygen refills and salvage banks, resets, and exits.
+The oxygen-pressure smoke loads `production_slice_01`, collects one salvage item, forces oxygen depletion, confirms the player surfaces at spawn with held salvage restored, confirms the failed expedition result panel appears, resets, recollects the salvage, returns to extraction, confirms oxygen refills and salvage banks, resets, and exits.
 
 The cargo-capacity smoke loads `production_slice_01`, fills the current two-pickup held capacity, confirms held score is not banked before extraction, confirms a third pickup remains available while cargo is full, banks held cargo/score at extraction, then confirms the blocked pickup can be collected after capacity frees up.
 

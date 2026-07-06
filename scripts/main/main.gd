@@ -76,6 +76,7 @@ var _hazard_feedback_seconds := 0.0
 var _hazard_interactions_enabled := true
 var _oxygen_seconds := OXYGEN_MAX_SECONDS
 var _run_complete := false
+var _run_failed := false
 var _last_status_note := ""
 
 
@@ -320,6 +321,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool) -> void:
 	_hazard_interactions_enabled = true
 	_oxygen_seconds = OXYGEN_MAX_SECONDS
 	_run_complete = false
+	_run_failed = false
 	_last_status_note = ""
 	_create_review_overlay(world)
 	_update_status_label()
@@ -357,7 +359,7 @@ func _process(delta: float) -> void:
 	if _world == null or _player == null:
 		return
 	_update_hazard_feedback(delta)
-	if _run_complete:
+	if _run_complete or _run_failed:
 		_update_status_label()
 		return
 
@@ -438,7 +440,7 @@ func _smoke_salvage_loop_and_quit() -> void:
 	var completed_total := _total_salvage
 	var completed_score := _banked_score
 	_reset_run()
-	if _held_salvage != 0 or _banked_salvage != 0 or _held_salvage_score != 0 or _banked_score != 0 or _run_complete:
+	if _held_salvage != 0 or _banked_salvage != 0 or _held_salvage_score != 0 or _banked_score != 0 or _run_complete or _run_failed:
 		push_error("Salvage loop smoke reset left stale run state.")
 		get_tree().quit(1)
 		return
@@ -574,12 +576,26 @@ func _smoke_oxygen_pressure_and_quit() -> void:
 		push_error("Oxygen pressure smoke did not drop held salvage on depletion.")
 		get_tree().quit(1)
 		return
+	if not _run_failed:
+		push_error("Oxygen pressure smoke did not enter a failed retry state.")
+		get_tree().quit(1)
+		return
+	if _result_panel == null or not _result_panel.visible or _result_label.text.find("Expedition failed") == -1:
+		push_error("Oxygen pressure smoke did not show failed expedition result panel: %s" % _result_label.text)
+		get_tree().quit(1)
+		return
 	if _player.global_position.distance_to(_world.spawn_position) > 2.0:
 		push_error("Oxygen pressure smoke did not return player to spawn.")
 		get_tree().quit(1)
 		return
 	if not is_equal_approx(_oxygen_seconds, OXYGEN_MAX_SECONDS):
 		push_error("Oxygen pressure smoke did not refill oxygen after depletion.")
+		get_tree().quit(1)
+		return
+
+	_reset_run()
+	if _run_failed or _held_salvage != 0 or _banked_salvage != 0 or _banked_score != 0:
+		push_error("Oxygen pressure smoke reset did not clear failed run state.")
 		get_tree().quit(1)
 		return
 
@@ -897,6 +913,7 @@ func _reset_run() -> void:
 	_hazard_interactions_enabled = true
 	_oxygen_seconds = OXYGEN_MAX_SECONDS
 	_run_complete = false
+	_run_failed = false
 	_last_status_note = "Reset"
 	_player.modulate = Color.WHITE
 	_player.position = _world.spawn_position
@@ -926,11 +943,12 @@ func _handle_oxygen_depleted() -> void:
 		_held_salvage_ids = []
 		_held_salvage = 0
 		_held_salvage_score = 0
-		_last_status_note = "Oxygen depleted: dropped held"
+		_last_status_note = "Oxygen depleted - press R"
 	else:
-		_last_status_note = "Oxygen depleted: surfaced"
+		_last_status_note = "Oxygen depleted - press R"
 
 	_oxygen_seconds = OXYGEN_MAX_SECONDS
+	_run_failed = true
 	_hazard_cooldown_seconds = HAZARD_COOLDOWN_SECONDS
 	_player.global_position = _world.spawn_position
 	if _player.has_method("reset_motion"):
@@ -1074,6 +1092,8 @@ func _update_status_label() -> void:
 	var prompt := ""
 	if _run_complete:
 		prompt = "Run complete - press R"
+	elif _run_failed:
+		prompt = "Oxygen depleted - press R"
 	elif _held_salvage >= HELD_SALVAGE_CAPACITY:
 		prompt = "Cargo full - return"
 	elif _held_salvage > 0:
@@ -1083,9 +1103,9 @@ func _update_status_label() -> void:
 
 	var oxygen_seconds := int(ceil(_oxygen_seconds))
 	var oxygen_text := "Oxygen %ds" % oxygen_seconds
-	if _oxygen_seconds <= OXYGEN_CRITICAL_WARNING_SECONDS and not _run_complete:
+	if _oxygen_seconds <= OXYGEN_CRITICAL_WARNING_SECONDS and not _run_complete and not _run_failed:
 		oxygen_text = "Oxygen %ds CRITICAL" % oxygen_seconds
-	elif _oxygen_seconds <= OXYGEN_LOW_WARNING_SECONDS and not _run_complete:
+	elif _oxygen_seconds <= OXYGEN_LOW_WARNING_SECONDS and not _run_complete and not _run_failed:
 		oxygen_text = "Oxygen %ds LOW" % oxygen_seconds
 
 	_status_label.text = "Score %d\nSalvage banked %d/%d\nHeld %d/%d (%d pts)\n%s" % [
@@ -1105,16 +1125,21 @@ func _update_status_label() -> void:
 func _update_result_panel() -> void:
 	if _result_panel == null or _result_label == null:
 		return
-	_result_panel.visible = _run_complete
-	if not _run_complete:
+	_result_panel.visible = _run_complete or _run_failed
+	if not _run_complete and not _run_failed:
 		_result_label.text = ""
 		return
 
-	_result_label.text = "Expedition complete\nScore %d\nSalvage %d/%d\nOxygen %ds\nPress R to retry" % [
+	var title := "Expedition complete" if _run_complete else "Expedition failed"
+	var oxygen_text := "Oxygen %ds" % int(ceil(_oxygen_seconds))
+	if _run_failed:
+		oxygen_text = "Oxygen depleted"
+	_result_label.text = "%s\nScore %d\nSalvage %d/%d\n%s\nPress R to retry" % [
+		title,
 		_banked_score,
 		_banked_salvage,
 		_total_salvage,
-		int(ceil(_oxygen_seconds)),
+		oxygen_text,
 	]
 
 
