@@ -8,6 +8,7 @@ const TILESET_TEST_MAP_PATH := "res://maps/cave_tileset_test_01.greybox.json"
 const ORGANIC_MAP_PATH := "res://maps/cave_salvage_organic_01.greybox.json"
 const FULL_SKETCH_MAP_PATH := "res://maps/full_cave_sketch_01.greybox.json"
 const PRODUCTION_SLICE_MAP_PATH := "res://maps/production_slice_01.greybox.json"
+const PRODUCTION_SLICE_02_MAP_PATH := "res://maps/production_slice_02.greybox.json"
 const SCREENSHOT_PATH := "res://visual_baselines/001_greybox_in_engine.png"
 const CAMERA_TEST_CAPTURE_DIR := "res://visual_captures/latest"
 const ORIGINAL_CAPTURE_DIR := "res://visual_captures/original_salvage"
@@ -16,6 +17,8 @@ const ORGANIC_CAPTURE_DIR := "res://visual_captures/organic_salvage"
 const FULL_SKETCH_CAPTURE_DIR := "res://visual_captures/full_cave_sketch"
 const PRODUCTION_SLICE_CAPTURE_DIR := "res://visual_captures/production_slice_01"
 const PRODUCTION_SLICE_DEBUG_CAPTURE_DIR := "res://visual_captures/production_slice_01_debug"
+const PRODUCTION_SLICE_02_CAPTURE_DIR := "res://visual_captures/production_slice_02"
+const PRODUCTION_SLICE_02_DEBUG_CAPTURE_DIR := "res://visual_captures/production_slice_02_debug"
 const BUILD_INFO_PATH := "res://build_info.json"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 const SALVAGE_COLLECTION_RADIUS := 34.0
@@ -50,6 +53,8 @@ func _ready() -> void:
 	var capture_full_sketch_map := _has_arg(user_args, engine_args, "--capture-full-sketch-map")
 	var capture_production_slice_map := _has_arg(user_args, engine_args, "--capture-production-slice-map")
 	var capture_production_slice_debug_map := _has_arg(user_args, engine_args, "--capture-production-slice-debug-map")
+	var capture_production_slice_02_map := _has_arg(user_args, engine_args, "--capture-production-slice-02-map")
+	var capture_production_slice_02_debug_map := _has_arg(user_args, engine_args, "--capture-production-slice-02-debug-map")
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
 	var smoke_production_slice_route := _has_arg(user_args, engine_args, "--smoke-production-slice-route")
@@ -72,6 +77,10 @@ func _ready() -> void:
 		world.map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_production_slice_debug_map:
 		world.map_path = PRODUCTION_SLICE_MAP_PATH
+	elif capture_production_slice_02_map:
+		world.map_path = PRODUCTION_SLICE_02_MAP_PATH
+	elif capture_production_slice_02_debug_map:
+		world.map_path = PRODUCTION_SLICE_02_MAP_PATH
 	elif smoke_production_slice_route:
 		world.map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_hazard_interaction:
@@ -82,7 +91,11 @@ func _ready() -> void:
 		world.map_path = requested_map_path
 	else:
 		world.map_path = DEFAULT_MAP_PATH
-	world.show_debug_overlay = _has_arg(user_args, engine_args, "--show-debug-overlay") or capture_production_slice_debug_map
+	world.show_debug_overlay = (
+		_has_arg(user_args, engine_args, "--show-debug-overlay")
+		or capture_production_slice_debug_map
+		or capture_production_slice_02_debug_map
+	)
 	add_child(world)
 	world.load_greybox()
 
@@ -133,6 +146,10 @@ func _ready() -> void:
 		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_CAPTURE_DIR)
 	elif capture_production_slice_debug_map:
 		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_DEBUG_CAPTURE_DIR)
+	elif capture_production_slice_02_map:
+		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_02_CAPTURE_DIR)
+	elif capture_production_slice_02_debug_map:
+		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_02_DEBUG_CAPTURE_DIR)
 
 
 func _process(delta: float) -> void:

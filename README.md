@@ -78,6 +78,12 @@ The first focused production-slice source is generated from the top-center entry
 .\tools\open_godot_project.ps1 -Run -ProductionSliceMap
 ```
 
+The second focused production-slice source is generated from the lower-right chamber route of the full sketch. It is a later-game destination/connector candidate with an in-water relay spawn and extraction zone, not an alternate first area. It can be selected explicitly with:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -ProductionSlice2Map
+```
+
 Regenerate and validate the greybox preview with:
 
 ```bash
@@ -95,6 +101,9 @@ python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
 python tools/create_production_slice_map.py
 python tools/render_greybox_map.py maps/production_slice_01.greybox.json references/greybox/production_slice_01.svg
 python tools/validate_greybox_map.py maps/production_slice_01.greybox.json
+python tools/create_production_slice_02_map.py
+python tools/render_greybox_map.py maps/production_slice_02.greybox.json references/greybox/production_slice_02.svg
+python tools/validate_greybox_map.py maps/production_slice_02.greybox.json
 ```
 
 Run the current Godot greybox with `project.godot`. The root scene is `scenes/main/Main.tscn`.

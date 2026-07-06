@@ -48,6 +48,12 @@ Run the first production slice:
 .\tools\open_godot_project.ps1 -Run -ProductionSliceMap
 ```
 
+Run the second production slice:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -ProductionSlice2Map
+```
+
 Run any map source by path:
 
 ```powershell
@@ -74,6 +80,7 @@ python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
 python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
 python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
 python tools/validate_greybox_map.py maps/production_slice_01.greybox.json
+python tools/validate_greybox_map.py maps/production_slice_02.greybox.json
 ```
 
 Check that Godot's runtime terrain and collision match the authored JSON source:
@@ -96,6 +103,7 @@ python tools/render_greybox_map.py maps/cave_salvage_organic_01.greybox.json ref
 python tools/render_greybox_map.py maps/cave_tileset_test_01.greybox.json references/greybox/cave_tileset_test_01.svg
 python tools/render_greybox_map.py maps/full_cave_sketch_01.greybox.json references/greybox/full_cave_sketch_01.svg
 python tools/render_greybox_map.py maps/production_slice_01.greybox.json references/greybox/production_slice_01.svg
+python tools/render_greybox_map.py maps/production_slice_02.greybox.json references/greybox/production_slice_02.svg
 ```
 
 Regenerate the supplied full-map sketch topology draft:
@@ -119,6 +127,17 @@ python tools/validate_greybox_map.py maps/production_slice_01.greybox.json
 ```
 
 This slice is generated from `maps/full_cave_sketch_01.greybox.json` using bounds `x=58, y=0, w=72, h=84`. It keeps the top-water shaft open for `boat_spawn`, seals left/right/bottom crop edges, and fills unreachable open pockets created by the high-fidelity sketch conversion.
+
+Regenerate the second focused production slice:
+
+```bash
+python tools/create_production_slice_02_map.py
+python tools/render_greybox_map.py maps/production_slice_02.greybox.json references/greybox/production_slice_02.svg
+python tools/validate_greybox_map.py maps/production_slice_02.greybox.json
+python tools/check_map_parity.py maps/production_slice_02.greybox.json
+```
+
+This slice is generated from `maps/full_cave_sketch_01.greybox.json` using bounds `x=88, y=78, w=66, h=72`. It is a later-game destination/connector candidate with an in-water `spawn` and `base` extraction zone rather than a top-water boat.
 
 Run whitespace checks:
 
@@ -245,6 +264,22 @@ Capture the first production slice with debug/review markers visible:
 ```
 
 This writes PNGs to `visual_captures/production_slice_01_debug/`. The debug overlay uses cyan source grid, white route rectangles, amber boat/extraction outlines, green entry/spawn labels, yellow salvage diamonds, and red hazard squares. Normal production-slice captures stay terrain-first and should not be overwritten with debug views.
+
+Capture the second production slice:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-production-slice-02-map
+```
+
+This reads `camera_tests` from `maps/production_slice_02.greybox.json` and writes PNGs to `visual_captures/production_slice_02/`.
+
+Capture the second production slice with debug/review markers visible:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-production-slice-02-debug-map
+```
+
+This writes PNGs to `visual_captures/production_slice_02_debug/`.
 
 Accept the current production-slice captures as the named visual baseline:
 
