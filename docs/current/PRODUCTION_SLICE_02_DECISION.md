@@ -59,6 +59,7 @@ python tools/create_production_slice_02_map.py
 python tools/render_greybox_map.py maps/production_slice_02.greybox.json references/greybox/production_slice_02.svg
 python tools/validate_greybox_map.py maps/production_slice_02.greybox.json
 python tools/check_map_parity.py maps/production_slice_02.greybox.json
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-02-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-production-slice-02-map
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-production-slice-02-debug-map
 ```

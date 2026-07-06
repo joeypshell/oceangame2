@@ -73,7 +73,7 @@ Additional current map sources:
   - Supports visual capture flags for the baseline screenshot and named camera-test captures.
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
   - Shows compact preview review context, salvage progress, and scoped oxygen pressure.
-  - Supports headless map parity, salvage-loop, production-slice route, hazard-interaction, and oxygen-pressure smoke checks.
+  - Supports headless map parity, salvage-loop, production-slice route checks for slices 01 and 02, hazard-interaction, and oxygen-pressure smoke checks.
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.

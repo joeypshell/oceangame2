@@ -58,6 +58,7 @@ func _ready() -> void:
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
 	var smoke_production_slice_route := _has_arg(user_args, engine_args, "--smoke-production-slice-route")
+	var smoke_production_slice_02_route := _has_arg(user_args, engine_args, "--smoke-production-slice-02-route")
 	var smoke_hazard_interaction := _has_arg(user_args, engine_args, "--smoke-hazard-interaction")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
@@ -83,6 +84,8 @@ func _ready() -> void:
 		world.map_path = PRODUCTION_SLICE_02_MAP_PATH
 	elif smoke_production_slice_route:
 		world.map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_production_slice_02_route:
+		world.map_path = PRODUCTION_SLICE_02_MAP_PATH
 	elif smoke_hazard_interaction:
 		world.map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_oxygen_pressure:
@@ -121,7 +124,10 @@ func _ready() -> void:
 		_smoke_salvage_loop_and_quit()
 		return
 	if smoke_production_slice_route:
-		await _smoke_production_slice_route_and_quit()
+		await _smoke_salvage_route_and_quit("production_slice_01", "boat extraction")
+		return
+	if smoke_production_slice_02_route:
+		await _smoke_salvage_route_and_quit("production_slice_02", "relay extraction")
 		return
 	if smoke_hazard_interaction:
 		_smoke_hazard_interaction_and_quit()
@@ -221,13 +227,17 @@ func _smoke_salvage_loop_and_quit() -> void:
 	get_tree().quit()
 
 
-func _smoke_production_slice_route_and_quit() -> void:
-	if _world.map_id != "production_slice_01":
-		push_error("Production slice route smoke loaded unexpected map: %s" % _world.map_id)
+func _smoke_salvage_route_and_quit(expected_map_id: String, extraction_label: String) -> void:
+	if _world.map_id != expected_map_id:
+		push_error("%s route smoke loaded unexpected map: %s" % [expected_map_id, _world.map_id])
 		get_tree().quit(1)
 		return
 	if not _player.has_method("swim_in_direction"):
-		push_error("Production slice route smoke requires player swim_in_direction().")
+		push_error("%s route smoke requires player swim_in_direction()." % expected_map_id)
+		get_tree().quit(1)
+		return
+	if _total_salvage <= 0:
+		push_error("%s route smoke requires authored salvage." % expected_map_id)
 		get_tree().quit(1)
 		return
 
@@ -246,13 +256,17 @@ func _smoke_production_slice_route_and_quit() -> void:
 		_process(0.0)
 
 	if not _run_complete:
-		push_error("Production slice route smoke did not complete after swimming through salvage route.")
+		push_error("%s route smoke did not complete after swimming through salvage route." % expected_map_id)
 		get_tree().quit(1)
 		return
 
 	var completed_total := _total_salvage
 	_reset_run()
-	print("Production slice route smoke passed: swam to %d salvage and returned to boat extraction." % completed_total)
+	print("%s route smoke passed: swam to %d salvage and returned to %s." % [
+		expected_map_id,
+		completed_total,
+		extraction_label,
+	])
 	get_tree().quit()
 
 
