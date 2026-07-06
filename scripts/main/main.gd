@@ -625,6 +625,10 @@ func _smoke_route_choice_and_quit() -> void:
 
 func _route_choice_target(salvage: Array) -> Dictionary:
 	for item in salvage:
+		if str(item.get("tier", "common")) == "valuable":
+			return item
+
+	for item in salvage:
 		if str(item.get("id", "")) == "salvage_lower_loop":
 			return item
 

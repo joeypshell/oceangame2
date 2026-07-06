@@ -17,6 +17,8 @@ const COLOR_MARKER := Color(1.0, 1.0, 1.0, 0.10)
 const COLOR_SALVAGE := Color(1.0, 0.80, 0.22, 1.0)
 const COLOR_SALVAGE_DARK := Color(0.48, 0.30, 0.11, 1.0)
 const COLOR_SALVAGE_METAL := Color(0.72, 0.83, 0.78, 1.0)
+const COLOR_SALVAGE_VALUABLE := Color(1.0, 0.92, 0.36, 0.92)
+const COLOR_SALVAGE_VALUABLE_GLOW := Color(1.0, 0.86, 0.22, 0.24)
 const COLOR_HAZARD := Color(1.0, 0.22, 0.34, 1.0)
 const COLOR_HAZARD_DARK := Color(0.40, 0.04, 0.10, 1.0)
 const COLOR_HAZARD_LIGHT := Color(1.0, 0.58, 0.66, 1.0)
@@ -161,6 +163,7 @@ func get_salvage_centers() -> Array:
 		centers.append({
 			"id": str(entity.get("id", "salvage")),
 			"center": _entity_center(entity),
+			"tier": str(entity.get("tier", "common")),
 		})
 	return centers
 
@@ -598,7 +601,12 @@ func _build_entities(entities: Array) -> void:
 		elif entity_type == "salvage":
 			_salvage_entities.append(entity)
 			var salvage_id := str(entity.get("id", "Salvage"))
-			var salvage_node := _add_salvage_prop(salvage_id, center, str(entity.get("kind", "crate")))
+			var salvage_node := _add_salvage_prop(
+				salvage_id,
+				center,
+				str(entity.get("kind", "crate")),
+				str(entity.get("tier", "common"))
+			)
 			_salvage_nodes_by_id[salvage_id] = salvage_node
 			if show_debug_overlay:
 				var debug_marker := _add_local_polygon(salvage_node, "DebugDiamond", _diamond_points(16.0), Color(1.0, 0.80, 0.22, 0.35))
@@ -961,24 +969,51 @@ func _add_diamond(marker_name: String, center: Vector2, color: Color, radius: fl
 	return poly
 
 
-func _add_salvage_prop(marker_name: String, center: Vector2, kind: String) -> Node2D:
+func _add_salvage_prop(marker_name: String, center: Vector2, kind: String, tier: String) -> Node2D:
 	var root := Node2D.new()
 	root.name = marker_name
 	root.position = center
 	root.z_index = 8
 	_marker_root.add_child(root)
 
-	if _add_prop_sprite(root, "PropSprite", _prop_texture(kind, "crate")):
-		return root
-
-	match kind:
-		"wreck_fragment":
-			_add_wreck_fragment_prop(root)
-		"relic":
-			_add_relic_prop(root)
-		_:
-			_add_crate_prop(root)
+	if not _add_prop_sprite(root, "PropSprite", _prop_texture(kind, "crate")):
+		match kind:
+			"wreck_fragment":
+				_add_wreck_fragment_prop(root)
+			"relic":
+				_add_relic_prop(root)
+			_:
+				_add_crate_prop(root)
+	if tier == "valuable":
+		_add_valuable_salvage_cue(root)
 	return root
+
+
+func _add_valuable_salvage_cue(root: Node2D) -> void:
+	var glow := _add_local_polygon(root, "ValuableGlow", _diamond_points(22.0), COLOR_SALVAGE_VALUABLE_GLOW)
+	glow.z_index = -1
+
+	var ring := _add_local_line(root, "ValuableRing", PackedVector2Array([
+		Vector2(0, -24),
+		Vector2(24, 0),
+		Vector2(0, 24),
+		Vector2(-24, 0),
+		Vector2(0, -24),
+	]), COLOR_SALVAGE_VALUABLE, 2.0)
+	ring.z_index = 4
+
+	var sparkle := _add_local_polygon(root, "ValuableSparkle", PackedVector2Array([
+		Vector2(0, -8),
+		Vector2(3, -2),
+		Vector2(9, 0),
+		Vector2(3, 2),
+		Vector2(0, 8),
+		Vector2(-3, 2),
+		Vector2(-9, 0),
+		Vector2(-3, -2),
+	]), COLOR_SALVAGE_VALUABLE)
+	sparkle.position = Vector2(13, -13)
+	sparkle.z_index = 5
 
 
 func _add_crate_prop(root: Node2D) -> void:
