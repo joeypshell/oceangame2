@@ -221,6 +221,7 @@ Current issue state as of 2026-07-06:
 - Closed: #90 implemented the controlled background-depth art pass
 - Closed: #89 added a focused background-depth review capture
 - Closed: #88 planned Controlled Visual Revision 04 as the background-depth pass
+- Closed: #95 implemented the controlled cave terrain tileset v2 pass
 - Closed: #94 added a terrain atlas coverage review tool for the Controlled Visual Revision 05 terrain pass
 - Closed: #93 planned Controlled Visual Revision 05 as the terrain tileset v2 pass
 - Closed: #87 verified the public Web preview after the boat entry art pass
@@ -350,6 +351,7 @@ Recent important commits:
 - `docs/current/CONTROLLED_VISUAL_REVISION_03_PLAN.md` selects the next controlled visual-revision target: replace the procedural `boat_spawn` entry craft with a named committed `boat_spawn_01.png` sprite while preserving source-map boat entry/extraction semantics, player spawn, collision, movement, camera behavior, map data, and gameplay logic.
 - `docs/current/CONTROLLED_VISUAL_REVISION_04_PLAN.md` selects the next controlled visual-revision target: improve the non-collision background/depth layer with a named `background_rocks_02.png` variant while preserving maps, terrain tiles, collision, movement, camera behavior, gameplay logic, approved foreground sprites, and accepted baselines until review.
 - `docs/current/CONTROLLED_VISUAL_REVISION_05_PLAN.md` selects the next controlled visual-revision target: create a named `cave_tileset_v2.png` atlas variant while preserving map data, terrain/collision cells, route design, camera tests, accepted foreground/background assets, gameplay behavior, and default preview selection.
+- `assets/terrain_tiles/cave_tileset_v2.png` is the active draft runtime terrain atlas under #95; `cave_tileset_v1.png` remains committed for comparison and rollback until #96 accepts or defers the v2 baseline.
 - `tools/render_terrain_atlas_coverage.py` renders `references/asset_reviews/cave_tileset_v1_coverage_review.png` and validates that atlas coordinates used by `scripts/world/greybox_world.gd` are present in the terrain manifest before terrain tileset revisions are accepted.
 - `docs/current/CONTROLLED_VISUAL_REVISION_CHECKLIST.md` is the reusable checklist for future controlled visual revisions, covering planning, source-of-truth constraints, capture comparison, baseline acceptance, Web preview verification, and follow-up issues.
 - `docs/current/PROP_SPRITE_BASELINE_DECISION.md` records #71: the prop sprites are approved for the current prototype, accepted baselines were updated for slices 02-04, and slice 01 baseline reconciliation was split into #75.

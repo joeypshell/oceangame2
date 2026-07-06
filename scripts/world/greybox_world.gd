@@ -27,11 +27,11 @@ const COLOR_DEBUG_EXTRACTION := Color(1.0, 0.92, 0.52, 0.90)
 const SOURCE_LAYER_ALPHA := 0.08
 const BACKGROUND_ART_ALPHA := 0.26
 
-const CAVE_TILESET_TEXTURE := "res://assets/terrain_tiles/cave_tileset_v1.png"
+const CAVE_TILESET_TEXTURE := "res://assets/terrain_tiles/cave_tileset_v2.png"
 const BACKGROUND_ROCKS_TEXTURE := "res://assets/terrain/background_rocks_02.png"
 const BACKGROUND_ROCKS_FALLBACK_TEXTURE := "res://assets/terrain/background_rocks_01.png"
 const BOAT_SPAWN_TEXTURE := "res://assets/vehicles/boat_spawn_01.png"
-const CAVE_TILESET_TEXTURE_RESOURCE := preload("res://assets/terrain_tiles/cave_tileset_v1.png")
+const CAVE_TILESET_TEXTURE_RESOURCE := preload("res://assets/terrain_tiles/cave_tileset_v2.png")
 const BACKGROUND_ROCKS_TEXTURE_RESOURCE := preload("res://assets/terrain/background_rocks_02.png")
 const BACKGROUND_ROCKS_FALLBACK_TEXTURE_RESOURCE := preload("res://assets/terrain/background_rocks_01.png")
 const PROP_SPRITE_TEXTURES := {

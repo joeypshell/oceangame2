@@ -545,6 +545,7 @@ Render the terrain atlas coverage review sheet:
 
 ```bash
 python tools/render_terrain_atlas_coverage.py
+python tools/render_terrain_atlas_coverage.py --manifest assets/terrain_tiles/cave_tileset_v2_manifest.json --output references/asset_reviews/cave_tileset_v2_coverage_review.png
 ```
 
 This writes `references/asset_reviews/cave_tileset_v1_coverage_review.png`, labels manifest tile names, atlas coordinates, mask/open-side roles, renderer selection roles, and fails if any coordinate used by `scripts/world/greybox_world.gd` is missing from the terrain manifest. Use it before reviewing terrain tileset changes so the art pass preserves exact mask coverage.

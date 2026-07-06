@@ -34,8 +34,8 @@ references/asset_reviews/background_rocks_02_review.png
 |---|---:|---|---|---|
 | `assets/terrain_tiles/cave_tileset_v1.png` | 256x160 | First grid-aligned cave terrain atlas | draft | 32x32 tiles; supports exposed-side masks, inner corners, isolated terrain, and fill/edge variants. |
 | `assets/terrain_tiles/cave_tileset_v1_manifest.json` | n/a | Tile metadata | draft | Names atlas coordinates, mask semantics, and variant tiles. |
-| `assets/terrain_tiles/cave_tileset_v2.png` | 256x160 | Controlled terrain atlas v2 | planned | Planned under #93; named variant so v1 remains available for comparison and rollback. |
-| `assets/terrain_tiles/cave_tileset_v2_manifest.json` | n/a | Tile metadata | planned | Planned under #93; should preserve v1 mask semantics unless #94 documents a renderer/manifest mismatch. |
+| `assets/terrain_tiles/cave_tileset_v2.png` | 256x160 | Controlled terrain atlas v2 | draft | Implemented under #95; named variant so v1 remains available for comparison and rollback. |
+| `assets/terrain_tiles/cave_tileset_v2_manifest.json` | n/a | Tile metadata | draft | Preserves v1 mask semantics and renderer atlas coordinate expectations. |
 
 Review sheet:
 
@@ -43,6 +43,7 @@ Review sheet:
 references/asset_reviews/cave_tileset_v1_review.png
 references/asset_reviews/cave_tileset_v1_coverage_review.png
 references/asset_reviews/cave_tileset_v2_review.png
+references/asset_reviews/cave_tileset_v2_coverage_review.png
 ```
 
 Stress-test source and captures:
