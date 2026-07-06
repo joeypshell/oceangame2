@@ -71,8 +71,14 @@ references/asset_reviews/prop_sprites_01_review.png
 
 | Asset | Size | Purpose | Status | Notes |
 |---|---:|---|---|---|
-| `assets/player/player_diver_01.png` | 96x64 | Player diver | planned | Selected target for Controlled Visual Revision 02; should replace the procedural player placeholder without changing collision or movement. |
+| `assets/player/player_diver_01.png` | 96x64 | Player diver | draft | Implemented under #77 with `tools/generate_player_sprite.py`; pending #78 baseline acceptance review. |
 | `research_sub_01.png` | 192x96 | Player or support vehicle | planned | Side-view, clean illustrated style. |
+
+Review sheet:
+
+```text
+references/asset_reviews/player_sprite_01_review.png
+```
 
 ## UI
 

@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_player"]
+[ext_resource type="Texture2D" path="res://assets/player/player_diver_01.png" id="2_diver"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
 size = Vector2(26, 18)
@@ -22,14 +23,8 @@ script = ExtResource("1_player")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_player")
 
-[node name="Body" type="Polygon2D" parent="."]
-color = Color(0.98, 0.67, 0.12, 1)
-polygon = PackedVector2Array(-28, -12, 12, -12, 30, 0, 12, 12, -28, 12)
-
-[node name="Visor" type="Polygon2D" parent="."]
-position = Vector2(14, 0)
-color = Color(0.08, 0.82, 0.96, 1)
-polygon = PackedVector2Array(-8, -8, 8, -8, 12, 0, 8, 8, -8, 8)
+[node name="Body" type="Sprite2D" parent="."]
+texture = ExtResource("2_diver")
 
 [node name="LightCone" type="Sprite2D" parent="."]
 position = Vector2(88, 0)

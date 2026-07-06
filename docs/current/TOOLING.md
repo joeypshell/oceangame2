@@ -531,6 +531,14 @@ python tools/generate_prop_sprites.py
 
 This writes the draft 32x32 prop sprites under `assets/props/` and the review sheet at `references/asset_reviews/prop_sprites_01_review.png`. Runtime prop selection still comes from JSON entity `kind` values, and the renderer keeps procedural fallback art if a sprite asset cannot be loaded.
 
+Regenerate the draft player diver sprite:
+
+```bash
+python tools/generate_player_sprite.py
+```
+
+This writes `assets/player/player_diver_01.png` and the review sheet at `references/asset_reviews/player_sprite_01_review.png`. The player scene uses this sprite while preserving the existing collision shape, movement script, camera, and light cone.
+
 Process locally generated raw chroma-key terrain assets into exact-size transparent draft PNGs:
 
 ```bash

@@ -18,6 +18,8 @@ Supporting generator/review artifact:
 - `tools/generate_player_sprite.py`
 - `references/asset_reviews/player_sprite_01_review.png`
 
+Implementation status: #77 adds the draft `player_diver_01.png` asset, generator, review sheet, and `Player.tscn` integration. Baseline acceptance remains separate under #78.
+
 ## Why This Target
 
 The player is the most important remaining procedural foreground object. Improving it tests the same controlled-asset workflow as the prop pass, but on the object players focus on while moving through the map.
