@@ -43,10 +43,10 @@ Local/editor review runs also expose the map selector in the overlay, so the sup
 
 | Slice | Normal Captures | Debug Captures | Baseline Review Sheet | Notes |
 |---|---|---|---|---|
-| `production_slice_01` | `visual_captures/production_slice_01/` | `visual_captures/production_slice_01_debug/` | `references/asset_reviews/production_slice_01_visual_baseline_review.png` | Current capture set has six views; the accepted baseline currently compares the original four configured views. |
-| `production_slice_02` | `visual_captures/production_slice_02/` | `visual_captures/production_slice_02_debug/` | `references/asset_reviews/production_slice_02_visual_baseline_review.png` | Accepted after the original framing and relay-readability blockers were resolved. |
-| `production_slice_03` | `visual_captures/production_slice_03/` | `visual_captures/production_slice_03_debug/` | `references/asset_reviews/production_slice_03_visual_baseline_review.png` | Keep as a connector/landmark reference; optional #52/#53 polish is deferred unless the accepted baseline intentionally changes. |
-| `production_slice_04` | `visual_captures/production_slice_04/` | `visual_captures/production_slice_04_debug/` | `references/asset_reviews/production_slice_04_visual_baseline_review.png` | Keep as a lower-left loop reference; curved-corridor stair steps are intentional for this prototype pass. |
+| `production_slice_01` | `visual_captures/production_slice_01/` | `visual_captures/production_slice_01_debug/` | `references/asset_reviews/production_slice_01_visual_baseline_review.png` | Current capture set has six views; accepted-baseline reconciliation is tracked in #75 before using this sheet for clean prop-only diffs. |
+| `production_slice_02` | `visual_captures/production_slice_02/` | `visual_captures/production_slice_02_debug/` | `references/asset_reviews/production_slice_02_visual_baseline_review.png` | Accepted after the original framing and relay-readability blockers were resolved; refreshed under #71 for the prop sprite pass. |
+| `production_slice_03` | `visual_captures/production_slice_03/` | `visual_captures/production_slice_03_debug/` | `references/asset_reviews/production_slice_03_visual_baseline_review.png` | Keep as a connector/landmark reference; refreshed under #71 for the prop sprite pass; optional #52/#53 polish is deferred unless the accepted baseline intentionally changes. |
+| `production_slice_04` | `visual_captures/production_slice_04/` | `visual_captures/production_slice_04_debug/` | `references/asset_reviews/production_slice_04_visual_baseline_review.png` | Keep as a lower-left loop reference; refreshed under #71 for the prop sprite pass; curved-corridor stair steps are intentional for this prototype pass. |
 
 ## Decision Docs
 
