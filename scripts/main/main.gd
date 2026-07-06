@@ -27,6 +27,7 @@ const PRODUCTION_SLICE_04_CAPTURE_DIR := "res://visual_captures/production_slice
 const PRODUCTION_SLICE_04_DEBUG_CAPTURE_DIR := "res://visual_captures/production_slice_04_debug"
 const PLAYER_READABILITY_CAPTURE_DIR := "res://visual_captures/player_readability"
 const BACKGROUND_DEPTH_CAPTURE_DIR := "res://visual_captures/background_depth"
+const FEEDBACK_OVERLAY_CAPTURE_DIR := "res://visual_captures/feedback_overlay"
 const BUILD_INFO_PATH := "res://build_info.json"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 const PLAYER_READABILITY_CAPTURE_ZOOM := Vector2(2.0, 2.0)
@@ -88,6 +89,7 @@ func _ready() -> void:
 	var capture_production_slice_04_debug_map := _has_arg(user_args, engine_args, "--capture-production-slice-04-debug-map")
 	var capture_player_readability := _has_arg(user_args, engine_args, "--capture-player-readability")
 	var capture_background_depth := _has_arg(user_args, engine_args, "--capture-background-depth")
+	var capture_feedback_overlay := _has_arg(user_args, engine_args, "--capture-feedback-overlay")
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
 	var smoke_production_slice_route := _has_arg(user_args, engine_args, "--smoke-production-slice-route")
@@ -131,6 +133,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_background_depth:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif capture_feedback_overlay:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_route:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_02_route:
@@ -169,6 +173,7 @@ func _ready() -> void:
 		or capture_production_slice_04_debug_map
 		or capture_player_readability
 		or capture_background_depth
+		or capture_feedback_overlay
 		or smoke_salvage_loop
 		or smoke_production_slice_route
 		or smoke_production_slice_02_route
@@ -254,6 +259,8 @@ func _ready() -> void:
 		_capture_player_readability_and_quit(PLAYER_READABILITY_CAPTURE_DIR)
 	elif capture_background_depth:
 		_capture_background_depth_and_quit(BACKGROUND_DEPTH_CAPTURE_DIR)
+	elif capture_feedback_overlay:
+		_capture_feedback_overlay_and_quit(FEEDBACK_OVERLAY_CAPTURE_DIR)
 
 
 func _review_map_selector_allowed(user_args: PackedStringArray, engine_args: PackedStringArray) -> bool:
@@ -348,7 +355,7 @@ func _process(delta: float) -> void:
 	if not collected_salvage.is_empty():
 		_held_salvage += 1
 		_held_salvage_ids.append(collected_salvage)
-		_last_status_note = "Collected %s" % collected_salvage
+		_last_status_note = "Collected salvage"
 
 	if _held_salvage > 0 and _world.is_inside_extraction(_player.global_position):
 		_banked_salvage += _held_salvage
@@ -724,9 +731,9 @@ func _handle_oxygen_depleted() -> void:
 		_world.restore_salvage(_held_salvage_ids)
 		_held_salvage_ids = []
 		_held_salvage = 0
-		_last_status_note = "Oxygen depleted - dropped salvage"
+		_last_status_note = "Oxygen depleted: dropped held"
 	else:
-		_last_status_note = "Oxygen depleted - surfaced"
+		_last_status_note = "Oxygen depleted: surfaced"
 
 	_oxygen_seconds = OXYGEN_MAX_SECONDS
 	_hazard_cooldown_seconds = HAZARD_COOLDOWN_SECONDS
@@ -742,9 +749,9 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 		_world.restore_salvage(_held_salvage_ids)
 		_held_salvage_ids = []
 		_held_salvage = 0
-		_last_status_note = "Hazard hit - dropped salvage"
+		_last_status_note = "Hazard hit: dropped held"
 	else:
-		_last_status_note = "Hazard hit - reset"
+		_last_status_note = "Hazard hit: reset"
 
 	_hazard_cooldown_seconds = HAZARD_COOLDOWN_SECONDS
 	_hazard_feedback_seconds = HAZARD_FEEDBACK_SECONDS
@@ -832,12 +839,12 @@ func _update_status_label() -> void:
 		return
 
 	if _total_salvage <= 0:
-		_status_label.text = "Salvage 0/0\nOxygen --"
+		_status_label.text = "Salvage banked 0/0\nHeld 0\nOxygen --"
 		return
 
 	var prompt := ""
 	if _run_complete:
-		prompt = "Complete - press R"
+		prompt = "Run complete - press R"
 	elif _held_salvage > 0:
 		prompt = "Return to extraction"
 	elif not _last_status_note.is_empty():
@@ -848,7 +855,7 @@ func _update_status_label() -> void:
 	if _oxygen_seconds <= 15.0 and not _run_complete:
 		oxygen_text = "Oxygen %ds LOW" % oxygen_seconds
 
-	_status_label.text = "Salvage %d/%d  Held %d\n%s" % [
+	_status_label.text = "Salvage banked %d/%d\nHeld %d\n%s" % [
 		_banked_salvage,
 		_total_salvage,
 		_held_salvage,
@@ -1011,6 +1018,49 @@ func _capture_background_depth_and_quit(capture_dir: String) -> void:
 	var image := get_viewport().get_texture().get_image()
 	image.save_png(output_path)
 	print("Saved background depth capture: %s" % ProjectSettings.globalize_path(output_path))
+	get_tree().quit()
+
+
+func _capture_feedback_overlay_and_quit(capture_dir: String) -> void:
+	if _world == null or _player == null:
+		push_error("Feedback overlay capture requires a loaded playable map.")
+		get_tree().quit(1)
+		return
+
+	var salvage_centers: Array = _world.get_salvage_centers()
+	if salvage_centers.is_empty():
+		push_error("Feedback overlay capture requires authored salvage.")
+		get_tree().quit(1)
+		return
+
+	_player.global_position = salvage_centers[0]["center"]
+	if _player.has_method("reset_motion"):
+		_player.reset_motion()
+	_process(0.0)
+	_oxygen_seconds = 12.0
+	_update_status_label()
+
+	var camera := Camera2D.new()
+	camera.name = "FeedbackOverlayCaptureCamera"
+	camera.zoom = CAPTURE_ZOOM
+	camera.position_smoothing_enabled = false
+	camera.limit_left = 0
+	camera.limit_top = 0
+	camera.limit_right = int(_world.map_pixel_size.x)
+	camera.limit_bottom = int(_world.map_pixel_size.y)
+	add_child(camera)
+	camera.make_current()
+	camera.position = _world.spawn_position + Vector2(180, 180)
+
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(capture_dir))
+	var output_path := "%s/%s_feedback_overlay.png" % [capture_dir, _safe_filename(_world.map_id)]
+	var image := get_viewport().get_texture().get_image()
+	image.save_png(output_path)
+	print("Saved feedback overlay capture: %s" % ProjectSettings.globalize_path(output_path))
 	get_tree().quit()
 
 
