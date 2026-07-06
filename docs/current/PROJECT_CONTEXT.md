@@ -59,6 +59,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Background depth baseline decision: `docs/current/BACKGROUND_DEPTH_BASELINE_DECISION.md`
 - Background depth web preview verification: `docs/current/BACKGROUND_DEPTH_WEB_PREVIEW_VERIFICATION.md`
 - Terrain tileset v2 baseline decision: `docs/current/TERRAIN_TILESET_V2_BASELINE_DECISION.md`
+- Terrain tileset v2 web preview verification: `docs/current/TERRAIN_TILESET_V2_WEB_PREVIEW_VERIFICATION.md`
 - Current backlog refresh: `docs/current/BACKLOG_REFRESH_2026_07_06.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
@@ -222,6 +223,7 @@ Current issue state as of 2026-07-06:
 - Closed: #90 implemented the controlled background-depth art pass
 - Closed: #89 added a focused background-depth review capture
 - Closed: #88 planned Controlled Visual Revision 04 as the background-depth pass
+- Closed: #97 verified the public Web preview after the terrain tileset v2 pass
 - Closed: #96 accepted the Controlled Visual Revision 05 terrain tileset v2 baselines
 - Closed: #95 implemented the controlled cave terrain tileset v2 pass
 - Closed: #94 added a terrain atlas coverage review tool for the Controlled Visual Revision 05 terrain pass
@@ -354,6 +356,7 @@ Recent important commits:
 - `docs/current/CONTROLLED_VISUAL_REVISION_04_PLAN.md` selects the next controlled visual-revision target: improve the non-collision background/depth layer with a named `background_rocks_02.png` variant while preserving maps, terrain tiles, collision, movement, camera behavior, gameplay logic, approved foreground sprites, and accepted baselines until review.
 - `docs/current/CONTROLLED_VISUAL_REVISION_05_PLAN.md` selects the next controlled visual-revision target: create a named `cave_tileset_v2.png` atlas variant while preserving map data, terrain/collision cells, route design, camera tests, accepted foreground/background assets, gameplay behavior, and default preview selection.
 - `docs/current/TERRAIN_TILESET_V2_BASELINE_DECISION.md` records #96: `cave_tileset_v2.png` is approved for the current prototype terrain baseline, and accepted baselines were updated for production slices 01-04.
+- `docs/current/TERRAIN_TILESET_V2_WEB_PREVIEW_VERIFICATION.md` records #97: the public Pages preview deployed the terrain tileset v2 runtime commit successfully, matched external build metadata, and loaded the updated runtime without missing texture warnings.
 - `assets/terrain_tiles/cave_tileset_v2.png` is the active approved runtime terrain atlas; `cave_tileset_v1.png` remains committed for comparison and rollback.
 - `tools/render_terrain_atlas_coverage.py` renders `references/asset_reviews/cave_tileset_v1_coverage_review.png` and validates that atlas coordinates used by `scripts/world/greybox_world.gd` are present in the terrain manifest before terrain tileset revisions are accepted.
 - `docs/current/CONTROLLED_VISUAL_REVISION_CHECKLIST.md` is the reusable checklist for future controlled visual revisions, covering planning, source-of-truth constraints, capture comparison, baseline acceptance, Web preview verification, and follow-up issues.
