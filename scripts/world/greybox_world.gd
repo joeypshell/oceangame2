@@ -184,6 +184,13 @@ func get_salvage_score(salvage_id: String) -> int:
 	return int(SALVAGE_TIER_SCORES["common"])
 
 
+func get_salvage_tier(salvage_id: String) -> String:
+	for entity in _salvage_entities:
+		if str(entity.get("id", "salvage")) == salvage_id:
+			return str(entity.get("tier", "common"))
+	return "common"
+
+
 func is_salvage_collected(salvage_id: String) -> bool:
 	return bool(_collected_salvage.get(salvage_id, false))
 

@@ -123,6 +123,8 @@ Playable salvage may also include an optional `tier` field. If omitted, runtime 
 
 Runtime salvage score is currently derived from `tier`, not from per-entity authored score values. Held salvage score banks only when the player returns to extraction; oxygen or hazard resets restore held pickups and clear their held score. Completed expeditions may add a small runtime oxygen bonus based on remaining oxygen, but that bonus is not authored in map data and does not change salvage banking semantics.
 
+Collection feedback should name the tier-derived payoff in compact status text: common salvage reports its common score, and valuable salvage reports that it is valuable with its higher score.
+
 Playable salvage may also include optional route-choice metadata. These fields are source annotations for validation, smoke tests, and review tooling; they do not change collision or collection behavior by themselves.
 
 - `route_choice_id`: lower_snake_case id for this pickup's route/payoff role, such as `lower_loop_payoff`.

@@ -112,6 +112,7 @@ func _ready() -> void:
 	var smoke_hazard_interaction := _has_arg(user_args, engine_args, "--smoke-hazard-interaction")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var smoke_cargo_capacity := _has_arg(user_args, engine_args, "--smoke-cargo-capacity")
+	var smoke_salvage_feedback := _has_arg(user_args, engine_args, "--smoke-salvage-feedback")
 	var smoke_session_best_score := _has_arg(user_args, engine_args, "--smoke-session-best-score")
 	var smoke_oxygen_bonus_score := _has_arg(user_args, engine_args, "--smoke-oxygen-bonus-score")
 	var smoke_route_choice := _has_arg(user_args, engine_args, "--smoke-route-choice")
@@ -167,6 +168,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_session_best_score:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_salvage_feedback:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_oxygen_bonus_score:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_route_choice:
@@ -211,6 +214,7 @@ func _ready() -> void:
 		or smoke_hazard_interaction
 		or smoke_oxygen_pressure
 		or smoke_cargo_capacity
+		or smoke_salvage_feedback
 		or smoke_session_best_score
 		or smoke_oxygen_bonus_score
 		or smoke_route_choice
@@ -256,6 +260,9 @@ func _ready() -> void:
 		return
 	if smoke_cargo_capacity:
 		_smoke_cargo_capacity_and_quit()
+		return
+	if smoke_salvage_feedback:
+		_smoke_salvage_feedback_and_quit()
 		return
 	if smoke_session_best_score:
 		_smoke_session_best_score_and_quit()
@@ -413,10 +420,11 @@ func _process(delta: float) -> void:
 		var collected_salvage: String = _world.collect_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
 		if not collected_salvage.is_empty():
 			var collected_score: int = _world.get_salvage_score(collected_salvage)
+			var collected_tier: String = _world.get_salvage_tier(collected_salvage)
 			_held_salvage += 1
 			_held_salvage_ids.append(collected_salvage)
 			_held_salvage_score += collected_score
-			_last_status_note = "Collected salvage +%d" % collected_score
+			_last_status_note = _salvage_collection_feedback(collected_tier, collected_score)
 	elif _world.has_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS):
 		_last_status_note = "Cargo full - return to extraction"
 
@@ -923,6 +931,54 @@ func _smoke_cargo_capacity_and_quit() -> void:
 		blocked_id,
 		blocked_score,
 	])
+	get_tree().quit()
+
+
+func _smoke_salvage_feedback_and_quit() -> void:
+	if _world.map_id != "production_slice_01":
+		push_error("Salvage feedback smoke loaded unexpected map: %s" % _world.map_id)
+		get_tree().quit(1)
+		return
+
+	var common_target := {}
+	var valuable_target := {}
+	for salvage in _world.get_salvage_centers():
+		var tier := str(salvage.get("tier", "common"))
+		if tier == "common" and common_target.is_empty():
+			common_target = salvage
+		elif tier == "valuable" and valuable_target.is_empty():
+			valuable_target = salvage
+
+	if common_target.is_empty() or valuable_target.is_empty():
+		push_error("Salvage feedback smoke requires common and valuable salvage targets.")
+		get_tree().quit(1)
+		return
+
+	_player.set_physics_process(false)
+	_hazard_interactions_enabled = false
+	_player.global_position = common_target["center"]
+	_process(0.0)
+	var common_score := int(common_target.get("score", 0))
+	var common_feedback := _salvage_collection_feedback("common", common_score)
+	if _last_status_note != common_feedback or _status_label == null or _status_label.text.find(common_feedback) == -1:
+		push_error("Salvage feedback smoke expected common feedback '%s', got note='%s' status='%s'." % [common_feedback, _last_status_note, _status_label.text])
+		get_tree().quit(1)
+		return
+
+	_reset_run()
+	_player.set_physics_process(false)
+	_hazard_interactions_enabled = false
+	_player.global_position = valuable_target["center"]
+	_process(0.0)
+	var valuable_score := int(valuable_target.get("score", 0))
+	var valuable_feedback := _salvage_collection_feedback("valuable", valuable_score)
+	if _last_status_note != valuable_feedback or _status_label == null or _status_label.text.find(valuable_feedback) == -1:
+		push_error("Salvage feedback smoke expected valuable feedback '%s', got note='%s' status='%s'." % [valuable_feedback, _last_status_note, _status_label.text])
+		get_tree().quit(1)
+		return
+
+	_reset_run()
+	print("Salvage feedback smoke passed: common='%s' valuable='%s'." % [common_feedback, valuable_feedback])
 	get_tree().quit()
 
 
@@ -1500,10 +1556,10 @@ func _update_status_label() -> void:
 		prompt = "Oxygen depleted - press R"
 	elif _held_salvage >= HELD_SALVAGE_CAPACITY:
 		prompt = "Cargo full - return to extraction"
-	elif _held_salvage > 0:
-		prompt = "Return to extraction"
 	elif not _last_status_note.is_empty():
 		prompt = _last_status_note
+	elif _held_salvage > 0:
+		prompt = "Return to extraction"
 
 	var oxygen_seconds := int(ceil(_oxygen_seconds))
 	var oxygen_text := "Oxygen %ds" % oxygen_seconds
@@ -1547,6 +1603,12 @@ func _current_expedition_score() -> int:
 
 func _calculate_oxygen_completion_bonus() -> int:
 	return int(ceil(_oxygen_seconds)) * OXYGEN_BONUS_POINTS_PER_SECOND
+
+
+func _salvage_collection_feedback(tier: String, score: int) -> String:
+	if tier == "valuable":
+		return "Collected valuable salvage +%d" % score
+	return "Collected common salvage +%d" % score
 
 
 func _record_session_best_score() -> void:
