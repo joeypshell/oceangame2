@@ -147,6 +147,7 @@ jobs:
 
           run_score_smoke --smoke-cargo-capacity cargo-capacity
           run_score_smoke --smoke-session-best-score session-best-score
+          run_score_smoke --smoke-oxygen-bonus-score oxygen-bonus-score
 
       - name: Run map selector smoke check
         run: |
