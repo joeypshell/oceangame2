@@ -37,6 +37,7 @@ Build a small side-view salvage game that proves:
 - [OceanGame Migration Notes](docs/OCEANGAME_MIGRATION.md)
 - [Current Architecture](docs/current/ARCHITECTURE.md)
 - [Tooling](docs/current/TOOLING.md)
+- [Production Slice Index](docs/current/PRODUCTION_SLICE_INDEX.md)
 
 ## Locked Visual Direction
 

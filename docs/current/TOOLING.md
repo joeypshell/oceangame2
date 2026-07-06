@@ -18,6 +18,8 @@ Run the current project scene locally:
 
 The current default preview map is `maps/production_slice_01.greybox.json`.
 
+Use `docs/current/PRODUCTION_SLICE_INDEX.md` for a compact status table of the current production slices, including launch flags, route smoke flags, capture folders, review sheets, and accepted baseline status.
+
 Run with the source map/grid overlay visible:
 
 ```powershell
