@@ -110,6 +110,7 @@ func _ready() -> void:
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var smoke_cargo_capacity := _has_arg(user_args, engine_args, "--smoke-cargo-capacity")
 	var smoke_route_choice := _has_arg(user_args, engine_args, "--smoke-route-choice")
+	var smoke_route_choice_metadata := _has_arg(user_args, engine_args, "--smoke-route-choice-metadata")
 	var smoke_expanded_route_choice := _has_arg(user_args, engine_args, "--smoke-expanded-route-choice")
 	var smoke_player_facing := _has_arg(user_args, engine_args, "--smoke-player-facing")
 	var smoke_movement_feel := _has_arg(user_args, engine_args, "--smoke-movement-feel")
@@ -161,6 +162,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_route_choice:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_route_choice_metadata:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_expanded_route_choice:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif not requested_map_path.is_empty():
@@ -200,6 +203,7 @@ func _ready() -> void:
 		or smoke_oxygen_pressure
 		or smoke_cargo_capacity
 		or smoke_route_choice
+		or smoke_route_choice_metadata
 		or smoke_expanded_route_choice
 		or smoke_player_facing
 		or smoke_movement_feel
@@ -244,6 +248,9 @@ func _ready() -> void:
 		return
 	if smoke_route_choice:
 		await _smoke_route_choice_and_quit()
+		return
+	if smoke_route_choice_metadata:
+		_smoke_route_choice_metadata_and_quit()
 		return
 	if smoke_expanded_route_choice:
 		await _smoke_expanded_route_choice_and_quit()
@@ -860,6 +867,85 @@ func _smoke_expanded_route_choice_and_quit() -> void:
 		banked_after_return,
 		score_after_return,
 		oxygen_after_return,
+	])
+	get_tree().quit()
+
+
+func _smoke_route_choice_metadata_and_quit() -> void:
+	if _world.map_id != "production_slice_01":
+		push_error("Route choice metadata smoke loaded unexpected map: %s" % _world.map_id)
+		get_tree().quit(1)
+		return
+
+	var salvage: Array = _world.get_salvage_centers()
+	var route_targets: Array = _route_choice_targets_for_route(salvage, EXPANDED_ROUTE_CHOICE_ID)
+	if route_targets.size() < 2:
+		push_error("Route choice metadata smoke requires at least two targets for validation_route=%s, got %d." % [EXPANDED_ROUTE_CHOICE_ID, route_targets.size()])
+		get_tree().quit(1)
+		return
+
+	var default_target := _route_choice_target(salvage)
+	if default_target.is_empty():
+		push_error("Route choice metadata smoke requires a default valuable target.")
+		get_tree().quit(1)
+		return
+	if str(default_target.get("id", "")) != str(route_targets[0].get("id", "")):
+		push_error("Route choice metadata smoke expected first ordered route target %s to match default route target %s." % [str(route_targets[0].get("id", "")), str(default_target.get("id", ""))])
+		get_tree().quit(1)
+		return
+
+	var extraction_center: Vector2 = _world.get_extraction_center()
+	var previous_order := -1
+	var target_ids := PackedStringArray()
+	var target_orders := PackedStringArray()
+	var target_scores := PackedStringArray()
+	for target in route_targets:
+		var target_id := str(target.get("id", "salvage"))
+		var route_choice_id := str(target.get("route_choice_id", ""))
+		var route_order := int(target.get("route_order", -1))
+		target_ids.append(target_id)
+		target_orders.append(str(route_order))
+		target_scores.append(str(int(target.get("score", 0))))
+
+		if route_choice_id.is_empty():
+			push_error("Route choice metadata smoke found target %s without route_choice_id." % target_id)
+			get_tree().quit(1)
+			return
+		if not bool(target.get("has_route_order", false)):
+			push_error("Route choice metadata smoke found target %s without route_order." % target_id)
+			get_tree().quit(1)
+			return
+		if route_order <= previous_order:
+			push_error("Route choice metadata smoke found non-increasing route_order at %s: %d after %d." % [target_id, route_order, previous_order])
+			get_tree().quit(1)
+			return
+		if str(target.get("tier", "common")) != "valuable":
+			push_error("Route choice metadata smoke expected target %s to be valuable." % target_id)
+			get_tree().quit(1)
+			return
+		if int(target.get("score", 0)) <= 0:
+			push_error("Route choice metadata smoke expected target %s to have positive score." % target_id)
+			get_tree().quit(1)
+			return
+
+		var target_center: Vector2 = target["center"]
+		if _world.find_open_path(_world.spawn_position, target_center).is_empty():
+			push_error("Route choice metadata smoke found no open route from spawn to %s." % target_id)
+			get_tree().quit(1)
+			return
+		if _world.find_open_path(target_center, extraction_center).is_empty():
+			push_error("Route choice metadata smoke found no open return route from %s to extraction." % target_id)
+			get_tree().quit(1)
+			return
+
+		previous_order = route_order
+
+	print("Route choice metadata smoke passed: route=%s targets=%s orders=%s scores=%s first_target=%s." % [
+		EXPANDED_ROUTE_CHOICE_ID,
+		",".join(target_ids),
+		",".join(target_orders),
+		",".join(target_scores),
+		str(default_target.get("id", "")),
 	])
 	get_tree().quit()
 
