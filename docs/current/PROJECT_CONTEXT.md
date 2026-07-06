@@ -61,7 +61,8 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Background depth web preview verification: `docs/current/BACKGROUND_DEPTH_WEB_PREVIEW_VERIFICATION.md`
 - Terrain tileset v2 baseline decision: `docs/current/TERRAIN_TILESET_V2_BASELINE_DECISION.md`
 - Terrain tileset v2 web preview verification: `docs/current/TERRAIN_TILESET_V2_WEB_PREVIEW_VERIFICATION.md`
-- Current backlog refresh: `docs/current/BACKLOG_REFRESH_2026_07_06.md`
+- Current backlog refresh: `docs/current/BACKLOG_REFRESH_POST_CVR05_2026_07_06.md`
+- Controlled Gameplay Pass 01 plan: `docs/current/CONTROLLED_GAMEPLAY_PASS_01_PLAN.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -219,6 +220,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-06:
 
+- Closed: #101 planned Controlled Gameplay Pass 01 as a movement-feel/readability pass
 - Closed: #100 added `--smoke-player-facing` to the `Godot Smoke` workflow
 - Closed: #84 planned Controlled Visual Revision 03 as the boat spawn entry art pass
 - Closed: #92 verified the public Web preview after the background-depth pass
@@ -360,6 +362,7 @@ Recent important commits:
 - `docs/current/CONTROLLED_VISUAL_REVISION_03_PLAN.md` selects the next controlled visual-revision target: replace the procedural `boat_spawn` entry craft with a named committed `boat_spawn_01.png` sprite while preserving source-map boat entry/extraction semantics, player spawn, collision, movement, camera behavior, map data, and gameplay logic.
 - `docs/current/CONTROLLED_VISUAL_REVISION_04_PLAN.md` selects the next controlled visual-revision target: improve the non-collision background/depth layer with a named `background_rocks_02.png` variant while preserving maps, terrain tiles, collision, movement, camera behavior, gameplay logic, approved foreground sprites, and accepted baselines until review.
 - `docs/current/CONTROLLED_VISUAL_REVISION_05_PLAN.md` selects the next controlled visual-revision target: create a named `cave_tileset_v2.png` atlas variant while preserving map data, terrain/collision cells, route design, camera tests, accepted foreground/background assets, gameplay behavior, and default preview selection.
+- `docs/current/CONTROLLED_GAMEPLAY_PASS_01_PLAN.md` selects the next controlled prototype target: tune player movement feel and readability while preserving map source data, terrain/collision, player sprite art, camera framing, salvage/hazard/oxygen semantics, and accepted visual baselines until review.
 - `docs/current/TERRAIN_TILESET_V2_BASELINE_DECISION.md` records #96: `cave_tileset_v2.png` is approved for the current prototype terrain baseline, and accepted baselines were updated for production slices 01-04.
 - `docs/current/TERRAIN_TILESET_V2_WEB_PREVIEW_VERIFICATION.md` records #97: the public Pages preview deployed the terrain tileset v2 runtime commit successfully, matched external build metadata, and loaded the updated runtime without missing texture warnings.
 - `assets/terrain_tiles/cave_tileset_v2.png` is the active approved runtime terrain atlas; `cave_tileset_v1.png` remains committed for comparison and rollback.
