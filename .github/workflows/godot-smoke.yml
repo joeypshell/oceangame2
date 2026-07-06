@@ -178,6 +178,7 @@ jobs:
           }
 
           run_route_smoke --smoke-production-slice-route production-slice-01-route
+          run_route_smoke --smoke-route-choice production-slice-01-route-choice
           run_route_smoke --smoke-production-slice-02-route production-slice-02-route
           run_route_smoke --smoke-production-slice-03-route production-slice-03-route
           run_route_smoke --smoke-production-slice-04-route production-slice-04-route

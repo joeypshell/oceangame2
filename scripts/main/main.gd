@@ -585,6 +585,10 @@ func _smoke_route_choice_and_quit() -> void:
 		return
 
 	var target: Dictionary = _route_choice_target(salvage)
+	if target.is_empty():
+		push_error("Route choice probe requires one authored valuable salvage target.")
+		get_tree().quit(1)
+		return
 	var target_id := str(target.get("id", "salvage"))
 	var target_center: Vector2 = target["center"]
 	var extraction_center: Vector2 = _world.get_extraction_center()
@@ -627,21 +631,7 @@ func _route_choice_target(salvage: Array) -> Dictionary:
 	for item in salvage:
 		if str(item.get("tier", "common")) == "valuable":
 			return item
-
-	for item in salvage:
-		if str(item.get("id", "")) == "salvage_lower_loop":
-			return item
-
-	var extraction_center: Vector2 = _world.get_extraction_center()
-	var selected: Dictionary = salvage[0]
-	var selected_distance := -1.0
-	for item in salvage:
-		var center: Vector2 = item["center"]
-		var distance := center.distance_to(extraction_center)
-		if distance > selected_distance:
-			selected = item
-			selected_distance = distance
-	return selected
+	return {}
 
 
 func _smoke_player_facing_and_quit() -> void:
