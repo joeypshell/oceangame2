@@ -25,8 +25,11 @@ const PRODUCTION_SLICE_03_CAPTURE_DIR := "res://visual_captures/production_slice
 const PRODUCTION_SLICE_03_DEBUG_CAPTURE_DIR := "res://visual_captures/production_slice_03_debug"
 const PRODUCTION_SLICE_04_CAPTURE_DIR := "res://visual_captures/production_slice_04"
 const PRODUCTION_SLICE_04_DEBUG_CAPTURE_DIR := "res://visual_captures/production_slice_04_debug"
+const PLAYER_READABILITY_CAPTURE_DIR := "res://visual_captures/player_readability"
 const BUILD_INFO_PATH := "res://build_info.json"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
+const PLAYER_READABILITY_CAPTURE_ZOOM := Vector2(2.0, 2.0)
+const PLAYER_READABILITY_ENTRY_OFFSET_TILES := Vector2(0, 5)
 const SALVAGE_COLLECTION_RADIUS := 34.0
 const HAZARD_CONTACT_RADIUS := 30.0
 const HAZARD_COOLDOWN_SECONDS := 1.0
@@ -78,6 +81,7 @@ func _ready() -> void:
 	var capture_production_slice_03_debug_map := _has_arg(user_args, engine_args, "--capture-production-slice-03-debug-map")
 	var capture_production_slice_04_map := _has_arg(user_args, engine_args, "--capture-production-slice-04-map")
 	var capture_production_slice_04_debug_map := _has_arg(user_args, engine_args, "--capture-production-slice-04-debug-map")
+	var capture_player_readability := _has_arg(user_args, engine_args, "--capture-player-readability")
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
 	var smoke_production_slice_route := _has_arg(user_args, engine_args, "--smoke-production-slice-route")
@@ -115,6 +119,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_04_MAP_PATH
 	elif capture_production_slice_04_debug_map:
 		selected_map_path = PRODUCTION_SLICE_04_MAP_PATH
+	elif capture_player_readability:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_route:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_02_route:
@@ -151,6 +157,7 @@ func _ready() -> void:
 		or capture_production_slice_03_debug_map
 		or capture_production_slice_04_map
 		or capture_production_slice_04_debug_map
+		or capture_player_readability
 		or smoke_salvage_loop
 		or smoke_production_slice_route
 		or smoke_production_slice_02_route
@@ -224,6 +231,8 @@ func _ready() -> void:
 		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_04_CAPTURE_DIR)
 	elif capture_production_slice_04_debug_map:
 		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_04_DEBUG_CAPTURE_DIR)
+	elif capture_player_readability:
+		_capture_player_readability_and_quit(PLAYER_READABILITY_CAPTURE_DIR)
 
 
 func _review_map_selector_allowed(user_args: PackedStringArray, engine_args: PackedStringArray) -> bool:
@@ -811,6 +820,42 @@ func _capture_camera_tests_and_quit(world: Node, capture_dir: String) -> void:
 		image.save_png(output_path)
 		print("Saved camera test capture: %s" % ProjectSettings.globalize_path(output_path))
 
+	get_tree().quit()
+
+
+func _capture_player_readability_and_quit(capture_dir: String) -> void:
+	if _world == null or _player == null:
+		push_error("Player readability capture requires a loaded playable map.")
+		get_tree().quit(1)
+		return
+
+	var review_position: Vector2 = _world.spawn_position + PLAYER_READABILITY_ENTRY_OFFSET_TILES * float(_world.tile_size)
+	_player.global_position = review_position
+	if _player.has_method("reset_motion"):
+		_player.reset_motion()
+
+	var camera := Camera2D.new()
+	camera.name = "PlayerReadabilityCaptureCamera"
+	camera.zoom = PLAYER_READABILITY_CAPTURE_ZOOM
+	camera.position_smoothing_enabled = false
+	camera.limit_left = 0
+	camera.limit_top = 0
+	camera.limit_right = int(_world.map_pixel_size.x)
+	camera.limit_bottom = int(_world.map_pixel_size.y)
+	add_child(camera)
+	camera.make_current()
+	camera.position = review_position + Vector2(64, -16)
+
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(capture_dir))
+	var view_id := "%s_player_start" % _safe_filename(_world.map_id)
+	var output_path := "%s/%s.png" % [capture_dir, view_id]
+	var image := get_viewport().get_texture().get_image()
+	image.save_png(output_path)
+	print("Saved player readability capture: %s" % ProjectSettings.globalize_path(output_path))
 	get_tree().quit()
 
 

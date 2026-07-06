@@ -82,7 +82,19 @@ Before changing the player visual:
 python tools/manage_production_slice_baseline.py compare-all
 ```
 
-The current camera-test captures do not consistently showcase the player in every slice. If review needs a close player-readability shot, add a focused player-start capture/check as a separate issue before accepting a replacement baseline.
+#76 adds the focused player-readability capture for this pass:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-player-readability
+```
+
+Expected output:
+
+```text
+visual_captures/player_readability/production_slice_01_player_start.png
+```
+
+Use this close spawn/player view alongside the normal production-slice captures before accepting any replacement baseline.
 
 After changing the player visual:
 

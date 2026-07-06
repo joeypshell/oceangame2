@@ -301,6 +301,14 @@ Capture the current named camera test views:
 This reads `camera_tests` from the default preview map, currently `maps/production_slice_01.greybox.json`, and writes PNGs to `visual_captures/latest/`.
 Normal gameplay and capture views hide the greybox source grid. Add `--show-debug-overlay` when you specifically need the source TileMap/grid overlay for map debugging.
 
+Capture the focused player-readability view for Controlled Visual Revision review:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-player-readability
+```
+
+This loads the default production slice, places the player a few tiles below the source-defined boat entry for a readable start-context shot, uses a close runtime camera, and writes `visual_captures/player_readability/production_slice_01_player_start.png`. Use this capture to review player sprite changes without changing map topology, gameplay, camera tests, or accepted baselines.
+
 Capture the original rectangular salvage map comparison views:
 
 ```powershell
