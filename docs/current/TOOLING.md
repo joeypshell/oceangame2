@@ -235,6 +235,14 @@ Capture the first production slice:
 
 This reads `camera_tests` from `maps/production_slice_01.greybox.json` and writes PNGs to `visual_captures/production_slice_01/`.
 
+Capture the first production slice with debug/review markers visible:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-production-slice-debug-map
+```
+
+This writes PNGs to `visual_captures/production_slice_01_debug/`. The debug overlay uses cyan source grid, white route rectangles, amber boat/extraction outlines, green entry/spawn labels, yellow salvage diamonds, and red hazard squares. Normal production-slice captures stay terrain-first and should not be overwritten with debug views.
+
 Accept the current production-slice captures as the named visual baseline:
 
 ```bash

@@ -16,6 +16,10 @@ const COLOR_SALVAGE_METAL := Color(0.72, 0.83, 0.78, 1.0)
 const COLOR_HAZARD := Color(1.0, 0.22, 0.34, 1.0)
 const COLOR_HAZARD_DARK := Color(0.40, 0.04, 0.10, 1.0)
 const COLOR_HAZARD_LIGHT := Color(1.0, 0.58, 0.66, 1.0)
+const COLOR_DEBUG_ROUTE := Color(0.90, 0.98, 1.0, 0.26)
+const COLOR_DEBUG_ROUTE_EDGE := Color(0.90, 0.98, 1.0, 0.88)
+const COLOR_DEBUG_ENTRY := Color(0.72, 1.0, 0.72, 0.88)
+const COLOR_DEBUG_EXTRACTION := Color(1.0, 0.92, 0.52, 0.90)
 const SOURCE_LAYER_ALPHA := 0.08
 const BACKGROUND_ART_ALPHA := 0.26
 
@@ -532,11 +536,18 @@ func _build_zones(zones: Array) -> void:
 			base.name = zone.get("id", "Base")
 			base.z_index = 5
 			_marker_root.add_child(base)
+			if show_debug_overlay:
+				_add_rect_outline(zone, "%sDebugOutline" % base.name, COLOR_DEBUG_EXTRACTION, 3.0, 22)
+				_add_debug_label("EXTRACTION", _rect_from_item(zone).position + Vector2(6, 6), COLOR_DEBUG_EXTRACTION)
 		elif zone.get("type", "") == "marker":
 			var marker := _rect_polygon(zone, COLOR_MARKER)
 			marker.name = zone.get("id", "Marker")
 			marker.z_index = 4
 			_marker_root.add_child(marker)
+			if show_debug_overlay:
+				marker.color = COLOR_DEBUG_ROUTE
+				_add_rect_outline(zone, "%sDebugOutline" % marker.name, COLOR_DEBUG_ROUTE_EDGE, 2.0, 21)
+				_add_debug_label("ROUTE", _rect_from_item(zone).position + Vector2(6, 6), COLOR_DEBUG_ROUTE_EDGE)
 
 
 func _build_entities(entities: Array) -> void:
@@ -551,10 +562,16 @@ func _build_entities(entities: Array) -> void:
 			_add_boat_marker(str(entity.get("id", "BoatSpawn")), entity)
 		elif entity_type == "spawn":
 			if has_boat_spawn:
-				_add_marker("LegacyPlayerStart", center, COLOR_MARKER, 18.0)
+				var legacy_marker := _add_marker("LegacyPlayerStart", center, COLOR_MARKER, 18.0)
+				if show_debug_overlay:
+					legacy_marker.color = COLOR_DEBUG_ENTRY
+					_add_debug_label("LEGACY SPAWN", center + Vector2(18, -22), COLOR_DEBUG_ENTRY)
 				continue
 			spawn_position = center
-			_add_marker("PlayerStart", center, COLOR_MARKER, 28.0)
+			var spawn_marker := _add_marker("PlayerStart", center, COLOR_MARKER, 28.0)
+			if show_debug_overlay:
+				spawn_marker.color = COLOR_DEBUG_ENTRY
+				_add_debug_label("SPAWN", center + Vector2(18, -22), COLOR_DEBUG_ENTRY)
 		elif entity_type == "salvage":
 			_salvage_entities.append(entity)
 			var salvage_id := str(entity.get("id", "Salvage"))
@@ -563,6 +580,7 @@ func _build_entities(entities: Array) -> void:
 			if show_debug_overlay:
 				var debug_marker := _add_local_polygon(salvage_node, "DebugDiamond", _diamond_points(16.0), Color(1.0, 0.80, 0.22, 0.35))
 				debug_marker.z_index = 20
+				_add_debug_label("SALVAGE", center + Vector2(18, -22), COLOR_SALVAGE)
 		elif entity_type == "hazard":
 			_hazard_entities.append(entity)
 			var hazard_id := str(entity.get("id", "Hazard"))
@@ -570,6 +588,7 @@ func _build_entities(entities: Array) -> void:
 			if show_debug_overlay:
 				var debug_marker := _add_local_polygon(hazard_node, "DebugMarker", _rect_points(Vector2(18, 18)), Color(1.0, 0.22, 0.34, 0.35))
 				debug_marker.z_index = 20
+				_add_debug_label("HAZARD", center + Vector2(18, -22), COLOR_HAZARD)
 
 
 func _has_entity_type(entities: Array, entity_type: String) -> bool:
@@ -741,6 +760,15 @@ func _add_boat_marker(marker_name: String, item: Dictionary) -> Node2D:
 			Vector2(tether_right, rung_y),
 		]), COLOR_BOAT_LIGHT, 2.0)
 		rung.z_index = 6
+
+	if show_debug_overlay:
+		var debug_rect := _add_local_line(root, "DebugBoatExtractionRect", _rect_outline_points(rect.size), COLOR_DEBUG_EXTRACTION, 3.0)
+		debug_rect.z_index = 22
+		var debug_entry := _add_local_polygon(root, "DebugEntryCell", _diamond_points(14.0), COLOR_DEBUG_ENTRY)
+		debug_entry.position = entry_local
+		debug_entry.z_index = 23
+		_add_debug_label("BOAT / RETURN", rect.position + Vector2(6, rect.size.y + 8), COLOR_DEBUG_EXTRACTION)
+		_add_debug_label("ENTRY", rect.position + entry_local + Vector2(18, -20), COLOR_DEBUG_ENTRY)
 	return root
 
 
@@ -894,6 +922,16 @@ func _closed_rect_points(size: Vector2) -> PackedVector2Array:
 	return points
 
 
+func _rect_outline_points(size: Vector2) -> PackedVector2Array:
+	return PackedVector2Array([
+		Vector2.ZERO,
+		Vector2(size.x, 0),
+		size,
+		Vector2(0, size.y),
+		Vector2.ZERO,
+	])
+
+
 func _diamond_points(radius: float) -> PackedVector2Array:
 	return PackedVector2Array([
 		Vector2(0, -radius),
@@ -929,6 +967,32 @@ func _rect_center(item: Dictionary) -> Vector2:
 
 func _rect_size(item: Dictionary) -> Vector2:
 	return Vector2(float(item["w"]) * tile_size, float(item["h"]) * tile_size)
+
+
+func _add_rect_outline(item: Dictionary, outline_name: String, color: Color, width: float, z_index: int) -> Line2D:
+	var line := Line2D.new()
+	line.name = outline_name
+	line.position = _rect_from_item(item).position
+	line.points = _rect_outline_points(_rect_size(item))
+	line.default_color = color
+	line.width = width
+	line.z_index = z_index
+	_marker_root.add_child(line)
+	return line
+
+
+func _add_debug_label(label_text: String, position: Vector2, color: Color) -> Label:
+	var label := Label.new()
+	label.name = "DebugLabel"
+	label.text = label_text
+	label.position = position
+	label.z_index = 30
+	label.add_theme_font_size_override("font_size", 13)
+	label.add_theme_color_override("font_color", color)
+	label.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 0.84))
+	label.add_theme_constant_override("outline_size", 4)
+	_marker_root.add_child(label)
+	return label
 
 
 func _rect_from_item(item: Dictionary) -> Rect2:

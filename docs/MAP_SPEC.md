@@ -53,6 +53,17 @@ Use simple greybox colors before final art:
 - Hazard: red.
 - Player start: green.
 
+## Debug Review Marker Roles
+
+Normal previews should keep debug markers subtle or hidden. When `--show-debug-overlay` is enabled:
+
+- Cyan grid/source overlay: authored map cells.
+- White translucent rectangles: route or review marker zones.
+- Amber outlines/labels: boat or extraction return rectangles.
+- Green diamonds/labels: player entry or spawn cells.
+- Yellow diamonds/labels: salvage entities.
+- Red squares/labels: hazard entities.
+
 ## Spawn And Extraction Entities
 
 Maps must define exactly one player entry entity:

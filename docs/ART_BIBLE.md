@@ -66,6 +66,7 @@ Normal gameplay previews should use small readable in-world props instead of abs
 - Salvage uses warm ochre/copper/yellow accents and should read as crates, wreck fragments, or relics.
 - Hazards reserve red/magenta and dark warning silhouettes, currently mines and jellyfish.
 - Simple yellow diamonds and red squares are allowed only as debug/review overlay markers.
+- Debug/review overlays may use cyan source grid, white route rectangles, amber extraction/boat outlines, green entry/spawn labels, yellow salvage diamonds, and red hazard squares.
 - Entity behavior remains driven by JSON `type`; `kind` selects the first-pass visual variant.
 
 ## Current Boat Entry Pass

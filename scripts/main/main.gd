@@ -15,6 +15,7 @@ const TILESET_TEST_CAPTURE_DIR := "res://visual_captures/tileset_test"
 const ORGANIC_CAPTURE_DIR := "res://visual_captures/organic_salvage"
 const FULL_SKETCH_CAPTURE_DIR := "res://visual_captures/full_cave_sketch"
 const PRODUCTION_SLICE_CAPTURE_DIR := "res://visual_captures/production_slice_01"
+const PRODUCTION_SLICE_DEBUG_CAPTURE_DIR := "res://visual_captures/production_slice_01_debug"
 const BUILD_INFO_PATH := "res://build_info.json"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 const SALVAGE_COLLECTION_RADIUS := 34.0
@@ -45,6 +46,7 @@ func _ready() -> void:
 	var capture_organic_map := _has_arg(user_args, engine_args, "--capture-organic-map")
 	var capture_full_sketch_map := _has_arg(user_args, engine_args, "--capture-full-sketch-map")
 	var capture_production_slice_map := _has_arg(user_args, engine_args, "--capture-production-slice-map")
+	var capture_production_slice_debug_map := _has_arg(user_args, engine_args, "--capture-production-slice-debug-map")
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
 	var smoke_production_slice_route := _has_arg(user_args, engine_args, "--smoke-production-slice-route")
@@ -64,6 +66,8 @@ func _ready() -> void:
 		world.map_path = FULL_SKETCH_MAP_PATH
 	elif capture_production_slice_map:
 		world.map_path = PRODUCTION_SLICE_MAP_PATH
+	elif capture_production_slice_debug_map:
+		world.map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_route:
 		world.map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_hazard_interaction:
@@ -72,7 +76,7 @@ func _ready() -> void:
 		world.map_path = requested_map_path
 	else:
 		world.map_path = DEFAULT_MAP_PATH
-	world.show_debug_overlay = _has_arg(user_args, engine_args, "--show-debug-overlay")
+	world.show_debug_overlay = _has_arg(user_args, engine_args, "--show-debug-overlay") or capture_production_slice_debug_map
 	add_child(world)
 	world.load_greybox()
 
@@ -118,6 +122,8 @@ func _ready() -> void:
 		_capture_camera_tests_and_quit(world, FULL_SKETCH_CAPTURE_DIR)
 	elif capture_production_slice_map:
 		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_CAPTURE_DIR)
+	elif capture_production_slice_debug_map:
+		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_DEBUG_CAPTURE_DIR)
 
 
 func _process(delta: float) -> void:
@@ -377,6 +383,14 @@ func _create_review_overlay(world: Node) -> void:
 	_review_label.add_theme_font_size_override("font_size", 13)
 	_review_label.text = "Map %s\nBuild %s" % [world.get_map_label(), _build_label()]
 	stack.add_child(_review_label)
+
+	if world.show_debug_overlay:
+		var debug_label := Label.new()
+		debug_label.add_theme_color_override("font_color", Color(0.78, 0.96, 1.0, 0.95))
+		debug_label.add_theme_font_size_override("font_size", 12)
+		debug_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		debug_label.text = "Debug markers: cyan grid/source, white route boxes, amber boat/extraction, green entry/spawn, yellow salvage diamonds, red hazard squares"
+		stack.add_child(debug_label)
 
 	_status_label = Label.new()
 	_status_label.add_theme_color_override("font_color", Color(1.0, 0.88, 0.45, 0.98))

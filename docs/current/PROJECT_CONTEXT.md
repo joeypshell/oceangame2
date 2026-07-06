@@ -167,10 +167,10 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-05:
 
-- Open: [#37](https://github.com/joeypshell/oceangame2/issues/37) `Clarify entity marker meanings in debug review mode`
 - Open: [#38](https://github.com/joeypshell/oceangame2/issues/38) `Tune production slice camera framing and capture set`
 - Open: [#39](https://github.com/joeypshell/oceangame2/issues/39) `Prototype scoped expedition pressure for production slice`
 - Open: [#40](https://github.com/joeypshell/oceangame2/issues/40) `Select and author second production slice from full sketch`
+- Closed: #37 debug/review marker meanings and capture route
 - Closed: #36 accepted production-slice visual baseline workflow
 - Closed: #35 readable boat-spawn entry and return visual
 - Closed: #34 readable salvage and hazard props
@@ -253,7 +253,8 @@ Recent important commits:
 - There is no health, oxygen, inventory screen, upgrade economy, or real enemy behavior yet.
 - Background art is still rough and secondary to proving terrain readability.
 - Normal preview uses first-pass readable salvage and hazard props instead of abstract marker shapes.
-- The source map/grid and simple entity debug markers can be shown with `--show-debug-overlay`, but normal preview should be terrain-first.
+- The source map/grid and entity review markers can be shown with `--show-debug-overlay`; dedicated production-slice debug captures are written with `--capture-production-slice-debug-map` to `visual_captures/production_slice_01_debug/`.
+- Debug marker roles are: cyan source grid, white route rectangles, amber boat/extraction outlines, green entry/spawn labels, yellow salvage diamonds, and red hazard squares.
 
 ## Recommended Next Work
 
@@ -278,7 +279,7 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. [#37](https://github.com/joeypshell/oceangame2/issues/37) and [#38](https://github.com/joeypshell/oceangame2/issues/38) improve debug marker review and capture framing.
+1. [#38](https://github.com/joeypshell/oceangame2/issues/38) tunes production-slice camera framing and capture set.
 2. [#39](https://github.com/joeypshell/oceangame2/issues/39) adds one scoped pressure mechanic only after visual/source validation is stable.
 3. [#40](https://github.com/joeypshell/oceangame2/issues/40) selects a second production slice once the first slice workflow is accepted.
 
