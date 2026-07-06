@@ -4,6 +4,17 @@ extends CharacterBody2D
 @export var acceleration := 820.0
 @export var deceleration := 1100.0
 
+const LIGHT_CONE_OFFSET_X := 88.0
+
+@onready var _body := $Body as Sprite2D
+@onready var _light_cone := $LightCone as Sprite2D
+
+var _facing_sign := 1.0
+
+
+func _ready() -> void:
+	_set_facing(_facing_sign)
+
 
 func _physics_process(delta: float) -> void:
 	swim_in_direction(_input_direction(), delta)
@@ -19,7 +30,7 @@ func swim_in_direction(direction: Vector2, delta: float) -> void:
 	move_and_slide()
 
 	if direction.x != 0.0:
-		scale.x = 1.0 if direction.x > 0.0 else -1.0
+		_set_facing(1.0 if direction.x > 0.0 else -1.0)
 
 
 func _input_direction() -> Vector2:
@@ -45,6 +56,15 @@ func snap_camera() -> void:
 	camera.reset_smoothing()
 
 
+func get_facing_report() -> Dictionary:
+	return {
+		"root_scale_x": scale.x,
+		"body_flip_h": _body.flip_h,
+		"light_cone_position_x": _light_cone.position.x,
+		"light_cone_scale_x": _light_cone.scale.x,
+	}
+
+
 func _wasd_vector() -> Vector2:
 	var x := 0.0
 	var y := 0.0
@@ -57,3 +77,11 @@ func _wasd_vector() -> Vector2:
 	if Input.is_key_pressed(KEY_S):
 		y += 1.0
 	return Vector2(x, y)
+
+
+func _set_facing(sign: float) -> void:
+	_facing_sign = 1.0 if sign >= 0.0 else -1.0
+	scale.x = 1.0
+	_body.flip_h = _facing_sign < 0.0
+	_light_cone.position.x = LIGHT_CONE_OFFSET_X * _facing_sign
+	_light_cone.scale.x = _facing_sign

@@ -96,6 +96,7 @@ func _ready() -> void:
 	var smoke_map_selector := _has_arg(user_args, engine_args, "--smoke-map-selector")
 	var smoke_hazard_interaction := _has_arg(user_args, engine_args, "--smoke-hazard-interaction")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
+	var smoke_player_facing := _has_arg(user_args, engine_args, "--smoke-player-facing")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
 	var parity_output_path := _arg_value(user_args, engine_args, "--parity-output")
 
@@ -174,6 +175,7 @@ func _ready() -> void:
 		or smoke_map_selector
 		or smoke_hazard_interaction
 		or smoke_oxygen_pressure
+		or smoke_player_facing
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
 		or _has_arg(user_args, engine_args, "--capture-camera-tests")
 	)
@@ -209,6 +211,9 @@ func _ready() -> void:
 		return
 	if smoke_oxygen_pressure:
 		_smoke_oxygen_pressure_and_quit()
+		return
+	if smoke_player_facing:
+		_smoke_player_facing_and_quit()
 		return
 
 	if _has_arg(user_args, engine_args, "--capture-greybox-screenshot"):
@@ -539,6 +544,46 @@ func _smoke_oxygen_pressure_and_quit() -> void:
 	_reset_run()
 	print("Oxygen pressure smoke passed: depleted, surfaced, restored salvage, refilled, and banked salvage.")
 	get_tree().quit()
+
+
+func _smoke_player_facing_and_quit() -> void:
+	if not _player.has_method("swim_in_direction") or not _player.has_method("get_facing_report"):
+		push_error("Player facing smoke requires swim_in_direction() and get_facing_report().")
+		get_tree().quit(1)
+		return
+
+	_player.set_physics_process(false)
+	_player.swim_in_direction(Vector2.RIGHT, 1.0 / 60.0)
+	var right_report: Dictionary = _player.get_facing_report()
+	_player.swim_in_direction(Vector2.LEFT, 1.0 / 60.0)
+	var left_report: Dictionary = _player.get_facing_report()
+	_player.swim_in_direction(Vector2.RIGHT, 1.0 / 60.0)
+	var restored_report: Dictionary = _player.get_facing_report()
+
+	if not _facing_report_matches(right_report, false, 88.0, 1.0):
+		push_error("Player facing smoke expected right-facing visual children, got %s." % right_report)
+		get_tree().quit(1)
+		return
+	if not _facing_report_matches(left_report, true, -88.0, -1.0):
+		push_error("Player facing smoke expected left-facing visual children, got %s." % left_report)
+		get_tree().quit(1)
+		return
+	if not _facing_report_matches(restored_report, false, 88.0, 1.0):
+		push_error("Player facing smoke expected restored right-facing visual children, got %s." % restored_report)
+		get_tree().quit(1)
+		return
+
+	print("Player facing smoke passed: root scale stayed stable while visual children flipped left/right.")
+	get_tree().quit()
+
+
+func _facing_report_matches(report: Dictionary, body_flip_h: bool, light_x: float, light_scale_x: float) -> bool:
+	return (
+		is_equal_approx(float(report.get("root_scale_x", 0.0)), 1.0)
+		and bool(report.get("body_flip_h", not body_flip_h)) == body_flip_h
+		and is_equal_approx(float(report.get("light_cone_position_x", 0.0)), light_x)
+		and is_equal_approx(float(report.get("light_cone_scale_x", 0.0)), light_scale_x)
+	)
 
 
 func _swim_to_target(target: Vector2) -> bool:

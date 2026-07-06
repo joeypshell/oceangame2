@@ -179,6 +179,7 @@ python tools/check_asset_manifest.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-map-selector
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-player-facing
 & 'C:\Program Files\Git\cmd\git.exe' diff --check
 ```
 
@@ -223,6 +224,7 @@ Current issue state as of 2026-07-06:
 - Closed: #90 implemented the controlled background-depth art pass
 - Closed: #89 added a focused background-depth review capture
 - Closed: #88 planned Controlled Visual Revision 04 as the background-depth pass
+- Closed: #98 fixed the player direction-change double-facing flash by keeping the root transform stable and flipping only visual children
 - Closed: #97 verified the public Web preview after the terrain tileset v2 pass
 - Closed: #96 accepted the Controlled Visual Revision 05 terrain tileset v2 baselines
 - Closed: #95 implemented the controlled cave terrain tileset v2 pass
@@ -391,6 +393,7 @@ Recent important commits:
 - `--smoke-production-slice-02-route` verifies `production_slice_02` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `--smoke-production-slice-03-route` verifies `production_slice_03` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `--smoke-production-slice-04-route` verifies `production_slice_04` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
+- `--smoke-player-facing` verifies the player direction-change path by keeping the root transform stable while flipping only the diver body and light-cone visuals.
 - The `Godot Smoke` workflow runs all four production-slice route smokes, so CI covers the default slice and the later reference slices.
 - `production_slice_02` has five tuned camera captures: overview, relay entry, main chamber, lower terminal, and return route. Normal captures live in `visual_captures/production_slice_02/`; debug captures live in `visual_captures/production_slice_02_debug/`.
 - `production_slice_03` has five authored camera captures: overview, relay entry, stacked rooms, connector, and return route. Normal captures live in `visual_captures/production_slice_03/`; debug captures live in `visual_captures/production_slice_03_debug/`.
@@ -408,6 +411,7 @@ Recent important commits:
 - In-water `base` extraction zones now render as compact relay/sub return visuals with a spawn cue when a legacy `spawn` point sits inside the zone. The visual does not change source collision, spawn, extraction, salvage, hazard, or terrain data.
 - The review overlay includes a local/editor-only map selector for supported review maps. It reloads world/player state cleanly, preserves the debug-overlay mode, and is covered by `--smoke-map-selector`.
 - Collision is rectangular per terrain block; player collision is tuned smaller than the placeholder body art for production-slice clearance.
+- Player facing now keeps the `CharacterBody2D` root at normal scale and flips only the `Body` sprite plus `LightCone`, avoiding transient double-facing artifacts from mirroring the whole player node.
 - Salvage has a minimal collect-return-complete-reset loop.
 - Hazards now have a tiny scoped interaction: touching one bumps the player back to spawn, briefly tints the player, and restores held/unbanked salvage to the map.
 - The first scoped expedition pressure is a simple oxygen timer: oxygen drains away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held/unbanked salvage to the map.
