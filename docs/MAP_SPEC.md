@@ -118,8 +118,10 @@ Production previews may use `kind` to choose first-pass prop art, but collection
 
 Playable salvage may also include an optional `tier` field. If omitted, runtime and validation should treat the salvage as `common`. Supported tiers are:
 
-- `common`: default salvage payoff/readability.
-- `valuable`: higher-payoff route-choice salvage. Use sparingly so it reads as an authored decision point, not clutter. Normal previews render a small extra cue on top of the existing salvage prop.
+- `common`: default salvage payoff/readability. Current prototype score value: 100.
+- `valuable`: higher-payoff route-choice salvage. Current prototype score value: 300. Use sparingly so it reads as an authored decision point, not clutter. Normal previews render a small extra cue on top of the existing salvage prop.
+
+Runtime score is currently derived from `tier`, not from per-entity authored score values. Held salvage score banks only when the player returns to extraction; oxygen or hazard resets restore held pickups and clear their held score.
 
 ```json
 {

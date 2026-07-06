@@ -66,6 +66,8 @@ var _held_salvage := 0
 var _banked_salvage := 0
 var _total_salvage := 0
 var _held_salvage_ids: Array[String] = []
+var _held_salvage_score := 0
+var _banked_score := 0
 var _hazard_cooldown_seconds := 0.0
 var _hazard_feedback_seconds := 0.0
 var _hazard_interactions_enabled := true
@@ -303,6 +305,8 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool) -> void:
 	_banked_salvage = 0
 	_total_salvage = world.get_total_salvage_count()
 	_held_salvage_ids = []
+	_held_salvage_score = 0
+	_banked_score = 0
 	_hazard_cooldown_seconds = 0.0
 	_hazard_feedback_seconds = 0.0
 	_hazard_interactions_enabled = true
@@ -362,14 +366,18 @@ func _process(delta: float) -> void:
 
 	var collected_salvage: String = _world.collect_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
 	if not collected_salvage.is_empty():
+		var collected_score: int = _world.get_salvage_score(collected_salvage)
 		_held_salvage += 1
 		_held_salvage_ids.append(collected_salvage)
-		_last_status_note = "Collected salvage"
+		_held_salvage_score += collected_score
+		_last_status_note = "Collected salvage +%d" % collected_score
 
 	if _held_salvage > 0 and _world.is_inside_extraction(_player.global_position):
 		_banked_salvage += _held_salvage
+		_banked_score += _held_salvage_score
 		_held_salvage = 0
 		_held_salvage_ids = []
+		_held_salvage_score = 0
 		if _total_salvage > 0 and _banked_salvage >= _total_salvage:
 			_run_complete = true
 			_last_status_note = "Run complete"
@@ -385,7 +393,9 @@ func _smoke_salvage_loop_and_quit() -> void:
 		get_tree().quit(1)
 		return
 
+	var expected_score := 0
 	for salvage in _world.get_salvage_centers():
+		expected_score += int(salvage.get("score", 0))
 		_player.global_position = salvage["center"]
 		_process(0.0)
 
@@ -396,15 +406,20 @@ func _smoke_salvage_loop_and_quit() -> void:
 		push_error("Salvage loop smoke did not complete after collecting and returning.")
 		get_tree().quit(1)
 		return
+	if _banked_score != expected_score:
+		push_error("Salvage loop smoke banked score %d, expected %d." % [_banked_score, expected_score])
+		get_tree().quit(1)
+		return
 
 	var completed_total := _total_salvage
+	var completed_score := _banked_score
 	_reset_run()
-	if _held_salvage != 0 or _banked_salvage != 0 or _run_complete:
+	if _held_salvage != 0 or _banked_salvage != 0 or _held_salvage_score != 0 or _banked_score != 0 or _run_complete:
 		push_error("Salvage loop smoke reset left stale run state.")
 		get_tree().quit(1)
 		return
 
-	print("Salvage loop smoke passed: collected, banked, completed, and reset %d salvage." % completed_total)
+	print("Salvage loop smoke passed: collected, banked %d score, completed, and reset %d salvage." % [completed_score, completed_total])
 	get_tree().quit()
 
 
@@ -622,8 +637,14 @@ func _smoke_route_choice_and_quit() -> void:
 	var oxygen_after_return := _oxygen_seconds
 	var completed_after_return := _run_complete
 	var banked_after_return := _banked_salvage
+	var score_after_return := _banked_score
+	var target_score := int(target.get("score", 0))
+	if score_after_return < target_score:
+		push_error("Route choice probe banked score %d below target score %d." % [score_after_return, target_score])
+		get_tree().quit(1)
+		return
 	_reset_run()
-	print("Route choice probe passed: target=%s collected=1 banked=%d returned_to=boat extraction run_complete=%s oxygen=%.1f." % [target_id, banked_after_return, str(completed_after_return), oxygen_after_return])
+	print("Route choice probe passed: target=%s collected=1 banked=%d score=%d returned_to=boat extraction run_complete=%s oxygen=%.1f." % [target_id, banked_after_return, score_after_return, str(completed_after_return), oxygen_after_return])
 	get_tree().quit()
 
 
@@ -772,7 +793,9 @@ func _reset_run() -> void:
 	_world.reset_salvage()
 	_held_salvage = 0
 	_held_salvage_ids = []
+	_held_salvage_score = 0
 	_banked_salvage = 0
+	_banked_score = 0
 	_hazard_cooldown_seconds = 0.0
 	_hazard_feedback_seconds = 0.0
 	_hazard_interactions_enabled = true
@@ -806,6 +829,7 @@ func _handle_oxygen_depleted() -> void:
 		_world.restore_salvage(_held_salvage_ids)
 		_held_salvage_ids = []
 		_held_salvage = 0
+		_held_salvage_score = 0
 		_last_status_note = "Oxygen depleted: dropped held"
 	else:
 		_last_status_note = "Oxygen depleted: surfaced"
@@ -824,6 +848,7 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 		_world.restore_salvage(_held_salvage_ids)
 		_held_salvage_ids = []
 		_held_salvage = 0
+		_held_salvage_score = 0
 		_last_status_note = "Hazard hit: dropped held"
 	else:
 		_last_status_note = "Hazard hit: reset"
@@ -914,7 +939,7 @@ func _update_status_label() -> void:
 		return
 
 	if _total_salvage <= 0:
-		_status_label.text = "Salvage banked 0/0\nHeld 0\nOxygen --"
+		_status_label.text = "Score 0\nSalvage banked 0/0\nHeld 0\nOxygen --"
 		return
 
 	var prompt := ""
@@ -932,10 +957,12 @@ func _update_status_label() -> void:
 	elif _oxygen_seconds <= OXYGEN_LOW_WARNING_SECONDS and not _run_complete:
 		oxygen_text = "Oxygen %ds LOW" % oxygen_seconds
 
-	_status_label.text = "Salvage banked %d/%d\nHeld %d\n%s" % [
+	_status_label.text = "Score %d\nSalvage banked %d/%d\nHeld %d (%d pts)\n%s" % [
+		_banked_score,
 		_banked_salvage,
 		_total_salvage,
 		_held_salvage,
+		_held_salvage_score,
 		oxygen_text,
 	]
 	if not prompt.is_empty():

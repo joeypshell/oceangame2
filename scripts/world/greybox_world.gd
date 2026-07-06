@@ -43,6 +43,10 @@ const PROP_SPRITE_TEXTURES := {
 	"mine": "res://assets/props/mine_01.png",
 	"jellyfish": "res://assets/props/jellyfish_01.png",
 }
+const SALVAGE_TIER_SCORES := {
+	"common": 100,
+	"valuable": 300,
+}
 const CAVE_TILESET_COLUMNS := 8
 const CAVE_TILESET_ROWS := 5
 const TERRAIN_SOURCE_ID := 0
@@ -164,8 +168,16 @@ func get_salvage_centers() -> Array:
 			"id": str(entity.get("id", "salvage")),
 			"center": _entity_center(entity),
 			"tier": str(entity.get("tier", "common")),
+			"score": _salvage_score(entity),
 		})
 	return centers
+
+
+func get_salvage_score(salvage_id: String) -> int:
+	for entity in _salvage_entities:
+		if str(entity.get("id", "salvage")) == salvage_id:
+			return _salvage_score(entity)
+	return int(SALVAGE_TIER_SCORES["common"])
 
 
 func get_hazard_centers() -> Array:
@@ -253,6 +265,11 @@ func collect_salvage_near(position: Vector2, radius_px: float) -> String:
 			salvage_node.visible = false
 		return salvage_id
 	return ""
+
+
+func _salvage_score(entity: Dictionary) -> int:
+	var tier := str(entity.get("tier", "common"))
+	return int(SALVAGE_TIER_SCORES.get(tier, SALVAGE_TIER_SCORES["common"]))
 
 
 func reset_salvage() -> void:
