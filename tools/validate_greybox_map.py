@@ -14,6 +14,7 @@ ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 ENTITY_TYPES = {"spawn", "boat_spawn", "salvage", "hazard"}
 POINT_ENTITY_TYPES = {"spawn", "salvage", "hazard"}
 KIND_ENTITY_TYPES = {"salvage", "hazard"}
+SALVAGE_VALUE_TIERS = {"common", "valuable"}
 
 
 def rect_cells(item: dict) -> set[tuple[int, int]]:
@@ -62,6 +63,15 @@ def validate_kind(value, item_label: str) -> list[str]:
     return []
 
 
+def validate_salvage_tier(value, item_label: str) -> list[str]:
+    if not isinstance(value, str) or not value:
+        return [f"{item_label} tier must be a non-empty string."]
+    if value not in SALVAGE_VALUE_TIERS:
+        allowed = ", ".join(sorted(SALVAGE_VALUE_TIERS))
+        return [f"{item_label} tier {value!r} must be one of: {allowed}."]
+    return []
+
+
 def validate_tile_coordinate(entity: dict, field: str, width: int, height: int) -> list[str]:
     item_label = str(entity.get("id", entity.get("type", "entity")))
     if field not in entity:
@@ -101,6 +111,8 @@ def validate_entity_schema(entities: list[dict], width: int, height: int, base_z
             failures.extend(validate_required_fields(entity, item_label, ("kind",)))
             if "kind" in entity:
                 failures.extend(validate_kind(entity["kind"], item_label))
+        if entity_type == "salvage" and "tier" in entity:
+            failures.extend(validate_salvage_tier(entity["tier"], item_label))
         if entity_type == "salvage" and entity.get("kind") != "stress_marker":
             has_gameplay_salvage = True
 

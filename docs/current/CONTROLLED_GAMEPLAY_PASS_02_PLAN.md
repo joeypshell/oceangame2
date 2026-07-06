@@ -50,7 +50,7 @@ The pass should make the route choice legible enough to evaluate locally and thr
 
 ## Expected Behavior Changes
 
-- Map data can distinguish at least common/default salvage from one higher-value target.
+- Map data can distinguish common/default salvage from one higher-value target with the optional salvage `tier` field.
 - The high-value target has a readable prototype visual distinction.
 - A deterministic route-choice probe can confirm the authored target is reachable, collectible, and returnable.
 - Oxygen pressure can be tuned against the accepted movement baseline so the deeper route creates mild pressure without becoming a hard fail-state maze.

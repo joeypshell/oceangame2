@@ -116,13 +116,19 @@ Every authored entity must include:
 `salvage` entities require `kind`. Current valid-style examples are `crate`, `wreck_fragment`, `relic`, and `stress_marker`. `stress_marker` is reserved for renderer/test maps and is not treated as a production salvage objective.
 Production previews may use `kind` to choose first-pass prop art, but collection behavior is still determined by `type: "salvage"`.
 
+Playable salvage may also include an optional `tier` field. If omitted, runtime and validation should treat the salvage as `common`. Supported tiers are:
+
+- `common`: default salvage payoff/readability.
+- `valuable`: higher-payoff route-choice salvage. Use sparingly so it reads as an authored decision point, not clutter.
+
 ```json
 {
   "id": "salvage_center_crossing",
   "type": "salvage",
   "x": 46,
   "y": 30,
-  "kind": "wreck_fragment"
+  "kind": "wreck_fragment",
+  "tier": "common"
 }
 ```
 
@@ -143,6 +149,7 @@ Validation expectations:
 
 - Entity ids must be unique.
 - Entity ids and kinds use lower_snake_case.
+- Salvage `tier`, when present, must be `common` or `valuable`.
 - Entity coordinates must be inside map bounds, non-solid, and reachable from the player entry cell.
 - Maps must define exactly one `spawn` or `boat_spawn`.
 - Playable salvage maps must define a base extraction zone or use `boat_spawn` extraction. Renderer stress-test maps may use `stress_marker` salvage without an extraction zone.
