@@ -29,6 +29,7 @@ const BACKGROUND_ART_ALPHA := 0.26
 
 const CAVE_TILESET_TEXTURE := "res://assets/terrain_tiles/cave_tileset_v1.png"
 const BACKGROUND_ROCKS_TEXTURE := "res://assets/terrain/background_rocks_01.png"
+const BOAT_SPAWN_TEXTURE := "res://assets/vehicles/boat_spawn_01.png"
 const CAVE_TILESET_TEXTURE_RESOURCE := preload("res://assets/terrain_tiles/cave_tileset_v1.png")
 const BACKGROUND_ROCKS_TEXTURE_RESOURCE := preload("res://assets/terrain/background_rocks_01.png")
 const PROP_SPRITE_TEXTURES := {
@@ -836,37 +837,8 @@ func _add_boat_marker(marker_name: String, item: Dictionary) -> Node2D:
 	return_field.position = rect.size * 0.5
 	return_field.z_index = 0
 
-	var hull_shadow := _add_local_polygon(root, "HullShadow", PackedVector2Array([
-		Vector2(rect.size.x * 0.05, rect.size.y * 0.36),
-		Vector2(rect.size.x * 0.95, rect.size.y * 0.36),
-		Vector2(rect.size.x * 0.82, rect.size.y * 1.24),
-		Vector2(rect.size.x * 0.18, rect.size.y * 1.24),
-	]), COLOR_BOAT_DARK)
-	hull_shadow.z_index = 1
-
-	var hull := _add_local_polygon(root, "Hull", PackedVector2Array([
-		Vector2(rect.size.x * 0.02, rect.size.y * 0.16),
-		Vector2(rect.size.x * 0.98, rect.size.y * 0.16),
-		Vector2(rect.size.x * 0.84, rect.size.y * 1.04),
-		Vector2(rect.size.x * 0.16, rect.size.y * 1.04),
-	]), COLOR_BOAT)
-	hull.z_index = 2
-
-	var rim := _add_local_line(root, "DeckRim", PackedVector2Array([
-		Vector2(rect.size.x * 0.08, rect.size.y * 0.20),
-		Vector2(rect.size.x * 0.92, rect.size.y * 0.20),
-	]), COLOR_BOAT_LIGHT, 3.0)
-	rim.z_index = 4
-
-	var cabin_width := minf(rect.size.x * 0.30, 72.0)
-	var cabin_center_x := clampf(entry_local.x + 58.0, cabin_width * 0.5 + 8.0, rect.size.x - cabin_width * 0.5 - 8.0)
-	var cabin := _add_local_polygon(root, "Cabin", _rect_points(Vector2(cabin_width, rect.size.y * 0.54)), Color(0.90, 0.79, 0.57, 0.96))
-	cabin.position = Vector2(cabin_center_x, rect.size.y * 0.36)
-	cabin.z_index = 3
-
-	var cabin_window := _add_local_polygon(root, "CabinWindow", _rect_points(Vector2(cabin_width * 0.45, rect.size.y * 0.20)), COLOR_BOAT_GLASS)
-	cabin_window.position = cabin.position + Vector2(0, -rect.size.y * 0.02)
-	cabin_window.z_index = 4
+	if not _add_boat_sprite(root, rect):
+		_add_procedural_boat_body(root, rect, entry_local)
 
 	var hatch := _add_local_polygon(root, "EntryHatch", _rect_points(Vector2(30, 10)), COLOR_BASE)
 	hatch.position = Vector2(entry_local.x, rect.size.y * 0.38)
@@ -912,6 +884,60 @@ func _add_boat_marker(marker_name: String, item: Dictionary) -> Node2D:
 		_add_debug_label("BOAT / RETURN", rect.position + Vector2(6, rect.size.y + 8), COLOR_DEBUG_EXTRACTION)
 		_add_debug_label("ENTRY", rect.position + entry_local + Vector2(18, -20), COLOR_DEBUG_ENTRY)
 	return root
+
+
+func _add_boat_sprite(root: Node2D, rect: Rect2) -> bool:
+	var texture := _load_png_texture(BOAT_SPAWN_TEXTURE)
+	if texture == null:
+		return false
+
+	var texture_size := texture.get_size()
+	if texture_size == Vector2.ZERO:
+		return false
+
+	var sprite := Sprite2D.new()
+	sprite.name = "BoatSprite"
+	sprite.texture = texture
+	sprite.centered = true
+	sprite.position = Vector2(rect.size.x * 0.5, rect.size.y * 0.58)
+	sprite.scale = Vector2(rect.size.x / texture_size.x, (rect.size.y * 1.46) / texture_size.y)
+	sprite.z_index = 2
+	root.add_child(sprite)
+	return true
+
+
+func _add_procedural_boat_body(root: Node2D, rect: Rect2, entry_local: Vector2) -> void:
+	var hull_shadow := _add_local_polygon(root, "HullShadow", PackedVector2Array([
+		Vector2(rect.size.x * 0.05, rect.size.y * 0.36),
+		Vector2(rect.size.x * 0.95, rect.size.y * 0.36),
+		Vector2(rect.size.x * 0.82, rect.size.y * 1.24),
+		Vector2(rect.size.x * 0.18, rect.size.y * 1.24),
+	]), COLOR_BOAT_DARK)
+	hull_shadow.z_index = 1
+
+	var hull := _add_local_polygon(root, "Hull", PackedVector2Array([
+		Vector2(rect.size.x * 0.02, rect.size.y * 0.16),
+		Vector2(rect.size.x * 0.98, rect.size.y * 0.16),
+		Vector2(rect.size.x * 0.84, rect.size.y * 1.04),
+		Vector2(rect.size.x * 0.16, rect.size.y * 1.04),
+	]), COLOR_BOAT)
+	hull.z_index = 2
+
+	var rim := _add_local_line(root, "DeckRim", PackedVector2Array([
+		Vector2(rect.size.x * 0.08, rect.size.y * 0.20),
+		Vector2(rect.size.x * 0.92, rect.size.y * 0.20),
+	]), COLOR_BOAT_LIGHT, 3.0)
+	rim.z_index = 4
+
+	var cabin_width := minf(rect.size.x * 0.30, 72.0)
+	var cabin_center_x := clampf(entry_local.x + 58.0, cabin_width * 0.5 + 8.0, rect.size.x - cabin_width * 0.5 - 8.0)
+	var cabin := _add_local_polygon(root, "Cabin", _rect_points(Vector2(cabin_width, rect.size.y * 0.54)), Color(0.90, 0.79, 0.57, 0.96))
+	cabin.position = Vector2(cabin_center_x, rect.size.y * 0.36)
+	cabin.z_index = 3
+
+	var cabin_window := _add_local_polygon(root, "CabinWindow", _rect_points(Vector2(cabin_width * 0.45, rect.size.y * 0.20)), COLOR_BOAT_GLASS)
+	cabin_window.position = cabin.position + Vector2(0, -rect.size.y * 0.02)
+	cabin_window.z_index = 4
 
 
 func _add_diamond(marker_name: String, center: Vector2, color: Color, radius: float) -> Polygon2D:
