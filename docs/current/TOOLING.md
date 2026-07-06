@@ -262,7 +262,7 @@ The hazard-interaction smoke loads `production_slice_01`, collects one salvage i
 
 The oxygen-pressure smoke loads `production_slice_01`, collects one salvage item, forces oxygen depletion, confirms the player surfaces at spawn with held salvage restored, recollects it, returns to extraction, confirms oxygen refills and salvage banks, resets, and exits.
 
-The cargo-capacity smoke loads `production_slice_01`, fills the current two-pickup held capacity, confirms a third pickup remains available while cargo is full, banks held cargo at extraction, then confirms the blocked pickup can be collected after capacity frees up.
+The cargo-capacity smoke loads `production_slice_01`, fills the current two-pickup held capacity, confirms held score is not banked before extraction, confirms a third pickup remains available while cargo is full, banks held cargo/score at extraction, then confirms the blocked pickup can be collected after capacity frees up.
 
 The player-facing smoke loads `production_slice_01`, asks the player controller to swim right, left, then right again, and confirms the root transform remains stable while only the player visual children flip. This catches one-frame double-facing regressions from flipping the whole `CharacterBody2D`.
 

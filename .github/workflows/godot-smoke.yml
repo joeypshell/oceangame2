@@ -123,6 +123,22 @@ jobs:
             exit 1
           fi
 
+      - name: Run scoring and cargo smoke check
+        run: |
+          set +e
+          godot --headless --path . --quit-after 1 --smoke-cargo-capacity 2>&1 | tee godot-cargo-capacity.log
+          godot_status=${PIPESTATUS[0]}
+          set -e
+
+          if [ "${godot_status}" -ne 0 ]; then
+            exit "${godot_status}"
+          fi
+
+          if grep -E "SCRIPT ERROR|ERROR:" godot-cargo-capacity.log; then
+            echo "Godot reported errors during scoring and cargo smoke check."
+            exit 1
+          fi
+
       - name: Run map selector smoke check
         run: |
           set +e

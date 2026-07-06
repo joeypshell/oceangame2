@@ -606,12 +606,21 @@ func _smoke_cargo_capacity_and_quit() -> void:
 		_player.global_position = salvage[index]["center"]
 		_process(0.0)
 
+	var expected_held_score := 0
+	for index in range(HELD_SALVAGE_CAPACITY):
+		expected_held_score += int(salvage[index].get("score", 0))
+
 	if _held_salvage != HELD_SALVAGE_CAPACITY:
 		push_error("Cargo capacity smoke expected held cargo to reach capacity, got %d." % _held_salvage)
 		get_tree().quit(1)
 		return
+	if _held_salvage_score != expected_held_score or _banked_score != 0:
+		push_error("Cargo capacity smoke expected held score %d and banked score 0 before extraction, got held score %d banked score %d." % [expected_held_score, _held_salvage_score, _banked_score])
+		get_tree().quit(1)
+		return
 
 	var blocked_id := str(salvage[HELD_SALVAGE_CAPACITY].get("id", "salvage"))
+	var blocked_score := int(salvage[HELD_SALVAGE_CAPACITY].get("score", 0))
 	_player.global_position = salvage[HELD_SALVAGE_CAPACITY]["center"]
 	_process(0.0)
 	if _held_salvage != HELD_SALVAGE_CAPACITY or _held_salvage_ids.has(blocked_id):
@@ -629,6 +638,10 @@ func _smoke_cargo_capacity_and_quit() -> void:
 		push_error("Cargo capacity smoke did not bank and free capacity; held=%d banked=%d." % [_held_salvage, _banked_salvage])
 		get_tree().quit(1)
 		return
+	if _held_salvage_score != 0 or _banked_score != expected_held_score:
+		push_error("Cargo capacity smoke did not move held score into banked score; held score=%d banked score=%d expected=%d." % [_held_salvage_score, _banked_score, expected_held_score])
+		get_tree().quit(1)
+		return
 
 	_player.global_position = salvage[HELD_SALVAGE_CAPACITY]["center"]
 	_process(0.0)
@@ -636,9 +649,21 @@ func _smoke_cargo_capacity_and_quit() -> void:
 		push_error("Cargo capacity smoke could not collect blocked salvage after banking.")
 		get_tree().quit(1)
 		return
+	if _held_salvage_score != blocked_score:
+		push_error("Cargo capacity smoke collected blocked salvage with held score %d, expected %d." % [_held_salvage_score, blocked_score])
+		get_tree().quit(1)
+		return
 
 	_reset_run()
-	print("Cargo capacity smoke passed: capacity=%d blocked=%s banked_and_recollected=true." % [HELD_SALVAGE_CAPACITY, blocked_id])
+	print("Cargo capacity smoke passed: held=%d capacity=%d held_score=%d banked=%d banked_score=%d blocked=%s blocked_score=%d." % [
+		1,
+		HELD_SALVAGE_CAPACITY,
+		blocked_score,
+		HELD_SALVAGE_CAPACITY,
+		expected_held_score,
+		blocked_id,
+		blocked_score,
+	])
 	get_tree().quit()
 
 
