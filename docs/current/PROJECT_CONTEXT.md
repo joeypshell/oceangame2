@@ -1,6 +1,6 @@
 # Project Context
 
-Last updated: 2026-07-05
+Last updated: 2026-07-06
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
@@ -35,6 +35,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Production-slice selection criteria: `docs/current/PRODUCTION_SLICE_SELECTION_CRITERIA.md`
 - Production-slice-02 evaluation: `docs/current/PRODUCTION_SLICE_02_EVALUATION.md`
 - Production-slice-03 decision: `docs/current/PRODUCTION_SLICE_03_DECISION.md`
+- Production-slice-03 evaluation: `docs/current/PRODUCTION_SLICE_03_EVALUATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -177,8 +178,9 @@ Open `http://127.0.0.1:8060/`. Do not open `exports/web/index.html` directly.
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Issues should include acceptance criteria, relevant files, implementation notes, and verification steps. When implementing immediately, still create the issue and close it with commit hashes and verification notes.
 
-Current issue state as of 2026-07-05:
+Current issue state as of 2026-07-06:
 
+- Closed: #51 evaluated `production_slice_03` and recommended keeping it as a validated connector/landmark reference slice, not the default preview
 - Closed: #50 authored `production_slice_03` from the upper-left room cluster with generator, validation, captures, route smoke, and review sheet
 - Closed: #49 selected upper-left room cluster as production-slice-03 candidate and deferred implementation to follow-up issue
 - Closed: #48 evaluated production-slice-02 against workflow goals and recommended moving to slice 03 planning
@@ -276,6 +278,7 @@ Recent important commits:
 - `docs/current/PRODUCTION_SLICE_02_VISUAL_BASELINE_DECISION.md` records that current slice 02 captures are reviewed but not accepted as a baseline until camera framing and relay-extraction visuals are improved.
 - `docs/current/PRODUCTION_SLICE_02_EVALUATION.md` records that slice 02 should stay a validated later-game reference slice and the next immediate work should move to slice 03 planning.
 - `docs/current/PRODUCTION_SLICE_03_DECISION.md` selects the upper-left room cluster as the third focused slice candidate with starting bounds `x=0, y=8, w=76, h=82` and likely `spawn + base` relay extraction.
+- `docs/current/PRODUCTION_SLICE_03_EVALUATION.md` records that slice 03 is a validated connector/landmark reference slice. Relay readability is accepted for the prototype pass, camera/source cleanup is not blocking, baseline acceptance remains separate, and slice 01 should stay the default preview for now.
 - `--smoke-production-slice-02-route` verifies `production_slice_02` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `--smoke-production-slice-03-route` verifies `production_slice_03` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `production_slice_02` has five tuned camera captures: overview, relay entry, main chamber, lower terminal, and return route. Normal captures live in `visual_captures/production_slice_02/`; debug captures live in `visual_captures/production_slice_02_debug/`.
@@ -319,7 +322,9 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Evaluate `production_slice_03` captures and source/render/collision review against the production-slice goals, then decide whether to tune camera framing, clean topology artifacts in source generation, or defer/accept a visual baseline.
+1. Improve local non-default slice launch ergonomics so users can run slice 02/03 without accidentally falling back to the editor Play/default slice.
+2. Extend visual baseline tooling beyond `production_slice_01`, then decide slice-03 baseline status.
+3. Defer slice 04 selection until slice-03 baseline/default-preview decisions are clear.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 
