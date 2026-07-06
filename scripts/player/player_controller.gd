@@ -1,8 +1,8 @@
 extends CharacterBody2D
 
 @export var swim_speed := 200.0
-@export var acceleration := 820.0
-@export var deceleration := 1100.0
+@export var acceleration := 620.0
+@export var deceleration := 900.0
 
 const LIGHT_CONE_OFFSET_X := 88.0
 

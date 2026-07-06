@@ -68,7 +68,7 @@ Additional current map sources:
 
 - `scenes/player/Player.tscn`
   - Basic placeholder diver/sub-style player.
-  - Uses `CharacterBody2D` with free-swim movement tuned to `200 px/s`, `820 px/s^2` acceleration, `1100 px/s^2` deceleration, and a `26x18 px` collision rectangle for the first production slice.
+  - Uses `CharacterBody2D` with free-swim movement tuned to `200 px/s`, `620 px/s^2` acceleration, `900 px/s^2` deceleration, and a `26x18 px` collision rectangle for the first production slice.
   - Contains the active `Camera2D`.
 
 ## Scripts
@@ -79,7 +79,7 @@ Additional current map sources:
   - Supports visual capture flags for the baseline screenshot and named camera-test captures.
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
   - Shows compact preview review context, salvage progress, and scoped oxygen pressure.
-  - Supports headless map parity, salvage-loop, production-slice route checks for slices 01, 02, and 03, hazard-interaction, and oxygen-pressure smoke checks.
+  - Supports headless map parity, salvage-loop, production-slice route checks for slices 01-04, hazard-interaction, oxygen-pressure, player-facing, and movement-feel smoke checks.
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.

@@ -221,6 +221,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-06:
 
+- Closed: #103 tuned the player swim acceleration/deceleration constants for Controlled Gameplay Pass 01
 - Closed: #102 added a deterministic `--smoke-movement-feel` probe for Controlled Gameplay Pass 01
 - Closed: #101 planned Controlled Gameplay Pass 01 as a movement-feel/readability pass
 - Closed: #100 added `--smoke-player-facing` to the `Godot Smoke` workflow
@@ -420,6 +421,7 @@ Recent important commits:
 - In-water `base` extraction zones now render as compact relay/sub return visuals with a spawn cue when a legacy `spawn` point sits inside the zone. The visual does not change source collision, spawn, extraction, salvage, hazard, or terrain data.
 - The review overlay includes a local/editor-only map selector for supported review maps. It reloads world/player state cleanly, preserves the debug-overlay mode, and is covered by `--smoke-map-selector`.
 - Collision is rectangular per terrain block; player collision is tuned smaller than the placeholder body art for production-slice clearance.
+- Player movement is currently tuned to `200 px/s` swim speed, `620 px/s^2` acceleration, and `900 px/s^2` deceleration for Controlled Gameplay Pass 01.
 - Player facing now keeps the `CharacterBody2D` root at normal scale and flips only the `Body` sprite plus `LightCone`, avoiding transient double-facing artifacts from mirroring the whole player node.
 - `docs/current/PLAYER_FACING_WEB_PREVIEW_VERIFICATION.md` records #99: the public Pages preview deployed the #98 player-facing runtime fix successfully, matched external build metadata, initialized the Godot canvas, and emitted no missing-resource or Godot error messages.
 - Salvage has a minimal collect-return-complete-reset loop.

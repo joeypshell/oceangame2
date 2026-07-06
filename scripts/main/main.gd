@@ -31,6 +31,7 @@ const BUILD_INFO_PATH := "res://build_info.json"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 const PLAYER_READABILITY_CAPTURE_ZOOM := Vector2(2.0, 2.0)
 const PLAYER_READABILITY_ENTRY_OFFSET_TILES := Vector2(0, 5)
+const MOVEMENT_FEEL_PROBE_CENTER_TILES := Vector2(42, 25)
 const BACKGROUND_DEPTH_CAPTURE_ZOOM := Vector2(0.52, 0.52)
 const BACKGROUND_DEPTH_CENTER_TILES := Vector2(39, 24)
 const BACKGROUND_DEPTH_PLAYER_OFFSET_TILES := Vector2(0, 8)
@@ -590,7 +591,7 @@ func _smoke_movement_feel_and_quit() -> void:
 
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
-	_player.global_position = _world.spawn_position + PLAYER_READABILITY_ENTRY_OFFSET_TILES * float(_world.tile_size)
+	_player.global_position = MOVEMENT_FEEL_PROBE_CENTER_TILES * float(_world.tile_size)
 	if _player.has_method("reset_motion"):
 		_player.reset_motion()
 
@@ -600,6 +601,8 @@ func _smoke_movement_feel_and_quit() -> void:
 	var stop_velocity: Vector2 = _player.velocity
 	await _swim_for_frames(Vector2.LEFT, 20)
 	var reverse_velocity: Vector2 = _player.velocity
+	if _player.has_method("reset_motion"):
+		_player.reset_motion()
 	await _swim_for_frames(Vector2(1.0, -1.0), 15)
 	var diagonal_velocity: Vector2 = _player.velocity
 
