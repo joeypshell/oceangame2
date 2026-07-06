@@ -47,6 +47,7 @@ Build a small side-view salvage game that proves:
 - [Controlled Gameplay Pass 02 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_02_PLAN.md)
 - [Oxygen Pressure Baseline Decision](docs/current/OXYGEN_PRESSURE_BASELINE_DECISION.md)
 - [Route Payoff Visual Baseline Decision](docs/current/ROUTE_PAYOFF_VISUAL_BASELINE_DECISION.md)
+- [Route Payoff Web Preview Verification](docs/current/ROUTE_PAYOFF_WEB_PREVIEW_VERIFICATION.md)
 
 ## Locked Visual Direction
 
