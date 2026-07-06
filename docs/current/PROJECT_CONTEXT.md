@@ -54,6 +54,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Prop sprite baseline decision: `docs/current/PROP_SPRITE_BASELINE_DECISION.md`
 - Player sprite baseline decision: `docs/current/PLAYER_SPRITE_BASELINE_DECISION.md`
 - Player sprite web preview verification: `docs/current/PLAYER_SPRITE_WEB_PREVIEW_VERIFICATION.md`
+- Player-facing fix web preview verification: `docs/current/PLAYER_FACING_WEB_PREVIEW_VERIFICATION.md`
 - Boat spawn entry baseline decision: `docs/current/BOAT_SPAWN_ENTRY_BASELINE_DECISION.md`
 - Boat spawn web preview verification: `docs/current/BOAT_SPAWN_WEB_PREVIEW_VERIFICATION.md`
 - Background depth baseline decision: `docs/current/BACKGROUND_DEPTH_BASELINE_DECISION.md`
@@ -224,6 +225,7 @@ Current issue state as of 2026-07-06:
 - Closed: #90 implemented the controlled background-depth art pass
 - Closed: #89 added a focused background-depth review capture
 - Closed: #88 planned Controlled Visual Revision 04 as the background-depth pass
+- Closed: #99 verified the public Web preview after the #98 player-facing fix
 - Closed: #98 fixed the player direction-change double-facing flash by keeping the root transform stable and flipping only visual children
 - Closed: #97 verified the public Web preview after the terrain tileset v2 pass
 - Closed: #96 accepted the Controlled Visual Revision 05 terrain tileset v2 baselines
@@ -412,6 +414,7 @@ Recent important commits:
 - The review overlay includes a local/editor-only map selector for supported review maps. It reloads world/player state cleanly, preserves the debug-overlay mode, and is covered by `--smoke-map-selector`.
 - Collision is rectangular per terrain block; player collision is tuned smaller than the placeholder body art for production-slice clearance.
 - Player facing now keeps the `CharacterBody2D` root at normal scale and flips only the `Body` sprite plus `LightCone`, avoiding transient double-facing artifacts from mirroring the whole player node.
+- `docs/current/PLAYER_FACING_WEB_PREVIEW_VERIFICATION.md` records #99: the public Pages preview deployed the #98 player-facing runtime fix successfully, matched external build metadata, initialized the Godot canvas, and emitted no missing-resource or Godot error messages.
 - Salvage has a minimal collect-return-complete-reset loop.
 - Hazards now have a tiny scoped interaction: touching one bumps the player back to spawn, briefly tints the player, and restores held/unbanked salvage to the map.
 - The first scoped expedition pressure is a simple oxygen timer: oxygen drains away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held/unbanked salvage to the map.
