@@ -28,12 +28,13 @@ SLICE_CONFIGS = {
         "capture_dir": ROOT / "visual_captures" / "production_slice_01",
         "baseline_dir": ROOT / "visual_baselines" / "production_slice_01_accepted",
         "review_path": ROOT / "references" / "asset_reviews" / "production_slice_01_visual_baseline_review.png",
-        # Slice 01 has six current captures, but the accepted baseline currently covers this original four-view set.
         "view_ids": [
             "production_slice_overview",
             "production_slice_entry_shaft",
+            "production_slice_first_route_choice",
             "production_slice_central_crossing",
             "production_slice_lower_loop",
+            "production_slice_return_to_boat",
         ],
     },
     "production_slice_02": {

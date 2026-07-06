@@ -1,13 +1,24 @@
 {
   "baseline_id": "production_slice_01_accepted",
-  "accepted_at_utc": "2026-07-05T23:54:40+00:00",
+  "slice_id": "production_slice_01",
+  "accepted_at_utc": "2026-07-06T14:04:06+00:00",
   "source_capture_dir": "visual_captures/production_slice_01",
-  "accepted_from_commit": "1d976ed",
+  "accepted_from_commit": "0100a68",
+  "view_ids": [
+    "production_slice_overview",
+    "production_slice_entry_shaft",
+    "production_slice_first_route_choice",
+    "production_slice_central_crossing",
+    "production_slice_lower_loop",
+    "production_slice_return_to_boat"
+  ],
   "views": [
     "visual_baselines/production_slice_01_accepted/production_slice_overview.png",
     "visual_baselines/production_slice_01_accepted/production_slice_entry_shaft.png",
+    "visual_baselines/production_slice_01_accepted/production_slice_first_route_choice.png",
     "visual_baselines/production_slice_01_accepted/production_slice_central_crossing.png",
-    "visual_baselines/production_slice_01_accepted/production_slice_lower_loop.png"
+    "visual_baselines/production_slice_01_accepted/production_slice_lower_loop.png",
+    "visual_baselines/production_slice_01_accepted/production_slice_return_to_boat.png"
   ],
   "notes": [
     "Accepted production_slice_01 visual baseline.",

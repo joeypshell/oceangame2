@@ -43,7 +43,7 @@ Local/editor review runs also expose the map selector in the overlay, so the sup
 
 | Slice | Normal Captures | Debug Captures | Baseline Review Sheet | Notes |
 |---|---|---|---|---|
-| `production_slice_01` | `visual_captures/production_slice_01/` | `visual_captures/production_slice_01_debug/` | `references/asset_reviews/production_slice_01_visual_baseline_review.png` | Current capture set has six views; accepted-baseline reconciliation is tracked in #75 before using this sheet for clean prop-only diffs. |
+| `production_slice_01` | `visual_captures/production_slice_01/` | `visual_captures/production_slice_01_debug/` | `references/asset_reviews/production_slice_01_visual_baseline_review.png` | Reconciled under #75 so the accepted default-slice baseline now covers the current six-view capture set. |
 | `production_slice_02` | `visual_captures/production_slice_02/` | `visual_captures/production_slice_02_debug/` | `references/asset_reviews/production_slice_02_visual_baseline_review.png` | Accepted after the original framing and relay-readability blockers were resolved; refreshed under #71 for the prop sprite pass. |
 | `production_slice_03` | `visual_captures/production_slice_03/` | `visual_captures/production_slice_03_debug/` | `references/asset_reviews/production_slice_03_visual_baseline_review.png` | Keep as a connector/landmark reference; refreshed under #71 for the prop sprite pass; optional #52/#53 polish is deferred unless the accepted baseline intentionally changes. |
 | `production_slice_04` | `visual_captures/production_slice_04/` | `visual_captures/production_slice_04_debug/` | `references/asset_reviews/production_slice_04_visual_baseline_review.png` | Keep as a lower-left loop reference; refreshed under #71 for the prop sprite pass; curved-corridor stair steps are intentional for this prototype pass. |
@@ -52,7 +52,7 @@ Local/editor review runs also expose the map selector in the overlay, so the sup
 
 | Slice | Decision And Evaluation Records |
 |---|---|
-| `production_slice_01` | `docs/current/PRODUCTION_SLICE_SELECTION_CRITERIA.md`, plus issue history #21, #23, #31, #36 |
+| `production_slice_01` | `docs/current/PRODUCTION_SLICE_SELECTION_CRITERIA.md`, `docs/current/PRODUCTION_SLICE_01_VISUAL_BASELINE_RECONCILIATION.md`, plus issue history #21, #23, #31, #36, #75 |
 | `production_slice_02` | `docs/current/PRODUCTION_SLICE_02_DECISION.md`, `docs/current/PRODUCTION_SLICE_02_EVALUATION.md`, `docs/current/PRODUCTION_SLICE_02_VISUAL_BASELINE_DECISION.md` |
 | `production_slice_03` | `docs/current/PRODUCTION_SLICE_03_DECISION.md`, `docs/current/PRODUCTION_SLICE_03_EVALUATION.md`, `docs/current/PRODUCTION_SLICE_03_VISUAL_BASELINE_DECISION.md`, `docs/current/PRODUCTION_SLICE_03_DEFAULT_PREVIEW_DECISION.md` |
 | `production_slice_04` | `docs/current/PRODUCTION_SLICE_04_DECISION.md`, `docs/current/PRODUCTION_SLICE_04_EVALUATION.md`, `docs/current/PRODUCTION_SLICE_04_VISUAL_BASELINE_DECISION.md` |
