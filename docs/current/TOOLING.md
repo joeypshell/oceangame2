@@ -450,10 +450,10 @@ python tools/manage_production_slice_baseline.py --slice production_slice_04 com
 
 This writes the slice-specific review sheet under `references/asset_reviews/`, showing accepted baseline, current capture, and difference columns for the configured views. If the difference column reveals an unexpected visual change, keep the baseline fixed and create a follow-up issue.
 
-For a slice that has current captures but no accepted baseline yet, currently slice 02, compare against the current capture directory as a tooling sanity check without accepting anything:
+For a future slice that has current captures but no accepted baseline yet, compare against the current capture directory as a tooling sanity check without accepting anything:
 
 ```powershell
-python tools/manage_production_slice_baseline.py --slice production_slice_02 --baseline-dir visual_captures/production_slice_02 compare --output "$env:TEMP\production_slice_02_visual_baseline_review.png"
+python tools/manage_production_slice_baseline.py --slice production_slice_02 --baseline-dir visual_captures/production_slice_02 compare --output "$env:TEMP\production_slice_tooling_sanity_review.png"
 ```
 
 Generate the production slice source/render/collision review sheet:

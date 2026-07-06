@@ -52,7 +52,7 @@ Results:
 
 ## Capture And Readability Review
 
-Status: good enough for a reference slice; not accepted as a visual baseline yet.
+Status: accepted as a reference visual baseline after the follow-up baseline decision in #64.
 
 The tuned five-view capture set covers:
 
@@ -64,7 +64,7 @@ The tuned five-view capture set covers:
 
 The relay extraction zone now reads as an intentional in-water relay/sub return point instead of a generic rectangle. Debug captures still show source grid, route boxes, amber extraction outline, green spawn marker, yellow salvage markers, and red hazard markers distinctly.
 
-Remaining baseline note: `visual_baselines/production_slice_01_accepted/` is still the only accepted production-slice baseline. Slice 02 can be accepted later, but the baseline accept/compare workflow is still slice-01-oriented and should be extended intentionally before using slice 02 as a locked comparison target.
+Baseline note: `visual_baselines/production_slice_02_accepted/` stores the accepted five-view slice-02 visual baseline, and `references/asset_reviews/production_slice_02_visual_baseline_review.png` compares the accepted baseline against the current captures.
 
 ## Route-Pressure Review
 
@@ -81,13 +81,9 @@ This is enough to validate later-game route review, but not enough to justify ad
 
 ## Blockers
 
-No source, collision, route, capture-completeness, or relay-readability blockers remain for using slice 02 as a reference slice.
+No source, collision, route, capture-completeness, relay-readability, or baseline-workflow blockers remain for using slice 02 as a reference slice.
 
-Before accepting a formal slice 02 visual baseline, the remaining blocker is workflow-specific:
-
-- Extend or parameterize `tools/manage_production_slice_baseline.py` so baseline accept/compare can target `production_slice_02` intentionally.
-
-This does not block slice 03 planning. It only blocks treating slice 02 as an accepted visual baseline for future visual diffs.
+The earlier baseline workflow blocker was resolved by the multi-slice baseline tooling and the #64 baseline acceptance pass.
 
 ## Recommendation
 
@@ -95,4 +91,4 @@ Recommended next action: next-slice planning.
 
 Use `docs/current/PRODUCTION_SLICE_SELECTION_CRITERIA.md` to select `production_slice_03`. Slice 02 has done its job as a second workflow proof: it validated a different role, different spawn/extraction model, route smoke, source/render/collision review, camera capture completeness, and relay readability.
 
-Only return to slice 02 before slice 03 if the immediate goal becomes formal baseline acceptance. In that case, create a small scoped issue to generalize the baseline accept/compare tool and accept the current slice 02 captures.
+The formal slice-02 baseline acceptance is now complete. Future slice-02 visual changes should compare against `visual_baselines/production_slice_02_accepted/` before replacing the accepted target.
