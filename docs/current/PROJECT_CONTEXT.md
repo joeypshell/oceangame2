@@ -33,6 +33,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Latest full-sketch evaluation: `docs/current/FULL_SKETCH_EVALUATION_01.md`
 - Production-slice selection criteria: `docs/current/PRODUCTION_SLICE_SELECTION_CRITERIA.md`
 - Production-slice-02 evaluation: `docs/current/PRODUCTION_SLICE_02_EVALUATION.md`
+- Production-slice-03 decision: `docs/current/PRODUCTION_SLICE_03_DECISION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -174,6 +175,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-05:
 
+- Closed: #49 selected upper-left room cluster as production-slice-03 candidate and deferred implementation to follow-up issue
 - Closed: #48 evaluated production-slice-02 against workflow goals and recommended moving to slice 03 planning
 - Closed: #47 added camera capture completeness checker for map-authored camera tests
 - Closed: #46 documented production-slice roles, selection criteria, entry/extraction choices, and lessons from slices 01/02
@@ -266,6 +268,7 @@ Recent important commits:
 - `docs/current/PRODUCTION_SLICE_02_DECISION.md` records the bounds, rationale, spawn/extraction plan, and verification for the second slice.
 - `docs/current/PRODUCTION_SLICE_02_VISUAL_BASELINE_DECISION.md` records that current slice 02 captures are reviewed but not accepted as a baseline until camera framing and relay-extraction visuals are improved.
 - `docs/current/PRODUCTION_SLICE_02_EVALUATION.md` records that slice 02 should stay a validated later-game reference slice and the next immediate work should move to slice 03 planning.
+- `docs/current/PRODUCTION_SLICE_03_DECISION.md` selects the upper-left room cluster as the third focused slice candidate with starting bounds `x=0, y=8, w=76, h=82` and likely `spawn + base` relay extraction.
 - `--smoke-production-slice-02-route` verifies `production_slice_02` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `production_slice_02` has five tuned camera captures: overview, relay entry, main chamber, lower terminal, and return route. Normal captures live in `visual_captures/production_slice_02/`; debug captures live in `visual_captures/production_slice_02_debug/`.
 - `tools/check_camera_captures.py` checks that a capture directory contains every PNG named by a map's authored `camera_tests`, ignoring Godot `.import` sidecars and reporting missing, extra, invalid, or stale-looking captures.
@@ -307,7 +310,7 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Continue with the current GitHub issue queue. Recommended next: select candidate for production slice 03.
+1. Continue with the follow-up implementation issue for authoring `production_slice_03` from the upper-left room cluster, if the next goal is to build another slice.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 
