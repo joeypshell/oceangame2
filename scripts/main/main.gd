@@ -33,11 +33,24 @@ const HAZARD_COOLDOWN_SECONDS := 1.0
 const HAZARD_FEEDBACK_SECONDS := 0.45
 const OXYGEN_MAX_SECONDS := 90.0
 const OXYGEN_REFILL_SECONDS_PER_SECOND := 25.0
+const REVIEW_MAP_OPTIONS := [
+	{"label": "Production 01", "path": PRODUCTION_SLICE_MAP_PATH},
+	{"label": "Production 02", "path": PRODUCTION_SLICE_02_MAP_PATH},
+	{"label": "Production 03", "path": PRODUCTION_SLICE_03_MAP_PATH},
+	{"label": "Production 04", "path": PRODUCTION_SLICE_04_MAP_PATH},
+	{"label": "Original", "path": ORIGINAL_MAP_PATH},
+	{"label": "Organic", "path": ORGANIC_MAP_PATH},
+	{"label": "Full Sketch", "path": FULL_SKETCH_MAP_PATH},
+]
 
 var _world
 var _player
+var _review_canvas: CanvasLayer
 var _review_label: Label
 var _status_label: Label
+var _map_selector: OptionButton
+var _map_selector_enabled := false
+var _debug_overlay_enabled := false
 var _held_salvage := 0
 var _banked_salvage := 0
 var _total_salvage := 0
@@ -71,80 +84,92 @@ func _ready() -> void:
 	var smoke_production_slice_02_route := _has_arg(user_args, engine_args, "--smoke-production-slice-02-route")
 	var smoke_production_slice_03_route := _has_arg(user_args, engine_args, "--smoke-production-slice-03-route")
 	var smoke_production_slice_04_route := _has_arg(user_args, engine_args, "--smoke-production-slice-04-route")
+	var smoke_map_selector := _has_arg(user_args, engine_args, "--smoke-map-selector")
 	var smoke_hazard_interaction := _has_arg(user_args, engine_args, "--smoke-hazard-interaction")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
 	var parity_output_path := _arg_value(user_args, engine_args, "--parity-output")
 
-	var world := WORLD_SCENE.instantiate()
-	_world = world
+	var selected_map_path := DEFAULT_MAP_PATH
 	if capture_original_map:
-		world.map_path = ORIGINAL_MAP_PATH
+		selected_map_path = ORIGINAL_MAP_PATH
 	elif capture_tileset_test:
-		world.map_path = TILESET_TEST_MAP_PATH
+		selected_map_path = TILESET_TEST_MAP_PATH
 	elif capture_organic_map:
-		world.map_path = ORGANIC_MAP_PATH
+		selected_map_path = ORGANIC_MAP_PATH
 	elif capture_full_sketch_map:
-		world.map_path = FULL_SKETCH_MAP_PATH
+		selected_map_path = FULL_SKETCH_MAP_PATH
 	elif capture_production_slice_map:
-		world.map_path = PRODUCTION_SLICE_MAP_PATH
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_production_slice_debug_map:
-		world.map_path = PRODUCTION_SLICE_MAP_PATH
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_production_slice_02_map:
-		world.map_path = PRODUCTION_SLICE_02_MAP_PATH
+		selected_map_path = PRODUCTION_SLICE_02_MAP_PATH
 	elif capture_production_slice_02_debug_map:
-		world.map_path = PRODUCTION_SLICE_02_MAP_PATH
+		selected_map_path = PRODUCTION_SLICE_02_MAP_PATH
 	elif capture_production_slice_03_map:
-		world.map_path = PRODUCTION_SLICE_03_MAP_PATH
+		selected_map_path = PRODUCTION_SLICE_03_MAP_PATH
 	elif capture_production_slice_03_debug_map:
-		world.map_path = PRODUCTION_SLICE_03_MAP_PATH
+		selected_map_path = PRODUCTION_SLICE_03_MAP_PATH
 	elif capture_production_slice_04_map:
-		world.map_path = PRODUCTION_SLICE_04_MAP_PATH
+		selected_map_path = PRODUCTION_SLICE_04_MAP_PATH
 	elif capture_production_slice_04_debug_map:
-		world.map_path = PRODUCTION_SLICE_04_MAP_PATH
+		selected_map_path = PRODUCTION_SLICE_04_MAP_PATH
 	elif smoke_production_slice_route:
-		world.map_path = PRODUCTION_SLICE_MAP_PATH
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_02_route:
-		world.map_path = PRODUCTION_SLICE_02_MAP_PATH
+		selected_map_path = PRODUCTION_SLICE_02_MAP_PATH
 	elif smoke_production_slice_03_route:
-		world.map_path = PRODUCTION_SLICE_03_MAP_PATH
+		selected_map_path = PRODUCTION_SLICE_03_MAP_PATH
 	elif smoke_production_slice_04_route:
-		world.map_path = PRODUCTION_SLICE_04_MAP_PATH
+		selected_map_path = PRODUCTION_SLICE_04_MAP_PATH
 	elif smoke_hazard_interaction:
-		world.map_path = PRODUCTION_SLICE_MAP_PATH
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_oxygen_pressure:
-		world.map_path = PRODUCTION_SLICE_MAP_PATH
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif not requested_map_path.is_empty():
-		world.map_path = requested_map_path
-	else:
-		world.map_path = DEFAULT_MAP_PATH
-	world.show_debug_overlay = (
+		selected_map_path = requested_map_path
+
+	_debug_overlay_enabled = (
 		_has_arg(user_args, engine_args, "--show-debug-overlay")
 		or capture_production_slice_debug_map
 		or capture_production_slice_02_debug_map
 		or capture_production_slice_03_debug_map
 		or capture_production_slice_04_debug_map
 	)
-	add_child(world)
-	world.load_greybox()
+	var automated_review := (
+		check_map_parity
+		or capture_original_map
+		or capture_tileset_test
+		or capture_organic_map
+		or capture_full_sketch_map
+		or capture_production_slice_map
+		or capture_production_slice_debug_map
+		or capture_production_slice_02_map
+		or capture_production_slice_02_debug_map
+		or capture_production_slice_03_map
+		or capture_production_slice_03_debug_map
+		or capture_production_slice_04_map
+		or capture_production_slice_04_debug_map
+		or smoke_salvage_loop
+		or smoke_production_slice_route
+		or smoke_production_slice_02_route
+		or smoke_production_slice_03_route
+		or smoke_production_slice_04_route
+		or smoke_map_selector
+		or smoke_hazard_interaction
+		or smoke_oxygen_pressure
+		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
+		or _has_arg(user_args, engine_args, "--capture-camera-tests")
+	)
+	_map_selector_enabled = (not automated_review) and _review_map_selector_allowed(user_args, engine_args)
 
 	if check_map_parity:
+		var world := _create_world(selected_map_path, _debug_overlay_enabled)
 		_write_parity_report_and_quit(world, parity_output_path)
 		return
 
-	var player := PLAYER_SCENE.instantiate()
-	_player = player
-	player.position = world.spawn_position
-	add_child(player)
-
-	if player.has_method("set_camera_limits"):
-		player.set_camera_limits(Rect2(Vector2.ZERO, world.map_pixel_size))
-	if player.has_method("snap_camera"):
-		player.snap_camera()
-
-	_total_salvage = world.get_total_salvage_count()
-	_create_review_overlay(world)
-	_update_status_label()
+	_load_playable_map(selected_map_path, _debug_overlay_enabled)
 
 	if smoke_salvage_loop:
 		_smoke_salvage_loop_and_quit()
@@ -161,6 +186,9 @@ func _ready() -> void:
 	if smoke_production_slice_04_route:
 		await _smoke_salvage_route_and_quit("production_slice_04", "relay extraction")
 		return
+	if smoke_map_selector:
+		_smoke_map_selector_and_quit()
+		return
 	if smoke_hazard_interaction:
 		_smoke_hazard_interaction_and_quit()
 		return
@@ -171,31 +199,98 @@ func _ready() -> void:
 	if _has_arg(user_args, engine_args, "--capture-greybox-screenshot"):
 		_capture_screenshot_and_quit()
 	elif _has_arg(user_args, engine_args, "--capture-camera-tests"):
-		_capture_camera_tests_and_quit(world, CAMERA_TEST_CAPTURE_DIR)
+		_capture_camera_tests_and_quit(_world, CAMERA_TEST_CAPTURE_DIR)
 	elif capture_original_map:
-		_capture_camera_tests_and_quit(world, ORIGINAL_CAPTURE_DIR)
+		_capture_camera_tests_and_quit(_world, ORIGINAL_CAPTURE_DIR)
 	elif capture_tileset_test:
-		_capture_camera_tests_and_quit(world, TILESET_TEST_CAPTURE_DIR)
+		_capture_camera_tests_and_quit(_world, TILESET_TEST_CAPTURE_DIR)
 	elif capture_organic_map:
-		_capture_camera_tests_and_quit(world, ORGANIC_CAPTURE_DIR)
+		_capture_camera_tests_and_quit(_world, ORGANIC_CAPTURE_DIR)
 	elif capture_full_sketch_map:
-		_capture_camera_tests_and_quit(world, FULL_SKETCH_CAPTURE_DIR)
+		_capture_camera_tests_and_quit(_world, FULL_SKETCH_CAPTURE_DIR)
 	elif capture_production_slice_map:
-		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_CAPTURE_DIR)
+		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_CAPTURE_DIR)
 	elif capture_production_slice_debug_map:
-		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_DEBUG_CAPTURE_DIR)
+		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_DEBUG_CAPTURE_DIR)
 	elif capture_production_slice_02_map:
-		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_02_CAPTURE_DIR)
+		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_02_CAPTURE_DIR)
 	elif capture_production_slice_02_debug_map:
-		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_02_DEBUG_CAPTURE_DIR)
+		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_02_DEBUG_CAPTURE_DIR)
 	elif capture_production_slice_03_map:
-		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_03_CAPTURE_DIR)
+		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_03_CAPTURE_DIR)
 	elif capture_production_slice_03_debug_map:
-		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_03_DEBUG_CAPTURE_DIR)
+		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_03_DEBUG_CAPTURE_DIR)
 	elif capture_production_slice_04_map:
-		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_04_CAPTURE_DIR)
+		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_04_CAPTURE_DIR)
 	elif capture_production_slice_04_debug_map:
-		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_04_DEBUG_CAPTURE_DIR)
+		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_04_DEBUG_CAPTURE_DIR)
+
+
+func _review_map_selector_allowed(user_args: PackedStringArray, engine_args: PackedStringArray) -> bool:
+	return OS.has_feature("editor") or _has_arg(user_args, engine_args, "--review-map-selector")
+
+
+func _create_world(map_path: String, show_debug_overlay: bool) -> Node:
+	var world := WORLD_SCENE.instantiate()
+	_world = world
+	world.map_path = map_path
+	world.show_debug_overlay = show_debug_overlay
+	add_child(world)
+	world.load_greybox()
+	return world
+
+
+func _load_playable_map(map_path: String, show_debug_overlay: bool) -> void:
+	_clear_loaded_review_nodes()
+	var world := _create_world(map_path, show_debug_overlay)
+	var player := PLAYER_SCENE.instantiate()
+	_player = player
+	player.position = world.spawn_position
+	add_child(player)
+
+	if player.has_method("set_camera_limits"):
+		player.set_camera_limits(Rect2(Vector2.ZERO, world.map_pixel_size))
+	if player.has_method("snap_camera"):
+		player.snap_camera()
+
+	_held_salvage = 0
+	_banked_salvage = 0
+	_total_salvage = world.get_total_salvage_count()
+	_held_salvage_ids = []
+	_hazard_cooldown_seconds = 0.0
+	_hazard_feedback_seconds = 0.0
+	_hazard_interactions_enabled = true
+	_oxygen_seconds = OXYGEN_MAX_SECONDS
+	_run_complete = false
+	_last_status_note = ""
+	_create_review_overlay(world)
+	_update_status_label()
+
+
+func _clear_loaded_review_nodes() -> void:
+	for node in [_review_canvas, _player, _world]:
+		if node == null or not is_instance_valid(node):
+			continue
+		if node.get_parent() != null:
+			node.get_parent().remove_child(node)
+		node.queue_free()
+	_review_canvas = null
+	_player = null
+	_world = null
+	_review_label = null
+	_status_label = null
+	_map_selector = null
+
+
+func _on_review_map_selected(index: int) -> void:
+	if _map_selector == null or index < 0:
+		return
+	var map_path := str(_map_selector.get_item_metadata(index))
+	if map_path.is_empty():
+		return
+	if _world != null and _world.map_path == map_path:
+		return
+	_load_playable_map(map_path, _debug_overlay_enabled)
 
 
 func _process(delta: float) -> void:
@@ -307,6 +402,23 @@ func _smoke_salvage_route_and_quit(expected_map_id: String, extraction_label: St
 		completed_total,
 		extraction_label,
 	])
+	get_tree().quit()
+
+
+func _smoke_map_selector_and_quit() -> void:
+	_load_playable_map(PRODUCTION_SLICE_03_MAP_PATH, false)
+	if _world.map_id != "production_slice_03":
+		push_error("Map selector smoke expected production_slice_03, loaded %s." % _world.map_id)
+		get_tree().quit(1)
+		return
+
+	_load_playable_map(PRODUCTION_SLICE_MAP_PATH, false)
+	if _world.map_id != "production_slice_01":
+		push_error("Map selector smoke expected production_slice_01, loaded %s." % _world.map_id)
+		get_tree().quit(1)
+		return
+
+	print("Map selector smoke passed: switched to production_slice_03 and back to production_slice_01.")
 	get_tree().quit()
 
 
@@ -527,6 +639,7 @@ func _update_hazard_feedback(delta: float) -> void:
 func _create_review_overlay(world: Node) -> void:
 	var canvas := CanvasLayer.new()
 	canvas.name = "ReviewOverlay"
+	_review_canvas = canvas
 	add_child(canvas)
 
 	var panel := PanelContainer.new()
@@ -558,6 +671,18 @@ func _create_review_overlay(world: Node) -> void:
 	_review_label.add_theme_font_size_override("font_size", 13)
 	_review_label.text = "Map %s\nBuild %s" % [world.get_map_label(), _build_label()]
 	stack.add_child(_review_label)
+
+	if _map_selector_enabled:
+		_map_selector = OptionButton.new()
+		_map_selector.name = "ReviewMapSelector"
+		for option in REVIEW_MAP_OPTIONS:
+			var index := _map_selector.item_count
+			_map_selector.add_item(str(option["label"]))
+			_map_selector.set_item_metadata(index, str(option["path"]))
+			if str(option["path"]) == world.map_path:
+				_map_selector.select(index)
+		_map_selector.item_selected.connect(_on_review_map_selected)
+		stack.add_child(_map_selector)
 
 	if world.show_debug_overlay:
 		var debug_label := Label.new()

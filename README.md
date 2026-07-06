@@ -122,6 +122,8 @@ run-production-slice-04.cmd
 
 Opening the Godot editor and pressing Play uses the default preview map unless Godot was launched with `--map-path`; the overlay should show the requested map id when a non-default slice is loaded correctly.
 
+Local/editor review runs also show a small map selector in the review overlay. Use it to switch between the supported review maps without relaunching Godot. Command-line flags such as `-ProductionSlice3Map` or `-MapPath` still control the initial map that opens.
+
 Regenerate and validate the greybox preview with:
 
 ```bash

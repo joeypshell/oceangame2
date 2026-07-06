@@ -104,6 +104,7 @@ Current map-loading helper:
 - Run the fourth production slice locally: `.\tools\open_godot_project.ps1 -Run -ProductionSlice4Map`
 - From Command Prompt, use the root wrappers instead of invoking `.ps1` files directly: `run-production-slice-01.cmd`, `run-production-slice-02.cmd`, `run-production-slice-03.cmd`, or `run-production-slice-04.cmd`.
 - Opening the Godot editor and pressing Play uses the default preview map unless Godot was launched with `--map-path`; the overlay should show the requested map id.
+- Local/editor review runs show a small map selector in the review overlay for switching supported maps without relaunching. It is hidden for capture/smoke automation and exported builds unless explicitly enabled with `--review-map-selector`.
 
 ## Web Preview Status
 
@@ -152,6 +153,7 @@ python tools/check_map_parity.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-02-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-03-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-04-route
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-map-selector
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
 & 'C:\Program Files\Git\cmd\git.exe' diff --check
@@ -192,6 +194,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-06:
 
+- Closed: #57 added a local/editor review map selector and a headless selector reload smoke
 - Closed: #60 added an aggregate production-slice capture completeness check and runs it in `Godot Smoke`
 - Closed: #63 accepted the current five-view `production_slice_04` normal captures as a named visual baseline
 - Closed: #62 evaluated `production_slice_04` and recommended keeping it as a validated lower-left connector/return-loop reference slice, not the default preview
@@ -322,6 +325,7 @@ Recent important commits:
 - There is no accepted `production_slice_02` visual baseline yet; camera framing, route readability, and baseline acceptance should be handled intentionally per slice.
 - `boat_spawn` now renders as a small top-water surface craft with a hatch/tether cue at the authored entry cell while still using the source rectangle for extraction.
 - In-water `base` extraction zones now render as compact relay/sub return visuals with a spawn cue when a legacy `spawn` point sits inside the zone. The visual does not change source collision, spawn, extraction, salvage, hazard, or terrain data.
+- The review overlay includes a local/editor-only map selector for supported review maps. It reloads world/player state cleanly, preserves the debug-overlay mode, and is covered by `--smoke-map-selector`.
 - Collision is rectangular per terrain block; player collision is tuned smaller than the placeholder body art for production-slice clearance.
 - Salvage has a minimal collect-return-complete-reset loop.
 - Hazards now have a tiny scoped interaction: touching one bumps the player back to spawn, briefly tints the player, and restores held/unbanked salvage to the map.
@@ -356,8 +360,7 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Consider a dev-only map selector (#57) if local review speed is the priority.
-2. Keep #52/#53 as optional post-baseline slice-03 improvement issues if the accepted slice-03 reference needs intentional camera or source cleanup.
+1. Keep #52/#53 as optional post-baseline slice-03 improvement issues if the accepted slice-03 reference needs intentional camera or source cleanup.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 

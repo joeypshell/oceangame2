@@ -123,6 +123,22 @@ jobs:
             exit 1
           fi
 
+      - name: Run map selector smoke check
+        run: |
+          set +e
+          godot --headless --path . --smoke-map-selector 2>&1 | tee godot-map-selector.log
+          godot_status=${PIPESTATUS[0]}
+          set -e
+
+          if [ "${godot_status}" -ne 0 ]; then
+            exit "${godot_status}"
+          fi
+
+          if grep -E "SCRIPT ERROR|ERROR:" godot-map-selector.log; then
+            echo "Godot reported errors during map selector smoke check."
+            exit 1
+          fi
+
       - name: Confirm no source files changed
         run: |
           status="$(git status --short --untracked-files=no)"

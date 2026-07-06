@@ -94,6 +94,8 @@ In Command Prompt, run the `.cmd` wrappers instead of executing `.ps1` files dir
 
 Opening the Godot editor and pressing Play uses the default preview map unless Godot was launched with a `--map-path` argument. For non-default slices, the in-game overlay should show the requested map id; if it reads `Map production_slice_01 v1`, the default map was launched.
 
+Local/editor review runs show a small map selector in the review overlay. Use it to switch between the supported review maps without relaunching Godot. It is hidden for capture/smoke automation and exported builds unless explicitly enabled with `--review-map-selector`. Command-line flags such as `-ProductionSlice3Map` or `-MapPath` still control the initial map that opens.
+
 Run any map source by path:
 
 ```powershell
@@ -221,6 +223,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-02-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-03-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-04-route
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-map-selector
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
 ```
@@ -236,6 +239,8 @@ The production-slice-02 route smoke loads `production_slice_02`, asks the world 
 The production-slice-03 route smoke loads `production_slice_03`, asks the world for open-water paths to each authored salvage point and back to the relay extraction zone, swims the player through those paths with the normal movement controller, confirms completion, resets, and exits.
 
 The production-slice-04 route smoke loads `production_slice_04`, asks the world for open-water paths to each authored salvage point and back to the relay extraction zone, swims the player through those paths with the normal movement controller, confirms completion, resets, and exits.
+
+The map-selector smoke loads the default map, reloads `production_slice_03`, then reloads `production_slice_01` through the same clean map/player reload path used by the local review selector.
 
 The hazard-interaction smoke loads `production_slice_01`, collects one salvage item, touches an authored hazard, confirms the player resets to spawn and the held salvage is restored, recollects it, resets, and exits.
 
