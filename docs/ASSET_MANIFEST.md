@@ -34,8 +34,8 @@ references/asset_reviews/background_rocks_02_review.png
 |---|---:|---|---|---|
 | `assets/terrain_tiles/cave_tileset_v1.png` | 256x160 | First grid-aligned cave terrain atlas | draft | 32x32 tiles; supports exposed-side masks, inner corners, isolated terrain, and fill/edge variants. |
 | `assets/terrain_tiles/cave_tileset_v1_manifest.json` | n/a | Tile metadata | draft | Names atlas coordinates, mask semantics, and variant tiles. |
-| `assets/terrain_tiles/cave_tileset_v2.png` | 256x160 | Controlled terrain atlas v2 | draft | Implemented under #95; named variant so v1 remains available for comparison and rollback. |
-| `assets/terrain_tiles/cave_tileset_v2_manifest.json` | n/a | Tile metadata | draft | Preserves v1 mask semantics and renderer atlas coordinate expectations. |
+| `assets/terrain_tiles/cave_tileset_v2.png` | 256x160 | Controlled terrain atlas v2 | approved | Implemented under #95 and accepted under #96 as the current prototype terrain baseline; v1 remains available for comparison and rollback. |
+| `assets/terrain_tiles/cave_tileset_v2_manifest.json` | n/a | Tile metadata | approved | Preserves v1 mask semantics and renderer atlas coordinate expectations. |
 
 Review sheet:
 
