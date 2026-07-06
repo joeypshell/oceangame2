@@ -284,6 +284,17 @@ Capture the second production slice with debug/review markers visible:
 
 This writes the same five camera views to `visual_captures/production_slice_02_debug/`.
 
+Check that a capture directory contains every authored `camera_tests` view for a map:
+
+```bash
+python tools/check_camera_captures.py maps/production_slice_01.greybox.json visual_captures/production_slice_01
+python tools/check_camera_captures.py maps/production_slice_01.greybox.json visual_captures/production_slice_01_debug
+python tools/check_camera_captures.py maps/production_slice_02.greybox.json visual_captures/production_slice_02
+python tools/check_camera_captures.py maps/production_slice_02.greybox.json visual_captures/production_slice_02_debug
+```
+
+The checker reads expected PNG names from the map JSON, ignores Godot `.import` sidecars, fails on missing/extra/invalid PNGs, and reports captures that look older than the source map. It does not regenerate visual files.
+
 Accept the current production-slice captures as the named visual baseline:
 
 ```bash

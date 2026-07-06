@@ -173,6 +173,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-05:
 
+- Closed: #47 added camera capture completeness checker for map-authored camera tests
 - Closed: #46 documented production-slice roles, selection criteria, entry/extraction choices, and lessons from slices 01/02
 - Closed: #45 added readable relay/sub extraction visual for in-water base zones and regenerated slice 02 captures
 - Closed: #44 tuned production-slice-02 camera framing and regenerated normal/debug captures
@@ -264,6 +265,7 @@ Recent important commits:
 - `docs/current/PRODUCTION_SLICE_02_VISUAL_BASELINE_DECISION.md` records that current slice 02 captures are reviewed but not accepted as a baseline until camera framing and relay-extraction visuals are improved.
 - `--smoke-production-slice-02-route` verifies `production_slice_02` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `production_slice_02` has five tuned camera captures: overview, relay entry, main chamber, lower terminal, and return route. Normal captures live in `visual_captures/production_slice_02/`; debug captures live in `visual_captures/production_slice_02_debug/`.
+- `tools/check_camera_captures.py` checks that a capture directory contains every PNG named by a map's authored `camera_tests`, ignoring Godot `.import` sidecars and reporting missing, extra, invalid, or stale-looking captures.
 - `visual_baselines/production_slice_01_accepted/` stores the accepted four-view production-slice visual baseline. Use `python tools/manage_production_slice_baseline.py compare` to render `references/asset_reviews/production_slice_01_visual_baseline_review.png` before accepting future visual changes.
 - There is no accepted `production_slice_02` visual baseline yet; camera framing and relay readability blockers are resolved, but the baseline accept/compare workflow still needs to be extended or run intentionally for slice 02.
 - `boat_spawn` now renders as a small top-water surface craft with a hatch/tether cue at the authored entry cell while still using the source rectangle for extraction.
@@ -302,7 +304,7 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Continue with the current GitHub issue queue. Recommended next: add the capture completeness checker, then evaluate production slice 02 against workflow goals before selecting slice 03.
+1. Continue with the current GitHub issue queue. Recommended next: evaluate production slice 02 against workflow goals before selecting slice 03.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 
