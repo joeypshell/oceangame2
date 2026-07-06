@@ -66,8 +66,8 @@ Additional current map sources:
   - Applies camera bounds from the world map size.
   - Supports visual capture flags for the baseline screenshot and named camera-test captures.
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
-  - Shows compact preview review context and salvage progress.
-  - Supports headless map parity, salvage-loop, production-slice route, and hazard-interaction smoke checks.
+  - Shows compact preview review context, salvage progress, and scoped oxygen pressure.
+  - Supports headless map parity, salvage-loop, production-slice route, hazard-interaction, and oxygen-pressure smoke checks.
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.
@@ -98,4 +98,5 @@ Art placement must not create, remove, or move collision.
 - Terrain collision is rectangular per terrain block, and the player collision shape is intentionally smaller than the placeholder body art to reduce snagging in one-tile-ish production-slice passages.
 - Minimal salvage collection, extraction completion, and restart loop exists.
 - Hazards bump the player back to spawn, briefly tint the player, and restore any held/unbanked salvage to the map.
+- Oxygen is a scoped expedition-pressure prototype: it drains while away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held salvage.
 - First screenshot baseline is committed at `visual_baselines/001_greybox_in_engine.png`.

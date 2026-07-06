@@ -73,7 +73,7 @@ Current terrain renderer:
 - Hides the source grid in normal preview mode.
 - Supports `--show-debug-overlay` for map debugging.
 
-The main scene also shows a compact preview overlay with map id, build label, and salvage progress. The minimal gameplay loop lets the player collect authored salvage, return to the extraction zone to complete the run, and press `R` to reset. Hazards now have a small bump/reset interaction without a full health system.
+The main scene also shows a compact preview overlay with map id, build label, salvage progress, and a scoped oxygen timer. The minimal gameplay loop lets the player collect authored salvage, return to the extraction zone to complete the run, and press `R` to reset. Hazards now have a small bump/reset interaction without a full health system.
 
 Maps may use either a legacy `spawn` entity or the newer `boat_spawn` entity. `boat_spawn` is the preferred top-water entry/extraction marker for production-style maps; the player starts at its `entry_x`/`entry_y` cell, and runtime extraction checks also accept its boat rectangle.
 
@@ -129,6 +129,7 @@ python tools/check_map_parity.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-loop
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
 & 'C:\Program Files\Git\cmd\git.exe' diff --check
 ```
 
@@ -167,8 +168,8 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-05:
 
-- Open: [#39](https://github.com/joeypshell/oceangame2/issues/39) `Prototype scoped expedition pressure for production slice`
 - Open: [#40](https://github.com/joeypshell/oceangame2/issues/40) `Select and author second production slice from full sketch`
+- Closed: #39 scoped oxygen pressure prototype for the production slice
 - Closed: #38 tuned production-slice camera framing and expanded the capture set
 - Closed: #37 debug/review marker meanings and capture route
 - Closed: #36 accepted production-slice visual baseline workflow
@@ -250,7 +251,8 @@ Recent important commits:
 - Collision is rectangular per terrain block; player collision is tuned smaller than the placeholder body art for production-slice clearance.
 - Salvage has a minimal collect-return-complete-reset loop.
 - Hazards now have a tiny scoped interaction: touching one bumps the player back to spawn, briefly tints the player, and restores held/unbanked salvage to the map.
-- There is no health, oxygen, inventory screen, upgrade economy, or real enemy behavior yet.
+- The first scoped expedition pressure is a simple oxygen timer: oxygen drains away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held/unbanked salvage to the map.
+- There is no health, inventory screen, upgrade economy, or real enemy behavior yet.
 - Background art is still rough and secondary to proving terrain readability.
 - Normal preview uses first-pass readable salvage and hazard props instead of abstract marker shapes.
 - The source map/grid and entity review markers can be shown with `--show-debug-overlay`; dedicated production-slice debug captures are written with `--capture-production-slice-debug-map` to `visual_captures/production_slice_01_debug/`.
@@ -280,8 +282,7 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. [#39](https://github.com/joeypshell/oceangame2/issues/39) adds one scoped pressure mechanic only after visual/source validation is stable.
-2. [#40](https://github.com/joeypshell/oceangame2/issues/40) selects a second production slice once the first slice workflow is accepted.
+1. [#40](https://github.com/joeypshell/oceangame2/issues/40) selects a second production slice once the first slice workflow is accepted.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 

@@ -22,6 +22,8 @@ const SALVAGE_COLLECTION_RADIUS := 34.0
 const HAZARD_CONTACT_RADIUS := 30.0
 const HAZARD_COOLDOWN_SECONDS := 1.0
 const HAZARD_FEEDBACK_SECONDS := 0.45
+const OXYGEN_MAX_SECONDS := 90.0
+const OXYGEN_REFILL_SECONDS_PER_SECOND := 25.0
 
 var _world
 var _player
@@ -34,6 +36,7 @@ var _held_salvage_ids: Array[String] = []
 var _hazard_cooldown_seconds := 0.0
 var _hazard_feedback_seconds := 0.0
 var _hazard_interactions_enabled := true
+var _oxygen_seconds := OXYGEN_MAX_SECONDS
 var _run_complete := false
 var _last_status_note := ""
 
@@ -51,6 +54,7 @@ func _ready() -> void:
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
 	var smoke_production_slice_route := _has_arg(user_args, engine_args, "--smoke-production-slice-route")
 	var smoke_hazard_interaction := _has_arg(user_args, engine_args, "--smoke-hazard-interaction")
+	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
 	var parity_output_path := _arg_value(user_args, engine_args, "--parity-output")
 
@@ -71,6 +75,8 @@ func _ready() -> void:
 	elif smoke_production_slice_route:
 		world.map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_hazard_interaction:
+		world.map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_oxygen_pressure:
 		world.map_path = PRODUCTION_SLICE_MAP_PATH
 	elif not requested_map_path.is_empty():
 		world.map_path = requested_map_path
@@ -107,6 +113,9 @@ func _ready() -> void:
 	if smoke_hazard_interaction:
 		_smoke_hazard_interaction_and_quit()
 		return
+	if smoke_oxygen_pressure:
+		_smoke_oxygen_pressure_and_quit()
+		return
 
 	if _has_arg(user_args, engine_args, "--capture-greybox-screenshot"):
 		_capture_screenshot_and_quit()
@@ -131,6 +140,10 @@ func _process(delta: float) -> void:
 		return
 	_update_hazard_feedback(delta)
 	if _run_complete:
+		_update_status_label()
+		return
+
+	if _update_oxygen(delta):
 		_update_status_label()
 		return
 
@@ -267,6 +280,65 @@ func _smoke_hazard_interaction_and_quit() -> void:
 	get_tree().quit()
 
 
+func _smoke_oxygen_pressure_and_quit() -> void:
+	if _world.map_id != "production_slice_01":
+		push_error("Oxygen pressure smoke loaded unexpected map: %s" % _world.map_id)
+		get_tree().quit(1)
+		return
+
+	var salvage: Array = _world.get_salvage_centers()
+	if salvage.is_empty():
+		push_error("Oxygen pressure smoke requires authored salvage.")
+		get_tree().quit(1)
+		return
+
+	_player.global_position = salvage[0]["center"]
+	_process(0.0)
+	if _held_salvage != 1 or _held_salvage_ids.is_empty():
+		push_error("Oxygen pressure smoke could not collect setup salvage.")
+		get_tree().quit(1)
+		return
+
+	var collected_id := _held_salvage_ids[0]
+	_oxygen_seconds = 0.1
+	_process(0.2)
+	if _held_salvage != 0 or not _held_salvage_ids.is_empty():
+		push_error("Oxygen pressure smoke did not drop held salvage on depletion.")
+		get_tree().quit(1)
+		return
+	if _player.global_position.distance_to(_world.spawn_position) > 2.0:
+		push_error("Oxygen pressure smoke did not return player to spawn.")
+		get_tree().quit(1)
+		return
+	if not is_equal_approx(_oxygen_seconds, OXYGEN_MAX_SECONDS):
+		push_error("Oxygen pressure smoke did not refill oxygen after depletion.")
+		get_tree().quit(1)
+		return
+
+	_player.global_position = salvage[0]["center"]
+	_process(0.0)
+	if _held_salvage != 1 or _held_salvage_ids[0] != collected_id:
+		push_error("Oxygen pressure smoke did not restore dropped salvage for recollection.")
+		get_tree().quit(1)
+		return
+
+	_oxygen_seconds = OXYGEN_MAX_SECONDS * 0.5
+	_player.global_position = _world.get_extraction_center()
+	_process(1.0)
+	if _banked_salvage != 1 or _held_salvage != 0:
+		push_error("Oxygen pressure smoke did not preserve collect-return banking.")
+		get_tree().quit(1)
+		return
+	if _oxygen_seconds <= OXYGEN_MAX_SECONDS * 0.5:
+		push_error("Oxygen pressure smoke did not refill at extraction.")
+		get_tree().quit(1)
+		return
+
+	_reset_run()
+	print("Oxygen pressure smoke passed: depleted, surfaced, restored salvage, refilled, and banked salvage.")
+	get_tree().quit()
+
+
 func _swim_to_target(target: Vector2) -> bool:
 	var path: Array = _world.find_open_path(_player.global_position, target)
 	if path.is_empty():
@@ -310,6 +382,7 @@ func _reset_run() -> void:
 	_hazard_cooldown_seconds = 0.0
 	_hazard_feedback_seconds = 0.0
 	_hazard_interactions_enabled = true
+	_oxygen_seconds = OXYGEN_MAX_SECONDS
 	_run_complete = false
 	_last_status_note = "Reset"
 	_player.modulate = Color.WHITE
@@ -319,6 +392,37 @@ func _reset_run() -> void:
 	if _player.has_method("snap_camera"):
 		_player.snap_camera()
 	_update_status_label()
+
+
+func _update_oxygen(delta: float) -> bool:
+	if _world.is_inside_extraction(_player.global_position):
+		_oxygen_seconds = minf(OXYGEN_MAX_SECONDS, _oxygen_seconds + OXYGEN_REFILL_SECONDS_PER_SECOND * delta)
+		return false
+
+	_oxygen_seconds = maxf(0.0, _oxygen_seconds - delta)
+	if _oxygen_seconds > 0.0:
+		return false
+
+	_handle_oxygen_depleted()
+	return true
+
+
+func _handle_oxygen_depleted() -> void:
+	if not _held_salvage_ids.is_empty():
+		_world.restore_salvage(_held_salvage_ids)
+		_held_salvage_ids = []
+		_held_salvage = 0
+		_last_status_note = "Oxygen depleted - dropped salvage"
+	else:
+		_last_status_note = "Oxygen depleted - surfaced"
+
+	_oxygen_seconds = OXYGEN_MAX_SECONDS
+	_hazard_cooldown_seconds = HAZARD_COOLDOWN_SECONDS
+	_player.global_position = _world.spawn_position
+	if _player.has_method("reset_motion"):
+		_player.reset_motion()
+	if _player.has_method("snap_camera"):
+		_player.snap_camera()
 
 
 func _handle_hazard_hit(hazard_id: String) -> void:
@@ -403,7 +507,7 @@ func _update_status_label() -> void:
 		return
 
 	if _total_salvage <= 0:
-		_status_label.text = "Salvage 0/0"
+		_status_label.text = "Salvage 0/0\nOxygen --"
 		return
 
 	var prompt := ""
@@ -414,12 +518,19 @@ func _update_status_label() -> void:
 	elif not _last_status_note.is_empty():
 		prompt = _last_status_note
 
+	var oxygen_seconds := int(ceil(_oxygen_seconds))
+	var oxygen_text := "Oxygen %ds" % oxygen_seconds
+	if _oxygen_seconds <= 15.0 and not _run_complete:
+		oxygen_text = "Oxygen %ds LOW" % oxygen_seconds
+
 	_status_label.text = "Salvage %d/%d  Held %d\n%s" % [
 		_banked_salvage,
 		_total_salvage,
 		_held_salvage,
-		prompt,
+		oxygen_text,
 	]
+	if not prompt.is_empty():
+		_status_label.text += "\n%s" % prompt
 
 
 func _build_label() -> String:

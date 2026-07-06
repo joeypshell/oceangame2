@@ -68,7 +68,8 @@ Accepted constraints for the next phase:
 
 - The player enters and extracts through the authored `boat_spawn` entity.
 - The first loop remains movement, salvage collection, hazard interaction, return to extraction, completion, and reset.
+- The first expedition-pressure mechanic is a scoped oxygen timer: oxygen drains while away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held salvage to the map.
 - Terrain and collision remain generated from JSON source data.
 - Supplied sketch icons are ignored by terrain conversion until intentionally reauthored as JSON entities.
 - Visual changes should target individual assets, source map data, or renderer rules; do not regenerate the whole scene to fix one visual problem.
-- New gameplay pressure should stay scoped until the production-slice visual workflow is accepted.
+- Additional gameplay pressure should stay scoped until the production-slice visual workflow is accepted.

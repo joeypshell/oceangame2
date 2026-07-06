@@ -134,6 +134,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-loop
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
 ```
 
 The import command is important on a fresh clone or CI checkout because `.godot/` and `*.import` files are intentionally untracked. The headless command can exit `0` even when script errors appear in output, so treat `SCRIPT ERROR` or `ERROR:` lines as failures.
@@ -143,6 +144,8 @@ The salvage-loop smoke check loads the default production slice, collects all au
 The production-slice route smoke loads `production_slice_01`, asks the world for open-water paths to each authored salvage point and back to the boat, swims the player through those paths with the normal movement controller, confirms completion, resets, and exits.
 
 The hazard-interaction smoke loads `production_slice_01`, collects one salvage item, touches an authored hazard, confirms the player resets to spawn and the held salvage is restored, recollects it, resets, and exits.
+
+The oxygen-pressure smoke loads `production_slice_01`, collects one salvage item, forces oxygen depletion, confirms the player surfaces at spawn with held salvage restored, recollects it, returns to extraction, confirms oxygen refills and salvage banks, resets, and exits.
 
 Generate optional local build metadata for the preview overlay:
 
