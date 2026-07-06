@@ -274,7 +274,7 @@ Capture the second production slice:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-production-slice-02-map
 ```
 
-This reads `camera_tests` from `maps/production_slice_02.greybox.json` and writes PNGs to `visual_captures/production_slice_02/`.
+This reads `camera_tests` from `maps/production_slice_02.greybox.json` and writes five PNGs to `visual_captures/production_slice_02/`: overview, relay entry, main chamber, lower terminal, and return route.
 
 Capture the second production slice with debug/review markers visible:
 
@@ -282,7 +282,7 @@ Capture the second production slice with debug/review markers visible:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-production-slice-02-debug-map
 ```
 
-This writes PNGs to `visual_captures/production_slice_02_debug/`.
+This writes the same five camera views to `visual_captures/production_slice_02_debug/`.
 
 Accept the current production-slice captures as the named visual baseline:
 

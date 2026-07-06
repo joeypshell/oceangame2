@@ -20,12 +20,12 @@ The current normal and debug captures are valid review artifacts for topology, r
 
 ## Follow-Up Blockers
 
-The blockers are already tracked as focused issues:
+The original blockers were tracked as focused issues:
 
-- #44 `Tune production slice 02 camera framing`
+- #44 `Tune production slice 02 camera framing` - resolved by tuning the five authored camera tests and regenerating normal/debug captures.
 - #45 `Add readable relay extraction visual for production slice 02`
 
-After those are resolved, regenerate the normal and debug captures, then accept a new slice 02 baseline by extending the baseline accept/compare workflow for `production_slice_02`.
+After #45 is resolved, regenerate the normal and debug captures, then accept a new slice 02 baseline by extending the baseline accept/compare workflow for `production_slice_02`.
 
 ## Verification
 
