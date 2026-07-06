@@ -357,21 +357,38 @@ python tools/check_camera_captures.py maps/production_slice_03.greybox.json visu
 
 The checker reads expected PNG names from the map JSON, ignores Godot `.import` sidecars, fails on missing/extra/invalid PNGs, and reports captures that look older than the source map. It does not regenerate visual files.
 
+List configured production-slice baseline targets:
+
+```bash
+python tools/manage_production_slice_baseline.py --list-slices
+```
+
 Accept the current production-slice captures as the named visual baseline:
 
 ```bash
 python tools/manage_production_slice_baseline.py accept
+python tools/manage_production_slice_baseline.py --slice production_slice_02 accept
+python tools/manage_production_slice_baseline.py --slice production_slice_03 accept
 ```
 
-This copies the four production-slice captures into `visual_baselines/production_slice_01_accepted/` and writes a small manifest. Only run it after the current visuals are intentionally accepted as the comparison target.
+The default command remains `production_slice_01` for backward compatibility. Slice-specific acceptance copies the configured captures into `visual_baselines/<slice>_accepted/` and writes a small manifest. Only run `accept` after that slice's current visuals are intentionally accepted as the comparison target.
 
 Render the accepted-baseline comparison sheet:
 
 ```bash
 python tools/manage_production_slice_baseline.py compare
+python tools/manage_production_slice_baseline.py --slice production_slice_02 compare
+python tools/manage_production_slice_baseline.py --slice production_slice_03 compare
 ```
 
-This writes `references/asset_reviews/production_slice_01_visual_baseline_review.png`, showing accepted baseline, current capture, and difference columns for the key production-slice views. If the difference column reveals an unexpected visual change, keep the baseline fixed and create a follow-up issue.
+This writes the slice-specific review sheet under `references/asset_reviews/`, showing accepted baseline, current capture, and difference columns for the configured views. If the difference column reveals an unexpected visual change, keep the baseline fixed and create a follow-up issue.
+
+For a slice that has current captures but no accepted baseline yet, compare against the current capture directory as a tooling sanity check without accepting anything:
+
+```powershell
+python tools/manage_production_slice_baseline.py --slice production_slice_02 --baseline-dir visual_captures/production_slice_02 compare --output "$env:TEMP\production_slice_02_visual_baseline_review.png"
+python tools/manage_production_slice_baseline.py --slice production_slice_03 --baseline-dir visual_captures/production_slice_03 compare --output "$env:TEMP\production_slice_03_visual_baseline_review.png"
+```
 
 Generate the production slice source/render/collision review sheet:
 

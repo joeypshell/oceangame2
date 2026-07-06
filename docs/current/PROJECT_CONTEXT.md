@@ -182,6 +182,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-06:
 
+- Closed: #54 extended production-slice visual baseline tooling so compare/accept can target slice 01, 02, or 03 without accepting new baselines by default
 - Closed: #51 evaluated `production_slice_03` and recommended keeping it as a validated connector/landmark reference slice, not the default preview
 - Closed: #56 added simple Command Prompt wrappers for production slice 01/02/03 local launches and documented the editor Play/default-map caveat
 - Closed: #50 authored `production_slice_03` from the upper-left room cluster with generator, validation, captures, route smoke, and review sheet
@@ -288,6 +289,7 @@ Recent important commits:
 - `production_slice_03` has five authored camera captures: overview, relay entry, stacked rooms, connector, and return route. Normal captures live in `visual_captures/production_slice_03/`; debug captures live in `visual_captures/production_slice_03_debug/`.
 - `tools/check_camera_captures.py` checks that a capture directory contains every PNG named by a map's authored `camera_tests`, ignoring Godot `.import` sidecars and reporting missing, extra, invalid, or stale-looking captures.
 - `visual_baselines/production_slice_01_accepted/` stores the accepted four-view production-slice visual baseline. Use `python tools/manage_production_slice_baseline.py compare` to render `references/asset_reviews/production_slice_01_visual_baseline_review.png` before accepting future visual changes.
+- `tools/manage_production_slice_baseline.py` supports `--slice production_slice_01`, `--slice production_slice_02`, and `--slice production_slice_03` for compare/accept workflows. Slice 02/03 still have no accepted baseline; use an explicit `--baseline-dir visual_captures/<slice>` only for tooling sanity checks, not as acceptance.
 - There is no accepted `production_slice_02` or `production_slice_03` visual baseline yet; camera framing, route readability, and baseline acceptance should be handled intentionally per slice.
 - `boat_spawn` now renders as a small top-water surface craft with a hatch/tether cue at the authored entry cell while still using the source rectangle for extraction.
 - In-water `base` extraction zones now render as compact relay/sub return visuals with a spawn cue when a legacy `spawn` point sits inside the zone. The visual does not change source collision, spawn, extraction, salvage, hazard, or terrain data.
@@ -325,8 +327,9 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Extend visual baseline tooling beyond `production_slice_01`, then decide slice-03 baseline status.
-2. Defer slice 04 selection until slice-03 baseline/default-preview decisions are clear.
+1. Decide visual baseline status for `production_slice_03`.
+2. Decide whether `production_slice_03` should affect the default preview.
+3. Defer slice 04 selection until slice-03 baseline/default-preview decisions are clear.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 
