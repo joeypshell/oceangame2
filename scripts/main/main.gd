@@ -465,7 +465,7 @@ func _smoke_salvage_loop_and_quit() -> void:
 		return
 	var expected_bonus := _completion_oxygen_bonus
 	var expected_total_score := expected_score + expected_bonus
-	if _result_label.text.find("Score %d" % expected_total_score) == -1 or _result_label.text.find("salvage %d + oxygen %d" % [expected_score, _completion_oxygen_bonus]) == -1 or _result_label.text.find("Salvage %d/%d" % [_banked_salvage, _total_salvage]) == -1:
+	if _result_label.text.find("Score %d" % expected_total_score) == -1 or _result_label.text.find("Salvage score %d" % expected_score) == -1 or _result_label.text.find("Oxygen bonus +%d" % _completion_oxygen_bonus) == -1 or _result_label.text.find("Salvage %d/%d" % [_banked_salvage, _total_salvage]) == -1:
 		push_error("Salvage loop smoke result panel did not report score/salvage: %s" % _result_label.text)
 		get_tree().quit(1)
 		return
@@ -623,7 +623,7 @@ func _smoke_oxygen_bonus_score_and_quit() -> void:
 		push_error("Oxygen bonus score smoke computed out-of-range bonus %d." % expected_bonus)
 		get_tree().quit(1)
 		return
-	if _result_label == null or _result_label.text.find("Score %d" % expected_total_score) == -1 or _result_label.text.find("salvage %d + oxygen %d" % [expected_salvage_score, expected_bonus]) == -1:
+	if _result_label == null or _result_label.text.find("Score %d" % expected_total_score) == -1 or _result_label.text.find("Salvage score %d" % expected_salvage_score) == -1 or _result_label.text.find("Oxygen bonus +%d" % expected_bonus) == -1:
 		push_error("Oxygen bonus score smoke result panel did not report score breakdown: %s" % _result_label.text)
 		get_tree().quit(1)
 		return
@@ -638,7 +638,7 @@ func _smoke_oxygen_bonus_score_and_quit() -> void:
 		push_error("Oxygen bonus score smoke failure received completion bonus; failed=%s bonus=%d." % [str(_run_failed), _completion_oxygen_bonus])
 		get_tree().quit(1)
 		return
-	if _result_label == null or _result_label.text.find("Score %d" % expected_salvage_score) == -1 or _result_label.text.find("oxygen 0") == -1:
+	if _result_label == null or _result_label.text.find("Score %d" % expected_salvage_score) == -1 or _result_label.text.find("Oxygen bonus +0") == -1:
 		push_error("Oxygen bonus score smoke failure panel did not show zero oxygen bonus: %s" % _result_label.text)
 		get_tree().quit(1)
 		return
@@ -1562,7 +1562,7 @@ func _update_result_panel() -> void:
 	var oxygen_text := "Oxygen %ds" % int(ceil(_oxygen_seconds))
 	if _run_failed:
 		oxygen_text = "Oxygen depleted"
-	_result_label.text = "%s\nScore %d (salvage %d + oxygen %d)\nBest %d\nSalvage %d/%d\n%s\nPress R to retry" % [
+	_result_label.text = "%s\nScore %d\nSalvage score %d\nOxygen bonus +%d\nBest %d\nSalvage %d/%d\n%s\nPress R to retry" % [
 		title,
 		_current_expedition_score(),
 		_banked_score,
