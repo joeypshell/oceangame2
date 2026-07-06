@@ -186,6 +186,7 @@ python tools/check_asset_manifest.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-map-selector
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-route-choice
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-player-facing
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-movement-feel
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-feedback-overlay
@@ -423,6 +424,7 @@ Recent important commits:
 - `--smoke-production-slice-04-route` verifies `production_slice_04` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `--smoke-player-facing` verifies the player direction-change path by keeping the root transform stable while flipping only the diver body and light-cone visuals.
 - `--smoke-movement-feel` drives the player controller through start, stop, horizontal reversal, and diagonal movement phases, then reports measured velocities for the Controlled Gameplay Pass 01 tuning pass.
+- `--smoke-route-choice` drives the player through the default slice route-choice probe by swimming from the boat entry to the lower-loop salvage target, collecting it, returning to extraction, and reporting the target/collection/return state.
 - `--capture-feedback-overlay` writes `visual_captures/feedback_overlay/production_slice_01_feedback_overlay.png` as the focused review capture for the salvage/oxygen feedback overlay pass.
 - The `Godot Smoke` workflow runs all four production-slice route smokes and the player-facing smoke, so CI covers the default slice, the later reference slices, and the direction-change regression path.
 - `production_slice_02` has five tuned camera captures: overview, relay entry, main chamber, lower terminal, and return route. Normal captures live in `visual_captures/production_slice_02/`; debug captures live in `visual_captures/production_slice_02_debug/`.

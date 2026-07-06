@@ -99,6 +99,7 @@ func _ready() -> void:
 	var smoke_map_selector := _has_arg(user_args, engine_args, "--smoke-map-selector")
 	var smoke_hazard_interaction := _has_arg(user_args, engine_args, "--smoke-hazard-interaction")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
+	var smoke_route_choice := _has_arg(user_args, engine_args, "--smoke-route-choice")
 	var smoke_player_facing := _has_arg(user_args, engine_args, "--smoke-player-facing")
 	var smoke_movement_feel := _has_arg(user_args, engine_args, "--smoke-movement-feel")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
@@ -147,6 +148,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_oxygen_pressure:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_route_choice:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif not requested_map_path.is_empty():
 		selected_map_path = requested_map_path
 
@@ -182,6 +185,7 @@ func _ready() -> void:
 		or smoke_map_selector
 		or smoke_hazard_interaction
 		or smoke_oxygen_pressure
+		or smoke_route_choice
 		or smoke_player_facing
 		or smoke_movement_feel
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
@@ -219,6 +223,9 @@ func _ready() -> void:
 		return
 	if smoke_oxygen_pressure:
 		_smoke_oxygen_pressure_and_quit()
+		return
+	if smoke_route_choice:
+		await _smoke_route_choice_and_quit()
 		return
 	if smoke_player_facing:
 		_smoke_player_facing_and_quit()
@@ -557,6 +564,78 @@ func _smoke_oxygen_pressure_and_quit() -> void:
 	_reset_run()
 	print("Oxygen pressure smoke passed: depleted, surfaced, restored salvage, refilled, and banked salvage.")
 	get_tree().quit()
+
+
+func _smoke_route_choice_and_quit() -> void:
+	if _world.map_id != "production_slice_01":
+		push_error("Route choice probe loaded unexpected map: %s" % _world.map_id)
+		get_tree().quit(1)
+		return
+	if not _player.has_method("swim_in_direction"):
+		push_error("Route choice probe requires player swim_in_direction().")
+		get_tree().quit(1)
+		return
+
+	var salvage: Array = _world.get_salvage_centers()
+	if salvage.is_empty():
+		push_error("Route choice probe requires authored salvage.")
+		get_tree().quit(1)
+		return
+
+	var target: Dictionary = _route_choice_target(salvage)
+	var target_id := str(target.get("id", "salvage"))
+	var target_center: Vector2 = target["center"]
+	var extraction_center: Vector2 = _world.get_extraction_center()
+
+	_player.set_physics_process(false)
+	_hazard_interactions_enabled = false
+	_player.global_position = _world.spawn_position
+	if _player.has_method("reset_motion"):
+		_player.reset_motion()
+
+	var reached_target := await _swim_to_target(target_center)
+	if not reached_target:
+		get_tree().quit(1)
+		return
+	_process(0.0)
+	if _held_salvage != 1 or _held_salvage_ids.is_empty() or _held_salvage_ids[0] != target_id:
+		push_error("Route choice probe did not collect target %s; held=%d ids=%s." % [target_id, _held_salvage, _held_salvage_ids])
+		get_tree().quit(1)
+		return
+
+	var reached_extraction := await _swim_to_target(extraction_center)
+	if not reached_extraction:
+		get_tree().quit(1)
+		return
+	_process(0.0)
+	if _held_salvage != 0 or _banked_salvage < 1 or not _world.is_inside_extraction(_player.global_position):
+		push_error("Route choice probe did not return/bank target %s; held=%d banked=%d position=%s." % [target_id, _held_salvage, _banked_salvage, _player.global_position])
+		get_tree().quit(1)
+		return
+
+	var oxygen_after_return := _oxygen_seconds
+	var completed_after_return := _run_complete
+	var banked_after_return := _banked_salvage
+	_reset_run()
+	print("Route choice probe passed: target=%s collected=1 banked=%d returned_to=boat extraction run_complete=%s oxygen=%.1f." % [target_id, banked_after_return, str(completed_after_return), oxygen_after_return])
+	get_tree().quit()
+
+
+func _route_choice_target(salvage: Array) -> Dictionary:
+	for item in salvage:
+		if str(item.get("id", "")) == "salvage_lower_loop":
+			return item
+
+	var extraction_center: Vector2 = _world.get_extraction_center()
+	var selected: Dictionary = salvage[0]
+	var selected_distance := -1.0
+	for item in salvage:
+		var center: Vector2 = item["center"]
+		var distance := center.distance_to(extraction_center)
+		if distance > selected_distance:
+			selected = item
+			selected_distance = distance
+	return selected
 
 
 func _smoke_player_facing_and_quit() -> void:
