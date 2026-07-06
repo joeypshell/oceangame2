@@ -28,10 +28,12 @@ const SOURCE_LAYER_ALPHA := 0.08
 const BACKGROUND_ART_ALPHA := 0.26
 
 const CAVE_TILESET_TEXTURE := "res://assets/terrain_tiles/cave_tileset_v1.png"
-const BACKGROUND_ROCKS_TEXTURE := "res://assets/terrain/background_rocks_01.png"
+const BACKGROUND_ROCKS_TEXTURE := "res://assets/terrain/background_rocks_02.png"
+const BACKGROUND_ROCKS_FALLBACK_TEXTURE := "res://assets/terrain/background_rocks_01.png"
 const BOAT_SPAWN_TEXTURE := "res://assets/vehicles/boat_spawn_01.png"
 const CAVE_TILESET_TEXTURE_RESOURCE := preload("res://assets/terrain_tiles/cave_tileset_v1.png")
-const BACKGROUND_ROCKS_TEXTURE_RESOURCE := preload("res://assets/terrain/background_rocks_01.png")
+const BACKGROUND_ROCKS_TEXTURE_RESOURCE := preload("res://assets/terrain/background_rocks_02.png")
+const BACKGROUND_ROCKS_FALLBACK_TEXTURE_RESOURCE := preload("res://assets/terrain/background_rocks_01.png")
 const PROP_SPRITE_TEXTURES := {
 	"crate": "res://assets/props/salvage_crate_01.png",
 	"wreck_fragment": "res://assets/props/wreck_fragment_01.png",
@@ -537,6 +539,8 @@ func _build_background(items: Array) -> void:
 
 		var sprite_name := "%sArt" % item.get("id", "Background")
 		var sprite := _add_texture_rect(_background_root, BACKGROUND_ROCKS_TEXTURE, item, sprite_name)
+		if sprite == null:
+			sprite = _add_texture_rect(_background_root, BACKGROUND_ROCKS_FALLBACK_TEXTURE, item, sprite_name)
 		if sprite != null:
 			sprite.modulate = Color(1.0, 1.0, 1.0, BACKGROUND_ART_ALPHA)
 
@@ -681,6 +685,8 @@ func _packaged_texture(texture_path: String) -> Texture2D:
 			return CAVE_TILESET_TEXTURE_RESOURCE
 		BACKGROUND_ROCKS_TEXTURE:
 			return BACKGROUND_ROCKS_TEXTURE_RESOURCE
+		BACKGROUND_ROCKS_FALLBACK_TEXTURE:
+			return BACKGROUND_ROCKS_FALLBACK_TEXTURE_RESOURCE
 		_:
 			return null
 
