@@ -18,7 +18,7 @@ Supporting generator/review artifact:
 - `tools/generate_player_sprite.py`
 - `references/asset_reviews/player_sprite_01_review.png`
 
-Implementation status: #77 added the `player_diver_01.png` asset, generator, review sheet, and `Player.tscn` integration. #78 accepted the player sprite as the current prototype baseline and refreshed accepted production-slice baselines.
+Implementation status: #77 added the `player_diver_01.png` asset, generator, review sheet, and `Player.tscn` integration. #78 accepted the player sprite as the current prototype baseline and refreshed accepted production-slice baselines. #79 verified the public Pages preview after deployment and confirmed the player sprite asset loads in browser without missing-texture warnings.
 
 ## Why This Target
 
