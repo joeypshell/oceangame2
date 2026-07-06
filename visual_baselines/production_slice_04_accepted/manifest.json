@@ -1,0 +1,26 @@
+{
+  "baseline_id": "production_slice_04_accepted",
+  "slice_id": "production_slice_04",
+  "accepted_at_utc": "2026-07-06T03:59:41+00:00",
+  "source_capture_dir": "visual_captures/production_slice_04",
+  "accepted_from_commit": "ffe2999",
+  "view_ids": [
+    "production_slice_04_overview",
+    "production_slice_04_relay_entry",
+    "production_slice_04_lower_left_loop",
+    "production_slice_04_curved_corridor",
+    "production_slice_04_return_route"
+  ],
+  "views": [
+    "visual_baselines/production_slice_04_accepted/production_slice_04_overview.png",
+    "visual_baselines/production_slice_04_accepted/production_slice_04_relay_entry.png",
+    "visual_baselines/production_slice_04_accepted/production_slice_04_lower_left_loop.png",
+    "visual_baselines/production_slice_04_accepted/production_slice_04_curved_corridor.png",
+    "visual_baselines/production_slice_04_accepted/production_slice_04_return_route.png"
+  ],
+  "notes": [
+    "Accepted production_slice_04 visual baseline.",
+    "Update this baseline only after the current production slice is intentionally accepted.",
+    "For regressions or disputed changes, keep the baseline fixed and create a follow-up issue."
+  ]
+}

@@ -57,6 +57,18 @@ SLICE_CONFIGS = {
             "production_slice_03_return_route",
         ],
     },
+    "production_slice_04": {
+        "capture_dir": ROOT / "visual_captures" / "production_slice_04",
+        "baseline_dir": ROOT / "visual_baselines" / "production_slice_04_accepted",
+        "review_path": ROOT / "references" / "asset_reviews" / "production_slice_04_visual_baseline_review.png",
+        "view_ids": [
+            "production_slice_04_overview",
+            "production_slice_04_relay_entry",
+            "production_slice_04_lower_left_loop",
+            "production_slice_04_curved_corridor",
+            "production_slice_04_return_route",
+        ],
+    },
 }
 
 
