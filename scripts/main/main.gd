@@ -45,6 +45,7 @@ const OXYGEN_MAX_SECONDS := 90.0
 const OXYGEN_REFILL_SECONDS_PER_SECOND := 25.0
 const OXYGEN_LOW_WARNING_SECONDS := 35.0
 const OXYGEN_CRITICAL_WARNING_SECONDS := 12.0
+const EXPANDED_ROUTE_CHOICE_ID := "expanded_route_choice"
 const REVIEW_MAP_OPTIONS := [
 	{"label": "Production 01", "path": PRODUCTION_SLICE_MAP_PATH},
 	{"label": "Production 02", "path": PRODUCTION_SLICE_02_MAP_PATH},
@@ -797,15 +798,9 @@ func _smoke_expanded_route_choice_and_quit() -> void:
 		get_tree().quit(1)
 		return
 
-	var salvage: Array = _world.get_salvage_centers()
-	var lower_loop: Dictionary = _salvage_target_by_id(salvage, "salvage_lower_loop")
-	var deep_cache: Dictionary = _salvage_target_by_id(salvage, "salvage_deep_right_cache")
-	if lower_loop.is_empty() or deep_cache.is_empty():
-		push_error("Expanded route choice probe requires salvage_lower_loop and salvage_deep_right_cache.")
-		get_tree().quit(1)
-		return
-	if str(lower_loop.get("validation_route", "")) != "expanded_route_choice" or str(deep_cache.get("validation_route", "")) != "expanded_route_choice":
-		push_error("Expanded route choice probe requires both targets to declare validation_route=expanded_route_choice.")
+	var route_targets: Array = _route_choice_targets_for_route(_world.get_salvage_centers(), EXPANDED_ROUTE_CHOICE_ID)
+	if route_targets.size() < 2:
+		push_error("Expanded route choice probe requires at least two targets for validation_route=%s, got %d." % [EXPANDED_ROUTE_CHOICE_ID, route_targets.size()])
 		get_tree().quit(1)
 		return
 
@@ -815,8 +810,10 @@ func _smoke_expanded_route_choice_and_quit() -> void:
 	if _player.has_method("reset_motion"):
 		_player.reset_motion()
 
-	for target in [lower_loop, deep_cache]:
+	var target_ids := PackedStringArray()
+	for target in route_targets:
 		var target_id := str(target.get("id", "salvage"))
+		target_ids.append(target_id)
 		var reached_target := await _swim_to_target(target["center"])
 		if not reached_target:
 			get_tree().quit(1)
@@ -827,13 +824,15 @@ func _smoke_expanded_route_choice_and_quit() -> void:
 			get_tree().quit(1)
 			return
 
-	var expected_score := int(lower_loop.get("score", 0)) + int(deep_cache.get("score", 0))
-	if _held_salvage != 2 or _held_salvage_score != expected_score:
-		push_error("Expanded route choice probe expected two held valuable pickups worth %d, got held=%d score=%d ids=%s." % [expected_score, _held_salvage, _held_salvage_score, _held_salvage_ids])
+	var expected_score := 0
+	for target in route_targets:
+		expected_score += int(target.get("score", 0))
+	if _held_salvage != route_targets.size() or _held_salvage_score != expected_score:
+		push_error("Expanded route choice probe expected %d held pickups worth %d, got held=%d score=%d ids=%s." % [route_targets.size(), expected_score, _held_salvage, _held_salvage_score, _held_salvage_ids])
 		get_tree().quit(1)
 		return
 
-	var reached_return_waypoint := await _swim_to_target(lower_loop["center"])
+	var reached_return_waypoint := await _swim_to_target(route_targets[0]["center"])
 	if not reached_return_waypoint:
 		get_tree().quit(1)
 		return
@@ -845,7 +844,7 @@ func _smoke_expanded_route_choice_and_quit() -> void:
 		return
 	_process(0.0)
 
-	if _held_salvage != 0 or _banked_salvage < 2 or _banked_score < expected_score or not _world.is_inside_extraction(_player.global_position):
+	if _held_salvage != 0 or _banked_salvage < route_targets.size() or _banked_score < expected_score or not _world.is_inside_extraction(_player.global_position):
 		push_error("Expanded route choice probe did not bank both targets; held=%d banked=%d score=%d position=%s." % [_held_salvage, _banked_salvage, _banked_score, _player.global_position])
 		get_tree().quit(1)
 		return
@@ -854,9 +853,9 @@ func _smoke_expanded_route_choice_and_quit() -> void:
 	var banked_after_return := _banked_salvage
 	var score_after_return := _banked_score
 	_reset_run()
-	print("Expanded route choice probe passed: targets=%s,%s held_capacity=%d banked=%d score=%d returned_to=boat extraction oxygen=%.1f." % [
-		str(lower_loop.get("id", "salvage")),
-		str(deep_cache.get("id", "salvage")),
+	print("Expanded route choice probe passed: route=%s targets=%s held_capacity=%d banked=%d score=%d returned_to=boat extraction oxygen=%.1f." % [
+		EXPANDED_ROUTE_CHOICE_ID,
+		",".join(target_ids),
 		HELD_SALVAGE_CAPACITY,
 		banked_after_return,
 		score_after_return,
@@ -872,11 +871,21 @@ func _route_choice_target(salvage: Array) -> Dictionary:
 	return {}
 
 
-func _salvage_target_by_id(salvage: Array, target_id: String) -> Dictionary:
+func _route_choice_targets_for_route(salvage: Array, route_id: String) -> Array:
+	var targets: Array = []
 	for item in salvage:
-		if str(item.get("id", "salvage")) == target_id:
-			return item
-	return {}
+		if str(item.get("validation_route", "")) == route_id:
+			targets.append(item)
+	targets.sort_custom(Callable(self, "_sort_route_choice_targets"))
+	return targets
+
+
+func _sort_route_choice_targets(a: Dictionary, b: Dictionary) -> bool:
+	var a_order := int(a.get("route_order", 0))
+	var b_order := int(b.get("route_order", 0))
+	if a_order != b_order:
+		return a_order < b_order
+	return str(a.get("id", "")) < str(b.get("id", ""))
 
 
 func _smoke_player_facing_and_quit() -> void:

@@ -282,6 +282,7 @@ def build_map_data(source_map: dict) -> dict:
                 "tier": "valuable",
                 "route_choice_id": "lower_loop_payoff",
                 "validation_route": "expanded_route_choice",
+                "route_order": 0,
                 "intent": "Route-choice payoff target for the lower optional loop.",
             },
             {
@@ -293,6 +294,7 @@ def build_map_data(source_map: dict) -> dict:
                 "tier": "valuable",
                 "route_choice_id": "deep_right_cache_payoff",
                 "validation_route": "expanded_route_choice",
+                "route_order": 1,
                 "intent": "Second route-choice payoff on the lower-right optional branch under cargo and oxygen pressure.",
             },
             {"id": "salvage_return_branch", "type": "salvage", "x": 17, "y": 58, "kind": "crate"},
