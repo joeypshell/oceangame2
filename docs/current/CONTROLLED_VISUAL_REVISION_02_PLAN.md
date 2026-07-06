@@ -18,7 +18,7 @@ Supporting generator/review artifact:
 - `tools/generate_player_sprite.py`
 - `references/asset_reviews/player_sprite_01_review.png`
 
-Implementation status: #77 adds the draft `player_diver_01.png` asset, generator, review sheet, and `Player.tscn` integration. Baseline acceptance remains separate under #78.
+Implementation status: #77 added the `player_diver_01.png` asset, generator, review sheet, and `Player.tscn` integration. #78 accepted the player sprite as the current prototype baseline and refreshed accepted production-slice baselines.
 
 ## Why This Target
 
