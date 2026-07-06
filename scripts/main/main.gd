@@ -10,6 +10,7 @@ const FULL_SKETCH_MAP_PATH := "res://maps/full_cave_sketch_01.greybox.json"
 const PRODUCTION_SLICE_MAP_PATH := "res://maps/production_slice_01.greybox.json"
 const PRODUCTION_SLICE_02_MAP_PATH := "res://maps/production_slice_02.greybox.json"
 const PRODUCTION_SLICE_03_MAP_PATH := "res://maps/production_slice_03.greybox.json"
+const PRODUCTION_SLICE_04_MAP_PATH := "res://maps/production_slice_04.greybox.json"
 const SCREENSHOT_PATH := "res://visual_baselines/001_greybox_in_engine.png"
 const CAMERA_TEST_CAPTURE_DIR := "res://visual_captures/latest"
 const ORIGINAL_CAPTURE_DIR := "res://visual_captures/original_salvage"
@@ -22,6 +23,8 @@ const PRODUCTION_SLICE_02_CAPTURE_DIR := "res://visual_captures/production_slice
 const PRODUCTION_SLICE_02_DEBUG_CAPTURE_DIR := "res://visual_captures/production_slice_02_debug"
 const PRODUCTION_SLICE_03_CAPTURE_DIR := "res://visual_captures/production_slice_03"
 const PRODUCTION_SLICE_03_DEBUG_CAPTURE_DIR := "res://visual_captures/production_slice_03_debug"
+const PRODUCTION_SLICE_04_CAPTURE_DIR := "res://visual_captures/production_slice_04"
+const PRODUCTION_SLICE_04_DEBUG_CAPTURE_DIR := "res://visual_captures/production_slice_04_debug"
 const BUILD_INFO_PATH := "res://build_info.json"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 const SALVAGE_COLLECTION_RADIUS := 34.0
@@ -60,11 +63,14 @@ func _ready() -> void:
 	var capture_production_slice_02_debug_map := _has_arg(user_args, engine_args, "--capture-production-slice-02-debug-map")
 	var capture_production_slice_03_map := _has_arg(user_args, engine_args, "--capture-production-slice-03-map")
 	var capture_production_slice_03_debug_map := _has_arg(user_args, engine_args, "--capture-production-slice-03-debug-map")
+	var capture_production_slice_04_map := _has_arg(user_args, engine_args, "--capture-production-slice-04-map")
+	var capture_production_slice_04_debug_map := _has_arg(user_args, engine_args, "--capture-production-slice-04-debug-map")
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
 	var smoke_production_slice_route := _has_arg(user_args, engine_args, "--smoke-production-slice-route")
 	var smoke_production_slice_02_route := _has_arg(user_args, engine_args, "--smoke-production-slice-02-route")
 	var smoke_production_slice_03_route := _has_arg(user_args, engine_args, "--smoke-production-slice-03-route")
+	var smoke_production_slice_04_route := _has_arg(user_args, engine_args, "--smoke-production-slice-04-route")
 	var smoke_hazard_interaction := _has_arg(user_args, engine_args, "--smoke-hazard-interaction")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
@@ -92,12 +98,18 @@ func _ready() -> void:
 		world.map_path = PRODUCTION_SLICE_03_MAP_PATH
 	elif capture_production_slice_03_debug_map:
 		world.map_path = PRODUCTION_SLICE_03_MAP_PATH
+	elif capture_production_slice_04_map:
+		world.map_path = PRODUCTION_SLICE_04_MAP_PATH
+	elif capture_production_slice_04_debug_map:
+		world.map_path = PRODUCTION_SLICE_04_MAP_PATH
 	elif smoke_production_slice_route:
 		world.map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_02_route:
 		world.map_path = PRODUCTION_SLICE_02_MAP_PATH
 	elif smoke_production_slice_03_route:
 		world.map_path = PRODUCTION_SLICE_03_MAP_PATH
+	elif smoke_production_slice_04_route:
+		world.map_path = PRODUCTION_SLICE_04_MAP_PATH
 	elif smoke_hazard_interaction:
 		world.map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_oxygen_pressure:
@@ -111,6 +123,7 @@ func _ready() -> void:
 		or capture_production_slice_debug_map
 		or capture_production_slice_02_debug_map
 		or capture_production_slice_03_debug_map
+		or capture_production_slice_04_debug_map
 	)
 	add_child(world)
 	world.load_greybox()
@@ -145,6 +158,9 @@ func _ready() -> void:
 	if smoke_production_slice_03_route:
 		await _smoke_salvage_route_and_quit("production_slice_03", "relay extraction")
 		return
+	if smoke_production_slice_04_route:
+		await _smoke_salvage_route_and_quit("production_slice_04", "relay extraction")
+		return
 	if smoke_hazard_interaction:
 		_smoke_hazard_interaction_and_quit()
 		return
@@ -176,6 +192,10 @@ func _ready() -> void:
 		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_03_CAPTURE_DIR)
 	elif capture_production_slice_03_debug_map:
 		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_03_DEBUG_CAPTURE_DIR)
+	elif capture_production_slice_04_map:
+		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_04_CAPTURE_DIR)
+	elif capture_production_slice_04_debug_map:
+		_capture_camera_tests_and_quit(world, PRODUCTION_SLICE_04_DEBUG_CAPTURE_DIR)
 
 
 func _process(delta: float) -> void:

@@ -78,9 +78,21 @@ Command Prompt wrapper:
 run-production-slice-03.cmd
 ```
 
+Run the fourth production slice:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -ProductionSlice4Map
+```
+
+Command Prompt wrapper:
+
+```cmd
+run-production-slice-04.cmd
+```
+
 In Command Prompt, run the `.cmd` wrappers instead of executing `.ps1` files directly. Depending on local file associations, typing a PowerShell script path from Command Prompt may open it in an editor instead of running it.
 
-Opening the Godot editor and pressing Play uses the default preview map unless Godot was launched with a `--map-path` argument. For slice 3, the in-game overlay should read `Map production_slice_03 v1`; if it reads `Map production_slice_01 v1`, the default map was launched.
+Opening the Godot editor and pressing Play uses the default preview map unless Godot was launched with a `--map-path` argument. For non-default slices, the in-game overlay should show the requested map id; if it reads `Map production_slice_01 v1`, the default map was launched.
 
 Run any map source by path:
 
@@ -110,6 +122,7 @@ python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
 python tools/validate_greybox_map.py maps/production_slice_01.greybox.json
 python tools/validate_greybox_map.py maps/production_slice_02.greybox.json
 python tools/validate_greybox_map.py maps/production_slice_03.greybox.json
+python tools/validate_greybox_map.py maps/production_slice_04.greybox.json
 ```
 
 Check that Godot's runtime terrain and collision match the authored JSON source:
@@ -134,6 +147,7 @@ python tools/render_greybox_map.py maps/full_cave_sketch_01.greybox.json referen
 python tools/render_greybox_map.py maps/production_slice_01.greybox.json references/greybox/production_slice_01.svg
 python tools/render_greybox_map.py maps/production_slice_02.greybox.json references/greybox/production_slice_02.svg
 python tools/render_greybox_map.py maps/production_slice_03.greybox.json references/greybox/production_slice_03.svg
+python tools/render_greybox_map.py maps/production_slice_04.greybox.json references/greybox/production_slice_04.svg
 ```
 
 Regenerate the supplied full-map sketch topology draft:
@@ -180,6 +194,17 @@ python tools/check_map_parity.py maps/production_slice_03.greybox.json
 
 This slice is generated from `maps/full_cave_sketch_01.greybox.json` using bounds `x=0, y=8, w=76, h=82`. It is an upper-left connector/landmark room-cluster candidate with an in-water `spawn` and `base` extraction zone near the east-side relay context.
 
+Regenerate the fourth focused production slice:
+
+```bash
+python tools/create_production_slice_04_map.py
+python tools/render_greybox_map.py maps/production_slice_04.greybox.json references/greybox/production_slice_04.svg
+python tools/validate_greybox_map.py maps/production_slice_04.greybox.json
+python tools/check_map_parity.py maps/production_slice_04.greybox.json
+```
+
+This slice is generated from `maps/full_cave_sketch_01.greybox.json` using bounds `x=0, y=86, w=88, h=50`. It is a lower-left connector/return-loop candidate with an in-water `spawn` and `base` relay extraction zone near the east-side connector context.
+
 Run whitespace checks:
 
 ```bash
@@ -195,6 +220,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-02-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-03-route
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-04-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
 ```
@@ -208,6 +234,8 @@ The production-slice route smoke loads `production_slice_01`, asks the world for
 The production-slice-02 route smoke loads `production_slice_02`, asks the world for open-water paths to each authored salvage point and back to the relay extraction zone, swims the player through those paths with the normal movement controller, confirms completion, resets, and exits.
 
 The production-slice-03 route smoke loads `production_slice_03`, asks the world for open-water paths to each authored salvage point and back to the relay extraction zone, swims the player through those paths with the normal movement controller, confirms completion, resets, and exits.
+
+The production-slice-04 route smoke loads `production_slice_04`, asks the world for open-water paths to each authored salvage point and back to the relay extraction zone, swims the player through those paths with the normal movement controller, confirms completion, resets, and exits.
 
 The hazard-interaction smoke loads `production_slice_01`, collects one salvage item, touches an authored hazard, confirms the player resets to spawn and the held salvage is restored, recollects it, resets, and exits.
 
@@ -344,6 +372,22 @@ Capture the third production slice with debug/review markers visible:
 
 This writes the same five camera views to `visual_captures/production_slice_03_debug/`.
 
+Capture the fourth production slice:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-production-slice-04-map
+```
+
+This reads `camera_tests` from `maps/production_slice_04.greybox.json` and writes five PNGs to `visual_captures/production_slice_04/`: overview, relay entry, lower-left loop, curved corridor, and return route.
+
+Capture the fourth production slice with debug/review markers visible:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-production-slice-04-debug-map
+```
+
+This writes the same five camera views to `visual_captures/production_slice_04_debug/`.
+
 Check that a capture directory contains every authored `camera_tests` view for a map:
 
 ```bash
@@ -353,6 +397,8 @@ python tools/check_camera_captures.py maps/production_slice_02.greybox.json visu
 python tools/check_camera_captures.py maps/production_slice_02.greybox.json visual_captures/production_slice_02_debug
 python tools/check_camera_captures.py maps/production_slice_03.greybox.json visual_captures/production_slice_03
 python tools/check_camera_captures.py maps/production_slice_03.greybox.json visual_captures/production_slice_03_debug
+python tools/check_camera_captures.py maps/production_slice_04.greybox.json visual_captures/production_slice_04
+python tools/check_camera_captures.py maps/production_slice_04.greybox.json visual_captures/production_slice_04_debug
 ```
 
 The checker reads expected PNG names from the map JSON, ignores Godot `.import` sidecars, fails on missing/extra/invalid PNGs, and reports captures that look older than the source map. It does not regenerate visual files.
@@ -413,6 +459,14 @@ python tools/render_map_review.py maps/production_slice_03.greybox.json referenc
 ```
 
 This writes `references/greybox/production_slice_03_source_render_collision_review.png`, comparing authored JSON topology, expected collision rectangles from the JSON terrain source, and the Godot rendered overview capture. Run `python tools/check_map_parity.py maps/production_slice_03.greybox.json` alongside it to verify Godot runtime terrain/collision cells match the source.
+
+Generate the fourth production slice source/render/collision review sheet:
+
+```bash
+python tools/render_map_review.py maps/production_slice_04.greybox.json references/greybox/production_slice_04_source_render_collision_review.png --godot-capture visual_captures/production_slice_04/production_slice_04_overview.png
+```
+
+This writes `references/greybox/production_slice_04_source_render_collision_review.png`, comparing authored JSON topology, expected collision rectangles from the JSON terrain source, and the Godot rendered overview capture. Run `python tools/check_map_parity.py maps/production_slice_04.greybox.json` alongside it to verify Godot runtime terrain/collision cells match the source.
 
 Regenerate the cave tileset and organic stress-test map:
 

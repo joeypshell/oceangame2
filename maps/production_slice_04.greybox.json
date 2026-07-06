@@ -1,0 +1,1642 @@
+{
+  "id": "production_slice_04",
+  "version": 1,
+  "purpose": "Fourth focused production-slice map from the lower-left loop of the supplied full cave sketch. This slice tests a longer connector/return loop and curved-corridor cleanup cost.",
+  "source": {
+    "map": "maps/full_cave_sketch_01.greybox.json",
+    "slice_bounds": {
+      "x": 0,
+      "y": 86,
+      "w": 88,
+      "h": 50
+    },
+    "slice_role": "connector_return_loop",
+    "spawn_plan": "Use an in-water relay spawn plus a base extraction zone near the east-side connector. The player enters from larger-map context, explores the lower-left loop, and returns to the relay.",
+    "cleanup": {
+      "sealed_edges": [
+        "left",
+        "right",
+        "top",
+        "bottom"
+      ],
+      "filled_unreachable_open_cells": 0,
+      "notes": [
+        "The original full sketch map is left untouched for comparison.",
+        "Source sketch icons are ignored; gameplay objects are reauthored as JSON entities.",
+        "All crop edges are sealed so this lower-left loop behaves as a bounded connector review slice.",
+        "No topology smoothing is applied in this first pass; curved sketch steps remain visible for review."
+      ]
+    },
+    "stats": {
+      "cropped_solid_cells_before_cleanup": 2864,
+      "solid_cells_after_cleanup": 2900
+    }
+  },
+  "units": {
+    "tile_size_px": 32,
+    "width_tiles": 88,
+    "height_tiles": 50
+  },
+  "legend": {
+    "water": "Open swimmable space preserved from the selected full-sketch region",
+    "solid": "Collision terrain preserved from the selected full-sketch region or cleanup seal",
+    "base": "In-water relay/extraction zone for this connector loop slice",
+    "spawn": "In-water relay entry point",
+    "salvage": "Collectible objective",
+    "hazard": "Avoidance pressure marker",
+    "marker": "Non-gameplay annotation"
+  },
+  "terrain": [
+    {
+      "id": "solid_y00_x00_87",
+      "type": "solid",
+      "x": 0,
+      "y": 0,
+      "w": 88,
+      "h": 1
+    },
+    {
+      "id": "solid_y01_x00_87",
+      "type": "solid",
+      "x": 0,
+      "y": 1,
+      "w": 88,
+      "h": 1
+    },
+    {
+      "id": "solid_y02_x00_22",
+      "type": "solid",
+      "x": 0,
+      "y": 2,
+      "w": 23,
+      "h": 1
+    },
+    {
+      "id": "solid_y02_x30_40",
+      "type": "solid",
+      "x": 30,
+      "y": 2,
+      "w": 11,
+      "h": 1
+    },
+    {
+      "id": "solid_y02_x50_87",
+      "type": "solid",
+      "x": 50,
+      "y": 2,
+      "w": 38,
+      "h": 1
+    },
+    {
+      "id": "solid_y03_x00_22",
+      "type": "solid",
+      "x": 0,
+      "y": 3,
+      "w": 23,
+      "h": 1
+    },
+    {
+      "id": "solid_y03_x30_40",
+      "type": "solid",
+      "x": 30,
+      "y": 3,
+      "w": 11,
+      "h": 1
+    },
+    {
+      "id": "solid_y03_x50_87",
+      "type": "solid",
+      "x": 50,
+      "y": 3,
+      "w": 38,
+      "h": 1
+    },
+    {
+      "id": "solid_y04_x00_16",
+      "type": "solid",
+      "x": 0,
+      "y": 4,
+      "w": 17,
+      "h": 1
+    },
+    {
+      "id": "solid_y04_x35_38",
+      "type": "solid",
+      "x": 35,
+      "y": 4,
+      "w": 4,
+      "h": 1
+    },
+    {
+      "id": "solid_y04_x57_63",
+      "type": "solid",
+      "x": 57,
+      "y": 4,
+      "w": 7,
+      "h": 1
+    },
+    {
+      "id": "solid_y04_x65_87",
+      "type": "solid",
+      "x": 65,
+      "y": 4,
+      "w": 23,
+      "h": 1
+    },
+    {
+      "id": "solid_y05_x00_16",
+      "type": "solid",
+      "x": 0,
+      "y": 5,
+      "w": 17,
+      "h": 1
+    },
+    {
+      "id": "solid_y05_x36_38",
+      "type": "solid",
+      "x": 36,
+      "y": 5,
+      "w": 3,
+      "h": 1
+    },
+    {
+      "id": "solid_y05_x57_62",
+      "type": "solid",
+      "x": 57,
+      "y": 5,
+      "w": 6,
+      "h": 1
+    },
+    {
+      "id": "solid_y05_x65_87",
+      "type": "solid",
+      "x": 65,
+      "y": 5,
+      "w": 23,
+      "h": 1
+    },
+    {
+      "id": "solid_y06_x00_16",
+      "type": "solid",
+      "x": 0,
+      "y": 6,
+      "w": 17,
+      "h": 1
+    },
+    {
+      "id": "solid_y06_x36_38",
+      "type": "solid",
+      "x": 36,
+      "y": 6,
+      "w": 3,
+      "h": 1
+    },
+    {
+      "id": "solid_y06_x67_87",
+      "type": "solid",
+      "x": 67,
+      "y": 6,
+      "w": 21,
+      "h": 1
+    },
+    {
+      "id": "solid_y07_x00_14",
+      "type": "solid",
+      "x": 0,
+      "y": 7,
+      "w": 15,
+      "h": 1
+    },
+    {
+      "id": "solid_y07_x67_87",
+      "type": "solid",
+      "x": 67,
+      "y": 7,
+      "w": 21,
+      "h": 1
+    },
+    {
+      "id": "solid_y08_x00_14",
+      "type": "solid",
+      "x": 0,
+      "y": 8,
+      "w": 15,
+      "h": 1
+    },
+    {
+      "id": "solid_y08_x67_87",
+      "type": "solid",
+      "x": 67,
+      "y": 8,
+      "w": 21,
+      "h": 1
+    },
+    {
+      "id": "solid_y09_x00_14",
+      "type": "solid",
+      "x": 0,
+      "y": 9,
+      "w": 15,
+      "h": 1
+    },
+    {
+      "id": "solid_y09_x27_29",
+      "type": "solid",
+      "x": 27,
+      "y": 9,
+      "w": 3,
+      "h": 1
+    },
+    {
+      "id": "solid_y09_x39_40",
+      "type": "solid",
+      "x": 39,
+      "y": 9,
+      "w": 2,
+      "h": 1
+    },
+    {
+      "id": "solid_y09_x70_87",
+      "type": "solid",
+      "x": 70,
+      "y": 9,
+      "w": 18,
+      "h": 1
+    },
+    {
+      "id": "solid_y10_x00_14",
+      "type": "solid",
+      "x": 0,
+      "y": 10,
+      "w": 15,
+      "h": 1
+    },
+    {
+      "id": "solid_y10_x27_46",
+      "type": "solid",
+      "x": 27,
+      "y": 10,
+      "w": 20,
+      "h": 1
+    },
+    {
+      "id": "solid_y10_x50_51",
+      "type": "solid",
+      "x": 50,
+      "y": 10,
+      "w": 2,
+      "h": 1
+    },
+    {
+      "id": "solid_y10_x70_87",
+      "type": "solid",
+      "x": 70,
+      "y": 10,
+      "w": 18,
+      "h": 1
+    },
+    {
+      "id": "solid_y11_x00_14",
+      "type": "solid",
+      "x": 0,
+      "y": 11,
+      "w": 15,
+      "h": 1
+    },
+    {
+      "id": "solid_y11_x27_46",
+      "type": "solid",
+      "x": 27,
+      "y": 11,
+      "w": 20,
+      "h": 1
+    },
+    {
+      "id": "solid_y11_x50_56",
+      "type": "solid",
+      "x": 50,
+      "y": 11,
+      "w": 7,
+      "h": 1
+    },
+    {
+      "id": "solid_y11_x60_64",
+      "type": "solid",
+      "x": 60,
+      "y": 11,
+      "w": 5,
+      "h": 1
+    },
+    {
+      "id": "solid_y11_x70_87",
+      "type": "solid",
+      "x": 70,
+      "y": 11,
+      "w": 18,
+      "h": 1
+    },
+    {
+      "id": "solid_y12_x00_16",
+      "type": "solid",
+      "x": 0,
+      "y": 12,
+      "w": 17,
+      "h": 1
+    },
+    {
+      "id": "solid_y12_x25_46",
+      "type": "solid",
+      "x": 25,
+      "y": 12,
+      "w": 22,
+      "h": 1
+    },
+    {
+      "id": "solid_y12_x50_56",
+      "type": "solid",
+      "x": 50,
+      "y": 12,
+      "w": 7,
+      "h": 1
+    },
+    {
+      "id": "solid_y12_x60_64",
+      "type": "solid",
+      "x": 60,
+      "y": 12,
+      "w": 5,
+      "h": 1
+    },
+    {
+      "id": "solid_y12_x74_87",
+      "type": "solid",
+      "x": 74,
+      "y": 12,
+      "w": 14,
+      "h": 1
+    },
+    {
+      "id": "solid_y13_x00_16",
+      "type": "solid",
+      "x": 0,
+      "y": 13,
+      "w": 17,
+      "h": 1
+    },
+    {
+      "id": "solid_y13_x25_40",
+      "type": "solid",
+      "x": 25,
+      "y": 13,
+      "w": 16,
+      "h": 1
+    },
+    {
+      "id": "solid_y13_x50_64",
+      "type": "solid",
+      "x": 50,
+      "y": 13,
+      "w": 15,
+      "h": 1
+    },
+    {
+      "id": "solid_y13_x74_87",
+      "type": "solid",
+      "x": 74,
+      "y": 13,
+      "w": 14,
+      "h": 1
+    },
+    {
+      "id": "solid_y14_x00_16",
+      "type": "solid",
+      "x": 0,
+      "y": 14,
+      "w": 17,
+      "h": 1
+    },
+    {
+      "id": "solid_y14_x25_35",
+      "type": "solid",
+      "x": 25,
+      "y": 14,
+      "w": 11,
+      "h": 1
+    },
+    {
+      "id": "solid_y14_x50_64",
+      "type": "solid",
+      "x": 50,
+      "y": 14,
+      "w": 15,
+      "h": 1
+    },
+    {
+      "id": "solid_y14_x74_87",
+      "type": "solid",
+      "x": 74,
+      "y": 14,
+      "w": 14,
+      "h": 1
+    },
+    {
+      "id": "solid_y15_x00_16",
+      "type": "solid",
+      "x": 0,
+      "y": 15,
+      "w": 17,
+      "h": 1
+    },
+    {
+      "id": "solid_y15_x25_34",
+      "type": "solid",
+      "x": 25,
+      "y": 15,
+      "w": 10,
+      "h": 1
+    },
+    {
+      "id": "solid_y15_x50_65",
+      "type": "solid",
+      "x": 50,
+      "y": 15,
+      "w": 16,
+      "h": 1
+    },
+    {
+      "id": "solid_y15_x74_87",
+      "type": "solid",
+      "x": 74,
+      "y": 15,
+      "w": 14,
+      "h": 1
+    },
+    {
+      "id": "solid_y16_x00_16",
+      "type": "solid",
+      "x": 0,
+      "y": 16,
+      "w": 17,
+      "h": 1
+    },
+    {
+      "id": "solid_y16_x25_33",
+      "type": "solid",
+      "x": 25,
+      "y": 16,
+      "w": 9,
+      "h": 1
+    },
+    {
+      "id": "solid_y16_x41_67",
+      "type": "solid",
+      "x": 41,
+      "y": 16,
+      "w": 27,
+      "h": 1
+    },
+    {
+      "id": "solid_y16_x76_87",
+      "type": "solid",
+      "x": 76,
+      "y": 16,
+      "w": 12,
+      "h": 1
+    },
+    {
+      "id": "solid_y17_x00_16",
+      "type": "solid",
+      "x": 0,
+      "y": 17,
+      "w": 17,
+      "h": 1
+    },
+    {
+      "id": "solid_y17_x25_33",
+      "type": "solid",
+      "x": 25,
+      "y": 17,
+      "w": 9,
+      "h": 1
+    },
+    {
+      "id": "solid_y17_x40_67",
+      "type": "solid",
+      "x": 40,
+      "y": 17,
+      "w": 28,
+      "h": 1
+    },
+    {
+      "id": "solid_y17_x77_87",
+      "type": "solid",
+      "x": 77,
+      "y": 17,
+      "w": 11,
+      "h": 1
+    },
+    {
+      "id": "solid_y18_x00_16",
+      "type": "solid",
+      "x": 0,
+      "y": 18,
+      "w": 17,
+      "h": 1
+    },
+    {
+      "id": "solid_y18_x25_33",
+      "type": "solid",
+      "x": 25,
+      "y": 18,
+      "w": 9,
+      "h": 1
+    },
+    {
+      "id": "solid_y18_x38_67",
+      "type": "solid",
+      "x": 38,
+      "y": 18,
+      "w": 30,
+      "h": 1
+    },
+    {
+      "id": "solid_y18_x77_87",
+      "type": "solid",
+      "x": 77,
+      "y": 18,
+      "w": 11,
+      "h": 1
+    },
+    {
+      "id": "solid_y19_x00_16",
+      "type": "solid",
+      "x": 0,
+      "y": 19,
+      "w": 17,
+      "h": 1
+    },
+    {
+      "id": "solid_y19_x25_33",
+      "type": "solid",
+      "x": 25,
+      "y": 19,
+      "w": 9,
+      "h": 1
+    },
+    {
+      "id": "solid_y19_x37_67",
+      "type": "solid",
+      "x": 37,
+      "y": 19,
+      "w": 31,
+      "h": 1
+    },
+    {
+      "id": "solid_y19_x77_87",
+      "type": "solid",
+      "x": 77,
+      "y": 19,
+      "w": 11,
+      "h": 1
+    },
+    {
+      "id": "solid_y20_x00_16",
+      "type": "solid",
+      "x": 0,
+      "y": 20,
+      "w": 17,
+      "h": 1
+    },
+    {
+      "id": "solid_y20_x25_32",
+      "type": "solid",
+      "x": 25,
+      "y": 20,
+      "w": 8,
+      "h": 1
+    },
+    {
+      "id": "solid_y20_x36_67",
+      "type": "solid",
+      "x": 36,
+      "y": 20,
+      "w": 32,
+      "h": 1
+    },
+    {
+      "id": "solid_y20_x77_87",
+      "type": "solid",
+      "x": 77,
+      "y": 20,
+      "w": 11,
+      "h": 1
+    },
+    {
+      "id": "solid_y21_x00_16",
+      "type": "solid",
+      "x": 0,
+      "y": 21,
+      "w": 17,
+      "h": 1
+    },
+    {
+      "id": "solid_y21_x27_32",
+      "type": "solid",
+      "x": 27,
+      "y": 21,
+      "w": 6,
+      "h": 1
+    },
+    {
+      "id": "solid_y21_x36_70",
+      "type": "solid",
+      "x": 36,
+      "y": 21,
+      "w": 35,
+      "h": 1
+    },
+    {
+      "id": "solid_y21_x79_87",
+      "type": "solid",
+      "x": 79,
+      "y": 21,
+      "w": 9,
+      "h": 1
+    },
+    {
+      "id": "solid_y22_x00_16",
+      "type": "solid",
+      "x": 0,
+      "y": 22,
+      "w": 17,
+      "h": 1
+    },
+    {
+      "id": "solid_y22_x27_32",
+      "type": "solid",
+      "x": 27,
+      "y": 22,
+      "w": 6,
+      "h": 1
+    },
+    {
+      "id": "solid_y22_x35_70",
+      "type": "solid",
+      "x": 35,
+      "y": 22,
+      "w": 36,
+      "h": 1
+    },
+    {
+      "id": "solid_y22_x81_87",
+      "type": "solid",
+      "x": 81,
+      "y": 22,
+      "w": 7,
+      "h": 1
+    },
+    {
+      "id": "solid_y23_x00_16",
+      "type": "solid",
+      "x": 0,
+      "y": 23,
+      "w": 17,
+      "h": 1
+    },
+    {
+      "id": "solid_y23_x27_31",
+      "type": "solid",
+      "x": 27,
+      "y": 23,
+      "w": 5,
+      "h": 1
+    },
+    {
+      "id": "solid_y23_x35_69",
+      "type": "solid",
+      "x": 35,
+      "y": 23,
+      "w": 35,
+      "h": 1
+    },
+    {
+      "id": "solid_y23_x81_87",
+      "type": "solid",
+      "x": 81,
+      "y": 23,
+      "w": 7,
+      "h": 1
+    },
+    {
+      "id": "solid_y24_x00_18",
+      "type": "solid",
+      "x": 0,
+      "y": 24,
+      "w": 19,
+      "h": 1
+    },
+    {
+      "id": "solid_y24_x27_31",
+      "type": "solid",
+      "x": 27,
+      "y": 24,
+      "w": 5,
+      "h": 1
+    },
+    {
+      "id": "solid_y24_x35_64",
+      "type": "solid",
+      "x": 35,
+      "y": 24,
+      "w": 30,
+      "h": 1
+    },
+    {
+      "id": "solid_y24_x81_87",
+      "type": "solid",
+      "x": 81,
+      "y": 24,
+      "w": 7,
+      "h": 1
+    },
+    {
+      "id": "solid_y25_x00_18",
+      "type": "solid",
+      "x": 0,
+      "y": 25,
+      "w": 19,
+      "h": 1
+    },
+    {
+      "id": "solid_y25_x27_31",
+      "type": "solid",
+      "x": 27,
+      "y": 25,
+      "w": 5,
+      "h": 1
+    },
+    {
+      "id": "solid_y25_x35_48",
+      "type": "solid",
+      "x": 35,
+      "y": 25,
+      "w": 14,
+      "h": 1
+    },
+    {
+      "id": "solid_y25_x51_64",
+      "type": "solid",
+      "x": 51,
+      "y": 25,
+      "w": 14,
+      "h": 1
+    },
+    {
+      "id": "solid_y25_x83_87",
+      "type": "solid",
+      "x": 83,
+      "y": 25,
+      "w": 5,
+      "h": 1
+    },
+    {
+      "id": "solid_y26_x00_18",
+      "type": "solid",
+      "x": 0,
+      "y": 26,
+      "w": 19,
+      "h": 1
+    },
+    {
+      "id": "solid_y26_x28_31",
+      "type": "solid",
+      "x": 28,
+      "y": 26,
+      "w": 4,
+      "h": 1
+    },
+    {
+      "id": "solid_y26_x35_43",
+      "type": "solid",
+      "x": 35,
+      "y": 26,
+      "w": 9,
+      "h": 1
+    },
+    {
+      "id": "solid_y26_x53_61",
+      "type": "solid",
+      "x": 53,
+      "y": 26,
+      "w": 9,
+      "h": 1
+    },
+    {
+      "id": "solid_y26_x83_87",
+      "type": "solid",
+      "x": 83,
+      "y": 26,
+      "w": 5,
+      "h": 1
+    },
+    {
+      "id": "solid_y27_x00_18",
+      "type": "solid",
+      "x": 0,
+      "y": 27,
+      "w": 19,
+      "h": 1
+    },
+    {
+      "id": "solid_y27_x30_31",
+      "type": "solid",
+      "x": 30,
+      "y": 27,
+      "w": 2,
+      "h": 1
+    },
+    {
+      "id": "solid_y27_x35_43",
+      "type": "solid",
+      "x": 35,
+      "y": 27,
+      "w": 9,
+      "h": 1
+    },
+    {
+      "id": "solid_y27_x53_61",
+      "type": "solid",
+      "x": 53,
+      "y": 27,
+      "w": 9,
+      "h": 1
+    },
+    {
+      "id": "solid_y27_x83_85",
+      "type": "solid",
+      "x": 83,
+      "y": 27,
+      "w": 3,
+      "h": 1
+    },
+    {
+      "id": "solid_y27_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 27,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y28_x00_18",
+      "type": "solid",
+      "x": 0,
+      "y": 28,
+      "w": 19,
+      "h": 1
+    },
+    {
+      "id": "solid_y28_x31_31",
+      "type": "solid",
+      "x": 31,
+      "y": 28,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y28_x35_38",
+      "type": "solid",
+      "x": 35,
+      "y": 28,
+      "w": 4,
+      "h": 1
+    },
+    {
+      "id": "solid_y28_x56_59",
+      "type": "solid",
+      "x": 56,
+      "y": 28,
+      "w": 4,
+      "h": 1
+    },
+    {
+      "id": "solid_y28_x83_84",
+      "type": "solid",
+      "x": 83,
+      "y": 28,
+      "w": 2,
+      "h": 1
+    },
+    {
+      "id": "solid_y28_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 28,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y29_x00_18",
+      "type": "solid",
+      "x": 0,
+      "y": 29,
+      "w": 19,
+      "h": 1
+    },
+    {
+      "id": "solid_y29_x35_38",
+      "type": "solid",
+      "x": 35,
+      "y": 29,
+      "w": 4,
+      "h": 1
+    },
+    {
+      "id": "solid_y29_x56_59",
+      "type": "solid",
+      "x": 56,
+      "y": 29,
+      "w": 4,
+      "h": 1
+    },
+    {
+      "id": "solid_y29_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 29,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y30_x00_24",
+      "type": "solid",
+      "x": 0,
+      "y": 30,
+      "w": 25,
+      "h": 1
+    },
+    {
+      "id": "solid_y30_x35_38",
+      "type": "solid",
+      "x": 35,
+      "y": 30,
+      "w": 4,
+      "h": 1
+    },
+    {
+      "id": "solid_y30_x57_58",
+      "type": "solid",
+      "x": 57,
+      "y": 30,
+      "w": 2,
+      "h": 1
+    },
+    {
+      "id": "solid_y30_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 30,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y31_x00_24",
+      "type": "solid",
+      "x": 0,
+      "y": 31,
+      "w": 25,
+      "h": 1
+    },
+    {
+      "id": "solid_y31_x35_38",
+      "type": "solid",
+      "x": 35,
+      "y": 31,
+      "w": 4,
+      "h": 1
+    },
+    {
+      "id": "solid_y31_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 31,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y32_x00_24",
+      "type": "solid",
+      "x": 0,
+      "y": 32,
+      "w": 25,
+      "h": 1
+    },
+    {
+      "id": "solid_y32_x65_67",
+      "type": "solid",
+      "x": 65,
+      "y": 32,
+      "w": 3,
+      "h": 1
+    },
+    {
+      "id": "solid_y32_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 32,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y33_x00_18",
+      "type": "solid",
+      "x": 0,
+      "y": 33,
+      "w": 19,
+      "h": 1
+    },
+    {
+      "id": "solid_y33_x65_67",
+      "type": "solid",
+      "x": 65,
+      "y": 33,
+      "w": 3,
+      "h": 1
+    },
+    {
+      "id": "solid_y33_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 33,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y34_x00_18",
+      "type": "solid",
+      "x": 0,
+      "y": 34,
+      "w": 19,
+      "h": 1
+    },
+    {
+      "id": "solid_y34_x65_67",
+      "type": "solid",
+      "x": 65,
+      "y": 34,
+      "w": 3,
+      "h": 1
+    },
+    {
+      "id": "solid_y34_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 34,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y35_x00_22",
+      "type": "solid",
+      "x": 0,
+      "y": 35,
+      "w": 23,
+      "h": 1
+    },
+    {
+      "id": "solid_y35_x41_43",
+      "type": "solid",
+      "x": 41,
+      "y": 35,
+      "w": 3,
+      "h": 1
+    },
+    {
+      "id": "solid_y35_x62_67",
+      "type": "solid",
+      "x": 62,
+      "y": 35,
+      "w": 6,
+      "h": 1
+    },
+    {
+      "id": "solid_y35_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 35,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y36_x00_22",
+      "type": "solid",
+      "x": 0,
+      "y": 36,
+      "w": 23,
+      "h": 1
+    },
+    {
+      "id": "solid_y36_x24_25",
+      "type": "solid",
+      "x": 24,
+      "y": 36,
+      "w": 2,
+      "h": 1
+    },
+    {
+      "id": "solid_y36_x41_43",
+      "type": "solid",
+      "x": 41,
+      "y": 36,
+      "w": 3,
+      "h": 1
+    },
+    {
+      "id": "solid_y36_x62_67",
+      "type": "solid",
+      "x": 62,
+      "y": 36,
+      "w": 6,
+      "h": 1
+    },
+    {
+      "id": "solid_y36_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 36,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y37_x00_27",
+      "type": "solid",
+      "x": 0,
+      "y": 37,
+      "w": 28,
+      "h": 1
+    },
+    {
+      "id": "solid_y37_x34_36",
+      "type": "solid",
+      "x": 34,
+      "y": 37,
+      "w": 3,
+      "h": 1
+    },
+    {
+      "id": "solid_y37_x41_51",
+      "type": "solid",
+      "x": 41,
+      "y": 37,
+      "w": 11,
+      "h": 1
+    },
+    {
+      "id": "solid_y37_x62_70",
+      "type": "solid",
+      "x": 62,
+      "y": 37,
+      "w": 9,
+      "h": 1
+    },
+    {
+      "id": "solid_y37_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 37,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y38_x00_27",
+      "type": "solid",
+      "x": 0,
+      "y": 38,
+      "w": 28,
+      "h": 1
+    },
+    {
+      "id": "solid_y38_x34_36",
+      "type": "solid",
+      "x": 34,
+      "y": 38,
+      "w": 3,
+      "h": 1
+    },
+    {
+      "id": "solid_y38_x41_51",
+      "type": "solid",
+      "x": 41,
+      "y": 38,
+      "w": 11,
+      "h": 1
+    },
+    {
+      "id": "solid_y38_x62_70",
+      "type": "solid",
+      "x": 62,
+      "y": 38,
+      "w": 9,
+      "h": 1
+    },
+    {
+      "id": "solid_y38_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 38,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y39_x00_38",
+      "type": "solid",
+      "x": 0,
+      "y": 39,
+      "w": 39,
+      "h": 1
+    },
+    {
+      "id": "solid_y39_x41_70",
+      "type": "solid",
+      "x": 41,
+      "y": 39,
+      "w": 30,
+      "h": 1
+    },
+    {
+      "id": "solid_y39_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 39,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y40_x00_38",
+      "type": "solid",
+      "x": 0,
+      "y": 40,
+      "w": 39,
+      "h": 1
+    },
+    {
+      "id": "solid_y40_x41_70",
+      "type": "solid",
+      "x": 41,
+      "y": 40,
+      "w": 30,
+      "h": 1
+    },
+    {
+      "id": "solid_y40_x72_73",
+      "type": "solid",
+      "x": 72,
+      "y": 40,
+      "w": 2,
+      "h": 1
+    },
+    {
+      "id": "solid_y40_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 40,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y41_x00_74",
+      "type": "solid",
+      "x": 0,
+      "y": 41,
+      "w": 75,
+      "h": 1
+    },
+    {
+      "id": "solid_y41_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 41,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y42_x00_75",
+      "type": "solid",
+      "x": 0,
+      "y": 42,
+      "w": 76,
+      "h": 1
+    },
+    {
+      "id": "solid_y42_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 42,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y43_x00_78",
+      "type": "solid",
+      "x": 0,
+      "y": 43,
+      "w": 79,
+      "h": 1
+    },
+    {
+      "id": "solid_y43_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 43,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y44_x00_78",
+      "type": "solid",
+      "x": 0,
+      "y": 44,
+      "w": 79,
+      "h": 1
+    },
+    {
+      "id": "solid_y44_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 44,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y45_x00_78",
+      "type": "solid",
+      "x": 0,
+      "y": 45,
+      "w": 79,
+      "h": 1
+    },
+    {
+      "id": "solid_y45_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 45,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y46_x00_78",
+      "type": "solid",
+      "x": 0,
+      "y": 46,
+      "w": 79,
+      "h": 1
+    },
+    {
+      "id": "solid_y46_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 46,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y47_x00_78",
+      "type": "solid",
+      "x": 0,
+      "y": 47,
+      "w": 79,
+      "h": 1
+    },
+    {
+      "id": "solid_y47_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 47,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y48_x00_78",
+      "type": "solid",
+      "x": 0,
+      "y": 48,
+      "w": 79,
+      "h": 1
+    },
+    {
+      "id": "solid_y48_x87_87",
+      "type": "solid",
+      "x": 87,
+      "y": 48,
+      "w": 1,
+      "h": 1
+    },
+    {
+      "id": "solid_y49_x00_87",
+      "type": "solid",
+      "x": 0,
+      "y": 49,
+      "w": 88,
+      "h": 1
+    }
+  ],
+  "zones": [
+    {
+      "id": "production_slice_04_bounds",
+      "type": "marker",
+      "x": 0,
+      "y": 0,
+      "w": 88,
+      "h": 50,
+      "intent": "Full extent of the fourth production slice crop."
+    },
+    {
+      "id": "relay_extraction_zone",
+      "type": "base",
+      "x": 68,
+      "y": 15,
+      "w": 13,
+      "h": 7,
+      "intent": "In-water relay entry and return zone placed in the east connector context."
+    },
+    {
+      "id": "east_connector_route",
+      "type": "marker",
+      "x": 61,
+      "y": 11,
+      "w": 25,
+      "h": 18,
+      "intent": "Connector context between the lower-left loop and the larger central cave."
+    },
+    {
+      "id": "upper_loop_route",
+      "type": "marker",
+      "x": 8,
+      "y": 7,
+      "w": 48,
+      "h": 23,
+      "intent": "Upper portion of the lower-left loop and first route-turn review."
+    },
+    {
+      "id": "lower_left_loop_route",
+      "type": "marker",
+      "x": 10,
+      "y": 23,
+      "w": 42,
+      "h": 23,
+      "intent": "Lower-left curved corridor and branch-turnaround route review."
+    },
+    {
+      "id": "return_route",
+      "type": "marker",
+      "x": 42,
+      "y": 24,
+      "w": 35,
+      "h": 22,
+      "intent": "Return path from the lower-left objectives back toward the relay extraction zone."
+    }
+  ],
+  "background": [
+    {
+      "id": "distant_upper_loop",
+      "type": "background",
+      "x": 10,
+      "y": 8,
+      "w": 38,
+      "h": 17
+    },
+    {
+      "id": "distant_lower_left_loop",
+      "type": "background",
+      "x": 12,
+      "y": 26,
+      "w": 34,
+      "h": 18
+    },
+    {
+      "id": "distant_return_wall",
+      "type": "background",
+      "x": 45,
+      "y": 25,
+      "w": 28,
+      "h": 18
+    },
+    {
+      "id": "distant_relay_context",
+      "type": "background",
+      "x": 64,
+      "y": 12,
+      "w": 21,
+      "h": 17
+    }
+  ],
+  "entities": [
+    {
+      "id": "relay_sub_entry",
+      "type": "spawn",
+      "x": 74,
+      "y": 18,
+      "facing": "left",
+      "intent": "In-water entry point for the lower-left loop relay/extraction zone."
+    },
+    {
+      "id": "salvage_left_pocket",
+      "type": "salvage",
+      "x": 15,
+      "y": 10,
+      "kind": "crate"
+    },
+    {
+      "id": "salvage_upper_turn_relic",
+      "type": "salvage",
+      "x": 33,
+      "y": 9,
+      "kind": "relic"
+    },
+    {
+      "id": "salvage_mid_loop_wreck",
+      "type": "salvage",
+      "x": 44,
+      "y": 27,
+      "kind": "wreck_fragment"
+    },
+    {
+      "id": "salvage_lower_turn_cache",
+      "type": "salvage",
+      "x": 24,
+      "y": 35,
+      "kind": "crate"
+    },
+    {
+      "id": "salvage_return_relic",
+      "type": "salvage",
+      "x": 68,
+      "y": 35,
+      "kind": "relic"
+    },
+    {
+      "id": "hazard_upper_choke",
+      "type": "hazard",
+      "x": 33,
+      "y": 20,
+      "kind": "mine"
+    },
+    {
+      "id": "hazard_mid_bend",
+      "type": "hazard",
+      "x": 52,
+      "y": 26,
+      "kind": "jellyfish"
+    },
+    {
+      "id": "hazard_lower_return",
+      "type": "hazard",
+      "x": 61,
+      "y": 36,
+      "kind": "mine"
+    }
+  ],
+  "camera_tests": [
+    {
+      "id": "production_slice_04_overview",
+      "center_x": 44,
+      "center_y": 25,
+      "zoom": 0.45,
+      "intent": "Fourth slice overview showing relay, lower-left loop, curved corridor, and return path."
+    },
+    {
+      "id": "production_slice_04_relay_entry",
+      "center_x": 72,
+      "center_y": 18,
+      "zoom": 0.68,
+      "intent": "In-water relay spawn, extraction zone, and east-side connector context review."
+    },
+    {
+      "id": "production_slice_04_lower_left_loop",
+      "center_x": 22,
+      "center_y": 22,
+      "zoom": 0.64,
+      "intent": "Lower-left loop pocket, first salvage spread, and route-turn review."
+    },
+    {
+      "id": "production_slice_04_curved_corridor",
+      "center_x": 42,
+      "center_y": 25,
+      "zoom": 0.66,
+      "intent": "Curved corridor and stair-stepped source conversion review."
+    },
+    {
+      "id": "production_slice_04_return_route",
+      "center_x": 59,
+      "center_y": 34,
+      "zoom": 0.66,
+      "intent": "Return route from loop objectives back to the relay extraction zone."
+    }
+  ],
+  "review_questions": [
+    "Does this slice read as a lower-left connector loop instead of another chamber or first area?",
+    "Does the east-side relay feel like believable larger-map context without forcing a top-water boat?",
+    "Do the curved corridor bends create readable movement pressure without trapping the player?",
+    "Do the sealed crop edges feel like bounded cave walls rather than arbitrary cutoffs?"
+  ]
+}

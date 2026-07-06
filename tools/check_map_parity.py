@@ -21,6 +21,7 @@ DEFAULT_MAPS = [
     ROOT / "maps" / "production_slice_01.greybox.json",
     ROOT / "maps" / "production_slice_02.greybox.json",
     ROOT / "maps" / "production_slice_03.greybox.json",
+    ROOT / "maps" / "production_slice_04.greybox.json",
 ]
 WINDOWS_GODOT_CANDIDATES = [
     Path(r"C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe"),

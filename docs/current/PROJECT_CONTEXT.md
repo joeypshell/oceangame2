@@ -29,6 +29,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - First production slice source: `maps/production_slice_01.greybox.json`
 - Second production slice source: `maps/production_slice_02.greybox.json`
 - Third production slice source: `maps/production_slice_03.greybox.json`
+- Fourth production slice source: `maps/production_slice_04.greybox.json`
 - Current terrain atlas: `assets/terrain_tiles/cave_tileset_v1.png`
 - Web export workflow: `.github/workflows/godot-web-export.yml`
 - Latest full-sketch evaluation: `docs/current/FULL_SKETCH_EVALUATION_01.md`
@@ -98,7 +99,8 @@ Current map-loading helper:
 - Run the first production slice locally: `.\tools\open_godot_project.ps1 -Run -ProductionSliceMap`
 - Run the second production slice locally: `.\tools\open_godot_project.ps1 -Run -ProductionSlice2Map`
 - Run the third production slice locally: `.\tools\open_godot_project.ps1 -Run -ProductionSlice3Map`
-- From Command Prompt, use the root wrappers instead of invoking `.ps1` files directly: `run-production-slice-01.cmd`, `run-production-slice-02.cmd`, or `run-production-slice-03.cmd`.
+- Run the fourth production slice locally: `.\tools\open_godot_project.ps1 -Run -ProductionSlice4Map`
+- From Command Prompt, use the root wrappers instead of invoking `.ps1` files directly: `run-production-slice-01.cmd`, `run-production-slice-02.cmd`, `run-production-slice-03.cmd`, or `run-production-slice-04.cmd`.
 - Opening the Godot editor and pressing Play uses the default preview map unless Godot was launched with `--map-path`; the overlay should show the requested map id.
 
 ## Web Preview Status
@@ -138,6 +140,7 @@ python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
 python tools/validate_greybox_map.py maps/production_slice_01.greybox.json
 python tools/validate_greybox_map.py maps/production_slice_02.greybox.json
 python tools/validate_greybox_map.py maps/production_slice_03.greybox.json
+python tools/validate_greybox_map.py maps/production_slice_04.greybox.json
 python tools/check_map_parity.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --import
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1
@@ -145,6 +148,7 @@ python tools/check_map_parity.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-02-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-03-route
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-04-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
 & 'C:\Program Files\Git\cmd\git.exe' diff --check
@@ -185,6 +189,8 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-06:
 
+- Open: #62 evaluates `production_slice_04` against workflow goals after implementation
+- Closed: #61 authored `production_slice_04` from the lower-left loop with generator, validation, route smoke, captures, and review sheet
 - Closed: #59 selected the lower-left loop as the production-slice-04 candidate and created #61 for implementation
 - Closed: #58 decided not to promote `production_slice_03`; `production_slice_01` remains the default preview map
 - Closed: #55 accepted the current five-view `production_slice_03` normal captures as a named visual baseline
@@ -281,9 +287,11 @@ Recent important commits:
 - `references/greybox/production_slice_01_source_render_collision_review.png` compares production-slice JSON topology, expected collision rectangles, and the Godot overview capture.
 - `references/greybox/production_slice_02_source_render_collision_review.png` compares slice 02 JSON topology, expected collision rectangles, and the Godot overview capture.
 - `references/greybox/production_slice_03_source_render_collision_review.png` compares slice 03 JSON topology, expected collision rectangles, and the Godot overview capture.
+- `references/greybox/production_slice_04_source_render_collision_review.png` compares slice 04 JSON topology, expected collision rectangles, and the Godot overview capture.
 - `production_slice_01` is the first focused slice from the full sketch's top-center entry hub; it preserves the selected topology, seals left/right/bottom crop edges, fills unreachable conversion pockets, applies targeted one-cell tip/notch cleanup in source generation, and adds authored boat spawn, salvage, hazards, route markers, and camera tests.
 - `production_slice_02` is the second focused slice from the full sketch's lower-right chamber route. It is a later-game destination/connector candidate, not an alternate first area. It uses an in-water `spawn` and `base` extraction zone because the region has no natural top-water boat opening.
 - `production_slice_03` is the third focused slice from the full sketch's upper-left room cluster. It is a connector/landmark room-cluster candidate with compact stacked-room navigation and an east-side in-water `spawn` plus `base` relay extraction zone.
+- `production_slice_04` is the fourth focused slice from the full sketch's lower-left loop. It is a connector/return-loop candidate with curved-corridor movement and an east-side in-water `spawn` plus `base` relay extraction zone.
 - `docs/current/PRODUCTION_SLICE_02_DECISION.md` records the bounds, rationale, spawn/extraction plan, and verification for the second slice.
 - `docs/current/PRODUCTION_SLICE_02_VISUAL_BASELINE_DECISION.md` records that current slice 02 captures are reviewed but not accepted as a baseline until camera framing and relay-extraction visuals are improved.
 - `docs/current/PRODUCTION_SLICE_02_EVALUATION.md` records that slice 02 should stay a validated later-game reference slice and the next immediate work should move to slice 03 planning.
@@ -291,10 +299,13 @@ Recent important commits:
 - `docs/current/PRODUCTION_SLICE_03_EVALUATION.md` records that slice 03 is a validated connector/landmark reference slice. Relay readability is accepted for the prototype pass, camera/source cleanup is not blocking, baseline acceptance remains separate, and slice 01 should stay the default preview for now.
 - `docs/current/PRODUCTION_SLICE_03_DEFAULT_PREVIEW_DECISION.md` records that slice 03 should stay a reference slice and should not replace slice 01 as the Godot or public web default preview.
 - `docs/current/PRODUCTION_SLICE_04_DECISION.md` selects the lower-left loop as the fourth focused slice candidate with bounds `x=0, y=86, w=88, h=50`, a `spawn + base` relay plan near global `(74, 104)`, and follow-up implementation issue #61.
+- `docs/current/PRODUCTION_SLICE_04_DECISION.md` also records implementation status for #61 and points to #62 for the evaluation pass.
 - `--smoke-production-slice-02-route` verifies `production_slice_02` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `--smoke-production-slice-03-route` verifies `production_slice_03` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
+- `--smoke-production-slice-04-route` verifies `production_slice_04` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `production_slice_02` has five tuned camera captures: overview, relay entry, main chamber, lower terminal, and return route. Normal captures live in `visual_captures/production_slice_02/`; debug captures live in `visual_captures/production_slice_02_debug/`.
 - `production_slice_03` has five authored camera captures: overview, relay entry, stacked rooms, connector, and return route. Normal captures live in `visual_captures/production_slice_03/`; debug captures live in `visual_captures/production_slice_03_debug/`.
+- `production_slice_04` has five authored camera captures: overview, relay entry, lower-left loop, curved corridor, and return route. Normal captures live in `visual_captures/production_slice_04/`; debug captures live in `visual_captures/production_slice_04_debug/`.
 - `tools/check_camera_captures.py` checks that a capture directory contains every PNG named by a map's authored `camera_tests`, ignoring Godot `.import` sidecars and reporting missing, extra, invalid, or stale-looking captures.
 - `visual_baselines/production_slice_01_accepted/` stores the accepted four-view production-slice visual baseline. Use `python tools/manage_production_slice_baseline.py compare` to render `references/asset_reviews/production_slice_01_visual_baseline_review.png` before accepting future visual changes.
 - `tools/manage_production_slice_baseline.py` supports `--slice production_slice_01`, `--slice production_slice_02`, and `--slice production_slice_03` for compare/accept workflows. Use an explicit `--baseline-dir visual_captures/<slice>` only for tooling sanity checks, not as acceptance.
@@ -336,7 +347,7 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Implement #61, the production-slice-04 lower-left loop source pass.
+1. Evaluate #62, the implemented production-slice-04 lower-left loop against workflow goals.
 2. Keep #52/#53 as optional post-baseline slice-03 improvement issues if the accepted slice-03 reference needs intentional camera or source cleanup.
 3. Consider workflow improvements such as a dev-only map selector or CI camera-capture completeness checks when they unblock review speed.
 

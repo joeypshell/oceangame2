@@ -108,7 +108,19 @@ From Command Prompt, use the wrapper:
 run-production-slice-03.cmd
 ```
 
-Opening the Godot editor and pressing Play uses the default preview map unless Godot was launched with `--map-path`; the overlay should say `Map production_slice_03 v1` when slice 3 is loaded correctly.
+The fourth focused production-slice source is generated from the lower-left loop of the full sketch. It is a connector/return-loop candidate with an in-water relay spawn and extraction zone. It can be selected explicitly with:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -ProductionSlice4Map
+```
+
+From Command Prompt, use the wrapper:
+
+```cmd
+run-production-slice-04.cmd
+```
+
+Opening the Godot editor and pressing Play uses the default preview map unless Godot was launched with `--map-path`; the overlay should show the requested map id when a non-default slice is loaded correctly.
 
 Regenerate and validate the greybox preview with:
 
@@ -133,6 +145,9 @@ python tools/validate_greybox_map.py maps/production_slice_02.greybox.json
 python tools/create_production_slice_03_map.py
 python tools/render_greybox_map.py maps/production_slice_03.greybox.json references/greybox/production_slice_03.svg
 python tools/validate_greybox_map.py maps/production_slice_03.greybox.json
+python tools/create_production_slice_04_map.py
+python tools/render_greybox_map.py maps/production_slice_04.greybox.json references/greybox/production_slice_04.svg
+python tools/validate_greybox_map.py maps/production_slice_04.greybox.json
 ```
 
 Run the current Godot greybox with `project.godot`. The root scene is `scenes/main/Main.tscn`.

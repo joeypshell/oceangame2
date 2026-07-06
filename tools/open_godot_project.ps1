@@ -9,6 +9,7 @@ param(
     [switch]$ProductionSliceMap,
     [switch]$ProductionSlice2Map,
     [switch]$ProductionSlice3Map,
+    [switch]$ProductionSlice4Map,
     [switch]$CheckOnly
 )
 
@@ -54,8 +55,9 @@ if ($Run) {
     if ($ProductionSliceMap) { $MapShortcutCount += 1 }
     if ($ProductionSlice2Map) { $MapShortcutCount += 1 }
     if ($ProductionSlice3Map) { $MapShortcutCount += 1 }
+    if ($ProductionSlice4Map) { $MapShortcutCount += 1 }
     if ($MapShortcutCount -gt 1) {
-        throw "Use only one map shortcut: -OriginalMap, -OrganicMap, -FullSketchMap, -ProductionSliceMap, -ProductionSlice2Map, or -ProductionSlice3Map."
+        throw "Use only one map shortcut: -OriginalMap, -OrganicMap, -FullSketchMap, -ProductionSliceMap, -ProductionSlice2Map, -ProductionSlice3Map, or -ProductionSlice4Map."
     }
     if ($OriginalMap) {
         $MapPath = "res://maps/cave_salvage_test_01.greybox.json"
@@ -74,6 +76,9 @@ if ($Run) {
     }
     if ($ProductionSlice3Map) {
         $MapPath = "res://maps/production_slice_03.greybox.json"
+    }
+    if ($ProductionSlice4Map) {
+        $MapPath = "res://maps/production_slice_04.greybox.json"
     }
     if ($MapPath) {
         $GodotArgs += "--map-path=$MapPath"
