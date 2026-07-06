@@ -23,9 +23,9 @@ The current normal and debug captures are valid review artifacts for topology, r
 The original blockers were tracked as focused issues:
 
 - #44 `Tune production slice 02 camera framing` - resolved by tuning the five authored camera tests and regenerating normal/debug captures.
-- #45 `Add readable relay extraction visual for production slice 02`
+- #45 `Add readable relay extraction visual for production slice 02` - resolved by rendering in-water base zones as relay/sub return visuals with a spawn cue.
 
-After #45 is resolved, regenerate the normal and debug captures, then accept a new slice 02 baseline by extending the baseline accept/compare workflow for `production_slice_02`.
+Both original blockers are resolved. Accept a new slice 02 baseline only after intentionally extending or running the baseline accept/compare workflow for `production_slice_02`.
 
 ## Verification
 

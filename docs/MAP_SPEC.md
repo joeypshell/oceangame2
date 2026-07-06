@@ -91,6 +91,8 @@ A `boat_spawn` entity has these required fields:
 
 Existing base/extraction zones remain valid. When a `boat_spawn` is present, runtime extraction checks also treat the boat rectangle as a valid return point. Production-style maps should render the boat rectangle as a readable surface craft, hatch, dock, or similar top-water marker so players can identify both expedition entry and salvage return without relying on debug overlays.
 
+In-water `base` extraction zones should render as readable relay, sub, dock, or return-field visuals. If a legacy `spawn` point sits inside the base zone, the normal preview may add a small entry cue at the authored spawn cell. These visuals communicate start and return semantics only; they must not change collision, spawn coordinates, extraction bounds, salvage, hazards, or terrain topology by eye.
+
 ## Entity Semantics
 
 Every authored entity must include:

@@ -8,6 +8,10 @@ const COLOR_BOAT := Color(0.96, 0.66, 0.20, 0.92)
 const COLOR_BOAT_DARK := Color(0.22, 0.16, 0.10, 1.0)
 const COLOR_BOAT_LIGHT := Color(1.0, 0.86, 0.40, 1.0)
 const COLOR_BOAT_GLASS := Color(0.36, 0.91, 0.96, 0.88)
+const COLOR_RELAY_BODY := Color(0.18, 0.31, 0.36, 1.0)
+const COLOR_RELAY_DARK := Color(0.08, 0.17, 0.21, 1.0)
+const COLOR_RELAY_LIGHT := Color(0.96, 0.86, 0.48, 1.0)
+const COLOR_RELAY_GLASS := Color(0.28, 0.92, 0.98, 0.92)
 const COLOR_BACKGROUND := Color(0.08, 0.39, 0.58, 0.18)
 const COLOR_MARKER := Color(1.0, 1.0, 1.0, 0.10)
 const COLOR_SALVAGE := Color(1.0, 0.80, 0.22, 1.0)
@@ -532,10 +536,7 @@ func _build_zones(zones: Array) -> void:
 	for zone in zones:
 		if zone.get("type", "") == "base":
 			_extraction_zones.append(zone)
-			var base := _rect_polygon(zone, Color(1.0, 0.92, 0.68, 0.30))
-			base.name = zone.get("id", "Base")
-			base.z_index = 5
-			_marker_root.add_child(base)
+			var base := _add_relay_extraction_prop(str(zone.get("id", "Base")), zone)
 			if show_debug_overlay:
 				_add_rect_outline(zone, "%sDebugOutline" % base.name, COLOR_DEBUG_EXTRACTION, 3.0, 22)
 				_add_debug_label("EXTRACTION", _rect_from_item(zone).position + Vector2(6, 6), COLOR_DEBUG_EXTRACTION)
@@ -568,9 +569,18 @@ func _build_entities(entities: Array) -> void:
 					_add_debug_label("LEGACY SPAWN", center + Vector2(18, -22), COLOR_DEBUG_ENTRY)
 				continue
 			spawn_position = center
-			var spawn_marker := _add_marker("PlayerStart", center, COLOR_MARKER, 28.0)
+			var spawn_in_extraction := is_inside_extraction(center)
+			var spawn_marker: Node2D
+			if spawn_in_extraction:
+				spawn_marker = _add_relay_spawn_cue("PlayerStartRelayCue", center)
+			else:
+				spawn_marker = _add_marker("PlayerStart", center, COLOR_MARKER, 28.0)
 			if show_debug_overlay:
-				spawn_marker.color = COLOR_DEBUG_ENTRY
+				if spawn_in_extraction:
+					var debug_spawn := _add_diamond("PlayerStartDebug", center, COLOR_DEBUG_ENTRY, 16.0)
+					debug_spawn.z_index = 23
+				elif spawn_marker is Polygon2D:
+					(spawn_marker as Polygon2D).color = COLOR_DEBUG_ENTRY
 				_add_debug_label("SPAWN", center + Vector2(18, -22), COLOR_DEBUG_ENTRY)
 		elif entity_type == "salvage":
 			_salvage_entities.append(entity)
@@ -678,6 +688,97 @@ func _add_marker(marker_name: String, center: Vector2, color: Color, radius: flo
 	])
 	_marker_root.add_child(poly)
 	return poly
+
+
+func _add_relay_extraction_prop(marker_name: String, item: Dictionary) -> Node2D:
+	var rect := _rect_from_item(item)
+	var root := Node2D.new()
+	root.name = marker_name
+	root.position = rect.position
+	root.z_index = 6
+	_marker_root.add_child(root)
+
+	var field := _add_local_polygon(root, "RelayReturnField", _rect_points(rect.size), Color(1.0, 0.92, 0.52, 0.13))
+	field.position = rect.size * 0.5
+	field.z_index = 0
+
+	var field_edge := _add_local_line(root, "RelayReturnFieldEdge", _rect_outline_points(rect.size), Color(1.0, 0.92, 0.52, 0.42), 2.0)
+	field_edge.z_index = 1
+
+	var center := rect.size * 0.5
+	var dock_size := Vector2(minf(rect.size.x * 0.72, 188.0), minf(rect.size.y * 0.20, 34.0))
+	var dock := _add_local_polygon(root, "RelayDock", _rect_points(dock_size), Color(0.10, 0.22, 0.26, 0.82))
+	dock.position = center + Vector2(0, rect.size.y * 0.22)
+	dock.z_index = 2
+
+	var dock_edge := _add_local_line(root, "RelayDockEdge", _closed_rect_points(dock_size), Color(0.55, 0.76, 0.78, 0.72), 2.0)
+	dock_edge.position = dock.position
+	dock_edge.z_index = 3
+
+	var hull_size := Vector2(minf(rect.size.x * 0.46, 132.0), minf(rect.size.y * 0.34, 52.0))
+	var hull_center := center + Vector2(0, -rect.size.y * 0.05)
+	var glow := _add_local_polygon(root, "RelayGlow", _ellipse_points(hull_size.x * 0.72, hull_size.y * 0.78, 24), Color(0.28, 0.92, 0.98, 0.20))
+	glow.position = hull_center
+	glow.z_index = 2
+
+	var tail := _add_local_polygon(root, "RelayTailFin", PackedVector2Array([
+		hull_center + Vector2(-hull_size.x * 0.42, -hull_size.y * 0.18),
+		hull_center + Vector2(-hull_size.x * 0.72, 0),
+		hull_center + Vector2(-hull_size.x * 0.42, hull_size.y * 0.18),
+	]), COLOR_RELAY_DARK)
+	tail.z_index = 4
+
+	var body_shadow := _add_local_polygon(root, "RelayBodyShadow", _ellipse_points(hull_size.x * 0.52, hull_size.y * 0.42, 24), COLOR_RELAY_DARK)
+	body_shadow.position = hull_center + Vector2(4, 4)
+	body_shadow.z_index = 3
+
+	var body := _add_local_polygon(root, "RelayBody", _ellipse_points(hull_size.x * 0.50, hull_size.y * 0.40, 24), COLOR_RELAY_BODY)
+	body.position = hull_center
+	body.z_index = 5
+
+	var window := _add_local_polygon(root, "RelayWindow", _ellipse_points(hull_size.x * 0.16, hull_size.y * 0.22, 16), COLOR_RELAY_GLASS)
+	window.position = hull_center + Vector2(hull_size.x * 0.20, -hull_size.y * 0.02)
+	window.z_index = 6
+
+	var beacon := _add_local_line(root, "RelayBeacon", PackedVector2Array([
+		hull_center + Vector2(0, -hull_size.y * 0.70),
+		hull_center + Vector2(0, -hull_size.y * 1.15),
+	]), COLOR_RELAY_LIGHT, 3.0)
+	beacon.z_index = 6
+
+	var beacon_light := _add_local_polygon(root, "RelayBeaconLight", _circle_points(7.0, 12), COLOR_RELAY_LIGHT)
+	beacon_light.position = hull_center + Vector2(0, -hull_size.y * 1.18)
+	beacon_light.z_index = 7
+	return root
+
+
+func _add_relay_spawn_cue(marker_name: String, center: Vector2) -> Node2D:
+	var root := Node2D.new()
+	root.name = marker_name
+	root.position = center
+	root.z_index = 10
+	_marker_root.add_child(root)
+
+	var glow := _add_local_polygon(root, "RelayEntryGlow", _circle_points(30.0, 18), Color(0.28, 0.92, 0.98, 0.18))
+	glow.z_index = 0
+
+	var ring := _add_local_line(root, "RelayEntryRing", PackedVector2Array([
+		Vector2(0, -18),
+		Vector2(18, 0),
+		Vector2(0, 18),
+		Vector2(-18, 0),
+		Vector2(0, -18),
+	]), COLOR_RELAY_GLASS, 2.0)
+	ring.z_index = 1
+
+	var chevron := _add_local_polygon(root, "RelayEntryChevron", PackedVector2Array([
+		Vector2(-6, -10),
+		Vector2(10, 0),
+		Vector2(-6, 10),
+		Vector2(-1, 0),
+	]), COLOR_RELAY_LIGHT)
+	chevron.z_index = 2
+	return root
 
 
 func _add_boat_marker(marker_name: String, item: Dictionary) -> Node2D:
@@ -946,6 +1047,14 @@ func _circle_points(radius: float, steps: int, offset := Vector2.ZERO) -> Packed
 	for index in range(steps):
 		var angle := TAU * float(index) / float(steps)
 		points.append(offset + Vector2(cos(angle), sin(angle)) * radius)
+	return points
+
+
+func _ellipse_points(radius_x: float, radius_y: float, steps: int, offset := Vector2.ZERO) -> PackedVector2Array:
+	var points := PackedVector2Array()
+	for index in range(steps):
+		var angle := TAU * float(index) / float(steps)
+		points.append(offset + Vector2(cos(angle) * radius_x, sin(angle) * radius_y))
 	return points
 
 

@@ -78,6 +78,16 @@ Production-style `boat_spawn` visuals should read as the top-water start and ret
 - Place the hatch/tether cue at the authored `entry_x`/`entry_y` cell so player spawn remains visually tied to source data.
 - Do not use the boat visual to redefine collision, spawn, or extraction bounds by eye.
 
+## Current Relay Extraction Pass
+
+In-water `base` extraction zones should read as relay/sub return points, not as plain abstract rectangles:
+
+- Keep the authored base rectangle legible as the extraction/return field.
+- Use compact dark metal, warm beacon, and teal glass/light accents so the relay remains distinct from salvage and hazards.
+- If a legacy `spawn` point is inside the extraction zone, render a small entry cue at the authored spawn cell.
+- Do not use the relay visual to redefine collision, spawn, or extraction bounds by eye.
+- Debug/review overlays must still draw amber extraction outlines and green spawn labels distinctly over the normal relay visual.
+
 ## Forbidden Styles
 
 Avoid these in the first prototype:
