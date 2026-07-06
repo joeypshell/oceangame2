@@ -42,6 +42,7 @@ Build a small side-view salvage game that proves:
 - [Controlled Visual Revision 01 Plan](docs/current/CONTROLLED_VISUAL_REVISION_01_PLAN.md)
 - [Controlled Visual Revision 02 Plan](docs/current/CONTROLLED_VISUAL_REVISION_02_PLAN.md)
 - [Prop Sprite Baseline Decision](docs/current/PROP_SPRITE_BASELINE_DECISION.md)
+- [Backlog Refresh 2026-07-06](docs/current/BACKLOG_REFRESH_2026_07_06.md)
 
 ## Locked Visual Direction
 
