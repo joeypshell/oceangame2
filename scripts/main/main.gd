@@ -37,6 +37,7 @@ const BACKGROUND_DEPTH_CAPTURE_ZOOM := Vector2(0.52, 0.52)
 const BACKGROUND_DEPTH_CENTER_TILES := Vector2(39, 24)
 const BACKGROUND_DEPTH_PLAYER_OFFSET_TILES := Vector2(0, 8)
 const SALVAGE_COLLECTION_RADIUS := 34.0
+const HELD_SALVAGE_CAPACITY := 2
 const HAZARD_CONTACT_RADIUS := 30.0
 const HAZARD_COOLDOWN_SECONDS := 1.0
 const HAZARD_FEEDBACK_SECONDS := 0.45
@@ -103,6 +104,7 @@ func _ready() -> void:
 	var smoke_map_selector := _has_arg(user_args, engine_args, "--smoke-map-selector")
 	var smoke_hazard_interaction := _has_arg(user_args, engine_args, "--smoke-hazard-interaction")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
+	var smoke_cargo_capacity := _has_arg(user_args, engine_args, "--smoke-cargo-capacity")
 	var smoke_route_choice := _has_arg(user_args, engine_args, "--smoke-route-choice")
 	var smoke_player_facing := _has_arg(user_args, engine_args, "--smoke-player-facing")
 	var smoke_movement_feel := _has_arg(user_args, engine_args, "--smoke-movement-feel")
@@ -189,6 +191,7 @@ func _ready() -> void:
 		or smoke_map_selector
 		or smoke_hazard_interaction
 		or smoke_oxygen_pressure
+		or smoke_cargo_capacity
 		or smoke_route_choice
 		or smoke_player_facing
 		or smoke_movement_feel
@@ -227,6 +230,9 @@ func _ready() -> void:
 		return
 	if smoke_oxygen_pressure:
 		_smoke_oxygen_pressure_and_quit()
+		return
+	if smoke_cargo_capacity:
+		_smoke_cargo_capacity_and_quit()
 		return
 	if smoke_route_choice:
 		await _smoke_route_choice_and_quit()
@@ -364,13 +370,16 @@ func _process(delta: float) -> void:
 			_update_status_label()
 			return
 
-	var collected_salvage: String = _world.collect_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
-	if not collected_salvage.is_empty():
-		var collected_score: int = _world.get_salvage_score(collected_salvage)
-		_held_salvage += 1
-		_held_salvage_ids.append(collected_salvage)
-		_held_salvage_score += collected_score
-		_last_status_note = "Collected salvage +%d" % collected_score
+	if _held_salvage < HELD_SALVAGE_CAPACITY:
+		var collected_salvage: String = _world.collect_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
+		if not collected_salvage.is_empty():
+			var collected_score: int = _world.get_salvage_score(collected_salvage)
+			_held_salvage += 1
+			_held_salvage_ids.append(collected_salvage)
+			_held_salvage_score += collected_score
+			_last_status_note = "Collected salvage +%d" % collected_score
+	elif _world.has_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS):
+		_last_status_note = "Cargo full - return"
 
 	if _held_salvage > 0 and _world.is_inside_extraction(_player.global_position):
 		_banked_salvage += _held_salvage
@@ -398,6 +407,9 @@ func _smoke_salvage_loop_and_quit() -> void:
 		expected_score += int(salvage.get("score", 0))
 		_player.global_position = salvage["center"]
 		_process(0.0)
+		if _held_salvage >= HELD_SALVAGE_CAPACITY:
+			_player.global_position = _world.get_extraction_center()
+			_process(0.0)
 
 	_player.global_position = _world.get_extraction_center()
 	_process(0.0)
@@ -580,6 +592,53 @@ func _smoke_oxygen_pressure_and_quit() -> void:
 
 	_reset_run()
 	print("Oxygen pressure smoke passed: depleted, surfaced, restored salvage, refilled, and banked salvage.")
+	get_tree().quit()
+
+
+func _smoke_cargo_capacity_and_quit() -> void:
+	var salvage: Array = _world.get_salvage_centers()
+	if salvage.size() <= HELD_SALVAGE_CAPACITY:
+		push_error("Cargo capacity smoke requires more salvage than capacity.")
+		get_tree().quit(1)
+		return
+
+	for index in range(HELD_SALVAGE_CAPACITY):
+		_player.global_position = salvage[index]["center"]
+		_process(0.0)
+
+	if _held_salvage != HELD_SALVAGE_CAPACITY:
+		push_error("Cargo capacity smoke expected held cargo to reach capacity, got %d." % _held_salvage)
+		get_tree().quit(1)
+		return
+
+	var blocked_id := str(salvage[HELD_SALVAGE_CAPACITY].get("id", "salvage"))
+	_player.global_position = salvage[HELD_SALVAGE_CAPACITY]["center"]
+	_process(0.0)
+	if _held_salvage != HELD_SALVAGE_CAPACITY or _held_salvage_ids.has(blocked_id):
+		push_error("Cargo capacity smoke collected beyond capacity; held=%d ids=%s." % [_held_salvage, _held_salvage_ids])
+		get_tree().quit(1)
+		return
+	if not _world.has_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS):
+		push_error("Cargo capacity smoke lost blocked salvage %s." % blocked_id)
+		get_tree().quit(1)
+		return
+
+	_player.global_position = _world.get_extraction_center()
+	_process(0.0)
+	if _held_salvage != 0 or _banked_salvage != HELD_SALVAGE_CAPACITY:
+		push_error("Cargo capacity smoke did not bank and free capacity; held=%d banked=%d." % [_held_salvage, _banked_salvage])
+		get_tree().quit(1)
+		return
+
+	_player.global_position = salvage[HELD_SALVAGE_CAPACITY]["center"]
+	_process(0.0)
+	if _held_salvage != 1 or _held_salvage_ids[0] != blocked_id:
+		push_error("Cargo capacity smoke could not collect blocked salvage after banking.")
+		get_tree().quit(1)
+		return
+
+	_reset_run()
+	print("Cargo capacity smoke passed: capacity=%d blocked=%s banked_and_recollected=true." % [HELD_SALVAGE_CAPACITY, blocked_id])
 	get_tree().quit()
 
 
@@ -939,12 +998,14 @@ func _update_status_label() -> void:
 		return
 
 	if _total_salvage <= 0:
-		_status_label.text = "Score 0\nSalvage banked 0/0\nHeld 0\nOxygen --"
+		_status_label.text = "Score 0\nSalvage banked 0/0\nHeld 0/%d\nOxygen --" % HELD_SALVAGE_CAPACITY
 		return
 
 	var prompt := ""
 	if _run_complete:
 		prompt = "Run complete - press R"
+	elif _held_salvage >= HELD_SALVAGE_CAPACITY:
+		prompt = "Cargo full - return"
 	elif _held_salvage > 0:
 		prompt = "Return to extraction"
 	elif not _last_status_note.is_empty():
@@ -957,11 +1018,12 @@ func _update_status_label() -> void:
 	elif _oxygen_seconds <= OXYGEN_LOW_WARNING_SECONDS and not _run_complete:
 		oxygen_text = "Oxygen %ds LOW" % oxygen_seconds
 
-	_status_label.text = "Score %d\nSalvage banked %d/%d\nHeld %d (%d pts)\n%s" % [
+	_status_label.text = "Score %d\nSalvage banked %d/%d\nHeld %d/%d (%d pts)\n%s" % [
 		_banked_score,
 		_banked_salvage,
 		_total_salvage,
 		_held_salvage,
+		HELD_SALVAGE_CAPACITY,
 		_held_salvage_score,
 		oxygen_text,
 	]

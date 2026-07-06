@@ -50,6 +50,10 @@ Pure polish, broad refactors, and optional slice-03 cleanup stay out of the acti
 - Runtime scoring and cargo behavior should read authored salvage metadata rather than hard-coding per-node scene edits.
 - Visual changes should be small overlays or named asset variants, not whole-scene regeneration.
 
+## Current Gameplay Constants
+
+- Held salvage capacity starts at 2 pickups for the prototype. This is intentionally small enough to make returning to the boat meaningful in `production_slice_01` while leaving room for later cargo tuning.
+
 ## Verification Pattern
 
 Use focused checks as the pass lands:
@@ -61,6 +65,7 @@ python tools/check_asset_manifest.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-salvage-loop
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-route-choice
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-cargo-capacity
 & 'C:\Program Files\Git\cmd\git.exe' diff --check
 ```
 

@@ -267,6 +267,16 @@ func collect_salvage_near(position: Vector2, radius_px: float) -> String:
 	return ""
 
 
+func has_available_salvage_near(position: Vector2, radius_px: float) -> bool:
+	for entity in _salvage_entities:
+		var salvage_id := str(entity.get("id", "salvage"))
+		if _collected_salvage.get(salvage_id, false):
+			continue
+		if position.distance_to(_entity_center(entity)) <= radius_px:
+			return true
+	return false
+
+
 func _salvage_score(entity: Dictionary) -> int:
 	var tier := str(entity.get("tier", "common"))
 	return int(SALVAGE_TIER_SCORES.get(tier, SALVAGE_TIER_SCORES["common"]))

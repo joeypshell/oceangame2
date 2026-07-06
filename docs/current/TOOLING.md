@@ -236,6 +236,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-map-selector
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-cargo-capacity
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-player-facing
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-movement-feel
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-feedback-overlay
@@ -260,6 +261,8 @@ The map-selector smoke loads the default map, reloads `production_slice_03`, the
 The hazard-interaction smoke loads `production_slice_01`, collects one salvage item, touches an authored hazard, confirms the player resets to spawn and the held salvage is restored, recollects it, resets, and exits.
 
 The oxygen-pressure smoke loads `production_slice_01`, collects one salvage item, forces oxygen depletion, confirms the player surfaces at spawn with held salvage restored, recollects it, returns to extraction, confirms oxygen refills and salvage banks, resets, and exits.
+
+The cargo-capacity smoke loads `production_slice_01`, fills the current two-pickup held capacity, confirms a third pickup remains available while cargo is full, banks held cargo at extraction, then confirms the blocked pickup can be collected after capacity frees up.
 
 The player-facing smoke loads `production_slice_01`, asks the player controller to swim right, left, then right again, and confirms the root transform remains stable while only the player visual children flip. This catches one-frame double-facing regressions from flipping the whole `CharacterBody2D`.
 

@@ -115,7 +115,7 @@ Current terrain renderer:
 - Hides the source grid in normal preview mode.
 - Supports `--show-debug-overlay` for map debugging.
 
-The main scene also shows a compact preview overlay with map id, build label, banked score, salvage progress, held salvage score, and a scoped oxygen timer. The minimal gameplay loop lets the player collect authored salvage, return to the extraction zone to complete the run, and press `R` to reset. Hazards now have a small bump/reset interaction without a full health system.
+The main scene also shows a compact preview overlay with map id, build label, banked score, salvage progress, held salvage capacity/score, and a scoped oxygen timer. The minimal gameplay loop lets the player collect authored salvage, return to the extraction zone to complete the run, and press `R` to reset. Hazards now have a small bump/reset interaction without a full health system.
 
 Maps may use either a legacy `spawn` entity or the newer `boat_spawn` entity. `boat_spawn` is the preferred top-water entry/extraction marker for production-style maps; the player starts at its `entry_x`/`entry_y` cell, and runtime extraction checks also accept its boat rectangle.
 
@@ -190,6 +190,7 @@ python tools/check_asset_manifest.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-map-selector
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-cargo-capacity
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-route-choice
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-player-facing
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-movement-feel
@@ -436,6 +437,7 @@ Recent important commits:
 - `--smoke-player-facing` verifies the player direction-change path by keeping the root transform stable while flipping only the diver body and light-cone visuals.
 - `--smoke-movement-feel` drives the player controller through start, stop, horizontal reversal, and diagonal movement phases, then reports measured velocities for the Controlled Gameplay Pass 01 tuning pass.
 - `--smoke-route-choice` drives the player through the default slice route-choice probe by swimming from the boat entry to the authored `valuable` salvage target, collecting it, returning to extraction, and reporting the target/collection/return state.
+- `--smoke-cargo-capacity` fills the current two-pickup cargo capacity, verifies an extra nearby salvage stays available while full, banks held salvage at extraction, then verifies the blocked pickup can be collected after capacity frees up.
 - `--capture-feedback-overlay` writes `visual_captures/feedback_overlay/production_slice_01_feedback_overlay.png` as the focused review capture for the salvage/oxygen feedback overlay pass.
 - The `Godot Smoke` workflow runs all four production-slice route smokes, the default-slice route-choice smoke, and the player-facing smoke, so CI covers the default slice, its valuable salvage route, the later reference slices, and the direction-change regression path.
 - `production_slice_02` has five tuned camera captures: overview, relay entry, main chamber, lower terminal, and return route. Normal captures live in `visual_captures/production_slice_02/`; debug captures live in `visual_captures/production_slice_02_debug/`.
@@ -463,6 +465,7 @@ Recent important commits:
 - The first scoped expedition pressure is a simple oxygen timer: oxygen drains away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held/unbanked salvage to the map.
 - Current oxygen pressure timing keeps a 90-second tank, starts `LOW` feedback at 35 seconds, and escalates to `CRITICAL` at 12 seconds.
 - Salvage map data may include optional `tier` values. Missing tiers default conceptually to `common`; the current supported tiers are `common` and `valuable`. Runtime score is tier-derived for now: `common` is worth 100 and `valuable` is worth 300.
+- Held salvage capacity is currently 2 pickups. Full cargo blocks additional collection without hiding or banking the blocked pickup, and returning to extraction frees capacity.
 - There is no health, inventory screen, upgrade economy, or real enemy behavior yet.
 - Background art is still rough and secondary to proving terrain readability.
 - Normal preview uses approved current-prototype sprite assets for salvage and hazard props, with procedural fallback if a sprite cannot be loaded.
