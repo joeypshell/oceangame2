@@ -66,6 +66,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Movement-feel baseline decision: `docs/current/MOVEMENT_FEEL_BASELINE_DECISION.md`
 - Salvage/oxygen feedback plan: `docs/current/SALVAGE_OXYGEN_FEEDBACK_PLAN.md`
 - Salvage/oxygen feedback baseline decision: `docs/current/SALVAGE_OXYGEN_FEEDBACK_BASELINE_DECISION.md`
+- Salvage/oxygen feedback web preview verification: `docs/current/SALVAGE_OXYGEN_FEEDBACK_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -225,6 +226,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-06:
 
+- Closed: #108 verified the public Web preview after the salvage/oxygen feedback polish
 - Closed: #107 accepted the salvage/oxygen feedback overlay baselines for production slices 01-04
 - Closed: #106 implemented the salvage/oxygen feedback overlay polish and focused review capture
 - Closed: #105 planned the salvage/oxygen feedback readability pass
@@ -377,6 +379,7 @@ Recent important commits:
 - `docs/current/MOVEMENT_FEEL_BASELINE_DECISION.md` records #104: the current movement-feel baseline is accepted for the prototype at `200 px/s` swim speed, `620 px/s^2` acceleration, and `900 px/s^2` deceleration.
 - `docs/current/SALVAGE_OXYGEN_FEEDBACK_PLAN.md` selects the next controlled prototype target: improve the existing review overlay feedback for held/banked salvage, oxygen pressure, and reset/failure moments while preserving gameplay semantics.
 - `docs/current/SALVAGE_OXYGEN_FEEDBACK_BASELINE_DECISION.md` records #107: the clearer salvage/oxygen overlay is accepted in normal production-slice visual baselines for slices 01-04.
+- `docs/current/SALVAGE_OXYGEN_FEEDBACK_WEB_PREVIEW_VERIFICATION.md` records #108: the public Pages preview deployed the salvage/oxygen feedback runtime commit successfully, matched external build metadata, loaded without missing-resource or Godot errors, and showed the separated overlay lines in the browser screenshot.
 - `docs/current/TERRAIN_TILESET_V2_BASELINE_DECISION.md` records #96: `cave_tileset_v2.png` is approved for the current prototype terrain baseline, and accepted baselines were updated for production slices 01-04.
 - `docs/current/TERRAIN_TILESET_V2_WEB_PREVIEW_VERIFICATION.md` records #97: the public Pages preview deployed the terrain tileset v2 runtime commit successfully, matched external build metadata, and loaded the updated runtime without missing texture warnings.
 - `assets/terrain_tiles/cave_tileset_v2.png` is the active approved runtime terrain atlas; `cave_tileset_v1.png` remains committed for comparison and rollback.
