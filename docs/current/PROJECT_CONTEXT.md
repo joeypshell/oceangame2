@@ -143,6 +143,7 @@ python tools/validate_greybox_map.py maps/production_slice_01.greybox.json
 python tools/validate_greybox_map.py maps/production_slice_02.greybox.json
 python tools/validate_greybox_map.py maps/production_slice_03.greybox.json
 python tools/validate_greybox_map.py maps/production_slice_04.greybox.json
+python tools/check_production_slice_captures.py
 python tools/check_map_parity.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --import
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1
@@ -191,6 +192,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-06:
 
+- Closed: #60 added an aggregate production-slice capture completeness check and runs it in `Godot Smoke`
 - Closed: #63 accepted the current five-view `production_slice_04` normal captures as a named visual baseline
 - Closed: #62 evaluated `production_slice_04` and recommended keeping it as a validated lower-left connector/return-loop reference slice, not the default preview
 - Closed: #61 authored `production_slice_04` from the lower-left loop with generator, validation, route smoke, captures, and review sheet
@@ -312,6 +314,7 @@ Recent important commits:
 - `production_slice_03` has five authored camera captures: overview, relay entry, stacked rooms, connector, and return route. Normal captures live in `visual_captures/production_slice_03/`; debug captures live in `visual_captures/production_slice_03_debug/`.
 - `production_slice_04` has five authored camera captures: overview, relay entry, lower-left loop, curved corridor, and return route. Normal captures live in `visual_captures/production_slice_04/`; debug captures live in `visual_captures/production_slice_04_debug/`.
 - `tools/check_camera_captures.py` checks that a capture directory contains every PNG named by a map's authored `camera_tests`, ignoring Godot `.import` sidecars and reporting missing, extra, invalid, or stale-looking captures.
+- `tools/check_production_slice_captures.py` runs the committed-capture completeness check for all production slices. The `Godot Smoke` workflow runs it without `--fail-on-stale` so CI catches missing, extra, or invalid captures without requiring a display renderer or relying on checkout mtimes.
 - `visual_baselines/production_slice_01_accepted/` stores the accepted four-view production-slice visual baseline. Use `python tools/manage_production_slice_baseline.py compare` to render `references/asset_reviews/production_slice_01_visual_baseline_review.png` before accepting future visual changes.
 - `tools/manage_production_slice_baseline.py` supports `--slice production_slice_01`, `--slice production_slice_02`, `--slice production_slice_03`, and `--slice production_slice_04` for compare/accept workflows. Use an explicit `--baseline-dir visual_captures/<slice>` only for tooling sanity checks, not as acceptance.
 - `visual_baselines/production_slice_03_accepted/` stores the accepted five-view slice-03 visual baseline. Use `python tools/manage_production_slice_baseline.py --slice production_slice_03 compare` to render `references/asset_reviews/production_slice_03_visual_baseline_review.png` before accepting future slice-03 visual changes.
@@ -353,7 +356,7 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Consider workflow improvements such as CI camera-capture completeness checks (#60) or a dev-only map selector (#57) when they unblock review speed.
+1. Consider a dev-only map selector (#57) if local review speed is the priority.
 2. Keep #52/#53 as optional post-baseline slice-03 improvement issues if the accepted slice-03 reference needs intentional camera or source cleanup.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.

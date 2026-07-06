@@ -403,6 +403,20 @@ python tools/check_camera_captures.py maps/production_slice_04.greybox.json visu
 
 The checker reads expected PNG names from the map JSON, ignores Godot `.import` sidecars, fails on missing/extra/invalid PNGs, and reports captures that look older than the source map. It does not regenerate visual files.
 
+Run the aggregate committed-capture check for every production slice:
+
+```bash
+python tools/check_production_slice_captures.py
+```
+
+Use the stale-file check locally after regenerating map JSON and captures in the same workspace:
+
+```bash
+python tools/check_production_slice_captures.py --fail-on-stale
+```
+
+The `Godot Smoke` workflow runs the aggregate check without `--fail-on-stale` so CI catches missing, extra, or invalid committed captures without relying on git checkout file mtimes or a display renderer.
+
 List configured production-slice baseline targets:
 
 ```bash

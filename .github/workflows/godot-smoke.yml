@@ -11,6 +11,7 @@ on:
       - "scenes/**"
       - "scripts/**"
       - "tools/**"
+      - "visual_captures/**"
   push:
     branches:
       - main
@@ -22,6 +23,7 @@ on:
       - "scenes/**"
       - "scripts/**"
       - "tools/**"
+      - "visual_captures/**"
 
 permissions:
   contents: read
@@ -82,6 +84,9 @@ jobs:
           python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
           python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
           python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
+
+      - name: Check production slice camera captures
+        run: python tools/check_production_slice_captures.py
 
       - name: Check Godot map parity
         run: python tools/check_map_parity.py
