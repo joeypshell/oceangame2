@@ -31,6 +31,13 @@ const CAVE_TILESET_TEXTURE := "res://assets/terrain_tiles/cave_tileset_v1.png"
 const BACKGROUND_ROCKS_TEXTURE := "res://assets/terrain/background_rocks_01.png"
 const CAVE_TILESET_TEXTURE_RESOURCE := preload("res://assets/terrain_tiles/cave_tileset_v1.png")
 const BACKGROUND_ROCKS_TEXTURE_RESOURCE := preload("res://assets/terrain/background_rocks_01.png")
+const PROP_SPRITE_TEXTURES := {
+	"crate": "res://assets/props/salvage_crate_01.png",
+	"wreck_fragment": "res://assets/props/wreck_fragment_01.png",
+	"relic": "res://assets/props/relic_01.png",
+	"mine": "res://assets/props/mine_01.png",
+	"jellyfish": "res://assets/props/jellyfish_01.png",
+}
 const CAVE_TILESET_COLUMNS := 8
 const CAVE_TILESET_ROWS := 5
 const TERRAIN_SOURCE_ID := 0
@@ -78,6 +85,7 @@ var _solid_layer: TileMapLayer
 var _terrain_layer: TileMapLayer
 var _marker_root: Node2D
 var _collision_root: Node2D
+var _prop_texture_cache := {}
 
 
 func _ready() -> void:
@@ -647,19 +655,20 @@ func _load_png_texture(texture_path: String) -> Texture2D:
 	if packaged_texture != null:
 		return packaged_texture
 
-	var resource := load(texture_path)
-	if resource is Texture2D:
-		return resource
+	if ResourceLoader.exists(texture_path):
+		var resource := load(texture_path)
+		if resource is Texture2D:
+			return resource
 
 	var file := FileAccess.open(texture_path, FileAccess.READ)
 	if file == null:
-		push_warning("Unable to open terrain art texture: %s" % texture_path)
+		push_warning("Unable to open texture asset: %s" % texture_path)
 		return null
 
 	var image := Image.new()
 	var error := image.load_png_from_buffer(file.get_buffer(file.get_length()))
 	if error != OK:
-		push_warning("Unable to decode terrain art texture: %s" % texture_path)
+		push_warning("Unable to decode texture asset: %s" % texture_path)
 		return null
 
 	return ImageTexture.create_from_image(image)
@@ -673,6 +682,38 @@ func _packaged_texture(texture_path: String) -> Texture2D:
 			return BACKGROUND_ROCKS_TEXTURE_RESOURCE
 		_:
 			return null
+
+
+func _prop_texture(kind: String, fallback_kind: String) -> Texture2D:
+	var sprite_kind := kind
+	if not PROP_SPRITE_TEXTURES.has(sprite_kind):
+		sprite_kind = fallback_kind
+
+	if _prop_texture_cache.has(sprite_kind):
+		var cached = _prop_texture_cache[sprite_kind]
+		if cached is Texture2D:
+			return cached
+		return null
+
+	var texture_path := str(PROP_SPRITE_TEXTURES.get(sprite_kind, ""))
+	if texture_path.is_empty():
+		return null
+
+	var texture := _load_png_texture(texture_path)
+	_prop_texture_cache[sprite_kind] = texture
+	return texture
+
+
+func _add_prop_sprite(parent: Node2D, sprite_name: String, texture: Texture2D) -> bool:
+	if texture == null:
+		return false
+
+	var sprite := Sprite2D.new()
+	sprite.name = sprite_name
+	sprite.texture = texture
+	sprite.centered = true
+	parent.add_child(sprite)
+	return true
 
 
 func _add_marker(marker_name: String, center: Vector2, color: Color, radius: float) -> Polygon2D:
@@ -895,6 +936,9 @@ func _add_salvage_prop(marker_name: String, center: Vector2, kind: String) -> No
 	root.z_index = 8
 	_marker_root.add_child(root)
 
+	if _add_prop_sprite(root, "PropSprite", _prop_texture(kind, "crate")):
+		return root
+
 	match kind:
 		"wreck_fragment":
 			_add_wreck_fragment_prop(root)
@@ -954,6 +998,9 @@ func _add_hazard_prop(marker_name: String, center: Vector2, kind: String) -> Nod
 	root.position = center
 	root.z_index = 8
 	_marker_root.add_child(root)
+
+	if _add_prop_sprite(root, "PropSprite", _prop_texture(kind, "mine")):
+		return root
 
 	match kind:
 		"jellyfish":

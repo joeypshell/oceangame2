@@ -508,6 +508,14 @@ python tools/generate_tileset_test_map.py
 python tools/generate_organic_salvage_map.py
 ```
 
+Regenerate the first-pass salvage and hazard prop sprites:
+
+```bash
+python tools/generate_prop_sprites.py
+```
+
+This writes the draft 32x32 prop sprites under `assets/props/` and the review sheet at `references/asset_reviews/prop_sprites_01_review.png`. Runtime prop selection still comes from JSON entity `kind` values, and the renderer keeps procedural fallback art if a sprite asset cannot be loaded.
+
 Process locally generated raw chroma-key terrain assets into exact-size transparent draft PNGs:
 
 ```bash
