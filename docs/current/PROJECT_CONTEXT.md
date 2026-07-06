@@ -172,6 +172,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-05:
 
+- Closed: #43 deferred production-slice-02 visual baseline pending focused framing and relay-extraction visual blockers
 - Closed: #42 added production-slice-02 source/render/collision review sheet
 - Closed: #41 added production-slice-02 route smoke
 - Closed: #40 selected and authored second production slice from the full sketch
@@ -255,8 +256,10 @@ Recent important commits:
 - `production_slice_01` is the first focused slice from the full sketch's top-center entry hub; it preserves the selected topology, seals left/right/bottom crop edges, fills unreachable conversion pockets, applies targeted one-cell tip/notch cleanup in source generation, and adds authored boat spawn, salvage, hazards, route markers, and camera tests.
 - `production_slice_02` is the second focused slice from the full sketch's lower-right chamber route. It is a later-game destination/connector candidate, not an alternate first area. It uses an in-water `spawn` and `base` extraction zone because the region has no natural top-water boat opening.
 - `docs/current/PRODUCTION_SLICE_02_DECISION.md` records the bounds, rationale, spawn/extraction plan, and verification for the second slice.
+- `docs/current/PRODUCTION_SLICE_02_VISUAL_BASELINE_DECISION.md` records that current slice 02 captures are reviewed but not accepted as a baseline until camera framing and relay-extraction visuals are improved.
 - `--smoke-production-slice-02-route` verifies `production_slice_02` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `visual_baselines/production_slice_01_accepted/` stores the accepted four-view production-slice visual baseline. Use `python tools/manage_production_slice_baseline.py compare` to render `references/asset_reviews/production_slice_01_visual_baseline_review.png` before accepting future visual changes.
+- There is no accepted `production_slice_02` visual baseline yet; blockers are #44 camera framing and #45 readable relay extraction visual.
 - `boat_spawn` now renders as a small top-water surface craft with a hatch/tether cue at the authored entry cell while still using the source rectangle for extraction.
 - Collision is rectangular per terrain block; player collision is tuned smaller than the placeholder body art for production-slice clearance.
 - Salvage has a minimal collect-return-complete-reset loop.
@@ -292,7 +295,7 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Continue with the current GitHub issue queue. Recommended next: decide the production-slice-02 visual baseline, then tune slice 02 camera framing if needed.
+1. Continue with the current GitHub issue queue. Recommended next: tune slice 02 camera framing, then add the readable relay extraction visual before accepting a slice 02 baseline.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 

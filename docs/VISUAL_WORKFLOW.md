@@ -64,6 +64,8 @@ references/asset_reviews/production_slice_01_visual_baseline_review.png
 
 Update the accepted baseline when the team intentionally approves a new visual state. If a targeted visual change has unexpected differences, keep the baseline fixed and create a follow-up issue describing the regression or disputed change.
 
+`production_slice_02` is reviewed but not accepted as a visual baseline yet. See `docs/current/PRODUCTION_SLICE_02_VISUAL_BASELINE_DECISION.md`; resolve the focused framing and relay-extraction visual blockers before adding a slice 02 accepted baseline.
+
 ## Revision Rule
 
 Every visual change should state:
