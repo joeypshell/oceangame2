@@ -155,6 +155,7 @@ python tools/validate_greybox_map.py maps/production_slice_03.greybox.json
 python tools/validate_greybox_map.py maps/production_slice_04.greybox.json
 python tools/check_production_slice_captures.py
 python tools/check_map_parity.py
+python tools/check_asset_manifest.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --import
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-loop
@@ -206,7 +207,7 @@ Current issue state as of 2026-07-06:
 - Open: #84 plan Controlled Visual Revision 03 after the player/diver sprite pass is reviewed
 - Open: #83 add a controlled visual revision checklist/template
 - Open: #81 expose Web export build metadata so public-preview checks can detect stale Pages deploys
-- Open: #80 validate committed asset manifest paths
+- Closed: #80 validates committed asset manifest paths
 - Closed: #79 verified the public web preview after the player sprite pass
 - Closed: #78 accepted the player sprite baseline after implementation and review
 - Closed: #77 implemented the controlled player sprite pass
@@ -358,6 +359,7 @@ Recent important commits:
 - `production_slice_04` has five authored camera captures: overview, relay entry, lower-left loop, curved corridor, and return route. Normal captures live in `visual_captures/production_slice_04/`; debug captures live in `visual_captures/production_slice_04_debug/`.
 - `tools/check_camera_captures.py` checks that a capture directory contains every PNG named by a map's authored `camera_tests`, ignoring Godot `.import` sidecars and reporting missing, extra, invalid, or stale-looking captures.
 - `tools/check_production_slice_captures.py` runs the committed-capture completeness check for all production slices. The `Godot Smoke` workflow runs it without `--fail-on-stale` so CI catches missing, extra, or invalid captures without requiring a display renderer or relying on checkout mtimes.
+- `tools/check_asset_manifest.py` verifies that `draft`, `approved`, and `locked` table entries in `docs/ASSET_MANIFEST.md` still point to committed files under `assets/` or `references/asset_reviews/`, while ignoring planned future assets.
 - `visual_baselines/production_slice_01_accepted/` stores the accepted six-view production-slice visual baseline. Use `python tools/manage_production_slice_baseline.py compare` to render `references/asset_reviews/production_slice_01_visual_baseline_review.png` before accepting future visual changes.
 - `tools/manage_production_slice_baseline.py` supports `--slice production_slice_01`, `--slice production_slice_02`, `--slice production_slice_03`, and `--slice production_slice_04` for compare/accept workflows. Use an explicit `--baseline-dir visual_captures/<slice>` only for tooling sanity checks, not as acceptance.
 - `visual_baselines/production_slice_02_accepted/` stores the accepted five-view slice-02 visual baseline. Use `python tools/manage_production_slice_baseline.py --slice production_slice_02 compare` to render `references/asset_reviews/production_slice_02_visual_baseline_review.png` before accepting future slice-02 visual changes.
@@ -404,7 +406,7 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Do #80 and #81 to harden asset-path and public-preview verification.
+1. Do #81 to harden public-preview verification against stale Pages deploys.
 2. Do #83 to capture the controlled visual-revision workflow as a checklist.
 3. Do #84 after the player pass public-preview verification has been absorbed into the next controlled visual-revision plan.
 4. Keep #52/#53 as optional post-baseline slice-03 improvement issues if the accepted slice-03 reference needs intentional camera or source cleanup.

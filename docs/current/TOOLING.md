@@ -141,6 +141,14 @@ Check one map only:
 python tools/check_map_parity.py maps/cave_salvage_organic_01.greybox.json
 ```
 
+Validate committed asset-manifest paths:
+
+```bash
+python tools/check_asset_manifest.py
+```
+
+The checker reads table rows in `docs/ASSET_MANIFEST.md` whose asset path is the first column and whose status is `draft`, `approved`, or `locked`. It fails only for missing files under committed asset folders such as `assets/` and `references/asset_reviews/`, so planned future assets and prose examples do not block the check.
+
 Regenerate the SVG preview from source data:
 
 ```bash
