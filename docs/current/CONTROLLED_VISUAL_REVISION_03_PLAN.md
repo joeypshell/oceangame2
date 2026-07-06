@@ -18,7 +18,7 @@ Supporting generator/review artifact:
 - `tools/generate_boat_spawn_sprite.py`
 - `references/asset_reviews/boat_spawn_01_review.png`
 
-Implementation status: #85 adds the draft `boat_spawn_01.png` asset, generator, review sheet, and renderer integration while leaving source maps, player spawn, extraction semantics, collision, movement, gameplay logic, and accepted baselines unchanged.
+Implementation status: #85 added the `boat_spawn_01.png` asset, generator, review sheet, and renderer integration while leaving source maps, player spawn, extraction semantics, collision, movement, gameplay logic, and accepted baselines unchanged. #86 accepted the boat sprite as the current prototype baseline and refreshed the accepted slice-01 visual baseline.
 
 ## Why This Target
 

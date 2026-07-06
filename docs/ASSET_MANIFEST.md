@@ -86,7 +86,7 @@ Controlled Visual Revision 03 target: replace the procedural `boat_spawn` entry 
 
 | Asset | Size | Purpose | Status | Notes |
 |---|---:|---|---|---|
-| `assets/vehicles/boat_spawn_01.png` | 192x64 | Top-water boat entry/extraction visual | draft | Implemented under #85; preserves `boat_spawn` source rectangle and entry-cell semantics. |
+| `assets/vehicles/boat_spawn_01.png` | 192x64 | Top-water boat entry/extraction visual | approved | Implemented under #85 and accepted under #86; preserves `boat_spawn` source rectangle and entry-cell semantics. |
 
 Review sheet:
 
