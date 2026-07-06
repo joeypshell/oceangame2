@@ -21,7 +21,7 @@ Supporting generator/review artifacts:
 
 The existing `assets/terrain/background_rocks_01.png` remains a draft v1 comparison asset until the replacement is reviewed. The implementation issue should add a named variant instead of silently replacing unrelated terrain modules.
 
-Implementation status: #90 added `background_rocks_02.png`, `tools/generate_background_depth_sprite.py`, `references/asset_reviews/background_rocks_02_review.png`, and renderer integration that prefers v2 while preserving v1 fallback. Source maps, collision, terrain tiles, gameplay behavior, camera tests, approved foreground sprites, and accepted baselines remain unchanged until #91 decides whether to accept replacement baselines.
+Implementation status: #90 added `background_rocks_02.png`, `tools/generate_background_depth_sprite.py`, `references/asset_reviews/background_rocks_02_review.png`, and renderer integration that prefers v2 while preserving v1 fallback. #91 accepted the background-depth visual for the current prototype and refreshed accepted baselines for production slices 01-04. Source maps, collision, terrain tiles, gameplay behavior, camera tests, approved foreground sprites, and default preview selection remain unchanged.
 
 ## Why This Target
 
