@@ -48,10 +48,22 @@ Run the first production slice:
 .\tools\open_godot_project.ps1 -Run -ProductionSliceMap
 ```
 
+Command Prompt wrapper:
+
+```cmd
+run-production-slice-01.cmd
+```
+
 Run the second production slice:
 
 ```powershell
 .\tools\open_godot_project.ps1 -Run -ProductionSlice2Map
+```
+
+Command Prompt wrapper:
+
+```cmd
+run-production-slice-02.cmd
 ```
 
 Run the third production slice:
@@ -59,6 +71,16 @@ Run the third production slice:
 ```powershell
 .\tools\open_godot_project.ps1 -Run -ProductionSlice3Map
 ```
+
+Command Prompt wrapper:
+
+```cmd
+run-production-slice-03.cmd
+```
+
+In Command Prompt, run the `.cmd` wrappers instead of executing `.ps1` files directly. Depending on local file associations, typing a PowerShell script path from Command Prompt may open it in an editor instead of running it.
+
+Opening the Godot editor and pressing Play uses the default preview map unless Godot was launched with a `--map-path` argument. For slice 3, the in-game overlay should read `Map production_slice_03 v1`; if it reads `Map production_slice_01 v1`, the default map was launched.
 
 Run any map source by path:
 

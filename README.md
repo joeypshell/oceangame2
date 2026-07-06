@@ -78,10 +78,22 @@ The first focused production-slice source is generated from the top-center entry
 .\tools\open_godot_project.ps1 -Run -ProductionSliceMap
 ```
 
+From Command Prompt, use the wrapper:
+
+```cmd
+run-production-slice-01.cmd
+```
+
 The second focused production-slice source is generated from the lower-right chamber route of the full sketch. It is a later-game destination/connector candidate with an in-water relay spawn and extraction zone, not an alternate first area. It can be selected explicitly with:
 
 ```powershell
 .\tools\open_godot_project.ps1 -Run -ProductionSlice2Map
+```
+
+From Command Prompt, use the wrapper:
+
+```cmd
+run-production-slice-02.cmd
 ```
 
 The third focused production-slice source is generated from the upper-left room cluster of the full sketch. It is a connector/landmark room-cluster candidate with an in-water relay spawn and extraction zone. It can be selected explicitly with:
@@ -89,6 +101,14 @@ The third focused production-slice source is generated from the upper-left room 
 ```powershell
 .\tools\open_godot_project.ps1 -Run -ProductionSlice3Map
 ```
+
+From Command Prompt, use the wrapper:
+
+```cmd
+run-production-slice-03.cmd
+```
+
+Opening the Godot editor and pressing Play uses the default preview map unless Godot was launched with `--map-path`; the overlay should say `Map production_slice_03 v1` when slice 3 is loaded correctly.
 
 Regenerate and validate the greybox preview with:
 

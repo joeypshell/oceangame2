@@ -95,6 +95,8 @@ Current map-loading helper:
 - Run the first production slice locally: `.\tools\open_godot_project.ps1 -Run -ProductionSliceMap`
 - Run the second production slice locally: `.\tools\open_godot_project.ps1 -Run -ProductionSlice2Map`
 - Run the third production slice locally: `.\tools\open_godot_project.ps1 -Run -ProductionSlice3Map`
+- From Command Prompt, use the root wrappers instead of invoking `.ps1` files directly: `run-production-slice-01.cmd`, `run-production-slice-02.cmd`, or `run-production-slice-03.cmd`.
+- Opening the Godot editor and pressing Play uses the default preview map unless Godot was launched with `--map-path`; the overlay should show the requested map id.
 
 ## Web Preview Status
 
@@ -181,6 +183,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 Current issue state as of 2026-07-06:
 
 - Closed: #51 evaluated `production_slice_03` and recommended keeping it as a validated connector/landmark reference slice, not the default preview
+- Closed: #56 added simple Command Prompt wrappers for production slice 01/02/03 local launches and documented the editor Play/default-map caveat
 - Closed: #50 authored `production_slice_03` from the upper-left room cluster with generator, validation, captures, route smoke, and review sheet
 - Closed: #49 selected upper-left room cluster as production-slice-03 candidate and deferred implementation to follow-up issue
 - Closed: #48 evaluated production-slice-02 against workflow goals and recommended moving to slice 03 planning
@@ -322,9 +325,8 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Improve local non-default slice launch ergonomics so users can run slice 02/03 without accidentally falling back to the editor Play/default slice.
-2. Extend visual baseline tooling beyond `production_slice_01`, then decide slice-03 baseline status.
-3. Defer slice 04 selection until slice-03 baseline/default-preview decisions are clear.
+1. Extend visual baseline tooling beyond `production_slice_01`, then decide slice-03 baseline status.
+2. Defer slice 04 selection until slice-03 baseline/default-preview decisions are clear.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 
