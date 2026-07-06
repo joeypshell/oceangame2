@@ -61,4 +61,6 @@ Local/editor review runs also expose the map selector in the overlay, so the sup
 
 Before changing terrain, camera framing, entity visuals, or route design for an accepted slice, compare against that slice's accepted baseline and decide whether the change is an intentional replacement or a regression.
 
+Use `python tools/manage_production_slice_baseline.py compare-all` to refresh all accepted baseline/current/difference review sheets before reviewing a controlled visual change.
+
 Do not promote another slice to the default preview as part of unrelated visual or tooling work. The default-preview decision should remain a separate scoped issue with launch smoke, route smoke, capture checks, docs, and web-preview expectation updates.

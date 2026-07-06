@@ -230,6 +230,16 @@ def parse_view_ids(value: str | None, defaults: list[str]) -> list[str]:
     return view_ids
 
 
+def render_configured_comparison(slice_id: str, config: dict) -> None:
+    render_comparison(
+        slice_id,
+        config["capture_dir"],
+        config["baseline_dir"],
+        config["review_path"],
+        list(config["view_ids"]),
+    )
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -249,6 +259,10 @@ def main() -> int:
     subparsers.add_parser("accept", help="Copy current captures into the accepted baseline directory.")
     compare_parser = subparsers.add_parser("compare", help="Render baseline/current/difference review sheet.")
     compare_parser.add_argument("--output", type=Path, help="Output review sheet PNG.")
+    subparsers.add_parser(
+        "compare-all",
+        help="Render baseline/current/difference review sheets for all configured production slices.",
+    )
 
     args = parser.parse_args()
     if args.list_slices:
@@ -257,6 +271,13 @@ def main() -> int:
         return 0
     if args.command is None:
         parser.error("the following arguments are required: command")
+
+    if args.command == "compare-all":
+        if args.capture_dir or args.baseline_dir or args.views:
+            parser.error("--capture-dir, --baseline-dir, and --views are not supported with compare-all")
+        for slice_id in sorted(SLICE_CONFIGS):
+            render_configured_comparison(slice_id, SLICE_CONFIGS[slice_id])
+        return 0
 
     config = SLICE_CONFIGS[args.slice]
     capture_dir = resolve_path(args.capture_dir) if args.capture_dir else config["capture_dir"]

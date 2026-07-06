@@ -196,6 +196,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-06:
 
+- Closed: #68 added `python tools/manage_production_slice_baseline.py compare-all` for aggregate accepted-baseline review sheets
 - Closed: #67 refreshed the roadmap after accepted production slices and recorded the controlled visual-revision phase decision
 - Closed: #66 added `docs/current/PRODUCTION_SLICE_INDEX.md` as the compact status index for slices 01-04
 - Closed: #65 added all four production-slice route smokes to the `Godot Smoke` workflow
@@ -332,6 +333,7 @@ Recent important commits:
 - `visual_baselines/production_slice_02_accepted/` stores the accepted five-view slice-02 visual baseline. Use `python tools/manage_production_slice_baseline.py --slice production_slice_02 compare` to render `references/asset_reviews/production_slice_02_visual_baseline_review.png` before accepting future slice-02 visual changes.
 - `visual_baselines/production_slice_03_accepted/` stores the accepted five-view slice-03 visual baseline. Use `python tools/manage_production_slice_baseline.py --slice production_slice_03 compare` to render `references/asset_reviews/production_slice_03_visual_baseline_review.png` before accepting future slice-03 visual changes.
 - `visual_baselines/production_slice_04_accepted/` stores the accepted five-view slice-04 visual baseline. Use `python tools/manage_production_slice_baseline.py --slice production_slice_04 compare` to render `references/asset_reviews/production_slice_04_visual_baseline_review.png` before accepting future slice-04 visual changes.
+- Use `python tools/manage_production_slice_baseline.py compare-all` to refresh every accepted production-slice baseline/current/difference review sheet before controlled visual-revision work.
 - `boat_spawn` now renders as a small top-water surface craft with a hatch/tether cue at the authored entry cell while still using the source rectangle for extraction.
 - In-water `base` extraction zones now render as compact relay/sub return visuals with a spawn cue when a legacy `spawn` point sits inside the zone. The visual does not change source collision, spawn, extraction, salvage, hazard, or terrain data.
 - The review overlay includes a local/editor-only map selector for supported review maps. It reloads world/player state cleanly, preserves the debug-overlay mode, and is covered by `--smoke-map-selector`.
@@ -369,8 +371,8 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Do #68 so all accepted production-slice baselines can be compared with one command before visual revision work.
-2. Do #69 to choose the first controlled visual-revision target before changing art, renderer rules, or runtime visuals.
+1. Do #69 to choose the first controlled visual-revision target before changing art, renderer rules, or runtime visuals.
+2. Run `python tools/manage_production_slice_baseline.py compare-all` before and after controlled visual-revision work to inspect accepted-baseline differences.
 3. Keep #52/#53 as optional post-baseline slice-03 improvement issues if the accepted slice-03 reference needs intentional camera or source cleanup.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.

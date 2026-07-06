@@ -454,6 +454,14 @@ python tools/manage_production_slice_baseline.py --slice production_slice_04 com
 
 This writes the slice-specific review sheet under `references/asset_reviews/`, showing accepted baseline, current capture, and difference columns for the configured views. If the difference column reveals an unexpected visual change, keep the baseline fixed and create a follow-up issue.
 
+Render all configured accepted-baseline comparison sheets with one command:
+
+```bash
+python tools/manage_production_slice_baseline.py compare-all
+```
+
+This compares `production_slice_01` through `production_slice_04` using the committed baseline-manager config. It fails if a configured current capture or accepted baseline view is missing or unreadable, and it does not accept or overwrite baseline PNGs.
+
 For a future slice that has current captures but no accepted baseline yet, compare against the current capture directory as a tooling sanity check without accepting anything:
 
 ```powershell
