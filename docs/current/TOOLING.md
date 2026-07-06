@@ -240,6 +240,8 @@ The production-slice-03 route smoke loads `production_slice_03`, asks the world 
 
 The production-slice-04 route smoke loads `production_slice_04`, asks the world for open-water paths to each authored salvage point and back to the relay extraction zone, swims the player through those paths with the normal movement controller, confirms completion, resets, and exits.
 
+The `Godot Smoke` workflow runs all four production-slice route smoke flags so CI catches broken authored routes across the accepted/reference slices, not only the default preview loop.
+
 The map-selector smoke loads the default map, reloads `production_slice_03`, then reloads `production_slice_01` through the same clean map/player reload path used by the local review selector.
 
 The hazard-interaction smoke loads `production_slice_01`, collects one salvage item, touches an authored hazard, confirms the player resets to spawn and the held salvage is restored, recollects it, resets, and exits.

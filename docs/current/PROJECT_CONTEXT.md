@@ -194,6 +194,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-06:
 
+- Closed: #65 added all four production-slice route smokes to the `Godot Smoke` workflow
 - Closed: #64 accepted the current five-view `production_slice_02` normal captures as a named visual baseline
 - Closed: #57 added a local/editor review map selector and a headless selector reload smoke
 - Closed: #60 added an aggregate production-slice capture completeness check and runs it in `Godot Smoke`
@@ -314,6 +315,7 @@ Recent important commits:
 - `--smoke-production-slice-02-route` verifies `production_slice_02` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `--smoke-production-slice-03-route` verifies `production_slice_03` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `--smoke-production-slice-04-route` verifies `production_slice_04` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
+- The `Godot Smoke` workflow runs all four production-slice route smokes, so CI covers the default slice and the later reference slices.
 - `production_slice_02` has five tuned camera captures: overview, relay entry, main chamber, lower terminal, and return route. Normal captures live in `visual_captures/production_slice_02/`; debug captures live in `visual_captures/production_slice_02_debug/`.
 - `production_slice_03` has five authored camera captures: overview, relay entry, stacked rooms, connector, and return route. Normal captures live in `visual_captures/production_slice_03/`; debug captures live in `visual_captures/production_slice_03_debug/`.
 - `production_slice_04` has five authored camera captures: overview, relay entry, lower-left loop, curved corridor, and return route. Normal captures live in `visual_captures/production_slice_04/`; debug captures live in `visual_captures/production_slice_04_debug/`.
