@@ -80,6 +80,14 @@ Review sheet:
 references/asset_reviews/player_sprite_01_review.png
 ```
 
+## Vehicles And Extraction
+
+Controlled Visual Revision 03 target: replace the procedural `boat_spawn` entry craft drawing with a named committed boat/entry sprite asset under #85.
+
+| Asset | Size | Purpose | Status | Notes |
+|---|---:|---|---|---|
+| `assets/vehicles/boat_spawn_01.png` | 192x64 | Top-water boat entry/extraction visual | planned | CVR03 target; should preserve `boat_spawn` source rectangle and entry-cell semantics. |
+
 ## UI
 
 | Asset | Size | Purpose | Status | Notes |

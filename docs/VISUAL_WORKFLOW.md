@@ -100,6 +100,10 @@ The second controlled visual revision is planned in `docs/current/CONTROLLED_VIS
 
 Target: replace the procedural player placeholder with a named committed `player_diver_01.png` sprite while preserving player collision, movement, camera behavior, map data, and gameplay logic.
 
+The third controlled visual revision is planned in `docs/current/CONTROLLED_VISUAL_REVISION_03_PLAN.md`.
+
+Target: replace the procedural `boat_spawn` entry craft visual with a named committed boat/entry sprite while preserving source-map entry/extraction semantics, player spawn, collision, movement, camera behavior, map data, and gameplay logic.
+
 Future controlled visual revisions should start from `docs/current/CONTROLLED_VISUAL_REVISION_CHECKLIST.md`.
 
 ## Terrain Placement Rule
