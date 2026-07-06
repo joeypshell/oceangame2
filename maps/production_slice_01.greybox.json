@@ -2364,29 +2364,43 @@
       "id": "production_slice_overview",
       "center_x": 36,
       "center_y": 42,
-      "zoom": 0.27,
-      "intent": "Whole production-slice topology review."
+      "zoom": 0.36,
+      "intent": "Broad production-slice context with reduced side border."
     },
     {
       "id": "production_slice_entry_shaft",
       "center_x": 39,
-      "center_y": 14,
-      "zoom": 0.58,
-      "intent": "Boat entry, surface opening, and early descent review."
+      "center_y": 11,
+      "zoom": 0.66,
+      "intent": "Boat entry, surface opening, and first descent read."
+    },
+    {
+      "id": "production_slice_first_route_choice",
+      "center_x": 42,
+      "center_y": 25,
+      "zoom": 0.6,
+      "intent": "First route choice after the entry shaft, with nearby salvage and hazard."
     },
     {
       "id": "production_slice_central_crossing",
-      "center_x": 46,
-      "center_y": 34,
-      "zoom": 0.48,
+      "center_x": 48,
+      "center_y": 43,
+      "zoom": 0.58,
       "intent": "Central branching, nearby salvage, and hazard pressure review."
     },
     {
       "id": "production_slice_lower_loop",
       "center_x": 36,
       "center_y": 66,
-      "zoom": 0.46,
+      "zoom": 0.58,
       "intent": "Lower optional route and return-path readability review."
+    },
+    {
+      "id": "production_slice_return_to_boat",
+      "center_x": 36,
+      "center_y": 18,
+      "zoom": 0.46,
+      "intent": "Return path context from first branch back to boat extraction."
     }
   ],
   "review_questions": [

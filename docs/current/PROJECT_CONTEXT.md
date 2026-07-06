@@ -135,7 +135,7 @@ python tools/check_map_parity.py
 Capture normal visual views:
 
 ```powershell
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-camera-tests
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-camera-tests
 ```
 
 Capture the organic tileset stress-test views:
@@ -167,9 +167,9 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-05:
 
-- Open: [#38](https://github.com/joeypshell/oceangame2/issues/38) `Tune production slice camera framing and capture set`
 - Open: [#39](https://github.com/joeypshell/oceangame2/issues/39) `Prototype scoped expedition pressure for production slice`
 - Open: [#40](https://github.com/joeypshell/oceangame2/issues/40) `Select and author second production slice from full sketch`
+- Closed: #38 tuned production-slice camera framing and expanded the capture set
 - Closed: #37 debug/review marker meanings and capture route
 - Closed: #36 accepted production-slice visual baseline workflow
 - Closed: #35 readable boat-spawn entry and return visual
@@ -255,6 +255,7 @@ Recent important commits:
 - Normal preview uses first-pass readable salvage and hazard props instead of abstract marker shapes.
 - The source map/grid and entity review markers can be shown with `--show-debug-overlay`; dedicated production-slice debug captures are written with `--capture-production-slice-debug-map` to `visual_captures/production_slice_01_debug/`.
 - Debug marker roles are: cyan source grid, white route rectangles, amber boat/extraction outlines, green entry/spawn labels, yellow salvage diamonds, and red hazard squares.
+- `production_slice_01` now has six authored camera captures: overview, entry shaft, first route choice, central crossing, lower loop, and return-to-boat context. Use `--quit-after 20` when regenerating this set so every view is written.
 
 ## Recommended Next Work
 
@@ -279,9 +280,8 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. [#38](https://github.com/joeypshell/oceangame2/issues/38) tunes production-slice camera framing and capture set.
-2. [#39](https://github.com/joeypshell/oceangame2/issues/39) adds one scoped pressure mechanic only after visual/source validation is stable.
-3. [#40](https://github.com/joeypshell/oceangame2/issues/40) selects a second production slice once the first slice workflow is accepted.
+1. [#39](https://github.com/joeypshell/oceangame2/issues/39) adds one scoped pressure mechanic only after visual/source validation is stable.
+2. [#40](https://github.com/joeypshell/oceangame2/issues/40) selects a second production slice once the first slice workflow is accepted.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 
