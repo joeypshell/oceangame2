@@ -84,6 +84,12 @@ The second focused production-slice source is generated from the lower-right cha
 .\tools\open_godot_project.ps1 -Run -ProductionSlice2Map
 ```
 
+The third focused production-slice source is generated from the upper-left room cluster of the full sketch. It is a connector/landmark room-cluster candidate with an in-water relay spawn and extraction zone. It can be selected explicitly with:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -ProductionSlice3Map
+```
+
 Regenerate and validate the greybox preview with:
 
 ```bash
@@ -104,6 +110,9 @@ python tools/validate_greybox_map.py maps/production_slice_01.greybox.json
 python tools/create_production_slice_02_map.py
 python tools/render_greybox_map.py maps/production_slice_02.greybox.json references/greybox/production_slice_02.svg
 python tools/validate_greybox_map.py maps/production_slice_02.greybox.json
+python tools/create_production_slice_03_map.py
+python tools/render_greybox_map.py maps/production_slice_03.greybox.json references/greybox/production_slice_03.svg
+python tools/validate_greybox_map.py maps/production_slice_03.greybox.json
 ```
 
 Run the current Godot greybox with `project.godot`. The root scene is `scenes/main/Main.tscn`.
