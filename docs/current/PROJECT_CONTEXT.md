@@ -47,6 +47,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Post-slice workflow decision: `docs/current/POST_SLICE_WORKFLOW_DECISION.md`
 - First controlled visual-revision plan: `docs/current/CONTROLLED_VISUAL_REVISION_01_PLAN.md`
 - Second controlled visual-revision plan: `docs/current/CONTROLLED_VISUAL_REVISION_02_PLAN.md`
+- Controlled visual-revision checklist: `docs/current/CONTROLLED_VISUAL_REVISION_CHECKLIST.md`
 - Prop sprite baseline decision: `docs/current/PROP_SPRITE_BASELINE_DECISION.md`
 - Player sprite baseline decision: `docs/current/PLAYER_SPRITE_BASELINE_DECISION.md`
 - Player sprite web preview verification: `docs/current/PLAYER_SPRITE_WEB_PREVIEW_VERIFICATION.md`
@@ -208,7 +209,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 Current issue state as of 2026-07-06:
 
 - Open: #84 plan Controlled Visual Revision 03 after the player/diver sprite pass is reviewed
-- Open: #83 add a controlled visual revision checklist/template
+- Closed: #83 adds a controlled visual revision checklist/template
 - Closed: #81 exposes Web export build metadata so public-preview checks can detect stale Pages deploys
 - Closed: #80 validates committed asset manifest paths
 - Closed: #79 verified the public web preview after the player sprite pass
@@ -329,6 +330,7 @@ Recent important commits:
 - `docs/current/POST_SLICE_WORKFLOW_DECISION.md` records that the focused slice workflow is repeatable enough to move into controlled visual-revision work without productionizing the whole full sketch.
 - `docs/current/CONTROLLED_VISUAL_REVISION_01_PLAN.md` selects the first controlled visual-revision target: replace procedural salvage/hazard prop drawings with named committed sprite assets under #70.
 - `docs/current/CONTROLLED_VISUAL_REVISION_02_PLAN.md` selects the next controlled visual-revision target: replace the procedural player placeholder with a named committed `player_diver_01.png` sprite while preserving collision, movement, camera behavior, map data, and gameplay logic.
+- `docs/current/CONTROLLED_VISUAL_REVISION_CHECKLIST.md` is the reusable checklist for future controlled visual revisions, covering planning, source-of-truth constraints, capture comparison, baseline acceptance, Web preview verification, and follow-up issues.
 - `docs/current/PROP_SPRITE_BASELINE_DECISION.md` records #71: the prop sprites are approved for the current prototype, accepted baselines were updated for slices 02-04, and slice 01 baseline reconciliation was split into #75.
 - `docs/current/PLAYER_SPRITE_BASELINE_DECISION.md` records #78: the player sprite is approved for the current prototype, and accepted baselines were updated for slices 01-04.
 - `docs/current/PLAYER_SPRITE_WEB_PREVIEW_VERIFICATION.md` records #79: the public Pages preview deployed the player sprite runtime commit successfully, loaded terrain/player assets without missing texture warnings, and showed the player sprite in the browser screenshot.
@@ -409,9 +411,8 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Do #83 to capture the controlled visual-revision workflow as a checklist.
-2. Do #84 after the player pass public-preview verification has been absorbed into the next controlled visual-revision plan.
-3. Keep #52/#53 as optional post-baseline slice-03 improvement issues if the accepted slice-03 reference needs intentional camera or source cleanup.
+1. Do #84 after the player pass public-preview verification has been absorbed into the next controlled visual-revision plan.
+2. Keep #52/#53 as optional post-baseline slice-03 improvement issues if the accepted slice-03 reference needs intentional camera or source cleanup.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 

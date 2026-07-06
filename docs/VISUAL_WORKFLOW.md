@@ -84,6 +84,8 @@ Untouched assets: player, sub, salvage crates, hazards, UI, map collision.
 Expected difference: playable surfaces read more clearly while layout and props remain unchanged.
 ```
 
+Use `docs/current/CONTROLLED_VISUAL_REVISION_CHECKLIST.md` for the reusable plan, implementation, baseline review, Web preview, and follow-up sequence.
+
 ## Failure Condition
 
 A revision fails if it improves the target issue but also damages unrelated visuals, changes the map layout, changes perspective, changes scale, or introduces incompatible detail.
@@ -97,6 +99,8 @@ Target: replace procedural salvage and hazard prop drawings with named committed
 The second controlled visual revision is planned in `docs/current/CONTROLLED_VISUAL_REVISION_02_PLAN.md`.
 
 Target: replace the procedural player placeholder with a named committed `player_diver_01.png` sprite while preserving player collision, movement, camera behavior, map data, and gameplay logic.
+
+Future controlled visual revisions should start from `docs/current/CONTROLLED_VISUAL_REVISION_CHECKLIST.md`.
 
 ## Terrain Placement Rule
 
