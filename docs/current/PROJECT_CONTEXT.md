@@ -40,6 +40,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Production-slice-03 visual baseline decision: `docs/current/PRODUCTION_SLICE_03_VISUAL_BASELINE_DECISION.md`
 - Production-slice-03 default preview decision: `docs/current/PRODUCTION_SLICE_03_DEFAULT_PREVIEW_DECISION.md`
 - Production-slice-04 decision: `docs/current/PRODUCTION_SLICE_04_DECISION.md`
+- Production-slice-04 evaluation: `docs/current/PRODUCTION_SLICE_04_EVALUATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -189,7 +190,8 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-06:
 
-- Open: #62 evaluates `production_slice_04` against workflow goals after implementation
+- Open: #63 decides visual baseline status for `production_slice_04`
+- Closed: #62 evaluated `production_slice_04` and recommended keeping it as a validated lower-left connector/return-loop reference slice, not the default preview
 - Closed: #61 authored `production_slice_04` from the lower-left loop with generator, validation, route smoke, captures, and review sheet
 - Closed: #59 selected the lower-left loop as the production-slice-04 candidate and created #61 for implementation
 - Closed: #58 decided not to promote `production_slice_03`; `production_slice_01` remains the default preview map
@@ -300,6 +302,7 @@ Recent important commits:
 - `docs/current/PRODUCTION_SLICE_03_DEFAULT_PREVIEW_DECISION.md` records that slice 03 should stay a reference slice and should not replace slice 01 as the Godot or public web default preview.
 - `docs/current/PRODUCTION_SLICE_04_DECISION.md` selects the lower-left loop as the fourth focused slice candidate with bounds `x=0, y=86, w=88, h=50`, a `spawn + base` relay plan near global `(74, 104)`, and follow-up implementation issue #61.
 - `docs/current/PRODUCTION_SLICE_04_DECISION.md` also records implementation status for #61 and points to #62 for the evaluation pass.
+- `docs/current/PRODUCTION_SLICE_04_EVALUATION.md` records that slice 04 is a validated lower-left connector/return-loop reference slice. Source/collision, route smoke, relay readability, and capture completeness pass; baseline status remains separate under #63.
 - `--smoke-production-slice-02-route` verifies `production_slice_02` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `--smoke-production-slice-03-route` verifies `production_slice_03` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `--smoke-production-slice-04-route` verifies `production_slice_04` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
@@ -347,7 +350,7 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Evaluate #62, the implemented production-slice-04 lower-left loop against workflow goals.
+1. Decide #63, the visual baseline status for `production_slice_04`.
 2. Keep #52/#53 as optional post-baseline slice-03 improvement issues if the accepted slice-03 reference needs intentional camera or source cleanup.
 3. Consider workflow improvements such as a dev-only map selector or CI camera-capture completeness checks when they unblock review speed.
 
