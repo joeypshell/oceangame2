@@ -36,6 +36,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Production-slice-02 evaluation: `docs/current/PRODUCTION_SLICE_02_EVALUATION.md`
 - Production-slice-03 decision: `docs/current/PRODUCTION_SLICE_03_DECISION.md`
 - Production-slice-03 evaluation: `docs/current/PRODUCTION_SLICE_03_EVALUATION.md`
+- Production-slice-03 visual baseline decision: `docs/current/PRODUCTION_SLICE_03_VISUAL_BASELINE_DECISION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -182,6 +183,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-06:
 
+- Closed: #55 accepted the current five-view `production_slice_03` normal captures as a named visual baseline
 - Closed: #54 extended production-slice visual baseline tooling so compare/accept can target slice 01, 02, or 03 without accepting new baselines by default
 - Closed: #51 evaluated `production_slice_03` and recommended keeping it as a validated connector/landmark reference slice, not the default preview
 - Closed: #56 added simple Command Prompt wrappers for production slice 01/02/03 local launches and documented the editor Play/default-map caveat
@@ -289,8 +291,9 @@ Recent important commits:
 - `production_slice_03` has five authored camera captures: overview, relay entry, stacked rooms, connector, and return route. Normal captures live in `visual_captures/production_slice_03/`; debug captures live in `visual_captures/production_slice_03_debug/`.
 - `tools/check_camera_captures.py` checks that a capture directory contains every PNG named by a map's authored `camera_tests`, ignoring Godot `.import` sidecars and reporting missing, extra, invalid, or stale-looking captures.
 - `visual_baselines/production_slice_01_accepted/` stores the accepted four-view production-slice visual baseline. Use `python tools/manage_production_slice_baseline.py compare` to render `references/asset_reviews/production_slice_01_visual_baseline_review.png` before accepting future visual changes.
-- `tools/manage_production_slice_baseline.py` supports `--slice production_slice_01`, `--slice production_slice_02`, and `--slice production_slice_03` for compare/accept workflows. Slice 02/03 still have no accepted baseline; use an explicit `--baseline-dir visual_captures/<slice>` only for tooling sanity checks, not as acceptance.
-- There is no accepted `production_slice_02` or `production_slice_03` visual baseline yet; camera framing, route readability, and baseline acceptance should be handled intentionally per slice.
+- `tools/manage_production_slice_baseline.py` supports `--slice production_slice_01`, `--slice production_slice_02`, and `--slice production_slice_03` for compare/accept workflows. Use an explicit `--baseline-dir visual_captures/<slice>` only for tooling sanity checks, not as acceptance.
+- `visual_baselines/production_slice_03_accepted/` stores the accepted five-view slice-03 visual baseline. Use `python tools/manage_production_slice_baseline.py --slice production_slice_03 compare` to render `references/asset_reviews/production_slice_03_visual_baseline_review.png` before accepting future slice-03 visual changes.
+- There is no accepted `production_slice_02` visual baseline yet; camera framing, route readability, and baseline acceptance should be handled intentionally per slice.
 - `boat_spawn` now renders as a small top-water surface craft with a hatch/tether cue at the authored entry cell while still using the source rectangle for extraction.
 - In-water `base` extraction zones now render as compact relay/sub return visuals with a spawn cue when a legacy `spawn` point sits inside the zone. The visual does not change source collision, spawn, extraction, salvage, hazard, or terrain data.
 - Collision is rectangular per terrain block; player collision is tuned smaller than the placeholder body art for production-slice clearance.
@@ -327,9 +330,8 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Decide visual baseline status for `production_slice_03`.
-2. Decide whether `production_slice_03` should affect the default preview.
-3. Defer slice 04 selection until slice-03 baseline/default-preview decisions are clear.
+1. Decide whether `production_slice_03` should affect the default preview.
+2. Defer slice 04 selection until slice-03 default-preview decision is clear.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 
