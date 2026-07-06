@@ -2326,6 +2326,15 @@
       "intent": "Route-choice payoff target for the lower optional loop."
     },
     {
+      "id": "salvage_deep_right_cache",
+      "type": "salvage",
+      "x": 64,
+      "y": 75,
+      "kind": "relic",
+      "tier": "valuable",
+      "intent": "Second route-choice payoff on the lower-right optional branch under cargo and oxygen pressure."
+    },
+    {
       "id": "salvage_return_branch",
       "type": "salvage",
       "x": 17,

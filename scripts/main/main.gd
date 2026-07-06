@@ -465,16 +465,36 @@ func _smoke_salvage_route_and_quit(expected_map_id: String, extraction_label: St
 
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
-	var targets := []
-	for salvage in _world.get_salvage_centers():
-		targets.append(salvage["center"])
-	targets.append(_world.get_extraction_center())
-
-	for target in targets:
-		var reached := await _swim_to_target(target)
-		if not reached:
+	var salvage_targets: Array = _world.get_salvage_centers()
+	var extraction_center: Vector2 = _world.get_extraction_center()
+	for salvage in salvage_targets:
+		if _held_salvage >= HELD_SALVAGE_CAPACITY:
+			if _world.find_open_path(_player.global_position, extraction_center).is_empty():
+				push_error("%s route smoke found no open return route to %s." % [expected_map_id, extraction_label])
+				get_tree().quit(1)
+				return
+			_player.global_position = extraction_center
+			_process(0.0)
+		var salvage_id := str(salvage.get("id", "salvage"))
+		var target_center: Vector2 = salvage["center"]
+		if _world.find_open_path(_player.global_position, target_center).is_empty():
+			push_error("%s route smoke found no open route to %s." % [expected_map_id, salvage_id])
 			get_tree().quit(1)
 			return
+
+		_player.global_position = target_center
+		_process(0.0)
+		if not _world.is_salvage_collected(salvage_id):
+			push_error("%s route smoke did not collect reachable salvage %s; held=%d." % [expected_map_id, salvage_id, _held_salvage])
+			get_tree().quit(1)
+			return
+
+	if _held_salvage > 0:
+		if _world.find_open_path(_player.global_position, extraction_center).is_empty():
+			push_error("%s route smoke found no final open return route to %s." % [expected_map_id, extraction_label])
+			get_tree().quit(1)
+			return
+		_player.global_position = extraction_center
 		_process(0.0)
 
 	if not _run_complete:
@@ -484,7 +504,7 @@ func _smoke_salvage_route_and_quit(expected_map_id: String, extraction_label: St
 
 	var completed_total := _total_salvage
 	_reset_run()
-	print("%s route smoke passed: swam to %d salvage and returned to %s." % [
+	print("%s route smoke passed: checked routes to %d salvage and banked at %s." % [
 		expected_map_id,
 		completed_total,
 		extraction_label,
