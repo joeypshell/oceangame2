@@ -109,6 +109,7 @@ func _ready() -> void:
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var smoke_cargo_capacity := _has_arg(user_args, engine_args, "--smoke-cargo-capacity")
 	var smoke_route_choice := _has_arg(user_args, engine_args, "--smoke-route-choice")
+	var smoke_expanded_route_choice := _has_arg(user_args, engine_args, "--smoke-expanded-route-choice")
 	var smoke_player_facing := _has_arg(user_args, engine_args, "--smoke-player-facing")
 	var smoke_movement_feel := _has_arg(user_args, engine_args, "--smoke-movement-feel")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
@@ -159,6 +160,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_route_choice:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_expanded_route_choice:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif not requested_map_path.is_empty():
 		selected_map_path = requested_map_path
 
@@ -196,6 +199,7 @@ func _ready() -> void:
 		or smoke_oxygen_pressure
 		or smoke_cargo_capacity
 		or smoke_route_choice
+		or smoke_expanded_route_choice
 		or smoke_player_facing
 		or smoke_movement_feel
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
@@ -239,6 +243,9 @@ func _ready() -> void:
 		return
 	if smoke_route_choice:
 		await _smoke_route_choice_and_quit()
+		return
+	if smoke_expanded_route_choice:
+		await _smoke_expanded_route_choice_and_quit()
 		return
 	if smoke_player_facing:
 		_smoke_player_facing_and_quit()
@@ -780,9 +787,94 @@ func _smoke_route_choice_and_quit() -> void:
 	get_tree().quit()
 
 
+func _smoke_expanded_route_choice_and_quit() -> void:
+	if _world.map_id != "production_slice_01":
+		push_error("Expanded route choice probe loaded unexpected map: %s" % _world.map_id)
+		get_tree().quit(1)
+		return
+	if not _player.has_method("swim_in_direction"):
+		push_error("Expanded route choice probe requires player swim_in_direction().")
+		get_tree().quit(1)
+		return
+
+	var salvage: Array = _world.get_salvage_centers()
+	var lower_loop: Dictionary = _salvage_target_by_id(salvage, "salvage_lower_loop")
+	var deep_cache: Dictionary = _salvage_target_by_id(salvage, "salvage_deep_right_cache")
+	if lower_loop.is_empty() or deep_cache.is_empty():
+		push_error("Expanded route choice probe requires salvage_lower_loop and salvage_deep_right_cache.")
+		get_tree().quit(1)
+		return
+	if str(lower_loop.get("validation_route", "")) != "expanded_route_choice" or str(deep_cache.get("validation_route", "")) != "expanded_route_choice":
+		push_error("Expanded route choice probe requires both targets to declare validation_route=expanded_route_choice.")
+		get_tree().quit(1)
+		return
+
+	_player.set_physics_process(false)
+	_hazard_interactions_enabled = false
+	_player.global_position = _world.spawn_position
+	if _player.has_method("reset_motion"):
+		_player.reset_motion()
+
+	for target in [lower_loop, deep_cache]:
+		var target_id := str(target.get("id", "salvage"))
+		var reached_target := await _swim_to_target(target["center"])
+		if not reached_target:
+			get_tree().quit(1)
+			return
+		_process(0.0)
+		if not _held_salvage_ids.has(target_id):
+			push_error("Expanded route choice probe did not collect target %s; held=%d ids=%s." % [target_id, _held_salvage, _held_salvage_ids])
+			get_tree().quit(1)
+			return
+
+	var expected_score := int(lower_loop.get("score", 0)) + int(deep_cache.get("score", 0))
+	if _held_salvage != 2 or _held_salvage_score != expected_score:
+		push_error("Expanded route choice probe expected two held valuable pickups worth %d, got held=%d score=%d ids=%s." % [expected_score, _held_salvage, _held_salvage_score, _held_salvage_ids])
+		get_tree().quit(1)
+		return
+
+	var reached_return_waypoint := await _swim_to_target(lower_loop["center"])
+	if not reached_return_waypoint:
+		get_tree().quit(1)
+		return
+
+	var extraction_center: Vector2 = _world.get_extraction_center()
+	var reached_extraction := await _swim_to_target(extraction_center)
+	if not reached_extraction:
+		get_tree().quit(1)
+		return
+	_process(0.0)
+
+	if _held_salvage != 0 or _banked_salvage < 2 or _banked_score < expected_score or not _world.is_inside_extraction(_player.global_position):
+		push_error("Expanded route choice probe did not bank both targets; held=%d banked=%d score=%d position=%s." % [_held_salvage, _banked_salvage, _banked_score, _player.global_position])
+		get_tree().quit(1)
+		return
+
+	var oxygen_after_return := _oxygen_seconds
+	var banked_after_return := _banked_salvage
+	var score_after_return := _banked_score
+	_reset_run()
+	print("Expanded route choice probe passed: targets=%s,%s held_capacity=%d banked=%d score=%d returned_to=boat extraction oxygen=%.1f." % [
+		str(lower_loop.get("id", "salvage")),
+		str(deep_cache.get("id", "salvage")),
+		HELD_SALVAGE_CAPACITY,
+		banked_after_return,
+		score_after_return,
+		oxygen_after_return,
+	])
+	get_tree().quit()
+
+
 func _route_choice_target(salvage: Array) -> Dictionary:
 	for item in salvage:
 		if str(item.get("tier", "common")) == "valuable":
+			return item
+	return {}
+
+
+func _salvage_target_by_id(salvage: Array, target_id: String) -> Dictionary:
+	for item in salvage:
+		if str(item.get("id", "salvage")) == target_id:
 			return item
 	return {}
 

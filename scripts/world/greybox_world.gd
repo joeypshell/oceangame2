@@ -168,6 +168,8 @@ func get_salvage_centers() -> Array:
 			"id": str(entity.get("id", "salvage")),
 			"center": _entity_center(entity),
 			"tier": str(entity.get("tier", "common")),
+			"route_choice_id": str(entity.get("route_choice_id", "")),
+			"validation_route": str(entity.get("validation_route", "")),
 			"score": _salvage_score(entity),
 		})
 	return centers
