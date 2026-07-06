@@ -97,6 +97,7 @@ func _ready() -> void:
 	var smoke_hazard_interaction := _has_arg(user_args, engine_args, "--smoke-hazard-interaction")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var smoke_player_facing := _has_arg(user_args, engine_args, "--smoke-player-facing")
+	var smoke_movement_feel := _has_arg(user_args, engine_args, "--smoke-movement-feel")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
 	var parity_output_path := _arg_value(user_args, engine_args, "--parity-output")
 
@@ -176,6 +177,7 @@ func _ready() -> void:
 		or smoke_hazard_interaction
 		or smoke_oxygen_pressure
 		or smoke_player_facing
+		or smoke_movement_feel
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
 		or _has_arg(user_args, engine_args, "--capture-camera-tests")
 	)
@@ -214,6 +216,9 @@ func _ready() -> void:
 		return
 	if smoke_player_facing:
 		_smoke_player_facing_and_quit()
+		return
+	if smoke_movement_feel:
+		await _smoke_movement_feel_and_quit()
 		return
 
 	if _has_arg(user_args, engine_args, "--capture-greybox-screenshot"):
@@ -575,6 +580,63 @@ func _smoke_player_facing_and_quit() -> void:
 
 	print("Player facing smoke passed: root scale stayed stable while visual children flipped left/right.")
 	get_tree().quit()
+
+
+func _smoke_movement_feel_and_quit() -> void:
+	if not _player.has_method("swim_in_direction"):
+		push_error("Movement feel probe requires player swim_in_direction().")
+		get_tree().quit(1)
+		return
+
+	_player.set_physics_process(false)
+	_hazard_interactions_enabled = false
+	_player.global_position = _world.spawn_position + PLAYER_READABILITY_ENTRY_OFFSET_TILES * float(_world.tile_size)
+	if _player.has_method("reset_motion"):
+		_player.reset_motion()
+
+	await _swim_for_frames(Vector2.RIGHT, 15)
+	var start_velocity: Vector2 = _player.velocity
+	await _swim_for_frames(Vector2.ZERO, 15)
+	var stop_velocity: Vector2 = _player.velocity
+	await _swim_for_frames(Vector2.LEFT, 20)
+	var reverse_velocity: Vector2 = _player.velocity
+	await _swim_for_frames(Vector2(1.0, -1.0), 15)
+	var diagonal_velocity: Vector2 = _player.velocity
+
+	if start_velocity.x <= 0.0:
+		push_error("Movement feel probe expected positive x velocity after right input, got %s." % start_velocity)
+		get_tree().quit(1)
+		return
+	if stop_velocity.length() >= start_velocity.length():
+		push_error("Movement feel probe expected stop phase to slow the player, got start %s stop %s." % [start_velocity, stop_velocity])
+		get_tree().quit(1)
+		return
+	if reverse_velocity.x >= 0.0:
+		push_error("Movement feel probe expected negative x velocity after left reversal, got %s." % reverse_velocity)
+		get_tree().quit(1)
+		return
+	if diagonal_velocity.length() > _player.swim_speed + 1.0:
+		push_error("Movement feel probe expected diagonal speed to stay normalized, got %s." % diagonal_velocity)
+		get_tree().quit(1)
+		return
+
+	print("Movement feel probe passed: start=%s stop=%s reverse=%s diagonal=%s." % [
+		_format_vector(start_velocity),
+		_format_vector(stop_velocity),
+		_format_vector(reverse_velocity),
+		_format_vector(diagonal_velocity),
+	])
+	get_tree().quit()
+
+
+func _swim_for_frames(direction: Vector2, frame_count: int) -> void:
+	for _frame in range(frame_count):
+		_player.swim_in_direction(direction, 1.0 / 60.0)
+		await get_tree().physics_frame
+
+
+func _format_vector(value: Vector2) -> String:
+	return "(%.1f, %.1f)" % [value.x, value.y]
 
 
 func _facing_report_matches(report: Dictionary, body_flip_h: bool, light_x: float, light_scale_x: float) -> bool:

@@ -66,9 +66,10 @@ The implementation chain should use:
 
 ```powershell
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-player-facing
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-movement-feel
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-salvage-loop
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-oxygen-pressure
 & 'C:\Program Files\Git\cmd\git.exe' diff --check
 ```
 
-After #102 adds a focused movement-feel probe or capture, #103 should use that check before and after tuning.
+The `--smoke-movement-feel` probe added by #102 drives the real player controller through start, stop, reversal, and diagonal input phases. #103 should use that check before and after tuning.
