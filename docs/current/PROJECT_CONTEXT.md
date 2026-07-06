@@ -64,6 +64,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Current backlog refresh: `docs/current/BACKLOG_REFRESH_POST_GAMEPLAY_PASS_01_2026_07_06.md`
 - Controlled Gameplay Pass 01 plan: `docs/current/CONTROLLED_GAMEPLAY_PASS_01_PLAN.md`
 - Controlled Gameplay Pass 02 plan: `docs/current/CONTROLLED_GAMEPLAY_PASS_02_PLAN.md`
+- Controlled Gameplay Pass 03 plan: `docs/current/CONTROLLED_GAMEPLAY_PASS_03_PLAN.md`
 - Movement-feel baseline decision: `docs/current/MOVEMENT_FEEL_BASELINE_DECISION.md`
 - Salvage/oxygen feedback plan: `docs/current/SALVAGE_OXYGEN_FEEDBACK_PLAN.md`
 - Salvage/oxygen feedback baseline decision: `docs/current/SALVAGE_OXYGEN_FEEDBACK_BASELINE_DECISION.md`
@@ -231,6 +232,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-06:
 
+- Open active batch: #120-#128 cover Controlled Gameplay Pass 03, focused on scored salvage, cargo pressure, deterministic validation, run results, retry flow, one additional source-authored default-slice route choice, visual baseline review, and public Web preview verification.
 - Closed: #119 verified the public Web preview after the route-payoff pass
 - Closed: #118 accepted the route-payoff visual baseline for production slice 01
 - Deferred: #52 and #53 remain optional slice-03 camera/topology polish. Do not pull them into the active queue unless slice-03 presentation becomes the selected goal.
@@ -404,6 +406,7 @@ Recent important commits:
 - `docs/current/BACKLOG_REFRESH_2026_07_06.md` records the recommended issue order after #74.
 - `docs/current/BACKLOG_REFRESH_POST_GAMEPLAY_PASS_01_2026_07_06.md` records the active recommended issue order after Controlled Gameplay Pass 01 and the salvage/oxygen feedback pass.
 - `docs/current/CONTROLLED_GAMEPLAY_PASS_02_PLAN.md` selects the next controlled prototype target: one readable route-choice loop in `production_slice_01`, pairing a safer salvage route with a more valuable pickup under oxygen pressure while preserving source-of-truth map discipline.
+- `docs/current/CONTROLLED_GAMEPLAY_PASS_03_PLAN.md` selects the next controlled prototype target: make the default loop feel like an expedition by adding scored salvage, cargo pressure, compact run results, retry flow, and one more authored route decision.
 - `docs/current/OXYGEN_PRESSURE_BASELINE_DECISION.md` records #113: the current oxygen baseline keeps a 90-second tank, starts `LOW` feedback at 35 seconds, escalates to `CRITICAL` at 12 seconds, and preserves the existing refill/depletion semantics.
 - `docs/current/ROUTE_PAYOFF_VISUAL_BASELINE_DECISION.md` records #118: the tiny valuable-salvage cue on `salvage_lower_loop` is accepted in the `production_slice_01` visual baseline.
 - `docs/current/ROUTE_PAYOFF_WEB_PREVIEW_VERIFICATION.md` records #119: the public Pages preview deployed the route/payoff runtime commit successfully, matched external build metadata, initialized the Godot canvas, and emitted no missing-resource or Godot error messages.
@@ -495,7 +498,7 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Refresh the issue backlog before starting the next implementation batch.
+1. Work through the Controlled Gameplay Pass 03 batch: scored salvage, cargo pressure, run summary, retry flow, and one additional source-authored route decision.
 2. Keep #52/#53 as optional post-baseline slice-03 improvement issues unless the selected goal shifts back to slice-03 presentation.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
