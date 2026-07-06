@@ -39,6 +39,7 @@ Build a small side-view salvage game that proves:
 - [Tooling](docs/current/TOOLING.md)
 - [Production Slice Index](docs/current/PRODUCTION_SLICE_INDEX.md)
 - [Post-Slice Workflow Decision](docs/current/POST_SLICE_WORKFLOW_DECISION.md)
+- [Controlled Visual Revision 01 Plan](docs/current/CONTROLLED_VISUAL_REVISION_01_PLAN.md)
 
 ## Locked Visual Direction
 

@@ -48,13 +48,18 @@ visual_captures/tileset_test/
 
 ## Props
 
+First controlled visual revision target: replace the current procedural salvage/hazard drawings with named sprite assets under #70. Until #70 lands, these remain planned assets and the runtime still draws first-pass procedural props from `scripts/world/greybox_world.gd`.
+
 | Asset | Size | Purpose | Status | Notes |
 |---|---:|---|---|---|
-| `salvage_crate_01.png` | 32x32 | Collectible | planned | Warm accent color. |
-| `mine_01.png` | 32x32 | Hazard | planned | High readability. |
+| `assets/props/salvage_crate_01.png` | 32x32 | Collectible crate sprite | planned | Warm accent color; should replace procedural `crate` salvage art. |
+| `assets/props/wreck_fragment_01.png` | 32x32 | Collectible wreck-fragment sprite | planned | Warm metal/rust accent; should replace procedural `wreck_fragment` salvage art. |
+| `assets/props/relic_01.png` | 32x32 | Collectible relic sprite | planned | Distinct teal/gold accent; should replace procedural `relic` salvage art. |
+| `assets/props/mine_01.png` | 32x32 | Hazard mine sprite | planned | High readability; should replace procedural `mine` hazard art. |
+| `assets/props/jellyfish_01.png` | 32x32 | Hazard jellyfish sprite | planned | Red/magenta warning role; should replace procedural `jellyfish` hazard art. |
 | `lamp_01.png` | 32x64 | Cave marker or prop | planned | Optional for first pass. |
 | `coral_cluster_01.png` | 64x64 | Decoration | planned | Separate from terrain modules. |
-| `wreck_fragment_01.png` | 128x64 | Salvage-zone prop | planned | Optional for first pass. |
+| `assets/props/wreck_fragment_large_01.png` | 128x64 | Salvage-zone decoration prop | planned | Optional future prop; separate from the 32x32 collectible wreck-fragment sprite. |
 
 ## Player
 

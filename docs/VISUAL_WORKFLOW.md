@@ -88,6 +88,12 @@ Expected difference: playable surfaces read more clearly while layout and props 
 
 A revision fails if it improves the target issue but also damages unrelated visuals, changes the map layout, changes perspective, changes scale, or introduces incompatible detail.
 
+## Current Controlled Revision Plan
+
+The first controlled visual revision is planned in `docs/current/CONTROLLED_VISUAL_REVISION_01_PLAN.md`.
+
+Target: replace procedural salvage and hazard prop drawings with named committed sprite assets, then compare the result against accepted production-slice baselines before accepting any replacement baseline.
+
 ## Terrain Placement Rule
 
 In-engine terrain art should be placed from the machine-readable map data. Do not hand-tune collision, routes, or topology in Godot to make an asset fit. If art reveals a real layout problem, update `maps/cave_salvage_test_01.greybox.json`, regenerate previews/captures, and rerun the accessibility validator.

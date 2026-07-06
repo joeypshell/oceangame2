@@ -76,8 +76,12 @@ Current constraints:
 - Keep gameplay pressure minimal until controlled visual revision passes prove that assets and renderer changes can be made without damaging unrelated visuals.
 - Keep #52 and #53 as optional slice-03 post-baseline polish unless a future accepted-baseline replacement intentionally needs them.
 
-Next issue batch:
+Current next implementation issue:
 
-- [#67](https://github.com/joeypshell/oceangame2/issues/67) refresh the roadmap after accepted production slices
-- [#68](https://github.com/joeypshell/oceangame2/issues/68) add an aggregate production-slice baseline comparison command
-- [#69](https://github.com/joeypshell/oceangame2/issues/69) plan the first controlled visual revision target
+- [#70](https://github.com/joeypshell/oceangame2/issues/70) implement the controlled sprite prop pass for salvage and hazards
+
+Recently completed planning/tooling setup:
+
+- [#67](https://github.com/joeypshell/oceangame2/issues/67) refreshed the roadmap after accepted production slices
+- [#68](https://github.com/joeypshell/oceangame2/issues/68) added an aggregate production-slice baseline comparison command
+- [#69](https://github.com/joeypshell/oceangame2/issues/69) planned the first controlled visual revision target
