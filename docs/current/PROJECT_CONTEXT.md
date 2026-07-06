@@ -38,6 +38,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Production-slice-03 evaluation: `docs/current/PRODUCTION_SLICE_03_EVALUATION.md`
 - Production-slice-03 visual baseline decision: `docs/current/PRODUCTION_SLICE_03_VISUAL_BASELINE_DECISION.md`
 - Production-slice-03 default preview decision: `docs/current/PRODUCTION_SLICE_03_DEFAULT_PREVIEW_DECISION.md`
+- Production-slice-04 decision: `docs/current/PRODUCTION_SLICE_04_DECISION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -184,6 +185,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-06:
 
+- Closed: #59 selected the lower-left loop as the production-slice-04 candidate and created #61 for implementation
 - Closed: #58 decided not to promote `production_slice_03`; `production_slice_01` remains the default preview map
 - Closed: #55 accepted the current five-view `production_slice_03` normal captures as a named visual baseline
 - Closed: #54 extended production-slice visual baseline tooling so compare/accept can target slice 01, 02, or 03 without accepting new baselines by default
@@ -288,6 +290,7 @@ Recent important commits:
 - `docs/current/PRODUCTION_SLICE_03_DECISION.md` selects the upper-left room cluster as the third focused slice candidate with starting bounds `x=0, y=8, w=76, h=82` and likely `spawn + base` relay extraction.
 - `docs/current/PRODUCTION_SLICE_03_EVALUATION.md` records that slice 03 is a validated connector/landmark reference slice. Relay readability is accepted for the prototype pass, camera/source cleanup is not blocking, baseline acceptance remains separate, and slice 01 should stay the default preview for now.
 - `docs/current/PRODUCTION_SLICE_03_DEFAULT_PREVIEW_DECISION.md` records that slice 03 should stay a reference slice and should not replace slice 01 as the Godot or public web default preview.
+- `docs/current/PRODUCTION_SLICE_04_DECISION.md` selects the lower-left loop as the fourth focused slice candidate with bounds `x=0, y=86, w=88, h=50`, a `spawn + base` relay plan near global `(74, 104)`, and follow-up implementation issue #61.
 - `--smoke-production-slice-02-route` verifies `production_slice_02` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `--smoke-production-slice-03-route` verifies `production_slice_03` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `production_slice_02` has five tuned camera captures: overview, relay entry, main chamber, lower terminal, and return route. Normal captures live in `visual_captures/production_slice_02/`; debug captures live in `visual_captures/production_slice_02_debug/`.
@@ -333,7 +336,7 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Select the production-slice-04 candidate from the full sketch.
+1. Implement #61, the production-slice-04 lower-left loop source pass.
 2. Keep #52/#53 as optional post-baseline slice-03 improvement issues if the accepted slice-03 reference needs intentional camera or source cleanup.
 3. Consider workflow improvements such as a dev-only map selector or CI camera-capture completeness checks when they unblock review speed.
 
