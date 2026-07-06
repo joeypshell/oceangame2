@@ -15,6 +15,7 @@ ENTITY_TYPES = {"spawn", "boat_spawn", "salvage", "hazard"}
 POINT_ENTITY_TYPES = {"spawn", "salvage", "hazard"}
 KIND_ENTITY_TYPES = {"salvage", "hazard"}
 SALVAGE_VALUE_TIERS = {"common", "valuable"}
+ROUTE_CHOICE_METADATA_FIELDS = {"route_choice_id", "validation_route", "route_order"}
 
 
 def rect_cells(item: dict) -> set[tuple[int, int]]:
@@ -72,6 +73,40 @@ def validate_salvage_tier(value, item_label: str) -> list[str]:
     return []
 
 
+def validate_route_choice_metadata(entity: dict, item_label: str) -> list[str]:
+    failures: list[str] = []
+    route_fields = ROUTE_CHOICE_METADATA_FIELDS & set(entity.keys())
+    if not route_fields:
+        return failures
+
+    if entity.get("type") != "salvage":
+        fields = ", ".join(sorted(route_fields))
+        return [f"{item_label} route-choice metadata ({fields}) is only supported on salvage entities."]
+
+    if "route_choice_id" in entity:
+        value = entity["route_choice_id"]
+        if not isinstance(value, str) or not value:
+            failures.append(f"{item_label} route_choice_id must be a non-empty string.")
+        elif not ID_PATTERN.match(value):
+            failures.append(f"{item_label} route_choice_id {value!r} must use lower_snake_case.")
+
+    if "validation_route" in entity:
+        value = entity["validation_route"]
+        if not isinstance(value, str) or not value:
+            failures.append(f"{item_label} validation_route must be a non-empty string.")
+        elif not ID_PATTERN.match(value):
+            failures.append(f"{item_label} validation_route {value!r} must use lower_snake_case.")
+
+    if "route_order" in entity:
+        value = entity["route_order"]
+        if not is_int_value(value):
+            failures.append(f"{item_label} route_order must be an integer.")
+        elif int(value) < 0:
+            failures.append(f"{item_label} route_order must be zero or greater.")
+
+    return failures
+
+
 def validate_tile_coordinate(entity: dict, field: str, width: int, height: int) -> list[str]:
     item_label = str(entity.get("id", entity.get("type", "entity")))
     if field not in entity:
@@ -83,6 +118,22 @@ def validate_tile_coordinate(entity: dict, field: str, width: int, height: int) 
     if int(entity[field]) < 0 or int(entity[field]) >= limit:
         return [f"{item_label} field {field} is outside map bounds: {entity[field]}."]
     return []
+
+
+def validate_route_target_reachability(
+    entity: dict,
+    validation_route: str,
+    point: tuple[int, int],
+    reachable: set[tuple[int, int]],
+) -> list[str]:
+    if point in reachable:
+        return []
+    route_id = str(entity.get("route_choice_id", entity.get("id", "route_choice_target")))
+    entity_id = str(entity.get("id", "salvage"))
+    return [
+        f"Route-choice target {entity_id} for validation_route {validation_route!r} "
+        f"route_choice_id {route_id!r} is unreachable at {point}."
+    ]
 
 
 def validate_entity_schema(entities: list[dict], width: int, height: int, base_zones: list[dict]) -> list[str]:
@@ -113,6 +164,7 @@ def validate_entity_schema(entities: list[dict], width: int, height: int, base_z
                 failures.extend(validate_kind(entity["kind"], item_label))
         if entity_type == "salvage" and "tier" in entity:
             failures.extend(validate_salvage_tier(entity["tier"], item_label))
+        failures.extend(validate_route_choice_metadata(entity, item_label))
         if entity_type == "salvage" and entity.get("kind") != "stress_marker":
             has_gameplay_salvage = True
 
@@ -226,7 +278,11 @@ def main() -> int:
         if point in solid:
             failures.append(f"{entity['id']} is inside solid terrain at {point}.")
         elif point not in reachable:
-            failures.append(f"{entity['id']} is unreachable at {point}.")
+            if ROUTE_CHOICE_METADATA_FIELDS & set(entity.keys()) and entity.get("type") == "salvage":
+                validation_route = entity.get("validation_route", entity.get("route_choice_id", "route_choice"))
+                failures.extend(validate_route_target_reachability(entity, str(validation_route), point, reachable))
+            else:
+                failures.append(f"{entity['id']} is unreachable at {point}.")
 
     for zone in map_data.get("zones", []):
         if zone.get("type") == "marker":

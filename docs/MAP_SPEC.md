@@ -123,6 +123,14 @@ Playable salvage may also include an optional `tier` field. If omitted, runtime 
 
 Runtime score is currently derived from `tier`, not from per-entity authored score values. Held salvage score banks only when the player returns to extraction; oxygen or hazard resets restore held pickups and clear their held score.
 
+Playable salvage may also include optional route-choice metadata. These fields are source annotations for validation, smoke tests, and review tooling; they do not change collision or collection behavior by themselves.
+
+- `route_choice_id`: lower_snake_case id for this pickup's route/payoff role, such as `lower_loop_payoff`.
+- `validation_route`: lower_snake_case id grouping pickups that should be validated by the same route smoke, such as `expanded_route_choice`.
+- `route_order`: optional zero-or-greater integer for deterministic route traversal when a smoke should collect multiple targets in source-authored order.
+
+Route-choice metadata is currently supported on salvage entities only. A route-tagged salvage entity must still satisfy normal salvage validation: it needs a valid `kind`, optional valid `tier`, in-bounds coordinates, non-solid placement, and reachability from the player entry cell.
+
 ```json
 {
   "id": "salvage_center_crossing",
@@ -130,7 +138,10 @@ Runtime score is currently derived from `tier`, not from per-entity authored sco
   "x": 46,
   "y": 30,
   "kind": "wreck_fragment",
-  "tier": "common"
+  "tier": "valuable",
+  "route_choice_id": "central_payoff",
+  "validation_route": "expanded_route_choice",
+  "route_order": 1
 }
 ```
 
@@ -152,6 +163,7 @@ Validation expectations:
 - Entity ids must be unique.
 - Entity ids and kinds use lower_snake_case.
 - Salvage `tier`, when present, must be `common` or `valuable`.
+- Salvage route-choice metadata, when present, must use supported fields: lower_snake_case `route_choice_id`, lower_snake_case `validation_route`, and/or integer `route_order` greater than or equal to zero.
 - Entity coordinates must be inside map bounds, non-solid, and reachable from the player entry cell.
 - Maps must define exactly one `spawn` or `boat_spawn`.
 - Playable salvage maps must define a base extraction zone or use `boat_spawn` extraction. Renderer stress-test maps may use `stress_marker` salvage without an extraction zone.
