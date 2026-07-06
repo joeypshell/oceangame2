@@ -541,6 +541,14 @@ python tools/generate_tileset_test_map.py
 python tools/generate_organic_salvage_map.py
 ```
 
+Render the terrain atlas coverage review sheet:
+
+```bash
+python tools/render_terrain_atlas_coverage.py
+```
+
+This writes `references/asset_reviews/cave_tileset_v1_coverage_review.png`, labels manifest tile names, atlas coordinates, mask/open-side roles, renderer selection roles, and fails if any coordinate used by `scripts/world/greybox_world.gd` is missing from the terrain manifest. Use it before reviewing terrain tileset changes so the art pass preserves exact mask coverage.
+
 Regenerate the first-pass salvage and hazard prop sprites:
 
 ```bash

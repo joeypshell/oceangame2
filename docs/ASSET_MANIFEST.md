@@ -41,6 +41,7 @@ Review sheet:
 
 ```text
 references/asset_reviews/cave_tileset_v1_review.png
+references/asset_reviews/cave_tileset_v1_coverage_review.png
 references/asset_reviews/cave_tileset_v2_review.png
 ```
 
