@@ -139,6 +139,22 @@ jobs:
             exit 1
           fi
 
+      - name: Run player-facing smoke check
+        run: |
+          set +e
+          godot --headless --path . --smoke-player-facing 2>&1 | tee godot-player-facing.log
+          godot_status=${PIPESTATUS[0]}
+          set -e
+
+          if [ "${godot_status}" -ne 0 ]; then
+            exit "${godot_status}"
+          fi
+
+          if grep -E "SCRIPT ERROR|ERROR:" godot-player-facing.log; then
+            echo "Godot reported errors during player-facing smoke check."
+            exit 1
+          fi
+
       - name: Run production slice route smoke checks
         run: |
           run_route_smoke() {

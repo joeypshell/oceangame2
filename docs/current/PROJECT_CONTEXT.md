@@ -219,6 +219,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-06:
 
+- Closed: #100 added `--smoke-player-facing` to the `Godot Smoke` workflow
 - Closed: #84 planned Controlled Visual Revision 03 as the boat spawn entry art pass
 - Closed: #92 verified the public Web preview after the background-depth pass
 - Closed: #91 accepted the Controlled Visual Revision 04 background-depth baseline
@@ -396,7 +397,7 @@ Recent important commits:
 - `--smoke-production-slice-03-route` verifies `production_slice_03` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `--smoke-production-slice-04-route` verifies `production_slice_04` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `--smoke-player-facing` verifies the player direction-change path by keeping the root transform stable while flipping only the diver body and light-cone visuals.
-- The `Godot Smoke` workflow runs all four production-slice route smokes, so CI covers the default slice and the later reference slices.
+- The `Godot Smoke` workflow runs all four production-slice route smokes and the player-facing smoke, so CI covers the default slice, the later reference slices, and the direction-change regression path.
 - `production_slice_02` has five tuned camera captures: overview, relay entry, main chamber, lower terminal, and return route. Normal captures live in `visual_captures/production_slice_02/`; debug captures live in `visual_captures/production_slice_02_debug/`.
 - `production_slice_03` has five authored camera captures: overview, relay entry, stacked rooms, connector, and return route. Normal captures live in `visual_captures/production_slice_03/`; debug captures live in `visual_captures/production_slice_03_debug/`.
 - `production_slice_04` has five authored camera captures: overview, relay entry, lower-left loop, curved corridor, and return route. Normal captures live in `visual_captures/production_slice_04/`; debug captures live in `visual_captures/production_slice_04_debug/`.
