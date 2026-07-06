@@ -1,9 +1,9 @@
 {
   "baseline_id": "production_slice_01_accepted",
   "slice_id": "production_slice_01",
-  "accepted_at_utc": "2026-07-06T18:47:54+00:00",
+  "accepted_at_utc": "2026-07-06T20:02:52+00:00",
   "source_capture_dir": "visual_captures/production_slice_01",
-  "accepted_from_commit": "f6bfe77",
+  "accepted_from_commit": "c92572a",
   "view_ids": [
     "production_slice_overview",
     "production_slice_entry_shaft",

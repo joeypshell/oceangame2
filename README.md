@@ -46,6 +46,7 @@ Build a small side-view salvage game that proves:
 - [Backlog Refresh After Gameplay Pass 01](docs/current/BACKLOG_REFRESH_POST_GAMEPLAY_PASS_01_2026_07_06.md)
 - [Controlled Gameplay Pass 02 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_02_PLAN.md)
 - [Oxygen Pressure Baseline Decision](docs/current/OXYGEN_PRESSURE_BASELINE_DECISION.md)
+- [Route Payoff Visual Baseline Decision](docs/current/ROUTE_PAYOFF_VISUAL_BASELINE_DECISION.md)
 
 ## Locked Visual Direction
 
