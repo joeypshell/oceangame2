@@ -443,6 +443,13 @@ python tools/manage_production_slice_baseline.py --slice production_slice_04 acc
 
 The default command remains `production_slice_01` for backward compatibility. Slice-specific acceptance copies the configured captures into `visual_baselines/<slice>_accepted/` and writes a small manifest. Only run `accept` after that slice's current visuals are intentionally accepted as the comparison target.
 
+The accept command only manages the configured PNG view files and `manifest.json`. It removes generated Godot/OS sidecars such as `*.import` from the target accepted-baseline directory and fails if other unexpected files are present. To clean or verify accepted baseline directories without accepting new images:
+
+```bash
+python tools/manage_production_slice_baseline.py clean-generated --all-slices
+python tools/manage_production_slice_baseline.py check-clean --all-slices
+```
+
 Render the accepted-baseline comparison sheet:
 
 ```bash

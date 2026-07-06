@@ -19,6 +19,9 @@ BACKGROUND = (20, 34, 42, 255)
 PANEL = (10, 24, 32, 255)
 TEXT = (232, 244, 246, 255)
 MUTED = (176, 204, 212, 255)
+BASELINE_MANIFEST_NAME = "manifest.json"
+GENERATED_BASELINE_FILE_NAMES = {".DS_Store", "Thumbs.db", "desktop.ini"}
+GENERATED_BASELINE_FILE_SUFFIXES = {".import"}
 
 SLICE_CONFIGS = {
     "production_slice_01": {
@@ -131,9 +134,69 @@ def existing_capture_paths(directory: Path, view_ids: list[str]) -> list[Path]:
     return paths
 
 
+def expected_baseline_names(view_ids: list[str]) -> set[str]:
+    return {f"{view_id}.png" for view_id in view_ids} | {BASELINE_MANIFEST_NAME}
+
+
+def is_generated_baseline_file(path: Path) -> bool:
+    return path.name in GENERATED_BASELINE_FILE_NAMES or path.suffix in GENERATED_BASELINE_FILE_SUFFIXES
+
+
+def generated_baseline_files(directory: Path) -> list[Path]:
+    if not directory.exists():
+        return []
+    return sorted(path for path in directory.rglob("*") if path.is_file() and is_generated_baseline_file(path))
+
+
+def assert_path_inside(path: Path, directory: Path) -> None:
+    try:
+        path.resolve().relative_to(directory.resolve())
+    except ValueError as exc:
+        raise RuntimeError(f"Refusing to touch path outside {rel(directory)}: {path}") from exc
+
+
+def prune_generated_baseline_files(directory: Path) -> list[str]:
+    removed: list[str] = []
+    for path in generated_baseline_files(directory):
+        assert_path_inside(path, directory)
+        path.unlink()
+        removed.append(rel(path))
+    return removed
+
+
+def unexpected_baseline_files(directory: Path, view_ids: list[str]) -> list[Path]:
+    if not directory.exists():
+        return []
+    expected_names = expected_baseline_names(view_ids)
+    return sorted(
+        path
+        for path in directory.iterdir()
+        if path.is_file() and path.name not in expected_names and not is_generated_baseline_file(path)
+    )
+
+
+def assert_clean_baseline_dir(directory: Path, view_ids: list[str]) -> None:
+    generated = generated_baseline_files(directory)
+    unexpected = unexpected_baseline_files(directory, view_ids)
+    if not generated and not unexpected:
+        return
+
+    messages: list[str] = []
+    if generated:
+        messages.append("generated files: " + ", ".join(rel(path) for path in generated))
+    if unexpected:
+        messages.append("unexpected files: " + ", ".join(rel(path) for path in unexpected))
+    raise RuntimeError(f"Accepted baseline directory is not clean ({rel(directory)}): " + "; ".join(messages))
+
+
 def accept_baseline(slice_id: str, capture_dir: Path, baseline_dir: Path, view_ids: list[str]) -> None:
     capture_paths = existing_capture_paths(capture_dir, view_ids)
     baseline_dir.mkdir(parents=True, exist_ok=True)
+    removed = prune_generated_baseline_files(baseline_dir)
+    if removed:
+        print(f"Removed {len(removed)} generated baseline files from {rel(baseline_dir)}")
+    assert_clean_baseline_dir(baseline_dir, view_ids)
+
     copied: list[str] = []
     for capture_path in capture_paths:
         output_path = baseline_dir / capture_path.name
@@ -156,7 +219,21 @@ def accept_baseline(slice_id: str, capture_dir: Path, baseline_dir: Path, view_i
     }
     manifest_path = baseline_dir / "manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    assert_clean_baseline_dir(baseline_dir, view_ids)
     print(f"Accepted {len(copied)} captures into {rel(baseline_dir)}")
+
+
+def clean_configured_baseline(slice_id: str, config: dict) -> None:
+    removed = prune_generated_baseline_files(config["baseline_dir"])
+    if removed:
+        print(f"{slice_id}: removed {len(removed)} generated baseline files")
+    else:
+        print(f"{slice_id}: no generated baseline files found")
+
+
+def check_configured_baseline(slice_id: str, config: dict) -> None:
+    assert_clean_baseline_dir(config["baseline_dir"], list(config["view_ids"]))
+    print(f"{slice_id}: clean")
 
 
 def fit_image(path: Path, size: tuple[int, int]) -> Image.Image:
@@ -259,6 +336,16 @@ def main() -> int:
     subparsers.add_parser("accept", help="Copy current captures into the accepted baseline directory.")
     compare_parser = subparsers.add_parser("compare", help="Render baseline/current/difference review sheet.")
     compare_parser.add_argument("--output", type=Path, help="Output review sheet PNG.")
+    clean_parser = subparsers.add_parser(
+        "clean-generated",
+        help="Remove generated cache/sidecar files from accepted baseline directories.",
+    )
+    clean_parser.add_argument("--all-slices", action="store_true", help="Clean every configured slice baseline.")
+    check_parser = subparsers.add_parser(
+        "check-clean",
+        help="Fail if accepted baseline directories contain generated or unexpected files.",
+    )
+    check_parser.add_argument("--all-slices", action="store_true", help="Check every configured slice baseline.")
     subparsers.add_parser(
         "compare-all",
         help="Render baseline/current/difference review sheets for all configured production slices.",
@@ -279,6 +366,16 @@ def main() -> int:
             render_configured_comparison(slice_id, SLICE_CONFIGS[slice_id])
         return 0
 
+    if args.command in {"clean-generated", "check-clean"} and args.all_slices:
+        if args.capture_dir or args.baseline_dir or args.views:
+            parser.error("--capture-dir, --baseline-dir, and --views are not supported with --all-slices")
+        for slice_id in sorted(SLICE_CONFIGS):
+            if args.command == "clean-generated":
+                clean_configured_baseline(slice_id, SLICE_CONFIGS[slice_id])
+            else:
+                check_configured_baseline(slice_id, SLICE_CONFIGS[slice_id])
+        return 0
+
     config = SLICE_CONFIGS[args.slice]
     capture_dir = resolve_path(args.capture_dir) if args.capture_dir else config["capture_dir"]
     baseline_dir = resolve_path(args.baseline_dir) if args.baseline_dir else config["baseline_dir"]
@@ -289,6 +386,12 @@ def main() -> int:
     elif args.command == "compare":
         output_path = resolve_path(args.output) if args.output else config["review_path"]
         render_comparison(args.slice, capture_dir, baseline_dir, output_path, view_ids)
+    elif args.command == "clean-generated":
+        removed = prune_generated_baseline_files(baseline_dir)
+        print(f"Removed {len(removed)} generated baseline files from {rel(baseline_dir)}")
+    elif args.command == "check-clean":
+        assert_clean_baseline_dir(baseline_dir, view_ids)
+        print(f"{args.slice}: clean")
     return 0
 
 
