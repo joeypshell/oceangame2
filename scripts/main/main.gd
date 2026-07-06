@@ -418,7 +418,7 @@ func _process(delta: float) -> void:
 			_held_salvage_score += collected_score
 			_last_status_note = "Collected salvage +%d" % collected_score
 	elif _world.has_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS):
-		_last_status_note = "Cargo full - return"
+		_last_status_note = "Cargo full - return to extraction"
 
 	if _held_salvage > 0 and _world.is_inside_extraction(_player.global_position):
 		_banked_salvage += _held_salvage
@@ -880,6 +880,14 @@ func _smoke_cargo_capacity_and_quit() -> void:
 		return
 	if not _world.has_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS):
 		push_error("Cargo capacity smoke lost blocked salvage %s." % blocked_id)
+		get_tree().quit(1)
+		return
+	if _world.is_salvage_collected(blocked_id):
+		push_error("Cargo capacity smoke marked blocked salvage %s collected while cargo was full." % blocked_id)
+		get_tree().quit(1)
+		return
+	if _status_label == null or _status_label.text.find("Cargo full - return to extraction") == -1:
+		push_error("Cargo capacity smoke did not show cargo-full return feedback: %s" % _status_label.text)
 		get_tree().quit(1)
 		return
 
@@ -1491,7 +1499,7 @@ func _update_status_label() -> void:
 	elif _run_failed:
 		prompt = "Oxygen depleted - press R"
 	elif _held_salvage >= HELD_SALVAGE_CAPACITY:
-		prompt = "Cargo full - return"
+		prompt = "Cargo full - return to extraction"
 	elif _held_salvage > 0:
 		prompt = "Return to extraction"
 	elif not _last_status_note.is_empty():
