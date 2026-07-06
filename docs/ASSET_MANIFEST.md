@@ -71,7 +71,7 @@ references/asset_reviews/prop_sprites_01_review.png
 
 | Asset | Size | Purpose | Status | Notes |
 |---|---:|---|---|---|
-| `player_diver_01.png` | 96x64 | Player diver | planned | Side-view, clean readable silhouette. |
+| `assets/player/player_diver_01.png` | 96x64 | Player diver | planned | Selected target for Controlled Visual Revision 02; should replace the procedural player placeholder without changing collision or movement. |
 | `research_sub_01.png` | 192x96 | Player or support vehicle | planned | Side-view, clean illustrated style. |
 
 ## UI
