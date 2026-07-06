@@ -280,7 +280,7 @@ npm install --prefix "$env:TEMP\oceangame2-web-preview-check" playwright@1.55.0
 node tools/check_web_preview.cjs http://127.0.0.1:8060/
 ```
 
-The check fails if the web preview logs `Unable to open terrain art texture`, `Unable to create cave TileSet`, `SCRIPT ERROR`, `ERROR:`, failed resource requests, or a missing Godot canvas.
+The check fails if the web preview logs missing texture warnings such as `Unable to open texture asset`, `Unable to create cave TileSet`, `SCRIPT ERROR`, `ERROR:`, failed resource requests, or a missing Godot canvas.
 
 GitHub Actions builds the same preview in `Godot Web Export`. The workflow serves the exported build and runs `tools/check_web_preview.cjs` before uploading the artifact or deploying Pages. Download the `oceangame2-web-export` artifact from the workflow run when you need to inspect a build. The workflow also deploys GitHub Pages from `main` when Pages is already enabled for the repository. If the Pages job says it skipped deployment, open repository Settings, enable Pages, and set the source to GitHub Actions. The latest preview should then be available at `https://joeypshell.github.io/oceangame2/`.
 

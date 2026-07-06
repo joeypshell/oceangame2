@@ -11,6 +11,8 @@ const failurePatterns = [
 	/SCRIPT ERROR/i,
 	/\bERROR:/,
 	/Unable to open terrain art texture/,
+	/Unable to open texture asset/,
+	/Unable to decode texture asset/,
 	/Unable to create cave TileSet/,
 	/Failed loading resource/i,
 ];
