@@ -40,6 +40,7 @@ const SALVAGE_COLLECTION_RADIUS := 34.0
 const HELD_SALVAGE_CAPACITY := 2
 const HAZARD_CONTACT_RADIUS := 30.0
 const HAZARD_WARNING_RADIUS := 80.0
+const HAZARD_OXYGEN_PENALTY_SECONDS := 12.0
 const HAZARD_COOLDOWN_SECONDS := 1.0
 const HAZARD_FEEDBACK_SECONDS := 0.45
 const OXYGEN_MAX_SECONDS := 90.0
@@ -784,6 +785,7 @@ func _smoke_hazard_interaction_and_quit() -> void:
 		get_tree().quit(1)
 		return
 
+	var oxygen_before_hit := _oxygen_seconds
 	_player.global_position = warning_hazard["center"]
 	_hazard_cooldown_seconds = 0.0
 	_process(0.0)
@@ -793,6 +795,15 @@ func _smoke_hazard_interaction_and_quit() -> void:
 		return
 	if _player.global_position.distance_to(_world.spawn_position) > 2.0:
 		push_error("Hazard smoke did not return player to spawn.")
+		get_tree().quit(1)
+		return
+	var expected_oxygen_after_hit := oxygen_before_hit - HAZARD_OXYGEN_PENALTY_SECONDS
+	if _run_failed or not is_equal_approx(_oxygen_seconds, expected_oxygen_after_hit):
+		push_error("Hazard smoke expected oxygen %.1f after penalty, got %.1f failed=%s." % [expected_oxygen_after_hit, _oxygen_seconds, str(_run_failed)])
+		get_tree().quit(1)
+		return
+	if _status_label == null or _status_label.text.find("oxygen -%ds" % int(HAZARD_OXYGEN_PENALTY_SECONDS)) == -1:
+		push_error("Hazard smoke did not show oxygen penalty feedback: %s" % _status_label.text)
 		get_tree().quit(1)
 		return
 
@@ -805,7 +816,27 @@ func _smoke_hazard_interaction_and_quit() -> void:
 		return
 
 	_reset_run()
-	print("Hazard interaction smoke passed: warned near hazard, hit hazard, reset to spawn, restored dropped salvage, and recollected it.")
+	_player.global_position = salvage[0]["center"]
+	_process(0.0)
+	_oxygen_seconds = HAZARD_OXYGEN_PENALTY_SECONDS * 0.5
+	_player.global_position = warning_hazard["center"]
+	_hazard_cooldown_seconds = 0.0
+	_process(0.0)
+	if not _run_failed or _held_salvage != 0 or not _held_salvage_ids.is_empty():
+		push_error("Hazard smoke expected oxygen failure after low-oxygen hazard hit; failed=%s held=%d ids=%s." % [str(_run_failed), _held_salvage, _held_salvage_ids])
+		get_tree().quit(1)
+		return
+	if _world.is_salvage_collected(collected_id):
+		push_error("Hazard smoke low-oxygen failure did not restore held salvage %s." % collected_id)
+		get_tree().quit(1)
+		return
+	if not _result_panel.visible or _result_label == null or _result_label.text.find("Expedition failed") == -1:
+		push_error("Hazard smoke low-oxygen penalty did not show failed result panel: %s" % _result_label.text)
+		get_tree().quit(1)
+		return
+
+	_reset_run()
+	print("Hazard interaction smoke passed: warned near hazard, applied %.0fs oxygen penalty, reset/restored salvage, and verified low-oxygen failure." % HAZARD_OXYGEN_PENALTY_SECONDS)
 	get_tree().quit()
 
 
@@ -1458,14 +1489,19 @@ func _handle_oxygen_depleted() -> void:
 
 func _handle_hazard_hit(hazard_id: String) -> void:
 	_hazard_warning_id = ""
+	var oxygen_depleted := _apply_hazard_oxygen_penalty()
+	if oxygen_depleted:
+		_handle_oxygen_depleted()
+		return
+
 	if not _held_salvage_ids.is_empty():
 		_world.restore_salvage(_held_salvage_ids)
 		_held_salvage_ids = []
 		_held_salvage = 0
 		_held_salvage_score = 0
-		_last_status_note = "Hazard hit: dropped held"
+		_last_status_note = "Hazard hit: dropped held, oxygen -%ds" % int(HAZARD_OXYGEN_PENALTY_SECONDS)
 	else:
-		_last_status_note = "Hazard hit: reset"
+		_last_status_note = "Hazard hit: oxygen -%ds" % int(HAZARD_OXYGEN_PENALTY_SECONDS)
 
 	_hazard_cooldown_seconds = HAZARD_COOLDOWN_SECONDS
 	_hazard_feedback_seconds = HAZARD_FEEDBACK_SECONDS
@@ -1474,6 +1510,11 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 		_player.reset_motion()
 	if _player.has_method("snap_camera"):
 		_player.snap_camera()
+
+
+func _apply_hazard_oxygen_penalty() -> bool:
+	_oxygen_seconds = maxf(0.0, _oxygen_seconds - HAZARD_OXYGEN_PENALTY_SECONDS)
+	return _oxygen_seconds <= 0.0
 
 
 func _update_hazard_warning() -> void:
