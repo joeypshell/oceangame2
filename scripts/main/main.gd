@@ -48,6 +48,7 @@ const OXYGEN_REFILL_SECONDS_PER_SECOND := 25.0
 const OXYGEN_LOW_WARNING_SECONDS := 35.0
 const OXYGEN_CRITICAL_WARNING_SECONDS := 12.0
 const OXYGEN_BONUS_POINTS_PER_SECOND := 1
+const SAFE_ROUTE_CHOICE_ID := "safe_route_choice"
 const EXPANDED_ROUTE_CHOICE_ID := "expanded_route_choice"
 const REVIEW_MAP_OPTIONS := [
 	{"label": "Production 01", "path": PRODUCTION_SLICE_MAP_PATH},
@@ -122,6 +123,7 @@ func _ready() -> void:
 	var smoke_route_choice := _has_arg(user_args, engine_args, "--smoke-route-choice")
 	var smoke_route_choice_metadata := _has_arg(user_args, engine_args, "--smoke-route-choice-metadata")
 	var smoke_expanded_route_choice := _has_arg(user_args, engine_args, "--smoke-expanded-route-choice")
+	var smoke_safe_deep_route_choice := _has_arg(user_args, engine_args, "--smoke-safe-deep-route-choice")
 	var smoke_player_facing := _has_arg(user_args, engine_args, "--smoke-player-facing")
 	var smoke_movement_feel := _has_arg(user_args, engine_args, "--smoke-movement-feel")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
@@ -184,6 +186,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_expanded_route_choice:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_safe_deep_route_choice:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif not requested_map_path.is_empty():
 		selected_map_path = requested_map_path
 
@@ -227,6 +231,7 @@ func _ready() -> void:
 		or smoke_route_choice
 		or smoke_route_choice_metadata
 		or smoke_expanded_route_choice
+		or smoke_safe_deep_route_choice
 		or smoke_player_facing
 		or smoke_movement_feel
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
@@ -288,6 +293,9 @@ func _ready() -> void:
 		return
 	if smoke_expanded_route_choice:
 		await _smoke_expanded_route_choice_and_quit()
+		return
+	if smoke_safe_deep_route_choice:
+		await _smoke_safe_deep_route_choice_and_quit()
 		return
 	if smoke_player_facing:
 		_smoke_player_facing_and_quit()
@@ -1207,6 +1215,116 @@ func _smoke_expanded_route_choice_and_quit() -> void:
 		oxygen_after_return,
 	])
 	get_tree().quit()
+
+
+func _smoke_safe_deep_route_choice_and_quit() -> void:
+	if _world.map_id != "production_slice_01":
+		push_error("Safe/deep route comparison smoke loaded unexpected map: %s" % _world.map_id)
+		get_tree().quit(1)
+		return
+	if not _player.has_method("swim_in_direction"):
+		push_error("Safe/deep route comparison smoke requires player swim_in_direction().")
+		get_tree().quit(1)
+		return
+
+	var salvage: Array = _world.get_salvage_centers()
+	var safe_targets: Array = _route_choice_targets_for_route(salvage, SAFE_ROUTE_CHOICE_ID)
+	if safe_targets.is_empty():
+		push_error("Safe/deep route comparison smoke requires at least one target for validation_route=%s." % SAFE_ROUTE_CHOICE_ID)
+		get_tree().quit(1)
+		return
+	var deep_targets: Array = _route_choice_targets_for_route(salvage, EXPANDED_ROUTE_CHOICE_ID)
+	if deep_targets.size() < 2:
+		push_error("Safe/deep route comparison smoke requires at least two targets for validation_route=%s, got %d." % [EXPANDED_ROUTE_CHOICE_ID, deep_targets.size()])
+		get_tree().quit(1)
+		return
+
+	var safe_result: Dictionary = await _run_route_comparison_path("safe", safe_targets, false)
+	if safe_result.is_empty():
+		get_tree().quit(1)
+		return
+	_reset_run()
+	var deep_result: Dictionary = await _run_route_comparison_path("deep", deep_targets, true)
+	if deep_result.is_empty():
+		get_tree().quit(1)
+		return
+
+	var safe_score := int(safe_result.get("score", 0))
+	var deep_score := int(deep_result.get("score", 0))
+	var safe_oxygen := float(safe_result.get("oxygen", 0.0))
+	var deep_oxygen := float(deep_result.get("oxygen", 0.0))
+	if deep_score <= safe_score:
+		push_error("Safe/deep route comparison smoke expected deep score > safe score, got deep=%d safe=%d." % [deep_score, safe_score])
+		get_tree().quit(1)
+		return
+	if deep_oxygen >= safe_oxygen:
+		push_error("Safe/deep route comparison smoke expected deep oxygen margin below safe margin, got deep=%.1f safe=%.1f." % [deep_oxygen, safe_oxygen])
+		get_tree().quit(1)
+		return
+
+	_reset_run()
+	print("Safe/deep route comparison smoke passed: safe_targets=%s safe_cargo=%d/%d safe_banked=%d safe_score=%d safe_oxygen=%.1f deep_targets=%s deep_cargo=%d/%d deep_banked=%d deep_score=%d deep_oxygen=%.1f." % [
+		str(safe_result.get("target_ids", "")),
+		int(safe_result.get("cargo", 0)),
+		HELD_SALVAGE_CAPACITY,
+		int(safe_result.get("banked", 0)),
+		safe_score,
+		safe_oxygen,
+		str(deep_result.get("target_ids", "")),
+		int(deep_result.get("cargo", 0)),
+		HELD_SALVAGE_CAPACITY,
+		int(deep_result.get("banked", 0)),
+		deep_score,
+		deep_oxygen,
+	])
+	get_tree().quit()
+
+
+func _run_route_comparison_path(route_label: String, route_targets: Array, return_via_first_target: bool) -> Dictionary:
+	_player.set_physics_process(false)
+	_hazard_interactions_enabled = false
+	_player.global_position = _world.spawn_position
+	if _player.has_method("reset_motion"):
+		_player.reset_motion()
+
+	var target_ids := PackedStringArray()
+	var expected_score := 0
+	for target in route_targets:
+		var target_id := str(target.get("id", "salvage"))
+		target_ids.append(target_id)
+		expected_score += int(target.get("score", 0))
+		var reached_target := await _swim_to_target(target["center"])
+		if not reached_target:
+			return {}
+		_process(0.0)
+		if not _held_salvage_ids.has(target_id):
+			push_error("Safe/deep route comparison smoke did not collect %s target %s; held=%d ids=%s." % [route_label, target_id, _held_salvage, _held_salvage_ids])
+			return {}
+
+	if _held_salvage != route_targets.size() or _held_salvage_score != expected_score:
+		push_error("Safe/deep route comparison smoke expected %s route to hold %d pickups worth %d, got held=%d score=%d ids=%s." % [route_label, route_targets.size(), expected_score, _held_salvage, _held_salvage_score, _held_salvage_ids])
+		return {}
+
+	if return_via_first_target:
+		var reached_return_waypoint := await _swim_to_target(route_targets[0]["center"])
+		if not reached_return_waypoint:
+			return {}
+
+	var reached_extraction := await _swim_to_target(_world.get_extraction_center())
+	if not reached_extraction:
+		return {}
+	_process(0.0)
+	if _held_salvage != 0 or _banked_salvage < route_targets.size() or _banked_score < expected_score or not _world.is_inside_extraction(_player.global_position):
+		push_error("Safe/deep route comparison smoke did not bank %s route; held=%d banked=%d score=%d position=%s." % [route_label, _held_salvage, _banked_salvage, _banked_score, _player.global_position])
+		return {}
+
+	return {
+		"target_ids": ",".join(target_ids),
+		"cargo": route_targets.size(),
+		"banked": _banked_salvage,
+		"score": _banked_score,
+		"oxygen": _oxygen_seconds,
+	}
 
 
 func _smoke_route_choice_metadata_and_quit() -> void:

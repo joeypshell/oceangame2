@@ -235,6 +235,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-04-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-route-choice-metadata
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expanded-route-choice
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-safe-deep-route-choice
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-map-selector
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-pressure
@@ -257,6 +258,8 @@ The production-slice route smoke loads `production_slice_01`, checks open-water 
 The route-choice metadata smoke loads `production_slice_01`, verifies the ordered `expanded_route_choice` targets have route-choice IDs, positive valuable scores, and open source routes from spawn and back to extraction, then exits without swimming the player.
 
 The expanded route-choice smoke loads `production_slice_01`, verifies the source route metadata for `salvage_lower_loop` and `salvage_deep_right_cache`, swims through both valuable targets, returns to the boat with full cargo, reports target ids, held capacity, banked salvage, score, and oxygen, resets, and exits.
+
+The safe/deep route-choice smoke loads `production_slice_01`, swims one run to the short `safe_route_choice` target and a second run through the deeper `expanded_route_choice` targets, reports target ids, cargo, banked salvage, score, and oxygen for both runs, and asserts the deep route has higher payoff with lower remaining oxygen.
 
 The production-slice-02 route smoke loads `production_slice_02`, asks the world for open-water paths to each authored salvage point and back to the relay extraction zone, swims the player through those paths with the normal movement controller, confirms completion, resets, and exits.
 
