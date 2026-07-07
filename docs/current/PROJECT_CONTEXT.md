@@ -1,6 +1,6 @@
 # Project Context
 
-Last updated: 2026-07-06
+Last updated: 2026-07-07
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
@@ -66,6 +66,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Controlled Gameplay Pass 02 plan: `docs/current/CONTROLLED_GAMEPLAY_PASS_02_PLAN.md`
 - Controlled Gameplay Pass 03 plan: `docs/current/CONTROLLED_GAMEPLAY_PASS_03_PLAN.md`
 - Controlled Gameplay Pass 04 plan: `docs/current/CONTROLLED_GAMEPLAY_PASS_04_PLAN.md`
+- Controlled Gameplay Pass 04 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_04_CLOSEOUT.md`
 - Movement-feel baseline decision: `docs/current/MOVEMENT_FEEL_BASELINE_DECISION.md`
 - Salvage/oxygen feedback plan: `docs/current/SALVAGE_OXYGEN_FEEDBACK_PLAN.md`
 - Salvage/oxygen feedback baseline decision: `docs/current/SALVAGE_OXYGEN_FEEDBACK_BASELINE_DECISION.md`
@@ -245,9 +246,9 @@ Open `http://127.0.0.1:8060/`. Do not open `exports/web/index.html` directly.
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Issues should include acceptance criteria, relevant files, implementation notes, and verification steps. When implementing immediately, still create the issue and close it with commit hashes and verification notes.
 
-Current issue state as of 2026-07-06:
+Current issue state as of 2026-07-07:
 
-- Open active batch: #129-#148 cover Controlled Gameplay Pass 04, focused on route-choice metadata, safe-versus-deep route validation, session best score, oxygen bonus/result breakdown, cargo/salvage feedback, hazard warning/penalty pressure, route-outcome review capture, visual baseline review, web verification, and pass closeout.
+- Closed: #129-#148 completed Controlled Gameplay Pass 04, including route-choice metadata, safe-versus-deep validation, session best score, oxygen bonus/result breakdown, cargo/salvage feedback, hazard warning/penalty pressure, route-outcome review capture, visual baseline review, public Web verification, and pass closeout.
 - Closed: #120-#128 completed Controlled Gameplay Pass 03, including scored salvage, cargo pressure, deterministic validation, run results, retry flow, one additional source-authored default-slice route choice, visual baseline review, and public Web preview verification.
 - Closed: #119 verified the public Web preview after the route-payoff pass
 - Closed: #118 accepted the route-payoff visual baseline for production slice 01
@@ -424,6 +425,7 @@ Recent important commits:
 - `docs/current/CONTROLLED_GAMEPLAY_PASS_02_PLAN.md` selects the next controlled prototype target: one readable route-choice loop in `production_slice_01`, pairing a safer salvage route with a more valuable pickup under oxygen pressure while preserving source-of-truth map discipline.
 - `docs/current/CONTROLLED_GAMEPLAY_PASS_03_PLAN.md` selects the next controlled prototype target: make the default loop feel like an expedition by adding scored salvage, cargo pressure, compact run results, retry flow, and one more authored route decision.
 - `docs/current/CONTROLLED_GAMEPLAY_PASS_04_PLAN.md` selects the next controlled prototype target: make the expedition loop easier to read and more worth replaying with route metadata, safe-versus-deep validation, best-score/bonus feedback, hazard pressure, and focused visual/Web review.
+- `docs/current/CONTROLLED_GAMEPLAY_PASS_04_CLOSEOUT.md` records #148: Pass 04 is complete, the next recommended pass should focus on moment-to-moment interaction before broader map scale, and the next issue batch should be concrete timed/tool-like salvage interaction work rather than a vague epic.
 - `docs/current/OXYGEN_PRESSURE_BASELINE_DECISION.md` records #113/#143: the current oxygen baseline keeps a 90-second tank, starts `LOW` feedback at 40 seconds, escalates to `CRITICAL` at 15 seconds, and preserves the existing refill/depletion semantics.
 - `docs/current/ROUTE_PAYOFF_VISUAL_BASELINE_DECISION.md` records #118: the tiny valuable-salvage cue on `salvage_lower_loop` is accepted in the `production_slice_01` visual baseline.
 - `docs/current/EXPEDITION_LOOP_VISUAL_BASELINE_DECISION.md` records #127: the current `production_slice_01` expedition-loop captures are accepted with score/cargo/oxygen overlay text and the new `salvage_deep_right_cache` cue; generated `.import` sidecars were removed from accepted production-slice baselines.
@@ -533,8 +535,9 @@ Accepted constraints for the next batch:
 
 Recommended next order:
 
-1. Work through the Controlled Gameplay Pass 04 batch: route metadata, safe/deep route validation, best-score and oxygen-bonus payoff, cargo/salvage/hazard feedback, route-outcome capture, visual baseline review, and public Web verification.
-2. Keep #52/#53 as optional post-baseline slice-03 improvement issues unless the selected goal shifts back to slice-03 presentation.
+1. Create a Controlled Gameplay Pass 05 batch around one moment-to-moment salvage interaction, such as timed/tool-like salvage, with source metadata, validator support, focused runtime implementation, smoke coverage, capture, visual review, and Web verification.
+2. Keep map scale as the next evaluation after that interaction pass; larger routes will be more useful once there is another meaningful in-cave verb to place and validate.
+3. Keep #52/#53 as optional post-baseline slice-03 improvement issues unless the selected goal shifts back to slice-03 presentation.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 
