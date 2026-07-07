@@ -270,7 +270,17 @@ def build_map_data(source_map: dict) -> dict:
                 "facing": "right",
                 "intent": "Top-water boat entry and extraction marker for the first production slice.",
             },
-            {"id": "salvage_entry_shaft", "type": "salvage", "x": 38, "y": 18, "kind": "crate"},
+            {
+                "id": "salvage_entry_shaft",
+                "type": "salvage",
+                "x": 38,
+                "y": 18,
+                "kind": "crate",
+                "route_choice_id": "safe_entry_pickup",
+                "validation_route": "safe_route_choice",
+                "route_order": 0,
+                "intent": "Safe route target near the entry shaft for short collect-return comparison.",
+            },
             {"id": "salvage_center_crossing", "type": "salvage", "x": 46, "y": 30, "kind": "wreck_fragment"},
             {"id": "salvage_right_branch", "type": "salvage", "x": 64, "y": 24, "kind": "crate"},
             {

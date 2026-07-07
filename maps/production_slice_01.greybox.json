@@ -2300,7 +2300,11 @@
       "type": "salvage",
       "x": 38,
       "y": 18,
-      "kind": "crate"
+      "kind": "crate",
+      "route_choice_id": "safe_entry_pickup",
+      "validation_route": "safe_route_choice",
+      "route_order": 0,
+      "intent": "Safe route target near the entry shaft for short collect-return comparison."
     },
     {
       "id": "salvage_center_crossing",
