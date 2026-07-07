@@ -10,6 +10,8 @@
 
 `visual_captures/production_slice_01/` contains generated screenshots from the first focused production slice.
 
+`visual_captures/route_outcome/` contains a focused generated screenshot of the completed route-outcome result panel for Controlled Gameplay review.
+
 These captures are not automatically approved baselines. They are review artifacts used to compare the current in-engine result against `visual_baselines/` and the art direction docs.
 
 Preview captures include the compact review overlay with map id, build label, and salvage progress.
@@ -53,3 +55,11 @@ Regenerate first production-slice captures with:
 ```
 
 Those named views come from `camera_tests` in `maps/production_slice_01.greybox.json`.
+
+Regenerate the focused route-outcome result capture with:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-route-outcome-result
+```
+
+This capture completes a deterministic route-tagged collect-return run and is a review artifact, not an accepted baseline by itself.

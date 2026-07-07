@@ -206,6 +206,7 @@ python tools/check_asset_manifest.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-player-facing
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-movement-feel
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-feedback-overlay
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-route-outcome-result
 & 'C:\Program Files\Git\cmd\git.exe' diff --check
 ```
 
@@ -464,6 +465,7 @@ Recent important commits:
 - `--smoke-route-outcome-result` completes a route-tagged collect-return run, verifies the result panel reports `Route: Deep route`, resets, and verifies a generic failure result does not show stale route text.
 - `--smoke-salvage-loop` also verifies the completion-only expedition result panel reports banked salvage score, oxygen bonus, best score, and salvage totals after a full collect-return run.
 - `--capture-feedback-overlay` writes `visual_captures/feedback_overlay/production_slice_01_feedback_overlay.png` as the focused review capture for the salvage/oxygen feedback overlay pass.
+- `--capture-route-outcome-result` writes `visual_captures/route_outcome/production_slice_01_route_outcome_result.png` after completing a deterministic route-tagged collect-return run; it is a review aid for Pass 04 result-panel readability, not baseline acceptance.
 - The `Godot Smoke` workflow runs the salvage loop, scoring/cargo/salvage-feedback/best-score/oxygen-bonus/route-outcome smoke, hazard-pressure smoke, all four production-slice route smokes, the default-slice route-choice smoke, the route-choice metadata smoke, the expanded and safe/deep route-choice smokes, and the player-facing smoke, so CI covers the default slice, its valuable salvage routes, safe-vs-deep route pressure, cargo banking, route-outcome result text, hazard pressure, the later reference slices, and the direction-change regression path.
 - `production_slice_02` has five tuned camera captures: overview, relay entry, main chamber, lower terminal, and return route. Normal captures live in `visual_captures/production_slice_02/`; debug captures live in `visual_captures/production_slice_02_debug/`.
 - `production_slice_03` has five authored camera captures: overview, relay entry, stacked rooms, connector, and return route. Normal captures live in `visual_captures/production_slice_03/`; debug captures live in `visual_captures/production_slice_03_debug/`.

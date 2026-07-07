@@ -28,6 +28,7 @@ const PRODUCTION_SLICE_04_DEBUG_CAPTURE_DIR := "res://visual_captures/production
 const PLAYER_READABILITY_CAPTURE_DIR := "res://visual_captures/player_readability"
 const BACKGROUND_DEPTH_CAPTURE_DIR := "res://visual_captures/background_depth"
 const FEEDBACK_OVERLAY_CAPTURE_DIR := "res://visual_captures/feedback_overlay"
+const ROUTE_OUTCOME_CAPTURE_DIR := "res://visual_captures/route_outcome"
 const BUILD_INFO_PATH := "res://build_info.json"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 const PLAYER_READABILITY_CAPTURE_ZOOM := Vector2(2.0, 2.0)
@@ -108,6 +109,7 @@ func _ready() -> void:
 	var capture_player_readability := _has_arg(user_args, engine_args, "--capture-player-readability")
 	var capture_background_depth := _has_arg(user_args, engine_args, "--capture-background-depth")
 	var capture_feedback_overlay := _has_arg(user_args, engine_args, "--capture-feedback-overlay")
+	var capture_route_outcome := _has_arg(user_args, engine_args, "--capture-route-outcome-result")
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
 	var smoke_production_slice_route := _has_arg(user_args, engine_args, "--smoke-production-slice-route")
@@ -162,6 +164,8 @@ func _ready() -> void:
 	elif capture_background_depth:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_feedback_overlay:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif capture_route_outcome:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_route:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
@@ -220,6 +224,7 @@ func _ready() -> void:
 		or capture_player_readability
 		or capture_background_depth
 		or capture_feedback_overlay
+		or capture_route_outcome
 		or smoke_salvage_loop
 		or smoke_production_slice_route
 		or smoke_production_slice_02_route
@@ -347,6 +352,8 @@ func _ready() -> void:
 		_capture_background_depth_and_quit(BACKGROUND_DEPTH_CAPTURE_DIR)
 	elif capture_feedback_overlay:
 		_capture_feedback_overlay_and_quit(FEEDBACK_OVERLAY_CAPTURE_DIR)
+	elif capture_route_outcome:
+		_capture_route_outcome_result_and_quit(ROUTE_OUTCOME_CAPTURE_DIR)
 
 
 func _review_map_selector_allowed(user_args: PackedStringArray, engine_args: PackedStringArray) -> bool:
@@ -702,19 +709,7 @@ func _smoke_route_outcome_result_and_quit() -> void:
 		get_tree().quit(1)
 		return
 
-	for salvage in _world.get_salvage_centers():
-		_player.global_position = salvage["center"]
-		_process(0.0)
-		if _held_salvage >= HELD_SALVAGE_CAPACITY:
-			_player.global_position = _world.get_extraction_center()
-			_process(0.0)
-
-	if _held_salvage > 0:
-		_player.global_position = _world.get_extraction_center()
-		_process(0.0)
-
-	if not _run_complete:
-		push_error("Route outcome result smoke did not complete after collecting and returning.")
+	if not _complete_route_outcome_review_state():
 		get_tree().quit(1)
 		return
 
@@ -734,6 +729,24 @@ func _smoke_route_outcome_result_and_quit() -> void:
 
 	print("Route outcome result smoke passed: tagged completion reported %s and generic failure stayed untagged." % expected_route_text)
 	get_tree().quit()
+
+
+func _complete_route_outcome_review_state() -> bool:
+	for salvage in _world.get_salvage_centers():
+		_player.global_position = salvage["center"]
+		_process(0.0)
+		if _held_salvage >= HELD_SALVAGE_CAPACITY:
+			_player.global_position = _world.get_extraction_center()
+			_process(0.0)
+
+	if _held_salvage > 0:
+		_player.global_position = _world.get_extraction_center()
+		_process(0.0)
+
+	if not _run_complete:
+		push_error("Route outcome review setup did not complete after collecting and returning.")
+		return false
+	return true
 
 
 func _smoke_salvage_route_and_quit(expected_map_id: String, extraction_label: String) -> void:
@@ -2237,6 +2250,48 @@ func _capture_feedback_overlay_and_quit(capture_dir: String) -> void:
 	var image := get_viewport().get_texture().get_image()
 	image.save_png(output_path)
 	print("Saved feedback overlay capture: %s" % ProjectSettings.globalize_path(output_path))
+	get_tree().quit()
+
+
+func _capture_route_outcome_result_and_quit(capture_dir: String) -> void:
+	if _world == null or _player == null:
+		push_error("Route outcome result capture requires a loaded playable map.")
+		get_tree().quit(1)
+		return
+	if _total_salvage <= 0:
+		push_error("Route outcome result capture requires authored salvage.")
+		get_tree().quit(1)
+		return
+
+	if not _complete_route_outcome_review_state():
+		get_tree().quit(1)
+		return
+	if _result_label == null or _result_label.text.find("Route:") == -1:
+		push_error("Route outcome result capture expected result panel route text before saving: %s" % [_result_label.text if _result_label != null else ""])
+		get_tree().quit(1)
+		return
+
+	var camera := Camera2D.new()
+	camera.name = "RouteOutcomeResultCaptureCamera"
+	camera.zoom = CAPTURE_ZOOM
+	camera.position_smoothing_enabled = false
+	camera.limit_left = 0
+	camera.limit_top = 0
+	camera.limit_right = int(_world.map_pixel_size.x)
+	camera.limit_bottom = int(_world.map_pixel_size.y)
+	add_child(camera)
+	camera.make_current()
+	camera.position = _world.spawn_position + Vector2(180, 180)
+
+	await get_tree().process_frame
+	await get_tree().process_frame
+	await get_tree().process_frame
+
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(capture_dir))
+	var output_path := "%s/%s_route_outcome_result.png" % [capture_dir, _safe_filename(_world.map_id)]
+	var image := get_viewport().get_texture().get_image()
+	image.save_png(output_path)
+	print("Saved route outcome result capture: %s" % ProjectSettings.globalize_path(output_path))
 	get_tree().quit()
 
 
