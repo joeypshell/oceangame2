@@ -45,8 +45,8 @@ const HAZARD_COOLDOWN_SECONDS := 1.0
 const HAZARD_FEEDBACK_SECONDS := 0.45
 const OXYGEN_MAX_SECONDS := 90.0
 const OXYGEN_REFILL_SECONDS_PER_SECOND := 25.0
-const OXYGEN_LOW_WARNING_SECONDS := 35.0
-const OXYGEN_CRITICAL_WARNING_SECONDS := 12.0
+const OXYGEN_LOW_WARNING_SECONDS := 40.0
+const OXYGEN_CRITICAL_WARNING_SECONDS := 15.0
 const OXYGEN_BONUS_POINTS_PER_SECOND := 1
 const SAFE_ROUTE_CHOICE_ID := "safe_route_choice"
 const EXPANDED_ROUTE_CHOICE_ID := "expanded_route_choice"
@@ -1261,21 +1261,31 @@ func _smoke_safe_deep_route_choice_and_quit() -> void:
 		push_error("Safe/deep route comparison smoke expected deep oxygen margin below safe margin, got deep=%.1f safe=%.1f." % [deep_oxygen, safe_oxygen])
 		get_tree().quit(1)
 		return
+	if bool(safe_result.get("saw_low", false)) or bool(safe_result.get("saw_critical", false)):
+		push_error("Safe/deep route comparison smoke expected safe route to stay comfortable, got feedback=%s status=%s." % [str(safe_result.get("oxygen_feedback", "")), str(safe_result.get("status", ""))])
+		get_tree().quit(1)
+		return
+	if not bool(deep_result.get("saw_low", false)) or not bool(deep_result.get("saw_critical", false)):
+		push_error("Safe/deep route comparison smoke expected deep route to show LOW and CRITICAL feedback, got feedback=%s status=%s." % [str(deep_result.get("oxygen_feedback", "")), str(deep_result.get("status", ""))])
+		get_tree().quit(1)
+		return
 
 	_reset_run()
-	print("Safe/deep route comparison smoke passed: safe_targets=%s safe_cargo=%d/%d safe_banked=%d safe_score=%d safe_oxygen=%.1f deep_targets=%s deep_cargo=%d/%d deep_banked=%d deep_score=%d deep_oxygen=%.1f." % [
+	print("Safe/deep route comparison smoke passed: safe_targets=%s safe_cargo=%d/%d safe_banked=%d safe_score=%d safe_oxygen=%.1f safe_feedback=%s deep_targets=%s deep_cargo=%d/%d deep_banked=%d deep_score=%d deep_oxygen=%.1f deep_feedback=%s." % [
 		str(safe_result.get("target_ids", "")),
 		int(safe_result.get("cargo", 0)),
 		HELD_SALVAGE_CAPACITY,
 		int(safe_result.get("banked", 0)),
 		safe_score,
 		safe_oxygen,
+		str(safe_result.get("oxygen_feedback", "")),
 		str(deep_result.get("target_ids", "")),
 		int(deep_result.get("cargo", 0)),
 		HELD_SALVAGE_CAPACITY,
 		int(deep_result.get("banked", 0)),
 		deep_score,
 		deep_oxygen,
+		str(deep_result.get("oxygen_feedback", "")),
 	])
 	get_tree().quit()
 
@@ -1288,6 +1298,10 @@ func _run_route_comparison_path(route_label: String, route_targets: Array, retur
 		_player.reset_motion()
 
 	var target_ids := PackedStringArray()
+	var oxygen_feedback := {
+		"low": false,
+		"critical": false,
+	}
 	var expected_score := 0
 	for target in route_targets:
 		var target_id := str(target.get("id", "salvage"))
@@ -1297,6 +1311,7 @@ func _run_route_comparison_path(route_label: String, route_targets: Array, retur
 		if not reached_target:
 			return {}
 		_process(0.0)
+		_record_route_oxygen_feedback(oxygen_feedback)
 		if not _held_salvage_ids.has(target_id):
 			push_error("Safe/deep route comparison smoke did not collect %s target %s; held=%d ids=%s." % [route_label, target_id, _held_salvage, _held_salvage_ids])
 			return {}
@@ -1306,14 +1321,17 @@ func _run_route_comparison_path(route_label: String, route_targets: Array, retur
 		return {}
 
 	if return_via_first_target:
-		var reached_return_waypoint := await _swim_to_target(route_targets[0]["center"])
+		var reached_return_waypoint := await _swim_to_target(route_targets[0]["center"], oxygen_feedback)
 		if not reached_return_waypoint:
 			return {}
+		_update_status_label()
+		_record_route_oxygen_feedback(oxygen_feedback)
 
-	var reached_extraction := await _swim_to_target(_world.get_extraction_center())
+	var reached_extraction := await _swim_to_target(_world.get_extraction_center(), oxygen_feedback)
 	if not reached_extraction:
 		return {}
 	_process(0.0)
+	_record_route_oxygen_feedback(oxygen_feedback)
 	if _held_salvage != 0 or _banked_salvage < route_targets.size() or _banked_score < expected_score or not _world.is_inside_extraction(_player.global_position):
 		push_error("Safe/deep route comparison smoke did not bank %s route; held=%d banked=%d score=%d position=%s." % [route_label, _held_salvage, _banked_salvage, _banked_score, _player.global_position])
 		return {}
@@ -1324,7 +1342,30 @@ func _run_route_comparison_path(route_label: String, route_targets: Array, retur
 		"banked": _banked_salvage,
 		"score": _banked_score,
 		"oxygen": _oxygen_seconds,
+		"saw_low": bool(oxygen_feedback.get("low", false)),
+		"saw_critical": bool(oxygen_feedback.get("critical", false)),
+		"oxygen_feedback": _route_oxygen_feedback_summary(oxygen_feedback),
+		"status": _status_label.text if _status_label != null else "",
 	}
+
+
+func _record_route_oxygen_feedback(oxygen_feedback: Dictionary) -> void:
+	var feedback_label := _oxygen_feedback_label()
+	if feedback_label == "CRITICAL":
+		oxygen_feedback["critical"] = true
+	elif feedback_label == "LOW":
+		oxygen_feedback["low"] = true
+
+
+func _route_oxygen_feedback_summary(oxygen_feedback: Dictionary) -> String:
+	var labels := PackedStringArray()
+	if bool(oxygen_feedback.get("low", false)):
+		labels.append("LOW")
+	if bool(oxygen_feedback.get("critical", false)):
+		labels.append("CRITICAL")
+	if labels.is_empty():
+		return "comfortable"
+	return ",".join(labels)
 
 
 func _smoke_route_choice_metadata_and_quit() -> void:
@@ -1529,7 +1570,7 @@ func _facing_report_matches(report: Dictionary, body_flip_h: bool, light_x: floa
 	)
 
 
-func _swim_to_target(target: Vector2) -> bool:
+func _swim_to_target(target: Vector2, oxygen_feedback: Dictionary = {}) -> bool:
 	var path: Array = _world.find_open_path(_player.global_position, target)
 	if path.is_empty():
 		push_error("No open-water path from %s to %s." % [_player.global_position, target])
@@ -1546,9 +1587,13 @@ func _swim_to_target(target: Vector2) -> bool:
 				push_error("Timed out swimming toward waypoint %s from %s." % [waypoint, _player.global_position])
 				return false
 			await get_tree().physics_frame
+			if not oxygen_feedback.is_empty():
+				_record_route_oxygen_feedback(oxygen_feedback)
 
 	_player.swim_in_direction(Vector2.ZERO, 1.0 / 60.0)
 	await get_tree().physics_frame
+	if not oxygen_feedback.is_empty():
+		_record_route_oxygen_feedback(oxygen_feedback)
 	return true
 
 
@@ -1793,10 +1838,9 @@ func _update_status_label() -> void:
 
 	var oxygen_seconds := int(ceil(_oxygen_seconds))
 	var oxygen_text := "Oxygen %ds" % oxygen_seconds
-	if _oxygen_seconds <= OXYGEN_CRITICAL_WARNING_SECONDS and not _run_complete and not _run_failed:
-		oxygen_text = "Oxygen %ds CRITICAL" % oxygen_seconds
-	elif _oxygen_seconds <= OXYGEN_LOW_WARNING_SECONDS and not _run_complete and not _run_failed:
-		oxygen_text = "Oxygen %ds LOW" % oxygen_seconds
+	var oxygen_feedback := _oxygen_feedback_label()
+	if not oxygen_feedback.is_empty():
+		oxygen_text = "Oxygen %ds %s" % [oxygen_seconds, oxygen_feedback]
 
 	_status_label.text = "Score %d\nSalvage banked %d/%d\nHeld %d/%d (%d pts)\n%s" % [
 		_banked_score,
@@ -1810,6 +1854,16 @@ func _update_status_label() -> void:
 	if not prompt.is_empty():
 		_status_label.text += "\n%s" % prompt
 	_update_result_panel()
+
+
+func _oxygen_feedback_label() -> String:
+	if _run_complete or _run_failed:
+		return ""
+	if _oxygen_seconds <= OXYGEN_CRITICAL_WARNING_SECONDS:
+		return "CRITICAL"
+	if _oxygen_seconds <= OXYGEN_LOW_WARNING_SECONDS:
+		return "LOW"
+	return ""
 
 
 func _session_best_map_key() -> String:
