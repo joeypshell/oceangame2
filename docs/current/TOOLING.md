@@ -244,6 +244,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-feedback
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-session-best-score
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-bonus-score
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-route-outcome-result
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-player-facing
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-movement-feel
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-feedback-overlay
@@ -259,7 +260,7 @@ The route-choice metadata smoke loads `production_slice_01`, verifies the ordere
 
 The expanded route-choice smoke loads `production_slice_01`, verifies the source route metadata for `salvage_lower_loop` and `salvage_deep_right_cache`, swims through both valuable targets, returns to the boat with full cargo, reports target ids, held capacity, banked salvage, score, and oxygen, resets, and exits.
 
-The safe/deep route-choice smoke loads `production_slice_01`, swims one run to the short `safe_route_choice` target and a second run through the deeper `expanded_route_choice` targets, reports target ids, cargo, banked salvage, score, and oxygen for both runs, and asserts the deep route has higher payoff with lower remaining oxygen.
+The safe/deep route-choice smoke loads `production_slice_01`, swims one run to the short `safe_route_choice` target and a second run through the deeper `expanded_route_choice` targets, reports target ids, cargo, banked salvage, score, oxygen, and oxygen feedback for both runs, and asserts the safe route stays comfortable while the deeper route has higher payoff, lower remaining oxygen, and visible `LOW`/`CRITICAL` pressure.
 
 The production-slice-02 route smoke loads `production_slice_02`, asks the world for open-water paths to each authored salvage point and back to the relay extraction zone, swims the player through those paths with the normal movement controller, confirms completion, resets, and exits.
 
@@ -282,6 +283,8 @@ The salvage-feedback smoke loads `production_slice_01`, collects one common pick
 The session-best score smoke loads `production_slice_01`, completes a full collect-return run, confirms the result panel shows score and best score, confirms reset preserves the current map's best score, and confirms oxygen failure does not overwrite that best score.
 
 The oxygen-bonus score smoke loads `production_slice_01`, completes a full collect-return run, confirms salvage banked score remains tier-derived, confirms the completion-only oxygen bonus is based on remaining oxygen, and confirms failed expeditions receive zero oxygen bonus.
+
+The route-outcome result smoke loads `production_slice_01`, completes a route-tagged collect-return run, confirms the compact result panel includes `Route: Deep route`, resets, and confirms a generic failure result does not show stale route text.
 
 The salvage-loop smoke also confirms the completion-only expedition result panel appears after a full collect-return run and reports the banked salvage score, oxygen bonus, best score, and salvage totals.
 

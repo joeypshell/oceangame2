@@ -78,6 +78,8 @@ var _held_salvage_score := 0
 var _banked_score := 0
 var _completion_oxygen_bonus := 0
 var _session_best_scores_by_map := {}
+var _salvage_validation_routes_by_id := {}
+var _banked_validation_route_counts := {}
 var _hazard_cooldown_seconds := 0.0
 var _hazard_feedback_seconds := 0.0
 var _hazard_interactions_enabled := true
@@ -120,6 +122,7 @@ func _ready() -> void:
 	var smoke_salvage_feedback := _has_arg(user_args, engine_args, "--smoke-salvage-feedback")
 	var smoke_session_best_score := _has_arg(user_args, engine_args, "--smoke-session-best-score")
 	var smoke_oxygen_bonus_score := _has_arg(user_args, engine_args, "--smoke-oxygen-bonus-score")
+	var smoke_route_outcome_result := _has_arg(user_args, engine_args, "--smoke-route-outcome-result")
 	var smoke_route_choice := _has_arg(user_args, engine_args, "--smoke-route-choice")
 	var smoke_route_choice_metadata := _has_arg(user_args, engine_args, "--smoke-route-choice-metadata")
 	var smoke_expanded_route_choice := _has_arg(user_args, engine_args, "--smoke-expanded-route-choice")
@@ -180,6 +183,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_oxygen_bonus_score:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_route_outcome_result:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_route_choice:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_route_choice_metadata:
@@ -228,6 +233,7 @@ func _ready() -> void:
 		or smoke_salvage_feedback
 		or smoke_session_best_score
 		or smoke_oxygen_bonus_score
+		or smoke_route_outcome_result
 		or smoke_route_choice
 		or smoke_route_choice_metadata
 		or smoke_expanded_route_choice
@@ -284,6 +290,9 @@ func _ready() -> void:
 		return
 	if smoke_oxygen_bonus_score:
 		_smoke_oxygen_bonus_score_and_quit()
+		return
+	if smoke_route_outcome_result:
+		_smoke_route_outcome_result_and_quit()
 		return
 	if smoke_route_choice:
 		await _smoke_route_choice_and_quit()
@@ -374,6 +383,8 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool) -> void:
 	_held_salvage_score = 0
 	_banked_score = 0
 	_completion_oxygen_bonus = 0
+	_refresh_salvage_route_metadata(world)
+	_banked_validation_route_counts = {}
 	_hazard_cooldown_seconds = 0.0
 	_hazard_feedback_seconds = 0.0
 	_hazard_interactions_enabled = true
@@ -451,6 +462,7 @@ func _process(delta: float) -> void:
 	if _held_salvage > 0 and _world.is_inside_extraction(_player.global_position):
 		_banked_salvage += _held_salvage
 		_banked_score += _held_salvage_score
+		_record_banked_route_outcomes(_held_salvage_ids)
 		_held_salvage = 0
 		_held_salvage_ids = []
 		_held_salvage_score = 0
@@ -677,6 +689,50 @@ func _smoke_oxygen_bonus_score_and_quit() -> void:
 		expected_bonus,
 		expected_total_score,
 	])
+	get_tree().quit()
+
+
+func _smoke_route_outcome_result_and_quit() -> void:
+	if _world.map_id != "production_slice_01":
+		push_error("Route outcome result smoke loaded unexpected map: %s" % _world.map_id)
+		get_tree().quit(1)
+		return
+	if _total_salvage <= 0:
+		push_error("Route outcome result smoke requires authored salvage.")
+		get_tree().quit(1)
+		return
+
+	for salvage in _world.get_salvage_centers():
+		_player.global_position = salvage["center"]
+		_process(0.0)
+		if _held_salvage >= HELD_SALVAGE_CAPACITY:
+			_player.global_position = _world.get_extraction_center()
+			_process(0.0)
+
+	if _held_salvage > 0:
+		_player.global_position = _world.get_extraction_center()
+		_process(0.0)
+
+	if not _run_complete:
+		push_error("Route outcome result smoke did not complete after collecting and returning.")
+		get_tree().quit(1)
+		return
+
+	var expected_route_text := "Route: Deep route"
+	if _result_label == null or _result_label.text.find(expected_route_text) == -1:
+		push_error("Route outcome result smoke did not show %s in result panel: %s" % [expected_route_text, _result_label.text if _result_label != null else ""])
+		get_tree().quit(1)
+		return
+
+	_reset_run()
+	_handle_oxygen_depleted()
+	_update_status_label()
+	if _result_label == null or _result_label.text.find("Route:") != -1:
+		push_error("Route outcome result smoke expected generic failure result without route text: %s" % [_result_label.text if _result_label != null else ""])
+		get_tree().quit(1)
+		return
+
+	print("Route outcome result smoke passed: tagged completion reported %s and generic failure stayed untagged." % expected_route_text)
 	get_tree().quit()
 
 
@@ -1617,6 +1673,7 @@ func _reset_run() -> void:
 	_banked_salvage = 0
 	_banked_score = 0
 	_completion_oxygen_bonus = 0
+	_banked_validation_route_counts = {}
 	_hazard_cooldown_seconds = 0.0
 	_hazard_feedback_seconds = 0.0
 	_hazard_interactions_enabled = true
@@ -1889,6 +1946,59 @@ func _calculate_oxygen_completion_bonus() -> int:
 	return int(ceil(_oxygen_seconds)) * OXYGEN_BONUS_POINTS_PER_SECOND
 
 
+func _refresh_salvage_route_metadata(world) -> void:
+	_salvage_validation_routes_by_id = {}
+	if world == null or not world.has_method("get_salvage_centers"):
+		return
+
+	for salvage in world.get_salvage_centers():
+		var salvage_id := str(salvage.get("id", ""))
+		var validation_route := str(salvage.get("validation_route", ""))
+		if salvage_id.is_empty() or validation_route.is_empty():
+			continue
+		_salvage_validation_routes_by_id[salvage_id] = validation_route
+
+
+func _record_banked_route_outcomes(salvage_ids: Array[String]) -> void:
+	for salvage_id in salvage_ids:
+		var validation_route := str(_salvage_validation_routes_by_id.get(salvage_id, ""))
+		if validation_route.is_empty():
+			continue
+		_banked_validation_route_counts[validation_route] = int(_banked_validation_route_counts.get(validation_route, 0)) + 1
+
+
+func _route_outcome_text() -> String:
+	if not _run_complete:
+		return ""
+
+	var validation_route := _route_outcome_validation_route()
+	if validation_route.is_empty():
+		return ""
+	return "Route: %s" % _route_outcome_label(validation_route)
+
+
+func _route_outcome_validation_route() -> String:
+	if int(_banked_validation_route_counts.get(EXPANDED_ROUTE_CHOICE_ID, 0)) > 0:
+		return EXPANDED_ROUTE_CHOICE_ID
+	if int(_banked_validation_route_counts.get(SAFE_ROUTE_CHOICE_ID, 0)) > 0:
+		return SAFE_ROUTE_CHOICE_ID
+
+	for route_id_value in _banked_validation_route_counts.keys():
+		var validation_route := str(route_id_value)
+		if validation_route.is_empty() or int(_banked_validation_route_counts.get(validation_route, 0)) <= 0:
+			continue
+		return validation_route
+	return ""
+
+
+func _route_outcome_label(validation_route: String) -> String:
+	if validation_route == SAFE_ROUTE_CHOICE_ID:
+		return "Safe route"
+	if validation_route == EXPANDED_ROUTE_CHOICE_ID:
+		return "Deep route"
+	return validation_route.replace("_", " ")
+
+
 func _salvage_collection_feedback(tier: String, score: int) -> String:
 	if tier == "valuable":
 		return "Collected valuable salvage +%d" % score
@@ -1916,16 +2026,19 @@ func _update_result_panel() -> void:
 	var oxygen_text := "Oxygen %ds" % int(ceil(_oxygen_seconds))
 	if _run_failed:
 		oxygen_text = "Oxygen depleted"
-	_result_label.text = "%s\nScore %d\nSalvage score %d\nOxygen bonus +%d\nBest %d\nSalvage %d/%d\n%s\nPress R to retry" % [
-		title,
-		_current_expedition_score(),
-		_banked_score,
-		_completion_oxygen_bonus,
-		_session_best_score(),
-		_banked_salvage,
-		_total_salvage,
-		oxygen_text,
-	]
+	var result_lines := PackedStringArray()
+	result_lines.append(title)
+	result_lines.append("Score %d" % _current_expedition_score())
+	result_lines.append("Salvage score %d" % _banked_score)
+	result_lines.append("Oxygen bonus +%d" % _completion_oxygen_bonus)
+	result_lines.append("Best %d" % _session_best_score())
+	result_lines.append("Salvage %d/%d" % [_banked_salvage, _total_salvage])
+	var route_text := _route_outcome_text()
+	if not route_text.is_empty():
+		result_lines.append(route_text)
+	result_lines.append(oxygen_text)
+	result_lines.append("Press R to retry")
+	_result_label.text = "\n".join(result_lines)
 
 
 func _build_label() -> String:
