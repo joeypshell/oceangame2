@@ -194,6 +194,7 @@ python tools/check_asset_manifest.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expanded-route-choice
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-map-selector
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-pressure
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-cargo-capacity
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-feedback
@@ -447,6 +448,7 @@ Recent important commits:
 - `--smoke-production-slice-03-route` verifies `production_slice_03` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `--smoke-production-slice-04-route` verifies `production_slice_04` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `--smoke-hazard-interaction` verifies hazard pressure in `production_slice_01` by checking a warning-only range status before contact, then confirming contact applies the 12-second oxygen penalty, resets the player, restores held salvage, and cleanly enters the failed expedition result panel if the penalty empties the tank.
+- `--smoke-hazard-pressure` runs the same deterministic hazard pressure check and reports hazard id, warning distance/radii, oxygen before/after, and restored salvage id for CI diagnosis.
 - `--smoke-player-facing` verifies the player direction-change path by keeping the root transform stable while flipping only the diver body and light-cone visuals.
 - `--smoke-movement-feel` drives the player controller through start, stop, horizontal reversal, and diagonal movement phases, then reports measured velocities for the Controlled Gameplay Pass 01 tuning pass.
 - `--smoke-route-choice` drives the player through the default slice route-choice probe by swimming from the boat entry to the authored `valuable` salvage target, collecting it, returning to extraction, and reporting the target/collection/return state.
@@ -458,7 +460,7 @@ Recent important commits:
 - `--smoke-oxygen-bonus-score` completes a full collect-return run, verifies banked salvage score stays tier-derived, verifies the completion oxygen bonus is based on remaining oxygen, and verifies failed expeditions receive zero oxygen bonus.
 - `--smoke-salvage-loop` also verifies the completion-only expedition result panel reports banked salvage score, oxygen bonus, best score, and salvage totals after a full collect-return run.
 - `--capture-feedback-overlay` writes `visual_captures/feedback_overlay/production_slice_01_feedback_overlay.png` as the focused review capture for the salvage/oxygen feedback overlay pass.
-- The `Godot Smoke` workflow runs the salvage loop, scoring/cargo/salvage-feedback/best-score/oxygen-bonus smoke, all four production-slice route smokes, the default-slice route-choice smoke, the route-choice metadata smoke, the expanded route-choice smoke, and the player-facing smoke, so CI covers the default slice, its valuable salvage routes, cargo banking, the later reference slices, and the direction-change regression path.
+- The `Godot Smoke` workflow runs the salvage loop, scoring/cargo/salvage-feedback/best-score/oxygen-bonus smoke, hazard-pressure smoke, all four production-slice route smokes, the default-slice route-choice smoke, the route-choice metadata smoke, the expanded route-choice smoke, and the player-facing smoke, so CI covers the default slice, its valuable salvage routes, cargo banking, hazard pressure, the later reference slices, and the direction-change regression path.
 - `production_slice_02` has five tuned camera captures: overview, relay entry, main chamber, lower terminal, and return route. Normal captures live in `visual_captures/production_slice_02/`; debug captures live in `visual_captures/production_slice_02_debug/`.
 - `production_slice_03` has five authored camera captures: overview, relay entry, stacked rooms, connector, and return route. Normal captures live in `visual_captures/production_slice_03/`; debug captures live in `visual_captures/production_slice_03_debug/`.
 - `production_slice_04` has five authored camera captures: overview, relay entry, lower-left loop, curved corridor, and return route. Normal captures live in `visual_captures/production_slice_04/`; debug captures live in `visual_captures/production_slice_04_debug/`.

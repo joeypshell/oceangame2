@@ -237,6 +237,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expanded-route-choice
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-map-selector
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-pressure
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-cargo-capacity
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-feedback
@@ -267,7 +268,7 @@ The `Godot Smoke` workflow runs all four production-slice route smoke flags so C
 
 The map-selector smoke loads the default map, reloads `production_slice_03`, then reloads `production_slice_01` through the same clean map/player reload path used by the local review selector.
 
-The hazard-interaction smoke loads `production_slice_01`, collects one salvage item, moves to warning-only range near an authored hazard, confirms the overlay reports `Hazard nearby - keep clear` without dropping cargo or moving the player, then touches the hazard, confirms the 12-second oxygen penalty, spawn reset, held-salvage restoration, and recollection behavior, then verifies a low-oxygen hazard hit cleanly shows the failed expedition result panel.
+The hazard-interaction smoke loads `production_slice_01`, collects one salvage item, moves to warning-only range near an authored hazard, confirms the overlay reports `Hazard nearby - keep clear` without dropping cargo or moving the player, then touches the hazard, confirms the 12-second oxygen penalty, spawn reset, held-salvage restoration, and recollection behavior, then verifies a low-oxygen hazard hit cleanly shows the failed expedition result panel. `--smoke-hazard-pressure` runs the same deterministic check with CI-oriented output that reports hazard id, warning distance/radii, oxygen before/after, and restored salvage id.
 
 The oxygen-pressure smoke loads `production_slice_01`, collects one salvage item, forces oxygen depletion, confirms the player surfaces at spawn with held salvage restored, confirms the failed expedition result panel appears, resets, recollects the salvage, returns to extraction, confirms oxygen refills and salvage banks, resets, and exits.
 

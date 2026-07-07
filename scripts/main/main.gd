@@ -113,6 +113,7 @@ func _ready() -> void:
 	var smoke_production_slice_04_route := _has_arg(user_args, engine_args, "--smoke-production-slice-04-route")
 	var smoke_map_selector := _has_arg(user_args, engine_args, "--smoke-map-selector")
 	var smoke_hazard_interaction := _has_arg(user_args, engine_args, "--smoke-hazard-interaction")
+	var smoke_hazard_pressure := _has_arg(user_args, engine_args, "--smoke-hazard-pressure")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var smoke_cargo_capacity := _has_arg(user_args, engine_args, "--smoke-cargo-capacity")
 	var smoke_salvage_feedback := _has_arg(user_args, engine_args, "--smoke-salvage-feedback")
@@ -167,6 +168,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_04_MAP_PATH
 	elif smoke_hazard_interaction:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_hazard_pressure:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_oxygen_pressure:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_session_best_score:
@@ -215,6 +218,7 @@ func _ready() -> void:
 		or smoke_production_slice_04_route
 		or smoke_map_selector
 		or smoke_hazard_interaction
+		or smoke_hazard_pressure
 		or smoke_oxygen_pressure
 		or smoke_cargo_capacity
 		or smoke_salvage_feedback
@@ -256,6 +260,9 @@ func _ready() -> void:
 		_smoke_map_selector_and_quit()
 		return
 	if smoke_hazard_interaction:
+		_smoke_hazard_interaction_and_quit()
+		return
+	if smoke_hazard_pressure:
 		_smoke_hazard_interaction_and_quit()
 		return
 	if smoke_oxygen_pressure:
@@ -786,6 +793,7 @@ func _smoke_hazard_interaction_and_quit() -> void:
 		return
 
 	var oxygen_before_hit := _oxygen_seconds
+	var warning_distance := warning_position.distance_to(warning_hazard["center"])
 	_player.global_position = warning_hazard["center"]
 	_hazard_cooldown_seconds = 0.0
 	_process(0.0)
@@ -806,6 +814,7 @@ func _smoke_hazard_interaction_and_quit() -> void:
 		push_error("Hazard smoke did not show oxygen penalty feedback: %s" % _status_label.text)
 		get_tree().quit(1)
 		return
+	var oxygen_after_hit := _oxygen_seconds
 
 	_player.global_position = salvage[0]["center"]
 	_hazard_cooldown_seconds = 0.0
@@ -836,7 +845,15 @@ func _smoke_hazard_interaction_and_quit() -> void:
 		return
 
 	_reset_run()
-	print("Hazard interaction smoke passed: warned near hazard, applied %.0fs oxygen penalty, reset/restored salvage, and verified low-oxygen failure." % HAZARD_OXYGEN_PENALTY_SECONDS)
+	print("Hazard pressure smoke passed: hazard=%s warning_distance=%.1f warning_radius=%.1f contact_radius=%.1f oxygen=%.1f->%.1f restored=%s low_oxygen_failure=true." % [
+		warning_id,
+		warning_distance,
+		HAZARD_WARNING_RADIUS,
+		HAZARD_CONTACT_RADIUS,
+		oxygen_before_hit,
+		oxygen_after_hit,
+		collected_id,
+	])
 	get_tree().quit()
 
 
