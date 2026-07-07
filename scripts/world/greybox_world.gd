@@ -205,6 +205,22 @@ func get_hazard_centers() -> Array:
 	return centers
 
 
+func get_nearest_hazard_within(position: Vector2, radius_px: float) -> Dictionary:
+	var nearest := {}
+	var nearest_distance := radius_px
+	for entity in _hazard_entities:
+		var center := _entity_center(entity)
+		var distance := position.distance_to(center)
+		if distance <= radius_px and (nearest.is_empty() or distance < nearest_distance):
+			nearest = {
+				"id": str(entity.get("id", "hazard")),
+				"center": center,
+				"distance": distance,
+			}
+			nearest_distance = distance
+	return nearest
+
+
 func get_hazard_near(position: Vector2, radius_px: float) -> String:
 	for entity in _hazard_entities:
 		if position.distance_to(_entity_center(entity)) <= radius_px:

@@ -39,6 +39,7 @@ const BACKGROUND_DEPTH_PLAYER_OFFSET_TILES := Vector2(0, 8)
 const SALVAGE_COLLECTION_RADIUS := 34.0
 const HELD_SALVAGE_CAPACITY := 2
 const HAZARD_CONTACT_RADIUS := 30.0
+const HAZARD_WARNING_RADIUS := 80.0
 const HAZARD_COOLDOWN_SECONDS := 1.0
 const HAZARD_FEEDBACK_SECONDS := 0.45
 const OXYGEN_MAX_SECONDS := 90.0
@@ -78,6 +79,7 @@ var _session_best_scores_by_map := {}
 var _hazard_cooldown_seconds := 0.0
 var _hazard_feedback_seconds := 0.0
 var _hazard_interactions_enabled := true
+var _hazard_warning_id := ""
 var _oxygen_seconds := OXYGEN_MAX_SECONDS
 var _run_complete := false
 var _run_failed := false
@@ -359,6 +361,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool) -> void:
 	_hazard_cooldown_seconds = 0.0
 	_hazard_feedback_seconds = 0.0
 	_hazard_interactions_enabled = true
+	_hazard_warning_id = ""
 	_oxygen_seconds = OXYGEN_MAX_SECONDS
 	_run_complete = false
 	_run_failed = false
@@ -415,6 +418,7 @@ func _process(delta: float) -> void:
 			_handle_hazard_hit(hazard_id)
 			_update_status_label()
 			return
+	_update_hazard_warning()
 
 	if _held_salvage < HELD_SALVAGE_CAPACITY:
 		var collected_salvage: String = _world.collect_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
@@ -756,7 +760,31 @@ func _smoke_hazard_interaction_and_quit() -> void:
 		return
 
 	var collected_id := _held_salvage_ids[0]
-	_player.global_position = hazards[0]["center"]
+	var warning_position := _hazard_warning_probe_position(hazards[0]["center"])
+	var warning_hazard: Dictionary = _world.get_nearest_hazard_within(warning_position, HAZARD_WARNING_RADIUS)
+	if warning_hazard.is_empty() or not _world.get_hazard_near(warning_position, HAZARD_CONTACT_RADIUS).is_empty():
+		push_error("Hazard smoke could not find a warning-only probe position near %s." % str(hazards[0].get("id", "hazard")))
+		get_tree().quit(1)
+		return
+
+	_player.global_position = warning_position
+	_hazard_cooldown_seconds = 0.0
+	_process(0.0)
+	var warning_id := str(warning_hazard.get("id", "hazard"))
+	if _held_salvage != 1 or _held_salvage_ids[0] != collected_id:
+		push_error("Hazard smoke warning range dropped held salvage; held=%d ids=%s." % [_held_salvage, _held_salvage_ids])
+		get_tree().quit(1)
+		return
+	if _player.global_position.distance_to(warning_position) > 2.0:
+		push_error("Hazard smoke warning range moved player unexpectedly to %s." % _player.global_position)
+		get_tree().quit(1)
+		return
+	if _hazard_warning_id != warning_id or _status_label == null or _status_label.text.find("Hazard nearby - keep clear") == -1:
+		push_error("Hazard smoke did not show warning for %s; warning=%s status=%s." % [warning_id, _hazard_warning_id, _status_label.text])
+		get_tree().quit(1)
+		return
+
+	_player.global_position = warning_hazard["center"]
 	_hazard_cooldown_seconds = 0.0
 	_process(0.0)
 	if _held_salvage != 0 or not _held_salvage_ids.is_empty():
@@ -777,8 +805,18 @@ func _smoke_hazard_interaction_and_quit() -> void:
 		return
 
 	_reset_run()
-	print("Hazard interaction smoke passed: hit hazard, reset to spawn, restored dropped salvage, and recollected it.")
+	print("Hazard interaction smoke passed: warned near hazard, hit hazard, reset to spawn, restored dropped salvage, and recollected it.")
 	get_tree().quit()
+
+
+func _hazard_warning_probe_position(hazard_center: Vector2) -> Vector2:
+	var warning_distance := HAZARD_CONTACT_RADIUS + 8.0
+	var directions: Array[Vector2] = [Vector2.RIGHT, Vector2.LEFT, Vector2.DOWN, Vector2.UP]
+	for direction in directions:
+		var candidate: Vector2 = hazard_center + direction * warning_distance
+		if _world.get_hazard_near(candidate, HAZARD_CONTACT_RADIUS).is_empty() and not _world.get_nearest_hazard_within(candidate, HAZARD_WARNING_RADIUS).is_empty():
+			return candidate
+	return hazard_center + Vector2.RIGHT * warning_distance
 
 
 func _smoke_oxygen_pressure_and_quit() -> void:
@@ -1371,6 +1409,7 @@ func _reset_run() -> void:
 	_hazard_cooldown_seconds = 0.0
 	_hazard_feedback_seconds = 0.0
 	_hazard_interactions_enabled = true
+	_hazard_warning_id = ""
 	_oxygen_seconds = OXYGEN_MAX_SECONDS
 	_run_complete = false
 	_run_failed = false
@@ -1418,6 +1457,7 @@ func _handle_oxygen_depleted() -> void:
 
 
 func _handle_hazard_hit(hazard_id: String) -> void:
+	_hazard_warning_id = ""
 	if not _held_salvage_ids.is_empty():
 		_world.restore_salvage(_held_salvage_ids)
 		_held_salvage_ids = []
@@ -1434,6 +1474,18 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 		_player.reset_motion()
 	if _player.has_method("snap_camera"):
 		_player.snap_camera()
+
+
+func _update_hazard_warning() -> void:
+	_hazard_warning_id = ""
+	if not _hazard_interactions_enabled or _hazard_cooldown_seconds > 0.0:
+		return
+	var hazard: Dictionary = _world.get_nearest_hazard_within(_player.global_position, HAZARD_WARNING_RADIUS)
+	if hazard.is_empty():
+		return
+	if float(hazard.get("distance", HAZARD_WARNING_RADIUS)) <= HAZARD_CONTACT_RADIUS:
+		return
+	_hazard_warning_id = str(hazard.get("id", "hazard"))
 
 
 func _update_hazard_feedback(delta: float) -> void:
@@ -1556,6 +1608,8 @@ func _update_status_label() -> void:
 		prompt = "Oxygen depleted - press R"
 	elif _held_salvage >= HELD_SALVAGE_CAPACITY:
 		prompt = "Cargo full - return to extraction"
+	elif not _hazard_warning_id.is_empty():
+		prompt = "Hazard nearby - keep clear"
 	elif not _last_status_note.is_empty():
 		prompt = _last_status_note
 	elif _held_salvage > 0:

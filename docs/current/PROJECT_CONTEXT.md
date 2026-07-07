@@ -446,6 +446,7 @@ Recent important commits:
 - `--smoke-production-slice-02-route` verifies `production_slice_02` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `--smoke-production-slice-03-route` verifies `production_slice_03` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
 - `--smoke-production-slice-04-route` verifies `production_slice_04` by swimming through authored salvage with the normal movement controller and returning to the relay extraction zone.
+- `--smoke-hazard-interaction` verifies hazard pressure in `production_slice_01` by checking a warning-only range status before contact, then confirming contact still resets the player and restores held salvage.
 - `--smoke-player-facing` verifies the player direction-change path by keeping the root transform stable while flipping only the diver body and light-cone visuals.
 - `--smoke-movement-feel` drives the player controller through start, stop, horizontal reversal, and diagonal movement phases, then reports measured velocities for the Controlled Gameplay Pass 01 tuning pass.
 - `--smoke-route-choice` drives the player through the default slice route-choice probe by swimming from the boat entry to the authored `valuable` salvage target, collecting it, returning to extraction, and reporting the target/collection/return state.
@@ -479,7 +480,7 @@ Recent important commits:
 - `docs/current/PLAYER_FACING_WEB_PREVIEW_VERIFICATION.md` records #99: the public Pages preview deployed the #98 player-facing runtime fix successfully, matched external build metadata, initialized the Godot canvas, and emitted no missing-resource or Godot error messages.
 - The salvage/oxygen overlay now separates banked salvage, held salvage, oxygen, and prompt/state lines so held-return, low oxygen, depletion, hazard reset, and run completion states are easier to read.
 - Salvage has a minimal collect-return-complete-reset loop.
-- Hazards now have a tiny scoped interaction: touching one bumps the player back to spawn, briefly tints the player, and restores held/unbanked salvage to the map.
+- Hazards now have a tiny scoped interaction: approaching one within warning range reports `Hazard nearby - keep clear`, and touching one bumps the player back to spawn, briefly tints the player, and restores held/unbanked salvage to the map.
 - The first scoped expedition pressure is a simple oxygen timer: oxygen drains away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held/unbanked salvage to the map.
 - Current oxygen pressure timing keeps a 90-second tank, starts `LOW` feedback at 35 seconds, and escalates to `CRITICAL` at 12 seconds.
 - Salvage map data may include optional `tier` values. Missing tiers default conceptually to `common`; the current supported tiers are `common` and `valuable`. Runtime salvage score is tier-derived for now: `common` is worth 100 and `valuable` is worth 300, and pickup status feedback names the tier and score. Completed expeditions add a small runtime oxygen bonus of 1 point per remaining oxygen second; failed expeditions receive no oxygen bonus.
