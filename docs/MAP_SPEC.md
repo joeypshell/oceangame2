@@ -155,6 +155,8 @@ Playable salvage may also include optional route-choice metadata. These fields a
 
 Route-choice metadata is currently supported on salvage entities only. A route-tagged salvage entity must still satisfy normal salvage validation: it needs a valid `kind`, optional valid `tier`, in-bounds coordinates, non-solid placement, and reachability from the player entry cell.
 
+For small optional detours, prefer a dedicated `validation_route` instead of reusing a broader route group. For example, the Pass 09 southwest pocket decision should tag its pocket payoff with a route id such as `southwest_pocket_decision` and a specific `route_choice_id` such as `southwest_pocket_detour`. This keeps deterministic smokes focused on the authored detour while preserving the existing safe/deep route metadata.
+
 ```json
 {
   "id": "salvage_center_crossing",

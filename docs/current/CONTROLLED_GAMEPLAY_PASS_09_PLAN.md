@@ -71,6 +71,13 @@ Prefer existing salvage route metadata:
 - `validation_route`
 - `route_order`
 
+Pass 09 source convention:
+
+- tag the pocket payoff with `validation_route: "southwest_pocket_decision"`
+- use a specific `route_choice_id`, recommended `southwest_pocket_detour`
+- keep the target a normal salvage entity so reachability, cargo, score, oxygen, hazard reset, and banking rules stay unchanged
+- keep `expanded_route_choice` metadata reserved for the existing deeper lower-loop/deep-cache route
+
 Add new map schema only if existing fields cannot describe the pocket decision.
 
 ## Runtime/UI Boundaries
