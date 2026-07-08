@@ -3,6 +3,7 @@ extends Node2D
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
+const PrePickupRouteCueFeedback := preload("res://scripts/main/pre_pickup_route_cue_feedback.gd")
 const ReturnPressureFeedback := preload("res://scripts/main/return_pressure_feedback.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
 const SmokeHazardRouteChecks := preload("res://scripts/main/smoke/smoke_hazard_route_checks.gd")
@@ -75,6 +76,7 @@ const REVIEW_MAP_OPTIONS := [
 var _world
 var _player
 var _capture_controller
+var _pre_pickup_route_cue_feedback
 var _return_pressure_feedback
 var _timed_salvage
 var _smoke_hazard_route_checks
@@ -112,6 +114,7 @@ var _last_status_note := ""
 
 func _ready() -> void:
 	_capture_controller = CaptureController.new(self)
+	_pre_pickup_route_cue_feedback = PrePickupRouteCueFeedback.new()
 	_return_pressure_feedback = ReturnPressureFeedback.new()
 	_timed_salvage = TimedSalvageController.new()
 	_smoke_hazard_route_checks = SmokeHazardRouteChecks.new(self)
@@ -870,6 +873,7 @@ func _update_status_label() -> void:
 		return
 
 	var prompt := ""
+	var pre_pickup_route_cue := _pre_pickup_route_cue_prompt()
 	if _run_complete:
 		prompt = "Run complete - press R"
 	elif _run_failed:
@@ -878,6 +882,8 @@ func _update_status_label() -> void:
 		prompt = _cargo_full_prompt()
 	elif not _hazard_warning_id.is_empty():
 		prompt = _hazard_warning_prompt()
+	elif not pre_pickup_route_cue.is_empty():
+		prompt = pre_pickup_route_cue
 	elif not _last_status_note.is_empty():
 		prompt = _last_status_note
 	elif _held_salvage > 0:
@@ -908,6 +914,12 @@ func _cargo_full_prompt() -> String:
 		return ReturnPressureFeedback.DEFAULT_CARGO_FULL_PROMPT
 	var nearby_salvage: Dictionary = _world.get_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
 	return _return_pressure_feedback.cargo_full_prompt(nearby_salvage)
+
+
+func _pre_pickup_route_cue_prompt() -> String:
+	if _pre_pickup_route_cue_feedback == null or _world == null or _player == null:
+		return ""
+	return _pre_pickup_route_cue_feedback.current_prompt(_world, _player.global_position)
 
 
 func _hazard_warning_prompt() -> String:
