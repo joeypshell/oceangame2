@@ -6,6 +6,7 @@ const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
 const SmokeHazardRouteChecks := preload("res://scripts/main/smoke/smoke_hazard_route_checks.gd")
 const SmokeInteractionChecks := preload("res://scripts/main/smoke/smoke_interaction_checks.gd")
+const SmokeRouteExtensionChecks := preload("res://scripts/main/smoke/smoke_route_extension_checks.gd")
 const SmokeRouteChecks := preload("res://scripts/main/smoke/smoke_route_checks.gd")
 const SmokeScoreChecks := preload("res://scripts/main/smoke/smoke_score_checks.gd")
 const DEFAULT_MAP_PATH := "res://maps/production_slice_01.greybox.json"
@@ -72,6 +73,7 @@ var _capture_controller
 var _timed_salvage
 var _smoke_hazard_route_checks
 var _smoke_interaction_checks
+var _smoke_route_extension_checks
 var _smoke_route_checks
 var _smoke_score_checks
 var _review_canvas: CanvasLayer
@@ -107,6 +109,7 @@ func _ready() -> void:
 	_timed_salvage = TimedSalvageController.new()
 	_smoke_hazard_route_checks = SmokeHazardRouteChecks.new(self)
 	_smoke_interaction_checks = SmokeInteractionChecks.new(self)
+	_smoke_route_extension_checks = SmokeRouteExtensionChecks.new(self)
 	_smoke_route_checks = SmokeRouteChecks.new(self)
 	_smoke_score_checks = SmokeScoreChecks.new(self)
 	var user_args := OS.get_cmdline_user_args()
@@ -139,6 +142,7 @@ func _ready() -> void:
 	var smoke_hazard_interaction := _has_arg(user_args, engine_args, "--smoke-hazard-interaction")
 	var smoke_hazard_pressure := _has_arg(user_args, engine_args, "--smoke-hazard-pressure")
 	var smoke_pass_07_hazard_route_pressure := _has_arg(user_args, engine_args, "--smoke-pass-07-hazard-route-pressure")
+	var smoke_pass_08_route_extension := _has_arg(user_args, engine_args, "--smoke-pass-08-route-extension")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var smoke_timed_salvage := _has_arg(user_args, engine_args, "--smoke-timed-salvage")
 	var smoke_cargo_capacity := _has_arg(user_args, engine_args, "--smoke-cargo-capacity")
@@ -206,6 +210,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_pass_07_hazard_route_pressure:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_pass_08_route_extension:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_oxygen_pressure:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_timed_salvage:
@@ -265,6 +271,7 @@ func _ready() -> void:
 		or smoke_hazard_interaction
 		or smoke_hazard_pressure
 		or smoke_pass_07_hazard_route_pressure
+		or smoke_pass_08_route_extension
 		or smoke_oxygen_pressure
 		or smoke_timed_salvage
 		or smoke_cargo_capacity
@@ -316,6 +323,9 @@ func _ready() -> void:
 		return
 	if smoke_pass_07_hazard_route_pressure:
 		_smoke_hazard_route_checks._smoke_pass_07_hazard_route_pressure_and_quit()
+		return
+	if smoke_pass_08_route_extension:
+		_smoke_route_extension_checks._smoke_pass_08_route_extension_and_quit()
 		return
 	if smoke_oxygen_pressure:
 		_smoke_interaction_checks._smoke_oxygen_pressure_and_quit()
