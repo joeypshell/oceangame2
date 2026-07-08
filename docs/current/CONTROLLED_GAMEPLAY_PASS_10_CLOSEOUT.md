@@ -95,4 +95,4 @@ Avoid full-map productionization, economy, upgrades, enemies, inventory, save fi
 
 ## Current Issue State
 
-After #209 closes, the Pass 10 queue is complete. Issue #210 remains active tooling-doc hygiene for the project-local repo drift evaluation skill. Issues #52 and #53 remain open as deferred optional slice-03 polish unless slice-03 presentation becomes the selected goal.
+After #209 closes, the Pass 10 queue is complete. Issues #210 and #211 are closed follow-up hygiene for the repo drift skill docs and Pass 10 script UID sidecars. The active next batch is Pass 11 pre-pickup route readability; issues #52 and #53 remain open as deferred optional slice-03 polish unless slice-03 presentation becomes the selected goal.

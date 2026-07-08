@@ -266,8 +266,8 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-08:
 
-- Active Pass 10 queue: none; #201-#209 are closed after #209.
-- Active tooling-doc queue: #210 documents the project-local repo drift evaluation skill.
+- Active Pass 11 queue: #213-#222 are open for pre-pickup route readability; Pass 10 queue is closed (#201-#209).
+- Active tooling/skill queue: none; #210 documented repo drift, #211 committed Pass 10 UID sidecars, #212 updated drift issue batching, and #223 added drift-batch-resolve.
 - Active Pass 09 queue: none; #191-#199 are closed.
 - Active Pass 08 queue: none; #180-#190 are closed.
 - Deferred optional slice-03 polish: #52 and #53 remain open.
