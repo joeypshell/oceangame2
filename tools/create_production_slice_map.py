@@ -28,6 +28,20 @@ TARGETED_REMOVE_SOLID_CELLS = {
     (2, 79),
     (58, 80),
 }
+PASS_08_ROUTE_EXTENSION_REMOVE_SOLID_CELLS = {
+    (23, 75),
+    (23, 76),
+    (23, 77),
+    (24, 75),
+    (24, 76),
+    (24, 77),
+    (25, 75),
+    (25, 76),
+    (25, 77),
+    (26, 75),
+    (26, 76),
+    (26, 77),
+}
 TARGETED_FILL_OPEN_CELLS = {
     (1, 22),
     (1, 23),
@@ -118,6 +132,12 @@ def apply_targeted_topology_cleanup(solid: set[tuple[int, int]]) -> dict:
             solid.remove(cell)
             removed_solid_tips.append(cell)
 
+    pass_08_route_extension: list[tuple[int, int]] = []
+    for cell in sorted(PASS_08_ROUTE_EXTENSION_REMOVE_SOLID_CELLS):
+        if cell in solid:
+            solid.remove(cell)
+            pass_08_route_extension.append(cell)
+
     for cell in sorted(TARGETED_FILL_OPEN_CELLS):
         if cell not in solid:
             solid.add(cell)
@@ -126,6 +146,7 @@ def apply_targeted_topology_cleanup(solid: set[tuple[int, int]]) -> dict:
     return {
         "removed_solid_tips": removed_solid_tips,
         "filled_open_notches": filled_open_notches,
+        "pass_08_route_extension": pass_08_route_extension,
     }
 
 
@@ -187,11 +208,15 @@ def build_map_data(source_map: dict) -> dict:
                 "filled_open_notches": [
                     {"x": x, "y": y} for x, y in targeted_cleanup["filled_open_notches"]
                 ],
+                "pass_08_route_extension_opened_cells": [
+                    {"x": x, "y": y} for x, y in targeted_cleanup["pass_08_route_extension"]
+                ],
                 "notes": [
                     "The top edge remains open around the source's water-surface shaft for boat entry.",
                     "Left, right, and bottom crop edges are sealed so the player cannot leave the focused slice.",
                     "Unreachable open pockets from the high-fidelity sketch conversion are filled as solid terrain.",
                     "Targeted cleanup removes isolated one-cell solid tips and fills one-cell open notches visible in the production-slice source/render review.",
+                    "Pass 08 opens a tiny alcove in the southwest return pocket without changing the main lower-loop or deep-cache route.",
                     "The original full sketch map is left untouched for comparison.",
                 ],
             },
@@ -256,7 +281,7 @@ def build_map_data(source_map: dict) -> dict:
                 "type": "marker",
                 "x": 1,
                 "y": 67,
-                "w": 23,
+                "w": 27,
                 "h": 16,
                 "intent": (
                     "Pass 08 route-scale segment marking the lower-left return pocket "
