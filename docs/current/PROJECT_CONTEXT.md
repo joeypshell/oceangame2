@@ -1,6 +1,6 @@
 # Project Context
 
-Last updated: 2026-07-07
+Last updated: 2026-07-08
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
@@ -248,6 +248,8 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-08:
 
+- Active Pass 06 queue: none; #160-#169 are closed.
+- Closed: #160-#169 completed Pass 06 timed-salvage readability, in-world affordance, progress/cancel/complete feedback, deterministic smoke hardening, focused capture, visual baseline acceptance, public Web verification, and closeout.
 - Active Pass 05 queue: none; #150-#159 are closed.
 - Closed: #150-#159 completed Pass 05 timed salvage interaction, source metadata/validation, runtime, map authoring, smoke coverage, focused capture, visual review, public Web verification, closeout, and main-file guard work.
 - Active Pass 04 queue: none; #129-#148 are closed.
@@ -519,30 +521,17 @@ Recent important commits:
 
 ## Recommended Next Work
 
-The first full-sketch evaluation selected the top-center entry hub as the first production slice target:
-
-```text
-x: 58
-y: 0
-w: 72
-h: 84
-```
-
-The first production slice is meant to test a focused version of the intended workflow: supplied full-sketch topology becomes JSON source data, Godot renders that source through grid-aligned terrain, collision remains source-derived, the player starts at a top-water boat entry, and a small collect-return route can be validated repeatedly.
+Pass 06 completed the readable timed-salvage interaction on the default `production_slice_01` slice. The next recommended pass should add one authored hazard/navigation pressure pattern in `production_slice_01` before broader map-scale expansion.
 
 Accepted constraints for the next batch:
 
+- Keep `production_slice_01` as the default preview map.
+- Preserve `maps/full_cave_sketch_01.greybox.json` as a topology draft and planning source.
 - Do not move the entire full sketch into production yet; work from focused slices.
-- Keep `production_slice_01` bounded to the selected top-center entry hub region unless a source-data cleanup issue intentionally revises it.
-- Use `boat_spawn` as the preferred production-style entry and extraction model.
+- Keep map topology, collision, spawn, extraction, and camera tests source-driven.
 - Keep gameplay scoped to movement, salvage, hazards, extraction, reset, and review UI until the visual pipeline is trustworthy.
-- Keep the visual target clean side-view underwater cave terrain with grid-aligned seam-critical tiles; fix individual assets or source data instead of regenerating whole scenes.
-
-Recommended next order:
-
-1. Create a Controlled Gameplay Pass 05 batch around one moment-to-moment salvage interaction, such as timed/tool-like salvage, with source metadata, validator support, focused runtime implementation, smoke coverage, capture, visual review, and Web verification.
-2. Keep map scale as the next evaluation after that interaction pass; larger routes will be more useful once there is another meaningful in-cave verb to place and validate.
-3. Keep #52/#53 as optional post-baseline slice-03 improvement issues unless the selected goal shifts back to slice-03 presentation.
+- Do not expand into economy, upgrades, inventory, enemies, procedural generation, save files, or broad art replacement.
+- Keep #52/#53 as optional post-baseline slice-03 improvement issues unless the selected goal shifts back to slice-03 presentation.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
 

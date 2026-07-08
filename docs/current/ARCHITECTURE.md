@@ -65,7 +65,7 @@ Additional current map sources:
   - Creates a `TileMapLayer` visual from the source JSON.
   - Creates a visible cave `TileMapLayer` from grid-aligned terrain tiles.
   - Creates `StaticBody2D` collision rectangles from the same terrain data.
-  - Draws background silhouettes, route markers, extraction zones, boat spawns, salvage, hazards, and spawn markers.
+  - Draws background silhouettes, route markers, extraction zones, boat spawns, salvage, timed-salvage affordance markers, hazards, and spawn markers.
 
 - `scenes/player/Player.tscn`
   - Basic placeholder diver/sub-style player.
@@ -78,11 +78,11 @@ Additional current map sources:
   - Loads world and player scenes.
   - Applies camera bounds from the world map size.
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
-  - Shows compact preview review context, salvage progress, and scoped oxygen pressure.
-  - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress, cargo banking, oxygen pressure, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, and route outcome result text.
+  - Shows compact preview review context, salvage progress, timed-salvage feedback, and scoped oxygen pressure.
+  - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress/cancel/complete feedback, cargo banking, oxygen pressure, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, and route outcome result text.
   - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, and focused timed-salvage capture.
   - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, timed salvage, hazard pressure, oxygen pressure, cargo/scoring, route outcome result, player-facing, movement-feel, and production-slice route checks.
-  - Uses `scripts/main/timed_salvage_controller.gd` for the narrow Pass 05 timed salvage interaction.
+  - Uses `scripts/main/timed_salvage_controller.gd` for the narrow timed salvage interaction.
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.
@@ -115,7 +115,8 @@ Art placement must not create, remove, or move collision.
 - Hazards show warning feedback before contact; contact applies a 12-second oxygen penalty, bumps the player back to spawn, briefly tints the player, and restores any held/unbanked salvage to the map.
 - Oxygen is a scoped expedition-pressure prototype: it drains while away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held salvage.
 - The default slice has source-authored safe/deep route metadata and deterministic smokes for safe/deep comparison, hazard pressure, and route outcome result text.
-- The default slice has one source-authored `timed_salvage` target, `salvage_deep_right_cache`, that requires 2.5 seconds of in-range progress before entering held cargo.
+- The default slice has one source-authored `timed_salvage` target, `salvage_deep_right_cache`, that renders a small in-world affordance and requires 2.5 seconds of in-range progress before entering held cargo.
+- Timed-salvage feedback covers progress, cancel, completion, cargo-full blocking, hazard reset, and oxygen failure/reset through `--smoke-timed-salvage`.
 - `--capture-route-outcome-result` provides a focused review capture for the completed-run route outcome panel without replacing normal accepted baselines.
 - `--capture-timed-salvage` provides a focused review capture for the timed-salvage overlay state without replacing normal accepted baselines.
 - First screenshot baseline is committed at `visual_baselines/001_greybox_in_engine.png`.
