@@ -28,7 +28,7 @@ The pass stayed inside the source-of-truth workflow:
 - #175 added deterministic `--smoke-pass-07-hazard-route-pressure` coverage.
 - #176 added focused `--capture-pass-07-hazard-pressure` review capture output.
 - #177 accepted only the intentional production-slice-01 marker visual impact after comparison review.
-- #178 verified the public Web preview for deployed runtime commit `1b90187a55c9d0c0baa11a46f35288b5d81c02ce`.
+- #178 verified the public Web preview. The behavior-changing runtime work deployed at `1b90187a55c9d0c0baa11a46f35288b5d81c02ce`; the final source-state build metadata later advanced to `99d5fff60e388f9c58ab26a797f617366cfbb509` after adding the missing Godot `.uid` sidecar for the Pass 07 smoke helper.
 - #179 recorded this closeout and next-step evaluation.
 
 ## Current Prototype State
@@ -79,7 +79,7 @@ python tools/check_map_parity.py maps/production_slice_01.greybox.json
 python tools/manage_production_slice_baseline.py compare-all
 python tools/manage_production_slice_baseline.py check-clean --all-slices
 python tools/check_production_slice_captures.py --fail-on-stale
-node tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha 1b90187a55c9d0c0baa11a46f35288b5d81c02ce
+node tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha 99d5fff60e388f9c58ab26a797f617366cfbb509
 python tools/check_file_lengths.py
 git diff --check
 ```
@@ -89,6 +89,8 @@ GitHub verification:
 - Godot Web Export run `28916261068`: success for deployed runtime commit `1b90187`.
 - Godot Smoke run `28916261027`: success for deployed runtime commit `1b90187`.
 - Godot Smoke run `28916414980`: success for accepted visual-baseline commit `b62ab12`.
+- Godot Web Export run `28916764273`: success for final `.uid` sidecar source-state commit `99d5fff`.
+- Godot Smoke run `28916764245`: success for final `.uid` sidecar source-state commit `99d5fff`.
 
 ## Remaining Goal Gaps
 
