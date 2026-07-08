@@ -19,6 +19,8 @@ const COLOR_SALVAGE_DARK := Color(0.48, 0.30, 0.11, 1.0)
 const COLOR_SALVAGE_METAL := Color(0.72, 0.83, 0.78, 1.0)
 const COLOR_SALVAGE_VALUABLE := Color(1.0, 0.92, 0.36, 0.92)
 const COLOR_SALVAGE_VALUABLE_GLOW := Color(1.0, 0.86, 0.22, 0.24)
+const COLOR_SALVAGE_TIMED := Color(0.42, 0.95, 1.0, 0.72)
+const COLOR_SALVAGE_TIMED_GLOW := Color(0.28, 0.92, 0.98, 0.16)
 const COLOR_HAZARD := Color(1.0, 0.22, 0.34, 1.0)
 const COLOR_HAZARD_DARK := Color(0.40, 0.04, 0.10, 1.0)
 const COLOR_HAZARD_LIGHT := Color(1.0, 0.58, 0.66, 1.0)
@@ -697,7 +699,8 @@ func _build_entities(entities: Array) -> void:
 				salvage_id,
 				center,
 				str(entity.get("kind", "crate")),
-				str(entity.get("tier", "common"))
+				str(entity.get("tier", "common")),
+				_salvage_interaction(entity)
 			)
 			_salvage_nodes_by_id[salvage_id] = salvage_node
 			if show_debug_overlay:
@@ -1061,7 +1064,7 @@ func _add_diamond(marker_name: String, center: Vector2, color: Color, radius: fl
 	return poly
 
 
-func _add_salvage_prop(marker_name: String, center: Vector2, kind: String, tier: String) -> Node2D:
+func _add_salvage_prop(marker_name: String, center: Vector2, kind: String, tier: String, interaction: String) -> Node2D:
 	var root := Node2D.new()
 	root.name = marker_name
 	root.position = center
@@ -1078,7 +1081,25 @@ func _add_salvage_prop(marker_name: String, center: Vector2, kind: String, tier:
 				_add_crate_prop(root)
 	if tier == "valuable":
 		_add_valuable_salvage_cue(root)
+	if interaction == "timed_salvage":
+		_add_timed_salvage_affordance(root)
 	return root
+
+
+func _add_timed_salvage_affordance(root: Node2D) -> void:
+	var glow := _add_local_polygon(root, "TimedActionGlow", _ellipse_points(26.0, 18.0, 24), COLOR_SALVAGE_TIMED_GLOW)
+	glow.z_index = -2
+
+	var ring_points := _circle_points(20.0, 28)
+	ring_points.append(ring_points[0])
+	var ring := _add_local_line(root, "TimedActionRing", ring_points, COLOR_SALVAGE_TIMED, 2.0)
+	ring.z_index = 5
+
+	var tick := _add_local_line(root, "TimedActionTick", PackedVector2Array([Vector2(0, -29), Vector2(0, -20)]), COLOR_SALVAGE_TIMED, 2.0)
+	tick.z_index = 6
+
+	var dot := _add_local_polygon(root, "TimedActionDot", _circle_points(3.0, 8, Vector2(0, -31)), COLOR_SALVAGE_TIMED)
+	dot.z_index = 7
 
 
 func _add_valuable_salvage_cue(root: Node2D) -> void:
