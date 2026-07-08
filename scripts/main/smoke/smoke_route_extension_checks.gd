@@ -9,6 +9,8 @@ const PASS_10_TARGET_ID := "salvage_return_branch"
 const PASS_10_ROUTE_ID := "return_pressure_decision"
 const PASS_10_ROUTE_CHOICE_ID := "return_branch_bank_prompt"
 const PASS_10_FEEDBACK := "Cargo full - bank at boat"
+const PASS_11_CUE_MARKER_ID := "southwest_pocket_pre_pickup_cue"
+const PASS_11_CUE_TEXT := "Optional pocket ahead"
 const LOWER_LOOP_SALVAGE_ID := "salvage_lower_loop"
 const DEEP_CACHE_SALVAGE_ID := "salvage_deep_right_cache"
 
@@ -348,6 +350,127 @@ func _smoke_pass_10_return_pressure_and_quit() -> void:
 	get_tree().quit()
 
 
+func _smoke_pass_11_pre_pickup_route_cue_and_quit() -> void:
+	if _world.map_id != "production_slice_01":
+		push_error("Pass 11 pre-pickup cue smoke loaded unexpected map: %s." % _world.map_id)
+		get_tree().quit(1)
+		return
+
+	var cue_marker: Dictionary = _world.get_marker_zone(PASS_11_CUE_MARKER_ID)
+	var target: Dictionary = _salvage_by_id(PASS_08_TARGET_ID)
+	if cue_marker.is_empty() or target.is_empty():
+		push_error("Pass 11 cue smoke missing source data: marker=%s target=%s." % [
+			str(not cue_marker.is_empty()),
+			str(not target.is_empty()),
+		])
+		get_tree().quit(1)
+		return
+
+	var cue_target_id := str(cue_marker.get("cue_target_id", ""))
+	var cue_text := str(cue_marker.get("cue_text", ""))
+	if str(cue_marker.get("route_cue_id", "")) != PASS_11_CUE_MARKER_ID or cue_target_id != PASS_08_TARGET_ID or cue_text != PASS_11_CUE_TEXT:
+		push_error("Pass 11 cue metadata mismatch: marker=%s target=%s text=%s." % [
+			str(cue_marker.get("route_cue_id", "")),
+			cue_target_id,
+			cue_text,
+		])
+		get_tree().quit(1)
+		return
+	if str(cue_marker.get("cue_condition", "")) != "target_uncollected":
+		push_error("Pass 11 cue condition mismatch: %s." % str(cue_marker.get("cue_condition", "")))
+		get_tree().quit(1)
+		return
+	if str(target.get("interaction", "instant")) != "instant":
+		push_error("Pass 11 cue target should remain instant salvage: %s." % str(target))
+		get_tree().quit(1)
+		return
+
+	var cue_center := _marker_center(cue_marker)
+	var path_to_cue: Array = _world.find_open_path(_world.spawn_position, cue_center)
+	var path_cue_to_target: Array = _world.find_open_path(cue_center, target["center"])
+	var return_path: Array = _world.find_open_path(target["center"], _world.get_extraction_center())
+	if path_to_cue.is_empty() or path_cue_to_target.is_empty() or return_path.is_empty():
+		push_error("Pass 11 cue path failure: to_cue=%d cue_to_target=%d return=%d." % [
+			path_to_cue.size(),
+			path_cue_to_target.size(),
+			return_path.size(),
+		])
+		get_tree().quit(1)
+		return
+
+	_player.set_physics_process(false)
+	_hazard_interactions_enabled = false
+	var oxygen_start := _oxygen_seconds
+	_player.global_position = cue_center
+	_process(0.0)
+	if _world.is_salvage_collected(PASS_08_TARGET_ID) or _held_salvage != 0:
+		push_error("Pass 11 cue smoke changed target or cargo before pickup: collected=%s held=%d." % [
+			str(_world.is_salvage_collected(PASS_08_TARGET_ID)),
+			_held_salvage,
+		])
+		get_tree().quit(1)
+		return
+	if _status_label == null or _status_label.text.find(PASS_11_CUE_TEXT) == -1:
+		push_error("Pass 11 cue feedback missing before pickup: %s." % _status_label.text)
+		get_tree().quit(1)
+		return
+
+	_player.global_position = target["center"]
+	_process(0.0)
+	var target_score := int(target.get("score", 0))
+	if _held_salvage != 1 or not _held_salvage_ids.has(PASS_08_TARGET_ID) or _held_salvage_score != target_score:
+		push_error("Pass 11 cue smoke did not collect target after cue: held=%d ids=%s score=%d." % [
+			_held_salvage,
+			_held_salvage_ids,
+			_held_salvage_score,
+		])
+		get_tree().quit(1)
+		return
+
+	_player.global_position = cue_center
+	_update_status_label()
+	if _status_label.text.find(PASS_11_CUE_TEXT) != -1:
+		push_error("Pass 11 cue remained visible after target collection: %s." % _status_label.text)
+		get_tree().quit(1)
+		return
+
+	_player.global_position = _world.get_extraction_center()
+	_process(0.0)
+	if _held_salvage != 0 or _banked_salvage != 1 or _banked_score != target_score:
+		push_error("Pass 11 cue smoke did not bank target: held=%d banked=%d score=%d." % [
+			_held_salvage,
+			_banked_salvage,
+			_banked_score,
+		])
+		get_tree().quit(1)
+		return
+
+	var oxygen_after_bank := _oxygen_seconds
+	_reset_run()
+	_player.global_position = cue_center
+	_process(0.0)
+	if _world.is_salvage_collected(PASS_08_TARGET_ID) or _status_label.text.find(PASS_11_CUE_TEXT) == -1:
+		push_error("Pass 11 cue reset state did not restore target/cue: collected=%s status=%s." % [
+			str(_world.is_salvage_collected(PASS_08_TARGET_ID)),
+			_status_label.text,
+		])
+		get_tree().quit(1)
+		return
+
+	print("Pass 11 pre-pickup route cue smoke passed: marker=%s target=%s cue=\"%s\" paths=%d,%d,%d held_after_pickup=1 banked_score=%d oxygen=%.1f->%.1f cue_before=true cue_after_collection=false reset_cue=true." % [
+		PASS_11_CUE_MARKER_ID,
+		PASS_08_TARGET_ID,
+		PASS_11_CUE_TEXT,
+		path_to_cue.size(),
+		path_cue_to_target.size(),
+		return_path.size(),
+		target_score,
+		oxygen_start,
+		oxygen_after_bank,
+	])
+	get_tree().quit()
+
+
 func _salvage_by_id(salvage_id: String) -> Dictionary:
 	for salvage in _world.get_salvage_centers():
 		if str(salvage.get("id", "")) == salvage_id:
@@ -360,3 +483,11 @@ func _hazard_by_id(hazard_id: String) -> Dictionary:
 		if str(hazard.get("id", "")) == hazard_id:
 			return hazard
 	return {}
+
+
+func _marker_center(marker: Dictionary) -> Vector2:
+	var tile_size := float(_world.tile_size)
+	return Vector2(
+		(float(marker.get("x", 0)) + (float(marker.get("w", 0)) * 0.5)) * tile_size,
+		(float(marker.get("y", 0)) + (float(marker.get("h", 0)) * 0.5)) * tile_size
+	)

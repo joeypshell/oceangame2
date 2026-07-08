@@ -158,6 +158,7 @@ func _ready() -> void:
 	var smoke_pass_08_route_extension := _has_arg(user_args, engine_args, "--smoke-pass-08-route-extension")
 	var smoke_pass_09_southwest_pocket_decision := _has_arg(user_args, engine_args, "--smoke-pass-09-southwest-pocket-decision")
 	var smoke_pass_10_return_pressure := _has_arg(user_args, engine_args, "--smoke-pass-10-return-pressure")
+	var smoke_pass_11_pre_pickup_route_cue := _has_arg(user_args, engine_args, "--smoke-pass-11-pre-pickup-route-cue")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var smoke_timed_salvage := _has_arg(user_args, engine_args, "--smoke-timed-salvage")
 	var smoke_cargo_capacity := _has_arg(user_args, engine_args, "--smoke-cargo-capacity")
@@ -237,6 +238,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_pass_10_return_pressure:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_pass_11_pre_pickup_route_cue:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_oxygen_pressure:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_timed_salvage:
@@ -302,6 +305,7 @@ func _ready() -> void:
 		or smoke_pass_08_route_extension
 		or smoke_pass_09_southwest_pocket_decision
 		or smoke_pass_10_return_pressure
+		or smoke_pass_11_pre_pickup_route_cue
 		or smoke_oxygen_pressure
 		or smoke_timed_salvage
 		or smoke_cargo_capacity
@@ -362,6 +366,9 @@ func _ready() -> void:
 		return
 	if smoke_pass_10_return_pressure:
 		_smoke_route_extension_checks._smoke_pass_10_return_pressure_and_quit()
+		return
+	if smoke_pass_11_pre_pickup_route_cue:
+		_smoke_route_extension_checks._smoke_pass_11_pre_pickup_route_cue_and_quit()
 		return
 	if smoke_oxygen_pressure:
 		_smoke_interaction_checks._smoke_oxygen_pressure_and_quit()
