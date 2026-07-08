@@ -277,6 +277,18 @@ def build_map_data(source_map: dict) -> dict:
                 "intent": "Lower optional loop for a longer salvage return test.",
             },
             {
+                "id": "return_pressure_to_boat",
+                "type": "marker",
+                "x": 12,
+                "y": 50,
+                "w": 28,
+                "h": 18,
+                "intent": (
+                    "Pass 10 return-pressure segment around salvage_return_branch "
+                    "where full cargo should prompt banking at the boat."
+                ),
+            },
+            {
                 "id": "southwest_return_pocket_extension",
                 "type": "marker",
                 "x": 1,
@@ -374,7 +386,17 @@ def build_map_data(source_map: dict) -> dict:
                     "keeps the pickup instant while making the optional route decision matter."
                 ),
             },
-            {"id": "salvage_return_branch", "type": "salvage", "x": 17, "y": 58, "kind": "crate"},
+            {
+                "id": "salvage_return_branch",
+                "type": "salvage",
+                "x": 17,
+                "y": 58,
+                "kind": "crate",
+                "route_choice_id": "return_branch_bank_prompt",
+                "validation_route": "return_pressure_decision",
+                "route_order": 0,
+                "intent": "Pass 10 return-pressure pickup that should remain available while full cargo returns to the boat.",
+            },
             {"id": "hazard_shaft_choke", "type": "hazard", "x": 34, "y": 20, "kind": "jellyfish"},
             {"id": "hazard_crossing_choke", "type": "hazard", "x": 52, "y": 34, "kind": "mine"},
             {"id": "hazard_lower_bend", "type": "hazard", "x": 36, "y": 61, "kind": "jellyfish"},
