@@ -38,6 +38,7 @@ Build a small side-view salvage game that proves:
 - [Current Architecture](docs/current/ARCHITECTURE.md)
 - [Tooling](docs/current/TOOLING.md)
 - [Parallel Codex Worktree Workflow](docs/current/PARALLEL_CODEX_WORKFLOW.md)
+- [Greybox World Split Plan](docs/current/GREYBOX_WORLD_SPLIT_PLAN.md)
 - [Production Slice Index](docs/current/PRODUCTION_SLICE_INDEX.md)
 - [Post-Slice Workflow Decision](docs/current/POST_SLICE_WORKFLOW_DECISION.md)
 - [Controlled Visual Revision 01 Plan](docs/current/CONTROLLED_VISUAL_REVISION_01_PLAN.md)
