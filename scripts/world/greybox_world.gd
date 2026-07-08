@@ -1,8 +1,6 @@
 extends Node2D
 
 const COLOR_WATER := Color(0.08, 0.72, 0.92, 1.0)
-const COLOR_GRID := Color(0.85, 0.98, 1.0, 0.22)
-const COLOR_SOLID := Color(0.15, 0.20, 0.25, 1.0)
 const COLOR_BASE := Color(0.95, 0.78, 0.48, 0.92)
 const COLOR_BOAT := Color(0.96, 0.66, 0.20, 0.92)
 const COLOR_BOAT_DARK := Color(0.22, 0.16, 0.10, 1.0)
@@ -28,11 +26,11 @@ const COLOR_DEBUG_ROUTE := Color(0.90, 0.98, 1.0, 0.26)
 const COLOR_DEBUG_ROUTE_EDGE := Color(0.90, 0.98, 1.0, 0.88)
 const COLOR_DEBUG_ENTRY := Color(0.72, 1.0, 0.72, 0.88)
 const COLOR_DEBUG_EXTRACTION := Color(1.0, 0.92, 0.52, 0.90)
-const SOURCE_LAYER_ALPHA := 0.08
 const BACKGROUND_ART_ALPHA := 0.26
 
 const GreyboxAssetLookup := preload("res://scripts/world/greybox_asset_lookup.gd")
 const GreyboxTerrainRenderer := preload("res://scripts/world/greybox_terrain_renderer.gd")
+const GreyboxDebugRenderer := preload("res://scripts/world/greybox_debug_renderer.gd")
 
 const SALVAGE_TIER_SCORES := {
 	"common": 100,
@@ -65,11 +63,13 @@ var _marker_root: Node2D
 var _collision_root: Node2D
 var _asset_lookup
 var _terrain_renderer
+var _debug_renderer
 
 
 func _ready() -> void:
 	_asset_lookup = GreyboxAssetLookup.new()
 	_terrain_renderer = GreyboxTerrainRenderer.new()
+	_debug_renderer = GreyboxDebugRenderer.new()
 	load_greybox()
 
 
@@ -374,10 +374,7 @@ func _draw() -> void:
 	if not show_debug_overlay:
 		return
 
-	for x in range(0, int(map_pixel_size.x) + 1, tile_size):
-		draw_line(Vector2(x, 0), Vector2(x, map_pixel_size.y), COLOR_GRID)
-	for y in range(0, int(map_pixel_size.y) + 1, tile_size):
-		draw_line(Vector2(0, y), Vector2(map_pixel_size.x, y), COLOR_GRID)
+	_debug_renderer_helper().draw_grid(self, map_pixel_size, tile_size)
 
 
 func _load_map_data() -> Dictionary:
@@ -395,20 +392,8 @@ func _load_map_data() -> Dictionary:
 
 
 func _build_tilemap(map_data: Dictionary) -> void:
-	_solid_layer = TileMapLayer.new()
-	_solid_layer.name = "SourceTileMapLayer"
-	_solid_layer.tile_set = _create_greybox_tileset()
-	_solid_layer.modulate = Color(1.0, 1.0, 1.0, SOURCE_LAYER_ALPHA)
-	_solid_layer.visible = show_debug_overlay
+	_solid_layer = _debug_renderer_helper().build_source_layer(map_data, tile_size, show_debug_overlay, COLOR_BASE)
 	add_child(_solid_layer)
-
-	for terrain in map_data.get("terrain", []):
-		if terrain.get("type", "") == "solid":
-			_fill_tile_rect(_solid_layer, terrain, Vector2i(0, 0))
-
-	for zone in map_data.get("zones", []):
-		if zone.get("type", "") == "base":
-			_fill_tile_rect(_solid_layer, zone, Vector2i(1, 0))
 
 
 func _build_cave_terrain_layer(terrain_items: Array) -> void:
@@ -418,31 +403,6 @@ func _build_cave_terrain_layer(terrain_items: Array) -> void:
 
 func _solid_cells_from_terrain(terrain_items: Array) -> Dictionary:
 	return _terrain_renderer_helper().solid_cells_from_terrain(terrain_items)
-
-
-func _create_greybox_tileset() -> TileSet:
-	var image := Image.create(tile_size * 2, tile_size, false, Image.FORMAT_RGBA8)
-	image.fill(Color(0, 0, 0, 0))
-	image.fill_rect(Rect2i(0, 0, tile_size, tile_size), COLOR_SOLID)
-	image.fill_rect(Rect2i(tile_size, 0, tile_size, tile_size), COLOR_BASE)
-
-	var texture := ImageTexture.create_from_image(image)
-	var source := TileSetAtlasSource.new()
-	source.texture = texture
-	source.texture_region_size = Vector2i(tile_size, tile_size)
-	source.create_tile(Vector2i(0, 0))
-	source.create_tile(Vector2i(1, 0))
-
-	var tile_set := TileSet.new()
-	tile_set.tile_size = Vector2i(tile_size, tile_size)
-	tile_set.add_source(source, 0)
-	return tile_set
-
-
-func _fill_tile_rect(layer: TileMapLayer, item: Dictionary, atlas_coords: Vector2i) -> void:
-	for y in range(int(item["y"]), int(item["y"]) + int(item["h"])):
-		for x in range(int(item["x"]), int(item["x"]) + int(item["w"])):
-			layer.set_cell(Vector2i(x, y), 0, atlas_coords)
 
 
 func _build_collision(terrain_items: Array) -> void:
@@ -654,6 +614,12 @@ func _terrain_renderer_helper():
 	if _terrain_renderer == null:
 		_terrain_renderer = GreyboxTerrainRenderer.new()
 	return _terrain_renderer
+
+
+func _debug_renderer_helper():
+	if _debug_renderer == null:
+		_debug_renderer = GreyboxDebugRenderer.new()
+	return _debug_renderer
 
 
 func _asset_lookup_helper():
@@ -1154,29 +1120,11 @@ func _rect_size(item: Dictionary) -> Vector2:
 
 
 func _add_rect_outline(item: Dictionary, outline_name: String, color: Color, width: float, z_index: int) -> Line2D:
-	var line := Line2D.new()
-	line.name = outline_name
-	line.position = _rect_from_item(item).position
-	line.points = _rect_outline_points(_rect_size(item))
-	line.default_color = color
-	line.width = width
-	line.z_index = z_index
-	_marker_root.add_child(line)
-	return line
+	return _debug_renderer_helper().add_rect_outline(_marker_root, _rect_from_item(item), outline_name, color, width, z_index)
 
 
 func _add_debug_label(label_text: String, position: Vector2, color: Color) -> Label:
-	var label := Label.new()
-	label.name = "DebugLabel"
-	label.text = label_text
-	label.position = position
-	label.z_index = 30
-	label.add_theme_font_size_override("font_size", 13)
-	label.add_theme_color_override("font_color", color)
-	label.add_theme_color_override("font_outline_color", Color(0.0, 0.0, 0.0, 0.84))
-	label.add_theme_constant_override("outline_size", 4)
-	_marker_root.add_child(label)
-	return label
+	return _debug_renderer_helper().add_debug_label(_marker_root, label_text, position, color)
 
 
 func _rect_from_item(item: Dictionary) -> Rect2:
