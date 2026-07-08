@@ -2316,6 +2316,20 @@
       "intent": "Pass 10 return-pressure segment around salvage_return_branch where full cargo should prompt banking at the boat."
     },
     {
+      "id": "lower_loop_oxygen_rest_pocket",
+      "type": "marker",
+      "x": 27,
+      "y": 60,
+      "w": 8,
+      "h": 5,
+      "route_context": "oxygen_rest_pressure",
+      "oxygen_rest": true,
+      "oxygen_rest_label": "Rest pocket",
+      "oxygen_rest_cap_seconds": 45,
+      "oxygen_rest_refill_per_second": 8,
+      "intent": "Pass 12 limited oxygen rest pocket in the lower-loop return corridor; supports a brief in-cave oxygen decision without changing extraction, cargo, salvage, hazards, or terrain topology."
+    },
+    {
       "id": "southwest_return_pocket_extension",
       "type": "marker",
       "x": 1,
