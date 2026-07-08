@@ -227,6 +227,11 @@ func _smoke_timed_salvage_and_quit() -> void:
 	var resumed_percent := int(round(100.0 * resumed_seconds / interaction_seconds))
 	var oxygen_start := _oxygen_seconds
 
+	if str(target.get("interaction", "instant")) != "timed_salvage" or interaction_seconds <= 0.0:
+		push_error("Timed salvage smoke target %s is not an available timed_salvage interaction." % target_id)
+		get_tree().quit(1)
+		return
+
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
 	_player.global_position = target_center
@@ -249,6 +254,7 @@ func _smoke_timed_salvage_and_quit() -> void:
 		push_error("Timed salvage smoke did not cancel progress when leaving range; status=%s." % _status_text())
 		get_tree().quit(1)
 		return
+	var cancel_feedback := _last_status_note
 
 	_player.global_position = target_center
 	_process(resumed_seconds)
@@ -266,6 +272,7 @@ func _smoke_timed_salvage_and_quit() -> void:
 		push_error("Timed salvage smoke did not show completion feedback; status=%s." % _status_text())
 		get_tree().quit(1)
 		return
+	var complete_feedback := _last_status_note
 	var held_after_completion := _held_salvage
 
 	_hazard_interactions_enabled = true
@@ -293,6 +300,10 @@ func _smoke_timed_salvage_and_quit() -> void:
 	_process(interaction_seconds + SMOKE_TIMED_SALVAGE_MARGIN_SECONDS)
 	if _world.is_salvage_collected(target_id) or _held_salvage_ids.has(target_id):
 		push_error("Timed salvage smoke collected timed target while cargo was full.")
+		get_tree().quit(1)
+		return
+	if _status_text().find("Cargo full - return to extraction") == -1:
+		push_error("Timed salvage smoke did not show cargo-full feedback; status=%s." % _status_text())
 		get_tree().quit(1)
 		return
 
@@ -335,9 +346,12 @@ func _smoke_timed_salvage_and_quit() -> void:
 		return
 
 	_reset_run()
-	print("Timed salvage smoke passed: target=%s seconds=%.1f completed=true held_after_complete=%d banked_score=%d oxygen=%.1f->%.1f cargo_blocked=true hazard_restored=true oxygen_reset=true." % [
+	print("Timed salvage smoke passed: target=%s seconds=%.1f available=true progress=%d%% cancel=\"%s\" complete=\"%s\" held_after_complete=%d banked_score=%d oxygen=%.1f->%.1f cargo_blocked=true hazard_restored=true oxygen_reset=true." % [
 		target_id,
 		interaction_seconds,
+		partial_percent,
+		cancel_feedback,
+		complete_feedback,
 		held_after_completion,
 		banked_score_after_timed,
 		oxygen_start,
