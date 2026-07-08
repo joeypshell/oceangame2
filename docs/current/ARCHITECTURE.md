@@ -39,6 +39,7 @@ Additional current map sources:
   - Uses `boat_spawn` as the top-water entry/extraction point and includes authored salvage, hazards, route markers, and camera tests.
   - Authors the current safe/deep route metadata: `salvage_entry_shaft` is the short safe target, while `salvage_lower_loop` and `salvage_deep_right_cache` are the deeper valuable route targets.
   - Authors the Pass 07 `lower_loop_to_deep_cache_pressure` route-pressure marker for the `hazard_right_branch` navigation beat.
+  - Authors the Pass 08 `southwest_return_pocket_extension` marker and `salvage_southwest_return_cache` common payoff cue.
   - Current default preview map.
   - Can also be selected explicitly with `.\tools\open_godot_project.ps1 -Run -ProductionSliceMap`.
 - `maps/production_slice_02.greybox.json`
@@ -81,7 +82,7 @@ Additional current map sources:
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
   - Shows compact preview review context, salvage progress, timed-salvage feedback, and scoped oxygen pressure.
   - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress/cancel/complete feedback, cargo banking, oxygen pressure, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, and route outcome result text.
-  - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, focused timed-salvage capture, and focused Pass 07 hazard-pressure capture.
+  - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, focused timed-salvage capture, focused Pass 07 hazard-pressure capture, and focused Pass 08 route-extension capture.
   - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, timed salvage, hazard pressure, oxygen pressure, cargo/scoring, route outcome result, player-facing, movement-feel, Pass 08 route-extension, and production-slice route checks.
   - Uses `scripts/main/timed_salvage_controller.gd` for the narrow timed salvage interaction.
 
@@ -122,4 +123,5 @@ Art placement must not create, remove, or move collision.
 - `--capture-route-outcome-result` provides a focused review capture for the completed-run route outcome panel without replacing normal accepted baselines.
 - `--capture-timed-salvage` provides a focused review capture for the timed-salvage overlay state without replacing normal accepted baselines.
 - `--capture-pass-07-hazard-pressure` provides a focused review capture for the selected lower-loop hazard/navigation pressure state without replacing normal accepted baselines.
+- `--capture-pass-08-route-extension` provides a focused review capture for the selected southwest return-pocket route extension without replacing normal accepted baselines.
 - First screenshot baseline is committed at `visual_baselines/001_greybox_in_engine.png`.

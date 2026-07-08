@@ -53,6 +53,8 @@ Build a small side-view salvage game that proves:
 - [Controlled Gameplay Pass 06 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_06_CLOSEOUT.md)
 - [Controlled Gameplay Pass 07 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_07_PLAN.md)
 - [Controlled Gameplay Pass 07 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_07_CLOSEOUT.md)
+- [Controlled Gameplay Pass 08 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_08_PLAN.md)
+- [Controlled Gameplay Pass 08 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_08_CLOSEOUT.md)
 - [Oxygen Pressure Baseline Decision](docs/current/OXYGEN_PRESSURE_BASELINE_DECISION.md)
 - [Route Payoff Visual Baseline Decision](docs/current/ROUTE_PAYOFF_VISUAL_BASELINE_DECISION.md)
 - [Route Payoff Web Preview Verification](docs/current/ROUTE_PAYOFF_WEB_PREVIEW_VERIFICATION.md)
@@ -63,6 +65,8 @@ Build a small side-view salvage game that proves:
 - [Pass 06 Timed Salvage Web Preview Verification](docs/current/PASS_06_TIMED_SALVAGE_WEB_PREVIEW_VERIFICATION.md)
 - [Pass 07 Hazard Pressure Visual Baseline Decision](docs/current/PASS_07_HAZARD_PRESSURE_VISUAL_BASELINE_DECISION.md)
 - [Pass 07 Hazard Pressure Web Preview Verification](docs/current/PASS_07_HAZARD_PRESSURE_WEB_PREVIEW_VERIFICATION.md)
+- [Pass 08 Route Extension Visual Baseline Decision](docs/current/PASS_08_ROUTE_EXTENSION_VISUAL_BASELINE_DECISION.md)
+- [Pass 08 Route Extension Web Preview Verification](docs/current/PASS_08_ROUTE_EXTENSION_WEB_PREVIEW_VERIFICATION.md)
 
 ## Locked Visual Direction
 

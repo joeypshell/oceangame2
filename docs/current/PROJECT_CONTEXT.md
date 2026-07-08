@@ -70,6 +70,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Controlled Gameplay Pass 05 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_05_CLOSEOUT.md`
 - Controlled Gameplay Pass 06 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_06_CLOSEOUT.md`
 - Controlled Gameplay Pass 07 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_07_CLOSEOUT.md`
+- Controlled Gameplay Pass 08 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_08_CLOSEOUT.md`
 - Movement-feel baseline decision: `docs/current/MOVEMENT_FEEL_BASELINE_DECISION.md`
 - Salvage/oxygen feedback plan: `docs/current/SALVAGE_OXYGEN_FEEDBACK_PLAN.md`
 - Salvage/oxygen feedback baseline decision: `docs/current/SALVAGE_OXYGEN_FEEDBACK_BASELINE_DECISION.md`
@@ -83,6 +84,8 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Pass 04 route-pressure web preview verification: `docs/current/PASS_04_ROUTE_PRESSURE_WEB_PREVIEW_VERIFICATION.md`
 - Pass 07 hazard-pressure visual baseline decision: `docs/current/PASS_07_HAZARD_PRESSURE_VISUAL_BASELINE_DECISION.md`
 - Pass 07 hazard-pressure web preview verification: `docs/current/PASS_07_HAZARD_PRESSURE_WEB_PREVIEW_VERIFICATION.md`
+- Pass 08 route-extension visual baseline decision: `docs/current/PASS_08_ROUTE_EXTENSION_VISUAL_BASELINE_DECISION.md`
+- Pass 08 route-extension web preview verification: `docs/current/PASS_08_ROUTE_EXTENSION_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -204,6 +207,7 @@ python tools/check_asset_manifest.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-map-selector
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-pressure
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-pass-08-route-extension
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-cargo-capacity
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-feedback
@@ -215,6 +219,7 @@ python tools/check_asset_manifest.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-movement-feel
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-feedback-overlay
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-route-outcome-result
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-08-route-extension
 & 'C:\Program Files\Git\cmd\git.exe' diff --check
 ```
 
@@ -253,6 +258,8 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-08:
 
+- Active Pass 08 queue: none; #180-#190 are closed.
+- Closed: #180-#190 completed Pass 08 cautious route-scale expansion, including planning, segment selection, source rules, source marker/alcove authoring, one common payoff cue, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
 - Active Pass 07 queue: none; #170-#179 are closed.
 - Closed: #170-#179 completed Pass 07 hazard/navigation pressure planning, segment selection, source marker authoring, feedback tuning, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
 - Active Pass 06 queue: none; #160-#169 are closed.
@@ -528,7 +535,7 @@ Recent important commits:
 
 ## Recommended Next Work
 
-Pass 07 completed one authored hazard/navigation pressure pattern on the default `production_slice_01` slice. The next recommended pass should begin cautious route-scale expansion from source data: one small connector, route extension, or return-loop beat, not full-map productionization.
+Pass 08 completed one tiny source-authored route extension on the default `production_slice_01` slice. The next recommended pass should deepen that southwest return pocket with one small authored route decision or payoff beat using existing systems, not add another broad connector or start full-map productionization.
 
 Accepted constraints for the next batch:
 

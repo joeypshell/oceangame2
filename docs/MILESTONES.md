@@ -55,9 +55,9 @@ Done when:
 
 ## Current Roadmap Decision
 
-As of 2026-07-08, Controlled Gameplay Pass 07 is complete. See `docs/current/CONTROLLED_GAMEPLAY_PASS_07_CLOSEOUT.md` for the latest closeout decision and `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table.
+As of 2026-07-08, Controlled Gameplay Pass 08 is complete. See `docs/current/CONTROLLED_GAMEPLAY_PASS_08_CLOSEOUT.md` for the latest closeout decision and `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table.
 
-The project can now move from one authored hazard/navigation pressure pattern into cautious route-scale expansion, still through small source-driven passes rather than whole-map productionization.
+The project can now deepen the new route-extension pocket with one small authored decision or payoff beat, still through small source-driven passes rather than whole-map productionization.
 
 What the current prototype has proven:
 
@@ -69,6 +69,7 @@ What the current prototype has proven:
 - the default slice now supports source-authored safe/deep route metadata, oxygen pressure, cargo pressure, hazard warning/penalty behavior, route outcome text, and deterministic smoke coverage
 - the default slice now has one authored timed valuable salvage target with source metadata, in-world affordance, progress/cancel/complete feedback, deterministic smoke coverage, focused capture, accepted visual impact, and public Web verification
 - the default slice now has one authored hazard/navigation pressure marker, route-specific warning feedback, deterministic route-pressure smoke, focused capture, accepted visual impact, and public Web verification
+- the default slice now has one tiny source-authored route extension with a common salvage cue, deterministic smoke coverage, focused capture, accepted visual impact, and public Web verification
 
 Current constraints:
 
@@ -80,7 +81,7 @@ Current constraints:
 
 Current next direction:
 
-- Plan a focused Controlled Gameplay Pass 08 around cautious route-scale expansion from the source workflow.
+- Plan a focused Controlled Gameplay Pass 09 that makes the southwest return pocket matter as one small authored route decision using existing systems.
 
 Recently completed current-state work:
 
@@ -91,3 +92,4 @@ Recently completed current-state work:
 - #150-#159 completed Controlled Gameplay Pass 05 and main-file guard work.
 - #160-#169 completed Controlled Gameplay Pass 06 timed-salvage readability, visual review, Web verification, and closeout.
 - #170-#179 completed Controlled Gameplay Pass 07 hazard/navigation pressure, visual review, Web verification, and closeout.
+- #180-#190 completed Controlled Gameplay Pass 08 cautious route-scale expansion, visual review, Web verification, and closeout.
