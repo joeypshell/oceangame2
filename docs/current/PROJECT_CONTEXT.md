@@ -61,10 +61,6 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Background depth web preview verification: `docs/current/BACKGROUND_DEPTH_WEB_PREVIEW_VERIFICATION.md`
 - Terrain tileset v2 baseline decision: `docs/current/TERRAIN_TILESET_V2_BASELINE_DECISION.md`
 - Terrain tileset v2 web preview verification: `docs/current/TERRAIN_TILESET_V2_WEB_PREVIEW_VERIFICATION.md`
-- Current backlog refresh: `docs/current/BACKLOG_REFRESH_POST_GAMEPLAY_PASS_01_2026_07_06.md`
-- Controlled Gameplay Pass 01 plan: `docs/current/CONTROLLED_GAMEPLAY_PASS_01_PLAN.md`
-- Controlled Gameplay Pass 02 plan: `docs/current/CONTROLLED_GAMEPLAY_PASS_02_PLAN.md`
-- Controlled Gameplay Pass 03 plan: `docs/current/CONTROLLED_GAMEPLAY_PASS_03_PLAN.md`
 - Controlled Gameplay Pass 04 plan: `docs/current/CONTROLLED_GAMEPLAY_PASS_04_PLAN.md`
 - Controlled Gameplay Pass 04 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_04_CLOSEOUT.md`
 - Controlled Gameplay Pass 05 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_05_CLOSEOUT.md`
@@ -73,6 +69,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Controlled Gameplay Pass 08 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_08_CLOSEOUT.md`
 - Controlled Gameplay Pass 09 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_09_CLOSEOUT.md`
 - Controlled Gameplay Pass 10 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_10_CLOSEOUT.md`
+- Controlled Gameplay Pass 11 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_11_CLOSEOUT.md`
 - Movement-feel baseline decision: `docs/current/MOVEMENT_FEEL_BASELINE_DECISION.md`
 - Salvage/oxygen feedback plan: `docs/current/SALVAGE_OXYGEN_FEEDBACK_PLAN.md`
 - Salvage/oxygen feedback baseline decision: `docs/current/SALVAGE_OXYGEN_FEEDBACK_BASELINE_DECISION.md`
@@ -92,6 +89,8 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Pass 09 southwest-pocket web preview verification: `docs/current/PASS_09_SOUTHWEST_POCKET_WEB_PREVIEW_VERIFICATION.md`
 - Pass 10 return-pressure visual baseline decision: `docs/current/PASS_10_RETURN_PRESSURE_VISUAL_BASELINE_DECISION.md`
 - Pass 10 return-pressure web preview verification: `docs/current/PASS_10_RETURN_PRESSURE_WEB_PREVIEW_VERIFICATION.md`
+- Pass 11 pre-pickup route cue visual baseline decision: `docs/current/PASS_11_PRE_PICKUP_ROUTE_CUE_VISUAL_BASELINE_DECISION.md`
+- Pass 11 pre-pickup route cue web preview verification: `docs/current/PASS_11_PRE_PICKUP_ROUTE_CUE_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -266,11 +265,12 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-08:
 
-- Active Pass 11 queue: #213-#222 are open for pre-pickup route readability; Pass 10 queue is closed (#201-#209).
+- Active Pass 11 queue: none; #213-#222 completed pre-pickup route readability, source metadata, smoke/capture coverage, visual review, Web verification, and closeout.
 - Active tooling/skill queue: none; #210 documented repo drift, #211 committed Pass 10 UID sidecars, #212 updated drift issue batching, and #223 added drift-batch-resolve.
 - Active Pass 09 queue: none; #191-#199 are closed.
 - Active Pass 08 queue: none; #180-#190 are closed.
 - Deferred optional slice-03 polish: #52 and #53 remain open.
+- Closed: #213-#222 completed Pass 11 pre-pickup route readability, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
 - Closed: #201-#209 completed Pass 10 return/banking pressure, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
 - Closed: #191-#199 completed Pass 09 southwest pocket route-decision payoff, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
 - Closed: #180-#190 completed Pass 08 cautious route-scale expansion, including planning, segment selection, source rules, source marker/alcove authoring, one common payoff cue, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
@@ -551,7 +551,7 @@ Recent important commits:
 
 ## Recommended Next Work
 
-Pass 10 completed the return/banking pressure beat on the default `production_slice_01` slice. The next recommended gameplay pass should add one small pre-pickup readability or route-commitment cue using existing systems before adding more map scale.
+Pass 11 completed the pre-pickup readability cue on the default `production_slice_01` slice. The next recommended gameplay pass should plan one small gameplay-meaningful expedition decision, preferably a source-authored oxygen/rest or route-pressure opportunity using existing systems before adding more map scale.
 
 Accepted constraints for the next batch:
 
