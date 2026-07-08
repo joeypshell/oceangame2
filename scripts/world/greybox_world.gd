@@ -5,8 +5,6 @@ const COLOR_BASE := Color(0.95, 0.78, 0.48, 0.92)
 const COLOR_MARKER := Color(1.0, 1.0, 1.0, 0.10)
 const COLOR_SALVAGE := Color(1.0, 0.80, 0.22, 1.0)
 const COLOR_HAZARD := Color(1.0, 0.22, 0.34, 1.0)
-const COLOR_DEBUG_ROUTE := Color(0.90, 0.98, 1.0, 0.26)
-const COLOR_DEBUG_ROUTE_EDGE := Color(0.90, 0.98, 1.0, 0.88)
 const COLOR_DEBUG_ENTRY := Color(0.72, 1.0, 0.72, 0.88)
 const COLOR_DEBUG_EXTRACTION := Color(1.0, 0.92, 0.52, 0.90)
 
@@ -17,6 +15,7 @@ const GreyboxCollisionBuilder := preload("res://scripts/world/greybox_collision_
 const GreyboxBackgroundRenderer := preload("res://scripts/world/greybox_background_renderer.gd")
 const GreyboxPropRenderer := preload("res://scripts/world/greybox_prop_renderer.gd")
 const GreyboxExtractionRenderer := preload("res://scripts/world/greybox_extraction_renderer.gd")
+const GreyboxRouteMarkerRenderer := preload("res://scripts/world/greybox_route_marker_renderer.gd")
 
 const SALVAGE_TIER_SCORES := {
 	"common": 100,
@@ -54,6 +53,7 @@ var _collision_builder
 var _background_renderer
 var _prop_renderer
 var _extraction_renderer
+var _route_marker_renderer
 
 
 func _ready() -> void:
@@ -64,6 +64,7 @@ func _ready() -> void:
 	_background_renderer = GreyboxBackgroundRenderer.new()
 	_prop_renderer = GreyboxPropRenderer.new()
 	_extraction_renderer = GreyboxExtractionRenderer.new()
+	_route_marker_renderer = GreyboxRouteMarkerRenderer.new()
 	load_greybox()
 
 
@@ -428,14 +429,7 @@ func _build_zones(zones: Array) -> void:
 				_add_rect_outline(zone, "%sDebugOutline" % base.name, COLOR_DEBUG_EXTRACTION, 3.0, 22)
 				_add_debug_label("EXTRACTION", _rect_from_item(zone).position + Vector2(6, 6), COLOR_DEBUG_EXTRACTION)
 		elif zone.get("type", "") == "marker":
-			var marker := _rect_polygon(zone, COLOR_MARKER)
-			marker.name = zone.get("id", "Marker")
-			marker.z_index = 4
-			_marker_root.add_child(marker)
-			if show_debug_overlay:
-				marker.color = COLOR_DEBUG_ROUTE
-				_add_rect_outline(zone, "%sDebugOutline" % marker.name, COLOR_DEBUG_ROUTE_EDGE, 2.0, 21)
-				_add_debug_label("ROUTE", _rect_from_item(zone).position + Vector2(6, 6), COLOR_DEBUG_ROUTE_EDGE)
+			_route_marker_renderer_helper().add_route_marker(_marker_root, zone, tile_size, show_debug_overlay, _debug_renderer_helper())
 
 
 func _build_entities(entities: Array) -> void:
@@ -525,20 +519,6 @@ func _has_entity_type(entities: Array, entity_type: String) -> bool:
 	return false
 
 
-func _rect_polygon(item: Dictionary, color: Color) -> Polygon2D:
-	var size := _rect_size(item)
-	var poly := Polygon2D.new()
-	poly.position = Vector2(int(item["x"]) * tile_size, int(item["y"]) * tile_size)
-	poly.color = color
-	poly.polygon = PackedVector2Array([
-		Vector2.ZERO,
-		Vector2(size.x, 0),
-		size,
-		Vector2(0, size.y),
-	])
-	return poly
-
-
 func _terrain_renderer_helper():
 	if _terrain_renderer == null:
 		_terrain_renderer = GreyboxTerrainRenderer.new()
@@ -573,6 +553,12 @@ func _extraction_renderer_helper():
 	if _extraction_renderer == null:
 		_extraction_renderer = GreyboxExtractionRenderer.new()
 	return _extraction_renderer
+
+
+func _route_marker_renderer_helper():
+	if _route_marker_renderer == null:
+		_route_marker_renderer = GreyboxRouteMarkerRenderer.new()
+	return _route_marker_renderer
 
 
 func _asset_lookup_helper():
