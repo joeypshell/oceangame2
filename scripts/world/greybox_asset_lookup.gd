@@ -60,6 +60,14 @@ func prop_texture(kind: String, fallback_kind: String) -> Texture2D:
 	return texture
 
 
+func cave_tileset_texture() -> Texture2D:
+	return load_png_texture(CAVE_TILESET_TEXTURE)
+
+
+func cave_tileset_texture_path() -> String:
+	return CAVE_TILESET_TEXTURE
+
+
 func _packaged_texture(texture_path: String) -> Texture2D:
 	if ResourceLoader.exists(texture_path):
 		var resource := load(texture_path)

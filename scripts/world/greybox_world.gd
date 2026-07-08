@@ -32,33 +32,12 @@ const SOURCE_LAYER_ALPHA := 0.08
 const BACKGROUND_ART_ALPHA := 0.26
 
 const GreyboxAssetLookup := preload("res://scripts/world/greybox_asset_lookup.gd")
+const GreyboxTerrainRenderer := preload("res://scripts/world/greybox_terrain_renderer.gd")
 
 const SALVAGE_TIER_SCORES := {
 	"common": 100,
 	"valuable": 300,
 }
-const CAVE_TILESET_COLUMNS := 8
-const CAVE_TILESET_ROWS := 5
-const TERRAIN_SOURCE_ID := 0
-const MASK_TOP := 1
-const MASK_RIGHT := 2
-const MASK_BOTTOM := 4
-const MASK_LEFT := 8
-const FILL_COORDS := [Vector2i(0, 0), Vector2i(0, 2), Vector2i(5, 2), Vector2i(6, 2), Vector2i(7, 2)]
-const TOP_COORDS := [Vector2i(1, 0), Vector2i(0, 3), Vector2i(1, 3)]
-const RIGHT_COORDS := [Vector2i(2, 0), Vector2i(6, 3), Vector2i(7, 3)]
-const BOTTOM_COORDS := [Vector2i(4, 0), Vector2i(2, 3), Vector2i(3, 3)]
-const LEFT_COORDS := [Vector2i(0, 1), Vector2i(4, 3), Vector2i(5, 3)]
-const TOP_RIGHT_OUTER_COORDS := [Vector2i(3, 0), Vector2i(0, 4)]
-const LEFT_TOP_OUTER_COORDS := [Vector2i(1, 1), Vector2i(1, 4)]
-const RIGHT_BOTTOM_OUTER_COORDS := [Vector2i(6, 0), Vector2i(2, 4)]
-const BOTTOM_LEFT_OUTER_COORDS := [Vector2i(4, 1), Vector2i(3, 4)]
-const ISOLATED_COORDS := [Vector2i(7, 1), Vector2i(4, 4), Vector2i(5, 4)]
-const INNER_TOP_LEFT_COORD := Vector2i(1, 2)
-const INNER_TOP_RIGHT_COORD := Vector2i(2, 2)
-const INNER_BOTTOM_LEFT_COORD := Vector2i(3, 2)
-const INNER_BOTTOM_RIGHT_COORD := Vector2i(4, 2)
-const NO_SPECIAL_COORD := Vector2i(-1, -1)
 
 @export var map_path := "res://maps/cave_salvage_test_01.greybox.json"
 @export var show_debug_overlay := false
@@ -85,10 +64,12 @@ var _terrain_layer: TileMapLayer
 var _marker_root: Node2D
 var _collision_root: Node2D
 var _asset_lookup
+var _terrain_renderer
 
 
 func _ready() -> void:
 	_asset_lookup = GreyboxAssetLookup.new()
+	_terrain_renderer = GreyboxTerrainRenderer.new()
 	load_greybox()
 
 
@@ -431,105 +412,12 @@ func _build_tilemap(map_data: Dictionary) -> void:
 
 
 func _build_cave_terrain_layer(terrain_items: Array) -> void:
-	_terrain_layer = TileMapLayer.new()
-	_terrain_layer.name = "CaveTerrainTileMapLayer"
-	_terrain_layer.tile_set = _create_cave_tileset()
+	_terrain_layer = _terrain_renderer_helper().build_layer(terrain_items, tile_size, map_tile_size, _asset_lookup_helper())
 	add_child(_terrain_layer)
-
-	var solid_cells := _solid_cells_from_terrain(terrain_items)
-	for cell in solid_cells.keys():
-		_terrain_layer.set_cell(cell, TERRAIN_SOURCE_ID, _terrain_atlas_coords(cell, solid_cells))
-
-
-func _create_cave_tileset() -> TileSet:
-	var texture := _load_png_texture(GreyboxAssetLookup.CAVE_TILESET_TEXTURE)
-	if texture == null:
-		push_error("Unable to create cave TileSet; missing texture %s" % GreyboxAssetLookup.CAVE_TILESET_TEXTURE)
-		return TileSet.new()
-
-	var source := TileSetAtlasSource.new()
-	source.texture = texture
-	source.texture_region_size = Vector2i(tile_size, tile_size)
-	for y in range(CAVE_TILESET_ROWS):
-		for x in range(CAVE_TILESET_COLUMNS):
-			source.create_tile(Vector2i(x, y))
-
-	var tile_set := TileSet.new()
-	tile_set.tile_size = Vector2i(tile_size, tile_size)
-	tile_set.add_source(source, TERRAIN_SOURCE_ID)
-	return tile_set
 
 
 func _solid_cells_from_terrain(terrain_items: Array) -> Dictionary:
-	var solid_cells := {}
-	for item in terrain_items:
-		if item.get("type", "") != "solid":
-			continue
-		for y in range(int(item["y"]), int(item["y"]) + int(item["h"])):
-			for x in range(int(item["x"]), int(item["x"]) + int(item["w"])):
-				solid_cells[Vector2i(x, y)] = true
-	return solid_cells
-
-
-func _terrain_atlas_coords(cell: Vector2i, solid_cells: Dictionary) -> Vector2i:
-	var mask := 0
-	if not _is_solid_cell(cell + Vector2i.UP, solid_cells):
-		mask |= MASK_TOP
-	if not _is_solid_cell(cell + Vector2i.RIGHT, solid_cells):
-		mask |= MASK_RIGHT
-	if not _is_solid_cell(cell + Vector2i.DOWN, solid_cells):
-		mask |= MASK_BOTTOM
-	if not _is_solid_cell(cell + Vector2i.LEFT, solid_cells):
-		mask |= MASK_LEFT
-
-	if mask == 0:
-		var inner_coord := _inner_corner_atlas_coords(cell, solid_cells)
-		if inner_coord != NO_SPECIAL_COORD:
-			return inner_coord
-		return _variant_coord(cell, FILL_COORDS)
-
-	if mask == MASK_TOP:
-		return _variant_coord(cell, TOP_COORDS)
-	if mask == MASK_RIGHT:
-		return _variant_coord(cell, RIGHT_COORDS)
-	if mask == MASK_BOTTOM:
-		return _variant_coord(cell, BOTTOM_COORDS)
-	if mask == MASK_LEFT:
-		return _variant_coord(cell, LEFT_COORDS)
-	if mask == (MASK_TOP | MASK_RIGHT):
-		return _variant_coord(cell, TOP_RIGHT_OUTER_COORDS)
-	if mask == (MASK_LEFT | MASK_TOP):
-		return _variant_coord(cell, LEFT_TOP_OUTER_COORDS)
-	if mask == (MASK_RIGHT | MASK_BOTTOM):
-		return _variant_coord(cell, RIGHT_BOTTOM_OUTER_COORDS)
-	if mask == (MASK_BOTTOM | MASK_LEFT):
-		return _variant_coord(cell, BOTTOM_LEFT_OUTER_COORDS)
-	if mask == (MASK_TOP | MASK_RIGHT | MASK_BOTTOM | MASK_LEFT):
-		return _variant_coord(cell, ISOLATED_COORDS)
-	return Vector2i(mask % CAVE_TILESET_COLUMNS, mask / CAVE_TILESET_COLUMNS)
-
-
-func _variant_coord(cell: Vector2i, coords: Array) -> Vector2i:
-	var index: int = abs((cell.x * 31 + cell.y * 17) % coords.size())
-	return coords[index]
-
-
-func _inner_corner_atlas_coords(cell: Vector2i, solid_cells: Dictionary) -> Vector2i:
-	if not _is_solid_cell(cell + Vector2i.UP + Vector2i.LEFT, solid_cells):
-		return INNER_TOP_LEFT_COORD
-	if not _is_solid_cell(cell + Vector2i.UP + Vector2i.RIGHT, solid_cells):
-		return INNER_TOP_RIGHT_COORD
-	if not _is_solid_cell(cell + Vector2i.DOWN + Vector2i.LEFT, solid_cells):
-		return INNER_BOTTOM_LEFT_COORD
-	if not _is_solid_cell(cell + Vector2i.DOWN + Vector2i.RIGHT, solid_cells):
-		return INNER_BOTTOM_RIGHT_COORD
-	return NO_SPECIAL_COORD
-
-
-func _is_solid_cell(cell: Vector2i, solid_cells: Dictionary) -> bool:
-	if cell.x < 0 or cell.y < 0 or cell.x >= map_tile_size.x or cell.y >= map_tile_size.y:
-		return true
-	return solid_cells.has(cell)
+	return _terrain_renderer_helper().solid_cells_from_terrain(terrain_items)
 
 
 func _create_greybox_tileset() -> TileSet:
@@ -760,6 +648,12 @@ func _load_png_texture(texture_path: String) -> Texture2D:
 
 func _prop_texture(kind: String, fallback_kind: String) -> Texture2D:
 	return _asset_lookup_helper().prop_texture(kind, fallback_kind)
+
+
+func _terrain_renderer_helper():
+	if _terrain_renderer == null:
+		_terrain_renderer = GreyboxTerrainRenderer.new()
+	return _terrain_renderer
 
 
 func _asset_lookup_helper():
