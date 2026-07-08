@@ -125,6 +125,28 @@ Runtime salvage score is currently derived from `tier`, not from per-entity auth
 
 Collection feedback should name the tier-derived payoff in compact status text: common salvage reports its common score, and valuable salvage reports that it is valuable with its higher score.
 
+Playable salvage may also include optional interaction metadata. If omitted, runtime and validation should treat the pickup as `instant`.
+
+- `interaction`: optional interaction type. Supported values are `instant` and `timed_salvage`.
+- `interaction_seconds`: required for `timed_salvage`; must be a positive number of seconds.
+- `interaction_label`: optional compact label for overlay/capture text. Use lower_snake_case or short display-safe text.
+
+The first timed interaction is intentionally narrow: a `timed_salvage` pickup remains a normal salvage entity for placement, reachability, cargo, score, banking, route metadata, hazard reset, and oxygen failure. The only source-authored difference is that runtime may require the player to stay near the target for the authored duration before the pickup enters held cargo. Interaction metadata is supported on salvage entities only.
+
+```json
+{
+  "id": "salvage_deep_right_cache",
+  "type": "salvage",
+  "x": 64,
+  "y": 75,
+  "kind": "relic",
+  "tier": "valuable",
+  "interaction": "timed_salvage",
+  "interaction_seconds": 2.5,
+  "interaction_label": "deep cache"
+}
+```
+
 Playable salvage may also include optional route-choice metadata. These fields are source annotations for validation, smoke tests, and review tooling; they do not change collision or collection behavior by themselves.
 
 - `route_choice_id`: lower_snake_case id for this pickup's route/payoff role, such as `lower_loop_payoff`.
@@ -165,6 +187,7 @@ Validation expectations:
 - Entity ids must be unique.
 - Entity ids and kinds use lower_snake_case.
 - Salvage `tier`, when present, must be `common` or `valuable`.
+- Salvage interaction metadata, when present, must use supported fields: `interaction` as `instant` or `timed_salvage`, positive numeric `interaction_seconds` for timed salvage, and optional lower_snake_case or short display-safe `interaction_label`.
 - Salvage route-choice metadata, when present, must use supported fields: lower_snake_case `route_choice_id`, lower_snake_case `validation_route`, and/or integer `route_order` greater than or equal to zero.
 - Entity coordinates must be inside map bounds, non-solid, and reachable from the player entry cell.
 - Maps must define exactly one `spawn` or `boat_spawn`.

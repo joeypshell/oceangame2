@@ -55,33 +55,34 @@ Done when:
 
 ## Current Roadmap Decision
 
-As of 2026-07-06, the project has validated the focused production-slice workflow across four different slice roles. See `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table and `docs/current/POST_SLICE_WORKFLOW_DECISION.md` for the phase decision.
+As of 2026-07-07, Controlled Gameplay Pass 04 is complete. See `docs/current/CONTROLLED_GAMEPLAY_PASS_04_CLOSEOUT.md` for the closeout decision and `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table.
 
-The project should now move from "prove focused slice production" to "prove controlled visual revision."
+The project should now move from route-pressure polish to one small moment-to-moment salvage interaction. Prefer a timed or tool-like salvage action before broader map-scale expansion.
 
-What the production-slice workflow has proven:
+What the current prototype has proven:
 
 - bounded regions from the supplied full sketch can become JSON source data
 - terrain rendering and collision can stay tied to authored source maps
 - both `boat_spawn` and in-water `spawn + base` entry/extraction models are reviewable
 - route smoke, camera captures, source/render/collision review, and visual baselines can be repeated across different topology roles
 - targeted visual changes can now be compared against accepted baselines instead of relying on memory or one-off screenshots
+- the default slice now supports source-authored safe/deep route metadata, oxygen pressure, cargo pressure, hazard warning/penalty behavior, route outcome text, and deterministic smoke coverage
 
 Current constraints:
 
 - Keep `production_slice_01` as the default preview map unless a separate default-preview decision changes it.
 - Preserve `maps/full_cave_sketch_01.greybox.json` as a topology draft and planning source.
 - Keep icons from the supplied sketch out of terrain conversion unless they are reauthored as JSON entities.
-- Do not attempt whole-map productionization yet; keep map work slice-sized and source-derived.
-- Keep gameplay pressure minimal until controlled visual revision passes prove that assets and renderer changes can be made without damaging unrelated visuals.
-- Keep #52 and #53 as optional slice-03 post-baseline polish unless a future accepted-baseline replacement intentionally needs them.
+- Do not attempt whole-map productionization yet; add another meaningful authored in-cave verb before expanding route scale.
+- Keep #52 and #53 as optional slice-03 camera/topology polish unless slice-03 presentation becomes the selected goal.
 
-Current next implementation issue:
+Current next direction:
 
-- [#70](https://github.com/joeypshell/oceangame2/issues/70) implement the controlled sprite prop pass for salvage and hazards
+- Create a focused Controlled Gameplay Pass 05 batch around one timed/tool-like salvage interaction, with source metadata, validator support, runtime implementation, smoke coverage, focused capture, visual review, and Web verification.
 
-Recently completed planning/tooling setup:
+Recently completed current-state work:
 
-- [#67](https://github.com/joeypshell/oceangame2/issues/67) refreshed the roadmap after accepted production slices
-- [#68](https://github.com/joeypshell/oceangame2/issues/68) added an aggregate production-slice baseline comparison command
-- [#69](https://github.com/joeypshell/oceangame2/issues/69) planned the first controlled visual revision target
+- #129-#148 completed Controlled Gameplay Pass 04.
+- #146 accepted the Pass 04 route-pressure visual baseline.
+- #147 verified the public Web preview for the Pass 04 route-pressure runtime.
+- #148 recorded the Pass 04 closeout and next-step evaluation.

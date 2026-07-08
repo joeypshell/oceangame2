@@ -248,7 +248,10 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-07:
 
-- Closed: #129-#148 completed Controlled Gameplay Pass 04, including route-choice metadata, safe-versus-deep validation, session best score, oxygen bonus/result breakdown, cargo/salvage feedback, hazard warning/penalty pressure, route-outcome review capture, visual baseline review, public Web verification, and pass closeout.
+- Active Pass 04 queue: none; #129-#148 are closed.
+- Closed: #129-#137 completed Pass 04 planning/setup, route-choice metadata, deterministic route metadata smokes, session best score, oxygen bonus/result breakdown, cargo-full feedback, and salvage collection feedback.
+- Closed: #138-#148 completed the remaining Pass 04 implementation/review/closeout work, including hazard warning/penalty pressure, safe-versus-deep metadata and smokes, oxygen threshold tuning, route outcome text/capture, visual baseline review, public Web verification, and pass closeout.
+- Closed: #149 completed related route-pressure tooling-index work.
 - Closed: #120-#128 completed Controlled Gameplay Pass 03, including scored salvage, cargo pressure, deterministic validation, run results, retry flow, one additional source-authored default-slice route choice, visual baseline review, and public Web preview verification.
 - Closed: #119 verified the public Web preview after the route-payoff pass
 - Closed: #118 accepted the route-payoff visual baseline for production slice 01

@@ -2,6 +2,11 @@ extends Node2D
 
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
+const CaptureController := preload("res://scripts/main/capture_controller.gd")
+const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
+const SmokeInteractionChecks := preload("res://scripts/main/smoke/smoke_interaction_checks.gd")
+const SmokeRouteChecks := preload("res://scripts/main/smoke/smoke_route_checks.gd")
+const SmokeScoreChecks := preload("res://scripts/main/smoke/smoke_score_checks.gd")
 const DEFAULT_MAP_PATH := "res://maps/production_slice_01.greybox.json"
 const ORIGINAL_MAP_PATH := "res://maps/cave_salvage_test_01.greybox.json"
 const TILESET_TEST_MAP_PATH := "res://maps/cave_tileset_test_01.greybox.json"
@@ -11,7 +16,6 @@ const PRODUCTION_SLICE_MAP_PATH := "res://maps/production_slice_01.greybox.json"
 const PRODUCTION_SLICE_02_MAP_PATH := "res://maps/production_slice_02.greybox.json"
 const PRODUCTION_SLICE_03_MAP_PATH := "res://maps/production_slice_03.greybox.json"
 const PRODUCTION_SLICE_04_MAP_PATH := "res://maps/production_slice_04.greybox.json"
-const SCREENSHOT_PATH := "res://visual_baselines/001_greybox_in_engine.png"
 const CAMERA_TEST_CAPTURE_DIR := "res://visual_captures/latest"
 const ORIGINAL_CAPTURE_DIR := "res://visual_captures/original_salvage"
 const TILESET_TEST_CAPTURE_DIR := "res://visual_captures/tileset_test"
@@ -29,14 +33,9 @@ const PLAYER_READABILITY_CAPTURE_DIR := "res://visual_captures/player_readabilit
 const BACKGROUND_DEPTH_CAPTURE_DIR := "res://visual_captures/background_depth"
 const FEEDBACK_OVERLAY_CAPTURE_DIR := "res://visual_captures/feedback_overlay"
 const ROUTE_OUTCOME_CAPTURE_DIR := "res://visual_captures/route_outcome"
+const TIMED_SALVAGE_CAPTURE_DIR := "res://visual_captures/timed_salvage"
 const BUILD_INFO_PATH := "res://build_info.json"
-const CAPTURE_ZOOM := Vector2(0.7, 0.7)
-const PLAYER_READABILITY_CAPTURE_ZOOM := Vector2(2.0, 2.0)
-const PLAYER_READABILITY_ENTRY_OFFSET_TILES := Vector2(0, 5)
 const MOVEMENT_FEEL_PROBE_CENTER_TILES := Vector2(42, 25)
-const BACKGROUND_DEPTH_CAPTURE_ZOOM := Vector2(0.52, 0.52)
-const BACKGROUND_DEPTH_CENTER_TILES := Vector2(39, 24)
-const BACKGROUND_DEPTH_PLAYER_OFFSET_TILES := Vector2(0, 8)
 const SALVAGE_COLLECTION_RADIUS := 34.0
 const HELD_SALVAGE_CAPACITY := 2
 const HAZARD_CONTACT_RADIUS := 30.0
@@ -63,6 +62,11 @@ const REVIEW_MAP_OPTIONS := [
 
 var _world
 var _player
+var _capture_controller
+var _timed_salvage
+var _smoke_interaction_checks
+var _smoke_route_checks
+var _smoke_score_checks
 var _review_canvas: CanvasLayer
 var _review_label: Label
 var _status_label: Label
@@ -92,6 +96,11 @@ var _last_status_note := ""
 
 
 func _ready() -> void:
+	_capture_controller = CaptureController.new(self)
+	_timed_salvage = TimedSalvageController.new()
+	_smoke_interaction_checks = SmokeInteractionChecks.new(self)
+	_smoke_route_checks = SmokeRouteChecks.new(self)
+	_smoke_score_checks = SmokeScoreChecks.new(self)
 	var user_args := OS.get_cmdline_user_args()
 	var engine_args := OS.get_cmdline_args()
 	var capture_original_map := _has_arg(user_args, engine_args, "--capture-original-map")
@@ -110,6 +119,7 @@ func _ready() -> void:
 	var capture_background_depth := _has_arg(user_args, engine_args, "--capture-background-depth")
 	var capture_feedback_overlay := _has_arg(user_args, engine_args, "--capture-feedback-overlay")
 	var capture_route_outcome := _has_arg(user_args, engine_args, "--capture-route-outcome-result")
+	var capture_timed_salvage := _has_arg(user_args, engine_args, "--capture-timed-salvage")
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
 	var smoke_production_slice_route := _has_arg(user_args, engine_args, "--smoke-production-slice-route")
@@ -120,6 +130,7 @@ func _ready() -> void:
 	var smoke_hazard_interaction := _has_arg(user_args, engine_args, "--smoke-hazard-interaction")
 	var smoke_hazard_pressure := _has_arg(user_args, engine_args, "--smoke-hazard-pressure")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
+	var smoke_timed_salvage := _has_arg(user_args, engine_args, "--smoke-timed-salvage")
 	var smoke_cargo_capacity := _has_arg(user_args, engine_args, "--smoke-cargo-capacity")
 	var smoke_salvage_feedback := _has_arg(user_args, engine_args, "--smoke-salvage-feedback")
 	var smoke_session_best_score := _has_arg(user_args, engine_args, "--smoke-session-best-score")
@@ -167,6 +178,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_route_outcome:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif capture_timed_salvage:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_route:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_02_route:
@@ -180,6 +193,8 @@ func _ready() -> void:
 	elif smoke_hazard_pressure:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_oxygen_pressure:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_timed_salvage:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_session_best_score:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
@@ -225,6 +240,7 @@ func _ready() -> void:
 		or capture_background_depth
 		or capture_feedback_overlay
 		or capture_route_outcome
+		or capture_timed_salvage
 		or smoke_salvage_loop
 		or smoke_production_slice_route
 		or smoke_production_slice_02_route
@@ -234,6 +250,7 @@ func _ready() -> void:
 		or smoke_hazard_interaction
 		or smoke_hazard_pressure
 		or smoke_oxygen_pressure
+		or smoke_timed_salvage
 		or smoke_cargo_capacity
 		or smoke_salvage_feedback
 		or smoke_session_best_score
@@ -258,102 +275,107 @@ func _ready() -> void:
 	_load_playable_map(selected_map_path, _debug_overlay_enabled)
 
 	if smoke_salvage_loop:
-		_smoke_salvage_loop_and_quit()
+		_smoke_score_checks._smoke_salvage_loop_and_quit()
 		return
 	if smoke_production_slice_route:
-		await _smoke_salvage_route_and_quit("production_slice_01", "boat extraction")
+		await _smoke_route_checks._smoke_salvage_route_and_quit("production_slice_01", "boat extraction")
 		return
 	if smoke_production_slice_02_route:
-		await _smoke_salvage_route_and_quit("production_slice_02", "relay extraction")
+		await _smoke_route_checks._smoke_salvage_route_and_quit("production_slice_02", "relay extraction")
 		return
 	if smoke_production_slice_03_route:
-		await _smoke_salvage_route_and_quit("production_slice_03", "relay extraction")
+		await _smoke_route_checks._smoke_salvage_route_and_quit("production_slice_03", "relay extraction")
 		return
 	if smoke_production_slice_04_route:
-		await _smoke_salvage_route_and_quit("production_slice_04", "relay extraction")
+		await _smoke_route_checks._smoke_salvage_route_and_quit("production_slice_04", "relay extraction")
 		return
 	if smoke_map_selector:
-		_smoke_map_selector_and_quit()
+		_smoke_interaction_checks._smoke_map_selector_and_quit()
 		return
 	if smoke_hazard_interaction:
-		_smoke_hazard_interaction_and_quit()
+		_smoke_interaction_checks._smoke_hazard_interaction_and_quit()
 		return
 	if smoke_hazard_pressure:
-		_smoke_hazard_interaction_and_quit()
+		_smoke_interaction_checks._smoke_hazard_interaction_and_quit()
 		return
 	if smoke_oxygen_pressure:
-		_smoke_oxygen_pressure_and_quit()
+		_smoke_interaction_checks._smoke_oxygen_pressure_and_quit()
+		return
+	if smoke_timed_salvage:
+		_smoke_interaction_checks._smoke_timed_salvage_and_quit()
 		return
 	if smoke_cargo_capacity:
-		_smoke_cargo_capacity_and_quit()
+		_smoke_score_checks._smoke_cargo_capacity_and_quit()
 		return
 	if smoke_salvage_feedback:
-		_smoke_salvage_feedback_and_quit()
+		_smoke_score_checks._smoke_salvage_feedback_and_quit()
 		return
 	if smoke_session_best_score:
-		_smoke_session_best_score_and_quit()
+		_smoke_score_checks._smoke_session_best_score_and_quit()
 		return
 	if smoke_oxygen_bonus_score:
-		_smoke_oxygen_bonus_score_and_quit()
+		_smoke_score_checks._smoke_oxygen_bonus_score_and_quit()
 		return
 	if smoke_route_outcome_result:
-		_smoke_route_outcome_result_and_quit()
+		_smoke_score_checks._smoke_route_outcome_result_and_quit()
 		return
 	if smoke_route_choice:
-		await _smoke_route_choice_and_quit()
+		await _smoke_route_checks._smoke_route_choice_and_quit()
 		return
 	if smoke_route_choice_metadata:
-		_smoke_route_choice_metadata_and_quit()
+		_smoke_route_checks._smoke_route_choice_metadata_and_quit()
 		return
 	if smoke_expanded_route_choice:
-		await _smoke_expanded_route_choice_and_quit()
+		await _smoke_route_checks._smoke_expanded_route_choice_and_quit()
 		return
 	if smoke_safe_deep_route_choice:
-		await _smoke_safe_deep_route_choice_and_quit()
+		await _smoke_route_checks._smoke_safe_deep_route_choice_and_quit()
 		return
 	if smoke_player_facing:
-		_smoke_player_facing_and_quit()
+		_smoke_interaction_checks._smoke_player_facing_and_quit()
 		return
 	if smoke_movement_feel:
-		await _smoke_movement_feel_and_quit()
+		await _smoke_interaction_checks._smoke_movement_feel_and_quit()
 		return
 
 	if _has_arg(user_args, engine_args, "--capture-greybox-screenshot"):
-		_capture_screenshot_and_quit()
+		_capture_controller.capture_screenshot_and_quit()
 	elif _has_arg(user_args, engine_args, "--capture-camera-tests"):
-		_capture_camera_tests_and_quit(_world, CAMERA_TEST_CAPTURE_DIR)
+		_capture_controller.capture_camera_tests_and_quit(_world, CAMERA_TEST_CAPTURE_DIR)
 	elif capture_original_map:
-		_capture_camera_tests_and_quit(_world, ORIGINAL_CAPTURE_DIR)
+		_capture_controller.capture_camera_tests_and_quit(_world, ORIGINAL_CAPTURE_DIR)
 	elif capture_tileset_test:
-		_capture_camera_tests_and_quit(_world, TILESET_TEST_CAPTURE_DIR)
+		_capture_controller.capture_camera_tests_and_quit(_world, TILESET_TEST_CAPTURE_DIR)
 	elif capture_organic_map:
-		_capture_camera_tests_and_quit(_world, ORGANIC_CAPTURE_DIR)
+		_capture_controller.capture_camera_tests_and_quit(_world, ORGANIC_CAPTURE_DIR)
 	elif capture_full_sketch_map:
-		_capture_camera_tests_and_quit(_world, FULL_SKETCH_CAPTURE_DIR)
+		_capture_controller.capture_camera_tests_and_quit(_world, FULL_SKETCH_CAPTURE_DIR)
 	elif capture_production_slice_map:
-		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_CAPTURE_DIR)
+		_capture_controller.capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_CAPTURE_DIR)
 	elif capture_production_slice_debug_map:
-		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_DEBUG_CAPTURE_DIR)
+		_capture_controller.capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_DEBUG_CAPTURE_DIR)
 	elif capture_production_slice_02_map:
-		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_02_CAPTURE_DIR)
+		_capture_controller.capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_02_CAPTURE_DIR)
 	elif capture_production_slice_02_debug_map:
-		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_02_DEBUG_CAPTURE_DIR)
+		_capture_controller.capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_02_DEBUG_CAPTURE_DIR)
 	elif capture_production_slice_03_map:
-		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_03_CAPTURE_DIR)
+		_capture_controller.capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_03_CAPTURE_DIR)
 	elif capture_production_slice_03_debug_map:
-		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_03_DEBUG_CAPTURE_DIR)
+		_capture_controller.capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_03_DEBUG_CAPTURE_DIR)
 	elif capture_production_slice_04_map:
-		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_04_CAPTURE_DIR)
+		_capture_controller.capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_04_CAPTURE_DIR)
 	elif capture_production_slice_04_debug_map:
-		_capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_04_DEBUG_CAPTURE_DIR)
+		_capture_controller.capture_camera_tests_and_quit(_world, PRODUCTION_SLICE_04_DEBUG_CAPTURE_DIR)
 	elif capture_player_readability:
-		_capture_player_readability_and_quit(PLAYER_READABILITY_CAPTURE_DIR)
+		_capture_controller.capture_player_readability_and_quit(PLAYER_READABILITY_CAPTURE_DIR)
 	elif capture_background_depth:
-		_capture_background_depth_and_quit(BACKGROUND_DEPTH_CAPTURE_DIR)
+		_capture_controller.capture_background_depth_and_quit(BACKGROUND_DEPTH_CAPTURE_DIR)
 	elif capture_feedback_overlay:
-		_capture_feedback_overlay_and_quit(FEEDBACK_OVERLAY_CAPTURE_DIR)
+		_capture_controller.capture_feedback_overlay_and_quit(FEEDBACK_OVERLAY_CAPTURE_DIR)
 	elif capture_route_outcome:
-		_capture_route_outcome_result_and_quit(ROUTE_OUTCOME_CAPTURE_DIR)
+		_capture_controller.capture_route_outcome_result_and_quit(ROUTE_OUTCOME_CAPTURE_DIR)
+	elif capture_timed_salvage:
+		_capture_controller.capture_timed_salvage_and_quit(TIMED_SALVAGE_CAPTURE_DIR)
 
 
 func _review_map_selector_allowed(user_args: PackedStringArray, engine_args: PackedStringArray) -> bool:
@@ -390,6 +412,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool) -> void:
 	_held_salvage_score = 0
 	_banked_score = 0
 	_completion_oxygen_bonus = 0
+	_timed_salvage.reset()
 	_refresh_salvage_route_metadata(world)
 	_banked_validation_route_counts = {}
 	_hazard_cooldown_seconds = 0.0
@@ -455,16 +478,27 @@ func _process(delta: float) -> void:
 	_update_hazard_warning()
 
 	if _held_salvage < HELD_SALVAGE_CAPACITY:
-		var collected_salvage: String = _world.collect_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
-		if not collected_salvage.is_empty():
-			var collected_score: int = _world.get_salvage_score(collected_salvage)
-			var collected_tier: String = _world.get_salvage_tier(collected_salvage)
-			_held_salvage += 1
-			_held_salvage_ids.append(collected_salvage)
-			_held_salvage_score += collected_score
-			_last_status_note = _salvage_collection_feedback(collected_tier, collected_score)
+		var nearby_salvage: Dictionary = _world.get_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
+		if not nearby_salvage.is_empty() and str(nearby_salvage.get("interaction", "instant")) == "timed_salvage":
+			var timed_result: Dictionary = _timed_salvage.update(nearby_salvage, delta)
+			if str(timed_result.get("state", "")) == "complete":
+				var timed_salvage_id := str(timed_result.get("id", ""))
+				if _world.collect_salvage_by_id(timed_salvage_id):
+					_collect_salvage_into_cargo(timed_salvage_id)
+			elif timed_result.has("note"):
+				_last_status_note = str(timed_result["note"])
+		else:
+			var timed_cancel: Dictionary = _timed_salvage.update({}, delta)
+			if str(timed_cancel.get("state", "")) == "canceled":
+				_last_status_note = "Timed salvage canceled"
+			var collected_salvage: String = _world.collect_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
+			if not collected_salvage.is_empty():
+				_collect_salvage_into_cargo(collected_salvage)
 	elif _world.has_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS):
+		_timed_salvage.reset()
 		_last_status_note = "Cargo full - return to extraction"
+	else:
+		_timed_salvage.reset()
 
 	if _held_salvage > 0 and _world.is_inside_extraction(_player.global_position):
 		_banked_salvage += _held_salvage
@@ -484,257 +518,10 @@ func _process(delta: float) -> void:
 	_update_status_label()
 
 
-func _smoke_salvage_loop_and_quit() -> void:
-	if _total_salvage <= 0:
-		push_error("Salvage loop smoke requires a map with authored salvage.")
-		get_tree().quit(1)
-		return
-
-	var expected_score := 0
-	for salvage in _world.get_salvage_centers():
-		expected_score += int(salvage.get("score", 0))
-		_player.global_position = salvage["center"]
-		_process(0.0)
-		if _held_salvage >= HELD_SALVAGE_CAPACITY:
-			_player.global_position = _world.get_extraction_center()
-			_process(0.0)
-
-	_player.global_position = _world.get_extraction_center()
-	_process(0.0)
-
-	if not _run_complete:
-		push_error("Salvage loop smoke did not complete after collecting and returning.")
-		get_tree().quit(1)
-		return
-	if _result_panel == null or not _result_panel.visible or _result_label == null:
-		push_error("Salvage loop smoke did not show the expedition result panel on completion.")
-		get_tree().quit(1)
-		return
-	var expected_bonus := _completion_oxygen_bonus
-	var expected_total_score := expected_score + expected_bonus
-	if _result_label.text.find("Score %d" % expected_total_score) == -1 or _result_label.text.find("Salvage score %d" % expected_score) == -1 or _result_label.text.find("Oxygen bonus +%d" % _completion_oxygen_bonus) == -1 or _result_label.text.find("Salvage %d/%d" % [_banked_salvage, _total_salvage]) == -1:
-		push_error("Salvage loop smoke result panel did not report score/salvage: %s" % _result_label.text)
-		get_tree().quit(1)
-		return
-	if _banked_score != expected_score:
-		push_error("Salvage loop smoke banked score %d, expected %d." % [_banked_score, expected_score])
-		get_tree().quit(1)
-		return
-
-	var completed_total := _total_salvage
-	var completed_score := _banked_score
-	_reset_run()
-	if _held_salvage != 0 or _banked_salvage != 0 or _held_salvage_score != 0 or _banked_score != 0 or _completion_oxygen_bonus != 0 or _run_complete or _run_failed:
-		push_error("Salvage loop smoke reset left stale run state.")
-		get_tree().quit(1)
-		return
-
-	print("Salvage loop smoke passed: collected, banked %d score, completed, and reset %d salvage." % [completed_score, completed_total])
-	get_tree().quit()
-
-
-func _smoke_session_best_score_and_quit() -> void:
-	if _world.map_id != "production_slice_01":
-		push_error("Session best score smoke loaded unexpected map: %s" % _world.map_id)
-		get_tree().quit(1)
-		return
-	if _total_salvage <= 0:
-		push_error("Session best score smoke requires authored salvage.")
-		get_tree().quit(1)
-		return
-	if _session_best_score() != 0:
-		push_error("Session best score smoke expected a fresh map best of 0, got %d." % _session_best_score())
-		get_tree().quit(1)
-		return
-
-	_player.set_physics_process(false)
-	_hazard_interactions_enabled = false
-	var salvage_targets: Array = _world.get_salvage_centers()
-	var expected_score := 0
-	for salvage in salvage_targets:
-		expected_score += int(salvage.get("score", 0))
-		if _held_salvage >= HELD_SALVAGE_CAPACITY:
-			_player.global_position = _world.get_extraction_center()
-			_process(0.0)
-		_player.global_position = salvage["center"]
-		_process(0.0)
-
-	if _held_salvage > 0:
-		_player.global_position = _world.get_extraction_center()
-		_process(0.0)
-
-	if not _run_complete or _banked_score != expected_score:
-		push_error("Session best score smoke expected complete score %d, got complete=%s score=%d." % [expected_score, str(_run_complete), _banked_score])
-		get_tree().quit(1)
-		return
-	var expected_bonus := _completion_oxygen_bonus
-	var expected_total_score := expected_score + expected_bonus
-	if _session_best_score() != expected_total_score:
-		push_error("Session best score smoke expected best score %d after completion, got %d." % [expected_total_score, _session_best_score()])
-		get_tree().quit(1)
-		return
-	if _result_panel == null or not _result_panel.visible or _result_label == null:
-		push_error("Session best score smoke did not show result panel after completion.")
-		get_tree().quit(1)
-		return
-	if _result_label.text.find("Score %d" % expected_total_score) == -1 or _result_label.text.find("Best %d" % expected_total_score) == -1:
-		push_error("Session best score smoke result panel did not show score and best: %s" % _result_label.text)
-		get_tree().quit(1)
-		return
-
-	_reset_run()
-	if _session_best_score() != expected_total_score:
-		push_error("Session best score smoke reset cleared best score; expected %d got %d." % [expected_total_score, _session_best_score()])
-		get_tree().quit(1)
-		return
-	if _result_panel != null and _result_panel.visible:
-		push_error("Session best score smoke reset left result panel visible.")
-		get_tree().quit(1)
-		return
-
-	var failure_score := expected_total_score + 100
-	_banked_score = failure_score
-	_banked_salvage = 1
-	_handle_oxygen_depleted()
-	_update_status_label()
-	if not _run_failed or _session_best_score() != expected_total_score:
-		push_error("Session best score smoke failure changed best score; failed=%s best=%d expected=%d." % [str(_run_failed), _session_best_score(), expected_total_score])
-		get_tree().quit(1)
-		return
-	if _result_label == null or _result_label.text.find("Score %d" % failure_score) == -1 or _result_label.text.find("Best %d" % expected_total_score) == -1:
-		push_error("Session best score smoke failure panel did not preserve best score: %s" % _result_label.text)
-		get_tree().quit(1)
-		return
-
-	_reset_run()
-	_load_playable_map(PRODUCTION_SLICE_02_MAP_PATH, false)
-	if _world.map_id != "production_slice_02" or _session_best_score() != 0:
-		push_error("Session best score smoke expected production_slice_02 best to start at 0, got map=%s best=%d." % [_world.map_id, _session_best_score()])
-		get_tree().quit(1)
-		return
-	_load_playable_map(PRODUCTION_SLICE_MAP_PATH, false)
-	if _world.map_id != "production_slice_01" or _session_best_score() != expected_total_score:
-		push_error("Session best score smoke expected production_slice_01 best %d after map reload, got map=%s best=%d." % [expected_total_score, _world.map_id, _session_best_score()])
-		get_tree().quit(1)
-		return
-
-	print("Session best score smoke passed: salvage=%d oxygen_bonus=%d best=%d failure_score=%d map_scope=production_slice_01." % [
-		expected_score,
-		expected_bonus,
-		_session_best_score(),
-		failure_score,
-	])
-	get_tree().quit()
-
-
-func _smoke_oxygen_bonus_score_and_quit() -> void:
-	if _world.map_id != "production_slice_01":
-		push_error("Oxygen bonus score smoke loaded unexpected map: %s" % _world.map_id)
-		get_tree().quit(1)
-		return
-	if _total_salvage <= 0:
-		push_error("Oxygen bonus score smoke requires authored salvage.")
-		get_tree().quit(1)
-		return
-
-	_player.set_physics_process(false)
-	_hazard_interactions_enabled = false
-	var expected_salvage_score := 0
-	for salvage in _world.get_salvage_centers():
-		expected_salvage_score += int(salvage.get("score", 0))
-		if _held_salvage >= HELD_SALVAGE_CAPACITY:
-			_player.global_position = _world.get_extraction_center()
-			_process(0.0)
-		_player.global_position = salvage["center"]
-		_process(0.0)
-
-	if _held_salvage > 0:
-		_player.global_position = _world.get_extraction_center()
-		_process(0.0)
-
-	var expected_bonus := int(ceil(_oxygen_seconds)) * OXYGEN_BONUS_POINTS_PER_SECOND
-	var expected_total_score := expected_salvage_score + expected_bonus
-	if not _run_complete:
-		push_error("Oxygen bonus score smoke did not complete run.")
-		get_tree().quit(1)
-		return
-	if _banked_score != expected_salvage_score:
-		push_error("Oxygen bonus score smoke changed salvage banked score; got %d expected %d." % [_banked_score, expected_salvage_score])
-		get_tree().quit(1)
-		return
-	if _completion_oxygen_bonus != expected_bonus or _current_expedition_score() != expected_total_score:
-		push_error("Oxygen bonus score smoke expected salvage %d + bonus %d = %d, got bonus=%d total=%d." % [expected_salvage_score, expected_bonus, expected_total_score, _completion_oxygen_bonus, _current_expedition_score()])
-		get_tree().quit(1)
-		return
-	if expected_bonus <= 0 or expected_bonus > OXYGEN_MAX_SECONDS * OXYGEN_BONUS_POINTS_PER_SECOND:
-		push_error("Oxygen bonus score smoke computed out-of-range bonus %d." % expected_bonus)
-		get_tree().quit(1)
-		return
-	if _result_label == null or _result_label.text.find("Score %d" % expected_total_score) == -1 or _result_label.text.find("Salvage score %d" % expected_salvage_score) == -1 or _result_label.text.find("Oxygen bonus +%d" % expected_bonus) == -1:
-		push_error("Oxygen bonus score smoke result panel did not report score breakdown: %s" % _result_label.text)
-		get_tree().quit(1)
-		return
-
-	_reset_run()
-	_banked_score = expected_salvage_score
-	_banked_salvage = 1
-	_oxygen_seconds = 0.0
-	_handle_oxygen_depleted()
-	_update_status_label()
-	if not _run_failed or _completion_oxygen_bonus != 0:
-		push_error("Oxygen bonus score smoke failure received completion bonus; failed=%s bonus=%d." % [str(_run_failed), _completion_oxygen_bonus])
-		get_tree().quit(1)
-		return
-	if _result_label == null or _result_label.text.find("Score %d" % expected_salvage_score) == -1 or _result_label.text.find("Oxygen bonus +0") == -1:
-		push_error("Oxygen bonus score smoke failure panel did not show zero oxygen bonus: %s" % _result_label.text)
-		get_tree().quit(1)
-		return
-
-	_reset_run()
-	print("Oxygen bonus score smoke passed: salvage=%d oxygen_bonus=%d total=%d failure_bonus=0." % [
-		expected_salvage_score,
-		expected_bonus,
-		expected_total_score,
-	])
-	get_tree().quit()
-
-
-func _smoke_route_outcome_result_and_quit() -> void:
-	if _world.map_id != "production_slice_01":
-		push_error("Route outcome result smoke loaded unexpected map: %s" % _world.map_id)
-		get_tree().quit(1)
-		return
-	if _total_salvage <= 0:
-		push_error("Route outcome result smoke requires authored salvage.")
-		get_tree().quit(1)
-		return
-
-	if not _complete_route_outcome_review_state():
-		get_tree().quit(1)
-		return
-
-	var expected_route_text := "Route: Deep route"
-	if _result_label == null or _result_label.text.find(expected_route_text) == -1:
-		push_error("Route outcome result smoke did not show %s in result panel: %s" % [expected_route_text, _result_label.text if _result_label != null else ""])
-		get_tree().quit(1)
-		return
-
-	_reset_run()
-	_handle_oxygen_depleted()
-	_update_status_label()
-	if _result_label == null or _result_label.text.find("Route:") != -1:
-		push_error("Route outcome result smoke expected generic failure result without route text: %s" % [_result_label.text if _result_label != null else ""])
-		get_tree().quit(1)
-		return
-
-	print("Route outcome result smoke passed: tagged completion reported %s and generic failure stayed untagged." % expected_route_text)
-	get_tree().quit()
-
-
 func _complete_route_outcome_review_state() -> bool:
 	for salvage in _world.get_salvage_centers():
 		_player.global_position = salvage["center"]
-		_process(0.0)
+		_collect_salvage_for_review_state(salvage)
 		if _held_salvage >= HELD_SALVAGE_CAPACITY:
 			_player.global_position = _world.get_extraction_center()
 			_process(0.0)
@@ -749,921 +536,25 @@ func _complete_route_outcome_review_state() -> bool:
 	return true
 
 
-func _smoke_salvage_route_and_quit(expected_map_id: String, extraction_label: String) -> void:
-	if _world.map_id != expected_map_id:
-		push_error("%s route smoke loaded unexpected map: %s" % [expected_map_id, _world.map_id])
-		get_tree().quit(1)
-		return
-	if not _player.has_method("swim_in_direction"):
-		push_error("%s route smoke requires player swim_in_direction()." % expected_map_id)
-		get_tree().quit(1)
-		return
-	if _total_salvage <= 0:
-		push_error("%s route smoke requires authored salvage." % expected_map_id)
-		get_tree().quit(1)
-		return
-
-	_player.set_physics_process(false)
-	_hazard_interactions_enabled = false
-	var salvage_targets: Array = _world.get_salvage_centers()
-	var extraction_center: Vector2 = _world.get_extraction_center()
-	for salvage in salvage_targets:
-		if _held_salvage >= HELD_SALVAGE_CAPACITY:
-			if _world.find_open_path(_player.global_position, extraction_center).is_empty():
-				push_error("%s route smoke found no open return route to %s." % [expected_map_id, extraction_label])
-				get_tree().quit(1)
-				return
-			_player.global_position = extraction_center
-			_process(0.0)
-		var salvage_id := str(salvage.get("id", "salvage"))
-		var target_center: Vector2 = salvage["center"]
-		if _world.find_open_path(_player.global_position, target_center).is_empty():
-			push_error("%s route smoke found no open route to %s." % [expected_map_id, salvage_id])
-			get_tree().quit(1)
-			return
-
-		_player.global_position = target_center
-		_process(0.0)
-		if not _world.is_salvage_collected(salvage_id):
-			push_error("%s route smoke did not collect reachable salvage %s; held=%d." % [expected_map_id, salvage_id, _held_salvage])
-			get_tree().quit(1)
-			return
-
-	if _held_salvage > 0:
-		if _world.find_open_path(_player.global_position, extraction_center).is_empty():
-			push_error("%s route smoke found no final open return route to %s." % [expected_map_id, extraction_label])
-			get_tree().quit(1)
-			return
-		_player.global_position = extraction_center
-		_process(0.0)
-
-	if not _run_complete:
-		push_error("%s route smoke did not complete after swimming through salvage route." % expected_map_id)
-		get_tree().quit(1)
-		return
-
-	var completed_total := _total_salvage
-	_reset_run()
-	print("%s route smoke passed: checked routes to %d salvage and banked at %s." % [
-		expected_map_id,
-		completed_total,
-		extraction_label,
-	])
-	get_tree().quit()
-
-
-func _smoke_map_selector_and_quit() -> void:
-	_load_playable_map(PRODUCTION_SLICE_03_MAP_PATH, false)
-	if _world.map_id != "production_slice_03":
-		push_error("Map selector smoke expected production_slice_03, loaded %s." % _world.map_id)
-		get_tree().quit(1)
-		return
-
-	_load_playable_map(PRODUCTION_SLICE_MAP_PATH, false)
-	if _world.map_id != "production_slice_01":
-		push_error("Map selector smoke expected production_slice_01, loaded %s." % _world.map_id)
-		get_tree().quit(1)
-		return
-
-	print("Map selector smoke passed: switched to production_slice_03 and back to production_slice_01.")
-	get_tree().quit()
-
-
-func _smoke_hazard_interaction_and_quit() -> void:
-	var salvage: Array = _world.get_salvage_centers()
-	var hazards: Array = _world.get_hazard_centers()
-	if salvage.is_empty() or hazards.is_empty():
-		push_error("Hazard smoke requires authored salvage and hazard entities.")
-		get_tree().quit(1)
-		return
-
-	_player.global_position = salvage[0]["center"]
+func _collect_salvage_for_review_state(salvage: Dictionary) -> void:
+	var salvage_id := str(salvage.get("id", "salvage"))
 	_process(0.0)
-	if _held_salvage != 1 or _held_salvage_ids.is_empty():
-		push_error("Hazard smoke could not collect setup salvage.")
-		get_tree().quit(1)
+	if _world.is_salvage_collected(salvage_id):
 		return
-
-	var collected_id := _held_salvage_ids[0]
-	var warning_position := _hazard_warning_probe_position(hazards[0]["center"])
-	var warning_hazard: Dictionary = _world.get_nearest_hazard_within(warning_position, HAZARD_WARNING_RADIUS)
-	if warning_hazard.is_empty() or not _world.get_hazard_near(warning_position, HAZARD_CONTACT_RADIUS).is_empty():
-		push_error("Hazard smoke could not find a warning-only probe position near %s." % str(hazards[0].get("id", "hazard")))
-		get_tree().quit(1)
-		return
-
-	_player.global_position = warning_position
-	_hazard_cooldown_seconds = 0.0
-	_process(0.0)
-	var warning_id := str(warning_hazard.get("id", "hazard"))
-	if _held_salvage != 1 or _held_salvage_ids[0] != collected_id:
-		push_error("Hazard smoke warning range dropped held salvage; held=%d ids=%s." % [_held_salvage, _held_salvage_ids])
-		get_tree().quit(1)
-		return
-	if _player.global_position.distance_to(warning_position) > 2.0:
-		push_error("Hazard smoke warning range moved player unexpectedly to %s." % _player.global_position)
-		get_tree().quit(1)
-		return
-	if _hazard_warning_id != warning_id or _status_label == null or _status_label.text.find("Hazard nearby - keep clear") == -1:
-		push_error("Hazard smoke did not show warning for %s; warning=%s status=%s." % [warning_id, _hazard_warning_id, _status_label.text])
-		get_tree().quit(1)
-		return
-
-	var oxygen_before_hit := _oxygen_seconds
-	var warning_distance := warning_position.distance_to(warning_hazard["center"])
-	_player.global_position = warning_hazard["center"]
-	_hazard_cooldown_seconds = 0.0
-	_process(0.0)
-	if _held_salvage != 0 or not _held_salvage_ids.is_empty():
-		push_error("Hazard smoke did not drop held salvage.")
-		get_tree().quit(1)
-		return
-	if _player.global_position.distance_to(_world.spawn_position) > 2.0:
-		push_error("Hazard smoke did not return player to spawn.")
-		get_tree().quit(1)
-		return
-	var expected_oxygen_after_hit := oxygen_before_hit - HAZARD_OXYGEN_PENALTY_SECONDS
-	if _run_failed or not is_equal_approx(_oxygen_seconds, expected_oxygen_after_hit):
-		push_error("Hazard smoke expected oxygen %.1f after penalty, got %.1f failed=%s." % [expected_oxygen_after_hit, _oxygen_seconds, str(_run_failed)])
-		get_tree().quit(1)
-		return
-	if _status_label == null or _status_label.text.find("oxygen -%ds" % int(HAZARD_OXYGEN_PENALTY_SECONDS)) == -1:
-		push_error("Hazard smoke did not show oxygen penalty feedback: %s" % _status_label.text)
-		get_tree().quit(1)
-		return
-	var oxygen_after_hit := _oxygen_seconds
-
-	_player.global_position = salvage[0]["center"]
-	_hazard_cooldown_seconds = 0.0
-	_process(0.0)
-	if _held_salvage != 1 or _held_salvage_ids[0] != collected_id:
-		push_error("Hazard smoke did not restore dropped salvage for recollection.")
-		get_tree().quit(1)
-		return
-
-	_reset_run()
-	_player.global_position = salvage[0]["center"]
-	_process(0.0)
-	_oxygen_seconds = HAZARD_OXYGEN_PENALTY_SECONDS * 0.5
-	_player.global_position = warning_hazard["center"]
-	_hazard_cooldown_seconds = 0.0
-	_process(0.0)
-	if not _run_failed or _held_salvage != 0 or not _held_salvage_ids.is_empty():
-		push_error("Hazard smoke expected oxygen failure after low-oxygen hazard hit; failed=%s held=%d ids=%s." % [str(_run_failed), _held_salvage, _held_salvage_ids])
-		get_tree().quit(1)
-		return
-	if _world.is_salvage_collected(collected_id):
-		push_error("Hazard smoke low-oxygen failure did not restore held salvage %s." % collected_id)
-		get_tree().quit(1)
-		return
-	if not _result_panel.visible or _result_label == null or _result_label.text.find("Expedition failed") == -1:
-		push_error("Hazard smoke low-oxygen penalty did not show failed result panel: %s" % _result_label.text)
-		get_tree().quit(1)
-		return
-
-	_reset_run()
-	print("Hazard pressure smoke passed: hazard=%s warning_distance=%.1f warning_radius=%.1f contact_radius=%.1f oxygen=%.1f->%.1f restored=%s low_oxygen_failure=true." % [
-		warning_id,
-		warning_distance,
-		HAZARD_WARNING_RADIUS,
-		HAZARD_CONTACT_RADIUS,
-		oxygen_before_hit,
-		oxygen_after_hit,
-		collected_id,
-	])
-	get_tree().quit()
-
-
-func _hazard_warning_probe_position(hazard_center: Vector2) -> Vector2:
-	var warning_distance := HAZARD_CONTACT_RADIUS + 8.0
-	var directions: Array[Vector2] = [Vector2.RIGHT, Vector2.LEFT, Vector2.DOWN, Vector2.UP]
-	for direction in directions:
-		var candidate: Vector2 = hazard_center + direction * warning_distance
-		if _world.get_hazard_near(candidate, HAZARD_CONTACT_RADIUS).is_empty() and not _world.get_nearest_hazard_within(candidate, HAZARD_WARNING_RADIUS).is_empty():
-			return candidate
-	return hazard_center + Vector2.RIGHT * warning_distance
-
-
-func _smoke_oxygen_pressure_and_quit() -> void:
-	if _world.map_id != "production_slice_01":
-		push_error("Oxygen pressure smoke loaded unexpected map: %s" % _world.map_id)
-		get_tree().quit(1)
-		return
-
-	var salvage: Array = _world.get_salvage_centers()
-	if salvage.is_empty():
-		push_error("Oxygen pressure smoke requires authored salvage.")
-		get_tree().quit(1)
-		return
-
-	_player.global_position = salvage[0]["center"]
-	_process(0.0)
-	if _held_salvage != 1 or _held_salvage_ids.is_empty():
-		push_error("Oxygen pressure smoke could not collect setup salvage.")
-		get_tree().quit(1)
-		return
-
-	var collected_id := _held_salvage_ids[0]
-	_oxygen_seconds = 0.1
-	_process(0.2)
-	if _held_salvage != 0 or not _held_salvage_ids.is_empty():
-		push_error("Oxygen pressure smoke did not drop held salvage on depletion.")
-		get_tree().quit(1)
-		return
-	if not _run_failed:
-		push_error("Oxygen pressure smoke did not enter a failed retry state.")
-		get_tree().quit(1)
-		return
-	if _result_panel == null or not _result_panel.visible or _result_label.text.find("Expedition failed") == -1:
-		push_error("Oxygen pressure smoke did not show failed expedition result panel: %s" % _result_label.text)
-		get_tree().quit(1)
-		return
-	if _player.global_position.distance_to(_world.spawn_position) > 2.0:
-		push_error("Oxygen pressure smoke did not return player to spawn.")
-		get_tree().quit(1)
-		return
-	if not is_equal_approx(_oxygen_seconds, OXYGEN_MAX_SECONDS):
-		push_error("Oxygen pressure smoke did not refill oxygen after depletion.")
-		get_tree().quit(1)
-		return
-
-	_reset_run()
-	if _run_failed or _held_salvage != 0 or _banked_salvage != 0 or _banked_score != 0:
-		push_error("Oxygen pressure smoke reset did not clear failed run state.")
-		get_tree().quit(1)
-		return
-
-	_player.global_position = salvage[0]["center"]
-	_process(0.0)
-	if _held_salvage != 1 or _held_salvage_ids[0] != collected_id:
-		push_error("Oxygen pressure smoke did not restore dropped salvage for recollection.")
-		get_tree().quit(1)
-		return
-
-	_oxygen_seconds = OXYGEN_MAX_SECONDS * 0.5
-	_player.global_position = _world.get_extraction_center()
-	_process(1.0)
-	if _banked_salvage != 1 or _held_salvage != 0:
-		push_error("Oxygen pressure smoke did not preserve collect-return banking.")
-		get_tree().quit(1)
-		return
-	if _oxygen_seconds <= OXYGEN_MAX_SECONDS * 0.5:
-		push_error("Oxygen pressure smoke did not refill at extraction.")
-		get_tree().quit(1)
-		return
-
-	_reset_run()
-	print("Oxygen pressure smoke passed: depleted, surfaced, restored salvage, refilled, and banked salvage.")
-	get_tree().quit()
-
-
-func _smoke_cargo_capacity_and_quit() -> void:
-	var salvage: Array = _world.get_salvage_centers()
-	if salvage.size() <= HELD_SALVAGE_CAPACITY:
-		push_error("Cargo capacity smoke requires more salvage than capacity.")
-		get_tree().quit(1)
-		return
-
-	for index in range(HELD_SALVAGE_CAPACITY):
-		_player.global_position = salvage[index]["center"]
-		_process(0.0)
-
-	var expected_held_score := 0
-	for index in range(HELD_SALVAGE_CAPACITY):
-		expected_held_score += int(salvage[index].get("score", 0))
-
-	if _held_salvage != HELD_SALVAGE_CAPACITY:
-		push_error("Cargo capacity smoke expected held cargo to reach capacity, got %d." % _held_salvage)
-		get_tree().quit(1)
-		return
-	if _held_salvage_score != expected_held_score or _banked_score != 0:
-		push_error("Cargo capacity smoke expected held score %d and banked score 0 before extraction, got held score %d banked score %d." % [expected_held_score, _held_salvage_score, _banked_score])
-		get_tree().quit(1)
-		return
-
-	var blocked_id := str(salvage[HELD_SALVAGE_CAPACITY].get("id", "salvage"))
-	var blocked_score := int(salvage[HELD_SALVAGE_CAPACITY].get("score", 0))
-	_player.global_position = salvage[HELD_SALVAGE_CAPACITY]["center"]
-	_process(0.0)
-	if _held_salvage != HELD_SALVAGE_CAPACITY or _held_salvage_ids.has(blocked_id):
-		push_error("Cargo capacity smoke collected beyond capacity; held=%d ids=%s." % [_held_salvage, _held_salvage_ids])
-		get_tree().quit(1)
-		return
-	if not _world.has_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS):
-		push_error("Cargo capacity smoke lost blocked salvage %s." % blocked_id)
-		get_tree().quit(1)
-		return
-	if _world.is_salvage_collected(blocked_id):
-		push_error("Cargo capacity smoke marked blocked salvage %s collected while cargo was full." % blocked_id)
-		get_tree().quit(1)
-		return
-	if _status_label == null or _status_label.text.find("Cargo full - return to extraction") == -1:
-		push_error("Cargo capacity smoke did not show cargo-full return feedback: %s" % _status_label.text)
-		get_tree().quit(1)
-		return
-
-	_player.global_position = _world.get_extraction_center()
-	_process(0.0)
-	if _held_salvage != 0 or _banked_salvage != HELD_SALVAGE_CAPACITY:
-		push_error("Cargo capacity smoke did not bank and free capacity; held=%d banked=%d." % [_held_salvage, _banked_salvage])
-		get_tree().quit(1)
-		return
-	if _held_salvage_score != 0 or _banked_score != expected_held_score:
-		push_error("Cargo capacity smoke did not move held score into banked score; held score=%d banked score=%d expected=%d." % [_held_salvage_score, _banked_score, expected_held_score])
-		get_tree().quit(1)
-		return
-
-	_player.global_position = salvage[HELD_SALVAGE_CAPACITY]["center"]
-	_process(0.0)
-	if _held_salvage != 1 or _held_salvage_ids[0] != blocked_id:
-		push_error("Cargo capacity smoke could not collect blocked salvage after banking.")
-		get_tree().quit(1)
-		return
-	if _held_salvage_score != blocked_score:
-		push_error("Cargo capacity smoke collected blocked salvage with held score %d, expected %d." % [_held_salvage_score, blocked_score])
-		get_tree().quit(1)
-		return
-
-	_reset_run()
-	print("Cargo capacity smoke passed: held=%d capacity=%d held_score=%d banked=%d banked_score=%d blocked=%s blocked_score=%d." % [
-		1,
-		HELD_SALVAGE_CAPACITY,
-		blocked_score,
-		HELD_SALVAGE_CAPACITY,
-		expected_held_score,
-		blocked_id,
-		blocked_score,
-	])
-	get_tree().quit()
-
-
-func _smoke_salvage_feedback_and_quit() -> void:
-	if _world.map_id != "production_slice_01":
-		push_error("Salvage feedback smoke loaded unexpected map: %s" % _world.map_id)
-		get_tree().quit(1)
-		return
-
-	var common_target := {}
-	var valuable_target := {}
-	for salvage in _world.get_salvage_centers():
-		var tier := str(salvage.get("tier", "common"))
-		if tier == "common" and common_target.is_empty():
-			common_target = salvage
-		elif tier == "valuable" and valuable_target.is_empty():
-			valuable_target = salvage
-
-	if common_target.is_empty() or valuable_target.is_empty():
-		push_error("Salvage feedback smoke requires common and valuable salvage targets.")
-		get_tree().quit(1)
-		return
-
-	_player.set_physics_process(false)
-	_hazard_interactions_enabled = false
-	_player.global_position = common_target["center"]
-	_process(0.0)
-	var common_score := int(common_target.get("score", 0))
-	var common_feedback := _salvage_collection_feedback("common", common_score)
-	if _last_status_note != common_feedback or _status_label == null or _status_label.text.find(common_feedback) == -1:
-		push_error("Salvage feedback smoke expected common feedback '%s', got note='%s' status='%s'." % [common_feedback, _last_status_note, _status_label.text])
-		get_tree().quit(1)
-		return
-
-	_reset_run()
-	_player.set_physics_process(false)
-	_hazard_interactions_enabled = false
-	_player.global_position = valuable_target["center"]
-	_process(0.0)
-	var valuable_score := int(valuable_target.get("score", 0))
-	var valuable_feedback := _salvage_collection_feedback("valuable", valuable_score)
-	if _last_status_note != valuable_feedback or _status_label == null or _status_label.text.find(valuable_feedback) == -1:
-		push_error("Salvage feedback smoke expected valuable feedback '%s', got note='%s' status='%s'." % [valuable_feedback, _last_status_note, _status_label.text])
-		get_tree().quit(1)
-		return
-
-	_reset_run()
-	print("Salvage feedback smoke passed: common='%s' valuable='%s'." % [common_feedback, valuable_feedback])
-	get_tree().quit()
-
-
-func _smoke_route_choice_and_quit() -> void:
-	if _world.map_id != "production_slice_01":
-		push_error("Route choice probe loaded unexpected map: %s" % _world.map_id)
-		get_tree().quit(1)
-		return
-	if not _player.has_method("swim_in_direction"):
-		push_error("Route choice probe requires player swim_in_direction().")
-		get_tree().quit(1)
-		return
-
-	var salvage: Array = _world.get_salvage_centers()
-	if salvage.is_empty():
-		push_error("Route choice probe requires authored salvage.")
-		get_tree().quit(1)
-		return
-
-	var target: Dictionary = _route_choice_target(salvage)
-	if target.is_empty():
-		push_error("Route choice probe requires one authored valuable salvage target.")
-		get_tree().quit(1)
-		return
-	var target_id := str(target.get("id", "salvage"))
-	var target_center: Vector2 = target["center"]
-	var extraction_center: Vector2 = _world.get_extraction_center()
-
-	_player.set_physics_process(false)
-	_hazard_interactions_enabled = false
-	_player.global_position = _world.spawn_position
-	if _player.has_method("reset_motion"):
-		_player.reset_motion()
-
-	var reached_target := await _swim_to_target(target_center)
-	if not reached_target:
-		get_tree().quit(1)
-		return
-	_process(0.0)
-	if _held_salvage != 1 or _held_salvage_ids.is_empty() or _held_salvage_ids[0] != target_id:
-		push_error("Route choice probe did not collect target %s; held=%d ids=%s." % [target_id, _held_salvage, _held_salvage_ids])
-		get_tree().quit(1)
-		return
-
-	var reached_extraction := await _swim_to_target(extraction_center)
-	if not reached_extraction:
-		get_tree().quit(1)
-		return
-	_process(0.0)
-	if _held_salvage != 0 or _banked_salvage < 1 or not _world.is_inside_extraction(_player.global_position):
-		push_error("Route choice probe did not return/bank target %s; held=%d banked=%d position=%s." % [target_id, _held_salvage, _banked_salvage, _player.global_position])
-		get_tree().quit(1)
-		return
-
-	var oxygen_after_return := _oxygen_seconds
-	var completed_after_return := _run_complete
-	var banked_after_return := _banked_salvage
-	var score_after_return := _banked_score
-	var target_score := int(target.get("score", 0))
-	if score_after_return < target_score:
-		push_error("Route choice probe banked score %d below target score %d." % [score_after_return, target_score])
-		get_tree().quit(1)
-		return
-	_reset_run()
-	print("Route choice probe passed: target=%s collected=1 banked=%d score=%d returned_to=boat extraction run_complete=%s oxygen=%.1f." % [target_id, banked_after_return, score_after_return, str(completed_after_return), oxygen_after_return])
-	get_tree().quit()
-
-
-func _smoke_expanded_route_choice_and_quit() -> void:
-	if _world.map_id != "production_slice_01":
-		push_error("Expanded route choice probe loaded unexpected map: %s" % _world.map_id)
-		get_tree().quit(1)
-		return
-	if not _player.has_method("swim_in_direction"):
-		push_error("Expanded route choice probe requires player swim_in_direction().")
-		get_tree().quit(1)
-		return
-
-	var route_targets: Array = _route_choice_targets_for_route(_world.get_salvage_centers(), EXPANDED_ROUTE_CHOICE_ID)
-	if route_targets.size() < 2:
-		push_error("Expanded route choice probe requires at least two targets for validation_route=%s, got %d." % [EXPANDED_ROUTE_CHOICE_ID, route_targets.size()])
-		get_tree().quit(1)
-		return
-
-	_player.set_physics_process(false)
-	_hazard_interactions_enabled = false
-	_player.global_position = _world.spawn_position
-	if _player.has_method("reset_motion"):
-		_player.reset_motion()
-
-	var target_ids := PackedStringArray()
-	for target in route_targets:
-		var target_id := str(target.get("id", "salvage"))
-		target_ids.append(target_id)
-		var reached_target := await _swim_to_target(target["center"])
-		if not reached_target:
-			get_tree().quit(1)
-			return
-		_process(0.0)
-		if not _held_salvage_ids.has(target_id):
-			push_error("Expanded route choice probe did not collect target %s; held=%d ids=%s." % [target_id, _held_salvage, _held_salvage_ids])
-			get_tree().quit(1)
-			return
-
-	var expected_score := 0
-	for target in route_targets:
-		expected_score += int(target.get("score", 0))
-	if _held_salvage != route_targets.size() or _held_salvage_score != expected_score:
-		push_error("Expanded route choice probe expected %d held pickups worth %d, got held=%d score=%d ids=%s." % [route_targets.size(), expected_score, _held_salvage, _held_salvage_score, _held_salvage_ids])
-		get_tree().quit(1)
-		return
-
-	var reached_return_waypoint := await _swim_to_target(route_targets[0]["center"])
-	if not reached_return_waypoint:
-		get_tree().quit(1)
-		return
-
-	var extraction_center: Vector2 = _world.get_extraction_center()
-	var reached_extraction := await _swim_to_target(extraction_center)
-	if not reached_extraction:
-		get_tree().quit(1)
-		return
-	_process(0.0)
-
-	if _held_salvage != 0 or _banked_salvage < route_targets.size() or _banked_score < expected_score or not _world.is_inside_extraction(_player.global_position):
-		push_error("Expanded route choice probe did not bank both targets; held=%d banked=%d score=%d position=%s." % [_held_salvage, _banked_salvage, _banked_score, _player.global_position])
-		get_tree().quit(1)
-		return
-
-	var oxygen_after_return := _oxygen_seconds
-	var banked_after_return := _banked_salvage
-	var score_after_return := _banked_score
-	_reset_run()
-	print("Expanded route choice probe passed: route=%s targets=%s held_capacity=%d banked=%d score=%d returned_to=boat extraction oxygen=%.1f." % [
-		EXPANDED_ROUTE_CHOICE_ID,
-		",".join(target_ids),
-		HELD_SALVAGE_CAPACITY,
-		banked_after_return,
-		score_after_return,
-		oxygen_after_return,
-	])
-	get_tree().quit()
-
-
-func _smoke_safe_deep_route_choice_and_quit() -> void:
-	if _world.map_id != "production_slice_01":
-		push_error("Safe/deep route comparison smoke loaded unexpected map: %s" % _world.map_id)
-		get_tree().quit(1)
-		return
-	if not _player.has_method("swim_in_direction"):
-		push_error("Safe/deep route comparison smoke requires player swim_in_direction().")
-		get_tree().quit(1)
-		return
-
-	var salvage: Array = _world.get_salvage_centers()
-	var safe_targets: Array = _route_choice_targets_for_route(salvage, SAFE_ROUTE_CHOICE_ID)
-	if safe_targets.is_empty():
-		push_error("Safe/deep route comparison smoke requires at least one target for validation_route=%s." % SAFE_ROUTE_CHOICE_ID)
-		get_tree().quit(1)
-		return
-	var deep_targets: Array = _route_choice_targets_for_route(salvage, EXPANDED_ROUTE_CHOICE_ID)
-	if deep_targets.size() < 2:
-		push_error("Safe/deep route comparison smoke requires at least two targets for validation_route=%s, got %d." % [EXPANDED_ROUTE_CHOICE_ID, deep_targets.size()])
-		get_tree().quit(1)
-		return
-
-	var safe_result: Dictionary = await _run_route_comparison_path("safe", safe_targets, false)
-	if safe_result.is_empty():
-		get_tree().quit(1)
-		return
-	_reset_run()
-	var deep_result: Dictionary = await _run_route_comparison_path("deep", deep_targets, true)
-	if deep_result.is_empty():
-		get_tree().quit(1)
-		return
-
-	var safe_score := int(safe_result.get("score", 0))
-	var deep_score := int(deep_result.get("score", 0))
-	var safe_oxygen := float(safe_result.get("oxygen", 0.0))
-	var deep_oxygen := float(deep_result.get("oxygen", 0.0))
-	if deep_score <= safe_score:
-		push_error("Safe/deep route comparison smoke expected deep score > safe score, got deep=%d safe=%d." % [deep_score, safe_score])
-		get_tree().quit(1)
-		return
-	if deep_oxygen >= safe_oxygen:
-		push_error("Safe/deep route comparison smoke expected deep oxygen margin below safe margin, got deep=%.1f safe=%.1f." % [deep_oxygen, safe_oxygen])
-		get_tree().quit(1)
-		return
-	if bool(safe_result.get("saw_low", false)) or bool(safe_result.get("saw_critical", false)):
-		push_error("Safe/deep route comparison smoke expected safe route to stay comfortable, got feedback=%s status=%s." % [str(safe_result.get("oxygen_feedback", "")), str(safe_result.get("status", ""))])
-		get_tree().quit(1)
-		return
-	if not bool(deep_result.get("saw_low", false)) or not bool(deep_result.get("saw_critical", false)):
-		push_error("Safe/deep route comparison smoke expected deep route to show LOW and CRITICAL feedback, got feedback=%s status=%s." % [str(deep_result.get("oxygen_feedback", "")), str(deep_result.get("status", ""))])
-		get_tree().quit(1)
-		return
-
-	_reset_run()
-	print("Safe/deep route comparison smoke passed: safe_targets=%s safe_cargo=%d/%d safe_banked=%d safe_score=%d safe_oxygen=%.1f safe_feedback=%s deep_targets=%s deep_cargo=%d/%d deep_banked=%d deep_score=%d deep_oxygen=%.1f deep_feedback=%s." % [
-		str(safe_result.get("target_ids", "")),
-		int(safe_result.get("cargo", 0)),
-		HELD_SALVAGE_CAPACITY,
-		int(safe_result.get("banked", 0)),
-		safe_score,
-		safe_oxygen,
-		str(safe_result.get("oxygen_feedback", "")),
-		str(deep_result.get("target_ids", "")),
-		int(deep_result.get("cargo", 0)),
-		HELD_SALVAGE_CAPACITY,
-		int(deep_result.get("banked", 0)),
-		deep_score,
-		deep_oxygen,
-		str(deep_result.get("oxygen_feedback", "")),
-	])
-	get_tree().quit()
-
-
-func _run_route_comparison_path(route_label: String, route_targets: Array, return_via_first_target: bool) -> Dictionary:
-	_player.set_physics_process(false)
-	_hazard_interactions_enabled = false
-	_player.global_position = _world.spawn_position
-	if _player.has_method("reset_motion"):
-		_player.reset_motion()
-
-	var target_ids := PackedStringArray()
-	var oxygen_feedback := {
-		"low": false,
-		"critical": false,
-	}
-	var expected_score := 0
-	for target in route_targets:
-		var target_id := str(target.get("id", "salvage"))
-		target_ids.append(target_id)
-		expected_score += int(target.get("score", 0))
-		var reached_target := await _swim_to_target(target["center"])
-		if not reached_target:
-			return {}
-		_process(0.0)
-		_record_route_oxygen_feedback(oxygen_feedback)
-		if not _held_salvage_ids.has(target_id):
-			push_error("Safe/deep route comparison smoke did not collect %s target %s; held=%d ids=%s." % [route_label, target_id, _held_salvage, _held_salvage_ids])
-			return {}
-
-	if _held_salvage != route_targets.size() or _held_salvage_score != expected_score:
-		push_error("Safe/deep route comparison smoke expected %s route to hold %d pickups worth %d, got held=%d score=%d ids=%s." % [route_label, route_targets.size(), expected_score, _held_salvage, _held_salvage_score, _held_salvage_ids])
-		return {}
-
-	if return_via_first_target:
-		var reached_return_waypoint := await _swim_to_target(route_targets[0]["center"], oxygen_feedback)
-		if not reached_return_waypoint:
-			return {}
-		_update_status_label()
-		_record_route_oxygen_feedback(oxygen_feedback)
-
-	var reached_extraction := await _swim_to_target(_world.get_extraction_center(), oxygen_feedback)
-	if not reached_extraction:
-		return {}
-	_process(0.0)
-	_record_route_oxygen_feedback(oxygen_feedback)
-	if _held_salvage != 0 or _banked_salvage < route_targets.size() or _banked_score < expected_score or not _world.is_inside_extraction(_player.global_position):
-		push_error("Safe/deep route comparison smoke did not bank %s route; held=%d banked=%d score=%d position=%s." % [route_label, _held_salvage, _banked_salvage, _banked_score, _player.global_position])
-		return {}
-
-	return {
-		"target_ids": ",".join(target_ids),
-		"cargo": route_targets.size(),
-		"banked": _banked_salvage,
-		"score": _banked_score,
-		"oxygen": _oxygen_seconds,
-		"saw_low": bool(oxygen_feedback.get("low", false)),
-		"saw_critical": bool(oxygen_feedback.get("critical", false)),
-		"oxygen_feedback": _route_oxygen_feedback_summary(oxygen_feedback),
-		"status": _status_label.text if _status_label != null else "",
-	}
-
-
-func _record_route_oxygen_feedback(oxygen_feedback: Dictionary) -> void:
-	var feedback_label := _oxygen_feedback_label()
-	if feedback_label == "CRITICAL":
-		oxygen_feedback["critical"] = true
-	elif feedback_label == "LOW":
-		oxygen_feedback["low"] = true
-
-
-func _route_oxygen_feedback_summary(oxygen_feedback: Dictionary) -> String:
-	var labels := PackedStringArray()
-	if bool(oxygen_feedback.get("low", false)):
-		labels.append("LOW")
-	if bool(oxygen_feedback.get("critical", false)):
-		labels.append("CRITICAL")
-	if labels.is_empty():
-		return "comfortable"
-	return ",".join(labels)
-
-
-func _smoke_route_choice_metadata_and_quit() -> void:
-	if _world.map_id != "production_slice_01":
-		push_error("Route choice metadata smoke loaded unexpected map: %s" % _world.map_id)
-		get_tree().quit(1)
-		return
-
-	var salvage: Array = _world.get_salvage_centers()
-	var route_targets: Array = _route_choice_targets_for_route(salvage, EXPANDED_ROUTE_CHOICE_ID)
-	if route_targets.size() < 2:
-		push_error("Route choice metadata smoke requires at least two targets for validation_route=%s, got %d." % [EXPANDED_ROUTE_CHOICE_ID, route_targets.size()])
-		get_tree().quit(1)
-		return
-
-	var default_target := _route_choice_target(salvage)
-	if default_target.is_empty():
-		push_error("Route choice metadata smoke requires a default valuable target.")
-		get_tree().quit(1)
-		return
-	if str(default_target.get("id", "")) != str(route_targets[0].get("id", "")):
-		push_error("Route choice metadata smoke expected first ordered route target %s to match default route target %s." % [str(route_targets[0].get("id", "")), str(default_target.get("id", ""))])
-		get_tree().quit(1)
-		return
-
-	var extraction_center: Vector2 = _world.get_extraction_center()
-	var previous_order := -1
-	var target_ids := PackedStringArray()
-	var target_orders := PackedStringArray()
-	var target_scores := PackedStringArray()
-	for target in route_targets:
-		var target_id := str(target.get("id", "salvage"))
-		var route_choice_id := str(target.get("route_choice_id", ""))
-		var route_order := int(target.get("route_order", -1))
-		target_ids.append(target_id)
-		target_orders.append(str(route_order))
-		target_scores.append(str(int(target.get("score", 0))))
-
-		if route_choice_id.is_empty():
-			push_error("Route choice metadata smoke found target %s without route_choice_id." % target_id)
-			get_tree().quit(1)
-			return
-		if not bool(target.get("has_route_order", false)):
-			push_error("Route choice metadata smoke found target %s without route_order." % target_id)
-			get_tree().quit(1)
-			return
-		if route_order <= previous_order:
-			push_error("Route choice metadata smoke found non-increasing route_order at %s: %d after %d." % [target_id, route_order, previous_order])
-			get_tree().quit(1)
-			return
-		if str(target.get("tier", "common")) != "valuable":
-			push_error("Route choice metadata smoke expected target %s to be valuable." % target_id)
-			get_tree().quit(1)
-			return
-		if int(target.get("score", 0)) <= 0:
-			push_error("Route choice metadata smoke expected target %s to have positive score." % target_id)
-			get_tree().quit(1)
-			return
-
-		var target_center: Vector2 = target["center"]
-		if _world.find_open_path(_world.spawn_position, target_center).is_empty():
-			push_error("Route choice metadata smoke found no open route from spawn to %s." % target_id)
-			get_tree().quit(1)
-			return
-		if _world.find_open_path(target_center, extraction_center).is_empty():
-			push_error("Route choice metadata smoke found no open return route from %s to extraction." % target_id)
-			get_tree().quit(1)
-			return
-
-		previous_order = route_order
-
-	print("Route choice metadata smoke passed: route=%s targets=%s orders=%s scores=%s first_target=%s." % [
-		EXPANDED_ROUTE_CHOICE_ID,
-		",".join(target_ids),
-		",".join(target_orders),
-		",".join(target_scores),
-		str(default_target.get("id", "")),
-	])
-	get_tree().quit()
-
-
-func _route_choice_target(salvage: Array) -> Dictionary:
-	for item in salvage:
-		if str(item.get("tier", "common")) == "valuable":
-			return item
-	return {}
-
-
-func _route_choice_targets_for_route(salvage: Array, route_id: String) -> Array:
-	var targets: Array = []
-	for item in salvage:
-		if str(item.get("validation_route", "")) == route_id:
-			targets.append(item)
-	targets.sort_custom(Callable(self, "_sort_route_choice_targets"))
-	return targets
-
-
-func _sort_route_choice_targets(a: Dictionary, b: Dictionary) -> bool:
-	var a_order := int(a.get("route_order", 0))
-	var b_order := int(b.get("route_order", 0))
-	if a_order != b_order:
-		return a_order < b_order
-	return str(a.get("id", "")) < str(b.get("id", ""))
-
-
-func _smoke_player_facing_and_quit() -> void:
-	if not _player.has_method("swim_in_direction") or not _player.has_method("get_facing_report"):
-		push_error("Player facing smoke requires swim_in_direction() and get_facing_report().")
-		get_tree().quit(1)
-		return
-
-	_player.set_physics_process(false)
-	_player.swim_in_direction(Vector2.RIGHT, 1.0 / 60.0)
-	var right_report: Dictionary = _player.get_facing_report()
-	_player.swim_in_direction(Vector2.LEFT, 1.0 / 60.0)
-	var left_report: Dictionary = _player.get_facing_report()
-	_player.swim_in_direction(Vector2.RIGHT, 1.0 / 60.0)
-	var restored_report: Dictionary = _player.get_facing_report()
-
-	if not _facing_report_matches(right_report, false, 88.0, 1.0):
-		push_error("Player facing smoke expected right-facing visual children, got %s." % right_report)
-		get_tree().quit(1)
-		return
-	if not _facing_report_matches(left_report, true, -88.0, -1.0):
-		push_error("Player facing smoke expected left-facing visual children, got %s." % left_report)
-		get_tree().quit(1)
-		return
-	if not _facing_report_matches(restored_report, false, 88.0, 1.0):
-		push_error("Player facing smoke expected restored right-facing visual children, got %s." % restored_report)
-		get_tree().quit(1)
-		return
-
-	print("Player facing smoke passed: root scale stayed stable while visual children flipped left/right.")
-	get_tree().quit()
-
-
-func _smoke_movement_feel_and_quit() -> void:
-	if not _player.has_method("swim_in_direction"):
-		push_error("Movement feel probe requires player swim_in_direction().")
-		get_tree().quit(1)
-		return
-
-	_player.set_physics_process(false)
-	_hazard_interactions_enabled = false
-	_player.global_position = MOVEMENT_FEEL_PROBE_CENTER_TILES * float(_world.tile_size)
-	if _player.has_method("reset_motion"):
-		_player.reset_motion()
-
-	await _swim_for_frames(Vector2.RIGHT, 15)
-	var start_velocity: Vector2 = _player.velocity
-	await _swim_for_frames(Vector2.ZERO, 15)
-	var stop_velocity: Vector2 = _player.velocity
-	await _swim_for_frames(Vector2.LEFT, 20)
-	var reverse_velocity: Vector2 = _player.velocity
-	if _player.has_method("reset_motion"):
-		_player.reset_motion()
-	await _swim_for_frames(Vector2(1.0, -1.0), 15)
-	var diagonal_velocity: Vector2 = _player.velocity
-
-	if start_velocity.x <= 0.0:
-		push_error("Movement feel probe expected positive x velocity after right input, got %s." % start_velocity)
-		get_tree().quit(1)
-		return
-	if stop_velocity.length() >= start_velocity.length():
-		push_error("Movement feel probe expected stop phase to slow the player, got start %s stop %s." % [start_velocity, stop_velocity])
-		get_tree().quit(1)
-		return
-	if reverse_velocity.x >= 0.0:
-		push_error("Movement feel probe expected negative x velocity after left reversal, got %s." % reverse_velocity)
-		get_tree().quit(1)
+	if str(salvage.get("interaction", "instant")) != "timed_salvage":
 		return
-	if diagonal_velocity.length() > _player.swim_speed + 1.0:
-		push_error("Movement feel probe expected diagonal speed to stay normalized, got %s." % diagonal_velocity)
-		get_tree().quit(1)
-		return
-
-	print("Movement feel probe passed: start=%s stop=%s reverse=%s diagonal=%s." % [
-		_format_vector(start_velocity),
-		_format_vector(stop_velocity),
-		_format_vector(reverse_velocity),
-		_format_vector(diagonal_velocity),
-	])
-	get_tree().quit()
-
-
-func _swim_for_frames(direction: Vector2, frame_count: int) -> void:
-	for _frame in range(frame_count):
-		_player.swim_in_direction(direction, 1.0 / 60.0)
-		await get_tree().physics_frame
-
-
-func _format_vector(value: Vector2) -> String:
-	return "(%.1f, %.1f)" % [value.x, value.y]
-
-
-func _facing_report_matches(report: Dictionary, body_flip_h: bool, light_x: float, light_scale_x: float) -> bool:
-	return (
-		is_equal_approx(float(report.get("root_scale_x", 0.0)), 1.0)
-		and bool(report.get("body_flip_h", not body_flip_h)) == body_flip_h
-		and is_equal_approx(float(report.get("light_cone_position_x", 0.0)), light_x)
-		and is_equal_approx(float(report.get("light_cone_scale_x", 0.0)), light_scale_x)
-	)
-
 
-func _swim_to_target(target: Vector2, oxygen_feedback: Dictionary = {}) -> bool:
-	var path: Array = _world.find_open_path(_player.global_position, target)
-	if path.is_empty():
-		push_error("No open-water path from %s to %s." % [_player.global_position, target])
-		return false
+	var interaction_seconds := maxf(0.01, float(salvage.get("interaction_seconds", 0.0)))
+	_process(interaction_seconds + 0.1)
 
-	for waypoint_value in path:
-		var waypoint: Vector2 = waypoint_value
-		var frames_at_waypoint := 0
-		while _player.global_position.distance_to(waypoint) > 4.0:
-			var direction: Vector2 = (waypoint - _player.global_position).normalized()
-			_player.swim_in_direction(direction, 1.0 / 60.0)
-			frames_at_waypoint += 1
-			if frames_at_waypoint > 120:
-				push_error("Timed out swimming toward waypoint %s from %s." % [waypoint, _player.global_position])
-				return false
-			await get_tree().physics_frame
-			if not oxygen_feedback.is_empty():
-				_record_route_oxygen_feedback(oxygen_feedback)
 
-	_player.swim_in_direction(Vector2.ZERO, 1.0 / 60.0)
-	await get_tree().physics_frame
-	if not oxygen_feedback.is_empty():
-		_record_route_oxygen_feedback(oxygen_feedback)
-	return true
+func _collect_salvage_into_cargo(salvage_id: String) -> void:
+	var collected_score: int = _world.get_salvage_score(salvage_id)
+	var collected_tier: String = _world.get_salvage_tier(salvage_id)
+	_held_salvage += 1
+	_held_salvage_ids.append(salvage_id)
+	_held_salvage_score += collected_score
+	_last_status_note = _salvage_collection_feedback(collected_tier, collected_score)
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -1680,6 +571,7 @@ func _reset_run() -> void:
 		return
 
 	_world.reset_salvage()
+	_timed_salvage.reset()
 	_held_salvage = 0
 	_held_salvage_ids = []
 	_held_salvage_score = 0
@@ -1718,6 +610,7 @@ func _update_oxygen(delta: float) -> bool:
 
 
 func _handle_oxygen_depleted() -> void:
+	_timed_salvage.reset()
 	if not _held_salvage_ids.is_empty():
 		_world.restore_salvage(_held_salvage_ids)
 		_held_salvage_ids = []
@@ -1739,6 +632,7 @@ func _handle_oxygen_depleted() -> void:
 
 func _handle_hazard_hit(hazard_id: String) -> void:
 	_hazard_warning_id = ""
+	_timed_salvage.reset()
 	var oxygen_depleted := _apply_hazard_oxygen_penalty()
 	if oxygen_depleted:
 		_handle_oxygen_depleted()
@@ -2086,215 +980,6 @@ func _write_parity_report_and_quit(world: Node, output_path: String) -> void:
 	get_tree().quit()
 
 
-func _capture_screenshot_and_quit() -> void:
-	await get_tree().process_frame
-	await get_tree().process_frame
-	await get_tree().process_frame
-
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path("res://visual_baselines"))
-	var image := get_viewport().get_texture().get_image()
-	image.save_png(SCREENSHOT_PATH)
-	print("Saved screenshot: %s" % ProjectSettings.globalize_path(SCREENSHOT_PATH))
-	get_tree().quit()
-
-
-func _capture_camera_tests_and_quit(world: Node, capture_dir: String) -> void:
-	var camera_tests: Array = world.camera_tests
-	if camera_tests.is_empty():
-		push_error("No camera_tests found in greybox map source.")
-		get_tree().quit(1)
-		return
-
-	var camera := Camera2D.new()
-	camera.name = "VisualCaptureCamera"
-	camera.zoom = CAPTURE_ZOOM
-	camera.position_smoothing_enabled = false
-	camera.limit_left = 0
-	camera.limit_top = 0
-	camera.limit_right = int(world.map_pixel_size.x)
-	camera.limit_bottom = int(world.map_pixel_size.y)
-	add_child(camera)
-	camera.make_current()
-
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(capture_dir))
-
-	for camera_test in camera_tests:
-		var view_id := _safe_filename(str(camera_test.get("id", "camera_test")))
-		var center := Vector2(
-			float(camera_test.get("center_x", 0.0)) * world.tile_size,
-			float(camera_test.get("center_y", 0.0)) * world.tile_size
-		)
-		var zoom := float(camera_test.get("zoom", CAPTURE_ZOOM.x))
-		camera.zoom = Vector2(zoom, zoom)
-		camera.position = center
-
-		await get_tree().process_frame
-		await get_tree().process_frame
-
-		var output_path := "%s/%s.png" % [capture_dir, view_id]
-		var image := get_viewport().get_texture().get_image()
-		image.save_png(output_path)
-		print("Saved camera test capture: %s" % ProjectSettings.globalize_path(output_path))
-
-	get_tree().quit()
-
-
-func _capture_player_readability_and_quit(capture_dir: String) -> void:
-	if _world == null or _player == null:
-		push_error("Player readability capture requires a loaded playable map.")
-		get_tree().quit(1)
-		return
-
-	var review_position: Vector2 = _world.spawn_position + PLAYER_READABILITY_ENTRY_OFFSET_TILES * float(_world.tile_size)
-	_player.global_position = review_position
-	if _player.has_method("reset_motion"):
-		_player.reset_motion()
-
-	var camera := Camera2D.new()
-	camera.name = "PlayerReadabilityCaptureCamera"
-	camera.zoom = PLAYER_READABILITY_CAPTURE_ZOOM
-	camera.position_smoothing_enabled = false
-	camera.limit_left = 0
-	camera.limit_top = 0
-	camera.limit_right = int(_world.map_pixel_size.x)
-	camera.limit_bottom = int(_world.map_pixel_size.y)
-	add_child(camera)
-	camera.make_current()
-	camera.position = review_position + Vector2(64, -16)
-
-	await get_tree().process_frame
-	await get_tree().process_frame
-	await get_tree().process_frame
-
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(capture_dir))
-	var view_id := "%s_player_start" % _safe_filename(_world.map_id)
-	var output_path := "%s/%s.png" % [capture_dir, view_id]
-	var image := get_viewport().get_texture().get_image()
-	image.save_png(output_path)
-	print("Saved player readability capture: %s" % ProjectSettings.globalize_path(output_path))
-	get_tree().quit()
-
-
-func _capture_background_depth_and_quit(capture_dir: String) -> void:
-	if _world == null or _player == null:
-		push_error("Background depth capture requires a loaded playable map.")
-		get_tree().quit(1)
-		return
-
-	var review_position: Vector2 = _world.spawn_position + BACKGROUND_DEPTH_PLAYER_OFFSET_TILES * float(_world.tile_size)
-	_player.global_position = review_position
-	if _player.has_method("reset_motion"):
-		_player.reset_motion()
-
-	var camera := Camera2D.new()
-	camera.name = "BackgroundDepthCaptureCamera"
-	camera.zoom = BACKGROUND_DEPTH_CAPTURE_ZOOM
-	camera.position_smoothing_enabled = false
-	camera.limit_left = 0
-	camera.limit_top = 0
-	camera.limit_right = int(_world.map_pixel_size.x)
-	camera.limit_bottom = int(_world.map_pixel_size.y)
-	add_child(camera)
-	camera.make_current()
-	camera.position = BACKGROUND_DEPTH_CENTER_TILES * float(_world.tile_size)
-
-	await get_tree().process_frame
-	await get_tree().process_frame
-	await get_tree().process_frame
-
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(capture_dir))
-	var output_path := "%s/%s_background_depth.png" % [capture_dir, _safe_filename(_world.map_id)]
-	var image := get_viewport().get_texture().get_image()
-	image.save_png(output_path)
-	print("Saved background depth capture: %s" % ProjectSettings.globalize_path(output_path))
-	get_tree().quit()
-
-
-func _capture_feedback_overlay_and_quit(capture_dir: String) -> void:
-	if _world == null or _player == null:
-		push_error("Feedback overlay capture requires a loaded playable map.")
-		get_tree().quit(1)
-		return
-
-	var salvage_centers: Array = _world.get_salvage_centers()
-	if salvage_centers.is_empty():
-		push_error("Feedback overlay capture requires authored salvage.")
-		get_tree().quit(1)
-		return
-
-	_player.global_position = salvage_centers[0]["center"]
-	if _player.has_method("reset_motion"):
-		_player.reset_motion()
-	_process(0.0)
-	_oxygen_seconds = 12.0
-	_update_status_label()
-
-	var camera := Camera2D.new()
-	camera.name = "FeedbackOverlayCaptureCamera"
-	camera.zoom = CAPTURE_ZOOM
-	camera.position_smoothing_enabled = false
-	camera.limit_left = 0
-	camera.limit_top = 0
-	camera.limit_right = int(_world.map_pixel_size.x)
-	camera.limit_bottom = int(_world.map_pixel_size.y)
-	add_child(camera)
-	camera.make_current()
-	camera.position = _world.spawn_position + Vector2(180, 180)
-
-	await get_tree().process_frame
-	await get_tree().process_frame
-	await get_tree().process_frame
-
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(capture_dir))
-	var output_path := "%s/%s_feedback_overlay.png" % [capture_dir, _safe_filename(_world.map_id)]
-	var image := get_viewport().get_texture().get_image()
-	image.save_png(output_path)
-	print("Saved feedback overlay capture: %s" % ProjectSettings.globalize_path(output_path))
-	get_tree().quit()
-
-
-func _capture_route_outcome_result_and_quit(capture_dir: String) -> void:
-	if _world == null or _player == null:
-		push_error("Route outcome result capture requires a loaded playable map.")
-		get_tree().quit(1)
-		return
-	if _total_salvage <= 0:
-		push_error("Route outcome result capture requires authored salvage.")
-		get_tree().quit(1)
-		return
-
-	if not _complete_route_outcome_review_state():
-		get_tree().quit(1)
-		return
-	if _result_label == null or _result_label.text.find("Route:") == -1:
-		push_error("Route outcome result capture expected result panel route text before saving: %s" % [_result_label.text if _result_label != null else ""])
-		get_tree().quit(1)
-		return
-
-	var camera := Camera2D.new()
-	camera.name = "RouteOutcomeResultCaptureCamera"
-	camera.zoom = CAPTURE_ZOOM
-	camera.position_smoothing_enabled = false
-	camera.limit_left = 0
-	camera.limit_top = 0
-	camera.limit_right = int(_world.map_pixel_size.x)
-	camera.limit_bottom = int(_world.map_pixel_size.y)
-	add_child(camera)
-	camera.make_current()
-	camera.position = _world.spawn_position + Vector2(180, 180)
-
-	await get_tree().process_frame
-	await get_tree().process_frame
-	await get_tree().process_frame
-
-	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(capture_dir))
-	var output_path := "%s/%s_route_outcome_result.png" % [capture_dir, _safe_filename(_world.map_id)]
-	var image := get_viewport().get_texture().get_image()
-	image.save_png(output_path)
-	print("Saved route outcome result capture: %s" % ProjectSettings.globalize_path(output_path))
-	get_tree().quit()
-
-
 func _has_arg(user_args: PackedStringArray, engine_args: PackedStringArray, value: String) -> bool:
 	return value in user_args or value in engine_args
 
@@ -2309,10 +994,3 @@ func _arg_value(user_args: PackedStringArray, engine_args: PackedStringArray, na
 			if arg.begins_with(prefix):
 				return arg.substr(prefix.length())
 	return ""
-
-
-func _safe_filename(value: String) -> String:
-	var output := value.to_lower()
-	for character in [" ", "\\", "/", ":", "*", "?", "\"", "<", ">", "|"]:
-		output = output.replace(character, "_")
-	return output

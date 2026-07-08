@@ -2,6 +2,8 @@
 
 Date: 2026-07-06
 
+Status: Completed as of 2026-07-07. Issues #129-#148 are closed; #149 is closed related tooling-index work. #52 and #53 remain deferred optional slice-03 polish outside this pass.
+
 ## Decision
 
 Controlled Gameplay Pass 04 should make the current expedition loop easier to read and more worth replaying. The pass should stay centered on `production_slice_01` and should build on the existing scored salvage, two-slot cargo, oxygen, result panel, and expanded route-choice smoke.
@@ -31,7 +33,9 @@ Issues in this pass should create at least one of:
 
 Pure polish, broad refactors, and optional slice-03 work stay out of this pass unless they directly support the playable route-pressure loop.
 
-## Planned Issue Batch
+## Issue Batch
+
+All issues in this batch are closed.
 
 - #129 `Plan Controlled Gameplay Pass 04 around route readability and replay pressure`
 - #130 `Add route-choice metadata schema to map spec and validator`

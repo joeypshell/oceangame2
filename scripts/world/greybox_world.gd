@@ -164,16 +164,7 @@ func get_total_salvage_count() -> int:
 func get_salvage_centers() -> Array:
 	var centers := []
 	for entity in _salvage_entities:
-		centers.append({
-			"id": str(entity.get("id", "salvage")),
-			"center": _entity_center(entity),
-			"tier": str(entity.get("tier", "common")),
-			"route_choice_id": str(entity.get("route_choice_id", "")),
-			"validation_route": str(entity.get("validation_route", "")),
-			"has_route_order": entity.has("route_order"),
-			"route_order": int(entity.get("route_order", 0)),
-			"score": _salvage_score(entity),
-		})
+		centers.append(_salvage_runtime_info(entity))
 	return centers
 
 
@@ -289,13 +280,36 @@ func collect_salvage_near(position: Vector2, radius_px: float) -> String:
 			continue
 		if position.distance_to(_entity_center(entity)) > radius_px:
 			continue
+		if _salvage_interaction(entity) == "timed_salvage":
+			continue
+
+		return salvage_id if collect_salvage_by_id(salvage_id) else ""
+	return ""
+
+
+func get_available_salvage_near(position: Vector2, radius_px: float) -> Dictionary:
+	for entity in _salvage_entities:
+		var salvage_id := str(entity.get("id", "salvage"))
+		if _collected_salvage.get(salvage_id, false):
+			continue
+		if position.distance_to(_entity_center(entity)) <= radius_px:
+			return _salvage_runtime_info(entity)
+	return {}
+
+
+func collect_salvage_by_id(salvage_id: String) -> bool:
+	for entity in _salvage_entities:
+		if str(entity.get("id", "salvage")) != salvage_id:
+			continue
+		if _collected_salvage.get(salvage_id, false):
+			return false
 
 		_collected_salvage[salvage_id] = true
 		if _salvage_nodes_by_id.has(salvage_id):
 			var salvage_node := _salvage_nodes_by_id[salvage_id] as Node2D
 			salvage_node.visible = false
-		return salvage_id
-	return ""
+		return true
+	return false
 
 
 func has_available_salvage_near(position: Vector2, radius_px: float) -> bool:
@@ -311,6 +325,26 @@ func has_available_salvage_near(position: Vector2, radius_px: float) -> bool:
 func _salvage_score(entity: Dictionary) -> int:
 	var tier := str(entity.get("tier", "common"))
 	return int(SALVAGE_TIER_SCORES.get(tier, SALVAGE_TIER_SCORES["common"]))
+
+
+func _salvage_runtime_info(entity: Dictionary) -> Dictionary:
+	return {
+		"id": str(entity.get("id", "salvage")),
+		"center": _entity_center(entity),
+		"tier": str(entity.get("tier", "common")),
+		"route_choice_id": str(entity.get("route_choice_id", "")),
+		"validation_route": str(entity.get("validation_route", "")),
+		"has_route_order": entity.has("route_order"),
+		"route_order": int(entity.get("route_order", 0)),
+		"score": _salvage_score(entity),
+		"interaction": _salvage_interaction(entity),
+		"interaction_seconds": float(entity.get("interaction_seconds", 0.0)),
+		"interaction_label": str(entity.get("interaction_label", "")),
+	}
+
+
+func _salvage_interaction(entity: Dictionary) -> String:
+	return str(entity.get("interaction", "instant"))
 
 
 func reset_salvage() -> void:

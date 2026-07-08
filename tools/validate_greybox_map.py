@@ -11,11 +11,14 @@ from pathlib import Path
 
 
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
+DISPLAY_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,31}$")
 ENTITY_TYPES = {"spawn", "boat_spawn", "salvage", "hazard"}
 POINT_ENTITY_TYPES = {"spawn", "salvage", "hazard"}
 KIND_ENTITY_TYPES = {"salvage", "hazard"}
 SALVAGE_VALUE_TIERS = {"common", "valuable"}
 ROUTE_CHOICE_METADATA_FIELDS = {"route_choice_id", "validation_route", "route_order"}
+SALVAGE_INTERACTIONS = {"instant", "timed_salvage"}
+SALVAGE_INTERACTION_METADATA_FIELDS = {"interaction", "interaction_seconds", "interaction_label"}
 
 
 def rect_cells(item: dict) -> set[tuple[int, int]]:
@@ -38,6 +41,10 @@ def spawn_cell(entity: dict) -> tuple[int, int]:
 
 def is_int_value(value) -> bool:
     return isinstance(value, int) and not isinstance(value, bool)
+
+
+def is_number_value(value) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
 
 
 def validate_required_fields(item: dict, item_label: str, required_fields: tuple[str, ...]) -> list[str]:
@@ -107,6 +114,45 @@ def validate_route_choice_metadata(entity: dict, item_label: str) -> list[str]:
     return failures
 
 
+def validate_salvage_interaction_metadata(entity: dict, item_label: str) -> list[str]:
+    failures: list[str] = []
+    interaction_fields = SALVAGE_INTERACTION_METADATA_FIELDS & set(entity.keys())
+    if not interaction_fields:
+        return failures
+
+    if entity.get("type") != "salvage":
+        fields = ", ".join(sorted(interaction_fields))
+        return [f"{item_label} interaction metadata ({fields}) is only supported on salvage entities."]
+
+    interaction = entity.get("interaction", "instant")
+    if not isinstance(interaction, str) or not interaction:
+        failures.append(f"{item_label} interaction must be a non-empty string.")
+    elif interaction not in SALVAGE_INTERACTIONS:
+        allowed = ", ".join(sorted(SALVAGE_INTERACTIONS))
+        failures.append(f"{item_label} interaction {interaction!r} must be one of: {allowed}.")
+
+    if interaction == "timed_salvage":
+        if "interaction_seconds" not in entity:
+            failures.append(f"{item_label} timed_salvage requires interaction_seconds.")
+        elif not is_number_value(entity["interaction_seconds"]):
+            failures.append(f"{item_label} interaction_seconds must be a positive number.")
+        elif float(entity["interaction_seconds"]) <= 0.0:
+            failures.append(f"{item_label} interaction_seconds must be greater than 0.")
+    elif "interaction_seconds" in entity:
+        failures.append(f"{item_label} interaction_seconds is only supported for timed_salvage.")
+
+    if "interaction_label" in entity:
+        label = entity["interaction_label"]
+        if not isinstance(label, str) or not label:
+            failures.append(f"{item_label} interaction_label must be a non-empty string.")
+        elif "\n" in label or "\r" in label or not (ID_PATTERN.match(label) or DISPLAY_LABEL_PATTERN.match(label)):
+            failures.append(
+                f"{item_label} interaction_label must be lower_snake_case or short display-safe text."
+            )
+
+    return failures
+
+
 def validate_tile_coordinate(entity: dict, field: str, width: int, height: int) -> list[str]:
     item_label = str(entity.get("id", entity.get("type", "entity")))
     if field not in entity:
@@ -165,6 +211,7 @@ def validate_entity_schema(entities: list[dict], width: int, height: int, base_z
         if entity_type == "salvage" and "tier" in entity:
             failures.extend(validate_salvage_tier(entity["tier"], item_label))
         failures.extend(validate_route_choice_metadata(entity, item_label))
+        failures.extend(validate_salvage_interaction_metadata(entity, item_label))
         if entity_type == "salvage" and entity.get("kind") != "stress_marker":
             has_gameplay_salvage = True
 

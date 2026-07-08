@@ -183,6 +183,22 @@ jobs:
             exit 1
           fi
 
+      - name: Run timed salvage smoke check
+        run: |
+          set +e
+          godot --headless --path . --smoke-timed-salvage 2>&1 | tee godot-timed-salvage.log
+          godot_status=${PIPESTATUS[0]}
+          set -e
+
+          if [ "${godot_status}" -ne 0 ]; then
+            exit "${godot_status}"
+          fi
+
+          if grep -E "SCRIPT ERROR|ERROR:" godot-timed-salvage.log; then
+            echo "Godot reported errors during timed salvage smoke check."
+            exit 1
+          fi
+
       - name: Run player-facing smoke check
         run: |
           set +e
