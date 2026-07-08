@@ -2,6 +2,7 @@ extends RefCounted
 
 const Pass10ReturnPressureCapture := preload("res://scripts/main/captures/pass_10_return_pressure_capture.gd")
 const Pass11PrePickupRouteCueCapture := preload("res://scripts/main/captures/pass_11_pre_pickup_route_cue_capture.gd")
+const Pass12OxygenRestCapture := preload("res://scripts/main/captures/pass_12_oxygen_rest_capture.gd")
 const SCREENSHOT_PATH := "res://visual_baselines/001_greybox_in_engine.png"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 const PLAYER_READABILITY_CAPTURE_ZOOM := Vector2(2.0, 2.0)
@@ -464,6 +465,9 @@ func capture_pass_11_pre_pickup_route_cue_and_quit(capture_dir: String) -> void:
 	var capture := Pass11PrePickupRouteCueCapture.new(_main)
 	await capture.capture_and_quit(capture_dir)
 
+func capture_pass_12_oxygen_rest_pressure_and_quit(capture_dir: String) -> void:
+	var capture := Pass12OxygenRestCapture.new(_main)
+	await capture.capture_and_quit(capture_dir)
 
 func _timed_salvage_target() -> Dictionary:
 	for salvage in _main._world.get_salvage_centers():
@@ -471,13 +475,11 @@ func _timed_salvage_target() -> Dictionary:
 			return salvage
 	return {}
 
-
 func _salvage_by_id(salvage_id: String) -> Dictionary:
 	for salvage in _main._world.get_salvage_centers():
 		if str(salvage.get("id", "")) == salvage_id:
 			return salvage
 	return {}
-
 
 func _hazard_by_id(hazard_id: String) -> Dictionary:
 	for hazard in _main._world.get_hazard_centers():
@@ -485,13 +487,11 @@ func _hazard_by_id(hazard_id: String) -> Dictionary:
 			return hazard
 	return {}
 
-
 func _zone_center(zone: Dictionary) -> Vector2:
 	return Vector2(
 		(float(zone.get("x", 0.0)) + float(zone.get("w", 1.0)) * 0.5) * float(_main._world.tile_size),
 		(float(zone.get("y", 0.0)) + float(zone.get("h", 1.0)) * 0.5) * float(_main._world.tile_size)
 	)
-
 
 func _safe_filename(value: String) -> String:
 	var output := value.to_lower()

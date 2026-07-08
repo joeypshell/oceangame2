@@ -45,6 +45,7 @@ const ROUTE_EXTENSION_CAPTURE_DIR := "res://visual_captures/route_extension"
 const SOUTHWEST_POCKET_DECISION_CAPTURE_DIR := "res://visual_captures/southwest_pocket_decision"
 const PASS_10_RETURN_PRESSURE_CAPTURE_DIR := "res://visual_captures/pass_10_return_pressure"
 const PASS_11_PRE_PICKUP_ROUTE_CUE_CAPTURE_DIR := "res://visual_captures/pass_11_pre_pickup_route_cue"
+const PASS_12_OXYGEN_REST_PRESSURE_CAPTURE_DIR := "res://visual_captures/pass_12_oxygen_rest_pressure"
 const BUILD_INFO_PATH := "res://build_info.json"
 const MOVEMENT_FEEL_PROBE_CENTER_TILES := Vector2(42, 25)
 const SALVAGE_COLLECTION_RADIUS := 34.0
@@ -153,6 +154,7 @@ func _ready() -> void:
 	var capture_southwest_pocket_decision := _has_arg(user_args, engine_args, "--capture-pass-09-southwest-pocket-decision")
 	var capture_pass_10_return_pressure := _has_arg(user_args, engine_args, "--capture-pass-10-return-pressure")
 	var capture_pass_11_pre_pickup_route_cue := _has_arg(user_args, engine_args, "--capture-pass-11-pre-pickup-route-cue")
+	var capture_pass_12_oxygen_rest_pressure := _has_arg(user_args, engine_args, "--capture-pass-12-oxygen-rest-pressure")
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
 	var smoke_production_slice_route := _has_arg(user_args, engine_args, "--smoke-production-slice-route")
@@ -305,6 +307,7 @@ func _ready() -> void:
 		or capture_southwest_pocket_decision
 		or capture_pass_10_return_pressure
 		or capture_pass_11_pre_pickup_route_cue
+		or capture_pass_12_oxygen_rest_pressure
 		or smoke_salvage_loop
 		or smoke_production_slice_route
 		or smoke_production_slice_02_route
@@ -474,6 +477,8 @@ func _ready() -> void:
 		_capture_controller.capture_pass_10_return_pressure_and_quit(PASS_10_RETURN_PRESSURE_CAPTURE_DIR)
 	elif capture_pass_11_pre_pickup_route_cue:
 		_capture_controller.capture_pass_11_pre_pickup_route_cue_and_quit(PASS_11_PRE_PICKUP_ROUTE_CUE_CAPTURE_DIR)
+	elif capture_pass_12_oxygen_rest_pressure:
+		_capture_controller.capture_pass_12_oxygen_rest_pressure_and_quit(PASS_12_OXYGEN_REST_PRESSURE_CAPTURE_DIR)
 
 
 func _review_map_selector_allowed(user_args: PackedStringArray, engine_args: PackedStringArray) -> bool:
