@@ -128,6 +128,18 @@ var HAZARD_OXYGEN_PENALTY_SECONDS: float:
 	get:
 		return _main.HAZARD_OXYGEN_PENALTY_SECONDS
 
+var PASS_07_PRESSURE_SEGMENT_ID: String:
+	get:
+		return _main.PASS_07_PRESSURE_SEGMENT_ID
+
+var PASS_07_PRESSURE_HAZARD_ID: String:
+	get:
+		return _main.PASS_07_PRESSURE_HAZARD_ID
+
+var PRESSURE_HAZARD_WARNING_PROMPT: String:
+	get:
+		return _main.PRESSURE_HAZARD_WARNING_PROMPT
+
 var OXYGEN_MAX_SECONDS: float:
 	get:
 		return _main.OXYGEN_MAX_SECONDS

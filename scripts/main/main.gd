@@ -4,6 +4,7 @@ const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
+const SmokeHazardRouteChecks := preload("res://scripts/main/smoke/smoke_hazard_route_checks.gd")
 const SmokeInteractionChecks := preload("res://scripts/main/smoke/smoke_interaction_checks.gd")
 const SmokeRouteChecks := preload("res://scripts/main/smoke/smoke_route_checks.gd")
 const SmokeScoreChecks := preload("res://scripts/main/smoke/smoke_score_checks.gd")
@@ -43,6 +44,7 @@ const HAZARD_WARNING_RADIUS := 80.0
 const HAZARD_OXYGEN_PENALTY_SECONDS := 12.0
 const HAZARD_COOLDOWN_SECONDS := 1.0
 const HAZARD_FEEDBACK_SECONDS := 0.45
+const PASS_07_PRESSURE_SEGMENT_ID := "lower_loop_to_deep_cache_pressure"
 const PASS_07_PRESSURE_HAZARD_ID := "hazard_right_branch"
 const GENERIC_HAZARD_WARNING_PROMPT := "Hazard nearby - keep clear"
 const PRESSURE_HAZARD_WARNING_PROMPT := "Hazard ahead - keep clear"
@@ -67,6 +69,7 @@ var _world
 var _player
 var _capture_controller
 var _timed_salvage
+var _smoke_hazard_route_checks
 var _smoke_interaction_checks
 var _smoke_route_checks
 var _smoke_score_checks
@@ -101,6 +104,7 @@ var _last_status_note := ""
 func _ready() -> void:
 	_capture_controller = CaptureController.new(self)
 	_timed_salvage = TimedSalvageController.new()
+	_smoke_hazard_route_checks = SmokeHazardRouteChecks.new(self)
 	_smoke_interaction_checks = SmokeInteractionChecks.new(self)
 	_smoke_route_checks = SmokeRouteChecks.new(self)
 	_smoke_score_checks = SmokeScoreChecks.new(self)
@@ -132,6 +136,7 @@ func _ready() -> void:
 	var smoke_map_selector := _has_arg(user_args, engine_args, "--smoke-map-selector")
 	var smoke_hazard_interaction := _has_arg(user_args, engine_args, "--smoke-hazard-interaction")
 	var smoke_hazard_pressure := _has_arg(user_args, engine_args, "--smoke-hazard-pressure")
+	var smoke_pass_07_hazard_route_pressure := _has_arg(user_args, engine_args, "--smoke-pass-07-hazard-route-pressure")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var smoke_timed_salvage := _has_arg(user_args, engine_args, "--smoke-timed-salvage")
 	var smoke_cargo_capacity := _has_arg(user_args, engine_args, "--smoke-cargo-capacity")
@@ -195,6 +200,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_hazard_pressure:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_pass_07_hazard_route_pressure:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_oxygen_pressure:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_timed_salvage:
@@ -252,6 +259,7 @@ func _ready() -> void:
 		or smoke_map_selector
 		or smoke_hazard_interaction
 		or smoke_hazard_pressure
+		or smoke_pass_07_hazard_route_pressure
 		or smoke_oxygen_pressure
 		or smoke_timed_salvage
 		or smoke_cargo_capacity
@@ -300,6 +308,9 @@ func _ready() -> void:
 		return
 	if smoke_hazard_pressure:
 		_smoke_interaction_checks._smoke_hazard_interaction_and_quit()
+		return
+	if smoke_pass_07_hazard_route_pressure:
+		_smoke_hazard_route_checks._smoke_pass_07_hazard_route_pressure_and_quit()
 		return
 	if smoke_oxygen_pressure:
 		_smoke_interaction_checks._smoke_oxygen_pressure_and_quit()

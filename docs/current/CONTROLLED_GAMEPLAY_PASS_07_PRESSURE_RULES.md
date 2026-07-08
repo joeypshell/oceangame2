@@ -141,6 +141,7 @@ Future implementation issues should preserve or add coverage for:
 python tools/validate_greybox_map.py maps/production_slice_01.greybox.json
 python tools/check_map_parity.py maps/production_slice_01.greybox.json
 --smoke-hazard-pressure
+--smoke-pass-07-hazard-route-pressure
 --smoke-oxygen-pressure
 --smoke-timed-salvage
 --smoke-safe-deep-route-choice

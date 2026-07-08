@@ -198,6 +198,13 @@ func get_hazard_centers() -> Array:
 	return centers
 
 
+func get_marker_zone(marker_id: String) -> Dictionary:
+	for zone in _map_data.get("zones", []):
+		if zone.get("type", "") == "marker" and str(zone.get("id", "")) == marker_id:
+			return zone
+	return {}
+
+
 func get_nearest_hazard_within(position: Vector2, radius_px: float) -> Dictionary:
 	var nearest := {}
 	var nearest_distance := radius_px
