@@ -65,6 +65,14 @@ Capture the focused Pass 08 route-extension view:
 
 This loads the default production slice, places the player near `salvage_southwest_return_cache` without collecting it, frames `southwest_return_pocket_extension` with compact overlay context, keeps map data and accepted baselines unchanged, and writes `visual_captures/route_extension/production_slice_01_route_extension.png`.
 
+Capture the focused Pass 09 southwest pocket route-decision view:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-09-southwest-pocket-decision
+```
+
+This loads the default production slice, collects `salvage_southwest_return_cache` through the normal runtime path, frames `southwest_return_pocket_extension` with compact payoff feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/southwest_pocket_decision/production_slice_01_southwest_pocket_decision.png`.
+
 Capture the original rectangular salvage map comparison views:
 
 ```powershell
