@@ -18,6 +18,8 @@
 
 `visual_captures/pass_13_route_commitment/` contains a focused generated screenshot of the Pass 13 deep-cache route objective while the timed salvage interaction is in progress.
 
+`visual_captures/pass_14_objective_cue/` contains a focused generated screenshot of the Pass 14 start-of-run objective cue at the boat/extraction area.
+
 These captures are not automatically approved baselines. They are review artifacts used to compare the current in-engine result against `visual_baselines/` and the art direction docs.
 
 Preview captures include the compact review overlay with map id, build label, and salvage progress.
@@ -93,3 +95,11 @@ Regenerate the focused Pass 13 route-commitment capture with:
 ```
 
 This capture frames the deep-cache objective with lower-loop cargo held, timed salvage progress visible, and is a review artifact, not an accepted baseline by itself.
+
+Regenerate the focused Pass 14 objective-cue capture with:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-14-objective-cue
+```
+
+This capture frames the boat/extraction start context with `Objective: Deep cache 0/2` visible, and is a review artifact, not an accepted baseline by itself.
