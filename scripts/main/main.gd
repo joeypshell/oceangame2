@@ -1006,7 +1006,10 @@ func _oxygen_rest_prompt() -> String:
 func _route_commitment_overlay_text() -> String:
 	if _route_commitment_feedback == null:
 		return ""
-	return _route_commitment_feedback.overlay_text(_held_salvage_ids, _banked_salvage_ids)
+	var show_start_cue := false
+	if _world != null and _player != null and not _run_complete and not _run_failed:
+		show_start_cue = _world.is_inside_extraction(_player.global_position)
+	return _route_commitment_feedback.overlay_text(_held_salvage_ids, _banked_salvage_ids, show_start_cue)
 
 
 func _route_commitment_result_text() -> String:

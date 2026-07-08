@@ -11,6 +11,7 @@ const EXPECTED_ONE_HELD := "Objective: Deep cache 1/2"
 const EXPECTED_TWO_HELD := "Objective: Deep cache 2/2 - bank"
 const EXPECTED_ONE_BANKED := "Objective: Deep cache 1/2 banked"
 const EXPECTED_COMPLETE := "Objective complete: Deep cache"
+const EXPECTED_START_CUE := "Objective: Deep cache 0/2"
 const EXPECTED_RESULT_COMPLETE := "Objective: Deep cache complete"
 const EXPECTED_RESULT_INCOMPLETE := "Objective: Deep cache incomplete"
 
@@ -49,8 +50,8 @@ func _smoke_pass_13_route_commitment_and_quit() -> void:
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
 	_update_status_label()
-	if _status_text().find("Objective:") != -1 or _status_text().find("Objective complete") != -1:
-		_fail("Pass 13 objective text appeared before route progress: %s." % _status_text())
+	if _status_text().find(EXPECTED_START_CUE) == -1:
+		_fail("Pass 13 start cue missing '%s': %s." % [EXPECTED_START_CUE, _status_text()])
 		return
 
 	_collect_and_bank_target(safe_target)

@@ -24,7 +24,7 @@ func has_objective() -> bool:
 	return not _objective.is_empty() and not _required_target_ids.is_empty()
 
 
-func overlay_text(held_ids: Array, banked_ids: Array) -> String:
+func overlay_text(held_ids: Array, banked_ids: Array, show_start_cue := false) -> String:
 	if not has_objective():
 		return ""
 
@@ -34,6 +34,8 @@ func overlay_text(held_ids: Array, banked_ids: Array) -> String:
 	if banked_count >= total_count:
 		return "Objective complete: %s" % _display_name()
 	if held_count + banked_count <= 0:
+		if show_start_cue:
+			return "Objective: %s 0/%d" % [_display_name(), total_count]
 		return ""
 	if held_count + banked_count >= total_count:
 		return "Objective: %s %d/%d - bank" % [_display_name(), total_count, total_count]
