@@ -246,8 +246,10 @@ Open `http://127.0.0.1:8060/`. Do not open `exports/web/index.html` directly.
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Issues should include acceptance criteria, relevant files, implementation notes, and verification steps. When implementing immediately, still create the issue and close it with commit hashes and verification notes.
 
-Current issue state as of 2026-07-07:
+Current issue state as of 2026-07-08:
 
+- Active Pass 05 queue: none; #150-#159 are closed.
+- Closed: #150-#159 completed Pass 05 timed salvage interaction, source metadata/validation, runtime, map authoring, smoke coverage, focused capture, visual review, public Web verification, closeout, and main-file guard work.
 - Active Pass 04 queue: none; #129-#148 are closed.
 - Closed: #129-#137 completed Pass 04 planning/setup, route-choice metadata, deterministic route metadata smokes, session best score, oxygen bonus/result breakdown, cargo-full feedback, and salvage collection feedback.
 - Closed: #138-#148 completed the remaining Pass 04 implementation/review/closeout work, including hazard warning/penalty pressure, safe-versus-deep metadata and smokes, oxygen threshold tuning, route outcome text/capture, visual baseline review, public Web verification, and pass closeout.

@@ -4,6 +4,8 @@ Date: 2026-07-07
 
 Issue: #150 `Plan Controlled Gameplay Pass 05 around timed salvage interaction`
 
+Status: Completed as of 2026-07-08. See `docs/current/CONTROLLED_GAMEPLAY_PASS_05_CLOSEOUT.md`.
+
 ## Decision
 
 Controlled Gameplay Pass 05 should add one authored timed salvage interaction to the default `production_slice_01` loop.

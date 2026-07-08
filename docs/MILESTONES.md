@@ -55,9 +55,9 @@ Done when:
 
 ## Current Roadmap Decision
 
-As of 2026-07-07, Controlled Gameplay Pass 04 is complete. See `docs/current/CONTROLLED_GAMEPLAY_PASS_04_CLOSEOUT.md` for the closeout decision and `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table.
+As of 2026-07-08, Controlled Gameplay Pass 05 is complete. See `docs/current/CONTROLLED_GAMEPLAY_PASS_05_CLOSEOUT.md` for the closeout decision and `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table.
 
-The project should now move from route-pressure polish to one small moment-to-moment salvage interaction. Prefer a timed or tool-like salvage action before broader map-scale expansion.
+The project should now move from one timed salvage interaction to one more small in-cave pressure or tool-like moment before broader map-scale expansion.
 
 What the current prototype has proven:
 
@@ -67,18 +67,19 @@ What the current prototype has proven:
 - route smoke, camera captures, source/render/collision review, and visual baselines can be repeated across different topology roles
 - targeted visual changes can now be compared against accepted baselines instead of relying on memory or one-off screenshots
 - the default slice now supports source-authored safe/deep route metadata, oxygen pressure, cargo pressure, hazard warning/penalty behavior, route outcome text, and deterministic smoke coverage
+- the default slice now has one authored timed valuable salvage target with source metadata, runtime progress, deterministic smoke coverage, focused capture, and public Web verification
 
 Current constraints:
 
 - Keep `production_slice_01` as the default preview map unless a separate default-preview decision changes it.
 - Preserve `maps/full_cave_sketch_01.greybox.json` as a topology draft and planning source.
 - Keep icons from the supplied sketch out of terrain conversion unless they are reauthored as JSON entities.
-- Do not attempt whole-map productionization yet; add another meaningful authored in-cave verb before expanding route scale.
+- Do not attempt whole-map productionization yet; add one more meaningful authored in-cave pressure point before expanding route scale.
 - Keep #52 and #53 as optional slice-03 camera/topology polish unless slice-03 presentation becomes the selected goal.
 
 Current next direction:
 
-- Create a focused Controlled Gameplay Pass 05 batch around one timed/tool-like salvage interaction, with source metadata, validator support, runtime implementation, smoke coverage, focused capture, visual review, and Web verification.
+- Plan a focused Controlled Gameplay Pass 06 around either clearer tool-like timed-salvage feedback or one authored hazard/navigation pressure pattern.
 
 Recently completed current-state work:
 
@@ -86,3 +87,4 @@ Recently completed current-state work:
 - #146 accepted the Pass 04 route-pressure visual baseline.
 - #147 verified the public Web preview for the Pass 04 route-pressure runtime.
 - #148 recorded the Pass 04 closeout and next-step evaluation.
+- #150-#159 completed Controlled Gameplay Pass 05 and main-file guard work.

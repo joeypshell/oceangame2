@@ -79,9 +79,10 @@ Additional current map sources:
   - Applies camera bounds from the world map size.
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
   - Shows compact preview review context, salvage progress, and scoped oxygen pressure.
-  - Runs the minimal expedition loop: salvage pickup, cargo banking, oxygen pressure, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, and route outcome result text.
-  - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures and the focused route-outcome result capture.
-  - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, hazard pressure, oxygen pressure, cargo/scoring, route outcome result, player-facing, movement-feel, and production-slice route checks.
+  - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress, cargo banking, oxygen pressure, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, and route outcome result text.
+  - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, and focused timed-salvage capture.
+  - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, timed salvage, hazard pressure, oxygen pressure, cargo/scoring, route outcome result, player-facing, movement-feel, and production-slice route checks.
+  - Uses `scripts/main/timed_salvage_controller.gd` for the narrow Pass 05 timed salvage interaction.
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.
@@ -114,5 +115,7 @@ Art placement must not create, remove, or move collision.
 - Hazards show warning feedback before contact; contact applies a 12-second oxygen penalty, bumps the player back to spawn, briefly tints the player, and restores any held/unbanked salvage to the map.
 - Oxygen is a scoped expedition-pressure prototype: it drains while away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held salvage.
 - The default slice has source-authored safe/deep route metadata and deterministic smokes for safe/deep comparison, hazard pressure, and route outcome result text.
+- The default slice has one source-authored `timed_salvage` target, `salvage_deep_right_cache`, that requires 2.5 seconds of in-range progress before entering held cargo.
 - `--capture-route-outcome-result` provides a focused review capture for the completed-run route outcome panel without replacing normal accepted baselines.
+- `--capture-timed-salvage` provides a focused review capture for the timed-salvage overlay state without replacing normal accepted baselines.
 - First screenshot baseline is committed at `visual_baselines/001_greybox_in_engine.png`.
