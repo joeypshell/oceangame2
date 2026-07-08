@@ -39,7 +39,8 @@ func update(nearby_salvage: Dictionary, delta: float) -> Dictionary:
 
 	_progress_seconds = minf(_required_seconds, _progress_seconds + maxf(0.0, delta))
 	var progress_ratio := clampf(_progress_seconds / _required_seconds, 0.0, 1.0)
-	var note := "Salvaging %s %d%%" % [_label, int(round(progress_ratio * 100.0))]
+	var progress_percent := int(round(progress_ratio * 100.0))
+	var note := "Salvaging %s\n%d%% %s" % [_label, progress_percent, _progress_bar(progress_ratio)]
 
 	if _progress_seconds >= _required_seconds:
 		var result := {
@@ -69,3 +70,11 @@ func _display_label(salvage: Dictionary) -> String:
 	else:
 		label = label.replace("_", " ")
 	return label
+
+
+func _progress_bar(progress_ratio: float) -> String:
+	var filled_segments := int(round(clampf(progress_ratio, 0.0, 1.0) * 6.0))
+	var segments := ""
+	for index in range(6):
+		segments += "=" if index < filled_segments else "-"
+	return "[%s]" % segments
