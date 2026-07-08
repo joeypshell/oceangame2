@@ -3,6 +3,7 @@ extends Node2D
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
+const OxygenRestPocketFeedback := preload("res://scripts/main/oxygen_rest_pocket_feedback.gd")
 const PrePickupRouteCueFeedback := preload("res://scripts/main/pre_pickup_route_cue_feedback.gd")
 const ReturnPressureFeedback := preload("res://scripts/main/return_pressure_feedback.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
@@ -77,6 +78,7 @@ const REVIEW_MAP_OPTIONS := [
 var _world
 var _player
 var _capture_controller
+var _oxygen_rest_feedback
 var _pre_pickup_route_cue_feedback
 var _return_pressure_feedback
 var _timed_salvage
@@ -115,6 +117,7 @@ var _last_status_note := ""
 
 func _ready() -> void:
 	_capture_controller = CaptureController.new(self)
+	_oxygen_rest_feedback = OxygenRestPocketFeedback.new()
 	_pre_pickup_route_cue_feedback = PrePickupRouteCueFeedback.new()
 	_return_pressure_feedback = ReturnPressureFeedback.new()
 	_timed_salvage = TimedSalvageController.new()
@@ -671,6 +674,7 @@ func _reset_run() -> void:
 		return
 
 	_world.reset_salvage()
+	_oxygen_rest_feedback.reset()
 	_timed_salvage.reset()
 	_held_salvage = 0
 	_held_salvage_ids = []
@@ -698,8 +702,17 @@ func _reset_run() -> void:
 
 func _update_oxygen(delta: float) -> bool:
 	if _world.is_inside_extraction(_player.global_position):
+		_oxygen_rest_feedback.reset()
 		_oxygen_seconds = minf(OXYGEN_MAX_SECONDS, _oxygen_seconds + OXYGEN_REFILL_SECONDS_PER_SECOND * delta)
 		return false
+
+	var rest_result: Dictionary = _oxygen_rest_feedback.update(_world, _player.global_position, _oxygen_seconds, delta)
+	if bool(rest_result.get("inside", false)):
+		_oxygen_seconds = float(rest_result.get("oxygen_seconds", _oxygen_seconds))
+		if _oxygen_seconds > 0.0:
+			return false
+		_handle_oxygen_depleted()
+		return true
 
 	_oxygen_seconds = maxf(0.0, _oxygen_seconds - delta)
 	if _oxygen_seconds > 0.0:
@@ -710,6 +723,7 @@ func _update_oxygen(delta: float) -> bool:
 
 
 func _handle_oxygen_depleted() -> void:
+	_oxygen_rest_feedback.reset()
 	_timed_salvage.reset()
 	if not _held_salvage_ids.is_empty():
 		_world.restore_salvage(_held_salvage_ids)
@@ -732,6 +746,7 @@ func _handle_oxygen_depleted() -> void:
 
 func _handle_hazard_hit(hazard_id: String) -> void:
 	_hazard_warning_id = ""
+	_oxygen_rest_feedback.reset()
 	_timed_salvage.reset()
 	var oxygen_depleted := _apply_hazard_oxygen_penalty()
 	if oxygen_depleted:
@@ -887,6 +902,7 @@ func _update_status_label() -> void:
 		return
 
 	var prompt := ""
+	var oxygen_rest_prompt := _oxygen_rest_prompt()
 	var pre_pickup_route_cue := _pre_pickup_route_cue_prompt()
 	if _run_complete:
 		prompt = "Run complete - press R"
@@ -896,6 +912,8 @@ func _update_status_label() -> void:
 		prompt = _cargo_full_prompt()
 	elif not _hazard_warning_id.is_empty():
 		prompt = _hazard_warning_prompt()
+	elif not oxygen_rest_prompt.is_empty():
+		prompt = oxygen_rest_prompt
 	elif not pre_pickup_route_cue.is_empty():
 		prompt = pre_pickup_route_cue
 	elif not _last_status_note.is_empty():
@@ -934,6 +952,12 @@ func _pre_pickup_route_cue_prompt() -> String:
 	if _pre_pickup_route_cue_feedback == null or _world == null or _player == null:
 		return ""
 	return _pre_pickup_route_cue_feedback.current_prompt(_world, _player.global_position)
+
+
+func _oxygen_rest_prompt() -> String:
+	if _oxygen_rest_feedback == null:
+		return ""
+	return _oxygen_rest_feedback.current_prompt()
 
 
 func _hazard_warning_prompt() -> String:
