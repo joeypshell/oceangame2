@@ -24,6 +24,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-pressure
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-pass-07-hazard-route-pressure
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-pass-08-route-extension
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-pass-09-southwest-pocket-decision
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-cargo-capacity
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-feedback
@@ -64,6 +65,8 @@ The hazard-interaction smoke loads `production_slice_01`, collects one salvage i
 The Pass 07 hazard route pressure smoke loads `production_slice_01`, verifies the source marker `lower_loop_to_deep_cache_pressure`, checks warning-only range and the selected `Hazard ahead - keep clear` prompt for `hazard_right_branch`, confirms contact oxygen/reset/restoration behavior, confirms partial timed-salvage state clears on hazard contact, and confirms the deep cache can still return to extraction.
 
 The Pass 08 route-extension smoke loads `production_slice_01`, verifies the source marker `southwest_return_pocket_extension`, checks open-water paths to `salvage_southwest_return_cache`, the timed deep cache, and boat extraction, confirms the pocket payoff can be collected and banked with existing cargo semantics, and reports segment id, target id, tier, route id, score, path sizes, held cargo, banked score, oxygen, timed target, and Pass 07 context.
+
+The Pass 09 southwest pocket decision smoke loads `production_slice_01`, verifies `salvage_southwest_return_cache` is the valuable instant `southwest_pocket_decision` payoff, checks open-water paths to the target, deep cache, and extraction, confirms the `Southwest pocket payoff` feedback, banks the target, verifies route bookkeeping and label text, then resets cleanly.
 
 The oxygen-pressure smoke loads `production_slice_01`, collects one salvage item, forces oxygen depletion, confirms the player surfaces at spawn with held salvage restored, confirms the failed expedition result panel appears, resets, recollects the salvage, returns to extraction, confirms oxygen refills and salvage banks, resets, and exits.
 

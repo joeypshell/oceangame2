@@ -244,6 +244,7 @@ jobs:
           run_route_smoke --smoke-safe-deep-route-choice production-slice-01-safe-deep-route-choice
           run_route_smoke --smoke-pass-07-hazard-route-pressure pass-07-hazard-route-pressure
           run_route_smoke --smoke-pass-08-route-extension pass-08-route-extension
+          run_route_smoke --smoke-pass-09-southwest-pocket-decision pass-09-southwest-pocket-decision
           run_route_smoke --smoke-production-slice-02-route production-slice-02-route
           run_route_smoke --smoke-production-slice-03-route production-slice-03-route
           run_route_smoke --smoke-production-slice-04-route production-slice-04-route
