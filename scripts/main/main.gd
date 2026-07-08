@@ -3,6 +3,7 @@ extends Node2D
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
+const ReturnPressureFeedback := preload("res://scripts/main/return_pressure_feedback.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
 const SmokeHazardRouteChecks := preload("res://scripts/main/smoke/smoke_hazard_route_checks.gd")
 const SmokeInteractionChecks := preload("res://scripts/main/smoke/smoke_interaction_checks.gd")
@@ -73,6 +74,7 @@ const REVIEW_MAP_OPTIONS := [
 var _world
 var _player
 var _capture_controller
+var _return_pressure_feedback
 var _timed_salvage
 var _smoke_hazard_route_checks
 var _smoke_interaction_checks
@@ -109,6 +111,7 @@ var _last_status_note := ""
 
 func _ready() -> void:
 	_capture_controller = CaptureController.new(self)
+	_return_pressure_feedback = ReturnPressureFeedback.new()
 	_timed_salvage = TimedSalvageController.new()
 	_smoke_hazard_route_checks = SmokeHazardRouteChecks.new(self)
 	_smoke_interaction_checks = SmokeInteractionChecks.new(self)
@@ -548,11 +551,11 @@ func _process(delta: float) -> void:
 			var collected_salvage: String = _world.collect_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
 			if not collected_salvage.is_empty():
 				_collect_salvage_into_cargo(collected_salvage)
-	elif _world.has_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS):
-		_timed_salvage.reset()
-		_last_status_note = "Cargo full - return to extraction"
 	else:
+		var blocked_salvage: Dictionary = _world.get_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
 		_timed_salvage.reset()
+		if not blocked_salvage.is_empty():
+			_last_status_note = _return_pressure_feedback.cargo_full_prompt(blocked_salvage)
 
 	if _held_salvage > 0 and _world.is_inside_extraction(_player.global_position):
 		_banked_salvage += _held_salvage
@@ -858,7 +861,7 @@ func _update_status_label() -> void:
 	elif _run_failed:
 		prompt = "Oxygen depleted - press R"
 	elif _held_salvage >= HELD_SALVAGE_CAPACITY:
-		prompt = "Cargo full - return to extraction"
+		prompt = _cargo_full_prompt()
 	elif not _hazard_warning_id.is_empty():
 		prompt = _hazard_warning_prompt()
 	elif not _last_status_note.is_empty():
@@ -884,6 +887,13 @@ func _update_status_label() -> void:
 	if not prompt.is_empty():
 		_status_label.text += "\n%s" % prompt
 	_update_result_panel()
+
+
+func _cargo_full_prompt() -> String:
+	if _return_pressure_feedback == null or _world == null or _player == null:
+		return ReturnPressureFeedback.DEFAULT_CARGO_FULL_PROMPT
+	var nearby_salvage: Dictionary = _world.get_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
+	return _return_pressure_feedback.cargo_full_prompt(nearby_salvage)
 
 
 func _hazard_warning_prompt() -> String:
