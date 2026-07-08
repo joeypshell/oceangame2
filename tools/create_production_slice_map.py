@@ -252,6 +252,18 @@ def build_map_data(source_map: dict) -> dict:
                 "intent": "Lower optional loop for a longer salvage return test.",
             },
             {
+                "id": "southwest_return_pocket_extension",
+                "type": "marker",
+                "x": 1,
+                "y": 67,
+                "w": 23,
+                "h": 16,
+                "intent": (
+                    "Pass 08 route-scale segment marking the lower-left return pocket "
+                    "near salvage_return_branch for a tiny optional route-extension beat."
+                ),
+            },
+            {
                 "id": "lower_loop_to_deep_cache_pressure",
                 "type": "marker",
                 "x": 54,
