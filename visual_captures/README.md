@@ -16,6 +16,8 @@
 
 `visual_captures/route_extension/` contains a focused generated screenshot of the selected Pass 08 route-extension state for Controlled Gameplay review.
 
+`visual_captures/pass_13_route_commitment/` contains a focused generated screenshot of the Pass 13 deep-cache route objective while the timed salvage interaction is in progress.
+
 These captures are not automatically approved baselines. They are review artifacts used to compare the current in-engine result against `visual_baselines/` and the art direction docs.
 
 Preview captures include the compact review overlay with map id, build label, and salvage progress.
@@ -83,3 +85,11 @@ Regenerate the focused Pass 08 route-extension capture with:
 ```
 
 This capture frames `southwest_return_pocket_extension` with the player and `salvage_southwest_return_cache`, and is a review artifact, not an accepted baseline by itself.
+
+Regenerate the focused Pass 13 route-commitment capture with:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-13-route-commitment
+```
+
+This capture frames the deep-cache objective with lower-loop cargo held, timed salvage progress visible, and is a review artifact, not an accepted baseline by itself.
