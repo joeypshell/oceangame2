@@ -66,6 +66,7 @@ Build a small side-view salvage game that proves:
 - [Controlled Gameplay Pass 12 Source Rules](docs/current/CONTROLLED_GAMEPLAY_PASS_12_SOURCE_RULES.md)
 - [Controlled Gameplay Pass 12 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_12_CLOSEOUT.md)
 - [Controlled Gameplay Pass 13 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_13_PLAN.md)
+- [Controlled Gameplay Pass 13 Source Rules](docs/current/CONTROLLED_GAMEPLAY_PASS_13_SOURCE_RULES.md)
 - [Oxygen Pressure Baseline Decision](docs/current/OXYGEN_PRESSURE_BASELINE_DECISION.md)
 - [Route Payoff Visual Baseline Decision](docs/current/ROUTE_PAYOFF_VISUAL_BASELINE_DECISION.md)
 - [Route Payoff Web Preview Verification](docs/current/ROUTE_PAYOFF_WEB_PREVIEW_VERIFICATION.md)
