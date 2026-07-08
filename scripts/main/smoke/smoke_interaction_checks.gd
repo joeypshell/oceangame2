@@ -245,7 +245,7 @@ func _smoke_timed_salvage_and_quit() -> void:
 
 	_player.global_position = _world.get_extraction_center()
 	_process(0.0)
-	if _world.is_salvage_collected(target_id) or _status_text().find("Timed salvage canceled") == -1:
+	if _world.is_salvage_collected(target_id) or _status_text().find("Salvage interrupted") == -1:
 		push_error("Timed salvage smoke did not cancel progress when leaving range; status=%s." % _status_text())
 		get_tree().quit(1)
 		return
@@ -260,6 +260,10 @@ func _smoke_timed_salvage_and_quit() -> void:
 	_process(interaction_seconds + SMOKE_TIMED_SALVAGE_MARGIN_SECONDS)
 	if _held_salvage != 1 or not _held_salvage_ids.has(target_id) or _held_salvage_score != target_score:
 		push_error("Timed salvage smoke did not move completed target into held cargo; held=%d ids=%s score=%d." % [_held_salvage, _held_salvage_ids, _held_salvage_score])
+		get_tree().quit(1)
+		return
+	if _status_text().find("Deep cache secured +%d" % target_score) == -1:
+		push_error("Timed salvage smoke did not show completion feedback; status=%s." % _status_text())
 		get_tree().quit(1)
 		return
 	var held_after_completion := _held_salvage

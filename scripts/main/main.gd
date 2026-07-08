@@ -484,13 +484,14 @@ func _process(delta: float) -> void:
 			if str(timed_result.get("state", "")) == "complete":
 				var timed_salvage_id := str(timed_result.get("id", ""))
 				if _world.collect_salvage_by_id(timed_salvage_id):
-					_collect_salvage_into_cargo(timed_salvage_id)
+					var completed_note := _timed_salvage_completion_feedback(timed_salvage_id, str(timed_result.get("label", "")))
+					_collect_salvage_into_cargo(timed_salvage_id, completed_note)
 			elif timed_result.has("note"):
 				_last_status_note = str(timed_result["note"])
 		else:
 			var timed_cancel: Dictionary = _timed_salvage.update({}, delta)
 			if str(timed_cancel.get("state", "")) == "canceled":
-				_last_status_note = "Timed salvage canceled"
+				_last_status_note = str(timed_cancel.get("note", "Salvage interrupted"))
 			var collected_salvage: String = _world.collect_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
 			if not collected_salvage.is_empty():
 				_collect_salvage_into_cargo(collected_salvage)
@@ -548,13 +549,25 @@ func _collect_salvage_for_review_state(salvage: Dictionary) -> void:
 	_process(interaction_seconds + 0.1)
 
 
-func _collect_salvage_into_cargo(salvage_id: String) -> void:
+func _collect_salvage_into_cargo(salvage_id: String, status_note := "") -> void:
 	var collected_score: int = _world.get_salvage_score(salvage_id)
 	var collected_tier: String = _world.get_salvage_tier(salvage_id)
 	_held_salvage += 1
 	_held_salvage_ids.append(salvage_id)
 	_held_salvage_score += collected_score
-	_last_status_note = _salvage_collection_feedback(collected_tier, collected_score)
+	_last_status_note = status_note if not status_note.is_empty() else _salvage_collection_feedback(collected_tier, collected_score)
+
+
+func _timed_salvage_completion_feedback(salvage_id: String, label: String) -> String:
+	var display_label := label
+	if display_label.is_empty():
+		display_label = salvage_id
+		if display_label.begins_with("salvage_"):
+			display_label = display_label.substr("salvage_".length())
+		display_label = display_label.replace("_", " ")
+	if not display_label.is_empty():
+		display_label = display_label.substr(0, 1).to_upper() + display_label.substr(1)
+	return "%s secured +%d" % [display_label, _world.get_salvage_score(salvage_id)]
 
 
 func _unhandled_input(event: InputEvent) -> void:

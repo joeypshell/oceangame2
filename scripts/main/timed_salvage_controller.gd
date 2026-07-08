@@ -23,7 +23,7 @@ func update(nearby_salvage: Dictionary, delta: float) -> Dictionary:
 	if nearby_salvage.is_empty() or str(nearby_salvage.get("interaction", "instant")) != TIMED_INTERACTION:
 		var was_active := is_active()
 		reset()
-		return {"state": "canceled"} if was_active else {"state": "none"}
+		return {"state": "canceled", "note": "Salvage interrupted"} if was_active else {"state": "none"}
 
 	var salvage_id := str(nearby_salvage.get("id", ""))
 	if salvage_id.is_empty():
@@ -46,6 +46,7 @@ func update(nearby_salvage: Dictionary, delta: float) -> Dictionary:
 		var result := {
 			"state": "complete",
 			"id": _active_id,
+			"label": _label,
 			"note": note,
 			"progress_ratio": progress_ratio,
 		}
@@ -55,6 +56,7 @@ func update(nearby_salvage: Dictionary, delta: float) -> Dictionary:
 	return {
 		"state": "progress",
 		"id": _active_id,
+		"label": _label,
 		"note": note,
 		"progress_ratio": progress_ratio,
 	}
