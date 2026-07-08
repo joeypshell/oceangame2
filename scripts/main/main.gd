@@ -35,6 +35,7 @@ const BACKGROUND_DEPTH_CAPTURE_DIR := "res://visual_captures/background_depth"
 const FEEDBACK_OVERLAY_CAPTURE_DIR := "res://visual_captures/feedback_overlay"
 const ROUTE_OUTCOME_CAPTURE_DIR := "res://visual_captures/route_outcome"
 const TIMED_SALVAGE_CAPTURE_DIR := "res://visual_captures/timed_salvage"
+const HAZARD_PRESSURE_CAPTURE_DIR := "res://visual_captures/hazard_pressure"
 const BUILD_INFO_PATH := "res://build_info.json"
 const MOVEMENT_FEEL_PROBE_CENTER_TILES := Vector2(42, 25)
 const SALVAGE_COLLECTION_RADIUS := 34.0
@@ -127,6 +128,7 @@ func _ready() -> void:
 	var capture_feedback_overlay := _has_arg(user_args, engine_args, "--capture-feedback-overlay")
 	var capture_route_outcome := _has_arg(user_args, engine_args, "--capture-route-outcome-result")
 	var capture_timed_salvage := _has_arg(user_args, engine_args, "--capture-timed-salvage")
+	var capture_hazard_pressure := _has_arg(user_args, engine_args, "--capture-pass-07-hazard-pressure")
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
 	var smoke_production_slice_route := _has_arg(user_args, engine_args, "--smoke-production-slice-route")
@@ -187,6 +189,8 @@ func _ready() -> void:
 	elif capture_route_outcome:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_timed_salvage:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif capture_hazard_pressure:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_route:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
@@ -251,6 +255,7 @@ func _ready() -> void:
 		or capture_feedback_overlay
 		or capture_route_outcome
 		or capture_timed_salvage
+		or capture_hazard_pressure
 		or smoke_salvage_loop
 		or smoke_production_slice_route
 		or smoke_production_slice_02_route
@@ -390,6 +395,8 @@ func _ready() -> void:
 		_capture_controller.capture_route_outcome_result_and_quit(ROUTE_OUTCOME_CAPTURE_DIR)
 	elif capture_timed_salvage:
 		_capture_controller.capture_timed_salvage_and_quit(TIMED_SALVAGE_CAPTURE_DIR)
+	elif capture_hazard_pressure:
+		_capture_controller.capture_hazard_pressure_and_quit(HAZARD_PRESSURE_CAPTURE_DIR)
 
 
 func _review_map_selector_allowed(user_args: PackedStringArray, engine_args: PackedStringArray) -> bool:

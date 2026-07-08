@@ -49,6 +49,14 @@ Capture the focused timed-salvage interaction view for Controlled Gameplay revie
 
 This loads the default production slice, places the player on the authored timed salvage target, advances to a partial `Salvaging deep cache` progress state, frames the Pass 06 in-world marker and overlay progress bar, keeps map data and accepted baselines unchanged, and writes `visual_captures/timed_salvage/production_slice_01_timed_salvage.png`.
 
+Capture the focused Pass 07 hazard/navigation pressure view:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-07-hazard-pressure
+```
+
+This loads the default production slice, collects the lower-loop payoff into held cargo, places the player in warning-only range near `hazard_right_branch`, frames the selected pressure segment with the deep-cache payoff and overlay warning, keeps map data and accepted baselines unchanged, and writes `visual_captures/hazard_pressure/production_slice_01_hazard_pressure.png`.
+
 Capture the original rectangular salvage map comparison views:
 
 ```powershell

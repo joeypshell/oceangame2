@@ -80,7 +80,7 @@ Additional current map sources:
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
   - Shows compact preview review context, salvage progress, timed-salvage feedback, and scoped oxygen pressure.
   - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress/cancel/complete feedback, cargo banking, oxygen pressure, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, and route outcome result text.
-  - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, and focused timed-salvage capture.
+  - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, focused timed-salvage capture, and focused Pass 07 hazard-pressure capture.
   - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, timed salvage, hazard pressure, oxygen pressure, cargo/scoring, route outcome result, player-facing, movement-feel, and production-slice route checks.
   - Uses `scripts/main/timed_salvage_controller.gd` for the narrow timed salvage interaction.
 
