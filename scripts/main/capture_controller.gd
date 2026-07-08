@@ -1,6 +1,7 @@
 extends RefCounted
 
 const Pass10ReturnPressureCapture := preload("res://scripts/main/captures/pass_10_return_pressure_capture.gd")
+const Pass11PrePickupRouteCueCapture := preload("res://scripts/main/captures/pass_11_pre_pickup_route_cue_capture.gd")
 const SCREENSHOT_PATH := "res://visual_baselines/001_greybox_in_engine.png"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 const PLAYER_READABILITY_CAPTURE_ZOOM := Vector2(2.0, 2.0)
@@ -18,13 +19,10 @@ const ROUTE_EXTENSION_CAPTURE_ZOOM := Vector2(0.84, 0.84)
 const ROUTE_EXTENSION_SEGMENT_ID := "southwest_return_pocket_extension"
 const ROUTE_EXTENSION_TARGET_ID := "salvage_southwest_return_cache"
 const ROUTE_EXTENSION_PLAYER_OFFSET_TILES := Vector2(-2, 0)
-
 var _main
-
 
 func _init(main_node) -> void:
 	_main = main_node
-
 
 func capture_screenshot_and_quit() -> void:
 	await _main.get_tree().process_frame
@@ -459,6 +457,11 @@ func capture_southwest_pocket_decision_and_quit(capture_dir: String) -> void:
 
 func capture_pass_10_return_pressure_and_quit(capture_dir: String) -> void:
 	var capture := Pass10ReturnPressureCapture.new(_main)
+	await capture.capture_and_quit(capture_dir)
+
+
+func capture_pass_11_pre_pickup_route_cue_and_quit(capture_dir: String) -> void:
+	var capture := Pass11PrePickupRouteCueCapture.new(_main)
 	await capture.capture_and_quit(capture_dir)
 
 

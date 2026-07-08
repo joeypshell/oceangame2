@@ -81,6 +81,14 @@ Capture the focused Pass 10 return-pressure view:
 
 This loads the default production slice, fills cargo with the lower-loop and timed deep-cache pickups, places the player at `salvage_return_branch`, frames the compact `Cargo full - bank at boat` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_10_return_pressure/production_slice_01_return_pressure.png`.
 
+Capture the focused Pass 11 pre-pickup route-cue view:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-11-pre-pickup-route-cue
+```
+
+This loads the default production slice, places the player in `southwest_pocket_pre_pickup_cue` before collecting `salvage_southwest_return_cache`, frames the compact `Optional pocket ahead` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_11_pre_pickup_route_cue/production_slice_01_pre_pickup_route_cue.png`.
+
 Capture the original rectangular salvage map comparison views:
 
 ```powershell
