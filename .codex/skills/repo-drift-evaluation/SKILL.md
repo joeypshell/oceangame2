@@ -1,13 +1,15 @@
 ---
 name: repo-drift-evaluation
-description: Fully evaluate this repository for drift from project direction, stale or missing documentation, GitHub issue/backlog mismatch, validation gaps, source-of-truth discipline, and alignment with AGENTS.md. Use when asked to audit, evaluate, assess direction, find drift, review project state, identify documentation updates, plan the next issue batch, or check whether the repo still matches its agent operating guide.
+description: Fully evaluate this repository for drift from project direction, stale or missing documentation, GitHub issue/backlog mismatch, validation gaps, source-of-truth discipline, and alignment with AGENTS.md, then create the recommended scoped GitHub issue batch when the backlog is below target unless the user asks for evaluation-only. Use when asked to audit, evaluate, assess direction, find drift, review project state, identify documentation updates, plan or create the next issue batch, or check whether the repo still matches its agent operating guide.
 ---
 
 # Repo Drift Evaluation
 
 ## Purpose
 
-Run an evidence-based project audit. Default to evaluation-only: do not edit files, create issues, close issues, accept baselines, or change source maps unless the user explicitly asks.
+Run an evidence-based project audit, then create a scoped GitHub issue batch when the audit shows the active actionable backlog is below the repo target or current docs point to untracked concrete work.
+
+Still default to no code/data changes: do not edit files, close issues, accept baselines, or change source maps unless the user explicitly asks. If the user says evaluation-only, no issue creation, report-only, or similar, do not create issues; only recommend the batch.
 
 ## Required Reading
 
@@ -65,7 +67,17 @@ Then inspect live repo state:
    - Count open actionable issues.
    - Distinguish active next work from deferred optional work.
    - Recommend a small issue batch only when the queue is below the project target or the docs point to untracked concrete work.
-   - Do not create issues unless the user asks for issue creation.
+   - Create the recommended issue batch during the run unless the user explicitly requested evaluation-only/no issue creation or GitHub access is unavailable.
+   - Keep intentionally deferred issues such as #52/#53 out of the active batch unless the current selected goal explicitly returns to that topic.
+
+7. **Create the issue batch when needed.**
+   - Run a duplicate check against open and recently closed issues before creating anything.
+   - Prefer about 10 open actionable issues when the queue is well below target.
+   - Use small independently actionable issues; do not pad with vague epics.
+   - Each issue body must include: summary, acceptance criteria, relevant docs/code areas, dependencies/blockers, implementation notes, and verification steps.
+   - Order issues by dependency. Planning/source-rule issues should precede source/runtime/smoke/capture/visual/Web/closeout issues.
+   - Create issues with `gh issue create` or the repo's preferred GitHub workflow.
+   - Return created issue numbers and URLs, dependency order, and any recommended issue intentionally not created with the reason.
 
 ## Output Format
 
@@ -88,7 +100,10 @@ Key files, issue ranges, commits, and commands inspected.
 - Concrete docs to update, split, archive, or leave alone.
 
 **Issue And Backlog Recommendations**
-- Active next issues to create or work, intentionally deferred issues, and what not to do yet.
+- Active next issues created or, in evaluation-only mode, issues to create; intentionally deferred issues; and what not to do yet.
+
+**Created Issues**
+- Issue numbers, titles, URLs, dependency order, and any issue intentionally not created.
 
 **Validation**
 - Commands run and results; commands skipped and why.
@@ -102,5 +117,6 @@ One specific next action, scoped enough for a GitHub issue.
 - Be explicit about uncertainty and distinguish evidence from inference.
 - Do not treat old chat memory as source of truth when repo docs or GitHub state disagree.
 - Do not silently fix drift during an evaluation unless the user requested edits.
+- Do not skip issue creation when the backlog is below target unless the user requested evaluation-only, GitHub access is unavailable, or every candidate would be duplicate/vague/deferred.
 - Do not pad recommendations with vague epics.
 - If recommending follow-up issues, include acceptance criteria and verification steps.
