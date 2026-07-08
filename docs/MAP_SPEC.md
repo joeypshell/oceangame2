@@ -171,6 +171,54 @@ For small optional detours, prefer a dedicated `validation_route` instead of reu
 }
 ```
 
+## Route Commitment Objectives
+
+Playable maps may include optional route commitment objectives under a top-level
+`route_objectives` list. These records describe a compact run objective that
+references existing source-authored salvage and marker ids. They do not create
+new collision, collection behavior, scoring, oxygen, cargo, extraction, or
+visual art by themselves.
+
+The first supported objective is intentionally narrow:
+
+- `id`: unique lower_snake_case objective id.
+- `route_context`: lower_snake_case route grouping.
+- `label`: compact display-safe text for overlay/result surfaces.
+- `required_banked_targets`: non-empty list of unique salvage entity ids that must be banked at extraction.
+- `supporting_marker_ids`: optional list of unique marker zone ids for smoke/capture framing.
+- `intent`: optional human-readable source intent.
+
+Recommended Pass 13 metadata:
+
+```json
+{
+  "id": "deep_cache_route_objective",
+  "route_context": "deep_cache_commitment",
+  "label": "Deep cache route",
+  "required_banked_targets": [
+    "salvage_lower_loop",
+    "salvage_deep_right_cache"
+  ],
+  "supporting_marker_ids": [
+    "lower_loop_route",
+    "lower_loop_to_deep_cache_pressure",
+    "lower_loop_oxygen_rest_pocket",
+    "return_pressure_to_boat"
+  ],
+  "intent": "Pass 13 route commitment objective requiring the player to bank the lower-loop payoff and timed deep-right cache in one committed route chain."
+}
+```
+
+Validation expectations:
+
+- `route_objectives`, when present, must be a list.
+- Each objective id must be unique and lower_snake_case.
+- Each required target id must refer to an existing playable salvage entity, not a `stress_marker`.
+- Required target salvage must still satisfy normal in-bounds, non-solid, reachable entity validation.
+- Supporting marker ids, when present, must refer to existing `marker` zones with in-bounds rectangles and at least one reachable open cell.
+- Objective records must not author coordinates, score values, oxygen values, cargo limits, runtime progress, completion state, or result text state.
+- `production_slice_01` should author only one Pass 13 route commitment objective.
+
 ## Oxygen Rest Markers
 
 Playable maps may include one optional oxygen rest marker under `zones`. This is a source-authored route-pressure aid, not a second extraction zone.
@@ -222,6 +270,7 @@ Validation expectations:
 - Salvage `tier`, when present, must be `common` or `valuable`.
 - Salvage interaction metadata, when present, must use supported fields: `interaction` as `instant` or `timed_salvage`, positive numeric `interaction_seconds` for timed salvage, and optional lower_snake_case or short display-safe `interaction_label`.
 - Salvage route-choice metadata, when present, must use supported fields: lower_snake_case `route_choice_id`, lower_snake_case `validation_route`, and/or integer `route_order` greater than or equal to zero.
+- Route commitment objectives, when present, must reference existing reachable playable salvage ids and optional reachable marker zones without authoring runtime state.
 - Oxygen rest metadata is supported only on marker zones. Rest rectangles must be in bounds, non-solid, reachable, and use positive cap/refill values.
 - Entity coordinates must be inside map bounds, non-solid, and reachable from the player entry cell.
 - Maps must define exactly one `spawn` or `boat_spawn`.
