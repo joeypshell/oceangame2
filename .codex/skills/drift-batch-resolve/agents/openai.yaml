@@ -1,0 +1,4 @@
+interface:
+  display_name: "Drift Batch Resolve"
+  short_description: "Audit drift, create issues, resolve queue"
+  default_prompt: "Use $drift-batch-resolve to audit repo drift, ensure a scoped GitHub issue batch exists, and then resolve the active non-deferred issues."

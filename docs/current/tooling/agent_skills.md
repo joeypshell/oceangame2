@@ -33,3 +33,13 @@ Skill path:
 ```
 
 Use `$resolve-github-issues` when the user asks to work through open GitHub issues. It should resolve one selected issue at a time, validate, commit, push, comment, and close, while leaving intentionally deferred issues such as #52/#53 open unless the selected goal changes.
+
+## Drift Batch Resolve
+
+Skill path:
+
+```text
+.codex/skills/drift-batch-resolve/SKILL.md
+```
+
+Use `$drift-batch-resolve` when the user wants the full maintenance loop: audit drift, ensure a scoped issue batch exists, then resolve active non-deferred GitHub issues.
