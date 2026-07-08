@@ -59,6 +59,14 @@ Record durable decisions, blockers, commit hashes, and verification results in i
 
 Detailed workflow: `docs/GITHUB_ISSUE_WORKFLOW.md`
 
+## Parallel Agent Workflow
+
+- Do not run multiple Codex agents in the same checkout.
+- Use one Git worktree and one feature branch per active agent.
+- Tie each branch to one GitHub issue and claim it with a comment naming the branch and worktree path.
+- Avoid overlapping edits to `scripts/main/main.gd`, `docs/current/PROJECT_CONTEXT.md`, `tools/create_production_slice_map.py`, generated map JSON, and visual baselines unless explicitly coordinated.
+- Detailed workflow: `docs/current/PARALLEL_CODEX_WORKFLOW.md`
+
 ## Current Planned Structure
 
 These paths are part of the intended project shape and should be created when the corresponding implementation work begins:
