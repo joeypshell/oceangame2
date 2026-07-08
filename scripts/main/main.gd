@@ -58,6 +58,7 @@ const OXYGEN_CRITICAL_WARNING_SECONDS := 15.0
 const OXYGEN_BONUS_POINTS_PER_SECOND := 1
 const SAFE_ROUTE_CHOICE_ID := "safe_route_choice"
 const EXPANDED_ROUTE_CHOICE_ID := "expanded_route_choice"
+const SOUTHWEST_POCKET_DECISION_ID := "southwest_pocket_decision"
 const REVIEW_MAP_OPTIONS := [
 	{"label": "Production 01", "path": PRODUCTION_SLICE_MAP_PATH},
 	{"label": "Production 02", "path": PRODUCTION_SLICE_02_MAP_PATH},
@@ -593,7 +594,7 @@ func _collect_salvage_into_cargo(salvage_id: String, status_note := "") -> void:
 	_held_salvage += 1
 	_held_salvage_ids.append(salvage_id)
 	_held_salvage_score += collected_score
-	_last_status_note = status_note if not status_note.is_empty() else _salvage_collection_feedback(collected_tier, collected_score)
+	_last_status_note = status_note if not status_note.is_empty() else _salvage_collection_feedback_for_id(salvage_id, collected_tier, collected_score)
 
 
 func _timed_salvage_completion_feedback(salvage_id: String, label: String) -> String:
@@ -960,7 +961,16 @@ func _route_outcome_label(validation_route: String) -> String:
 		return "Safe route"
 	if validation_route == EXPANDED_ROUTE_CHOICE_ID:
 		return "Deep route"
+	if validation_route == SOUTHWEST_POCKET_DECISION_ID:
+		return "Southwest pocket"
 	return validation_route.replace("_", " ")
+
+
+func _salvage_collection_feedback_for_id(salvage_id: String, tier: String, score: int) -> String:
+	var validation_route := str(_salvage_validation_routes_by_id.get(salvage_id, ""))
+	if validation_route == SOUTHWEST_POCKET_DECISION_ID:
+		return "Southwest pocket payoff +%d" % score
+	return _salvage_collection_feedback(tier, score)
 
 
 func _salvage_collection_feedback(tier: String, score: int) -> String:
