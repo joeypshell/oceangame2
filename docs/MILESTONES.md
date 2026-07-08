@@ -55,9 +55,9 @@ Done when:
 
 ## Current Roadmap Decision
 
-As of 2026-07-08, Controlled Gameplay Pass 09 is complete. See `docs/current/CONTROLLED_GAMEPLAY_PASS_09_CLOSEOUT.md` for the latest closeout decision and `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table.
+As of 2026-07-08, Controlled Gameplay Pass 10 is complete. See `docs/current/CONTROLLED_GAMEPLAY_PASS_10_CLOSEOUT.md` for the latest closeout decision and `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table.
 
-The project can now add one more in-run decision using existing systems, preferably return/banking pressure or pre-pickup route readability, still through small source-driven passes rather than whole-map productionization.
+The project can now add one more in-run decision using existing systems, preferably pre-pickup route readability or a small route-commitment cue, still through small source-driven passes rather than whole-map productionization.
 
 What the current prototype has proven:
 
@@ -70,6 +70,7 @@ What the current prototype has proven:
 - the default slice now has one authored timed valuable salvage target with source metadata, in-world affordance, progress/cancel/complete feedback, deterministic smoke coverage, focused capture, accepted visual impact, and public Web verification
 - the default slice now has one authored hazard/navigation pressure marker, route-specific warning feedback, deterministic route-pressure smoke, focused capture, accepted visual impact, and public Web verification
 - the default slice now has one tiny source-authored route extension with a southwest pocket route-decision payoff, deterministic smoke coverage, focused capture, accepted visual impact, and public Web verification
+- the default slice now has one source-authored return/banking pressure beat at `salvage_return_branch`, compact full-cargo banking feedback, deterministic smoke coverage, focused capture, accepted visual impact, and public Web verification
 
 Current constraints:
 
@@ -81,7 +82,7 @@ Current constraints:
 
 Current next direction:
 
-- Plan a focused Controlled Gameplay Pass 10 that makes return/banking pressure or pre-pickup route readability matter using existing systems.
+- Plan a focused Controlled Gameplay Pass 11 that improves pre-pickup readability or route commitment using existing metadata, compact feedback, smoke, and focused capture.
 
 Recently completed current-state work:
 
@@ -94,3 +95,4 @@ Recently completed current-state work:
 - #170-#179 completed Controlled Gameplay Pass 07 hazard/navigation pressure, visual review, Web verification, and closeout.
 - #180-#190 completed Controlled Gameplay Pass 08 cautious route-scale expansion, visual review, Web verification, and closeout.
 - #191-#199 completed Controlled Gameplay Pass 09 southwest pocket route-decision payoff, smoke/capture coverage, visual review, Web verification, and closeout.
+- #201-#209 completed Controlled Gameplay Pass 10 return/banking pressure, smoke/capture coverage, visual review, Web verification, and closeout.
