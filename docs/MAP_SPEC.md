@@ -171,6 +171,37 @@ For small optional detours, prefer a dedicated `validation_route` instead of reu
 }
 ```
 
+## Oxygen Rest Markers
+
+Playable maps may include one optional oxygen rest marker under `zones`. This is a source-authored route-pressure aid, not a second extraction zone.
+
+The first supported rest marker is intentionally narrow:
+
+- `type`: must be `marker`.
+- `oxygen_rest`: must be `true` when rest metadata is present.
+- `route_context`: optional lower_snake_case route grouping, such as `oxygen_rest_pressure`.
+- `oxygen_rest_label`: optional compact label for overlay/capture text. Use lower_snake_case or short display-safe text.
+- `oxygen_rest_cap_seconds`: required positive number; must not exceed the normal oxygen maximum.
+- `oxygen_rest_refill_per_second`: required positive number.
+
+The marker rectangle must stay inside map bounds, contain only non-solid reachable water cells, and remain source-authored through the map generator/source path. Runtime may use it to refill oxygen up to the authored cap while the player is inside the rectangle. It must not bank cargo, complete the expedition, create collision, move salvage, change score, or replace boat/base extraction.
+
+```json
+{
+  "id": "lower_loop_oxygen_rest_pocket",
+  "type": "marker",
+  "x": 27,
+  "y": 60,
+  "w": 8,
+  "h": 5,
+  "route_context": "oxygen_rest_pressure",
+  "oxygen_rest": true,
+  "oxygen_rest_label": "Rest pocket",
+  "oxygen_rest_cap_seconds": 45,
+  "oxygen_rest_refill_per_second": 8
+}
+```
+
 `hazard` entities require `kind`. Current valid-style examples are `mine`, `jellyfish`, and `stress_marker`.
 Production previews may use `kind` to choose first-pass prop art, but hazard behavior is still determined by `type: "hazard"`.
 
@@ -191,6 +222,7 @@ Validation expectations:
 - Salvage `tier`, when present, must be `common` or `valuable`.
 - Salvage interaction metadata, when present, must use supported fields: `interaction` as `instant` or `timed_salvage`, positive numeric `interaction_seconds` for timed salvage, and optional lower_snake_case or short display-safe `interaction_label`.
 - Salvage route-choice metadata, when present, must use supported fields: lower_snake_case `route_choice_id`, lower_snake_case `validation_route`, and/or integer `route_order` greater than or equal to zero.
+- Oxygen rest metadata is supported only on marker zones. Rest rectangles must be in bounds, non-solid, reachable, and use positive cap/refill values.
 - Entity coordinates must be inside map bounds, non-solid, and reachable from the player entry cell.
 - Maps must define exactly one `spawn` or `boat_spawn`.
 - Playable salvage maps must define a base extraction zone or use `boat_spawn` extraction. Renderer stress-test maps may use `stress_marker` salvage without an extraction zone.

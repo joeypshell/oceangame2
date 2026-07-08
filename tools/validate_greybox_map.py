@@ -19,6 +19,14 @@ SALVAGE_VALUE_TIERS = {"common", "valuable"}
 ROUTE_CHOICE_METADATA_FIELDS = {"route_choice_id", "validation_route", "route_order"}
 SALVAGE_INTERACTIONS = {"instant", "timed_salvage"}
 SALVAGE_INTERACTION_METADATA_FIELDS = {"interaction", "interaction_seconds", "interaction_label"}
+OXYGEN_MAX_SECONDS = 90.0
+OXYGEN_REST_METADATA_FIELDS = {
+    "oxygen_rest",
+    "oxygen_rest_label",
+    "oxygen_rest_cap_seconds",
+    "oxygen_rest_refill_per_second",
+    "route_context",
+}
 
 
 def rect_cells(item: dict) -> set[tuple[int, int]]:
@@ -153,6 +161,77 @@ def validate_salvage_interaction_metadata(entity: dict, item_label: str) -> list
     return failures
 
 
+def validate_oxygen_rest_forbidden(item: dict, item_label: str, owner_label: str) -> list[str]:
+    rest_fields = OXYGEN_REST_METADATA_FIELDS & set(item.keys())
+    if not rest_fields:
+        return []
+    fields = ", ".join(sorted(rest_fields))
+    return [f"{item_label} oxygen-rest metadata ({fields}) is only supported on marker zones, not {owner_label}."]
+
+
+def validate_rect_fields(item: dict, item_label: str, width: int, height: int) -> list[str]:
+    failures: list[str] = []
+    failures.extend(validate_required_fields(item, item_label, ("x", "y", "w", "h")))
+    if failures:
+        return failures
+
+    for field in ("x", "y", "w", "h"):
+        if not is_int_value(item[field]):
+            failures.append(f"{item_label} field {field} must be an integer tile coordinate or size.")
+    if failures:
+        return failures
+
+    if int(item["w"]) <= 0 or int(item["h"]) <= 0:
+        failures.append(f"{item_label} width and height must be positive.")
+    if int(item["x"]) < 0 or int(item["y"]) < 0:
+        failures.append(f"{item_label} rectangle origin must be inside map bounds.")
+    if int(item["x"]) + int(item["w"]) > width or int(item["y"]) + int(item["h"]) > height:
+        failures.append(f"{item_label} rectangle extends outside map bounds.")
+    return failures
+
+
+def validate_oxygen_rest_metadata(zone: dict, item_label: str, width: int, height: int) -> list[str]:
+    failures: list[str] = []
+    rest_fields = OXYGEN_REST_METADATA_FIELDS & set(zone.keys())
+    if not rest_fields:
+        return failures
+
+    if zone.get("type") != "marker":
+        fields = ", ".join(sorted(rest_fields))
+        return [f"{item_label} oxygen-rest metadata ({fields}) is only supported on marker zones."]
+
+    if zone.get("oxygen_rest") is not True:
+        failures.append(f"{item_label} oxygen_rest must be true when oxygen-rest metadata is present.")
+    for field in ("oxygen_rest_cap_seconds", "oxygen_rest_refill_per_second"):
+        if field not in zone:
+            failures.append(f"{item_label} oxygen-rest metadata requires {field}.")
+        elif not is_number_value(zone[field]) or float(zone[field]) <= 0.0:
+            failures.append(f"{item_label} {field} must be a positive number.")
+
+    if "oxygen_rest_cap_seconds" in zone and is_number_value(zone["oxygen_rest_cap_seconds"]):
+        if float(zone["oxygen_rest_cap_seconds"]) > OXYGEN_MAX_SECONDS:
+            failures.append(f"{item_label} oxygen_rest_cap_seconds must not exceed {OXYGEN_MAX_SECONDS:.0f}.")
+
+    if "oxygen_rest_label" in zone:
+        label = zone["oxygen_rest_label"]
+        if not isinstance(label, str) or not label:
+            failures.append(f"{item_label} oxygen_rest_label must be a non-empty string.")
+        elif "\n" in label or "\r" in label or not (ID_PATTERN.match(label) or DISPLAY_LABEL_PATTERN.match(label)):
+            failures.append(
+                f"{item_label} oxygen_rest_label must be lower_snake_case or short display-safe text."
+            )
+
+    if "route_context" in zone:
+        route_context = zone["route_context"]
+        if not isinstance(route_context, str) or not route_context:
+            failures.append(f"{item_label} route_context must be a non-empty string.")
+        elif not ID_PATTERN.match(route_context):
+            failures.append(f"{item_label} route_context {route_context!r} must use lower_snake_case.")
+
+    failures.extend(validate_rect_fields(zone, item_label, width, height))
+    return failures
+
+
 def validate_tile_coordinate(entity: dict, field: str, width: int, height: int) -> list[str]:
     item_label = str(entity.get("id", entity.get("type", "entity")))
     if field not in entity:
@@ -212,12 +291,27 @@ def validate_entity_schema(entities: list[dict], width: int, height: int, base_z
             failures.extend(validate_salvage_tier(entity["tier"], item_label))
         failures.extend(validate_route_choice_metadata(entity, item_label))
         failures.extend(validate_salvage_interaction_metadata(entity, item_label))
+        failures.extend(validate_oxygen_rest_forbidden(entity, item_label, "entities"))
         if entity_type == "salvage" and entity.get("kind") != "stress_marker":
             has_gameplay_salvage = True
 
     if has_gameplay_salvage and not has_boat_spawn and not base_zones:
         failures.append("Playable salvage maps must define a base extraction zone or use boat_spawn extraction.")
 
+    return failures
+
+
+def validate_zone_schema(zones: list[dict], width: int, height: int) -> list[str]:
+    failures: list[str] = []
+    oxygen_rest_zone_ids: list[str] = []
+    for index, zone in enumerate(zones):
+        item_label = str(zone.get("id", f"zone[{index}]"))
+        failures.extend(validate_oxygen_rest_metadata(zone, item_label, width, height))
+        if OXYGEN_REST_METADATA_FIELDS & set(zone.keys()):
+            oxygen_rest_zone_ids.append(item_label)
+
+    if len(oxygen_rest_zone_ids) > 1:
+        failures.append(f"Only one oxygen-rest marker is currently supported. Found: {oxygen_rest_zone_ids}.")
     return failures
 
 
@@ -274,7 +368,9 @@ def main() -> int:
     base_zones = [zone for zone in map_data.get("zones", []) if zone.get("type") == "base"]
 
     failures: list[str] = []
+    zones = map_data.get("zones", [])
     failures.extend(validate_entity_schema(entities, width, height, base_zones))
+    failures.extend(validate_zone_schema(zones, width, height))
     if failures:
         for failure in failures:
             print(failure)
@@ -331,7 +427,15 @@ def main() -> int:
             else:
                 failures.append(f"{entity['id']} is unreachable at {point}.")
 
-    for zone in map_data.get("zones", []):
+    for zone in zones:
+        if OXYGEN_REST_METADATA_FIELDS & set(zone.keys()):
+            cells = rect_cells(zone)
+            solid_cells = sorted(cells & solid)
+            unreachable_cells = sorted(cell for cell in cells if cell not in reachable)
+            if solid_cells:
+                failures.append(f"{zone['id']} oxygen-rest rectangle contains solid cells. Sample: {solid_cells[:4]}")
+            if unreachable_cells:
+                failures.append(f"{zone['id']} oxygen-rest rectangle contains unreachable cells. Sample: {unreachable_cells[:4]}")
         if zone.get("type") == "marker":
             continue
         cells = rect_cells(zone)
