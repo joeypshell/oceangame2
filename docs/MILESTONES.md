@@ -55,9 +55,9 @@ Done when:
 
 ## Current Roadmap Decision
 
-As of 2026-07-08, Controlled Gameplay Pass 12 is complete. See `docs/current/CONTROLLED_GAMEPLAY_PASS_12_CLOSEOUT.md` for the latest closeout decision and `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table.
+As of 2026-07-08, Controlled Gameplay Pass 13 is complete. See `docs/current/CONTROLLED_GAMEPLAY_PASS_13_CLOSEOUT.md` for the latest closeout decision and `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table.
 
-The project can now plan one small gameplay-meaningful retry/objective beat using existing systems, still through small source-driven passes rather than whole-map productionization.
+The project can now plan one small start-of-run objective cue using existing route-objective metadata, still through small source-driven passes rather than whole-map productionization.
 
 What the current prototype has proven:
 
@@ -73,18 +73,19 @@ What the current prototype has proven:
 - the default slice now has one source-authored return/banking pressure beat at `salvage_return_branch`, compact full-cargo banking feedback, deterministic smoke coverage, focused capture, accepted visual impact, and public Web verification
 - the default slice now has one source-authored pre-pickup route cue at `southwest_pocket_pre_pickup_cue`, compact `Optional pocket ahead` feedback, deterministic smoke coverage, focused capture, accepted visual impact, and public Web verification
 - the default slice now has one source-authored oxygen/rest pocket at `lower_loop_oxygen_rest_pocket`, compact `Rest pocket +oxygen` feedback, deterministic smoke coverage, focused capture, accepted visual impact, and public Web verification
+- the default slice now has one source-authored route commitment objective at `deep_cache_route_objective`, compact objective progress/result feedback, deterministic smoke coverage, focused capture, visual review with no baseline acceptance needed, and public Web verification
 
 Current constraints:
 
 - Keep `production_slice_01` as the default preview map unless a separate default-preview decision changes it.
 - Preserve `maps/full_cave_sketch_01.greybox.json` as a topology draft and planning source.
 - Keep icons from the supplied sketch out of terrain conversion unless they are reauthored as JSON entities.
-- Do not attempt whole-map productionization yet; expand route scale only as one small source-authored connector, extension, or return-loop pass at a time.
+- Do not attempt whole-map productionization yet; expand route scale only as one small source-authored connector, extension, return-loop, or objective-readability pass at a time.
 - Keep #52 and #53 as optional slice-03 camera/topology polish unless slice-03 presentation becomes the selected goal.
 
 Current next direction:
 
-- Plan a focused Controlled Gameplay Pass 13 around one source-authored expedition objective or retry target using existing route metadata, salvage, oxygen pressure, overlay/result text, smoke, focused capture, visual review, and Web verification.
+- Plan a focused Controlled Gameplay Pass 14 around one compact start-of-run objective cue at the boat/extraction area using existing `route_objectives` metadata, smoke, focused capture, visual review, and Web verification.
 
 Recently completed current-state work:
 
@@ -100,3 +101,4 @@ Recently completed current-state work:
 - #201-#209 completed Controlled Gameplay Pass 10 return/banking pressure, smoke/capture coverage, visual review, Web verification, and closeout.
 - #213-#222 completed Controlled Gameplay Pass 11 pre-pickup route readability, source metadata, smoke/capture coverage, visual review, Web verification, and closeout.
 - #224-#233 completed Controlled Gameplay Pass 12 oxygen/rest route pressure, source metadata, smoke/capture coverage, visual review, Web verification, and closeout.
+- #236-#245 completed Controlled Gameplay Pass 13 route commitment objective, source metadata, runtime feedback, smoke/capture coverage, visual review, Web verification, and closeout.
