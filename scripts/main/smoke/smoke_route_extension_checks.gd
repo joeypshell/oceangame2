@@ -4,6 +4,12 @@ const PASS_08_SEGMENT_ID := "southwest_return_pocket_extension"
 const PASS_08_TARGET_ID := "salvage_southwest_return_cache"
 const PASS_09_ROUTE_ID := "southwest_pocket_decision"
 const PASS_09_ROUTE_CHOICE_ID := "southwest_pocket_detour"
+const PASS_10_SEGMENT_ID := "return_pressure_to_boat"
+const PASS_10_TARGET_ID := "salvage_return_branch"
+const PASS_10_ROUTE_ID := "return_pressure_decision"
+const PASS_10_ROUTE_CHOICE_ID := "return_branch_bank_prompt"
+const PASS_10_FEEDBACK := "Cargo full - bank at boat"
+const LOWER_LOOP_SALVAGE_ID := "salvage_lower_loop"
 const DEEP_CACHE_SALVAGE_ID := "salvage_deep_right_cache"
 
 
@@ -207,6 +213,137 @@ func _smoke_pass_09_southwest_pocket_decision_and_quit() -> void:
 		oxygen_start,
 		oxygen_after_return,
 		expected_feedback,
+	])
+	get_tree().quit()
+
+
+func _smoke_pass_10_return_pressure_and_quit() -> void:
+	if _world.map_id != "production_slice_01":
+		push_error("Pass 10 return-pressure smoke loaded unexpected map: %s." % _world.map_id)
+		get_tree().quit(1)
+		return
+
+	var segment: Dictionary = _world.get_marker_zone(PASS_10_SEGMENT_ID)
+	var lower_loop: Dictionary = _salvage_by_id(LOWER_LOOP_SALVAGE_ID)
+	var deep_cache: Dictionary = _salvage_by_id(DEEP_CACHE_SALVAGE_ID)
+	var target: Dictionary = _salvage_by_id(PASS_10_TARGET_ID)
+	if segment.is_empty() or lower_loop.is_empty() or deep_cache.is_empty() or target.is_empty():
+		push_error("Pass 10 return-pressure smoke missing source data: segment=%s lower=%s deep=%s target=%s." % [
+			str(not segment.is_empty()),
+			str(not lower_loop.is_empty()),
+			str(not deep_cache.is_empty()),
+			str(not target.is_empty()),
+		])
+		get_tree().quit(1)
+		return
+
+	var route_id := str(target.get("validation_route", ""))
+	var route_choice_id := str(target.get("route_choice_id", ""))
+	if route_id != PASS_10_ROUTE_ID or route_choice_id != PASS_10_ROUTE_CHOICE_ID:
+		push_error("Pass 10 target has wrong route metadata: route=%s choice=%s." % [route_id, route_choice_id])
+		get_tree().quit(1)
+		return
+	if str(target.get("interaction", "instant")) != "instant":
+		push_error("Pass 10 target should remain instant salvage: %s." % str(target))
+		get_tree().quit(1)
+		return
+
+	var path_to_lower: Array = _world.find_open_path(_world.spawn_position, lower_loop["center"])
+	var path_to_deep: Array = _world.find_open_path(lower_loop["center"], deep_cache["center"])
+	var path_to_target: Array = _world.find_open_path(deep_cache["center"], target["center"])
+	var return_path: Array = _world.find_open_path(target["center"], _world.get_extraction_center())
+	if path_to_lower.is_empty() or path_to_deep.is_empty() or path_to_target.is_empty() or return_path.is_empty():
+		push_error("Pass 10 return-pressure path failure: lower=%d deep=%d target=%d return=%d." % [
+			path_to_lower.size(),
+			path_to_deep.size(),
+			path_to_target.size(),
+			return_path.size(),
+		])
+		get_tree().quit(1)
+		return
+
+	_player.set_physics_process(false)
+	_hazard_interactions_enabled = false
+	var oxygen_start := _oxygen_seconds
+	_player.global_position = lower_loop["center"]
+	_collect_salvage_for_smoke(lower_loop)
+	_player.global_position = deep_cache["center"]
+	_collect_salvage_for_smoke(deep_cache)
+	var expected_banked_score := int(lower_loop.get("score", 0)) + int(deep_cache.get("score", 0))
+	if _held_salvage != HELD_SALVAGE_CAPACITY or _held_salvage_score != expected_banked_score:
+		push_error("Pass 10 return-pressure smoke did not fill cargo with planned pickups: held=%d score=%d expected=%d ids=%s." % [
+			_held_salvage,
+			_held_salvage_score,
+			expected_banked_score,
+			_held_salvage_ids,
+		])
+		get_tree().quit(1)
+		return
+
+	_player.global_position = target["center"]
+	_process(0.0)
+	if _held_salvage != HELD_SALVAGE_CAPACITY or _held_salvage_ids.has(PASS_10_TARGET_ID):
+		push_error("Pass 10 return-pressure smoke collected while cargo was full: held=%d ids=%s." % [
+			_held_salvage,
+			_held_salvage_ids,
+		])
+		get_tree().quit(1)
+		return
+	if _world.is_salvage_collected(PASS_10_TARGET_ID) or not _world.has_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS):
+		push_error("Pass 10 return-pressure target availability changed while cargo was full.")
+		get_tree().quit(1)
+		return
+	if _last_status_note != PASS_10_FEEDBACK or _status_label == null or _status_label.text.find(PASS_10_FEEDBACK) == -1:
+		push_error("Pass 10 return-pressure feedback mismatch: note=%s status=%s." % [_last_status_note, _status_label.text])
+		get_tree().quit(1)
+		return
+
+	var oxygen_at_pressure := _oxygen_seconds
+	_player.global_position = _world.get_extraction_center()
+	_process(0.0)
+	if _held_salvage != 0 or _banked_salvage != HELD_SALVAGE_CAPACITY or _banked_score != expected_banked_score:
+		push_error("Pass 10 return-pressure smoke did not bank full cargo: held=%d banked=%d score=%d expected=%d." % [
+			_held_salvage,
+			_banked_salvage,
+			_banked_score,
+			expected_banked_score,
+		])
+		get_tree().quit(1)
+		return
+	if _world.is_salvage_collected(PASS_10_TARGET_ID):
+		push_error("Pass 10 return-pressure target was deleted during banking.")
+		get_tree().quit(1)
+		return
+
+	var target_score := int(target.get("score", 0))
+	_player.global_position = target["center"]
+	_collect_salvage_for_smoke(target)
+	if _held_salvage != 1 or not _held_salvage_ids.has(PASS_10_TARGET_ID) or _held_salvage_score != target_score:
+		push_error("Pass 10 return-pressure target did not collect after banking: held=%d ids=%s score=%d expected=%d." % [
+			_held_salvage,
+			_held_salvage_ids,
+			_held_salvage_score,
+			target_score,
+		])
+		get_tree().quit(1)
+		return
+
+	_reset_run()
+	print("Pass 10 return-pressure smoke passed: segment=%s target=%s route=%s route_choice=%s held_full=%d banked_score=%d target_score=%d oxygen=%.1f->%.1f feedback=\"%s\" paths=%d,%d,%d,%d target_collects_after_banking=true." % [
+		str(segment.get("id", PASS_10_SEGMENT_ID)),
+		PASS_10_TARGET_ID,
+		route_id,
+		route_choice_id,
+		HELD_SALVAGE_CAPACITY,
+		expected_banked_score,
+		target_score,
+		oxygen_start,
+		oxygen_at_pressure,
+		PASS_10_FEEDBACK,
+		path_to_lower.size(),
+		path_to_deep.size(),
+		path_to_target.size(),
+		return_path.size(),
 	])
 	get_tree().quit()
 
