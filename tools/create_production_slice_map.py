@@ -301,6 +301,22 @@ def build_map_data(source_map: dict) -> dict:
                 ),
             },
             {
+                "id": "southwest_pocket_pre_pickup_cue",
+                "type": "marker",
+                "x": 12,
+                "y": 65,
+                "w": 16,
+                "h": 9,
+                "route_cue_id": "southwest_pocket_pre_pickup_cue",
+                "cue_target_id": "salvage_southwest_return_cache",
+                "cue_text": "Optional pocket ahead",
+                "cue_condition": "target_uncollected",
+                "intent": (
+                    "Pass 11 pre-pickup route-readability cue before the "
+                    "southwest pocket payoff is collected."
+                ),
+            },
+            {
                 "id": "lower_loop_to_deep_cache_pressure",
                 "type": "marker",
                 "x": 54,
