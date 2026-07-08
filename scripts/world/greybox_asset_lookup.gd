@@ -68,6 +68,14 @@ func cave_tileset_texture_path() -> String:
 	return CAVE_TILESET_TEXTURE
 
 
+func background_rocks_texture_path() -> String:
+	return BACKGROUND_ROCKS_TEXTURE
+
+
+func background_rocks_fallback_texture_path() -> String:
+	return BACKGROUND_ROCKS_FALLBACK_TEXTURE
+
+
 func _packaged_texture(texture_path: String) -> Texture2D:
 	if ResourceLoader.exists(texture_path):
 		var resource := load(texture_path)
