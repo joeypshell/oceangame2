@@ -11,6 +11,7 @@ This is the compact index for current project commands. Keep detailed command bl
 - [Web Export](tooling/web_export.md): local build metadata, local Web export, HTTP serving, Chromium preview checks, GitHub Actions export, and Pages notes.
 - [Baselines And Review Sheets](tooling/baselines.md): production-slice baseline accept/compare commands and source/render/collision review sheets.
 - [Asset Generation](tooling/asset_generation.md): terrain tileset, props, player sprite, terrain-kit processing, and generated-file warnings.
+- [Agent Skills](tooling/agent_skills.md): project-local Codex skills for repo drift evaluation and issue-resolution workflows.
 
 ## Critical Warnings
 
