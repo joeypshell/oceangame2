@@ -67,10 +67,7 @@ Additional current map sources:
 
 - `scenes/world/GreyboxWorld.tscn`
   - Runtime renderer for the greybox map.
-  - Creates a `TileMapLayer` visual from the source JSON.
-  - Creates a visible cave `TileMapLayer` from grid-aligned terrain tiles.
-  - Creates `StaticBody2D` collision rectangles from the same terrain data.
-  - Draws background silhouettes, route markers, extraction zones, boat spawns, salvage, timed-salvage affordance markers, hazards, and spawn markers.
+  - Orchestrates focused world helpers that render source JSON, cave terrain, collision, background art, route markers, extraction zones, boat spawns, salvage, timed-salvage affordance markers, hazards, and spawn markers.
 
 - `scenes/player/Player.tscn`
   - Basic placeholder diver/sub-style player.
@@ -94,10 +91,35 @@ Additional current map sources:
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.
-  - Builds the runtime source TileMapLayer, cave terrain TileMapLayer, background art, and collision.
-  - Keeps visuals tied to source topology.
+  - Owns map state, entity/zone bookkeeping, helper orchestration, and public query APIs used by `scripts/main/main.gd`.
+  - Keeps visuals, runtime queries, and collision tied to source topology.
   - Exposes `camera_tests` from the source map for repeatable visual captures.
   - Exposes runtime terrain/collision parity data and authored salvage/extraction positions.
+  - Remains file-length debt after the first split lane: the lane reduced it from 1,377 lines to 734 lines, while focused helper files remain under the 500-line policy target.
+
+- `scripts/world/greybox_asset_lookup.gd`
+  - Provides texture path, loading, and fallback helpers for world renderers.
+
+- `scripts/world/greybox_terrain_renderer.gd`
+  - Builds the cave terrain `TileMapLayer`, terrain `TileSet`, solid-cell extraction, and neighbor mask tile selection.
+
+- `scripts/world/greybox_debug_renderer.gd`
+  - Builds the faint source layer, debug grid/outlines, debug labels, and shared simple debug shapes.
+
+- `scripts/world/greybox_collision_builder.gd`
+  - Builds `StaticBody2D` collision rectangles and runtime terrain/collision parity cell data from source terrain.
+
+- `scripts/world/greybox_background_renderer.gd`
+  - Draws non-collision background silhouettes and landmark/decorative background items.
+
+- `scripts/world/greybox_prop_renderer.gd`
+  - Draws salvage and hazard prop visuals, including valuable and timed-salvage affordance markers.
+
+- `scripts/world/greybox_extraction_renderer.gd`
+  - Draws boat, base, relay spawn, extraction-zone, and spawn-cue visuals.
+
+- `scripts/world/greybox_route_marker_renderer.gd`
+  - Draws source-authored route/review marker rectangles and compact debug outline/label overlays.
 
 - `scripts/player/player_controller.gd`
   - Basic side-view swimming controller.
