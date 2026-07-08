@@ -112,7 +112,7 @@ Art placement must not create, remove, or move collision.
 - Terrain tile art is a first-pass structural placeholder, not final production art.
 - Terrain collision is rectangular per terrain block, and the player collision shape is intentionally smaller than the placeholder body art to reduce snagging in one-tile-ish production-slice passages.
 - Minimal salvage collection, extraction completion, and restart loop exists.
-- Hazards show warning feedback before contact; contact applies a 12-second oxygen penalty, bumps the player back to spawn, briefly tints the player, and restores any held/unbanked salvage to the map.
+- Hazards show warning feedback before contact; the selected Pass 07 `hazard_right_branch` pressure route uses a compact `Hazard ahead - keep clear` prompt, while contact applies a 12-second oxygen penalty, bumps the player back to spawn, briefly tints the player, and restores any held/unbanked salvage to the map.
 - Oxygen is a scoped expedition-pressure prototype: it drains while away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held salvage.
 - The default slice has source-authored safe/deep route metadata and deterministic smokes for safe/deep comparison, hazard pressure, and route outcome result text.
 - The default slice has one source-authored `timed_salvage` target, `salvage_deep_right_cache`, that renders a small in-world affordance and requires 2.5 seconds of in-range progress before entering held cargo.

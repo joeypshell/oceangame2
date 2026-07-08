@@ -43,6 +43,9 @@ const HAZARD_WARNING_RADIUS := 80.0
 const HAZARD_OXYGEN_PENALTY_SECONDS := 12.0
 const HAZARD_COOLDOWN_SECONDS := 1.0
 const HAZARD_FEEDBACK_SECONDS := 0.45
+const PASS_07_PRESSURE_HAZARD_ID := "hazard_right_branch"
+const GENERIC_HAZARD_WARNING_PROMPT := "Hazard nearby - keep clear"
+const PRESSURE_HAZARD_WARNING_PROMPT := "Hazard ahead - keep clear"
 const OXYGEN_MAX_SECONDS := 90.0
 const OXYGEN_REFILL_SECONDS_PER_SECOND := 25.0
 const OXYGEN_LOW_WARNING_SECONDS := 40.0
@@ -807,7 +810,7 @@ func _update_status_label() -> void:
 	elif _held_salvage >= HELD_SALVAGE_CAPACITY:
 		prompt = "Cargo full - return to extraction"
 	elif not _hazard_warning_id.is_empty():
-		prompt = "Hazard nearby - keep clear"
+		prompt = _hazard_warning_prompt()
 	elif not _last_status_note.is_empty():
 		prompt = _last_status_note
 	elif _held_salvage > 0:
@@ -831,6 +834,12 @@ func _update_status_label() -> void:
 	if not prompt.is_empty():
 		_status_label.text += "\n%s" % prompt
 	_update_result_panel()
+
+
+func _hazard_warning_prompt() -> String:
+	if _hazard_warning_id == PASS_07_PRESSURE_HAZARD_ID:
+		return PRESSURE_HAZARD_WARNING_PROMPT
+	return GENERIC_HAZARD_WARNING_PROMPT
 
 
 func _oxygen_feedback_label() -> String:

@@ -57,7 +57,8 @@ Current warning behavior remains the Pass 07 baseline:
 - Warning radius: `HAZARD_WARNING_RADIUS`, currently 80 px.
 - Contact radius: `HAZARD_CONTACT_RADIUS`, currently 30 px.
 - Warning appears only when the player is inside warning radius and outside contact radius.
-- Warning uses the existing compact overlay text: `Hazard nearby - keep clear`.
+- Generic hazards use compact overlay text: `Hazard nearby - keep clear`.
+- The selected Pass 07 route hazard, `hazard_right_branch`, uses `Hazard ahead - keep clear` so the lower-loop to deep-cache route reads as intentional navigation pressure.
 - Warning should not move the player, drop salvage, alter score, alter cargo, or mutate map state.
 
 For the selected segment, the expected warning case is a player moving from `salvage_lower_loop` toward `salvage_deep_right_cache` and entering warning range around `hazard_right_branch` before touching it.
