@@ -71,6 +71,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Controlled Gameplay Pass 06 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_06_CLOSEOUT.md`
 - Controlled Gameplay Pass 07 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_07_CLOSEOUT.md`
 - Controlled Gameplay Pass 08 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_08_CLOSEOUT.md`
+- Controlled Gameplay Pass 09 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_09_CLOSEOUT.md`
 - Movement-feel baseline decision: `docs/current/MOVEMENT_FEEL_BASELINE_DECISION.md`
 - Salvage/oxygen feedback plan: `docs/current/SALVAGE_OXYGEN_FEEDBACK_PLAN.md`
 - Salvage/oxygen feedback baseline decision: `docs/current/SALVAGE_OXYGEN_FEEDBACK_BASELINE_DECISION.md`
@@ -86,6 +87,8 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Pass 07 hazard-pressure web preview verification: `docs/current/PASS_07_HAZARD_PRESSURE_WEB_PREVIEW_VERIFICATION.md`
 - Pass 08 route-extension visual baseline decision: `docs/current/PASS_08_ROUTE_EXTENSION_VISUAL_BASELINE_DECISION.md`
 - Pass 08 route-extension web preview verification: `docs/current/PASS_08_ROUTE_EXTENSION_WEB_PREVIEW_VERIFICATION.md`
+- Pass 09 southwest-pocket visual baseline decision: `docs/current/PASS_09_SOUTHWEST_POCKET_VISUAL_BASELINE_DECISION.md`
+- Pass 09 southwest-pocket web preview verification: `docs/current/PASS_09_SOUTHWEST_POCKET_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -208,6 +211,7 @@ python tools/check_asset_manifest.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-pressure
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-pass-08-route-extension
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-pass-09-southwest-pocket-decision
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-cargo-capacity
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-feedback
@@ -220,6 +224,7 @@ python tools/check_asset_manifest.py
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-feedback-overlay
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-route-outcome-result
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-08-route-extension
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-09-southwest-pocket-decision
 & 'C:\Program Files\Git\cmd\git.exe' diff --check
 ```
 
@@ -258,7 +263,10 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-08:
 
+- Active Pass 09 queue: none; #191-#199 are closed.
 - Active Pass 08 queue: none; #180-#190 are closed.
+- Deferred optional slice-03 polish: #52 and #53 remain open.
+- Closed: #191-#199 completed Pass 09 southwest pocket route-decision payoff, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
 - Closed: #180-#190 completed Pass 08 cautious route-scale expansion, including planning, segment selection, source rules, source marker/alcove authoring, one common payoff cue, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
 - Active Pass 07 queue: none; #170-#179 are closed.
 - Closed: #170-#179 completed Pass 07 hazard/navigation pressure planning, segment selection, source marker authoring, feedback tuning, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
@@ -460,7 +468,7 @@ Recent important commits:
 - `references/greybox/production_slice_03_source_render_collision_review.png` compares slice 03 JSON topology, expected collision rectangles, and the Godot overview capture.
 - `references/greybox/production_slice_04_source_render_collision_review.png` compares slice 04 JSON topology, expected collision rectangles, and the Godot overview capture.
 - `production_slice_01` is the first focused slice from the full sketch's top-center entry hub; it preserves the selected topology, seals left/right/bottom crop edges, fills unreachable conversion pockets, applies targeted one-cell tip/notch cleanup in source generation, and adds authored boat spawn, salvage, hazards, route markers, and camera tests.
-- `production_slice_01` marks `salvage_entry_shaft` as the short `safe_route_choice` target, and `salvage_lower_loop` plus `salvage_deep_right_cache` as current `valuable` route-choice payoff targets.
+- `production_slice_01` marks `salvage_entry_shaft` as the short `safe_route_choice` target, `salvage_lower_loop` plus `salvage_deep_right_cache` as current `valuable` deep-route payoff targets, and `salvage_southwest_return_cache` as the `southwest_pocket_decision` detour payoff.
 - `production_slice_02` is the second focused slice from the full sketch's lower-right chamber route. It is a later-game destination/connector candidate, not an alternate first area. It uses an in-water `spawn` and `base` extraction zone because the region has no natural top-water boat opening.
 - `production_slice_03` is the third focused slice from the full sketch's upper-left room cluster. It is a connector/landmark room-cluster candidate with compact stacked-room navigation and an east-side in-water `spawn` plus `base` relay extraction zone.
 - `production_slice_04` is the fourth focused slice from the full sketch's lower-left loop. It is a connector/return-loop candidate with curved-corridor movement and an east-side in-water `spawn` plus `base` relay extraction zone.
@@ -490,10 +498,12 @@ Recent important commits:
 - `--smoke-session-best-score` completes a full collect-return run, verifies the result panel reports score and best score, verifies reset preserves the current map's best score, and verifies oxygen failure does not overwrite that best score.
 - `--smoke-oxygen-bonus-score` completes a full collect-return run, verifies banked salvage score stays tier-derived, verifies the completion oxygen bonus is based on remaining oxygen, and verifies failed expeditions receive zero oxygen bonus.
 - `--smoke-route-outcome-result` completes a route-tagged collect-return run, verifies the result panel reports `Route: Deep route`, resets, and verifies a generic failure result does not show stale route text.
+- `--smoke-pass-09-southwest-pocket-decision` verifies the southwest pocket payoff metadata, pathing, collection feedback, held/banked score, route label, and reset cleanup.
 - `--smoke-salvage-loop` also verifies the completion-only expedition result panel reports banked salvage score, oxygen bonus, best score, and salvage totals after a full collect-return run.
 - `--capture-feedback-overlay` writes `visual_captures/feedback_overlay/production_slice_01_feedback_overlay.png` as the focused review capture for the salvage/oxygen feedback overlay pass.
 - `--capture-route-outcome-result` writes `visual_captures/route_outcome/production_slice_01_route_outcome_result.png` after completing a deterministic route-tagged collect-return run; it is a review aid for Pass 04 result-panel readability, not baseline acceptance.
-- The `Godot Smoke` workflow runs the salvage loop, scoring/cargo/salvage-feedback/best-score/oxygen-bonus/route-outcome smoke, hazard-pressure smoke, all four production-slice route smokes, the default-slice route-choice smoke, the route-choice metadata smoke, the expanded and safe/deep route-choice smokes, and the player-facing smoke, so CI covers the default slice, its valuable salvage routes, safe-vs-deep route pressure, cargo banking, route-outcome result text, hazard pressure, the later reference slices, and the direction-change regression path.
+- `--capture-pass-09-southwest-pocket-decision` writes `visual_captures/southwest_pocket_decision/production_slice_01_southwest_pocket_decision.png` after collecting the pocket payoff through the normal runtime path; it is a review aid, not baseline acceptance.
+- The `Godot Smoke` workflow runs the salvage loop, scoring/cargo/salvage-feedback/best-score/oxygen-bonus/route-outcome smoke, hazard-pressure smoke, all four production-slice route smokes, the default-slice route-choice smoke, the route-choice metadata smoke, the expanded and safe/deep route-choice smokes, Pass 08/09 southwest pocket smokes, and the player-facing smoke, so CI covers the default slice, its valuable salvage routes, safe-vs-deep route pressure, cargo banking, route-outcome result text, hazard pressure, later reference slices, the southwest pocket decision, and the direction-change regression path.
 - `production_slice_02` has five tuned camera captures: overview, relay entry, main chamber, lower terminal, and return route. Normal captures live in `visual_captures/production_slice_02/`; debug captures live in `visual_captures/production_slice_02_debug/`.
 - `production_slice_03` has five authored camera captures: overview, relay entry, stacked rooms, connector, and return route. Normal captures live in `visual_captures/production_slice_03/`; debug captures live in `visual_captures/production_slice_03_debug/`.
 - `production_slice_04` has five authored camera captures: overview, relay entry, lower-left loop, curved corridor, and return route. Normal captures live in `visual_captures/production_slice_04/`; debug captures live in `visual_captures/production_slice_04_debug/`.
@@ -535,7 +545,7 @@ Recent important commits:
 
 ## Recommended Next Work
 
-Pass 08 completed one tiny source-authored route extension on the default `production_slice_01` slice. The next recommended pass should deepen that southwest return pocket with one small authored route decision or payoff beat using existing systems, not add another broad connector or start full-map productionization.
+Pass 09 completed the southwest pocket route-decision payoff on the default `production_slice_01` slice. The next recommended pass should add one more in-run decision using existing systems, preferably return/banking pressure or pre-pickup route readability, before adding more map scale.
 
 Accepted constraints for the next batch:
 
@@ -545,6 +555,7 @@ Accepted constraints for the next batch:
 - Keep map topology, collision, spawn, extraction, and camera tests source-driven.
 - Keep gameplay scoped to movement, salvage, hazards, extraction, reset, and review UI until the visual pipeline is trustworthy.
 - Do not expand into economy, upgrades, inventory, enemies, procedural generation, save files, or broad art replacement.
+- Do not start another map-scale connector pass until the next change creates clearer moment-to-moment tension or readability.
 - Keep #52/#53 as optional post-baseline slice-03 improvement issues unless the selected goal shifts back to slice-03 presentation.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.

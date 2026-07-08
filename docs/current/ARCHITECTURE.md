@@ -39,7 +39,7 @@ Additional current map sources:
   - Uses `boat_spawn` as the top-water entry/extraction point and includes authored salvage, hazards, route markers, and camera tests.
   - Authors the current safe/deep route metadata: `salvage_entry_shaft` is the short safe target, while `salvage_lower_loop` and `salvage_deep_right_cache` are the deeper valuable route targets.
   - Authors the Pass 07 `lower_loop_to_deep_cache_pressure` route-pressure marker for the `hazard_right_branch` navigation beat.
-  - Authors the Pass 08 `southwest_return_pocket_extension` marker and `salvage_southwest_return_cache` common payoff cue.
+  - Authors the Pass 08 `southwest_return_pocket_extension` marker and the Pass 09 `salvage_southwest_return_cache` valuable payoff tagged as `southwest_pocket_decision`.
   - Current default preview map.
   - Can also be selected explicitly with `.\tools\open_godot_project.ps1 -Run -ProductionSliceMap`.
 - `maps/production_slice_02.greybox.json`
@@ -82,8 +82,8 @@ Additional current map sources:
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
   - Shows compact preview review context, salvage progress, timed-salvage feedback, and scoped oxygen pressure.
   - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress/cancel/complete feedback, cargo banking, oxygen pressure, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, and route outcome result text.
-  - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, focused timed-salvage capture, focused Pass 07 hazard-pressure capture, and focused Pass 08 route-extension capture.
-  - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, timed salvage, hazard pressure, oxygen pressure, cargo/scoring, route outcome result, player-facing, movement-feel, Pass 08 route-extension, and production-slice route checks.
+  - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, focused timed-salvage capture, focused Pass 07 hazard-pressure capture, focused Pass 08 route-extension capture, and focused Pass 09 southwest-pocket decision capture.
+  - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, timed salvage, hazard pressure, oxygen pressure, cargo/scoring, route outcome result, player-facing, movement-feel, Pass 08 route-extension, Pass 09 southwest-pocket decision, and production-slice route checks.
   - Uses `scripts/main/timed_salvage_controller.gd` for the narrow timed salvage interaction.
 
 - `scripts/world/greybox_world.gd`
@@ -117,11 +117,13 @@ Art placement must not create, remove, or move collision.
 - Hazards show warning feedback before contact; the selected Pass 07 `hazard_right_branch` pressure route uses a compact `Hazard ahead - keep clear` prompt, while contact applies a 12-second oxygen penalty, bumps the player back to spawn, briefly tints the player, and restores any held/unbanked salvage to the map.
 - Oxygen is a scoped expedition-pressure prototype: it drains while away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held salvage.
 - The default slice has source-authored safe/deep route metadata and deterministic smokes for safe/deep comparison, generic hazard pressure, Pass 07 hazard-route pressure, and route outcome result text.
-- The default slice has a Pass 08 `southwest_return_pocket_extension` marker with a small common salvage cue, protected by `--smoke-pass-08-route-extension`.
+- The default slice has a Pass 08 `southwest_return_pocket_extension` marker with a source-authored payoff cue, protected by `--smoke-pass-08-route-extension`.
+- Pass 09 deepened that pocket by tagging `salvage_southwest_return_cache` as a `valuable` payoff for `southwest_pocket_decision`, adding compact `Southwest pocket payoff +300` feedback, and protecting it with `--smoke-pass-09-southwest-pocket-decision`.
 - The default slice has one source-authored `timed_salvage` target, `salvage_deep_right_cache`, that renders a small in-world affordance and requires 2.5 seconds of in-range progress before entering held cargo.
 - Timed-salvage feedback covers progress, cancel, completion, cargo-full blocking, hazard reset, and oxygen failure/reset through `--smoke-timed-salvage`.
 - `--capture-route-outcome-result` provides a focused review capture for the completed-run route outcome panel without replacing normal accepted baselines.
 - `--capture-timed-salvage` provides a focused review capture for the timed-salvage overlay state without replacing normal accepted baselines.
 - `--capture-pass-07-hazard-pressure` provides a focused review capture for the selected lower-loop hazard/navigation pressure state without replacing normal accepted baselines.
 - `--capture-pass-08-route-extension` provides a focused review capture for the selected southwest return-pocket route extension without replacing normal accepted baselines.
+- `--capture-pass-09-southwest-pocket-decision` provides a focused review capture for the selected southwest pocket payoff feedback without replacing normal accepted baselines.
 - First screenshot baseline is committed at `visual_baselines/001_greybox_in_engine.png`.
