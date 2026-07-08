@@ -57,6 +57,14 @@ Capture the focused Pass 07 hazard/navigation pressure view:
 
 This loads the default production slice, collects the lower-loop payoff into held cargo, places the player in warning-only range near `hazard_right_branch`, frames the selected pressure segment with the deep-cache payoff and overlay warning, keeps map data and accepted baselines unchanged, and writes `visual_captures/hazard_pressure/production_slice_01_hazard_pressure.png`.
 
+Capture the focused Pass 08 route-extension view:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-08-route-extension
+```
+
+This loads the default production slice, places the player near `salvage_southwest_return_cache` without collecting it, frames `southwest_return_pocket_extension` with compact overlay context, keeps map data and accepted baselines unchanged, and writes `visual_captures/route_extension/production_slice_01_route_extension.png`.
+
 Capture the original rectangular salvage map comparison views:
 
 ```powershell
