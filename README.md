@@ -37,6 +37,7 @@ Build a small side-view salvage game that proves:
 - [OceanGame Migration Notes](docs/OCEANGAME_MIGRATION.md)
 - [Current Architecture](docs/current/ARCHITECTURE.md)
 - [Tooling](docs/current/TOOLING.md)
+- [Parallel Codex Worktree Workflow](docs/current/PARALLEL_CODEX_WORKFLOW.md)
 - [Production Slice Index](docs/current/PRODUCTION_SLICE_INDEX.md)
 - [Post-Slice Workflow Decision](docs/current/POST_SLICE_WORKFLOW_DECISION.md)
 - [Controlled Visual Revision 01 Plan](docs/current/CONTROLLED_VISUAL_REVISION_01_PLAN.md)
