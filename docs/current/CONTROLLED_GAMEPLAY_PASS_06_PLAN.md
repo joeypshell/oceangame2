@@ -90,19 +90,19 @@ UI and visual feedback should use existing lightweight patterns:
 
 Do not add an inventory screen, tool wheel, modal tutorial, new HUD framework, sound system, or broad visual replacement.
 
-## Feedback State Plan
+## Feedback State Rules
 
-The next issue should define exact state copy and state transitions before runtime work starts.
+Pass 06 feedback should use the existing `interaction_label` as the player-facing target name. For the current target, that label is `deep cache`.
 
-State rules should cover:
+- Available: before interaction starts, the target should have a small in-world cue that reads as special but does not imply collection has begun. Suggested overlay copy is none; this state should be readable from the world marker.
+- Progress: while the player is in range and cargo has room, progress should increase and display compactly, for example `Salvaging deep cache 42%`. Oxygen continues draining normally.
+- Canceled: when the player leaves range before completion, progress returns to zero and a brief status note should communicate interruption, for example `Salvage interrupted`. The target stays in the world.
+- Completed: when progress reaches 100%, the pickup enters held cargo and a brief status note should communicate completion/payoff, for example `Deep cache secured +300`.
+- Cargo-full: when cargo is full, timed salvage should not start or complete. The target remains in the world and feedback should say the cargo is full without deleting or hiding the target.
+- Hazard reset: hazard contact clears active timed progress and feedback, then follows the existing hazard oxygen-penalty/restoration path.
+- Oxygen failure/reset: oxygen failure clears active timed progress and feedback, restores held salvage as before, and leaves uncollected timed targets available.
 
-- available: timed target is visible and distinct before interaction
-- progress: player is in range and progress is increasing
-- canceled: player leaves range before completion
-- completed: timed action finishes and salvage enters held cargo
-- cargo-full: target remains in the world and cannot be collected
-- hazard reset: active progress clears
-- oxygen failure/reset: active progress clears and held state restores as before
+These are runtime/UI states, not terrain, topology, collision, or map-source states. Source metadata remains the current `interaction`, `interaction_seconds`, and `interaction_label` fields unless a later issue proves a new field is necessary.
 
 ## Validation/Smoke Plan
 
