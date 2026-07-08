@@ -50,6 +50,12 @@ var _held_salvage_ids: Array[String]:
 	set(value):
 		_main._held_salvage_ids = value
 
+var _banked_salvage_ids: Array[String]:
+	get:
+		return _main._banked_salvage_ids
+	set(value):
+		_main._banked_salvage_ids = value
+
 var _held_salvage_score: int:
 	get:
 		return _main._held_salvage_score

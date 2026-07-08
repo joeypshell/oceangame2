@@ -11,6 +11,7 @@ const TimedSalvageController := preload("res://scripts/main/timed_salvage_contro
 const SmokeHazardRouteChecks := preload("res://scripts/main/smoke/smoke_hazard_route_checks.gd")
 const SmokeInteractionChecks := preload("res://scripts/main/smoke/smoke_interaction_checks.gd")
 const SmokeOxygenRestChecks := preload("res://scripts/main/smoke/smoke_oxygen_rest_checks.gd")
+const SmokeRouteCommitmentChecks := preload("res://scripts/main/smoke/smoke_route_commitment_checks.gd")
 const SmokeRouteExtensionChecks := preload("res://scripts/main/smoke/smoke_route_extension_checks.gd")
 const SmokeRouteChecks := preload("res://scripts/main/smoke/smoke_route_checks.gd")
 const SmokeScoreChecks := preload("res://scripts/main/smoke/smoke_score_checks.gd")
@@ -89,6 +90,7 @@ var _timed_salvage
 var _smoke_hazard_route_checks
 var _smoke_interaction_checks
 var _smoke_oxygen_rest_checks
+var _smoke_route_commitment_checks
 var _smoke_route_extension_checks
 var _smoke_route_checks
 var _smoke_score_checks
@@ -131,6 +133,7 @@ func _ready() -> void:
 	_smoke_hazard_route_checks = SmokeHazardRouteChecks.new(self)
 	_smoke_interaction_checks = SmokeInteractionChecks.new(self)
 	_smoke_oxygen_rest_checks = SmokeOxygenRestChecks.new(self)
+	_smoke_route_commitment_checks = SmokeRouteCommitmentChecks.new(self)
 	_smoke_route_extension_checks = SmokeRouteExtensionChecks.new(self)
 	_smoke_route_checks = SmokeRouteChecks.new(self)
 	_smoke_score_checks = SmokeScoreChecks.new(self)
@@ -174,6 +177,7 @@ func _ready() -> void:
 	var smoke_pass_10_return_pressure := _has_arg(user_args, engine_args, "--smoke-pass-10-return-pressure")
 	var smoke_pass_11_pre_pickup_route_cue := _has_arg(user_args, engine_args, "--smoke-pass-11-pre-pickup-route-cue")
 	var smoke_pass_12_oxygen_rest_pressure := _has_arg(user_args, engine_args, "--smoke-pass-12-oxygen-rest-pressure")
+	var smoke_pass_13_route_commitment := _has_arg(user_args, engine_args, "--smoke-pass-13-route-commitment")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var smoke_timed_salvage := _has_arg(user_args, engine_args, "--smoke-timed-salvage")
 	var smoke_cargo_capacity := _has_arg(user_args, engine_args, "--smoke-cargo-capacity")
@@ -257,6 +261,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_pass_11_pre_pickup_route_cue:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_pass_13_route_commitment:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_oxygen_pressure:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_timed_salvage:
@@ -326,6 +332,7 @@ func _ready() -> void:
 		or smoke_pass_10_return_pressure
 		or smoke_pass_11_pre_pickup_route_cue
 		or smoke_pass_12_oxygen_rest_pressure
+		or smoke_pass_13_route_commitment
 		or smoke_oxygen_pressure
 		or smoke_timed_salvage
 		or smoke_cargo_capacity
@@ -392,6 +399,9 @@ func _ready() -> void:
 		return
 	if smoke_pass_12_oxygen_rest_pressure:
 		_smoke_oxygen_rest_checks._smoke_pass_12_oxygen_rest_pressure_and_quit()
+		return
+	if smoke_pass_13_route_commitment:
+		_smoke_route_commitment_checks._smoke_pass_13_route_commitment_and_quit()
 		return
 	if smoke_oxygen_pressure:
 		_smoke_interaction_checks._smoke_oxygen_pressure_and_quit()
