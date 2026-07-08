@@ -2417,6 +2417,14 @@
       "intent": "Second route-choice payoff on the lower-right optional branch under cargo, oxygen, and timed-salvage pressure."
     },
     {
+      "id": "salvage_southwest_return_cache",
+      "type": "salvage",
+      "x": 25,
+      "y": 76,
+      "kind": "crate",
+      "intent": "Small common salvage cue that gives the Pass 08 southwest return pocket a modest optional payoff."
+    },
+    {
       "id": "salvage_return_branch",
       "type": "salvage",
       "x": 17,
