@@ -247,6 +247,7 @@ jobs:
           run_route_smoke --smoke-pass-09-southwest-pocket-decision pass-09-southwest-pocket-decision
           run_route_smoke --smoke-pass-10-return-pressure pass-10-return-pressure
           run_route_smoke --smoke-pass-11-pre-pickup-route-cue pass-11-pre-pickup-route-cue
+          run_route_smoke --smoke-pass-12-oxygen-rest-pressure pass-12-oxygen-rest-pressure
           run_route_smoke --smoke-production-slice-02-route production-slice-02-route
           run_route_smoke --smoke-production-slice-03-route production-slice-03-route
           run_route_smoke --smoke-production-slice-04-route production-slice-04-route
