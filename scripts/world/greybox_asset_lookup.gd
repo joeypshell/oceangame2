@@ -76,6 +76,10 @@ func background_rocks_fallback_texture_path() -> String:
 	return BACKGROUND_ROCKS_FALLBACK_TEXTURE
 
 
+func boat_spawn_texture_path() -> String:
+	return BOAT_SPAWN_TEXTURE
+
+
 func _packaged_texture(texture_path: String) -> Texture2D:
 	if ResourceLoader.exists(texture_path):
 		var resource := load(texture_path)
