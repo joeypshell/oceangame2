@@ -9,6 +9,11 @@ import re
 from collections import deque
 from pathlib import Path
 
+from validate_route_objectives import (
+    validate_route_objective_reachability,
+    validate_route_objective_schema,
+)
+
 
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 DISPLAY_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,31}$")
@@ -371,6 +376,7 @@ def main() -> int:
     zones = map_data.get("zones", [])
     failures.extend(validate_entity_schema(entities, width, height, base_zones))
     failures.extend(validate_zone_schema(zones, width, height))
+    failures.extend(validate_route_objective_schema(map_data, entities, zones))
     if failures:
         for failure in failures:
             print(failure)
@@ -443,6 +449,8 @@ def main() -> int:
             failures.append(f"{zone['id']} has no open cells.")
         elif not (cells & reachable):
             failures.append(f"{zone['id']} is unreachable.")
+
+    failures.extend(validate_route_objective_reachability(map_data, entities, zones, solid, reachable))
 
     if failures:
         for failure in failures:
