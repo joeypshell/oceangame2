@@ -251,6 +251,18 @@ def build_map_data(source_map: dict) -> dict:
                 "h": 24,
                 "intent": "Lower optional loop for a longer salvage return test.",
             },
+            {
+                "id": "lower_loop_to_deep_cache_pressure",
+                "type": "marker",
+                "x": 54,
+                "y": 64,
+                "w": 13,
+                "h": 13,
+                "intent": (
+                    "Pass 07 hazard/navigation pressure segment covering the hazard_right_branch "
+                    "warning corridor and approach to timed salvage_deep_right_cache."
+                ),
+            },
         ],
         "background": [
             {"id": "distant_entry_wall", "type": "background", "x": 30, "y": 6, "w": 18, "h": 22},

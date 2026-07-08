@@ -22,6 +22,8 @@
 <text x="780.0" y="738.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">central_crossing_route</text>
 <rect x="384" y="1760" width="1664" height="768" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
 <text x="396.0" y="1794.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">lower_loop_route</text>
+<rect x="1728" y="2048" width="416" height="416" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="1740.0" y="2082.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">lower_loop_to_deep_cache_pressure</text>
 <rect x="0" y="0" width="1056" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="1600" y="0" width="704" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="0" y="32" width="1056" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
