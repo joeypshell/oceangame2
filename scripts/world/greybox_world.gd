@@ -31,20 +31,8 @@ const COLOR_DEBUG_EXTRACTION := Color(1.0, 0.92, 0.52, 0.90)
 const SOURCE_LAYER_ALPHA := 0.08
 const BACKGROUND_ART_ALPHA := 0.26
 
-const CAVE_TILESET_TEXTURE := "res://assets/terrain_tiles/cave_tileset_v2.png"
-const BACKGROUND_ROCKS_TEXTURE := "res://assets/terrain/background_rocks_02.png"
-const BACKGROUND_ROCKS_FALLBACK_TEXTURE := "res://assets/terrain/background_rocks_01.png"
-const BOAT_SPAWN_TEXTURE := "res://assets/vehicles/boat_spawn_01.png"
-const CAVE_TILESET_TEXTURE_RESOURCE := preload("res://assets/terrain_tiles/cave_tileset_v2.png")
-const BACKGROUND_ROCKS_TEXTURE_RESOURCE := preload("res://assets/terrain/background_rocks_02.png")
-const BACKGROUND_ROCKS_FALLBACK_TEXTURE_RESOURCE := preload("res://assets/terrain/background_rocks_01.png")
-const PROP_SPRITE_TEXTURES := {
-	"crate": "res://assets/props/salvage_crate_01.png",
-	"wreck_fragment": "res://assets/props/wreck_fragment_01.png",
-	"relic": "res://assets/props/relic_01.png",
-	"mine": "res://assets/props/mine_01.png",
-	"jellyfish": "res://assets/props/jellyfish_01.png",
-}
+const GreyboxAssetLookup := preload("res://scripts/world/greybox_asset_lookup.gd")
+
 const SALVAGE_TIER_SCORES := {
 	"common": 100,
 	"valuable": 300,
@@ -96,10 +84,11 @@ var _solid_layer: TileMapLayer
 var _terrain_layer: TileMapLayer
 var _marker_root: Node2D
 var _collision_root: Node2D
-var _prop_texture_cache := {}
+var _asset_lookup
 
 
 func _ready() -> void:
+	_asset_lookup = GreyboxAssetLookup.new()
 	load_greybox()
 
 
@@ -453,9 +442,9 @@ func _build_cave_terrain_layer(terrain_items: Array) -> void:
 
 
 func _create_cave_tileset() -> TileSet:
-	var texture := _load_png_texture(CAVE_TILESET_TEXTURE)
+	var texture := _load_png_texture(GreyboxAssetLookup.CAVE_TILESET_TEXTURE)
 	if texture == null:
-		push_error("Unable to create cave TileSet; missing texture %s" % CAVE_TILESET_TEXTURE)
+		push_error("Unable to create cave TileSet; missing texture %s" % GreyboxAssetLookup.CAVE_TILESET_TEXTURE)
 		return TileSet.new()
 
 	var source := TileSetAtlasSource.new()
@@ -642,9 +631,9 @@ func _build_background(items: Array) -> void:
 		_background_root.add_child(poly)
 
 		var sprite_name := "%sArt" % item.get("id", "Background")
-		var sprite := _add_texture_rect(_background_root, BACKGROUND_ROCKS_TEXTURE, item, sprite_name)
+		var sprite := _add_texture_rect(_background_root, GreyboxAssetLookup.BACKGROUND_ROCKS_TEXTURE, item, sprite_name)
 		if sprite == null:
-			sprite = _add_texture_rect(_background_root, BACKGROUND_ROCKS_FALLBACK_TEXTURE, item, sprite_name)
+			sprite = _add_texture_rect(_background_root, GreyboxAssetLookup.BACKGROUND_ROCKS_FALLBACK_TEXTURE, item, sprite_name)
 		if sprite != null:
 			sprite.modulate = Color(1.0, 1.0, 1.0, BACKGROUND_ART_ALPHA)
 
@@ -766,59 +755,17 @@ func _add_texture_rect(parent: Node2D, texture_path: String, item: Dictionary, s
 
 
 func _load_png_texture(texture_path: String) -> Texture2D:
-	var packaged_texture := _packaged_texture(texture_path)
-	if packaged_texture != null:
-		return packaged_texture
-
-	if ResourceLoader.exists(texture_path):
-		var resource := load(texture_path)
-		if resource is Texture2D:
-			return resource
-
-	var file := FileAccess.open(texture_path, FileAccess.READ)
-	if file == null:
-		push_warning("Unable to open texture asset: %s" % texture_path)
-		return null
-
-	var image := Image.new()
-	var error := image.load_png_from_buffer(file.get_buffer(file.get_length()))
-	if error != OK:
-		push_warning("Unable to decode texture asset: %s" % texture_path)
-		return null
-
-	return ImageTexture.create_from_image(image)
-
-
-func _packaged_texture(texture_path: String) -> Texture2D:
-	match texture_path:
-		CAVE_TILESET_TEXTURE:
-			return CAVE_TILESET_TEXTURE_RESOURCE
-		BACKGROUND_ROCKS_TEXTURE:
-			return BACKGROUND_ROCKS_TEXTURE_RESOURCE
-		BACKGROUND_ROCKS_FALLBACK_TEXTURE:
-			return BACKGROUND_ROCKS_FALLBACK_TEXTURE_RESOURCE
-		_:
-			return null
+	return _asset_lookup_helper().load_png_texture(texture_path)
 
 
 func _prop_texture(kind: String, fallback_kind: String) -> Texture2D:
-	var sprite_kind := kind
-	if not PROP_SPRITE_TEXTURES.has(sprite_kind):
-		sprite_kind = fallback_kind
+	return _asset_lookup_helper().prop_texture(kind, fallback_kind)
 
-	if _prop_texture_cache.has(sprite_kind):
-		var cached = _prop_texture_cache[sprite_kind]
-		if cached is Texture2D:
-			return cached
-		return null
 
-	var texture_path := str(PROP_SPRITE_TEXTURES.get(sprite_kind, ""))
-	if texture_path.is_empty():
-		return null
-
-	var texture := _load_png_texture(texture_path)
-	_prop_texture_cache[sprite_kind] = texture
-	return texture
+func _asset_lookup_helper():
+	if _asset_lookup == null:
+		_asset_lookup = GreyboxAssetLookup.new()
+	return _asset_lookup
 
 
 func _add_prop_sprite(parent: Node2D, sprite_name: String, texture: Texture2D) -> bool:
@@ -1003,7 +950,7 @@ func _add_boat_marker(marker_name: String, item: Dictionary) -> Node2D:
 
 
 func _add_boat_sprite(root: Node2D, rect: Rect2) -> bool:
-	var texture := _load_png_texture(BOAT_SPAWN_TEXTURE)
+	var texture := _load_png_texture(GreyboxAssetLookup.BOAT_SPAWN_TEXTURE)
 	if texture == null:
 		return false
 
