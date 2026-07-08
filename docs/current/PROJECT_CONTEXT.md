@@ -67,6 +67,9 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Controlled Gameplay Pass 03 plan: `docs/current/CONTROLLED_GAMEPLAY_PASS_03_PLAN.md`
 - Controlled Gameplay Pass 04 plan: `docs/current/CONTROLLED_GAMEPLAY_PASS_04_PLAN.md`
 - Controlled Gameplay Pass 04 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_04_CLOSEOUT.md`
+- Controlled Gameplay Pass 05 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_05_CLOSEOUT.md`
+- Controlled Gameplay Pass 06 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_06_CLOSEOUT.md`
+- Controlled Gameplay Pass 07 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_07_CLOSEOUT.md`
 - Movement-feel baseline decision: `docs/current/MOVEMENT_FEEL_BASELINE_DECISION.md`
 - Salvage/oxygen feedback plan: `docs/current/SALVAGE_OXYGEN_FEEDBACK_PLAN.md`
 - Salvage/oxygen feedback baseline decision: `docs/current/SALVAGE_OXYGEN_FEEDBACK_BASELINE_DECISION.md`
@@ -78,6 +81,8 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Expedition loop web preview verification: `docs/current/EXPEDITION_LOOP_WEB_PREVIEW_VERIFICATION.md`
 - Pass 04 route-pressure visual baseline decision: `docs/current/PASS_04_ROUTE_PRESSURE_VISUAL_BASELINE_DECISION.md`
 - Pass 04 route-pressure web preview verification: `docs/current/PASS_04_ROUTE_PRESSURE_WEB_PREVIEW_VERIFICATION.md`
+- Pass 07 hazard-pressure visual baseline decision: `docs/current/PASS_07_HAZARD_PRESSURE_VISUAL_BASELINE_DECISION.md`
+- Pass 07 hazard-pressure web preview verification: `docs/current/PASS_07_HAZARD_PRESSURE_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -248,6 +253,8 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-08:
 
+- Active Pass 07 queue: none; #170-#179 are closed.
+- Closed: #170-#179 completed Pass 07 hazard/navigation pressure planning, segment selection, source marker authoring, feedback tuning, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
 - Active Pass 06 queue: none; #160-#169 are closed.
 - Closed: #160-#169 completed Pass 06 timed-salvage readability, in-world affordance, progress/cancel/complete feedback, deterministic smoke hardening, focused capture, visual baseline acceptance, public Web verification, and closeout.
 - Active Pass 05 queue: none; #150-#159 are closed.
@@ -521,13 +528,13 @@ Recent important commits:
 
 ## Recommended Next Work
 
-Pass 06 completed the readable timed-salvage interaction on the default `production_slice_01` slice. The next recommended pass should add one authored hazard/navigation pressure pattern in `production_slice_01` before broader map-scale expansion.
+Pass 07 completed one authored hazard/navigation pressure pattern on the default `production_slice_01` slice. The next recommended pass should begin cautious route-scale expansion from source data: one small connector, route extension, or return-loop beat, not full-map productionization.
 
 Accepted constraints for the next batch:
 
 - Keep `production_slice_01` as the default preview map.
 - Preserve `maps/full_cave_sketch_01.greybox.json` as a topology draft and planning source.
-- Do not move the entire full sketch into production yet; work from focused slices.
+- Do not move the entire full sketch into production yet; grow route scale one source-authored segment at a time.
 - Keep map topology, collision, spawn, extraction, and camera tests source-driven.
 - Keep gameplay scoped to movement, salvage, hazards, extraction, reset, and review UI until the visual pipeline is trustworthy.
 - Do not expand into economy, upgrades, inventory, enemies, procedural generation, save files, or broad art replacement.

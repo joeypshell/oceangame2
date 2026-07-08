@@ -55,9 +55,9 @@ Done when:
 
 ## Current Roadmap Decision
 
-As of 2026-07-08, Controlled Gameplay Pass 06 is complete. See `docs/current/CONTROLLED_GAMEPLAY_PASS_06_CLOSEOUT.md` for the latest closeout decision and `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table.
+As of 2026-07-08, Controlled Gameplay Pass 07 is complete. See `docs/current/CONTROLLED_GAMEPLAY_PASS_07_CLOSEOUT.md` for the latest closeout decision and `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table.
 
-The project should now move from the readable timed-salvage interaction to one authored hazard/navigation pressure pattern before broader map-scale expansion.
+The project can now move from one authored hazard/navigation pressure pattern into cautious route-scale expansion, still through small source-driven passes rather than whole-map productionization.
 
 What the current prototype has proven:
 
@@ -68,18 +68,19 @@ What the current prototype has proven:
 - targeted visual changes can now be compared against accepted baselines instead of relying on memory or one-off screenshots
 - the default slice now supports source-authored safe/deep route metadata, oxygen pressure, cargo pressure, hazard warning/penalty behavior, route outcome text, and deterministic smoke coverage
 - the default slice now has one authored timed valuable salvage target with source metadata, in-world affordance, progress/cancel/complete feedback, deterministic smoke coverage, focused capture, accepted visual impact, and public Web verification
+- the default slice now has one authored hazard/navigation pressure marker, route-specific warning feedback, deterministic route-pressure smoke, focused capture, accepted visual impact, and public Web verification
 
 Current constraints:
 
 - Keep `production_slice_01` as the default preview map unless a separate default-preview decision changes it.
 - Preserve `maps/full_cave_sketch_01.greybox.json` as a topology draft and planning source.
 - Keep icons from the supplied sketch out of terrain conversion unless they are reauthored as JSON entities.
-- Do not attempt whole-map productionization yet; add one authored hazard/navigation pressure pattern before expanding route scale.
+- Do not attempt whole-map productionization yet; expand route scale only as one small source-authored connector, extension, or return-loop pass at a time.
 - Keep #52 and #53 as optional slice-03 camera/topology polish unless slice-03 presentation becomes the selected goal.
 
 Current next direction:
 
-- Plan a focused Controlled Gameplay Pass 07 around one authored hazard/navigation pressure pattern in `production_slice_01`.
+- Plan a focused Controlled Gameplay Pass 08 around cautious route-scale expansion from the source workflow.
 
 Recently completed current-state work:
 
@@ -89,3 +90,4 @@ Recently completed current-state work:
 - #148 recorded the Pass 04 closeout and next-step evaluation.
 - #150-#159 completed Controlled Gameplay Pass 05 and main-file guard work.
 - #160-#169 completed Controlled Gameplay Pass 06 timed-salvage readability, visual review, Web verification, and closeout.
+- #170-#179 completed Controlled Gameplay Pass 07 hazard/navigation pressure, visual review, Web verification, and closeout.
