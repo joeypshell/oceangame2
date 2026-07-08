@@ -12,15 +12,7 @@ const COLOR_RELAY_LIGHT := Color(0.96, 0.86, 0.48, 1.0)
 const COLOR_RELAY_GLASS := Color(0.28, 0.92, 0.98, 0.92)
 const COLOR_MARKER := Color(1.0, 1.0, 1.0, 0.10)
 const COLOR_SALVAGE := Color(1.0, 0.80, 0.22, 1.0)
-const COLOR_SALVAGE_DARK := Color(0.48, 0.30, 0.11, 1.0)
-const COLOR_SALVAGE_METAL := Color(0.72, 0.83, 0.78, 1.0)
-const COLOR_SALVAGE_VALUABLE := Color(1.0, 0.92, 0.36, 0.92)
-const COLOR_SALVAGE_VALUABLE_GLOW := Color(1.0, 0.86, 0.22, 0.24)
-const COLOR_SALVAGE_TIMED := Color(0.42, 0.95, 1.0, 0.72)
-const COLOR_SALVAGE_TIMED_GLOW := Color(0.28, 0.92, 0.98, 0.16)
 const COLOR_HAZARD := Color(1.0, 0.22, 0.34, 1.0)
-const COLOR_HAZARD_DARK := Color(0.40, 0.04, 0.10, 1.0)
-const COLOR_HAZARD_LIGHT := Color(1.0, 0.58, 0.66, 1.0)
 const COLOR_DEBUG_ROUTE := Color(0.90, 0.98, 1.0, 0.26)
 const COLOR_DEBUG_ROUTE_EDGE := Color(0.90, 0.98, 1.0, 0.88)
 const COLOR_DEBUG_ENTRY := Color(0.72, 1.0, 0.72, 0.88)
@@ -31,6 +23,7 @@ const GreyboxTerrainRenderer := preload("res://scripts/world/greybox_terrain_ren
 const GreyboxDebugRenderer := preload("res://scripts/world/greybox_debug_renderer.gd")
 const GreyboxCollisionBuilder := preload("res://scripts/world/greybox_collision_builder.gd")
 const GreyboxBackgroundRenderer := preload("res://scripts/world/greybox_background_renderer.gd")
+const GreyboxPropRenderer := preload("res://scripts/world/greybox_prop_renderer.gd")
 
 const SALVAGE_TIER_SCORES := {
 	"common": 100,
@@ -66,6 +59,7 @@ var _terrain_renderer
 var _debug_renderer
 var _collision_builder
 var _background_renderer
+var _prop_renderer
 
 
 func _ready() -> void:
@@ -74,6 +68,7 @@ func _ready() -> void:
 	_debug_renderer = GreyboxDebugRenderer.new()
 	_collision_builder = GreyboxCollisionBuilder.new()
 	_background_renderer = GreyboxBackgroundRenderer.new()
+	_prop_renderer = GreyboxPropRenderer.new()
 	load_greybox()
 
 
@@ -482,12 +477,14 @@ func _build_entities(entities: Array) -> void:
 		elif entity_type == "salvage":
 			_salvage_entities.append(entity)
 			var salvage_id := str(entity.get("id", "Salvage"))
-			var salvage_node := _add_salvage_prop(
+			var salvage_node: Node2D = _prop_renderer_helper().add_salvage_prop(
+				_marker_root,
 				salvage_id,
 				center,
 				str(entity.get("kind", "crate")),
 				str(entity.get("tier", "common")),
-				_salvage_interaction(entity)
+				_salvage_interaction(entity),
+				_asset_lookup_helper()
 			)
 			_salvage_nodes_by_id[salvage_id] = salvage_node
 			if show_debug_overlay:
@@ -497,7 +494,13 @@ func _build_entities(entities: Array) -> void:
 		elif entity_type == "hazard":
 			_hazard_entities.append(entity)
 			var hazard_id := str(entity.get("id", "Hazard"))
-			var hazard_node := _add_hazard_prop(hazard_id, center, str(entity.get("kind", "mine")))
+			var hazard_node: Node2D = _prop_renderer_helper().add_hazard_prop(
+				_marker_root,
+				hazard_id,
+				center,
+				str(entity.get("kind", "mine")),
+				_asset_lookup_helper()
+			)
 			if show_debug_overlay:
 				var debug_marker := _add_local_polygon(hazard_node, "DebugMarker", _rect_points(Vector2(18, 18)), Color(1.0, 0.22, 0.34, 0.35))
 				debug_marker.z_index = 20
@@ -529,10 +532,6 @@ func _load_png_texture(texture_path: String) -> Texture2D:
 	return _asset_lookup_helper().load_png_texture(texture_path)
 
 
-func _prop_texture(kind: String, fallback_kind: String) -> Texture2D:
-	return _asset_lookup_helper().prop_texture(kind, fallback_kind)
-
-
 func _terrain_renderer_helper():
 	if _terrain_renderer == null:
 		_terrain_renderer = GreyboxTerrainRenderer.new()
@@ -557,22 +556,16 @@ func _background_renderer_helper():
 	return _background_renderer
 
 
+func _prop_renderer_helper():
+	if _prop_renderer == null:
+		_prop_renderer = GreyboxPropRenderer.new()
+	return _prop_renderer
+
+
 func _asset_lookup_helper():
 	if _asset_lookup == null:
 		_asset_lookup = GreyboxAssetLookup.new()
 	return _asset_lookup
-
-
-func _add_prop_sprite(parent: Node2D, sprite_name: String, texture: Texture2D) -> bool:
-	if texture == null:
-		return false
-
-	var sprite := Sprite2D.new()
-	sprite.name = sprite_name
-	sprite.texture = texture
-	sprite.centered = true
-	parent.add_child(sprite)
-	return true
 
 
 func _add_marker(marker_name: String, center: Vector2, color: Color, radius: float) -> Polygon2D:
@@ -811,157 +804,6 @@ func _add_diamond(marker_name: String, center: Vector2, color: Color, radius: fl
 	])
 	_marker_root.add_child(poly)
 	return poly
-
-
-func _add_salvage_prop(marker_name: String, center: Vector2, kind: String, tier: String, interaction: String) -> Node2D:
-	var root := Node2D.new()
-	root.name = marker_name
-	root.position = center
-	root.z_index = 8
-	_marker_root.add_child(root)
-
-	if not _add_prop_sprite(root, "PropSprite", _prop_texture(kind, "crate")):
-		match kind:
-			"wreck_fragment":
-				_add_wreck_fragment_prop(root)
-			"relic":
-				_add_relic_prop(root)
-			_:
-				_add_crate_prop(root)
-	if tier == "valuable":
-		_add_valuable_salvage_cue(root)
-	if interaction == "timed_salvage":
-		_add_timed_salvage_affordance(root)
-	return root
-
-
-func _add_timed_salvage_affordance(root: Node2D) -> void:
-	var glow := _add_local_polygon(root, "TimedActionGlow", _ellipse_points(26.0, 18.0, 24), COLOR_SALVAGE_TIMED_GLOW)
-	glow.z_index = -2
-
-	var ring_points := _circle_points(20.0, 28)
-	ring_points.append(ring_points[0])
-	var ring := _add_local_line(root, "TimedActionRing", ring_points, COLOR_SALVAGE_TIMED, 2.0)
-	ring.z_index = 5
-
-	var tick := _add_local_line(root, "TimedActionTick", PackedVector2Array([Vector2(0, -29), Vector2(0, -20)]), COLOR_SALVAGE_TIMED, 2.0)
-	tick.z_index = 6
-
-	var dot := _add_local_polygon(root, "TimedActionDot", _circle_points(3.0, 8, Vector2(0, -31)), COLOR_SALVAGE_TIMED)
-	dot.z_index = 7
-
-
-func _add_valuable_salvage_cue(root: Node2D) -> void:
-	var glow := _add_local_polygon(root, "ValuableGlow", _diamond_points(22.0), COLOR_SALVAGE_VALUABLE_GLOW)
-	glow.z_index = -1
-
-	var ring := _add_local_line(root, "ValuableRing", PackedVector2Array([
-		Vector2(0, -24),
-		Vector2(24, 0),
-		Vector2(0, 24),
-		Vector2(-24, 0),
-		Vector2(0, -24),
-	]), COLOR_SALVAGE_VALUABLE, 2.0)
-	ring.z_index = 4
-
-	var sparkle := _add_local_polygon(root, "ValuableSparkle", PackedVector2Array([
-		Vector2(0, -8),
-		Vector2(3, -2),
-		Vector2(9, 0),
-		Vector2(3, 2),
-		Vector2(0, 8),
-		Vector2(-3, 2),
-		Vector2(-9, 0),
-		Vector2(-3, -2),
-	]), COLOR_SALVAGE_VALUABLE)
-	sparkle.position = Vector2(13, -13)
-	sparkle.z_index = 5
-
-
-func _add_crate_prop(root: Node2D) -> void:
-	_add_local_polygon(root, "CrateBody", _rect_points(Vector2(24, 20)), Color(0.82, 0.52, 0.20, 1.0))
-	_add_local_line(root, "CrateOutline", _closed_rect_points(Vector2(24, 20)), COLOR_SALVAGE_DARK, 2.0)
-	_add_local_line(root, "CrateBandHorizontal", PackedVector2Array([Vector2(-12, 0), Vector2(12, 0)]), COLOR_SALVAGE_DARK, 2.0)
-	_add_local_line(root, "CrateBandVertical", PackedVector2Array([Vector2(0, -10), Vector2(0, 10)]), COLOR_SALVAGE_DARK, 2.0)
-	_add_local_polygon(root, "CrateGlint", PackedVector2Array([Vector2(5, -8), Vector2(10, -8), Vector2(10, -4), Vector2(5, -4)]), COLOR_SALVAGE)
-
-
-func _add_wreck_fragment_prop(root: Node2D) -> void:
-	_add_local_polygon(root, "FragmentBody", PackedVector2Array([
-		Vector2(-15, -7),
-		Vector2(12, -11),
-		Vector2(17, 1),
-		Vector2(-9, 9),
-	]), COLOR_SALVAGE_METAL)
-	_add_local_polygon(root, "FragmentRust", PackedVector2Array([
-		Vector2(-13, -5),
-		Vector2(-2, -7),
-		Vector2(0, 3),
-		Vector2(-10, 6),
-	]), Color(0.73, 0.39, 0.17, 1.0))
-	_add_local_line(root, "FragmentEdge", PackedVector2Array([
-		Vector2(-15, -7),
-		Vector2(12, -11),
-		Vector2(17, 1),
-		Vector2(-9, 9),
-		Vector2(-15, -7),
-	]), Color(0.16, 0.23, 0.25, 1.0), 2.0)
-	_add_local_polygon(root, "FragmentGlint", PackedVector2Array([Vector2(7, -8), Vector2(13, -9), Vector2(14, -5), Vector2(8, -4)]), COLOR_SALVAGE)
-
-
-func _add_relic_prop(root: Node2D) -> void:
-	_add_local_polygon(root, "RelicGlow", _circle_points(13.0, 16), Color(0.24, 0.94, 0.90, 0.38))
-	_add_local_polygon(root, "RelicCore", _circle_points(8.0, 16), Color(0.10, 0.70, 0.72, 1.0))
-	_add_local_line(root, "RelicBand", PackedVector2Array([Vector2(-12, 4), Vector2(12, 4)]), COLOR_SALVAGE_DARK, 2.0)
-	_add_local_polygon(root, "RelicGold", PackedVector2Array([
-		Vector2(-7, -11),
-		Vector2(7, -11),
-		Vector2(9, -6),
-		Vector2(-9, -6),
-	]), COLOR_SALVAGE)
-
-
-func _add_hazard_prop(marker_name: String, center: Vector2, kind: String) -> Node2D:
-	var root := Node2D.new()
-	root.name = marker_name
-	root.position = center
-	root.z_index = 8
-	_marker_root.add_child(root)
-
-	if _add_prop_sprite(root, "PropSprite", _prop_texture(kind, "mine")):
-		return root
-
-	match kind:
-		"jellyfish":
-			_add_jellyfish_prop(root)
-		_:
-			_add_mine_prop(root)
-	return root
-
-
-func _add_mine_prop(root: Node2D) -> void:
-	_add_local_polygon(root, "MineSpikes", _star_points(10.0, 18.0, 8), COLOR_HAZARD_DARK)
-	_add_local_polygon(root, "MineBody", _circle_points(11.0, 18), COLOR_HAZARD)
-	_add_local_polygon(root, "MineHighlight", _circle_points(4.0, 10, Vector2(-4, -4)), COLOR_HAZARD_LIGHT)
-
-
-func _add_jellyfish_prop(root: Node2D) -> void:
-	_add_local_polygon(root, "JellyBell", PackedVector2Array([
-		Vector2(-14, 1),
-		Vector2(-11, -8),
-		Vector2(-4, -13),
-		Vector2(5, -13),
-		Vector2(12, -8),
-		Vector2(15, 1),
-		Vector2(9, 7),
-		Vector2(3, 3),
-		Vector2(-3, 7),
-		Vector2(-9, 3),
-	]), COLOR_HAZARD)
-	_add_local_line(root, "JellyTentacleLeft", PackedVector2Array([Vector2(-7, 5), Vector2(-10, 13), Vector2(-7, 18)]), COLOR_HAZARD_LIGHT, 2.0)
-	_add_local_line(root, "JellyTentacleCenter", PackedVector2Array([Vector2(0, 5), Vector2(2, 13), Vector2(0, 20)]), COLOR_HAZARD_LIGHT, 2.0)
-	_add_local_line(root, "JellyTentacleRight", PackedVector2Array([Vector2(7, 5), Vector2(10, 13), Vector2(7, 18)]), COLOR_HAZARD_LIGHT, 2.0)
-	_add_local_polygon(root, "JellyHighlight", _circle_points(3.0, 8, Vector2(-4, -6)), COLOR_HAZARD_LIGHT)
 
 
 func _add_local_polygon(parent: Node2D, polygon_name: String, points: PackedVector2Array, color: Color) -> Polygon2D:
