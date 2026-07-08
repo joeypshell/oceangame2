@@ -1,5 +1,6 @@
 extends RefCounted
 
+const Pass10ReturnPressureCapture := preload("res://scripts/main/captures/pass_10_return_pressure_capture.gd")
 const SCREENSHOT_PATH := "res://visual_baselines/001_greybox_in_engine.png"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 const PLAYER_READABILITY_CAPTURE_ZOOM := Vector2(2.0, 2.0)
@@ -454,6 +455,11 @@ func capture_southwest_pocket_decision_and_quit(capture_dir: String) -> void:
 	image.save_png(output_path)
 	print("Saved southwest pocket decision capture: %s" % ProjectSettings.globalize_path(output_path))
 	_main.get_tree().quit()
+
+
+func capture_pass_10_return_pressure_and_quit(capture_dir: String) -> void:
+	var capture := Pass10ReturnPressureCapture.new(_main)
+	await capture.capture_and_quit(capture_dir)
 
 
 func _timed_salvage_target() -> Dictionary:

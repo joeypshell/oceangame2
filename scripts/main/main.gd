@@ -40,6 +40,7 @@ const TIMED_SALVAGE_CAPTURE_DIR := "res://visual_captures/timed_salvage"
 const HAZARD_PRESSURE_CAPTURE_DIR := "res://visual_captures/hazard_pressure"
 const ROUTE_EXTENSION_CAPTURE_DIR := "res://visual_captures/route_extension"
 const SOUTHWEST_POCKET_DECISION_CAPTURE_DIR := "res://visual_captures/southwest_pocket_decision"
+const PASS_10_RETURN_PRESSURE_CAPTURE_DIR := "res://visual_captures/pass_10_return_pressure"
 const BUILD_INFO_PATH := "res://build_info.json"
 const MOVEMENT_FEEL_PROBE_CENTER_TILES := Vector2(42, 25)
 const SALVAGE_COLLECTION_RADIUS := 34.0
@@ -140,6 +141,7 @@ func _ready() -> void:
 	var capture_hazard_pressure := _has_arg(user_args, engine_args, "--capture-pass-07-hazard-pressure")
 	var capture_route_extension := _has_arg(user_args, engine_args, "--capture-pass-08-route-extension")
 	var capture_southwest_pocket_decision := _has_arg(user_args, engine_args, "--capture-pass-09-southwest-pocket-decision")
+	var capture_pass_10_return_pressure := _has_arg(user_args, engine_args, "--capture-pass-10-return-pressure")
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
 	var smoke_production_slice_route := _has_arg(user_args, engine_args, "--smoke-production-slice-route")
@@ -209,6 +211,8 @@ func _ready() -> void:
 	elif capture_route_extension:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_southwest_pocket_decision:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif capture_pass_10_return_pressure:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_route:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
@@ -282,6 +286,7 @@ func _ready() -> void:
 		or capture_hazard_pressure
 		or capture_route_extension
 		or capture_southwest_pocket_decision
+		or capture_pass_10_return_pressure
 		or smoke_salvage_loop
 		or smoke_production_slice_route
 		or smoke_production_slice_02_route
@@ -439,6 +444,8 @@ func _ready() -> void:
 		_capture_controller.capture_route_extension_and_quit(ROUTE_EXTENSION_CAPTURE_DIR)
 	elif capture_southwest_pocket_decision:
 		_capture_controller.capture_southwest_pocket_decision_and_quit(SOUTHWEST_POCKET_DECISION_CAPTURE_DIR)
+	elif capture_pass_10_return_pressure:
+		_capture_controller.capture_pass_10_return_pressure_and_quit(PASS_10_RETURN_PRESSURE_CAPTURE_DIR)
 
 
 func _review_map_selector_allowed(user_args: PackedStringArray, engine_args: PackedStringArray) -> bool:

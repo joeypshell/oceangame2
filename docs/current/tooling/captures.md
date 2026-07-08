@@ -73,6 +73,14 @@ Capture the focused Pass 09 southwest pocket route-decision view:
 
 This loads the default production slice, collects `salvage_southwest_return_cache` through the normal runtime path, frames `southwest_return_pocket_extension` with compact payoff feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/southwest_pocket_decision/production_slice_01_southwest_pocket_decision.png`.
 
+Capture the focused Pass 10 return-pressure view:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-10-return-pressure
+```
+
+This loads the default production slice, fills cargo with the lower-loop and timed deep-cache pickups, places the player at `salvage_return_branch`, frames the compact `Cargo full - bank at boat` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_10_return_pressure/production_slice_01_return_pressure.png`.
+
 Capture the original rectangular salvage map comparison views:
 
 ```powershell
