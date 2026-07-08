@@ -31,6 +31,7 @@ const BACKGROUND_ART_ALPHA := 0.26
 const GreyboxAssetLookup := preload("res://scripts/world/greybox_asset_lookup.gd")
 const GreyboxTerrainRenderer := preload("res://scripts/world/greybox_terrain_renderer.gd")
 const GreyboxDebugRenderer := preload("res://scripts/world/greybox_debug_renderer.gd")
+const GreyboxCollisionBuilder := preload("res://scripts/world/greybox_collision_builder.gd")
 
 const SALVAGE_TIER_SCORES := {
 	"common": 100,
@@ -64,12 +65,14 @@ var _collision_root: Node2D
 var _asset_lookup
 var _terrain_renderer
 var _debug_renderer
+var _collision_builder
 
 
 func _ready() -> void:
 	_asset_lookup = GreyboxAssetLookup.new()
 	_terrain_renderer = GreyboxTerrainRenderer.new()
 	_debug_renderer = GreyboxDebugRenderer.new()
+	_collision_builder = GreyboxCollisionBuilder.new()
 	load_greybox()
 
 
@@ -406,70 +409,19 @@ func _solid_cells_from_terrain(terrain_items: Array) -> Dictionary:
 
 
 func _build_collision(terrain_items: Array) -> void:
-	for item in terrain_items:
-		if item.get("type", "") != "solid":
-			continue
-
-		var body := StaticBody2D.new()
-		body.name = "%sCollision" % item.get("id", "Terrain")
-		body.position = _rect_center(item)
-
-		var shape := RectangleShape2D.new()
-		shape.size = _rect_size(item)
-
-		var collision := CollisionShape2D.new()
-		collision.shape = shape
-		body.add_child(collision)
-		_collision_root.add_child(body)
+	_collision_builder_helper().build_collision(_collision_root, terrain_items, tile_size)
 
 
 func _collision_rects_from_runtime() -> Array:
-	var rects := []
-	if _collision_root == null:
-		return rects
-
-	for body_node in _collision_root.get_children():
-		if not body_node is StaticBody2D:
-			continue
-		var body := body_node as StaticBody2D
-		for shape_node in body.get_children():
-			if not shape_node is CollisionShape2D:
-				continue
-			var collision := shape_node as CollisionShape2D
-			if not collision.shape is RectangleShape2D:
-				continue
-			var rectangle := collision.shape as RectangleShape2D
-			var size := rectangle.size
-			var center := body.position + collision.position
-			rects.append({
-				"id": body.name,
-				"x": int(round((center.x - size.x * 0.5) / tile_size)),
-				"y": int(round((center.y - size.y * 0.5) / tile_size)),
-				"w": int(round(size.x / tile_size)),
-				"h": int(round(size.y / tile_size)),
-			})
-
-	rects.sort_custom(func(a, b): return int(a["x"]) < int(b["x"]) if int(a["y"]) == int(b["y"]) else int(a["y"]) < int(b["y"]))
-	return rects
+	return _collision_builder_helper().collision_rects_from_runtime(_collision_root, tile_size)
 
 
 func _collision_cells_from_runtime() -> Array:
-	var cells := []
-	for rect in _collision_rects_from_runtime():
-		for y in range(int(rect["y"]), int(rect["y"]) + int(rect["h"])):
-			for x in range(int(rect["x"]), int(rect["x"]) + int(rect["w"])):
-				cells.append(Vector2i(x, y))
-	return cells
+	return _collision_builder_helper().collision_cells_from_runtime(_collision_root, tile_size)
 
 
 func _sorted_cell_arrays(cells: Array) -> Array:
-	var sorted_cells := cells.duplicate()
-	sorted_cells.sort_custom(func(a, b): return a.x < b.x if a.y == b.y else a.y < b.y)
-
-	var output := []
-	for cell in sorted_cells:
-		output.append([cell.x, cell.y])
-	return output
+	return _collision_builder_helper().sorted_cell_arrays(cells)
 
 
 func _build_background(items: Array) -> void:
@@ -620,6 +572,12 @@ func _debug_renderer_helper():
 	if _debug_renderer == null:
 		_debug_renderer = GreyboxDebugRenderer.new()
 	return _debug_renderer
+
+
+func _collision_builder_helper():
+	if _collision_builder == null:
+		_collision_builder = GreyboxCollisionBuilder.new()
+	return _collision_builder
 
 
 func _asset_lookup_helper():
