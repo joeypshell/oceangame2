@@ -2361,6 +2361,24 @@
       "intent": "Pass 07 hazard/navigation pressure segment covering the hazard_right_branch warning corridor and approach to timed salvage_deep_right_cache."
     }
   ],
+  "route_objectives": [
+    {
+      "id": "deep_cache_route_objective",
+      "route_context": "deep_cache_commitment",
+      "label": "Deep cache route",
+      "required_banked_targets": [
+        "salvage_lower_loop",
+        "salvage_deep_right_cache"
+      ],
+      "supporting_marker_ids": [
+        "lower_loop_route",
+        "lower_loop_to_deep_cache_pressure",
+        "lower_loop_oxygen_rest_pocket",
+        "return_pressure_to_boat"
+      ],
+      "intent": "Pass 13 route commitment objective requiring the player to bank the lower-loop payoff and timed deep-right cache in one committed route chain."
+    }
+  ],
   "background": [
     {
       "id": "distant_entry_wall",

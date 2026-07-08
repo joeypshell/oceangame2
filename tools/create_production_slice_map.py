@@ -52,6 +52,7 @@ TARGETED_FILL_OPEN_CELLS = {
     (1, 80),
     (59, 80),
 }
+PASS_13_ROUTE_OBJECTIVES = [{"id": "deep_cache_route_objective", "route_context": "deep_cache_commitment", "label": "Deep cache route", "required_banked_targets": ["salvage_lower_loop", "salvage_deep_right_cache"], "supporting_marker_ids": ["lower_loop_route", "lower_loop_to_deep_cache_pressure", "lower_loop_oxygen_rest_pocket", "return_pressure_to_boat"], "intent": "Pass 13 route commitment objective requiring the player to bank the lower-loop payoff and timed deep-right cache in one committed route chain."}]
 
 
 def rect_cells(item: dict) -> set[tuple[int, int]]:
@@ -339,6 +340,7 @@ def build_map_data(source_map: dict) -> dict:
                 ),
             },
         ],
+        "route_objectives": PASS_13_ROUTE_OBJECTIVES,
         "background": [
             {"id": "distant_entry_wall", "type": "background", "x": 30, "y": 6, "w": 18, "h": 22},
             {"id": "distant_crossing_mass", "type": "background", "x": 28, "y": 24, "w": 30, "h": 24},
@@ -486,7 +488,7 @@ def main() -> int:
         source_map = json.load(handle)
 
     map_data = build_map_data(source_map)
-    OUTPUT_MAP_PATH.write_text(json.dumps(map_data, indent=2) + "\n", encoding="utf-8")
+    OUTPUT_MAP_PATH.write_text(json.dumps(map_data, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(
         f"Wrote {OUTPUT_MAP_PATH.relative_to(ROOT)} with "
         f"{len(map_data['terrain'])} solid row runs."
