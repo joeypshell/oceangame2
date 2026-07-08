@@ -284,8 +284,8 @@ def build_map_data(source_map: dict) -> dict:
                 "w": 27,
                 "h": 16,
                 "intent": (
-                    "Pass 08 route-scale segment marking the lower-left return pocket "
-                    "near salvage_return_branch for a tiny optional route-extension beat."
+                    "Pass 08/09 route segment marking the lower-left return pocket "
+                    "near salvage_return_branch for a small optional detour decision."
                 ),
             },
             {
@@ -365,7 +365,14 @@ def build_map_data(source_map: dict) -> dict:
                 "x": 25,
                 "y": 76,
                 "kind": "crate",
-                "intent": "Small common salvage cue that gives the Pass 08 southwest return pocket a modest optional payoff.",
+                "tier": "valuable",
+                "route_choice_id": "southwest_pocket_detour",
+                "validation_route": "southwest_pocket_decision",
+                "route_order": 0,
+                "intent": (
+                    "Pass 09 valuable payoff cue for the southwest return pocket detour; "
+                    "keeps the pickup instant while making the optional route decision matter."
+                ),
             },
             {"id": "salvage_return_branch", "type": "salvage", "x": 17, "y": 58, "kind": "crate"},
             {"id": "hazard_shaft_choke", "type": "hazard", "x": 34, "y": 20, "kind": "jellyfish"},

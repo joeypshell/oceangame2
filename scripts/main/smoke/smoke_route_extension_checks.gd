@@ -39,8 +39,8 @@ func _smoke_pass_08_route_extension_and_quit() -> void:
 		get_tree().quit(1)
 		return
 
-	if str(target.get("interaction", "instant")) != "instant" or str(target.get("tier", "common")) != "common":
-		push_error("Pass 08 route extension target should remain an instant common salvage cue: %s." % str(target))
+	if str(target.get("interaction", "instant")) != "instant":
+		push_error("Pass 08 route extension target should remain an instant salvage cue: %s." % str(target))
 		get_tree().quit(1)
 		return
 	if str(deep_cache.get("interaction", "instant")) != "timed_salvage" or float(deep_cache.get("interaction_seconds", 0.0)) <= 0.0:
@@ -77,9 +77,11 @@ func _smoke_pass_08_route_extension_and_quit() -> void:
 
 	var banked_score_after_return := _banked_score
 	_reset_run()
-	print("Pass 08 route extension smoke passed: segment=%s target=%s target_score=%d path_to_target=%d path_to_deep_cache=%d return_path=%d held_after_pickup=%d banked_score=%d oxygen=%.1f timed_target=%s pass07_segment=%s hazard=%s." % [
+	print("Pass 08 route extension smoke passed: segment=%s target=%s target_tier=%s route=%s target_score=%d path_to_target=%d path_to_deep_cache=%d return_path=%d held_after_pickup=%d banked_score=%d oxygen=%.1f timed_target=%s pass07_segment=%s hazard=%s." % [
 		str(segment.get("id", PASS_08_SEGMENT_ID)),
 		PASS_08_TARGET_ID,
+		str(target.get("tier", "common")),
+		str(target.get("validation_route", "")),
 		int(target.get("score", 0)),
 		path_to_target.size(),
 		path_to_deep_cache.size(),

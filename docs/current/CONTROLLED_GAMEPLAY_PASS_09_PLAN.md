@@ -75,6 +75,7 @@ Pass 09 source convention:
 
 - tag the pocket payoff with `validation_route: "southwest_pocket_decision"`
 - use a specific `route_choice_id`, recommended `southwest_pocket_detour`
+- make the pocket payoff `valuable` only if the detour needs a stronger reason to exist
 - keep the target a normal salvage entity so reachability, cargo, score, oxygen, hazard reset, and banking rules stay unchanged
 - keep `expanded_route_choice` metadata reserved for the existing deeper lower-loop/deep-cache route
 

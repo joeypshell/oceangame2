@@ -63,7 +63,7 @@ The hazard-interaction smoke loads `production_slice_01`, collects one salvage i
 
 The Pass 07 hazard route pressure smoke loads `production_slice_01`, verifies the source marker `lower_loop_to_deep_cache_pressure`, checks warning-only range and the selected `Hazard ahead - keep clear` prompt for `hazard_right_branch`, confirms contact oxygen/reset/restoration behavior, confirms partial timed-salvage state clears on hazard contact, and confirms the deep cache can still return to extraction.
 
-The Pass 08 route-extension smoke loads `production_slice_01`, verifies the source marker `southwest_return_pocket_extension`, checks open-water paths to `salvage_southwest_return_cache`, the timed deep cache, and boat extraction, confirms the new common salvage cue can be collected and banked with existing cargo semantics, and reports segment id, target id, score, path sizes, held cargo, banked score, oxygen, timed target, and Pass 07 context.
+The Pass 08 route-extension smoke loads `production_slice_01`, verifies the source marker `southwest_return_pocket_extension`, checks open-water paths to `salvage_southwest_return_cache`, the timed deep cache, and boat extraction, confirms the pocket payoff can be collected and banked with existing cargo semantics, and reports segment id, target id, tier, route id, score, path sizes, held cargo, banked score, oxygen, timed target, and Pass 07 context.
 
 The oxygen-pressure smoke loads `production_slice_01`, collects one salvage item, forces oxygen depletion, confirms the player surfaces at spawn with held salvage restored, confirms the failed expedition result panel appears, resets, recollects the salvage, returns to extraction, confirms oxygen refills and salvage banks, resets, and exits.
 
