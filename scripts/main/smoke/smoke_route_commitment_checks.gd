@@ -156,6 +156,83 @@ func _smoke_pass_13_route_commitment_and_quit() -> void:
 	get_tree().quit()
 
 
+func _smoke_pass_14_objective_cue_and_quit() -> void:
+	if _world.map_id != "production_slice_01":
+		_fail("Pass 14 objective cue smoke loaded unexpected map: %s." % _world.map_id)
+		return
+
+	var objective := _objective_by_id(OBJECTIVE_ID)
+	var lower_loop := _salvage_by_id(LOWER_LOOP_ID)
+	var deep_cache := _salvage_by_id(DEEP_CACHE_ID)
+	var safe_target := _salvage_by_id(SAFE_TARGET_ID)
+	if objective.is_empty() or lower_loop.is_empty() or deep_cache.is_empty() or safe_target.is_empty():
+		_fail("Pass 14 objective cue smoke missing source data: objective=%s lower=%s deep=%s safe=%s." % [
+			str(not objective.is_empty()),
+			str(not lower_loop.is_empty()),
+			str(not deep_cache.is_empty()),
+			str(not safe_target.is_empty()),
+		])
+		return
+
+	var required_targets: Array = objective.get("required_banked_targets", [])
+	if str(objective.get("route_context", "")) != ROUTE_CONTEXT or not required_targets.has(LOWER_LOOP_ID) or not required_targets.has(DEEP_CACHE_ID):
+		_fail("Pass 14 route objective metadata mismatch: %s." % str(objective))
+		return
+
+	_player.set_physics_process(false)
+	_hazard_interactions_enabled = false
+	_player.global_position = _world.get_extraction_center()
+	_update_status_label()
+	if _status_text().find(EXPECTED_START_CUE) == -1:
+		_fail("Pass 14 start cue missing at extraction: %s." % _status_text())
+		return
+
+	_player.global_position = safe_target["center"]
+	_update_status_label()
+	if _status_has_objective_text():
+		_fail("Pass 14 start cue stayed visible away from extraction before route progress: %s." % _status_text())
+		return
+
+	_collect_and_bank_target(safe_target)
+	if _status_text().find(EXPECTED_COMPLETE) != -1 or _banked_salvage_ids.has(LOWER_LOOP_ID) or _banked_salvage_ids.has(DEEP_CACHE_ID):
+		_fail("Pass 14 safe-route banking completed deep objective unexpectedly: status=%s banked_ids=%s." % [_status_text(), _banked_salvage_ids])
+		return
+	if _status_text().find(EXPECTED_START_CUE) == -1:
+		_fail("Pass 14 start cue missing after unrelated safe-route banking at extraction: %s." % _status_text())
+		return
+
+	_reset_run()
+	_hazard_interactions_enabled = false
+	_collect_target(lower_loop)
+	if _status_text().find(EXPECTED_ONE_HELD) == -1:
+		_fail("Pass 14 one-held progress missing '%s': %s." % [EXPECTED_ONE_HELD, _status_text()])
+		return
+
+	_player.global_position = _world.get_extraction_center()
+	_process(0.0)
+	if _status_text().find(EXPECTED_ONE_BANKED) == -1:
+		_fail("Pass 14 one-banked progress missing '%s': %s." % [EXPECTED_ONE_BANKED, _status_text()])
+		return
+
+	_collect_target(deep_cache)
+	if _status_text().find(EXPECTED_TWO_HELD) == -1:
+		_fail("Pass 14 two-required-target progress missing '%s': %s." % [EXPECTED_TWO_HELD, _status_text()])
+		return
+
+	_player.global_position = _world.get_extraction_center()
+	_process(0.0)
+	if _status_text().find(EXPECTED_COMPLETE) == -1:
+		_fail("Pass 14 completed objective overlay missing '%s': %s." % [EXPECTED_COMPLETE, _status_text()])
+		return
+
+	print("Pass 14 objective cue smoke passed: objective=%s start_cue=\"%s\" away_hidden=true safe_route_incomplete=true one_held=true one_banked=true two_held=true complete=true banked_ids=%s." % [
+		OBJECTIVE_ID,
+		EXPECTED_START_CUE,
+		_banked_salvage_ids,
+	])
+	get_tree().quit()
+
+
 func _collect_target(target: Dictionary) -> void:
 	_player.global_position = target["center"]
 	_collect_salvage_for_smoke(target)
@@ -206,6 +283,10 @@ func _marker_center(marker: Dictionary) -> Vector2:
 
 func _status_text() -> String:
 	return _status_label.text if _status_label != null else ""
+
+
+func _status_has_objective_text() -> bool:
+	return _status_text().find("Objective:") != -1 or _status_text().find("Objective complete") != -1
 
 
 func _result_text() -> String:
