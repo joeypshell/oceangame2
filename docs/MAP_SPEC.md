@@ -179,6 +179,12 @@ references existing source-authored salvage and marker ids. They do not create
 new collision, collection behavior, scoring, oxygen, cargo, extraction, or
 visual art by themselves.
 
+Start-of-run objective cues should derive from these same objective records plus
+runtime extraction/boat context. Pass 14 does not add separate cue metadata:
+`id`, `label`, and `required_banked_targets` are sufficient for the compact
+start cue, while runtime decides whether the player is currently in the
+start/extraction area.
+
 The first supported objective is intentionally narrow:
 
 - `id`: unique lower_snake_case objective id.
@@ -217,6 +223,7 @@ Validation expectations:
 - Required target salvage must still satisfy normal in-bounds, non-solid, reachable entity validation.
 - Supporting marker ids, when present, must refer to existing `marker` zones with in-bounds rectangles and at least one reachable open cell.
 - Objective records must not author coordinates, score values, oxygen values, cargo limits, runtime progress, completion state, or result text state.
+- Objective cue visibility state must not be authored in map data; it is derived from existing objective metadata and runtime player/extraction state.
 - `production_slice_01` should author only one Pass 13 route commitment objective.
 
 ## Oxygen Rest Markers
