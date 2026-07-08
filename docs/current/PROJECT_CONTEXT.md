@@ -70,6 +70,7 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Controlled Gameplay Pass 09 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_09_CLOSEOUT.md`
 - Controlled Gameplay Pass 10 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_10_CLOSEOUT.md`
 - Controlled Gameplay Pass 11 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_11_CLOSEOUT.md`
+- Controlled Gameplay Pass 12 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_12_CLOSEOUT.md`
 - Movement-feel baseline decision: `docs/current/MOVEMENT_FEEL_BASELINE_DECISION.md`
 - Salvage/oxygen feedback plan: `docs/current/SALVAGE_OXYGEN_FEEDBACK_PLAN.md`
 - Salvage/oxygen feedback baseline decision: `docs/current/SALVAGE_OXYGEN_FEEDBACK_BASELINE_DECISION.md`
@@ -91,6 +92,8 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Pass 10 return-pressure web preview verification: `docs/current/PASS_10_RETURN_PRESSURE_WEB_PREVIEW_VERIFICATION.md`
 - Pass 11 pre-pickup route cue visual baseline decision: `docs/current/PASS_11_PRE_PICKUP_ROUTE_CUE_VISUAL_BASELINE_DECISION.md`
 - Pass 11 pre-pickup route cue web preview verification: `docs/current/PASS_11_PRE_PICKUP_ROUTE_CUE_WEB_PREVIEW_VERIFICATION.md`
+- Pass 12 oxygen-rest visual baseline decision: `docs/current/PASS_12_OXYGEN_REST_VISUAL_BASELINE_DECISION.md`
+- Pass 12 oxygen-rest web preview verification: `docs/current/PASS_12_OXYGEN_REST_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -265,29 +268,23 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-08:
 
-- Active Pass 11 queue: none; #213-#222 completed pre-pickup route readability, source metadata, smoke/capture coverage, visual review, Web verification, and closeout.
+- Active Pass 12 queue: none; #224-#233 completed oxygen/rest route pressure, source metadata, smoke/capture coverage, visual review, Web verification, and closeout.
 - Active tooling/skill queue: none; #210 documented repo drift, #211 committed Pass 10 UID sidecars, #212 updated drift issue batching, and #223 added drift-batch-resolve.
-- Active Pass 09 queue: none; #191-#199 are closed.
-- Active Pass 08 queue: none; #180-#190 are closed.
 - Deferred optional slice-03 polish: #52 and #53 remain open.
+- Closed: #224-#233 completed Pass 12 oxygen/rest route pressure, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
 - Closed: #213-#222 completed Pass 11 pre-pickup route readability, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
 - Closed: #201-#209 completed Pass 10 return/banking pressure, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
 - Closed: #191-#199 completed Pass 09 southwest pocket route-decision payoff, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
 - Closed: #180-#190 completed Pass 08 cautious route-scale expansion, including planning, segment selection, source rules, source marker/alcove authoring, one common payoff cue, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
-- Active Pass 07 queue: none; #170-#179 are closed.
 - Closed: #170-#179 completed Pass 07 hazard/navigation pressure planning, segment selection, source marker authoring, feedback tuning, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
-- Active Pass 06 queue: none; #160-#169 are closed.
 - Closed: #160-#169 completed Pass 06 timed-salvage readability, in-world affordance, progress/cancel/complete feedback, deterministic smoke hardening, focused capture, visual baseline acceptance, public Web verification, and closeout.
-- Active Pass 05 queue: none; #150-#159 are closed.
 - Closed: #150-#159 completed Pass 05 timed salvage interaction, source metadata/validation, runtime, map authoring, smoke coverage, focused capture, visual review, public Web verification, closeout, and main-file guard work.
-- Active Pass 04 queue: none; #129-#148 are closed.
 - Closed: #129-#137 completed Pass 04 planning/setup, route-choice metadata, deterministic route metadata smokes, session best score, oxygen bonus/result breakdown, cargo-full feedback, and salvage collection feedback.
 - Closed: #138-#148 completed the remaining Pass 04 implementation/review/closeout work, including hazard warning/penalty pressure, safe-versus-deep metadata and smokes, oxygen threshold tuning, route outcome text/capture, visual baseline review, public Web verification, and pass closeout.
 - Closed: #149 completed related route-pressure tooling-index work.
 - Closed: #120-#128 completed Controlled Gameplay Pass 03, including scored salvage, cargo pressure, deterministic validation, run results, retry flow, one additional source-authored default-slice route choice, visual baseline review, and public Web preview verification.
 - Closed: #119 verified the public Web preview after the route-payoff pass
 - Closed: #118 accepted the route-payoff visual baseline for production slice 01
-- Deferred: #52 and #53 remain optional slice-03 camera/topology polish. Do not pull them into the active queue unless slice-03 presentation becomes the selected goal.
 - Closed: #108 verified the public Web preview after the salvage/oxygen feedback polish
 - Closed: #107 accepted the salvage/oxygen feedback overlay baselines for production slices 01-04
 - Closed: #106 implemented the salvage/oxygen feedback overlay polish and focused review capture
@@ -534,6 +531,7 @@ Recent important commits:
 - Hazards now have a tiny scoped interaction: approaching one within warning range reports `Hazard nearby - keep clear`, and touching one applies a 12-second oxygen penalty, bumps the player back to spawn, briefly tints the player, and restores held/unbanked salvage to the map. If the penalty empties the tank, the normal failed expedition result panel takes over.
 - The first scoped expedition pressure is a simple oxygen timer: oxygen drains away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held/unbanked salvage to the map.
 - Current oxygen pressure timing keeps a 90-second tank, starts `LOW` feedback at 40 seconds, and escalates to `CRITICAL` at 15 seconds. The safe/deep route comparison smoke keeps the short safe route comfortable while verifying the deeper route shows `LOW` and `CRITICAL` before returning.
+- `lower_loop_oxygen_rest_pocket` provides the Pass 12 limited oxygen-rest beat: compact `Rest pocket +oxygen` feedback, slow recovery up to a 45-second cap, and deterministic `--smoke-pass-12-oxygen-rest-pressure` coverage.
 - Salvage map data may include optional `tier` values. Missing tiers default conceptually to `common`; the current supported tiers are `common` and `valuable`. Runtime salvage score is tier-derived for now: `common` is worth 100 and `valuable` is worth 300, and pickup status feedback names the tier and score. Completed expeditions add a small runtime oxygen bonus of 1 point per remaining oxygen second; failed expeditions receive no oxygen bonus.
 - Held salvage capacity is currently 2 pickups. Full cargo blocks additional collection without hiding or banking the blocked pickup, shows a compact return-to-extraction status prompt, and returning to extraction frees capacity.
 - Run completion shows a compact result panel with final total score, salvage score, oxygen bonus, current map session-best score, salvage banked, optional route outcome, oxygen, and retry prompt. Route-tagged production-slice completions currently summarize the strongest banked route as `Route: Deep route` or `Route: Safe route`; untagged and failed runs stay generic. Oxygen depletion now shows the same result panel as a failed expedition with zero oxygen bonus and pauses the run until reset without overwriting session best. The panel stays hidden during normal exploration.
@@ -551,7 +549,7 @@ Recent important commits:
 
 ## Recommended Next Work
 
-Pass 11 completed the pre-pickup readability cue on the default `production_slice_01` slice. The next recommended gameplay pass should plan one small gameplay-meaningful expedition decision, preferably a source-authored oxygen/rest or route-pressure opportunity using existing systems before adding more map scale.
+Pass 12 completed the oxygen/rest route-pressure pocket on the default `production_slice_01` slice. The next recommended gameplay pass should plan one small gameplay-meaningful expedition objective or retry target using existing systems before adding more map scale.
 
 Accepted constraints for the next batch:
 

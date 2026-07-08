@@ -61,6 +61,9 @@ Build a small side-view salvage game that proves:
 - [Controlled Gameplay Pass 10 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_10_CLOSEOUT.md)
 - [Controlled Gameplay Pass 11 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_11_PLAN.md)
 - [Controlled Gameplay Pass 11 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_11_CLOSEOUT.md)
+- [Controlled Gameplay Pass 12 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_12_PLAN.md)
+- [Controlled Gameplay Pass 12 Source Rules](docs/current/CONTROLLED_GAMEPLAY_PASS_12_SOURCE_RULES.md)
+- [Controlled Gameplay Pass 12 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_12_CLOSEOUT.md)
 - [Oxygen Pressure Baseline Decision](docs/current/OXYGEN_PRESSURE_BASELINE_DECISION.md)
 - [Route Payoff Visual Baseline Decision](docs/current/ROUTE_PAYOFF_VISUAL_BASELINE_DECISION.md)
 - [Route Payoff Web Preview Verification](docs/current/ROUTE_PAYOFF_WEB_PREVIEW_VERIFICATION.md)
@@ -79,6 +82,8 @@ Build a small side-view salvage game that proves:
 - [Pass 10 Return Pressure Web Preview Verification](docs/current/PASS_10_RETURN_PRESSURE_WEB_PREVIEW_VERIFICATION.md)
 - [Pass 11 Pre-Pickup Route Cue Visual Baseline Decision](docs/current/PASS_11_PRE_PICKUP_ROUTE_CUE_VISUAL_BASELINE_DECISION.md)
 - [Pass 11 Pre-Pickup Route Cue Web Preview Verification](docs/current/PASS_11_PRE_PICKUP_ROUTE_CUE_WEB_PREVIEW_VERIFICATION.md)
+- [Pass 12 Oxygen Rest Visual Baseline Decision](docs/current/PASS_12_OXYGEN_REST_VISUAL_BASELINE_DECISION.md)
+- [Pass 12 Oxygen Rest Web Preview Verification](docs/current/PASS_12_OXYGEN_REST_WEB_PREVIEW_VERIFICATION.md)
 
 ## Locked Visual Direction
 

@@ -55,9 +55,9 @@ Done when:
 
 ## Current Roadmap Decision
 
-As of 2026-07-08, Controlled Gameplay Pass 11 is complete. See `docs/current/CONTROLLED_GAMEPLAY_PASS_11_CLOSEOUT.md` for the latest closeout decision and `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table.
+As of 2026-07-08, Controlled Gameplay Pass 12 is complete. See `docs/current/CONTROLLED_GAMEPLAY_PASS_12_CLOSEOUT.md` for the latest closeout decision and `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table.
 
-The project can now plan one small gameplay-meaningful expedition decision using existing systems, preferably a source-authored oxygen/rest or route-pressure opportunity, still through small source-driven passes rather than whole-map productionization.
+The project can now plan one small gameplay-meaningful retry/objective beat using existing systems, still through small source-driven passes rather than whole-map productionization.
 
 What the current prototype has proven:
 
@@ -72,6 +72,7 @@ What the current prototype has proven:
 - the default slice now has one tiny source-authored route extension with a southwest pocket route-decision payoff, deterministic smoke coverage, focused capture, accepted visual impact, and public Web verification
 - the default slice now has one source-authored return/banking pressure beat at `salvage_return_branch`, compact full-cargo banking feedback, deterministic smoke coverage, focused capture, accepted visual impact, and public Web verification
 - the default slice now has one source-authored pre-pickup route cue at `southwest_pocket_pre_pickup_cue`, compact `Optional pocket ahead` feedback, deterministic smoke coverage, focused capture, accepted visual impact, and public Web verification
+- the default slice now has one source-authored oxygen/rest pocket at `lower_loop_oxygen_rest_pocket`, compact `Rest pocket +oxygen` feedback, deterministic smoke coverage, focused capture, accepted visual impact, and public Web verification
 
 Current constraints:
 
@@ -83,7 +84,7 @@ Current constraints:
 
 Current next direction:
 
-- Plan a focused Controlled Gameplay Pass 12 around one source-authored oxygen/rest or route-pressure opportunity using existing metadata, compact feedback, smoke, focused capture, visual review, and Web verification.
+- Plan a focused Controlled Gameplay Pass 13 around one source-authored expedition objective or retry target using existing route metadata, salvage, oxygen pressure, overlay/result text, smoke, focused capture, visual review, and Web verification.
 
 Recently completed current-state work:
 
@@ -98,3 +99,4 @@ Recently completed current-state work:
 - #191-#199 completed Controlled Gameplay Pass 09 southwest pocket route-decision payoff, smoke/capture coverage, visual review, Web verification, and closeout.
 - #201-#209 completed Controlled Gameplay Pass 10 return/banking pressure, smoke/capture coverage, visual review, Web verification, and closeout.
 - #213-#222 completed Controlled Gameplay Pass 11 pre-pickup route readability, source metadata, smoke/capture coverage, visual review, Web verification, and closeout.
+- #224-#233 completed Controlled Gameplay Pass 12 oxygen/rest route pressure, source metadata, smoke/capture coverage, visual review, Web verification, and closeout.
