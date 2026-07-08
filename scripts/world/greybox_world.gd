@@ -10,7 +10,6 @@ const COLOR_RELAY_BODY := Color(0.18, 0.31, 0.36, 1.0)
 const COLOR_RELAY_DARK := Color(0.08, 0.17, 0.21, 1.0)
 const COLOR_RELAY_LIGHT := Color(0.96, 0.86, 0.48, 1.0)
 const COLOR_RELAY_GLASS := Color(0.28, 0.92, 0.98, 0.92)
-const COLOR_BACKGROUND := Color(0.08, 0.39, 0.58, 0.18)
 const COLOR_MARKER := Color(1.0, 1.0, 1.0, 0.10)
 const COLOR_SALVAGE := Color(1.0, 0.80, 0.22, 1.0)
 const COLOR_SALVAGE_DARK := Color(0.48, 0.30, 0.11, 1.0)
@@ -26,12 +25,12 @@ const COLOR_DEBUG_ROUTE := Color(0.90, 0.98, 1.0, 0.26)
 const COLOR_DEBUG_ROUTE_EDGE := Color(0.90, 0.98, 1.0, 0.88)
 const COLOR_DEBUG_ENTRY := Color(0.72, 1.0, 0.72, 0.88)
 const COLOR_DEBUG_EXTRACTION := Color(1.0, 0.92, 0.52, 0.90)
-const BACKGROUND_ART_ALPHA := 0.26
 
 const GreyboxAssetLookup := preload("res://scripts/world/greybox_asset_lookup.gd")
 const GreyboxTerrainRenderer := preload("res://scripts/world/greybox_terrain_renderer.gd")
 const GreyboxDebugRenderer := preload("res://scripts/world/greybox_debug_renderer.gd")
 const GreyboxCollisionBuilder := preload("res://scripts/world/greybox_collision_builder.gd")
+const GreyboxBackgroundRenderer := preload("res://scripts/world/greybox_background_renderer.gd")
 
 const SALVAGE_TIER_SCORES := {
 	"common": 100,
@@ -66,6 +65,7 @@ var _asset_lookup
 var _terrain_renderer
 var _debug_renderer
 var _collision_builder
+var _background_renderer
 
 
 func _ready() -> void:
@@ -73,6 +73,7 @@ func _ready() -> void:
 	_terrain_renderer = GreyboxTerrainRenderer.new()
 	_debug_renderer = GreyboxDebugRenderer.new()
 	_collision_builder = GreyboxCollisionBuilder.new()
+	_background_renderer = GreyboxBackgroundRenderer.new()
 	load_greybox()
 
 
@@ -425,17 +426,7 @@ func _sorted_cell_arrays(cells: Array) -> Array:
 
 
 func _build_background(items: Array) -> void:
-	for item in items:
-		var poly := _rect_polygon(item, COLOR_BACKGROUND)
-		poly.name = item.get("id", "Background")
-		_background_root.add_child(poly)
-
-		var sprite_name := "%sArt" % item.get("id", "Background")
-		var sprite := _add_texture_rect(_background_root, GreyboxAssetLookup.BACKGROUND_ROCKS_TEXTURE, item, sprite_name)
-		if sprite == null:
-			sprite = _add_texture_rect(_background_root, GreyboxAssetLookup.BACKGROUND_ROCKS_FALLBACK_TEXTURE, item, sprite_name)
-		if sprite != null:
-			sprite.modulate = Color(1.0, 1.0, 1.0, BACKGROUND_ART_ALPHA)
+	_background_renderer_helper().build_background(_background_root, items, tile_size, _asset_lookup_helper())
 
 
 func _build_zones(zones: Array) -> void:
@@ -534,26 +525,6 @@ func _rect_polygon(item: Dictionary, color: Color) -> Polygon2D:
 	return poly
 
 
-func _add_texture_rect(parent: Node2D, texture_path: String, item: Dictionary, sprite_name: String) -> Sprite2D:
-	var texture := _load_png_texture(texture_path)
-	if texture == null:
-		return null
-
-	var texture_size := texture.get_size()
-	if texture_size == Vector2.ZERO:
-		push_warning("Terrain art texture has no size: %s" % texture_path)
-		return null
-
-	var sprite := Sprite2D.new()
-	sprite.name = sprite_name
-	sprite.texture = texture
-	sprite.centered = true
-	sprite.position = _rect_center(item)
-	sprite.scale = _rect_size(item) / texture_size
-	parent.add_child(sprite)
-	return sprite
-
-
 func _load_png_texture(texture_path: String) -> Texture2D:
 	return _asset_lookup_helper().load_png_texture(texture_path)
 
@@ -578,6 +549,12 @@ func _collision_builder_helper():
 	if _collision_builder == null:
 		_collision_builder = GreyboxCollisionBuilder.new()
 	return _collision_builder
+
+
+func _background_renderer_helper():
+	if _background_renderer == null:
+		_background_renderer = GreyboxBackgroundRenderer.new()
+	return _background_renderer
 
 
 func _asset_lookup_helper():
