@@ -6,6 +6,7 @@ const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const OxygenRestPocketFeedback := preload("res://scripts/main/oxygen_rest_pocket_feedback.gd")
 const PrePickupRouteCueFeedback := preload("res://scripts/main/pre_pickup_route_cue_feedback.gd")
 const ReturnPressureFeedback := preload("res://scripts/main/return_pressure_feedback.gd")
+const RouteCommitmentFeedback := preload("res://scripts/main/route_commitment_feedback.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
 const SmokeHazardRouteChecks := preload("res://scripts/main/smoke/smoke_hazard_route_checks.gd")
 const SmokeInteractionChecks := preload("res://scripts/main/smoke/smoke_interaction_checks.gd")
@@ -83,6 +84,7 @@ var _capture_controller
 var _oxygen_rest_feedback
 var _pre_pickup_route_cue_feedback
 var _return_pressure_feedback
+var _route_commitment_feedback
 var _timed_salvage
 var _smoke_hazard_route_checks
 var _smoke_interaction_checks
@@ -102,6 +104,7 @@ var _held_salvage := 0
 var _banked_salvage := 0
 var _total_salvage := 0
 var _held_salvage_ids: Array[String] = []
+var _banked_salvage_ids: Array[String] = []
 var _held_salvage_score := 0
 var _banked_score := 0
 var _completion_oxygen_bonus := 0
@@ -123,6 +126,7 @@ func _ready() -> void:
 	_oxygen_rest_feedback = OxygenRestPocketFeedback.new()
 	_pre_pickup_route_cue_feedback = PrePickupRouteCueFeedback.new()
 	_return_pressure_feedback = ReturnPressureFeedback.new()
+	_route_commitment_feedback = RouteCommitmentFeedback.new()
 	_timed_salvage = TimedSalvageController.new()
 	_smoke_hazard_route_checks = SmokeHazardRouteChecks.new(self)
 	_smoke_interaction_checks = SmokeInteractionChecks.new(self)
@@ -512,10 +516,12 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool) -> void:
 	_banked_salvage = 0
 	_total_salvage = world.get_total_salvage_count()
 	_held_salvage_ids = []
+	_banked_salvage_ids = []
 	_held_salvage_score = 0
 	_banked_score = 0
 	_completion_oxygen_bonus = 0
 	_timed_salvage.reset()
+	_refresh_route_commitment_feedback(world)
 	_refresh_salvage_route_metadata(world)
 	_banked_validation_route_counts = {}
 	_hazard_cooldown_seconds = 0.0
@@ -608,6 +614,7 @@ func _process(delta: float) -> void:
 		_banked_salvage += _held_salvage
 		_banked_score += _held_salvage_score
 		_record_banked_route_outcomes(_held_salvage_ids)
+		_banked_salvage_ids.append_array(_held_salvage_ids)
 		_held_salvage = 0
 		_held_salvage_ids = []
 		_held_salvage_score = 0
@@ -691,6 +698,7 @@ func _reset_run() -> void:
 	_timed_salvage.reset()
 	_held_salvage = 0
 	_held_salvage_ids = []
+	_banked_salvage_ids = []
 	_held_salvage_score = 0
 	_banked_salvage = 0
 	_banked_score = 0
@@ -915,6 +923,7 @@ func _update_status_label() -> void:
 		return
 
 	var prompt := ""
+	var objective_text := _route_commitment_overlay_text()
 	var oxygen_rest_prompt := _oxygen_rest_prompt()
 	var pre_pickup_route_cue := _pre_pickup_route_cue_prompt()
 	if _run_complete:
@@ -949,6 +958,8 @@ func _update_status_label() -> void:
 		_held_salvage_score,
 		oxygen_text,
 	]
+	if not objective_text.is_empty():
+		_status_label.text += "\n%s" % objective_text
 	if not prompt.is_empty():
 		_status_label.text += "\n%s" % prompt
 	_update_result_panel()
@@ -971,6 +982,18 @@ func _oxygen_rest_prompt() -> String:
 	if _oxygen_rest_feedback == null:
 		return ""
 	return _oxygen_rest_feedback.current_prompt()
+
+
+func _route_commitment_overlay_text() -> String:
+	if _route_commitment_feedback == null:
+		return ""
+	return _route_commitment_feedback.overlay_text(_held_salvage_ids, _banked_salvage_ids)
+
+
+func _route_commitment_result_text() -> String:
+	if _route_commitment_feedback == null:
+		return ""
+	return _route_commitment_feedback.result_text(_banked_salvage_ids)
 
 
 func _hazard_warning_prompt() -> String:
@@ -1023,6 +1046,15 @@ func _refresh_salvage_route_metadata(world) -> void:
 		if salvage_id.is_empty() or validation_route.is_empty():
 			continue
 		_salvage_validation_routes_by_id[salvage_id] = validation_route
+
+
+func _refresh_route_commitment_feedback(world) -> void:
+	if _route_commitment_feedback == null:
+		return
+	if world == null or not world.has_method("get_route_objectives"):
+		_route_commitment_feedback.reset([])
+		return
+	_route_commitment_feedback.reset(world.get_route_objectives())
 
 
 func _record_banked_route_outcomes(salvage_ids: Array[String]) -> void:
@@ -1111,6 +1143,9 @@ func _update_result_panel() -> void:
 	var route_text := _route_outcome_text()
 	if not route_text.is_empty():
 		result_lines.append(route_text)
+	var objective_text := _route_commitment_result_text()
+	if not objective_text.is_empty():
+		result_lines.append(objective_text)
 	result_lines.append(oxygen_text)
 	result_lines.append("Press R to retry")
 	_result_label.text = "\n".join(result_lines)

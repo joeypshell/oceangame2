@@ -135,6 +135,14 @@ func get_salvage_centers() -> Array:
 	return centers
 
 
+func get_route_objectives() -> Array:
+	var objectives := []
+	for objective in _map_data.get("route_objectives", []):
+		if typeof(objective) == TYPE_DICTIONARY:
+			objectives.append(objective.duplicate(true))
+	return objectives
+
+
 func get_salvage_score(salvage_id: String) -> int:
 	for entity in _salvage_entities:
 		if str(entity.get("id", "salvage")) == salvage_id:
