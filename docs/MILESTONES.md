@@ -41,7 +41,7 @@ The open GitHub milestones should mirror this roadmap:
 
 ## Current Next Direction
 
-Controlled Gameplay Pass 16 completed the prototype-level Milestone 02 goal: the default dive now has one source-authored primary objective that can be completed from boat to return. The next implementation batch should come from Milestone 03 by adding one more small, source-authored salvage/tool interaction before economy, upgrades, enemies, procedural generation, or map-scale expansion.
+Controlled Gameplay Pass 17 completed the first Milestone 03 salvage-tool step: the default dive now has one staged source-authored pry salvage interaction in addition to timed salvage. The next implementation batch should plan a small Milestone 04 progression/economy slice before enemies, procedural generation, full inventory/loadout systems, or map-scale expansion.
 
 ## Recently Completed Prototype Passes
 
@@ -58,3 +58,4 @@ Controlled Gameplay Pass 16 completed the prototype-level Milestone 02 goal: the
 - #278-#286 completed Controlled Gameplay Pass 14 start-of-run objective cue.
 - #298-#307 completed Controlled Gameplay Pass 15 objective follow-through, including source marker, validation, runtime cue, smoke, capture, visual decision, Web verification, and closeout.
 - #320-#329 completed Controlled Gameplay Pass 16 primary dive completion, including source contract, validation, runtime completion gate, smoke, capture, visual decision, Web verification, and closeout.
+- #340-#349 completed Controlled Gameplay Pass 17 pry salvage, including source contract, validation, source target authoring, staged runtime interaction, smoke, capture, visual decision, Web verification, and closeout.

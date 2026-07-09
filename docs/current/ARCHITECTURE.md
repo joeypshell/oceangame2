@@ -48,6 +48,7 @@ Additional current map sources:
   - Authors the Pass 13 `deep_cache_route_objective` route objective requiring `salvage_lower_loop` and `salvage_deep_right_cache` to be banked in one committed route chain.
   - Authors the Pass 15 `deep_cache_first_step_cue` marker for compact `Objective route: Lower loop` follow-through feedback after leaving the boat.
   - Sets `primary_route_objective_id` to `deep_cache_route_objective` so the default dive completes after the authored primary objective is banked.
+  - Authors the Pass 17 `salvage_pry_locker` valuable `pry_salvage` target for a staged lower-bend oxygen/cargo decision.
   - Current default preview map.
   - Can also be selected explicitly with `.\tools\open_godot_project.ps1 -Run -ProductionSliceMap`.
 - `maps/production_slice_02.greybox.json`
@@ -85,11 +86,12 @@ Additional current map sources:
   - Loads world and player scenes.
   - Applies camera bounds from the world map size.
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
-  - Shows compact preview review context, salvage progress, timed-salvage feedback, oxygen-rest feedback, route-objective progress/start cue, and scoped oxygen pressure.
-  - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress/cancel/complete feedback, cargo banking, oxygen pressure, limited oxygen-rest recovery, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, route outcome result text, source-tagged return-pressure feedback, source-tagged pre-pickup route cue feedback, route-objective feedback, and primary-objective completion gating.
-  - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, focused timed-salvage capture, focused Pass 07-15 captures, and focused primary dive completion capture.
-  - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, timed salvage, hazard pressure, oxygen pressure, oxygen-rest pressure, cargo/scoring, route outcome result, player-facing, movement-feel, Pass 08-15 objective/route smokes, primary dive completion, and production-slice route checks.
+  - Shows compact preview review context, salvage progress, timed/pry salvage feedback, oxygen-rest feedback, route-objective progress/start cue, and scoped oxygen pressure.
+  - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress/cancel/complete feedback, staged pry salvage progress/cancel/complete feedback, cargo banking, oxygen pressure, limited oxygen-rest recovery, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, route outcome result text, source-tagged return-pressure feedback, source-tagged pre-pickup route cue feedback, route-objective feedback, and primary-objective completion gating.
+  - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, focused timed/pry salvage captures, focused Pass 07-15 captures, and focused primary dive completion capture.
+  - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, timed/pry salvage, hazard pressure, oxygen pressure, oxygen-rest pressure, cargo/scoring, route outcome result, player-facing, movement-feel, Pass 08-15 objective/route smokes, primary dive completion, and production-slice route checks.
   - Uses `scripts/main/timed_salvage_controller.gd` for the narrow timed salvage interaction.
+  - Uses `scripts/main/pry_salvage_controller.gd` for the narrow staged pry salvage interaction.
   - Uses `scripts/main/return_pressure_feedback.gd` for the narrow source-tagged cargo-full banking prompt.
   - Uses `scripts/main/pre_pickup_route_cue_feedback.gd` for the narrow source-tagged pre-pickup route cue prompt.
   - Uses `scripts/main/oxygen_rest_pocket_feedback.gd` for the narrow source-tagged oxygen-rest prompt and cap text.
@@ -161,8 +163,10 @@ Art placement must not create, remove, or move collision.
 - Pass 14 derives the start-of-run `Objective: Deep cache 0/2` cue from `deep_cache_route_objective` while the player is at the boat/extraction area before objective progress, and protects the behavior with `--smoke-pass-14-objective-cue`.
 - Pass 15 adds `deep_cache_first_step_cue` for compact `Objective route: Lower loop` follow-through feedback near the first required deep-cache route target, protected by `--smoke-pass-15-objective-follow-through`.
 - Pass 16 makes `deep_cache_route_objective` the primary dive completion condition for `production_slice_01`, while maps without `primary_route_objective_id` preserve all-salvage completion, protected by `--smoke-primary-dive-completion`.
+- Pass 17 adds `salvage_pry_locker` as a staged `pry_salvage` target with 3 stages at 1.2 seconds each, partial-stage cancel on leaving range, completed-stage persistence during normal exploration, cargo-full blocking, and hazard/oxygen reset cleanup, protected by `--smoke-pry-salvage`.
 - The default slice has one source-authored `timed_salvage` target, `salvage_deep_right_cache`, that renders a small in-world affordance and requires 2.5 seconds of in-range progress before entering held cargo.
 - Timed-salvage feedback covers progress, cancel, completion, cargo-full blocking, hazard reset, and oxygen failure/reset through `--smoke-timed-salvage`.
+- The default slice has one source-authored `pry_salvage` target, `salvage_pry_locker`, that requires staged in-range progress before entering held cargo and keeps completed stages during normal exploration.
 - `--capture-route-outcome-result` provides a focused review capture for the completed-run route outcome panel without replacing normal accepted baselines.
 - `--capture-timed-salvage` provides a focused review capture for the timed-salvage overlay state without replacing normal accepted baselines.
 - `--capture-pass-07-hazard-pressure` provides a focused review capture for the selected lower-loop hazard/navigation pressure state without replacing normal accepted baselines.
@@ -175,4 +179,5 @@ Art placement must not create, remove, or move collision.
 - `--capture-pass-14-objective-cue` provides a focused review capture for the start-of-run deep-cache objective cue without replacing normal accepted baselines.
 - `--capture-pass-15-objective-follow-through` provides a focused review capture for the first in-route deep-cache objective step cue without replacing normal accepted baselines.
 - `--capture-primary-dive-completion` provides a focused review capture for the completed primary dive result state without replacing normal accepted baselines.
+- `--capture-pry-salvage` provides a focused review capture for the Pass 17 staged pry salvage state without replacing normal accepted baselines.
 - First screenshot baseline is committed at `visual_baselines/001_greybox_in_engine.png`.
