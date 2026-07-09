@@ -39,9 +39,9 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest completed pass closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_24_CLOSEOUT.md`
-- Current next direction: decide whether Milestone 06 needs one final-dive/capstone objective seed or should move to Milestone 07 presentation/game feel.
-- Latest Web verification: `docs/current/PASS_24_RELAY_FOLLOW_THROUGH_WEB_PREVIEW_VERIFICATION.md`
+- Latest completed pass closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_25_CLOSEOUT.md`
+- Current next direction: move to Milestone 07 presentation/game feel with a small issue batch improving clarity, feel, and payoff of the existing objective/result loop.
+- Latest Web verification: `docs/current/PASS_25_FINAL_DIVE_OBJECTIVE_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -216,7 +216,8 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-09:
 
-- Active roadmap queue: no non-deferred Pass 24 issues remain after #542-#551. The next batch should come from `docs/current/CONTROLLED_GAMEPLAY_PASS_24_CLOSEOUT.md`. #52/#53 remain deferred slice-03 polish.
+- Active roadmap queue: no non-deferred Pass 25 issues remain after #562-#571. The next batch should come from `docs/current/CONTROLLED_GAMEPLAY_PASS_25_CLOSEOUT.md`. #52/#53 remain deferred slice-03 polish.
+- Closed: #562-#571 completed Pass 25 planning, final-dive contract, validation, source authoring, runtime feedback, smoke, focused capture, visual decision, public Web verification, and closeout.
 - Closed: #542-#551 completed Pass 24 planning, relay objective contract, validation, source authoring, runtime feedback, smoke, focused capture, visual decision, public Web verification, and closeout.
 - Closed: #522-#531 completed Pass 23 planning, next-dive prompt contract, validation, source authoring, runtime result text, smoke, focused capture, visual/Web verification, and closeout.
 - Closed: #502-#511 completed Pass 22 planning, destination payoff contract, validation, source target authoring, runtime feedback, smoke, capture, visual decision, Web verification, and closeout.
@@ -468,9 +469,9 @@ Use `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md` as the current north star. The p
 
 The first compact feedback/audio cue layer is complete under #481-#490. Pass 22 is complete under #502-#511: the existing lower-left connector now leads to one source-authored `production_slice_04` destination cache with compact `Destination cache +300` feedback, smoke, focused capture, visual review, and public Web verification.
 
-Pass 24 is complete under #542-#551: the Pass 23 next-dive prompt now pays off with one source-authored lower-left relay follow-through objective. Banking `slice_04_destination_cache` in `production_slice_04` shows `Relay lead confirmed`, with validation, runtime feedback, smoke, focused capture, visual review, public Web verification, and closeout.
+Pass 25 is complete under #562-#571: the Pass 24 relay follow-through now seeds a compact final-dive/capstone cue. Banking `slice_04_destination_cache` in `production_slice_04` shows `Relay lead confirmed` and `Final dive signal discovered`, with validation, runtime feedback, smoke, focused capture, visual review, public Web verification, and closeout.
 
-The next recommended batch should stay small and decide whether Milestone 06 needs one final-dive/capstone objective seed or should move to Milestone 07 presentation/game feel. Keep it tiny: no music, ambience, audio options menu, enemy AI, inventory/loadouts, save systems, broad economy, procedural generation, broad art replacement, broad audio systems, or full-map productionization.
+Milestone 06 objective/run structure is complete enough for the current compact diver-game target. The next recommended batch should move to Milestone 07 presentation/game feel and improve clarity, feel, and payoff of the existing objective/result loop. Keep it tiny: no music, ambience, audio options menu, enemy AI, inventory/loadouts, save systems, broad economy, procedural generation, broad art replacement, broad audio systems, or full-map productionization.
 
 Accepted constraints for the next batch:
 

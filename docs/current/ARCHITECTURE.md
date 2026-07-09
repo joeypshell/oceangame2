@@ -111,6 +111,7 @@ Additional current map sources:
   - Uses `scripts/main/primary_dive_objective.gd` for maps that opt into source-authored primary objective completion.
   - Uses `scripts/main/session_progression.gd` for the session-only wallet and oxygen, cargo, light, and propulsion upgrades.
   - Uses `scripts/main/world_connector_controller.gd` for source-authored prompted world-slice connectors.
+  - Uses `scripts/main/final_dive_objective_seed.gd` for the compact source-authored final-dive/capstone cue.
   - Uses `scripts/main/audio_cue_player.gd` for cue lookup/playback, cooldown/dedupe, graceful missing-asset handling, and future smoke event logs.
 
 - `scripts/world/greybox_world.gd`
@@ -185,6 +186,7 @@ Art placement must not create, remove, or move collision.
 - The first darkness/light-gate work is design-scoped in `docs/current/DEPTH_DARKNESS_LIGHT_GATE_CONTRACT.md`: one visual-only deep-route readability zone improved by `dive_light_1`, not a hard lock or global fog system.
 - Pass 21 adds a source-authored prompted connector from `production_slice_01` to `production_slice_04`, preserving session wallet/upgrades while resetting destination-local expedition state, protected by `--smoke-pass-21-world-connector`.
 - Pass 22 adds `slice_04_destination_cache`, one source-authored destination payoff in `production_slice_04` for the existing lower-left connector, with compact `Destination cache +300` feedback and `--smoke-pass-22-destination-payoff` coverage.
+- Pass 25 adds `lower_left_final_dive_signal`, one source-authored final-dive objective seed in `production_slice_04`; banking `slice_04_destination_cache` now shows `Final dive signal discovered`, successful result text can include `Final dive signal found`, and `--smoke-pass-25-final-dive-objective` protects hidden-before-trigger, failure, and reset behavior.
 - The progression-gate lane adds `lower_left_loop_current`, a source-authored soft-push current gate overlapping the lower-left connector. It blocks connector use and pushes the diver right until the session-only `propulsion_fins` upgrade is purchased, while oxygen continues draining. It is protected by `--smoke-current-gate`.
 - The progression-reward lane adds `lower_loop_upgrade_chest`, a source-authored `upgrade_chest` that grants a one-time session wallet reward on an optional lower-loop detour without entering cargo or adding inventory UI. It is protected by `--smoke-upgrade-chest`.
 - The route-pressure lane adds `deep_route_jellyfish_patrol`, one source-authored deterministic `linear_patrol` moving hazard on the lower-loop-to-deep-cache route. Contact reuses existing hazard reset/oxygen semantics, and the scope remains dodge pressure, not combat or broad enemy AI. It is protected by `--smoke-moving-hazard`.
@@ -208,6 +210,7 @@ Art placement must not create, remove, or move collision.
 - `--capture-pass-19-cargo-upgrade` provides a focused review capture for the Pass 19 wallet and cargo capacity upgrade state without replacing normal accepted baselines.
 - `--capture-pass-20-light-upgrade` provides a focused review capture for the Pass 20 wallet and light upgrade state without replacing normal accepted baselines.
 - `--capture-pass-21-world-connector` provides a focused review capture for the Pass 21 destination-arrival connector state without replacing normal accepted baselines.
+- `--capture-pass-25-final-dive-objective` provides a focused review capture for the Pass 25 final-dive objective feedback without replacing normal accepted baselines.
 - `--capture-current-gate` provides a focused review capture for the current-gate blocked prompt and connector area without replacing normal accepted baselines.
 - `--capture-upgrade-chest` provides a focused review capture for the first upgrade-chest reward state without replacing normal accepted baselines.
 - `--capture-moving-hazard` provides a focused review capture for the first deterministic moving-hazard patrol without replacing normal accepted baselines.
