@@ -34,10 +34,14 @@ var _last_played_at: Dictionary = {}
 var _event_log: Array[Dictionary] = []
 var _enabled := true
 var _playback_available := true
+var _requires_user_unlock := false
+var _playback_unlocked := true
 
 
 func _ready() -> void:
 	_playback_available = DisplayServer.get_name() != "headless"
+	_requires_user_unlock = OS.get_name() == "Web"
+	_playback_unlocked = not _requires_user_unlock
 	if not _playback_available:
 		return
 	_load_streams()
@@ -63,6 +67,9 @@ func play_cue(cue_id: String, dedupe_key := "") -> bool:
 		return false
 	if not _playback_available:
 		event["reason"] = "headless_audio"
+		return false
+	if not _playback_unlocked:
+		event["reason"] = "audio_locked"
 		return false
 	if not _streams.has(cue_id):
 		event["reason"] = "missing_stream"
@@ -105,6 +112,15 @@ func shutdown() -> void:
 	_streams.clear()
 
 
+func unlock_playback() -> bool:
+	if not _playback_available:
+		return false
+	if not _requires_user_unlock:
+		return true
+	_playback_unlocked = true
+	return true
+
+
 func has_cue(cue_id: String) -> bool:
 	if not CUE_PATHS.has(cue_id):
 		return false
@@ -122,14 +138,10 @@ func clear_event_log() -> void:
 func _load_streams() -> void:
 	for cue_id in CUE_PATHS.keys():
 		var path := str(CUE_PATHS[cue_id])
-		if not FileAccess.file_exists(path):
-			push_warning("Feedback cue asset missing: %s" % path)
-			continue
 		if not ResourceLoader.exists(path):
 			continue
 		var stream := load(path)
 		if stream == null:
-			push_warning("Feedback cue asset could not load: %s" % path)
 			continue
 		_streams[cue_id] = stream
 
