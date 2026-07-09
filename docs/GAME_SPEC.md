@@ -73,3 +73,16 @@ Accepted constraints for the next phase:
 - Supplied sketch icons are ignored by terrain conversion until intentionally reauthored as JSON entities.
 - Visual changes should target individual assets, source map data, or renderer rules; do not regenerate the whole scene to fix one visual problem.
 - Additional gameplay pressure should stay scoped until the production-slice visual workflow is accepted.
+
+## Current Post-RC Expansion Target
+
+The compact diver game has a GO release candidate. The first larger-OceanGame step is one bounded anomaly-survey foundation:
+
+- keep `production_slice_01` as the surface boat/default preview
+- travel through the remembered `production_slice_04` relay route into adjacent `production_slice_02`
+- unlock one `survey_scanner_1` capability without an inventory/loadout system
+- survey one source-authored anomaly under normal oxygen/route pressure
+- carry one pending discovery back across connectors and commit it at the boat
+- keep maps, collision, connectors, survey targets, and future fauna source-authored and validated
+
+This pass does not add territorial fauna yet, procedural generation, base building, major vehicles, inventory grids, crafting trees, combat, full ecosystem AI, broad persistent economy, multiple biomes, or full-map productionization.

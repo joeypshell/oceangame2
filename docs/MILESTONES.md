@@ -27,17 +27,17 @@ The project has already proven:
 
 ## Current GitHub Milestones
 
-Simple Diver Game 01 through 08 are complete and closed. The only open roadmap milestone is:
+Simple Diver Game 01 through 09 are complete. The active implementation milestone is:
 
-1. Simple Diver Game 09: 2D Subnautica Expansion Planning
+1. OceanGame Expansion 01: Anomaly Survey Foundation
 
-Milestone 09 issues #643-#652 are documentation and decision work. They must select one bounded next implementation milestone before larger systems are added.
+Milestone 09 issues #643-#652 selected the bounded anomaly-survey foundation. Expansion 01 issues #662-#671 implement it in dependency order.
 
 ## Current Next Direction
 
 Simple Diver Game 08 release-candidate hardening is complete. Issues #622-#631 completed the release-candidate plan, validation matrix, one-command validation runner, release journey smoke, capture review index, local run verification, public Web export handoff, baseline/capture audit, documentation refresh, and go/no-go closeout.
 
-The closeout decision is GO. Simple Diver Game 09 is now the selected planning milestone; #643-#652 must define the first bounded expansion outcome before implementation. Keep #52/#53 deferred as optional slice-03 polish unless slice-03 presentation becomes the selected goal. Do not add another connector merely because the first one works, and do not jump directly to procedural generation, full inventory/loadout systems, save-heavy progression, broad economy work, full enemy AI, broad art/audio replacement, or full-map productionization.
+Milestone 09 closed with a GO for OceanGame Expansion 01. The active outcome is one scanner-backed anomaly survey across `production_slice_01 <-> production_slice_04 <-> production_slice_02`, with one returned discovery and no territorial fauna until Phase B. Keep #52/#53 deferred and do not expand into procedural generation, full inventory/loadouts, save-heavy progression, broad economy, combat/AI, broad art/audio replacement, or full-map productionization.
 
 ## Recently Completed Prototype Passes
 

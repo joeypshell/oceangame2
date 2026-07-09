@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Simple Diver Game 08 GO closeout and the Simple Diver Game 09 expansion-planning contract. Issues #643-#652 are planning/decision work only; implementation begins after that lane selects one bounded outcome.
+Current handoff starts with the Simple Diver Game 08 GO closeout and the completed Simple Diver Game 09 expansion-planning decision. OceanGame Expansion 01 issues #662-#671 are the active implementation queue for one anomaly-survey foundation.
 
 - [Game Spec](docs/GAME_SPEC.md)
 - [Art Bible](docs/ART_BIBLE.md)
@@ -139,6 +139,7 @@ Current handoff starts with the Simple Diver Game 08 GO closeout and the Simple 
 - [Simple Diver Game 09 Tool And Resource Contract](docs/current/SIMPLE_DIVER_GAME_09_TOOL_RESOURCE_CONTRACT.md)
 - [Simple Diver Game 09 Fauna And Hazard Contract](docs/current/SIMPLE_DIVER_GAME_09_FAUNA_HAZARD_CONTRACT.md)
 - [Simple Diver Game 09 Architecture And Validation Gates](docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md)
+- [Simple Diver Game 09 Expansion Planning Closeout](docs/current/SIMPLE_DIVER_GAME_09_EXPANSION_CLOSEOUT.md)
 - [First Feedback Audio Micro-Pass Plan](docs/current/FIRST_FEEDBACK_AUDIO_MICRO_PASS_PLAN.md)
 - [First Feedback Audio Cue Contract](docs/current/FIRST_FEEDBACK_AUDIO_CUE_CONTRACT.md)
 - [First Feedback Audio Review Note](docs/current/FIRST_FEEDBACK_AUDIO_REVIEW.md)
