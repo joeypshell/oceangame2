@@ -173,14 +173,14 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 ## Current Next Direction
 
-Pass 26 and Pass 27 completed the selected Milestone 07 result-presentation and player-facing readability gaps.
+Simple Diver Game 08 is a GO release candidate, and Simple Diver Game 09 expansion planning is complete.
 
-Simple Diver Game 08 release-candidate hardening is complete. Issues #622-#631 proved and documented the current small game with a release-candidate plan, validation matrix, one-command validation runner, release journey smoke, capture inventory, local/Web handoff checks, baseline audit, documentation refresh, and GO closeout.
+Issues #643-#652 selected one bounded post-RC outcome: OceanGame Expansion 01 `Anomaly Survey Foundation`. Issues #662-#671 implement two no-behavior owner extractions, one scanner/profile discovery path, source-authored slice-04/slice-02 travel, one slice-02 survey target, deterministic smoke, focused visual review, public Web verification, and closeout.
 
-Pause validation batching unless playtest/public-preview review finds a blocker; otherwise select the next roadmap milestone deliberately. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, broad audio systems, broad art replacement, or full-map productionization.
+Do not add territorial fauna until that foundation closes. Do not jump to procedural generation, full inventory/loadout systems, broad save/economy work, combat AI, broad audio/art replacement, more destinations, or full-map productionization.
 
 ## Deferred Work
 
 - #52 and #53 remain optional slice-03 polish unless slice-03 becomes part of Milestone 05.
-- Full-map productionization remains deferred until the core loop and progression goals need it.
-- Broad economy, upgrades, inventory, enemies, procedural generation, and save systems remain outside the simple diver game until their milestone is selected.
+- The territorial eel is the accepted Phase B fauna candidate, deferred until Expansion 01 closeout.
+- Full-map productionization, broad economy, inventory/crafting, combat/ecosystem AI, procedural generation, and save-heavy sandbox systems remain deferred.

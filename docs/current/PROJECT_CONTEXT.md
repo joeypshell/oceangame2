@@ -6,7 +6,7 @@ This file is the compact handoff for new Codex or ChatGPT Project sessions. It c
 
 ## Current Goal
 
-`oceangame2` is a visual-first Godot prototype growing toward a finished small side-view diver salvage game. It is not trying to rebuild the full OceanGame yet. The current product target is a complete compact diver game first, with:
+`oceangame2` has a GO release candidate for its compact side-view diver salvage game and is beginning one bounded 2D Subnautica-like expansion. The current target is an anomaly-survey foundation that preserves:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -14,7 +14,7 @@ This file is the compact handoff for new Codex or ChatGPT Project sessions. It c
 - fixing one visual issue without resetting unrelated visuals
 - expedition pressure through oxygen, cargo, hazards, routes, and objectives
 - tool-like salvage interactions and limited progression
-- eventual scaling into the larger 2D Subnautica-like OceanGame idea
+- one scanner-backed, source-authored discovery journey before broader OceanGame systems
 
 Controlled gameplay/visual passes are now a validation lane inside the roadmap, not the whole roadmap. New work should serve curiosity, pressure, payoff, remembered-place progress, meaningful route choice, or a reason to try another expedition.
 
@@ -39,9 +39,9 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Current release-candidate plan: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_PLAN.md`
-- Current validation matrix: `docs/current/SIMPLE_DIVER_GAME_08_VALIDATION_MATRIX.md`
-- Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; next select playtest feedback or the next roadmap milestone).
+- Current expansion decision: `docs/current/SIMPLE_DIVER_GAME_09_EXPANSION_CLOSEOUT.md`
+- Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
+- Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
 - Latest Web verification: `docs/current/SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
@@ -217,7 +217,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-09:
 
-- Active roadmap queue: #643-#652 plan Simple Diver Game 09 expansion after the Simple Diver Game 08 GO decision. #52/#53 remain deferred slice-03 polish.
+- Active roadmap queue: #662-#671 implement OceanGame Expansion 01 anomaly-survey foundation. #52/#53 remain deferred slice-03 polish.
 - Closed: #562-#571 completed Pass 25 planning, final-dive contract, validation, source authoring, runtime feedback, smoke, focused capture, visual decision, public Web verification, and closeout.
 - Closed: #542-#551 completed Pass 24 planning, relay objective contract, validation, source authoring, runtime feedback, smoke, focused capture, visual decision, public Web verification, and closeout.
 - Closed: #522-#531 completed Pass 23 planning, next-dive prompt contract, validation, source authoring, runtime result text, smoke, focused capture, visual/Web verification, and closeout.
@@ -466,9 +466,9 @@ Recent important commits:
 
 ## Recommended Next Work
 
-Use `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md` as the current north star. The project should now finish the small diver game before planning the larger 2D Subnautica-like expansion.
+Use `docs/current/SIMPLE_DIVER_GAME_09_EXPANSION_CLOSEOUT.md` as the current north star for the first bounded OceanGame expansion.
 
-Simple Diver Game 08 has a GO closeout with full validation runner, local run, public Web, baseline/capture, and docs handoff evidence. Simple Diver Game 09 issues #643-#652 are now the active planning lane; they must select one bounded expansion outcome before gameplay, map, asset, persistence, inventory, or fauna implementation begins.
+Simple Diver Game 08 has a GO closeout, and Simple Diver Game 09 planning selected OceanGame Expansion 01. Issues #662-#671 implement owner extractions, survey schema/state/source/runtime, deterministic smoke, focused visual review, Web verification, and closeout.
 
 Accepted constraints for next work:
 
@@ -476,9 +476,9 @@ Accepted constraints for next work:
 - Preserve `maps/full_cave_sketch_01.greybox.json` as a topology draft and planning source.
 - Do not move the entire full sketch into production yet; grow route scale only when it supports the roadmap.
 - Keep map topology, collision, spawn, extraction, and camera tests source-driven.
-- Keep gameplay scoped, but start selecting work that builds the finished simple diver game: salvage tools, limited progression, objective structure, and presentation.
-- Do not expand into enemies, procedural generation, complex inventory, base building, save-heavy sandbox systems, or broad art replacement.
-- Do not start another map-scale connector pass until it creates clearer moment-to-moment tension, payoff, progression, or route memory.
+- Keep Expansion 01 scoped to one scanner, one slice-02 anomaly, one returned discovery, and source-authored slice-04/slice-02 travel.
+- Defer territorial fauna until the survey foundation closes; do not add combat, procedural generation, complex inventory, base building, save-heavy sandbox systems, or broad art replacement.
+- Do not add another destination or connector beyond the selected slice-04/slice-02 link.
 - Keep #52/#53 as optional post-baseline slice-03 improvement issues unless the selected goal shifts back to slice-03 presentation.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
