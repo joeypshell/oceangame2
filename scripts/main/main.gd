@@ -956,29 +956,39 @@ func _update_status_label() -> void:
 		return
 
 	var prompt := ""
-	var objective_text := _route_commitment_overlay_text()
+	var objective_step_cue_blocked := false
+	var oxygen_feedback := _oxygen_feedback_label()
 	var oxygen_rest_prompt := _oxygen_rest_prompt()
 	var pre_pickup_route_cue := _pre_pickup_route_cue_prompt()
 	if _run_complete:
 		prompt = "Run complete - press R"
+		objective_step_cue_blocked = true
 	elif _run_failed:
 		prompt = "Oxygen depleted - press R"
+		objective_step_cue_blocked = true
 	elif _held_salvage >= HELD_SALVAGE_CAPACITY:
 		prompt = _cargo_full_prompt()
+		objective_step_cue_blocked = true
 	elif not _hazard_warning_id.is_empty():
 		prompt = _hazard_warning_prompt()
+		objective_step_cue_blocked = true
 	elif not oxygen_rest_prompt.is_empty():
 		prompt = oxygen_rest_prompt
+		objective_step_cue_blocked = true
 	elif not pre_pickup_route_cue.is_empty():
 		prompt = pre_pickup_route_cue
+		objective_step_cue_blocked = true
 	elif not _last_status_note.is_empty():
 		prompt = _last_status_note
+		objective_step_cue_blocked = _is_collection_status_note(_last_status_note)
 	elif _held_salvage > 0:
 		prompt = "Return to extraction"
+	if not oxygen_feedback.is_empty():
+		objective_step_cue_blocked = true
+	var objective_text := _route_commitment_overlay_text(not objective_step_cue_blocked)
 
 	var oxygen_seconds := int(ceil(_oxygen_seconds))
 	var oxygen_text := "Oxygen %ds" % oxygen_seconds
-	var oxygen_feedback := _oxygen_feedback_label()
 	if not oxygen_feedback.is_empty():
 		oxygen_text = "Oxygen %ds %s" % [oxygen_seconds, oxygen_feedback]
 
@@ -1017,13 +1027,24 @@ func _oxygen_rest_prompt() -> String:
 	return _oxygen_rest_feedback.current_prompt()
 
 
-func _route_commitment_overlay_text() -> String:
+func _route_commitment_overlay_text(show_step_cue := true) -> String:
 	if _route_commitment_feedback == null:
 		return ""
 	var show_start_cue := false
 	if _world != null and _player != null and not _run_complete and not _run_failed:
 		show_start_cue = _world.is_inside_extraction(_player.global_position)
-	return _route_commitment_feedback.overlay_text(_held_salvage_ids, _banked_salvage_ids, show_start_cue)
+	var progress_text: String = _route_commitment_feedback.overlay_text(_held_salvage_ids, _banked_salvage_ids, show_start_cue)
+	if not progress_text.is_empty():
+		return progress_text
+	if _world == null or _player == null or _run_complete or _run_failed:
+		return ""
+	return _route_commitment_feedback.objective_step_cue_text(
+		_world,
+		_player.global_position,
+		_held_salvage_ids,
+		_banked_salvage_ids,
+		show_step_cue
+	)
 
 
 func _route_commitment_result_text() -> String:
@@ -1046,6 +1067,15 @@ func _oxygen_feedback_label() -> String:
 	if _oxygen_seconds <= OXYGEN_LOW_WARNING_SECONDS:
 		return "LOW"
 	return ""
+
+
+func _is_collection_status_note(status_note: String) -> bool:
+	return (
+		status_note.begins_with("Collected ")
+		or status_note.begins_with("Salvaging ")
+		or status_note.find(" secured +") != -1
+		or status_note == "Salvage interrupted"
+	)
 
 
 func _session_best_map_key() -> String:
