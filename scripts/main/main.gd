@@ -166,6 +166,8 @@ var _hazard_feedback_seconds := 0.0
 var _hazard_interactions_enabled := true
 var _hazard_warning_id := ""
 var _oxygen_seconds := OXYGEN_MAX_SECONDS
+var _oxygen_low_cue_emitted := false
+var _oxygen_critical_cue_emitted := false
 var _run_complete := false
 var _run_failed := false
 var _last_status_note := ""
@@ -782,6 +784,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_hazard_interactions_enabled = true
 	_hazard_warning_id = ""
 	_oxygen_seconds = _oxygen_capacity_seconds()
+	_reset_oxygen_feedback_cues()
 	_run_complete = false
 	_run_failed = false
 	_last_status_note = status_note
@@ -1033,6 +1036,7 @@ func _reset_run() -> void:
 	_hazard_interactions_enabled = true
 	_hazard_warning_id = ""
 	_oxygen_seconds = _oxygen_capacity_seconds()
+	_reset_oxygen_feedback_cues()
 	_run_complete = false
 	_run_failed = false
 	_last_status_note = "Reset"
@@ -1071,25 +1075,50 @@ func _try_world_connector_transition() -> bool:
 
 
 func _update_oxygen(delta: float) -> bool:
+	var previous_oxygen := _oxygen_seconds
 	if _world.is_inside_extraction(_player.global_position):
 		_oxygen_rest_feedback.reset()
 		_oxygen_seconds = minf(_oxygen_capacity_seconds(), _oxygen_seconds + OXYGEN_REFILL_SECONDS_PER_SECOND * delta)
+		_update_oxygen_feedback_cues(previous_oxygen)
 		return false
 
 	var rest_result: Dictionary = _oxygen_rest_feedback.update(_world, _player.global_position, _oxygen_seconds, delta)
 	if bool(rest_result.get("inside", false)):
 		_oxygen_seconds = float(rest_result.get("oxygen_seconds", _oxygen_seconds))
 		if _oxygen_seconds > 0.0:
+			_update_oxygen_feedback_cues(previous_oxygen)
 			return false
 		_handle_oxygen_depleted()
 		return true
 
 	_oxygen_seconds = maxf(0.0, _oxygen_seconds - delta)
 	if _oxygen_seconds > 0.0:
+		_update_oxygen_feedback_cues(previous_oxygen)
 		return false
 
 	_handle_oxygen_depleted()
 	return true
+
+
+func _update_oxygen_feedback_cues(previous_oxygen: float) -> void:
+	if _run_complete or _run_failed:
+		return
+	if _oxygen_seconds > OXYGEN_LOW_WARNING_SECONDS:
+		_reset_oxygen_feedback_cues()
+		return
+	if _oxygen_seconds > OXYGEN_CRITICAL_WARNING_SECONDS:
+		_oxygen_critical_cue_emitted = false
+	if not _oxygen_low_cue_emitted and previous_oxygen > OXYGEN_LOW_WARNING_SECONDS and _oxygen_seconds <= OXYGEN_LOW_WARNING_SECONDS:
+		_oxygen_low_cue_emitted = true
+		_play_feedback_cue("oxygen_low", "oxygen_low")
+	if not _oxygen_critical_cue_emitted and previous_oxygen > OXYGEN_CRITICAL_WARNING_SECONDS and _oxygen_seconds <= OXYGEN_CRITICAL_WARNING_SECONDS:
+		_oxygen_critical_cue_emitted = true
+		_play_feedback_cue("oxygen_critical", "oxygen_critical")
+
+
+func _reset_oxygen_feedback_cues() -> void:
+	_oxygen_low_cue_emitted = false
+	_oxygen_critical_cue_emitted = false
 
 
 func _update_current_gate(delta: float) -> void:
@@ -1113,6 +1142,9 @@ func _current_gate_block_prompt(gate: Dictionary) -> String:
 
 
 func _handle_oxygen_depleted() -> void:
+	if _run_failed:
+		return
+	_play_feedback_cue("oxygen_failure", "oxygen_failure")
 	_oxygen_rest_feedback.reset()
 	_current_gate.reset()
 	_moving_hazards.reset(_world)
@@ -1128,6 +1160,7 @@ func _handle_oxygen_depleted() -> void:
 		_last_status_note = "Oxygen depleted - press R"
 
 	_oxygen_seconds = _oxygen_capacity_seconds()
+	_reset_oxygen_feedback_cues()
 	_run_failed = true
 	_hazard_cooldown_seconds = HAZARD_COOLDOWN_SECONDS
 	_player.global_position = _world.spawn_position
