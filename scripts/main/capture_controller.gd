@@ -18,6 +18,8 @@ const BACKGROUND_DEPTH_CENTER_TILES := Vector2(39, 24)
 const BACKGROUND_DEPTH_PLAYER_OFFSET_TILES := Vector2(0, 8)
 const TIMED_SALVAGE_CAPTURE_ZOOM := Vector2(1.15, 1.15)
 const TIMED_SALVAGE_PROGRESS_RATIO := 0.52
+const PRY_SALVAGE_CAPTURE_ZOOM := Vector2(1.15, 1.15)
+const PRY_SALVAGE_PROGRESS_RATIO := 0.45
 const HAZARD_PRESSURE_CAPTURE_ZOOM := Vector2(0.68, 0.68)
 const HAZARD_PRESSURE_WARNING_OFFSET_TILES := Vector2.DOWN
 const HAZARD_PRESSURE_SETUP_SALVAGE_ID := "salvage_lower_loop"
@@ -281,6 +283,55 @@ func capture_timed_salvage_and_quit(capture_dir: String) -> void:
 	_main.get_tree().quit()
 
 
+func capture_pry_salvage_and_quit(capture_dir: String) -> void:
+	if _main._world == null or _main._player == null:
+		push_error("Pry salvage capture requires a loaded playable map.")
+		_main.get_tree().quit(1)
+		return
+
+	var target := _pry_salvage_target()
+	if target.is_empty():
+		push_error("Pry salvage capture requires an authored pry_salvage target.")
+		_main.get_tree().quit(1)
+		return
+
+	var target_center: Vector2 = target["center"]
+	var interaction_seconds := maxf(0.01, float(target.get("interaction_seconds", 0.0)))
+	_main._player.global_position = target_center
+	if _main._player.has_method("reset_motion"):
+		_main._player.reset_motion()
+	_main._process(interaction_seconds * PRY_SALVAGE_PROGRESS_RATIO)
+	_main._update_status_label()
+	if _main._status_label == null or _main._status_label.text.find("Prying") == -1:
+		push_error("Pry salvage capture expected visible pry progress before saving.")
+		_main.get_tree().quit(1)
+		return
+	_main.set_process(false)
+
+	var camera := Camera2D.new()
+	camera.name = "PrySalvageCaptureCamera"
+	camera.zoom = PRY_SALVAGE_CAPTURE_ZOOM
+	camera.position_smoothing_enabled = false
+	camera.limit_left = 0
+	camera.limit_top = 0
+	camera.limit_right = int(_main._world.map_pixel_size.x)
+	camera.limit_bottom = int(_main._world.map_pixel_size.y)
+	_main.add_child(camera)
+	camera.make_current()
+	camera.position = target_center + Vector2(-32, -24)
+
+	await _main.get_tree().process_frame
+	await _main.get_tree().process_frame
+	await _main.get_tree().process_frame
+
+	DirAccess.make_dir_recursive_absolute(ProjectSettings.globalize_path(capture_dir))
+	var output_path := "%s/%s_pry_salvage.png" % [capture_dir, _safe_filename(_main._world.map_id)]
+	var image: Image = _main.get_viewport().get_texture().get_image()
+	image.save_png(output_path)
+	print("Saved pry salvage capture: %s" % ProjectSettings.globalize_path(output_path))
+	_main.get_tree().quit()
+
+
 func capture_hazard_pressure_and_quit(capture_dir: String) -> void:
 	if _main._world == null or _main._player == null:
 		push_error("Hazard pressure capture requires a loaded playable map.")
@@ -391,6 +442,12 @@ func capture_primary_dive_completion_and_quit(capture_dir: String) -> void:
 func _timed_salvage_target() -> Dictionary:
 	for salvage in _main._world.get_salvage_centers():
 		if str(salvage.get("interaction", "instant")) == "timed_salvage":
+			return salvage
+	return {}
+
+func _pry_salvage_target() -> Dictionary:
+	for salvage in _main._world.get_salvage_centers():
+		if str(salvage.get("interaction", "instant")) == "pry_salvage":
 			return salvage
 	return {}
 
