@@ -28,6 +28,8 @@
 
 `visual_captures/pass_18_progression/` contains a focused generated screenshot of the Pass 18 wallet and oxygen tank upgrade feedback after banking enough salvage and purchasing at extraction.
 
+`visual_captures/pass_19_cargo_upgrade/` contains a focused generated screenshot of the Pass 19 wallet and cargo capacity upgrade feedback after banking enough salvage and purchasing at extraction.
+
 These captures are not automatically approved baselines. They are review artifacts used to compare the current in-engine result against `visual_baselines/` and the art direction docs.
 
 Preview captures include the compact review overlay with map id, build label, and salvage progress.
