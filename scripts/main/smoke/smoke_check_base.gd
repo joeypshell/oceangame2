@@ -231,6 +231,14 @@ func _session_best_score() -> int:
 	return _main._session_best_score()
 
 
+func _session_wallet() -> int:
+	return _main._session_wallet()
+
+
+func _session_payout_total() -> int:
+	return _main._session_payout_total()
+
+
 func _current_expedition_score() -> int:
 	return _main._current_expedition_score()
 
