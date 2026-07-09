@@ -14,6 +14,7 @@ const Pass22DestinationPayoffCapture := preload("res://scripts/main/captures/pas
 const Pass23NextDiveObjectiveCapture := preload("res://scripts/main/captures/pass_23_next_dive_objective_capture.gd")
 const Pass24RelayFollowThroughCapture := preload("res://scripts/main/captures/pass_24_relay_follow_through_capture.gd")
 const Pass25FinalDiveObjectiveCapture := preload("res://scripts/main/captures/pass_25_final_dive_objective_capture.gd")
+const Pass26ResultPresentationCapture := preload("res://scripts/main/captures/pass_26_result_presentation_capture.gd")
 const PrePickupRouteCueFeedback := preload("res://scripts/main/pre_pickup_route_cue_feedback.gd")
 const NextDiveObjectivePrompt := preload("res://scripts/main/next_dive_objective_prompt.gd")
 const PrimaryDiveObjective := preload("res://scripts/main/primary_dive_objective.gd")
@@ -92,6 +93,7 @@ const PASS_22_DESTINATION_PAYOFF_CAPTURE_DIR := "res://visual_captures/pass_22_d
 const PASS_23_NEXT_DIVE_OBJECTIVE_CAPTURE_DIR := "res://visual_captures/pass_23_next_dive_objective"
 const PASS_24_RELAY_FOLLOW_THROUGH_CAPTURE_DIR := "res://visual_captures/pass_24_relay_follow_through"
 const PASS_25_FINAL_DIVE_OBJECTIVE_CAPTURE_DIR := "res://visual_captures/pass_25_final_dive_objective"
+const PASS_26_RESULT_PRESENTATION_CAPTURE_DIR := "res://visual_captures/pass_26_result_presentation"
 const DARKNESS_LIGHT_CAPTURE_DIR := "res://visual_captures/darkness_light_gate"
 const CURRENT_GATE_CAPTURE_DIR := "res://visual_captures/current_gate"
 const MOVING_HAZARD_CAPTURE_DIR := "res://visual_captures/moving_hazard"
@@ -277,6 +279,7 @@ func _ready() -> void:
 	var capture_pass_23_next_dive_objective := _has_arg(user_args, engine_args, "--capture-pass-23-next-dive-objective")
 	var capture_pass_24_relay_follow_through := _has_arg(user_args, engine_args, "--capture-pass-24-relay-follow-through")
 	var capture_pass_25_final_dive_objective := _has_arg(user_args, engine_args, "--capture-pass-25-final-dive-objective")
+	var capture_pass_26_result_presentation := _has_arg(user_args, engine_args, "--capture-pass-26-result-presentation")
 	var capture_darkness_light_gate := _has_arg(user_args, engine_args, "--capture-darkness-light-gate")
 	var capture_current_gate := _has_arg(user_args, engine_args, "--capture-current-gate")
 	var capture_moving_hazard := _has_arg(user_args, engine_args, "--capture-moving-hazard")
@@ -403,6 +406,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_04_MAP_PATH
 	elif capture_pass_25_final_dive_objective:
 		selected_map_path = PRODUCTION_SLICE_04_MAP_PATH
+	elif capture_pass_26_result_presentation:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_darkness_light_gate:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_current_gate:
@@ -536,6 +541,7 @@ func _ready() -> void:
 		or capture_pass_23_next_dive_objective
 		or capture_pass_24_relay_follow_through
 		or capture_pass_25_final_dive_objective
+		or capture_pass_26_result_presentation
 		or capture_darkness_light_gate
 		or capture_current_gate
 		or capture_moving_hazard
@@ -817,6 +823,9 @@ func _ready() -> void:
 	elif capture_pass_25_final_dive_objective:
 		var capture := Pass25FinalDiveObjectiveCapture.new(self)
 		await capture.capture_and_quit(PASS_25_FINAL_DIVE_OBJECTIVE_CAPTURE_DIR)
+	elif capture_pass_26_result_presentation:
+		var capture := Pass26ResultPresentationCapture.new(self)
+		await capture.capture_and_quit(PASS_26_RESULT_PRESENTATION_CAPTURE_DIR)
 	elif capture_darkness_light_gate:
 		_capture_controller.capture_darkness_light_gate_and_quit(DARKNESS_LIGHT_CAPTURE_DIR)
 	elif capture_current_gate:
