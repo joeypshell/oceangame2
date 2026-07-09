@@ -41,7 +41,7 @@ The open GitHub milestones should mirror this roadmap:
 
 ## Current Next Direction
 
-Finish or explicitly defer the remaining Pass 15 objective-follow-through review tail under Milestone 01, then choose the next implementation batch from Milestone 02 or 03. Avoid creating another narrow objective-label pass unless it directly supports the finished simple diver game.
+Controlled Gameplay Pass 15 is complete. The next implementation batch should come from Milestone 02 or 03, with Milestone 02 preferred if the goal is to make the current default dive feel like a complete start-middle-return run. Avoid creating another narrow objective-label pass unless it directly supports the finished simple diver game.
 
 ## Recently Completed Prototype Passes
 
@@ -56,4 +56,4 @@ Finish or explicitly defer the remaining Pass 15 objective-follow-through review
 - #224-#233 completed Controlled Gameplay Pass 12 oxygen/rest route pressure.
 - #236-#245 completed Controlled Gameplay Pass 13 route commitment objective.
 - #278-#286 completed Controlled Gameplay Pass 14 start-of-run objective cue.
-- #298-#302 completed the first implementation half of Controlled Gameplay Pass 15 objective follow-through.
+- #298-#307 completed Controlled Gameplay Pass 15 objective follow-through, including source marker, validation, runtime cue, smoke, capture, visual decision, Web verification, and closeout.

@@ -39,9 +39,9 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest completed pass closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_14_CLOSEOUT.md`
-- Active pass docs: `docs/current/CONTROLLED_GAMEPLAY_PASS_15_PLAN.md`, `docs/current/CONTROLLED_GAMEPLAY_PASS_15_OBJECTIVE_STEP_CUE_CONTRACT.md`
-- Latest visual/Web verification: `docs/current/PASS_14_OBJECTIVE_CUE_VISUAL_BASELINE_DECISION.md`, `docs/current/PASS_14_OBJECTIVE_CUE_WEB_PREVIEW_VERIFICATION.md`
+- Latest completed pass closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_15_CLOSEOUT.md`
+- Latest pass docs: `docs/current/CONTROLLED_GAMEPLAY_PASS_15_PLAN.md`, `docs/current/CONTROLLED_GAMEPLAY_PASS_15_OBJECTIVE_STEP_CUE_CONTRACT.md`
+- Latest visual/Web verification: `docs/current/PASS_15_OBJECTIVE_FOLLOW_THROUGH_VISUAL_BASELINE_DECISION.md`, `docs/current/PASS_15_OBJECTIVE_FOLLOW_THROUGH_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -216,8 +216,8 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-08:
 
-- Active roadmap queue: finish or explicitly defer the remaining Pass 15 objective-follow-through review tail under the first simple-diver-game milestone, then choose the next implementation batch from the core loop or salvage-tool milestones.
-- Active Pass 15 implementation half: #298-#302 completed planning, source/text contract, metadata validation, source marker authoring, and compact runtime feedback.
+- Active roadmap queue: Pass 15 is closed out by #307; create the next implementation batch from Milestone 02 core loop or Milestone 03 salvage-tool work.
+- Closed: #298-#307 completed Pass 15 objective follow-through, including planning, source/text contract, metadata validation, source marker authoring, compact runtime feedback, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
 - Active tooling/skill queue: none; #210 documented repo drift, #211 committed Pass 10 UID sidecars, #212 updated drift issue batching, and #223 added drift-batch-resolve.
 - Deferred optional slice-03 polish: #52 and #53 remain open.
 - Closed: #278-#286 completed Pass 14 start-of-run objective cue, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
