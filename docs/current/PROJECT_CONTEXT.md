@@ -32,71 +32,13 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Fourth production slice source: `maps/production_slice_04.greybox.json`
 - Current terrain atlas: `assets/terrain_tiles/cave_tileset_v2.png`
 - Web export workflow: `.github/workflows/godot-web-export.yml`
-- Latest full-sketch evaluation: `docs/current/FULL_SKETCH_EVALUATION_01.md`
-- Production-slice selection criteria: `docs/current/PRODUCTION_SLICE_SELECTION_CRITERIA.md`
-- Production-slice-02 evaluation: `docs/current/PRODUCTION_SLICE_02_EVALUATION.md`
-- Production-slice-03 decision: `docs/current/PRODUCTION_SLICE_03_DECISION.md`
-- Production-slice-03 evaluation: `docs/current/PRODUCTION_SLICE_03_EVALUATION.md`
-- Production-slice-03 visual baseline decision: `docs/current/PRODUCTION_SLICE_03_VISUAL_BASELINE_DECISION.md`
-- Production-slice-03 default preview decision: `docs/current/PRODUCTION_SLICE_03_DEFAULT_PREVIEW_DECISION.md`
-- Production-slice-04 decision: `docs/current/PRODUCTION_SLICE_04_DECISION.md`
-- Production-slice-04 evaluation: `docs/current/PRODUCTION_SLICE_04_EVALUATION.md`
-- Production-slice-04 visual baseline decision: `docs/current/PRODUCTION_SLICE_04_VISUAL_BASELINE_DECISION.md`
-- Production-slice status index: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Production-slice-01 visual baseline reconciliation: `docs/current/PRODUCTION_SLICE_01_VISUAL_BASELINE_RECONCILIATION.md`
-- Post-slice workflow decision: `docs/current/POST_SLICE_WORKFLOW_DECISION.md`
-- First controlled visual-revision plan: `docs/current/CONTROLLED_VISUAL_REVISION_01_PLAN.md`
-- Second controlled visual-revision plan: `docs/current/CONTROLLED_VISUAL_REVISION_02_PLAN.md`
-- Third controlled visual-revision plan: `docs/current/CONTROLLED_VISUAL_REVISION_03_PLAN.md`
-- Fourth controlled visual-revision plan: `docs/current/CONTROLLED_VISUAL_REVISION_04_PLAN.md`
-- Fifth controlled visual-revision plan: `docs/current/CONTROLLED_VISUAL_REVISION_05_PLAN.md`
-- Controlled visual-revision checklist: `docs/current/CONTROLLED_VISUAL_REVISION_CHECKLIST.md`
-- Prop sprite baseline decision: `docs/current/PROP_SPRITE_BASELINE_DECISION.md`
-- Player sprite baseline decision: `docs/current/PLAYER_SPRITE_BASELINE_DECISION.md`
-- Player sprite web preview verification: `docs/current/PLAYER_SPRITE_WEB_PREVIEW_VERIFICATION.md`
-- Player-facing fix web preview verification: `docs/current/PLAYER_FACING_WEB_PREVIEW_VERIFICATION.md`
-- Boat spawn entry baseline decision: `docs/current/BOAT_SPAWN_ENTRY_BASELINE_DECISION.md`
-- Boat spawn web preview verification: `docs/current/BOAT_SPAWN_WEB_PREVIEW_VERIFICATION.md`
-- Background depth baseline decision: `docs/current/BACKGROUND_DEPTH_BASELINE_DECISION.md`
-- Background depth web preview verification: `docs/current/BACKGROUND_DEPTH_WEB_PREVIEW_VERIFICATION.md`
-- Terrain tileset v2 baseline decision: `docs/current/TERRAIN_TILESET_V2_BASELINE_DECISION.md`
-- Terrain tileset v2 web preview verification: `docs/current/TERRAIN_TILESET_V2_WEB_PREVIEW_VERIFICATION.md`
-- Controlled Gameplay Pass 04 plan: `docs/current/CONTROLLED_GAMEPLAY_PASS_04_PLAN.md`
-- Controlled Gameplay Pass 04 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_04_CLOSEOUT.md`
-- Controlled Gameplay Pass 05 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_05_CLOSEOUT.md`
-- Controlled Gameplay Pass 06 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_06_CLOSEOUT.md`
-- Controlled Gameplay Pass 07 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_07_CLOSEOUT.md`
-- Controlled Gameplay Pass 08 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_08_CLOSEOUT.md`
-- Controlled Gameplay Pass 09 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_09_CLOSEOUT.md`
-- Controlled Gameplay Pass 10 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_10_CLOSEOUT.md`
-- Controlled Gameplay Pass 11 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_11_CLOSEOUT.md`
-- Controlled Gameplay Pass 12 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_12_CLOSEOUT.md`
-- Controlled Gameplay Pass 13 closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_13_CLOSEOUT.md`
-- Movement-feel baseline decision: `docs/current/MOVEMENT_FEEL_BASELINE_DECISION.md`
-- Salvage/oxygen feedback plan: `docs/current/SALVAGE_OXYGEN_FEEDBACK_PLAN.md`
-- Salvage/oxygen feedback baseline decision: `docs/current/SALVAGE_OXYGEN_FEEDBACK_BASELINE_DECISION.md`
-- Salvage/oxygen feedback web preview verification: `docs/current/SALVAGE_OXYGEN_FEEDBACK_WEB_PREVIEW_VERIFICATION.md`
-- Oxygen pressure baseline decision: `docs/current/OXYGEN_PRESSURE_BASELINE_DECISION.md`
-- Route payoff visual baseline decision: `docs/current/ROUTE_PAYOFF_VISUAL_BASELINE_DECISION.md`
-- Route payoff web preview verification: `docs/current/ROUTE_PAYOFF_WEB_PREVIEW_VERIFICATION.md`
-- Expedition loop visual baseline decision: `docs/current/EXPEDITION_LOOP_VISUAL_BASELINE_DECISION.md`
-- Expedition loop web preview verification: `docs/current/EXPEDITION_LOOP_WEB_PREVIEW_VERIFICATION.md`
-- Pass 04 route-pressure visual baseline decision: `docs/current/PASS_04_ROUTE_PRESSURE_VISUAL_BASELINE_DECISION.md`
-- Pass 04 route-pressure web preview verification: `docs/current/PASS_04_ROUTE_PRESSURE_WEB_PREVIEW_VERIFICATION.md`
-- Pass 07 hazard-pressure visual baseline decision: `docs/current/PASS_07_HAZARD_PRESSURE_VISUAL_BASELINE_DECISION.md`
-- Pass 07 hazard-pressure web preview verification: `docs/current/PASS_07_HAZARD_PRESSURE_WEB_PREVIEW_VERIFICATION.md`
-- Pass 08 route-extension visual baseline decision: `docs/current/PASS_08_ROUTE_EXTENSION_VISUAL_BASELINE_DECISION.md`
-- Pass 08 route-extension web preview verification: `docs/current/PASS_08_ROUTE_EXTENSION_WEB_PREVIEW_VERIFICATION.md`
-- Pass 09 southwest-pocket visual baseline decision: `docs/current/PASS_09_SOUTHWEST_POCKET_VISUAL_BASELINE_DECISION.md`
-- Pass 09 southwest-pocket web preview verification: `docs/current/PASS_09_SOUTHWEST_POCKET_WEB_PREVIEW_VERIFICATION.md`
-- Pass 10 return-pressure visual baseline decision: `docs/current/PASS_10_RETURN_PRESSURE_VISUAL_BASELINE_DECISION.md`
-- Pass 10 return-pressure web preview verification: `docs/current/PASS_10_RETURN_PRESSURE_WEB_PREVIEW_VERIFICATION.md`
-- Pass 11 pre-pickup route cue visual baseline decision: `docs/current/PASS_11_PRE_PICKUP_ROUTE_CUE_VISUAL_BASELINE_DECISION.md`
-- Pass 11 pre-pickup route cue web preview verification: `docs/current/PASS_11_PRE_PICKUP_ROUTE_CUE_WEB_PREVIEW_VERIFICATION.md`
-- Pass 12 oxygen-rest visual baseline decision: `docs/current/PASS_12_OXYGEN_REST_VISUAL_BASELINE_DECISION.md`
-- Pass 12 oxygen-rest web preview verification: `docs/current/PASS_12_OXYGEN_REST_WEB_PREVIEW_VERIFICATION.md`
-- Pass 13 route-commitment visual baseline decision: `docs/current/PASS_13_ROUTE_COMMITMENT_VISUAL_BASELINE_DECISION.md`
-- Pass 13 route-commitment web preview verification: `docs/current/PASS_13_ROUTE_COMMITMENT_WEB_PREVIEW_VERIFICATION.md`
+- Current docs index: `README.md`
+- Architecture: `docs/current/ARCHITECTURE.md`
+- Tooling: `docs/current/TOOLING.md`
+- Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
+- Current pass closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_14_CLOSEOUT.md`
+- Current visual decision: `docs/current/PASS_14_OBJECTIVE_CUE_VISUAL_BASELINE_DECISION.md`
+- Current Web verification: `docs/current/PASS_14_OBJECTIVE_CUE_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -271,9 +213,10 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-08:
 
-- Active Pass 13 queue: none; #236-#245 completed route commitment objective, source metadata, runtime feedback, smoke/capture coverage, visual review, Web verification, and closeout.
+- Active Pass 14 queue: none; #278-#286 completed start-of-run objective cue planning, source/text contract, runtime feedback, smoke/capture coverage, visual review, Web verification, and closeout.
 - Active tooling/skill queue: none; #210 documented repo drift, #211 committed Pass 10 UID sidecars, #212 updated drift issue batching, and #223 added drift-batch-resolve.
 - Deferred optional slice-03 polish: #52 and #53 remain open.
+- Closed: #278-#286 completed Pass 14 start-of-run objective cue, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
 - Closed: #236-#245 completed Pass 13 route commitment objective, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
 - Closed: #224-#233 completed Pass 12 oxygen/rest route pressure, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
 - Closed: #213-#222 completed Pass 11 pre-pickup route readability, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
@@ -286,59 +229,11 @@ Current issue state as of 2026-07-08:
 - Closed: #129-#137 completed Pass 04 planning/setup, route-choice metadata, deterministic route metadata smokes, session best score, oxygen bonus/result breakdown, cargo-full feedback, and salvage collection feedback.
 - Closed: #138-#148 completed the remaining Pass 04 implementation/review/closeout work, including hazard warning/penalty pressure, safe-versus-deep metadata and smokes, oxygen threshold tuning, route outcome text/capture, visual baseline review, public Web verification, and pass closeout.
 - Closed: #149 completed related route-pressure tooling-index work.
-- Closed: #120-#128 completed Controlled Gameplay Pass 03, including scored salvage, cargo pressure, deterministic validation, run results, retry flow, one additional source-authored default-slice route choice, visual baseline review, and public Web preview verification.
-- Closed: #119 verified the public Web preview after the route-payoff pass
-- Closed: #118 accepted the route-payoff visual baseline for production slice 01
-- Closed: #108 verified the public Web preview after the salvage/oxygen feedback polish
-- Closed: #107 accepted the salvage/oxygen feedback overlay baselines for production slices 01-04
-- Closed: #106 implemented the salvage/oxygen feedback overlay polish and focused review capture
-- Closed: #105 planned the salvage/oxygen feedback readability pass
-- Closed: #104 accepted the Controlled Gameplay Pass 01 movement-feel baseline
-- Closed: #103 tuned the player swim acceleration/deceleration constants for Controlled Gameplay Pass 01
-- Closed: #102 added a deterministic `--smoke-movement-feel` probe for Controlled Gameplay Pass 01
-- Closed: #101 planned Controlled Gameplay Pass 01 as a movement-feel/readability pass
-- Closed: #100 added `--smoke-player-facing` to the `Godot Smoke` workflow
-- Closed: #84 planned Controlled Visual Revision 03 as the boat spawn entry art pass
-- Closed: #92 verified the public Web preview after the background-depth pass
-- Closed: #91 accepted the Controlled Visual Revision 04 background-depth baseline
-- Closed: #90 implemented the controlled background-depth art pass
-- Closed: #89 added a focused background-depth review capture
-- Closed: #88 planned Controlled Visual Revision 04 as the background-depth pass
-- Closed: #99 verified the public Web preview after the #98 player-facing fix
-- Closed: #98 fixed the player direction-change double-facing flash by keeping the root transform stable and flipping only visual children
-- Closed: #97 verified the public Web preview after the terrain tileset v2 pass
-- Closed: #96 accepted the Controlled Visual Revision 05 terrain tileset v2 baselines
-- Closed: #95 implemented the controlled cave terrain tileset v2 pass
-- Closed: #94 added a terrain atlas coverage review tool for the Controlled Visual Revision 05 terrain pass
-- Closed: #93 planned Controlled Visual Revision 05 as the terrain tileset v2 pass
-- Closed: #87 verified the public Web preview after the boat entry art pass
-- Closed: #86 accepted the boat spawn entry art baseline
-- Closed: #85 implemented the controlled boat spawn entry art pass
-- Closed: #83 adds a controlled visual revision checklist/template
-- Closed: #81 exposes Web export build metadata so public-preview checks can detect stale Pages deploys
-- Closed: #80 validates committed asset manifest paths
-- Closed: #79 verified the public web preview after the player sprite pass
-- Closed: #78 accepted the player sprite baseline after implementation and review
-- Closed: #77 implemented the controlled player sprite pass
-- Closed: #76 added a focused player-readability capture path for CVR02 review
-- Closed: #82 prevented baseline acceptance tooling from retaining ignored `.import` sidecars in accepted baseline directories
-- Closed: #74 refreshed the actionable backlog and recorded the recommended order in `docs/current/BACKLOG_REFRESH_2026_07_06.md`
-- Closed: #73 selected the player/diver placeholder replacement as Controlled Visual Revision 02 and documented the follow-up issue shape
-- Closed: #72 hardened the web preview check for generic texture asset failures and verified the public preview after deployment
-- Closed: #75 reconciled the `production_slice_01` accepted baseline with the current six-view capture set
-- Closed: #71 accepted the #70 sprite-prop pass for current prototype use and updated accepted baselines for production slices 02, 03, and 04 while leaving slice 01 to #75
-- Closed: #70 implemented the controlled sprite prop pass for salvage and hazards while keeping source maps, collision, gameplay behavior, debug markers, and accepted baselines unchanged
-- Closed: #69 selected the first controlled visual revision target and created #70 for implementation
-- Closed: #68 added `python tools/manage_production_slice_baseline.py compare-all` for aggregate accepted-baseline review sheets
-- Closed: #67 refreshed the roadmap after accepted production slices and recorded the controlled visual-revision phase decision
-- Closed: #66 added `docs/current/PRODUCTION_SLICE_INDEX.md` as the compact status index for slices 01-04
-- Closed: #65 added all four production-slice route smokes to the `Godot Smoke` workflow
-- Closed: #64 accepted the current five-view `production_slice_02` normal captures as a named visual baseline
-- Closed: #57 added a local/editor review map selector and a headless selector reload smoke
-- Closed: #60 added an aggregate production-slice capture completeness check and runs it in `Godot Smoke`
-- Closed: #63 accepted the current five-view `production_slice_04` normal captures as a named visual baseline
-- Closed: #62 evaluated `production_slice_04` and recommended keeping it as a validated lower-left connector/return-loop reference slice, not the default preview
-- Closed: #61 authored `production_slice_04` from the lower-left loop with generator, validation, route smoke, captures, and review sheet
+- Closed: #120-#128 completed Controlled Gameplay Pass 03 with scored salvage, cargo pressure, run results, retry flow, one additional source-authored route choice, visual review, and Web verification.
+- Closed: #101-#119 completed early movement, salvage/oxygen feedback, and route-payoff gameplay passes with matching smoke, baseline, and Web preview coverage.
+- Closed: #84-#100 completed boat, background-depth, terrain-tileset, player-facing, smoke, baseline, and Web-preview work for controlled visual revisions 03-05.
+- Closed: #69-#83 completed controlled visual-revision setup, prop/player sprite passes, asset/baseline tooling, web-preview hardening, and backlog refresh work.
+- Closed: #57-#68 completed the production-slice status/capture/baseline tooling lane for slices 01-04.
 - Closed: #59 selected the lower-left loop as the production-slice-04 candidate and created #61 for implementation
 - Closed: #58 decided not to promote `production_slice_03`; `production_slice_01` remains the default preview map
 - Closed: #55 accepted the current five-view `production_slice_03` normal captures as a named visual baseline
@@ -536,7 +431,7 @@ Recent important commits:
 - The first scoped expedition pressure is a simple oxygen timer: oxygen drains away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held/unbanked salvage to the map.
 - Current oxygen pressure timing keeps a 90-second tank, starts `LOW` feedback at 40 seconds, and escalates to `CRITICAL` at 15 seconds. The safe/deep route comparison smoke keeps the short safe route comfortable while verifying the deeper route shows `LOW` and `CRITICAL` before returning.
 - `lower_loop_oxygen_rest_pocket` provides the Pass 12 limited oxygen-rest beat: compact `Rest pocket +oxygen` feedback, slow recovery up to a 45-second cap, and deterministic `--smoke-pass-12-oxygen-rest-pressure` coverage.
-- `deep_cache_route_objective` provides the Pass 13 route-commitment beat: bank `salvage_lower_loop` and the timed `salvage_deep_right_cache` in one committed route chain, with compact objective overlay/result text and deterministic `--smoke-pass-13-route-commitment` coverage.
+- `deep_cache_route_objective` provides the Pass 13 route-commitment beat and Pass 14 start cue: bank `salvage_lower_loop` and the timed `salvage_deep_right_cache` in one committed route chain, with compact objective overlay/result text, `Objective: Deep cache 0/2` at the boat/extraction area before progress, and deterministic `--smoke-pass-13-route-commitment` / `--smoke-pass-14-objective-cue` coverage.
 - Salvage map data may include optional `tier` values. Missing tiers default conceptually to `common`; the current supported tiers are `common` and `valuable`. Runtime salvage score is tier-derived for now: `common` is worth 100 and `valuable` is worth 300, and pickup status feedback names the tier and score. Completed expeditions add a small runtime oxygen bonus of 1 point per remaining oxygen second; failed expeditions receive no oxygen bonus.
 - Held salvage capacity is currently 2 pickups. Full cargo blocks additional collection without hiding or banking the blocked pickup, shows a compact return-to-extraction status prompt, and returning to extraction frees capacity.
 - Run completion shows a compact result panel with final total score, salvage score, oxygen bonus, current map session-best score, salvage banked, optional route outcome, oxygen, and retry prompt. Route-tagged production-slice completions currently summarize the strongest banked route as `Route: Deep route` or `Route: Safe route`; untagged and failed runs stay generic. Oxygen depletion now shows the same result panel as a failed expedition with zero oxygen bonus and pauses the run until reset without overwriting session best. The panel stays hidden during normal exploration.
@@ -554,7 +449,7 @@ Recent important commits:
 
 ## Recommended Next Work
 
-Pass 13 completed the deep-cache route-commitment objective on the default `production_slice_01` slice. The next recommended gameplay pass should make that objective clearer before the dive with one compact start-of-run cue, using existing systems before adding more map scale.
+Pass 14 completed the compact start-of-run objective cue on the default `production_slice_01` slice. The next recommended gameplay pass should make that objective easier to follow after leaving the boat with one narrow objective-readability improvement, using existing route-objective metadata before adding more map scale.
 
 Accepted constraints for the next batch:
 

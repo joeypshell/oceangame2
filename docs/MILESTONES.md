@@ -55,9 +55,9 @@ Done when:
 
 ## Current Roadmap Decision
 
-As of 2026-07-08, Controlled Gameplay Pass 13 is complete. See `docs/current/CONTROLLED_GAMEPLAY_PASS_13_CLOSEOUT.md` for the latest closeout decision and `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table.
+As of 2026-07-08, Controlled Gameplay Pass 14 is complete. See `docs/current/CONTROLLED_GAMEPLAY_PASS_14_CLOSEOUT.md` for the latest closeout decision and `docs/current/PRODUCTION_SLICE_INDEX.md` for the current slice status table.
 
-The project can now plan one small start-of-run objective cue using existing route-objective metadata, still through small source-driven passes rather than whole-map productionization.
+The project can now plan one small objective-follow-through/readability pass after the player leaves the boat, still through small source-driven passes rather than whole-map productionization.
 
 What the current prototype has proven:
 
@@ -74,6 +74,7 @@ What the current prototype has proven:
 - the default slice now has one source-authored pre-pickup route cue at `southwest_pocket_pre_pickup_cue`, compact `Optional pocket ahead` feedback, deterministic smoke coverage, focused capture, accepted visual impact, and public Web verification
 - the default slice now has one source-authored oxygen/rest pocket at `lower_loop_oxygen_rest_pocket`, compact `Rest pocket +oxygen` feedback, deterministic smoke coverage, focused capture, accepted visual impact, and public Web verification
 - the default slice now has one source-authored route commitment objective at `deep_cache_route_objective`, compact objective progress/result feedback, deterministic smoke coverage, focused capture, visual review with no baseline acceptance needed, and public Web verification
+- the default slice now has one compact start-of-run objective cue derived from existing `deep_cache_route_objective` metadata, deterministic smoke coverage, focused capture, visual review with no baseline acceptance needed, and public Web verification
 
 Current constraints:
 
@@ -85,7 +86,7 @@ Current constraints:
 
 Current next direction:
 
-- Plan a focused Controlled Gameplay Pass 14 around one compact start-of-run objective cue at the boat/extraction area using existing `route_objectives` metadata, smoke, focused capture, visual review, and Web verification.
+- Plan a focused Controlled Gameplay Pass 15 around one compact objective-follow-through/readability improvement after leaving the boat, using existing `route_objectives` metadata, smoke, focused capture, visual review, and Web verification.
 
 Recently completed current-state work:
 
@@ -102,3 +103,4 @@ Recently completed current-state work:
 - #213-#222 completed Controlled Gameplay Pass 11 pre-pickup route readability, source metadata, smoke/capture coverage, visual review, Web verification, and closeout.
 - #224-#233 completed Controlled Gameplay Pass 12 oxygen/rest route pressure, source metadata, smoke/capture coverage, visual review, Web verification, and closeout.
 - #236-#245 completed Controlled Gameplay Pass 13 route commitment objective, source metadata, runtime feedback, smoke/capture coverage, visual review, Web verification, and closeout.
+- #278-#286 completed Controlled Gameplay Pass 14 start-of-run objective cue, source/text contract, runtime feedback, smoke/capture coverage, visual review, Web verification, and closeout.
