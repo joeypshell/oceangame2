@@ -6,15 +6,17 @@ This file is the compact handoff for new Codex or ChatGPT Project sessions. It c
 
 ## Current Goal
 
-`oceangame2` is a visual-first Godot prototype for a side-view ocean salvage game. It is not trying to rebuild OceanGame yet. The immediate purpose is to prove a stable workflow for:
+`oceangame2` is a visual-first Godot prototype growing toward a finished small side-view diver salvage game. It is not trying to rebuild the full OceanGame yet. The current product target is a complete compact diver game first, with:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
 - repeatable screenshots and browser preview
 - fixing one visual issue without resetting unrelated visuals
-- eventually scaling the workflow into the larger OceanGame idea
+- expedition pressure through oxygen, cargo, hazards, routes, and objectives
+- tool-like salvage interactions and limited progression
+- eventual scaling into the larger 2D Subnautica-like OceanGame idea
 
-The project is intentionally simple on gameplay until the visual pipeline is trustworthy.
+Controlled gameplay/visual passes are now a validation lane inside the roadmap, not the whole roadmap. New work should serve curiosity, pressure, payoff, remembered-place progress, meaningful route choice, or a reason to try another expedition.
 
 ## Repository
 
@@ -33,12 +35,13 @@ The project is intentionally simple on gameplay until the visual pipeline is tru
 - Current terrain atlas: `assets/terrain_tiles/cave_tileset_v2.png`
 - Web export workflow: `.github/workflows/godot-web-export.yml`
 - Current docs index: `README.md`
+- Current roadmap: `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Current pass closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_14_CLOSEOUT.md`
-- Current visual decision: `docs/current/PASS_14_OBJECTIVE_CUE_VISUAL_BASELINE_DECISION.md`
-- Current Web verification: `docs/current/PASS_14_OBJECTIVE_CUE_WEB_PREVIEW_VERIFICATION.md`
+- Latest completed pass closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_14_CLOSEOUT.md`
+- Active pass docs: `docs/current/CONTROLLED_GAMEPLAY_PASS_15_PLAN.md`, `docs/current/CONTROLLED_GAMEPLAY_PASS_15_OBJECTIVE_STEP_CUE_CONTRACT.md`
+- Latest visual/Web verification: `docs/current/PASS_14_OBJECTIVE_CUE_VISUAL_BASELINE_DECISION.md`, `docs/current/PASS_14_OBJECTIVE_CUE_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -213,7 +216,8 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-08:
 
-- Active Pass 14 queue: none; #278-#286 completed start-of-run objective cue planning, source/text contract, runtime feedback, smoke/capture coverage, visual review, Web verification, and closeout.
+- Active roadmap queue: finish or explicitly defer the remaining Pass 15 objective-follow-through review tail under the first simple-diver-game milestone, then choose the next implementation batch from the core loop or salvage-tool milestones.
+- Active Pass 15 implementation half: #298-#302 completed planning, source/text contract, metadata validation, source marker authoring, and compact runtime feedback.
 - Active tooling/skill queue: none; #210 documented repo drift, #211 committed Pass 10 UID sidecars, #212 updated drift issue batching, and #223 added drift-batch-resolve.
 - Deferred optional slice-03 polish: #52 and #53 remain open.
 - Closed: #278-#286 completed Pass 14 start-of-run objective cue, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
@@ -431,7 +435,7 @@ Recent important commits:
 - The first scoped expedition pressure is a simple oxygen timer: oxygen drains away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held/unbanked salvage to the map.
 - Current oxygen pressure timing keeps a 90-second tank, starts `LOW` feedback at 40 seconds, and escalates to `CRITICAL` at 15 seconds. The safe/deep route comparison smoke keeps the short safe route comfortable while verifying the deeper route shows `LOW` and `CRITICAL` before returning.
 - `lower_loop_oxygen_rest_pocket` provides the Pass 12 limited oxygen-rest beat: compact `Rest pocket +oxygen` feedback, slow recovery up to a 45-second cap, and deterministic `--smoke-pass-12-oxygen-rest-pressure` coverage.
-- `deep_cache_route_objective` provides the Pass 13 route-commitment beat and Pass 14 start cue: bank `salvage_lower_loop` and the timed `salvage_deep_right_cache` in one committed route chain, with compact objective overlay/result text, `Objective: Deep cache 0/2` at the boat/extraction area before progress, and deterministic `--smoke-pass-13-route-commitment` / `--smoke-pass-14-objective-cue` coverage.
+- `deep_cache_route_objective` provides the Pass 13 route-commitment beat, Pass 14 start cue, and Pass 15 first-step route cue: bank `salvage_lower_loop` and the timed `salvage_deep_right_cache` in one committed route chain, with compact objective overlay/result text, `Objective: Deep cache 0/2` at the boat before progress, and `Objective route: Lower loop` near the first required target.
 - Salvage map data may include optional `tier` values. Missing tiers default conceptually to `common`; the current supported tiers are `common` and `valuable`. Runtime salvage score is tier-derived for now: `common` is worth 100 and `valuable` is worth 300, and pickup status feedback names the tier and score. Completed expeditions add a small runtime oxygen bonus of 1 point per remaining oxygen second; failed expeditions receive no oxygen bonus.
 - Held salvage capacity is currently 2 pickups. Full cargo blocks additional collection without hiding or banking the blocked pickup, shows a compact return-to-extraction status prompt, and returning to extraction frees capacity.
 - Run completion shows a compact result panel with final total score, salvage score, oxygen bonus, current map session-best score, salvage banked, optional route outcome, oxygen, and retry prompt. Route-tagged production-slice completions currently summarize the strongest banked route as `Route: Deep route` or `Route: Safe route`; untagged and failed runs stay generic. Oxygen depletion now shows the same result panel as a failed expedition with zero oxygen bonus and pauses the run until reset without overwriting session best. The panel stays hidden during normal exploration.
@@ -449,17 +453,17 @@ Recent important commits:
 
 ## Recommended Next Work
 
-Pass 14 completed the compact start-of-run objective cue on the default `production_slice_01` slice. The next recommended gameplay pass should make that objective easier to follow after leaving the boat with one narrow objective-readability improvement, using existing route-objective metadata before adding more map scale.
+Use `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md` as the current north star. The project should now finish the small diver game before planning the larger 2D Subnautica-like expansion.
 
 Accepted constraints for the next batch:
 
 - Keep `production_slice_01` as the default preview map.
 - Preserve `maps/full_cave_sketch_01.greybox.json` as a topology draft and planning source.
-- Do not move the entire full sketch into production yet; grow route scale one source-authored segment at a time.
+- Do not move the entire full sketch into production yet; grow route scale only when it supports the roadmap.
 - Keep map topology, collision, spawn, extraction, and camera tests source-driven.
-- Keep gameplay scoped to movement, salvage, hazards, extraction, reset, and review UI until the visual pipeline is trustworthy.
-- Do not expand into economy, upgrades, inventory, enemies, procedural generation, save files, or broad art replacement.
-- Do not start another map-scale connector pass until the next change creates clearer moment-to-moment tension or readability.
+- Keep gameplay scoped, but start selecting work that builds the finished simple diver game: core loop clarity, salvage tools, limited progression, objective structure, and presentation.
+- Do not expand into enemies, procedural generation, complex inventory, base building, save-heavy sandbox systems, or broad art replacement.
+- Do not start another map-scale connector pass until it creates clearer moment-to-moment tension, payoff, progression, or route memory.
 - Keep #52/#53 as optional post-baseline slice-03 improvement issues unless the selected goal shifts back to slice-03 presentation.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.

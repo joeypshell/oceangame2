@@ -2,7 +2,9 @@
 
 ## Purpose
 
-The current project is a minimal Godot 4.7 greybox for testing the side-view underwater cave map before creating production art.
+The current project is a Godot 4.7 side-view ocean salvage prototype for proving the source-driven map, terrain, validation, capture, and gameplay workflow that will support a finished small diver game.
+
+The product roadmap is `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`. Controlled gameplay and visual passes are implementation/validation lanes inside that roadmap, not the whole product direction.
 
 ## Source Of Truth
 
@@ -44,6 +46,7 @@ Additional current map sources:
   - Authors the Pass 11 `southwest_pocket_pre_pickup_cue` marker for compact pre-pickup route cue feedback before `salvage_southwest_return_cache`.
   - Authors the Pass 12 `lower_loop_oxygen_rest_pocket` marker for limited `Rest pocket +oxygen` feedback in the lower-loop return corridor.
   - Authors the Pass 13 `deep_cache_route_objective` route objective requiring `salvage_lower_loop` and `salvage_deep_right_cache` to be banked in one committed route chain.
+  - Authors the Pass 15 `deep_cache_first_step_cue` marker for compact `Objective route: Lower loop` follow-through feedback after leaving the boat.
   - Current default preview map.
   - Can also be selected explicitly with `.\tools\open_godot_project.ps1 -Run -ProductionSliceMap`.
 - `maps/production_slice_02.greybox.json`
@@ -82,14 +85,14 @@ Additional current map sources:
   - Applies camera bounds from the world map size.
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
   - Shows compact preview review context, salvage progress, timed-salvage feedback, oxygen-rest feedback, route-objective progress/start cue, and scoped oxygen pressure.
-  - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress/cancel/complete feedback, cargo banking, oxygen pressure, limited oxygen-rest recovery, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, route outcome result text, source-tagged return-pressure feedback, source-tagged pre-pickup route cue feedback, Pass 13 route-commitment objective result text, and Pass 14 start-of-run objective cue text.
+  - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress/cancel/complete feedback, cargo banking, oxygen pressure, limited oxygen-rest recovery, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, route outcome result text, source-tagged return-pressure feedback, source-tagged pre-pickup route cue feedback, Pass 13 route-commitment objective result text, Pass 14 start-of-run objective cue text, and Pass 15 objective step cue text.
   - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, focused timed-salvage capture, focused Pass 07 hazard-pressure capture, focused Pass 08 route-extension capture, focused Pass 09 southwest-pocket decision capture, focused Pass 10 return-pressure capture, focused Pass 11 pre-pickup route-cue capture, focused Pass 12 oxygen-rest capture, focused Pass 13 route-commitment capture, and focused Pass 14 objective-cue capture.
   - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, timed salvage, hazard pressure, oxygen pressure, oxygen-rest pressure, cargo/scoring, route outcome result, player-facing, movement-feel, Pass 08 route-extension, Pass 09 southwest-pocket decision, Pass 10 return pressure, Pass 11 pre-pickup route cue, Pass 13 route commitment, Pass 14 objective cue, and production-slice route checks.
   - Uses `scripts/main/timed_salvage_controller.gd` for the narrow timed salvage interaction.
   - Uses `scripts/main/return_pressure_feedback.gd` for the narrow source-tagged cargo-full banking prompt.
   - Uses `scripts/main/pre_pickup_route_cue_feedback.gd` for the narrow source-tagged pre-pickup route cue prompt.
   - Uses `scripts/main/oxygen_rest_pocket_feedback.gd` for the narrow source-tagged oxygen-rest prompt and cap text.
-  - Uses `scripts/main/route_commitment_feedback.gd` for the narrow source-authored route objective overlay, start cue, and result text.
+  - Uses `scripts/main/route_commitment_feedback.gd` for the narrow source-authored route objective overlay, start cue, objective step cue, and result text.
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.
@@ -154,6 +157,7 @@ Art placement must not create, remove, or move collision.
 - Pass 12 tags `lower_loop_oxygen_rest_pocket` as the selected oxygen/rest marker, adds compact `Rest pocket +oxygen` feedback with recovery capped below the boat/extraction maximum, and protects the behavior with `--smoke-pass-12-oxygen-rest-pressure`.
 - Pass 13 authors `deep_cache_route_objective`, requires `salvage_lower_loop` and `salvage_deep_right_cache` to be banked for completion, adds compact objective overlay/result feedback, and protects the behavior with `--smoke-pass-13-route-commitment`.
 - Pass 14 derives the start-of-run `Objective: Deep cache 0/2` cue from `deep_cache_route_objective` while the player is at the boat/extraction area before objective progress, and protects the behavior with `--smoke-pass-14-objective-cue`.
+- Pass 15 adds `deep_cache_first_step_cue` for compact `Objective route: Lower loop` follow-through feedback near the first required deep-cache route target.
 - The default slice has one source-authored `timed_salvage` target, `salvage_deep_right_cache`, that renders a small in-world affordance and requires 2.5 seconds of in-range progress before entering held cargo.
 - Timed-salvage feedback covers progress, cancel, completion, cargo-full blocking, hazard reset, and oxygen failure/reset through `--smoke-timed-salvage`.
 - `--capture-route-outcome-result` provides a focused review capture for the completed-run route outcome panel without replacing normal accepted baselines.
