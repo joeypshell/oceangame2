@@ -145,6 +145,14 @@ Capture the focused Pass 26 result presentation view:
 
 This starts from the default production slice, travels through the lower-left connector by the normal runtime path, completes the slice-04 final-dive payoff, frames the completed result panel with `Final dive signal locked`, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_26_result_presentation/production_slice_04_pass_26_result_presentation.png`.
 
+Capture the focused Pass 27 player-facing review view:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-27-player-facing
+```
+
+This loads the default production slice, places the player in a readable open-water area, applies deterministic left/right reversals, frames the final right-facing body and light alignment, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_27_player_facing/production_slice_01_pass_27_player_facing.png`.
+
 Capture the focused Pass 18 progression upgrade view:
 
 ```powershell
