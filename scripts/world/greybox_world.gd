@@ -16,6 +16,7 @@ const GreyboxBackgroundRenderer := preload("res://scripts/world/greybox_backgrou
 const GreyboxPropRenderer := preload("res://scripts/world/greybox_prop_renderer.gd")
 const GreyboxExtractionRenderer := preload("res://scripts/world/greybox_extraction_renderer.gd")
 const GreyboxRouteMarkerRenderer := preload("res://scripts/world/greybox_route_marker_renderer.gd")
+const GreyboxVisibilityZoneRenderer := preload("res://scripts/world/greybox_visibility_zone_renderer.gd")
 
 const SALVAGE_TIER_SCORES := {
 	"common": 100,
@@ -41,6 +42,7 @@ var _extraction_zones: Array = []
 var _boat_entities: Array = []
 var _world_connector_zones: Array = []
 var _current_gate_zones: Array = []
+var _visibility_zones: Array = []
 var _progression_containers: Array = []
 var _moving_hazards: Array = []
 var _spawn_positions_by_id := {}
@@ -62,6 +64,7 @@ var _background_renderer
 var _prop_renderer
 var _extraction_renderer
 var _route_marker_renderer
+var _visibility_zone_renderer
 
 
 func _ready() -> void:
@@ -73,6 +76,7 @@ func _ready() -> void:
 	_prop_renderer = GreyboxPropRenderer.new()
 	_extraction_renderer = GreyboxExtractionRenderer.new()
 	_route_marker_renderer = GreyboxRouteMarkerRenderer.new()
+	_visibility_zone_renderer = GreyboxVisibilityZoneRenderer.new()
 	load_greybox()
 
 
@@ -98,6 +102,7 @@ func load_greybox() -> void:
 	_boat_entities = []
 	_world_connector_zones = []
 	_current_gate_zones = []
+	_visibility_zones = []
 	_progression_containers = []
 	_moving_hazards = []
 	_spawn_positions_by_id = {}
@@ -218,6 +223,20 @@ func get_current_gate_at(position: Vector2) -> Dictionary:
 	for zone in _current_gate_zones:
 		if _rect_from_item(zone).has_point(position):
 			return _current_gate_runtime_info(zone)
+	return {}
+
+
+func get_visibility_zones() -> Array:
+	var zones := []
+	for zone in _visibility_zones:
+		zones.append(_visibility_zone_runtime_info(zone))
+	return zones
+
+
+func get_visibility_zone_at(position: Vector2) -> Dictionary:
+	for zone in _visibility_zones:
+		if _rect_from_item(zone).has_point(position):
+			return _visibility_zone_runtime_info(zone)
 	return {}
 
 
@@ -464,6 +483,19 @@ func _current_gate_runtime_info(zone: Dictionary) -> Dictionary:
 	}
 
 
+func _visibility_zone_runtime_info(zone: Dictionary) -> Dictionary:
+	return {
+		"id": str(zone.get("id", "visibility_zone")),
+		"center": _rect_center(zone),
+		"rect": _rect_from_item(zone),
+		"visibility_level": str(zone.get("visibility_level", "dim")),
+		"visibility_label": str(zone.get("visibility_label", "")),
+		"required_upgrade_id": str(zone.get("required_upgrade_id", "")),
+		"route_context": str(zone.get("route_context", "")),
+		"visual_only": bool(zone.get("visual_only", false)),
+	}
+
+
 func _moving_hazard_runtime_info(hazard: Dictionary) -> Dictionary:
 	var hazard_id := str(hazard.get("id", "moving_hazard"))
 	var center: Vector2 = _moving_hazard_positions_by_id.get(hazard_id, _moving_hazard_initial_center(hazard))
@@ -610,7 +642,11 @@ func _build_zones(zones: Array) -> void:
 				_world_connector_zones.append(zone)
 			if bool(zone.get("current_gate", false)):
 				_current_gate_zones.append(zone)
-			_route_marker_renderer_helper().add_route_marker(_marker_root, zone, tile_size, show_debug_overlay, _debug_renderer_helper())
+			if bool(zone.get("visibility_zone", false)):
+				_visibility_zones.append(zone)
+				_visibility_zone_renderer_helper().add_visibility_zone(_marker_root, zone, tile_size, show_debug_overlay, _debug_renderer_helper())
+			else:
+				_route_marker_renderer_helper().add_route_marker(_marker_root, zone, tile_size, show_debug_overlay, _debug_renderer_helper())
 
 
 func _build_progression_containers(containers: Array) -> void:
@@ -774,6 +810,12 @@ func _route_marker_renderer_helper():
 	if _route_marker_renderer == null:
 		_route_marker_renderer = GreyboxRouteMarkerRenderer.new()
 	return _route_marker_renderer
+
+
+func _visibility_zone_renderer_helper():
+	if _visibility_zone_renderer == null:
+		_visibility_zone_renderer = GreyboxVisibilityZoneRenderer.new()
+	return _visibility_zone_renderer
 
 
 func _asset_lookup_helper():
