@@ -5,6 +5,7 @@ const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const CurrentGateCapture := preload("res://scripts/main/captures/current_gate_capture.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
+const DestinationPayoffFeedback := preload("res://scripts/main/destination_payoff_feedback.gd")
 const MovingHazardCapture := preload("res://scripts/main/captures/moving_hazard_capture.gd")
 const MovingHazardController := preload("res://scripts/main/moving_hazard_controller.gd")
 const OxygenRestPocketFeedback := preload("res://scripts/main/oxygen_rest_pocket_feedback.gd")
@@ -117,6 +118,7 @@ var _world
 var _player
 var _capture_controller
 var _current_gate
+var _destination_payoff_feedback
 var _moving_hazards
 var _oxygen_rest_feedback
 var _pre_pickup_route_cue_feedback
@@ -181,6 +183,7 @@ var _last_status_note := ""
 func _ready() -> void:
 	_capture_controller = CaptureController.new(self)
 	_current_gate = CurrentGateController.new()
+	_destination_payoff_feedback = DestinationPayoffFeedback.new()
 	_moving_hazards = MovingHazardController.new()
 	_oxygen_rest_feedback = OxygenRestPocketFeedback.new()
 	_pre_pickup_route_cue_feedback = PrePickupRouteCueFeedback.new()
@@ -791,6 +794,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_primary_dive_objective.reset(world)
 	_refresh_route_commitment_feedback(world)
 	_refresh_salvage_route_metadata(world)
+	_refresh_destination_payoff_feedback(world)
 	_banked_validation_route_counts = {}
 	_hazard_cooldown_seconds = 0.0
 	_hazard_feedback_seconds = 0.0
@@ -1550,6 +1554,7 @@ func _is_collection_status_note(status_note: String) -> bool:
 		or status_note.begins_with("Pry interrupted")
 		or status_note.find(" secured +") != -1
 		or status_note.find(" opened +") != -1
+		or (_destination_payoff_feedback != null and _destination_payoff_feedback.is_collection_note(status_note))
 		or status_note == "Salvage interrupted"
 	)
 
@@ -1607,6 +1612,15 @@ func _refresh_salvage_route_metadata(world) -> void:
 		_salvage_validation_routes_by_id[salvage_id] = validation_route
 
 
+func _refresh_destination_payoff_feedback(world) -> void:
+	if _destination_payoff_feedback == null:
+		return
+	if world == null or not world.has_method("get_salvage_centers"):
+		_destination_payoff_feedback.reset([])
+		return
+	_destination_payoff_feedback.reset(world.get_salvage_centers())
+
+
 func _refresh_route_commitment_feedback(world) -> void:
 	if _route_commitment_feedback == null:
 		return
@@ -1655,6 +1669,10 @@ func _route_outcome_label(validation_route: String) -> String:
 		return "Deep route"
 	if validation_route == SOUTHWEST_POCKET_DECISION_ID:
 		return "Southwest pocket"
+	if _destination_payoff_feedback != null:
+		var destination_label: String = _destination_payoff_feedback.route_label(validation_route)
+		if not destination_label.is_empty():
+			return destination_label
 	return validation_route.replace("_", " ")
 
 
@@ -1662,6 +1680,10 @@ func _salvage_collection_feedback_for_id(salvage_id: String, tier: String, score
 	var validation_route := str(_salvage_validation_routes_by_id.get(salvage_id, ""))
 	if validation_route == SOUTHWEST_POCKET_DECISION_ID:
 		return "Southwest pocket payoff +%d" % score
+	if _destination_payoff_feedback != null:
+		var destination_feedback: String = _destination_payoff_feedback.collection_feedback(salvage_id, score)
+		if not destination_feedback.is_empty():
+			return destination_feedback
 	return _salvage_collection_feedback(tier, score)
 
 
