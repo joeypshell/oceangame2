@@ -695,7 +695,7 @@ func _process(delta: float) -> void:
 			return
 	_update_hazard_warning()
 
-	if _held_salvage < HELD_SALVAGE_CAPACITY:
+	if _held_salvage < _held_salvage_capacity():
 		var nearby_salvage: Dictionary = _world.get_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
 		var nearby_interaction := str(nearby_salvage.get("interaction", "instant"))
 		if not nearby_salvage.is_empty() and nearby_interaction == "timed_salvage":
@@ -759,7 +759,7 @@ func _complete_route_outcome_review_state() -> bool:
 	for salvage in _salvage_centers_for_full_collection():
 		_player.global_position = salvage["center"]
 		_collect_salvage_for_review_state(salvage)
-		if _held_salvage >= HELD_SALVAGE_CAPACITY:
+		if _held_salvage >= _held_salvage_capacity():
 			_player.global_position = _world.get_extraction_center()
 			_process(0.0)
 
@@ -845,6 +845,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		_reset_run()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_U:
 		_try_purchase_oxygen_tank_upgrade()
+	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_C:
+		_try_purchase_cargo_capacity_upgrade()
 
 
 func _reset_run() -> void:
@@ -1079,7 +1081,7 @@ func _update_status_label() -> void:
 		return
 
 	if _total_salvage <= 0:
-		_status_label.text = "Score 0\nSalvage banked 0/0\nHeld 0/%d\nOxygen --" % HELD_SALVAGE_CAPACITY
+		_status_label.text = "Score 0\nSalvage banked 0/0\nHeld 0/%d\nOxygen --" % _held_salvage_capacity()
 		_update_result_panel()
 		return
 
@@ -1094,7 +1096,7 @@ func _update_status_label() -> void:
 	elif _run_failed:
 		prompt = "Oxygen depleted - press R"
 		objective_step_cue_blocked = true
-	elif _held_salvage >= HELD_SALVAGE_CAPACITY:
+	elif _held_salvage >= _held_salvage_capacity():
 		prompt = _cargo_full_prompt()
 		objective_step_cue_blocked = true
 	elif not _hazard_warning_id.is_empty():
@@ -1126,7 +1128,7 @@ func _update_status_label() -> void:
 		_banked_salvage,
 		_total_salvage,
 		_held_salvage,
-		HELD_SALVAGE_CAPACITY,
+		_held_salvage_capacity(),
 		_held_salvage_score,
 		oxygen_text,
 		progression_text,
@@ -1215,6 +1217,8 @@ func _is_progression_status_note(status_note: String) -> bool:
 	return (
 		status_note == "O2 tank upgraded"
 		or status_note == "O2 tank already upgraded"
+		or status_note == "Cargo +1 upgraded"
+		or status_note == "Cargo +1 already upgraded"
 		or status_note == "Upgrade at extraction"
 		or status_note == "Upgrade blocked"
 		or status_note.begins_with("Need ")
@@ -1371,8 +1375,41 @@ func _try_purchase_oxygen_tank_upgrade() -> bool:
 	return false
 
 
+func _try_purchase_cargo_capacity_upgrade() -> bool:
+	if _world == null or _player == null or _session_progression == null:
+		return false
+	if not _world.is_inside_extraction(_player.global_position):
+		_last_status_note = "Upgrade at extraction"
+		_update_status_label()
+		return false
+	var result: Dictionary = _session_progression.purchase_cargo_capacity_upgrade()
+	if bool(result.get("purchased", false)):
+		_last_status_note = "Cargo +1 upgraded"
+		_update_status_label()
+		return true
+	var reason := str(result.get("reason", "blocked"))
+	if reason == "insufficient_funds":
+		_last_status_note = "Need %d more" % int(result.get("needed", 0))
+	elif reason == "already_purchased":
+		_last_status_note = "Cargo +1 already upgraded"
+	else:
+		_last_status_note = "Upgrade blocked"
+	_update_status_label()
+	return false
+
+
 func _has_oxygen_tank_upgrade() -> bool:
 	return _session_progression != null and _session_progression.has_oxygen_tank_upgrade()
+
+
+func _has_cargo_capacity_upgrade() -> bool:
+	return _session_progression != null and _session_progression.has_cargo_capacity_upgrade()
+
+
+func _held_salvage_capacity() -> int:
+	if _session_progression == null:
+		return HELD_SALVAGE_CAPACITY
+	return HELD_SALVAGE_CAPACITY + _session_progression.cargo_capacity_bonus()
 
 
 func _oxygen_capacity_seconds() -> float:
