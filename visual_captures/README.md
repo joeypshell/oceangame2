@@ -20,6 +20,8 @@
 
 `visual_captures/pass_14_objective_cue/` contains a focused generated screenshot of the Pass 14 start-of-run objective cue at the boat/extraction area.
 
+`visual_captures/pass_15_objective_follow_through/` contains a focused generated screenshot of the Pass 15 in-route objective-follow-through cue before collecting `salvage_lower_loop`.
+
 These captures are not automatically approved baselines. They are review artifacts used to compare the current in-engine result against `visual_baselines/` and the art direction docs.
 
 Preview captures include the compact review overlay with map id, build label, and salvage progress.
@@ -103,3 +105,11 @@ Regenerate the focused Pass 14 objective-cue capture with:
 ```
 
 This capture frames the boat/extraction start context with `Objective: Deep cache 0/2` visible, and is a review artifact, not an accepted baseline by itself.
+
+Regenerate the focused Pass 15 objective-follow-through capture with:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-15-objective-follow-through
+```
+
+This capture frames `deep_cache_first_step_cue` with `Objective route: Lower loop` visible before collecting `salvage_lower_loop`, and is a review artifact, not an accepted baseline by itself.
