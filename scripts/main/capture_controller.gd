@@ -8,6 +8,7 @@ const Pass12OxygenRestCapture := preload("res://scripts/main/captures/pass_12_ox
 const Pass13RouteCommitmentCapture := preload("res://scripts/main/captures/pass_13_route_commitment_capture.gd")
 const Pass14ObjectiveCueCapture := preload("res://scripts/main/captures/pass_14_objective_cue_capture.gd")
 const Pass15ObjectiveFollowThroughCapture := preload("res://scripts/main/captures/pass_15_objective_follow_through_capture.gd")
+const PrimaryDiveCompletionCapture := preload("res://scripts/main/captures/primary_dive_completion_capture.gd")
 const SCREENSHOT_PATH := "res://visual_baselines/001_greybox_in_engine.png"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 const PLAYER_READABILITY_CAPTURE_ZOOM := Vector2(2.0, 2.0)
@@ -379,6 +380,11 @@ func capture_pass_14_objective_cue_and_quit(capture_dir: String) -> void:
 
 func capture_pass_15_objective_follow_through_and_quit(capture_dir: String) -> void:
 	var capture := Pass15ObjectiveFollowThroughCapture.new(_main)
+	await capture.capture_and_quit(capture_dir)
+
+
+func capture_primary_dive_completion_and_quit(capture_dir: String) -> void:
+	var capture := PrimaryDiveCompletionCapture.new(_main)
 	await capture.capture_and_quit(capture_dir)
 
 

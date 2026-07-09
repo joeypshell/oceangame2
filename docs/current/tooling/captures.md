@@ -97,6 +97,14 @@ Capture the focused Pass 15 objective-follow-through view:
 
 This loads the default production slice, places the player in `deep_cache_first_step_cue` before collecting `salvage_lower_loop`, frames the compact `Objective route: Lower loop` cue, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_15_objective_follow_through/production_slice_01_objective_follow_through.png`.
 
+Capture the focused primary dive completion result view:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-primary-dive-completion
+```
+
+This loads the default production slice, collects the primary objective targets through the normal runtime path, banks them at extraction, frames the completed result panel, keeps map data and accepted baselines unchanged, and writes `visual_captures/primary_dive_completion/production_slice_01_primary_dive_completion.png`.
+
 Capture the original rectangular salvage map comparison views:
 
 ```powershell
