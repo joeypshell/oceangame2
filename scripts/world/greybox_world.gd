@@ -182,6 +182,14 @@ func get_next_dive_objective_prompts() -> Array:
 	return prompts
 
 
+func get_relay_follow_through_objectives() -> Array:
+	var objectives := []
+	for objective in _map_data.get("relay_follow_through_objectives", []):
+		if typeof(objective) == TYPE_DICTIONARY:
+			objectives.append(objective.duplicate(true))
+	return objectives
+
+
 func get_salvage_score(salvage_id: String) -> int:
 	for entity in _salvage_entities:
 		if str(entity.get("id", "salvage")) == salvage_id:
