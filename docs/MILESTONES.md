@@ -43,7 +43,7 @@ The open GitHub milestones should mirror this roadmap:
 
 Controlled Gameplay Pass 26 completed the first Milestone 07 presentation/game-feel pass. Completed-run result presentation now prioritizes objective/payoff text before bookkeeping, adds the compact `Final dive signal locked` cue, and is protected by smoke, focused capture, visual review, Web verification, and closeout.
 
-The next recommended step is the #591 Milestone 07 release-readiness audit. Use that audit to decide whether the next small batch should address player movement/facing feel, additional result/UI polish, visual readability, or release-candidate blockers. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, broad art replacement, broad audio systems, or full-map productionization.
+The #591 Milestone 07 release-readiness audit selected #602-#611, a player movement/facing readability batch. Address the reported direction-change flash before broader presentation polish or release-candidate preparation. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, broad art replacement, broad audio systems, or full-map productionization.
 
 ## Recently Completed Prototype Passes
 
