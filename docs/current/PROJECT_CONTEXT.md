@@ -120,7 +120,7 @@ The GitHub Pages source is configured for GitHub Actions publishing. The `Godot 
 - generates ignored `export_presets.cfg` with `tools/write_web_export_preset.py`
 - writes `build_info.json` and copies it beside `exports/web/index.html` as plain external Pages metadata
 - exports to ignored `exports/web/`
-- serves the export and runs `tools/check_web_preview.cjs --expected-sha "${GITHUB_SHA}"` in Chromium to catch missing texture assets and stale build metadata before deploy
+- serves the export and runs `tools/check_web_preview.cjs --expected-sha "${GITHUB_SHA}"` in Chromium to catch missing texture assets, stale build metadata, and viewport-size framing drift before deploy
 - uploads the `oceangame2-web-export` artifact
 - deploys to GitHub Pages when Pages is enabled
 
@@ -132,7 +132,7 @@ Important fixed pitfall: Web exports did not package dynamically loaded PNG terr
 
 If the browser preview ever shows only blue water, faint rectangles, markers, no cave tiles, or fallback prop art, check browser logs for missing `res://assets/...png` warnings and verify the export package includes the assets.
 
-If the public preview looks stale, fetch `https://joeypshell.github.io/oceangame2/build_info.json` or run `tools/check_web_preview.cjs` with `--expected-sha` to compare the deployed external metadata with the expected commit.
+If the public preview looks stale, fetch `https://joeypshell.github.io/oceangame2/build_info.json` or run `tools/check_web_preview.cjs` with `--expected-sha` to compare the deployed external metadata with the expected commit. `Build local` means the editor is running a local checkout/worktree; mismatched HUD, salvage counts, or upgrade prompts usually mean the local checkout is behind or running a different map/worktree than the public `Build <sha>`.
 
 ## Current Validation Commands
 
