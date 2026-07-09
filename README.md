@@ -93,6 +93,9 @@ Build a small side-view salvage game that proves:
 - [Controlled Gameplay Pass 21 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_21_PLAN.md)
 - [Controlled Gameplay Pass 21 Connector Contract](docs/current/CONTROLLED_GAMEPLAY_PASS_21_CONNECTOR_CONTRACT.md)
 - [Controlled Gameplay Pass 21 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_21_CLOSEOUT.md)
+- [Controlled Gameplay Pass 22 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_22_PLAN.md)
+- [Controlled Gameplay Pass 22 Destination Payoff Contract](docs/current/CONTROLLED_GAMEPLAY_PASS_22_DESTINATION_PAYOFF_CONTRACT.md)
+- [Controlled Gameplay Pass 22 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_22_CLOSEOUT.md)
 - [First Feedback Audio Micro-Pass Plan](docs/current/FIRST_FEEDBACK_AUDIO_MICRO_PASS_PLAN.md)
 - [First Feedback Audio Cue Contract](docs/current/FIRST_FEEDBACK_AUDIO_CUE_CONTRACT.md)
 - [First Feedback Audio Review Note](docs/current/FIRST_FEEDBACK_AUDIO_REVIEW.md)
@@ -135,6 +138,8 @@ Build a small side-view salvage game that proves:
 - [Pass 20 Light Upgrade Web Preview Verification](docs/current/PASS_20_LIGHT_UPGRADE_WEB_PREVIEW_VERIFICATION.md)
 - [Pass 21 World Connector Visual Baseline Decision](docs/current/PASS_21_WORLD_CONNECTOR_VISUAL_BASELINE_DECISION.md)
 - [Pass 21 World Connector Web Preview Verification](docs/current/PASS_21_WORLD_CONNECTOR_WEB_PREVIEW_VERIFICATION.md)
+- [Pass 22 Destination Payoff Visual Baseline Decision](docs/current/PASS_22_DESTINATION_PAYOFF_VISUAL_BASELINE_DECISION.md)
+- [Pass 22 Destination Payoff Web Preview Verification](docs/current/PASS_22_DESTINATION_PAYOFF_WEB_PREVIEW_VERIFICATION.md)
 
 ## Locked Visual Direction
 
