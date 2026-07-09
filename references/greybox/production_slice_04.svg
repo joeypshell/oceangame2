@@ -207,6 +207,7 @@
 <text x="2408.0" y="602.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">START</text>
 <polygon points="496.0,319.0 513.0,336.0 496.0,353.0 479.0,336.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
 <polygon points="1072.0,287.0 1089.0,304.0 1072.0,321.0 1055.0,304.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
+<polygon points="592.0,735.0 609.0,752.0 592.0,769.0 575.0,752.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
 <polygon points="1424.0,863.0 1441.0,880.0 1424.0,897.0 1407.0,880.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
 <polygon points="784.0,1119.0 801.0,1136.0 784.0,1153.0 767.0,1136.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
 <polygon points="2192.0,1119.0 2209.0,1136.0 2192.0,1153.0 2175.0,1136.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
@@ -221,5 +222,5 @@
 <line x1="1980.0" y1="1156.0" x2="1956.0" y2="1180.0" stroke="#ffffff" stroke-width="5"/>
 <rect x="0" y="0" width="2816" height="1600" fill="url(#grid)"/>
 <text x="24.0" y="42.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="30" paint-order="stroke" stroke="#10384a" stroke-width="4">production_slice_04 - greybox source preview</text>
-<text x="24.0" y="1576.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">cyan=open water | gray=solid | tan=extraction | orange=boat | green=start | yellow=salvage | red=hazard</text>
+<text x="24.0" y="1576.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">cyan=open | gray=solid | tan=extraction | orange=boat | green=start | yellow=salvage | red=hazard | pink=moving | purple=container</text>
 </svg>
