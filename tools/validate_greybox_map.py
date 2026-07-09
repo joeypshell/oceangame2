@@ -16,6 +16,7 @@ from validate_route_objectives import (
     validate_route_objective_reachability,
     validate_route_objective_schema,
 )
+from validate_world_connectors import validate_world_connector_reachability, validate_world_connector_schema
 
 
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
@@ -390,6 +391,7 @@ def main() -> int:
     zones = map_data.get("zones", [])
     failures.extend(validate_entity_schema(entities, width, height, base_zones))
     failures.extend(validate_zone_schema(zones, width, height))
+    failures.extend(validate_world_connector_schema(args.map_json, map_data))
     failures.extend(validate_route_objective_schema(map_data, entities, zones))
     failures.extend(validate_primary_route_objective_schema(map_data))
     failures.extend(validate_objective_step_cue_schema(map_data, entities, zones))
@@ -468,6 +470,7 @@ def main() -> int:
 
     failures.extend(validate_route_objective_reachability(map_data, entities, zones, solid, reachable))
     failures.extend(validate_objective_step_cue_reachability(map_data, entities, zones, solid, reachable))
+    failures.extend(validate_world_connector_reachability(zones, solid, reachable))
 
     if failures:
         for failure in failures:

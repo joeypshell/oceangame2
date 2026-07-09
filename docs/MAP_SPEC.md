@@ -348,6 +348,43 @@ The marker rectangle must stay inside map bounds, contain only non-solid reachab
 }
 ```
 
+## World Connector Markers
+
+Playable maps may include optional world connector markers under `zones`. A connector marker describes one source-authored transition point from the current map to another committed greybox map. It is a world-slice expansion cue, not terrain stitching, fast travel, a map screen, or persistent save data.
+
+The first supported connector is intentionally narrow:
+
+- `type`: must be `marker`.
+- `world_connector`: must be `true` when connector metadata is present.
+- zone `id`: connector id; must be unique and lower_snake_case.
+- `connector_label`: compact display-safe text for overlay/capture text.
+- `destination_map_id`: lower_snake_case id of the destination map.
+- `destination_map_path`: committed `res://maps/*.greybox.json` destination path.
+- `destination_entry_id`: existing `spawn` or `boat_spawn` id in the destination map.
+- `connector_direction`: optional `forward`, `return`, or `bidirectional`; defaults conceptually to `forward`.
+
+The marker rectangle must stay in bounds, contain only non-solid reachable water cells, and remain source-authored through the map generator/source path. Runtime may use it to show a compact prompt and load the destination map at the authored destination entry. It must not author score, wallet, cargo, oxygen, objective progress, save state, or collision changes.
+
+Recommended Pass 21 metadata:
+
+```json
+{
+  "id": "lower_left_loop_connector",
+  "type": "marker",
+  "x": 20,
+  "y": 70,
+  "w": 4,
+  "h": 4,
+  "world_connector": true,
+  "connector_label": "Lower-left loop",
+  "destination_map_id": "production_slice_04",
+  "destination_map_path": "res://maps/production_slice_04.greybox.json",
+  "destination_entry_id": "relay_sub_entry",
+  "connector_direction": "forward",
+  "intent": "Pass 21 connector from the default boat hub toward the lower-left loop reference slice."
+}
+```
+
 `hazard` entities require `kind`. Current valid-style examples are `mine`, `jellyfish`, and `stress_marker`.
 Production previews may use `kind` to choose first-pass prop art, but hazard behavior is still determined by `type: "hazard"`.
 
@@ -371,6 +408,7 @@ Validation expectations:
 - Route commitment objectives, when present, must reference existing reachable playable salvage ids and optional reachable marker zones without authoring runtime state.
 - Objective-step cue metadata is supported only on marker zones. Cue rectangles must be in bounds, non-solid, reachable, outside the boat/extraction area, linked to an existing objective, and targeted at a required playable salvage id.
 - Oxygen rest metadata is supported only on marker zones. Rest rectangles must be in bounds, non-solid, reachable, and use positive cap/refill values.
+- World connector metadata is supported only on marker zones. Connector rectangles must be in bounds, non-solid, reachable, and reference a committed destination map plus an existing destination `spawn` or `boat_spawn` entry id.
 - Entity coordinates must be inside map bounds, non-solid, and reachable from the player entry cell.
 - Maps must define exactly one `spawn` or `boat_spawn`.
 - Playable salvage maps must define a base extraction zone or use `boat_spawn` extraction. Renderer stress-test maps may use `stress_marker` salvage without an extraction zone.
