@@ -1,8 +1,8 @@
 # oceangame2
 
-`oceangame2` is a clean visual proof-of-concept for a small side-view ocean salvage game.
+`oceangame2` is a clean visual proof-of-concept growing toward a finished small side-view diver salvage game.
 
-The purpose is not to rebuild OceanGame immediately. The purpose is to prove a stable workflow for ocean visuals, maps, reusable assets, and controlled iteration. Gameplay stays simple until the visual pipeline is trustworthy.
+The purpose is not to rebuild the full OceanGame immediately. The current product target is a complete, compact diver game first: boat/base entry, authored cave routes, oxygen/cargo pressure, tool-like salvage interactions, limited progression, and a final small-game arc. The workflow must stay stable enough to scale later into the larger 2D Subnautica-like idea.
 
 ## Project Goal
 
@@ -12,7 +12,7 @@ Build a small side-view salvage game that proves:
 - The art direction can stay coherent across revisions.
 - Individual visual issues can be fixed without resetting the whole scene.
 - Approved assets can be locked and reused.
-- The workflow can eventually scale into the larger OceanGame idea.
+- The core diver loop can become a finished small game before larger OceanGame expansion.
 
 ## Prototype Shape
 
@@ -20,7 +20,7 @@ Build a small side-view salvage game that proves:
 - Engine: Godot
 - First map: small hand-authored modular underwater cave test map
 - Core loop: leave boat/base, collect salvage, return to extraction, complete the run, restart
-- Primary risk being tested: visual consistency
+- Primary risks being tested: visual consistency, source-driven map production, expedition pressure, and small-game progression shape
 
 ## Planning Docs
 
@@ -34,6 +34,7 @@ Build a small side-view salvage game that proves:
 - [Reference Standard](docs/REFERENCE_STANDARD.md)
 - [Asset Manifest](docs/ASSET_MANIFEST.md)
 - [Milestones](docs/MILESTONES.md)
+- [Finished Simple Diver Game Roadmap](docs/current/SIMPLE_DIVER_GAME_ROADMAP.md)
 - [OceanGame Migration Notes](docs/OCEANGAME_MIGRATION.md)
 - [Current Architecture](docs/current/ARCHITECTURE.md)
 - [Tooling](docs/current/TOOLING.md)
@@ -73,6 +74,8 @@ Build a small side-view salvage game that proves:
 - [Controlled Gameplay Pass 14 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_14_PLAN.md)
 - [Controlled Gameplay Pass 14 Objective Cue Contract](docs/current/CONTROLLED_GAMEPLAY_PASS_14_OBJECTIVE_CUE_CONTRACT.md)
 - [Controlled Gameplay Pass 14 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_14_CLOSEOUT.md)
+- [Controlled Gameplay Pass 15 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_15_PLAN.md)
+- [Controlled Gameplay Pass 15 Objective Step Cue Contract](docs/current/CONTROLLED_GAMEPLAY_PASS_15_OBJECTIVE_STEP_CUE_CONTRACT.md)
 - [Oxygen Pressure Baseline Decision](docs/current/OXYGEN_PRESSURE_BASELINE_DECISION.md)
 - [Route Payoff Visual Baseline Decision](docs/current/ROUTE_PAYOFF_VISUAL_BASELINE_DECISION.md)
 - [Route Payoff Web Preview Verification](docs/current/ROUTE_PAYOFF_WEB_PREVIEW_VERIFICATION.md)
