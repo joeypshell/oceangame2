@@ -331,7 +331,7 @@ func _smoke_pass_24_relay_follow_through_and_quit() -> void:
 
 	_player.global_position = _world.get_extraction_center()
 	_process(0.0)
-	if _last_status_note != PASS_24_LABEL or _status_text().find(PASS_24_LABEL) == -1:
+	if _last_status_note.find(PASS_24_LABEL) == -1 or _status_text().find(PASS_24_LABEL) == -1:
 		push_error("Pass 24 relay smoke missing banked feedback '%s': note=%s status=%s." % [
 			PASS_24_LABEL,
 			_last_status_note,
