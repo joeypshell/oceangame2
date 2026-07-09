@@ -121,6 +121,7 @@ Build a small side-view salvage game that proves:
 - [Pass 27 Player-Facing Visual Baseline Decision](docs/current/PASS_27_PLAYER_FACING_VISUAL_BASELINE_DECISION.md)
 - [Pass 27 Player-Facing Web Preview Verification](docs/current/PASS_27_PLAYER_FACING_WEB_PREVIEW_VERIFICATION.md)
 - [Controlled Gameplay Pass 27 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_27_CLOSEOUT.md)
+- [Milestone 07 Release-Readiness Blockers After Pass 27](docs/current/MILESTONE_07_RELEASE_READINESS_BLOCKERS_AFTER_PASS_27.md)
 - [First Feedback Audio Micro-Pass Plan](docs/current/FIRST_FEEDBACK_AUDIO_MICRO_PASS_PLAN.md)
 - [First Feedback Audio Cue Contract](docs/current/FIRST_FEEDBACK_AUDIO_CUE_CONTRACT.md)
 - [First Feedback Audio Review Note](docs/current/FIRST_FEEDBACK_AUDIO_REVIEW.md)
