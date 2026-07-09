@@ -18,6 +18,8 @@ The current default preview map is `maps/production_slice_01.greybox.json`.
 
 Use `docs/current/PRODUCTION_SLICE_INDEX.md` for a compact status table of the current production slices, including launch flags, route smoke flags, capture folders, review sheets, and accepted baseline status.
 
+Current release-candidate local import/run verification is recorded in [Simple Diver Game 08 Local Run Verification](../SIMPLE_DIVER_GAME_08_LOCAL_RUN_VERIFICATION.md).
+
 Run with the source map/grid overlay visible:
 
 ```powershell

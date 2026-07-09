@@ -125,6 +125,7 @@ Build a small side-view salvage game that proves:
 - [Simple Diver Game 08 Release-Candidate Plan](docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_PLAN.md)
 - [Simple Diver Game 08 Validation Matrix](docs/current/SIMPLE_DIVER_GAME_08_VALIDATION_MATRIX.md)
 - [Simple Diver Game 08 Capture Review Index](docs/current/SIMPLE_DIVER_GAME_08_CAPTURE_REVIEW_INDEX.md)
+- [Simple Diver Game 08 Local Run Verification](docs/current/SIMPLE_DIVER_GAME_08_LOCAL_RUN_VERIFICATION.md)
 - [First Feedback Audio Micro-Pass Plan](docs/current/FIRST_FEEDBACK_AUDIO_MICRO_PASS_PLAN.md)
 - [First Feedback Audio Cue Contract](docs/current/FIRST_FEEDBACK_AUDIO_CUE_CONTRACT.md)
 - [First Feedback Audio Review Note](docs/current/FIRST_FEEDBACK_AUDIO_REVIEW.md)
