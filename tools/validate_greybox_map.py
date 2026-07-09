@@ -22,6 +22,7 @@ from validate_route_objectives import (
     validate_route_objective_reachability,
     validate_route_objective_schema,
 )
+from validate_visibility_zones import validate_visibility_zone_reachability, validate_visibility_zone_schema
 from validate_world_connectors import validate_world_connector_reachability, validate_world_connector_schema
 
 
@@ -400,6 +401,7 @@ def main() -> int:
     failures.extend(validate_current_gate_schema(map_data))
     failures.extend(validate_moving_hazard_schema(map_data))
     failures.extend(validate_progression_container_schema(map_data))
+    failures.extend(validate_visibility_zone_schema(map_data))
     failures.extend(validate_world_connector_schema(args.map_json, map_data))
     failures.extend(validate_route_objective_schema(map_data, entities, zones))
     failures.extend(validate_primary_route_objective_schema(map_data))
@@ -482,6 +484,7 @@ def main() -> int:
     failures.extend(validate_current_gate_reachability(zones, solid, reachable))
     failures.extend(validate_moving_hazard_reachability(map_data.get("moving_hazards", []), solid, reachable))
     failures.extend(validate_progression_container_reachability(map_data.get("progression_containers", []), solid, reachable))
+    failures.extend(validate_visibility_zone_reachability(zones, solid, reachable))
     failures.extend(validate_world_connector_reachability(zones, solid, reachable))
 
     if failures:
