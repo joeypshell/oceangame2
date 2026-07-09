@@ -71,7 +71,7 @@ Normal gameplay previews should use small readable in-world props instead of abs
 
 ## Current Player Animation Direction
 
-The approved `assets/player/player_diver_01.png` remains the style and scale anchor for player animation. First animation work should add a small swim/idle slice with matching 96x64 frame bounds, right-facing source frames, runtime visual-only flipping, and no collision, camera, movement, map, oxygen, cargo, or light-cone behavior changes.
+The approved `assets/player/player_diver_01.png` remains the style and scale anchor for player animation. The first animation slice uses `assets/player/player_diver_swim_01.png`, a small swim/idle sheet with matching 96x64 frame bounds, right-facing source frames, runtime visual-only flipping, and no collision, camera, movement, map, oxygen, cargo, or light-cone behavior changes.
 
 ## Current Boat Entry Pass
 

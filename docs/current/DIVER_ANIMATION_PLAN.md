@@ -8,7 +8,7 @@ Issue: #447 `Plan diver animation states and sprite requirements`
 
 Use the current approved `player_diver_01.png` silhouette as the style anchor and add animation in small visual-only slices. Animation must not change the player `CharacterBody2D`, the 26x18 collision rectangle, movement tuning, camera behavior, light-cone semantics, map data, oxygen/cargo logic, or route validation.
 
-The first implementation should be #448: one readable swim/idle slice that improves motion and direction-change clarity without replacing the whole player art pass.
+The first implementation is #448: one readable swim/idle slice that improves motion and direction-change clarity without replacing the whole player art pass.
 
 ## Current Baseline
 
@@ -55,7 +55,7 @@ The first implementation should be #448: one readable swim/idle slice that impro
 
 The first animation asset should be a named committed sprite sheet or small frame set:
 
-- Preferred first asset: `assets/player/player_diver_swim_01.png`
+- First asset: `assets/player/player_diver_swim_01.png`
 - Suggested canvas per frame: 96x64, matching `player_diver_01.png`
 - Suggested first sheet: horizontal 4-frame strip, 384x64
 - Direction: author right-facing frames only; runtime flips the visual node for left-facing.
@@ -65,7 +65,7 @@ If generated, extend `tools/generate_player_sprite.py` or create a tiny sibling 
 
 ## Runtime Boundaries
 
-#448 should add only the smallest useful animation runtime:
+#448 adds only the smallest useful animation runtime:
 
 - Add `AnimatedSprite2D`, `SpriteFrames`, or a tiny visual helper if that fits Godot patterns cleanly.
 - Keep the current `Body` node path or provide a narrow compatibility wrapper if existing smokes/captures rely on it.
@@ -99,7 +99,7 @@ git diff --check
 
 ## Follow-Up Issue
 
-#448 is the active implementation follow-up for the smallest useful swim/idle animation slice. Do not create a larger animation epic until #448 proves the asset/runtime path.
+#448 implements the smallest useful swim/idle animation slice. Do not create a larger animation epic until this asset/runtime path has been reviewed in motion.
 
 ## Deferred
 
