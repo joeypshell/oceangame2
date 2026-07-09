@@ -273,6 +273,128 @@ func _smoke_pass_19_cargo_upgrade_and_quit() -> void:
 	get_tree().quit()
 
 
+func _smoke_pass_20_light_upgrade_and_quit() -> void:
+	if _world.map_id != "production_slice_01":
+		push_error("Pass 20 light upgrade smoke loaded unexpected map: %s." % _world.map_id)
+		get_tree().quit(1)
+		return
+	if not _player.has_method("get_facing_report"):
+		push_error("Pass 20 light upgrade smoke requires player facing report.")
+		get_tree().quit(1)
+		return
+
+	var base_report: Dictionary = _player.get_facing_report()
+	if _session_wallet() != 0 or _session_payout_total() != 0 or _has_light_upgrade():
+		push_error("Pass 20 light upgrade smoke expected fresh state, wallet=%d payout=%d upgraded=%s." % [
+			_session_wallet(),
+			_session_payout_total(),
+			str(_has_light_upgrade()),
+		])
+		get_tree().quit(1)
+		return
+	if not _light_report_matches(base_report, 1.0, 0.38):
+		push_error("Pass 20 light upgrade smoke expected base light, got %s." % base_report)
+		get_tree().quit(1)
+		return
+
+	_player.global_position = _world.get_extraction_center()
+	if _try_purchase_light_upgrade() or _session_wallet() != 0 or _has_light_upgrade():
+		push_error("Pass 20 light upgrade smoke insufficient-funds purchase mutated state: wallet=%d upgraded=%s." % [
+			_session_wallet(),
+			str(_has_light_upgrade()),
+		])
+		get_tree().quit(1)
+		return
+	if _status_label == null or _status_label.text.find("Need %d more" % _light_upgrade_cost()) == -1:
+		push_error("Pass 20 light upgrade smoke did not show insufficient-funds feedback: %s." % _status_text())
+		get_tree().quit(1)
+		return
+
+	var banked_target_ids := _bank_until_light_upgrade_affordable()
+	if _session_wallet() < _light_upgrade_cost() or banked_target_ids.is_empty():
+		push_error("Pass 20 light upgrade smoke could not bank enough wallet for purchase: wallet=%d targets=%s." % [_session_wallet(), banked_target_ids])
+		get_tree().quit(1)
+		return
+
+	var wallet_before_purchase := _session_wallet()
+	var payout_before_purchase := _session_payout_total()
+	_player.global_position = _world.get_extraction_center()
+	if not _try_purchase_light_upgrade():
+		push_error("Pass 20 light upgrade smoke affordable purchase was blocked: wallet=%d status=%s." % [_session_wallet(), _status_text()])
+		get_tree().quit(1)
+		return
+	var upgraded_report: Dictionary = _player.get_facing_report()
+	if (
+		not _has_light_upgrade()
+		or _session_wallet() != wallet_before_purchase - _light_upgrade_cost()
+		or _session_payout_total() != payout_before_purchase
+		or _has_oxygen_tank_upgrade()
+		or _has_cargo_capacity_upgrade()
+		or not _light_report_matches(upgraded_report, _main.SessionProgression.LIGHT_UPGRADE_RANGE_SCALE, _main.SessionProgression.LIGHT_UPGRADE_ALPHA)
+	):
+		push_error("Pass 20 light upgrade smoke purchase state mismatch: wallet=%d before=%d payout=%d light=%s oxygen=%s cargo=%s report=%s." % [
+			_session_wallet(),
+			wallet_before_purchase,
+			_session_payout_total(),
+			str(_has_light_upgrade()),
+			str(_has_oxygen_tank_upgrade()),
+			str(_has_cargo_capacity_upgrade()),
+			upgraded_report,
+		])
+		get_tree().quit(1)
+		return
+	if _status_label == null or _status_label.text.find("Light +range upgraded") == -1:
+		push_error("Pass 20 light upgrade smoke did not show purchase feedback: %s." % _status_text())
+		get_tree().quit(1)
+		return
+	var wallet_after_purchase := _session_wallet()
+
+	_reset_run()
+	var reset_report: Dictionary = _player.get_facing_report()
+	if not _has_light_upgrade() or not _light_report_matches(reset_report, _main.SessionProgression.LIGHT_UPGRADE_RANGE_SCALE, _main.SessionProgression.LIGHT_UPGRADE_ALPHA):
+		push_error("Pass 20 light upgrade smoke reset did not preserve upgraded light state: upgraded=%s report=%s." % [
+			str(_has_light_upgrade()),
+			reset_report,
+		])
+		get_tree().quit(1)
+		return
+	if _has_oxygen_tank_upgrade() or _has_cargo_capacity_upgrade():
+		push_error("Pass 20 light upgrade smoke changed unrelated upgrades: oxygen=%s cargo=%s." % [
+			str(_has_oxygen_tank_upgrade()),
+			str(_has_cargo_capacity_upgrade()),
+		])
+		get_tree().quit(1)
+		return
+
+	_player.global_position = _world.get_extraction_center()
+	if _try_purchase_light_upgrade() or _session_wallet() != wallet_after_purchase:
+		push_error("Pass 20 light upgrade smoke repurchase mutated state: wallet=%d expected=%d status=%s." % [
+			_session_wallet(),
+			wallet_after_purchase,
+			_status_text(),
+		])
+		get_tree().quit(1)
+		return
+	if _status_label == null or _status_label.text.find("Light +range already upgraded") == -1:
+		push_error("Pass 20 light upgrade smoke did not show already-upgraded feedback: %s." % _status_text())
+		get_tree().quit(1)
+		return
+
+	print("Pass 20 light upgrade smoke passed: id=%s cost=%d targets=%s wallet_before=%d wallet_after=%d payout=%d base_range=%.2f base_alpha=%.2f upgraded_range=%.2f upgraded_alpha=%.2f reset_persisted=true independent_upgrades=true." % [
+		_main.SessionProgression.LIGHT_UPGRADE_ID,
+		_light_upgrade_cost(),
+		banked_target_ids,
+		wallet_before_purchase,
+		wallet_after_purchase,
+		_session_payout_total(),
+		float(base_report.get("light_cone_range_scale", 0.0)),
+		float(base_report.get("light_cone_alpha", 0.0)),
+		float(upgraded_report.get("light_cone_range_scale", 0.0)),
+		float(upgraded_report.get("light_cone_alpha", 0.0)),
+	])
+	get_tree().quit()
+
+
 func _instant_salvage_target() -> Dictionary:
 	for salvage in _world.get_salvage_centers():
 		if str(salvage.get("interaction", "instant")) == "instant":
@@ -322,6 +444,27 @@ func _bank_until_cargo_upgrade_affordable() -> PackedStringArray:
 	return banked_ids
 
 
+func _bank_until_light_upgrade_affordable() -> PackedStringArray:
+	var banked_ids := PackedStringArray()
+	for salvage in _salvage_centers_for_full_collection():
+		if _session_wallet() >= _light_upgrade_cost():
+			break
+		var salvage_id := str(salvage.get("id", "salvage"))
+		_player.global_position = salvage["center"]
+		if not _collect_salvage_for_smoke(salvage):
+			continue
+		if not banked_ids.has(salvage_id):
+			banked_ids.append(salvage_id)
+		if _held_salvage >= _held_salvage_capacity():
+			_player.global_position = _world.get_extraction_center()
+			_process(0.0)
+
+	if _held_salvage > 0 and _session_wallet() < _light_upgrade_cost():
+		_player.global_position = _world.get_extraction_center()
+		_process(0.0)
+	return banked_ids
+
+
 func _oxygen_upgrade_cost() -> int:
 	return _main.SessionProgression.OXYGEN_TANK_UPGRADE_COST
 
@@ -336,6 +479,18 @@ func _cargo_upgrade_cost() -> int:
 
 func _cargo_upgrade_bonus() -> int:
 	return _main.SessionProgression.CARGO_CAPACITY_UPGRADE_BONUS
+
+
+func _light_upgrade_cost() -> int:
+	return _main.SessionProgression.LIGHT_UPGRADE_COST
+
+
+func _light_report_matches(report: Dictionary, range_scale: float, alpha: float) -> bool:
+	return (
+		is_equal_approx(float(report.get("root_scale_x", 0.0)), 1.0)
+		and is_equal_approx(float(report.get("light_cone_range_scale", 0.0)), range_scale)
+		and is_equal_approx(float(report.get("light_cone_alpha", 0.0)), alpha)
+	)
 
 
 func _status_text() -> String:
