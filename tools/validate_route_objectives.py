@@ -23,6 +23,14 @@ ROUTE_OBJECTIVE_FORBIDDEN_FIELDS = {
     "complete",
     "result_text",
 }
+OBJECTIVE_STEP_CUE_FIELDS = {
+    "objective_step_cue",
+    "objective_id",
+    "target_id",
+    "route_context",
+    "objective_step_label",
+}
+OBJECTIVE_STEP_CUE_TRIGGER_FIELDS = OBJECTIVE_STEP_CUE_FIELDS - {"route_context"}
 
 
 def is_int_value(value) -> bool:
@@ -165,6 +173,81 @@ def validate_route_objective_schema(map_data: dict, entities: list[dict], zones:
     return failures
 
 
+def validate_objective_step_cue_schema(map_data: dict, entities: list[dict], zones: list[dict]) -> list[str]:
+    failures: list[str] = []
+    objectives = map_data.get("route_objectives", [])
+    objectives_by_id = {
+        objective.get("id"): objective
+        for objective in objectives
+        if isinstance(objective, dict) and isinstance(objective.get("id"), str)
+    }
+    entities_by_id = {entity.get("id"): entity for entity in entities if isinstance(entity.get("id"), str)}
+    cue_zone_ids: list[str] = []
+
+    for index, zone in enumerate(zones):
+        cue_fields = OBJECTIVE_STEP_CUE_TRIGGER_FIELDS & set(zone.keys())
+        if not cue_fields:
+            continue
+
+        item_label = str(zone.get("id", f"zone[{index}]"))
+        if zone.get("type") != "marker":
+            fields = ", ".join(sorted(cue_fields))
+            failures.append(f"{item_label} objective-step cue metadata ({fields}) is only supported on marker zones.")
+            continue
+
+        cue_zone_ids.append(item_label)
+        failures.extend(
+            validate_required_fields(
+                zone,
+                item_label,
+                ("objective_step_cue", "objective_id", "target_id", "route_context", "objective_step_label"),
+            )
+        )
+        if zone.get("objective_step_cue") is not True:
+            failures.append(f"{item_label} objective_step_cue must be true when objective-step metadata is present.")
+
+        objective_id = zone.get("objective_id")
+        target_id = zone.get("target_id")
+        route_context = zone.get("route_context")
+
+        if "objective_id" in zone:
+            failures.extend(validate_id(objective_id, f"{item_label} objective_id"))
+        if "target_id" in zone:
+            failures.extend(validate_id(target_id, f"{item_label} target_id"))
+        if "route_context" in zone:
+            if not isinstance(route_context, str) or not route_context:
+                failures.append(f"{item_label} route_context must be a non-empty string.")
+            elif not ID_PATTERN.match(route_context):
+                failures.append(f"{item_label} route_context {route_context!r} must use lower_snake_case.")
+        if "objective_step_label" in zone:
+            failures.extend(validate_display_label(zone["objective_step_label"], item_label, "objective_step_label"))
+
+        objective = objectives_by_id.get(objective_id)
+        target = entities_by_id.get(target_id)
+        if isinstance(objective_id, str) and objective is None:
+            failures.append(f"{item_label} objective_id {objective_id!r} does not exist in route_objectives.")
+        if isinstance(target_id, str):
+            if target is None:
+                failures.append(f"{item_label} target_id {target_id!r} does not exist in entities.")
+            elif target.get("type") != "salvage":
+                failures.append(f"{item_label} target_id {target_id!r} must reference a salvage entity.")
+            elif target.get("kind") == "stress_marker":
+                failures.append(f"{item_label} target_id {target_id!r} must not be stress_marker salvage.")
+        if isinstance(objective, dict):
+            required_targets = objective.get("required_banked_targets", [])
+            if isinstance(target_id, str) and isinstance(required_targets, list) and target_id not in required_targets:
+                failures.append(f"{item_label} target_id {target_id!r} must be required by objective {objective_id!r}.")
+            marker_ids = objective.get("supporting_marker_ids", [])
+            if isinstance(marker_ids, list) and zone.get("id") not in marker_ids:
+                failures.append(f"{item_label} must be listed in objective {objective_id!r} supporting_marker_ids.")
+            if isinstance(route_context, str) and objective.get("route_context") != route_context:
+                failures.append(f"{item_label} route_context must match objective {objective_id!r}.")
+
+    if len(cue_zone_ids) > 1:
+        failures.append(f"Only one objective-step cue marker is currently supported. Found: {cue_zone_ids}.")
+    return failures
+
+
 def validate_route_objective_reachability(
     map_data: dict,
     entities: list[dict],
@@ -210,4 +293,37 @@ def validate_route_objective_reachability(
                 failures.append(f"{item_label} supporting marker {marker_id!r} has no open cells.")
             elif not reachable_open_cells:
                 failures.append(f"{item_label} supporting marker {marker_id!r} has no reachable open cells.")
+    return failures
+
+
+def validate_objective_step_cue_reachability(
+    map_data: dict,
+    entities: list[dict],
+    zones: list[dict],
+    solid: set[tuple[int, int]],
+    reachable: set[tuple[int, int]],
+) -> list[str]:
+    failures: list[str] = []
+    entry_rects = [
+        rect_cells(entity)
+        for entity in entities
+        if entity.get("type") == "boat_spawn" and all(is_int_value(entity.get(field)) for field in ("x", "y", "w", "h"))
+    ]
+
+    for zone in zones:
+        if not (OBJECTIVE_STEP_CUE_TRIGGER_FIELDS & set(zone.keys())):
+            continue
+        if zone.get("type") != "marker" or validate_rect_fields(zone, str(zone.get("id", "objective_step_cue")), int(map_data["units"]["width_tiles"]), int(map_data["units"]["height_tiles"])):
+            continue
+
+        item_label = str(zone.get("id", "objective_step_cue"))
+        cells = rect_cells(zone)
+        solid_cells = sorted(cells & solid)
+        reachable_open_cells = (cells - solid) & reachable
+        if solid_cells:
+            failures.append(f"{item_label} objective-step cue rectangle contains solid cells. Sample: {solid_cells[:4]}")
+        if not reachable_open_cells:
+            failures.append(f"{item_label} objective-step cue rectangle has no reachable open cells.")
+        if any(cells & entry_rect for entry_rect in entry_rects):
+            failures.append(f"{item_label} objective-step cue rectangle must not overlap the boat/extraction area.")
     return failures

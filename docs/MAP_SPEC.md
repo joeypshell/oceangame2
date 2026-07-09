@@ -226,6 +226,40 @@ Validation expectations:
 - Objective cue visibility state must not be authored in map data; it is derived from existing objective metadata and runtime player/extraction state.
 - `production_slice_01` should author only one Pass 13 route commitment objective.
 
+## Objective Step Cue Markers
+
+Playable maps may include one optional objective-step cue marker under `zones`. This is a source-authored readability cue for an existing route objective, not a new objective, pickup, reward, or route.
+
+The first supported cue is intentionally narrow:
+
+- `type`: must be `marker`.
+- `objective_step_cue`: must be `true`.
+- `objective_id`: required route objective id.
+- `target_id`: required playable salvage id that is included in the objective's `required_banked_targets`.
+- `route_context`: required lower_snake_case route grouping that matches the objective's `route_context`.
+- `objective_step_label`: required compact display-safe text.
+
+The marker id should also appear in the referenced objective's `supporting_marker_ids` list so smoke and capture tooling can discover the cue as part of the objective context. The marker rectangle must stay in bounds, contain reachable open water, and must not overlap the boat/extraction area. It must not move salvage, change collision, create terrain, change score, alter cargo, or author objective completion state.
+
+Recommended Pass 15 metadata:
+
+```json
+{
+  "id": "deep_cache_first_step_cue",
+  "type": "marker",
+  "x": 28,
+  "y": 58,
+  "w": 4,
+  "h": 3,
+  "objective_step_cue": true,
+  "objective_id": "deep_cache_route_objective",
+  "target_id": "salvage_lower_loop",
+  "route_context": "deep_cache_commitment",
+  "objective_step_label": "Lower loop",
+  "intent": "Pass 15 objective follow-through cue for the first required deep-cache route target."
+}
+```
+
 ## Oxygen Rest Markers
 
 Playable maps may include one optional oxygen rest marker under `zones`. This is a source-authored route-pressure aid, not a second extraction zone.
@@ -278,6 +312,7 @@ Validation expectations:
 - Salvage interaction metadata, when present, must use supported fields: `interaction` as `instant` or `timed_salvage`, positive numeric `interaction_seconds` for timed salvage, and optional lower_snake_case or short display-safe `interaction_label`.
 - Salvage route-choice metadata, when present, must use supported fields: lower_snake_case `route_choice_id`, lower_snake_case `validation_route`, and/or integer `route_order` greater than or equal to zero.
 - Route commitment objectives, when present, must reference existing reachable playable salvage ids and optional reachable marker zones without authoring runtime state.
+- Objective-step cue metadata is supported only on marker zones. Cue rectangles must be in bounds, non-solid, reachable, outside the boat/extraction area, linked to an existing objective, and targeted at a required playable salvage id.
 - Oxygen rest metadata is supported only on marker zones. Rest rectangles must be in bounds, non-solid, reachable, and use positive cap/refill values.
 - Entity coordinates must be inside map bounds, non-solid, and reachable from the player entry cell.
 - Maps must define exactly one `spawn` or `boat_spawn`.

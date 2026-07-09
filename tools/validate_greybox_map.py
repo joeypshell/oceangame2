@@ -10,6 +10,8 @@ from collections import deque
 from pathlib import Path
 
 from validate_route_objectives import (
+    validate_objective_step_cue_reachability,
+    validate_objective_step_cue_schema,
     validate_route_objective_reachability,
     validate_route_objective_schema,
 )
@@ -32,6 +34,7 @@ OXYGEN_REST_METADATA_FIELDS = {
     "oxygen_rest_refill_per_second",
     "route_context",
 }
+OXYGEN_REST_TRIGGER_FIELDS = OXYGEN_REST_METADATA_FIELDS - {"route_context"}
 
 
 def rect_cells(item: dict) -> set[tuple[int, int]]:
@@ -167,7 +170,7 @@ def validate_salvage_interaction_metadata(entity: dict, item_label: str) -> list
 
 
 def validate_oxygen_rest_forbidden(item: dict, item_label: str, owner_label: str) -> list[str]:
-    rest_fields = OXYGEN_REST_METADATA_FIELDS & set(item.keys())
+    rest_fields = OXYGEN_REST_TRIGGER_FIELDS & set(item.keys())
     if not rest_fields:
         return []
     fields = ", ".join(sorted(rest_fields))
@@ -197,7 +200,7 @@ def validate_rect_fields(item: dict, item_label: str, width: int, height: int) -
 
 def validate_oxygen_rest_metadata(zone: dict, item_label: str, width: int, height: int) -> list[str]:
     failures: list[str] = []
-    rest_fields = OXYGEN_REST_METADATA_FIELDS & set(zone.keys())
+    rest_fields = OXYGEN_REST_TRIGGER_FIELDS & set(zone.keys())
     if not rest_fields:
         return failures
 
@@ -312,7 +315,7 @@ def validate_zone_schema(zones: list[dict], width: int, height: int) -> list[str
     for index, zone in enumerate(zones):
         item_label = str(zone.get("id", f"zone[{index}]"))
         failures.extend(validate_oxygen_rest_metadata(zone, item_label, width, height))
-        if OXYGEN_REST_METADATA_FIELDS & set(zone.keys()):
+        if OXYGEN_REST_TRIGGER_FIELDS & set(zone.keys()):
             oxygen_rest_zone_ids.append(item_label)
 
     if len(oxygen_rest_zone_ids) > 1:
@@ -377,6 +380,7 @@ def main() -> int:
     failures.extend(validate_entity_schema(entities, width, height, base_zones))
     failures.extend(validate_zone_schema(zones, width, height))
     failures.extend(validate_route_objective_schema(map_data, entities, zones))
+    failures.extend(validate_objective_step_cue_schema(map_data, entities, zones))
     if failures:
         for failure in failures:
             print(failure)
@@ -434,7 +438,7 @@ def main() -> int:
                 failures.append(f"{entity['id']} is unreachable at {point}.")
 
     for zone in zones:
-        if OXYGEN_REST_METADATA_FIELDS & set(zone.keys()):
+        if OXYGEN_REST_TRIGGER_FIELDS & set(zone.keys()):
             cells = rect_cells(zone)
             solid_cells = sorted(cells & solid)
             unreachable_cells = sorted(cell for cell in cells if cell not in reachable)
@@ -451,6 +455,7 @@ def main() -> int:
             failures.append(f"{zone['id']} is unreachable.")
 
     failures.extend(validate_route_objective_reachability(map_data, entities, zones, solid, reachable))
+    failures.extend(validate_objective_step_cue_reachability(map_data, entities, zones, solid, reachable))
 
     if failures:
         for failure in failures:
