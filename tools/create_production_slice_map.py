@@ -332,6 +332,7 @@ def build_map_data(source_map: dict) -> dict:
                     "warning corridor and approach to timed salvage_deep_right_cache."
                 ),
             },
+            {"id": "deep_cache_dark_pocket", "type": "marker", "x": 50, "y": 68, "w": 16, "h": 11, "visibility_zone": True, "visibility_level": "dark", "visibility_label": "Dark pocket", "route_context": "deep_cache_pressure", "required_upgrade_id": "dive_light_1", "visual_only": True, "intent": "First visual-only darkness pressure zone around the lower-loop-to-deep-cache route."},
         ],
         "progression_containers": [{"id": "lower_loop_upgrade_chest", "container_type": "upgrade_chest", "x": 18, "y": 72, "w": 2, "h": 2, "display_label": "Upgrade chest", "interaction": "instant", "reward_type": "wallet", "reward_id": "upgrade_wallet_bonus", "reward_amount": 400, "route_context": "lower_loop_reward", "intent": "Pass 23 first small progression chest rewarding the lower-loop detour without adding inventory UI."}],
         "moving_hazards": [{"id": "deep_route_jellyfish_patrol", "kind": "jellyfish", "x": 54, "y": 68, "movement": "linear_patrol", "path": [{"x": 54, "y": 68}, {"x": 64, "y": 68}], "speed_tiles_per_second": 1.0, "route_context": "deep_cache_pressure", "display_label": "Jellyfish patrol", "intent": "Pass 24 first deterministic moving hazard on the lower-loop to deep-cache route."}],
