@@ -41,7 +41,7 @@ The open GitHub milestones should mirror this roadmap:
 
 ## Current Next Direction
 
-Controlled Gameplay Pass 17 completed the first Milestone 03 salvage-tool step: the default dive now has one staged source-authored pry salvage interaction in addition to timed salvage. The next implementation batch should plan a small Milestone 04 progression/economy slice before enemies, procedural generation, full inventory/loadout systems, or map-scale expansion.
+Controlled Gameplay Pass 18 completed the first Milestone 04 progression step: banked salvage now earns session wallet payout, and the player can buy one session-only `O2 tank +15` upgrade at extraction. The next implementation batch should continue Milestone 04 with one more small upgrade/unlock decision before enemies, procedural generation, full inventory/loadout systems, save files, or map-scale expansion.
 
 ## Recently Completed Prototype Passes
 
@@ -59,3 +59,4 @@ Controlled Gameplay Pass 17 completed the first Milestone 03 salvage-tool step: 
 - #298-#307 completed Controlled Gameplay Pass 15 objective follow-through, including source marker, validation, runtime cue, smoke, capture, visual decision, Web verification, and closeout.
 - #320-#329 completed Controlled Gameplay Pass 16 primary dive completion, including source contract, validation, runtime completion gate, smoke, capture, visual decision, Web verification, and closeout.
 - #340-#349 completed Controlled Gameplay Pass 17 pry salvage, including source contract, validation, source target authoring, staged runtime interaction, smoke, capture, visual decision, Web verification, and closeout.
+- #360-#369 completed Controlled Gameplay Pass 18 session progression, including planning, runtime progression contract, session wallet, one oxygen tank upgrade, overlay feedback, smoke, capture, visual decision, Web verification, and closeout.
