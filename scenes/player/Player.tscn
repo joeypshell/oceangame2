@@ -26,6 +26,7 @@ shape = SubResource("RectangleShape2D_player")
 [node name="Body" type="Sprite2D" parent="."]
 texture = ExtResource("2_diver")
 hframes = 4
+region_filter_clip_enabled = true
 
 [node name="LightCone" type="Sprite2D" parent="."]
 position = Vector2(88, 0)

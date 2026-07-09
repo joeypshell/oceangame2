@@ -20,6 +20,7 @@ var _swim_frame_time := 0.0
 
 
 func _ready() -> void:
+	_body.region_filter_clip_enabled = true
 	_set_facing(_facing_sign)
 
 
@@ -75,6 +76,7 @@ func get_facing_report() -> Dictionary:
 	return {
 		"root_scale_x": scale.x,
 		"body_flip_h": _body.flip_h,
+		"body_region_filter_clip_enabled": _body.region_filter_clip_enabled,
 		"light_cone_position_x": _light_cone.position.x,
 		"light_cone_scale_x": _light_cone.scale.x,
 		"light_cone_range_scale": absf(_light_cone.scale.x),
