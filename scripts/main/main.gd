@@ -89,6 +89,7 @@ const HAZARD_WARNING_RADIUS := 80.0
 const HAZARD_OXYGEN_PENALTY_SECONDS := 12.0
 const HAZARD_COOLDOWN_SECONDS := 1.0
 const HAZARD_FEEDBACK_SECONDS := 0.45
+const HAZARD_WARNING_CUE_COOLDOWN_SECONDS := 1.0
 const PASS_07_PRESSURE_SEGMENT_ID := "lower_loop_to_deep_cache_pressure"
 const PASS_07_PRESSURE_HAZARD_ID := "hazard_right_branch"
 const GENERIC_HAZARD_WARNING_PROMPT := "Hazard nearby - keep clear"
@@ -165,6 +166,8 @@ var _hazard_cooldown_seconds := 0.0
 var _hazard_feedback_seconds := 0.0
 var _hazard_interactions_enabled := true
 var _hazard_warning_id := ""
+var _hazard_warning_cue_id := ""
+var _hazard_warning_cue_cooldown_seconds := 0.0
 var _oxygen_seconds := OXYGEN_MAX_SECONDS
 var _oxygen_low_cue_emitted := false
 var _oxygen_critical_cue_emitted := false
@@ -783,6 +786,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_hazard_feedback_seconds = 0.0
 	_hazard_interactions_enabled = true
 	_hazard_warning_id = ""
+	_reset_hazard_feedback_cues()
 	_oxygen_seconds = _oxygen_capacity_seconds()
 	_reset_oxygen_feedback_cues()
 	_run_complete = false
@@ -849,7 +853,7 @@ func _process(delta: float) -> void:
 			_handle_hazard_hit(hazard_id)
 			_update_status_label()
 			return
-	_update_hazard_warning()
+	_update_hazard_warning(delta)
 
 	if _held_salvage < _held_salvage_capacity():
 		var nearby_salvage: Dictionary = _world.get_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
@@ -1035,6 +1039,7 @@ func _reset_run() -> void:
 	_hazard_feedback_seconds = 0.0
 	_hazard_interactions_enabled = true
 	_hazard_warning_id = ""
+	_reset_hazard_feedback_cues()
 	_oxygen_seconds = _oxygen_capacity_seconds()
 	_reset_oxygen_feedback_cues()
 	_run_complete = false
@@ -1172,6 +1177,8 @@ func _handle_oxygen_depleted() -> void:
 
 func _handle_hazard_hit(hazard_id: String) -> void:
 	_hazard_warning_id = ""
+	_reset_hazard_feedback_cues()
+	_play_feedback_cue("hazard_contact", hazard_id)
 	_oxygen_rest_feedback.reset()
 	_current_gate.reset()
 	_moving_hazards.reset(_world)
@@ -1205,19 +1212,38 @@ func _apply_hazard_oxygen_penalty() -> bool:
 	return _oxygen_seconds <= 0.0
 
 
-func _update_hazard_warning() -> void:
+func _update_hazard_warning(delta: float) -> void:
 	_hazard_warning_id = ""
+	if _hazard_warning_cue_cooldown_seconds > 0.0:
+		_hazard_warning_cue_cooldown_seconds = maxf(0.0, _hazard_warning_cue_cooldown_seconds - delta)
 	if not _hazard_interactions_enabled or _hazard_cooldown_seconds > 0.0:
+		_hazard_warning_cue_id = ""
 		return
 	if _moving_hazards != null and not _moving_hazards.warning_id().is_empty():
-		_hazard_warning_id = _moving_hazards.warning_id()
+		_set_hazard_warning_id(_moving_hazards.warning_id())
 		return
 	var hazard: Dictionary = _world.get_nearest_hazard_within(_player.global_position, HAZARD_WARNING_RADIUS)
 	if hazard.is_empty():
+		_hazard_warning_cue_id = ""
 		return
 	if float(hazard.get("distance", HAZARD_WARNING_RADIUS)) <= HAZARD_CONTACT_RADIUS:
+		_hazard_warning_cue_id = ""
 		return
-	_hazard_warning_id = str(hazard.get("id", "hazard"))
+	_set_hazard_warning_id(str(hazard.get("id", "hazard")))
+
+
+func _set_hazard_warning_id(hazard_id: String) -> void:
+	_hazard_warning_id = hazard_id
+	if hazard_id.is_empty() or _hazard_warning_cue_id == hazard_id or _hazard_warning_cue_cooldown_seconds > 0.0:
+		return
+	_hazard_warning_cue_id = hazard_id
+	_hazard_warning_cue_cooldown_seconds = HAZARD_WARNING_CUE_COOLDOWN_SECONDS
+	_play_feedback_cue("hazard_warning", hazard_id)
+
+
+func _reset_hazard_feedback_cues() -> void:
+	_hazard_warning_cue_id = ""
+	_hazard_warning_cue_cooldown_seconds = 0.0
 
 
 func _update_hazard_feedback(delta: float) -> void:
