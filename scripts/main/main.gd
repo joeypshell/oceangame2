@@ -46,6 +46,7 @@ const BACKGROUND_DEPTH_CAPTURE_DIR := "res://visual_captures/background_depth"
 const FEEDBACK_OVERLAY_CAPTURE_DIR := "res://visual_captures/feedback_overlay"
 const ROUTE_OUTCOME_CAPTURE_DIR := "res://visual_captures/route_outcome"
 const TIMED_SALVAGE_CAPTURE_DIR := "res://visual_captures/timed_salvage"
+const PRY_SALVAGE_CAPTURE_DIR := "res://visual_captures/pry_salvage"
 const HAZARD_PRESSURE_CAPTURE_DIR := "res://visual_captures/hazard_pressure"
 const ROUTE_EXTENSION_CAPTURE_DIR := "res://visual_captures/route_extension"
 const SOUTHWEST_POCKET_DECISION_CAPTURE_DIR := "res://visual_captures/southwest_pocket_decision"
@@ -172,6 +173,7 @@ func _ready() -> void:
 	var capture_feedback_overlay := _has_arg(user_args, engine_args, "--capture-feedback-overlay")
 	var capture_route_outcome := _has_arg(user_args, engine_args, "--capture-route-outcome-result")
 	var capture_timed_salvage := _has_arg(user_args, engine_args, "--capture-timed-salvage")
+	var capture_pry_salvage := _has_arg(user_args, engine_args, "--capture-pry-salvage")
 	var capture_hazard_pressure := _has_arg(user_args, engine_args, "--capture-pass-07-hazard-pressure")
 	var capture_route_extension := _has_arg(user_args, engine_args, "--capture-pass-08-route-extension")
 	var capture_southwest_pocket_decision := _has_arg(user_args, engine_args, "--capture-pass-09-southwest-pocket-decision")
@@ -252,6 +254,8 @@ func _ready() -> void:
 	elif capture_route_outcome:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_timed_salvage:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif capture_pry_salvage:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_hazard_pressure:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
@@ -354,6 +358,7 @@ func _ready() -> void:
 		or capture_feedback_overlay
 		or capture_route_outcome
 		or capture_timed_salvage
+		or capture_pry_salvage
 		or capture_hazard_pressure
 		or capture_route_extension
 		or capture_southwest_pocket_decision
@@ -543,6 +548,8 @@ func _ready() -> void:
 		_capture_controller.capture_route_outcome_result_and_quit(ROUTE_OUTCOME_CAPTURE_DIR)
 	elif capture_timed_salvage:
 		_capture_controller.capture_timed_salvage_and_quit(TIMED_SALVAGE_CAPTURE_DIR)
+	elif capture_pry_salvage:
+		_capture_controller.capture_pry_salvage_and_quit(PRY_SALVAGE_CAPTURE_DIR)
 	elif capture_hazard_pressure:
 		_capture_controller.capture_hazard_pressure_and_quit(HAZARD_PRESSURE_CAPTURE_DIR)
 	elif capture_route_extension:
