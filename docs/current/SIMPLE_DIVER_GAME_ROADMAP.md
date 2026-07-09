@@ -173,9 +173,9 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 ## Current Next Direction
 
-Pass 24 is complete and gives the default slice one deterministic moving hazard as a route-timing beat, not an enemy/combat system.
+Pass 24 is complete and gives the default slice one deterministic moving hazard as a route-timing beat, not an enemy/combat system. #448 adds the first small visual-only diver swim/idle animation slice.
 
-Use `docs/current/DIVER_ANIMATION_PLAN.md` for the next Milestone 07 presentation step: one small swim/idle animation slice that improves player readability without changing movement, collision, camera, light, or gameplay semantics. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, or full-map productionization.
+Use `docs/current/DEPTH_DARKNESS_LIGHT_GATE_CONTRACT.md` for the next light/progression presentation step: one visual-only deep-route darkness zone improved by `dive_light_1`, without changing movement, collision, oxygen, cargo, objective, or salvage semantics. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, or full-map productionization.
 
 ## Deferred Work
 

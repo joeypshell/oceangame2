@@ -429,6 +429,8 @@ Future chest/cache progression metadata is defined in `docs/current/LOCKED_CACHE
 
 The first implementation target is one `upgrade_chest` in `production_slice_01` that grants a small session wallet/reward beat without adding inventory UI, persistent keys, loot tables, or save-heavy state.
 
+Future darkness/light metadata is defined in `docs/current/DEPTH_DARKNESS_LIGHT_GATE_CONTRACT.md`. First-pass visibility zones should be visual-only marker zones, not terrain, collision, oxygen, pickup, or objective gates.
+
 `hazard` entities are static point hazards and require `kind`. Current valid-style examples are `mine`, `jellyfish`, and `stress_marker`.
 Moving hazards are defined separately in `docs/current/MOVING_HAZARD_DODGE_CONTRACT.md` using top-level `moving_hazards`; production previews may use `kind` to choose first-pass prop art, but hazard behavior is still source-driven.
 
