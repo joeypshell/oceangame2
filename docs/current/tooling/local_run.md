@@ -96,6 +96,8 @@ Opening the Godot editor and pressing Play uses the default preview map unless G
 
 Local/editor review runs show a small map selector in the review overlay. Use it to switch between the supported review maps without relaunching Godot. It is hidden for capture/smoke automation and exported builds unless explicitly enabled with `--review-map-selector`. Command-line flags such as `-ProductionSlice3Map` or `-MapPath` still control the initial map that opens.
 
+When comparing local/editor and public Web preview screenshots, compare matching commits and map selections. `Build local` means the editor is running the current checkout or worktree; `Build <sha>` in the Web overlay is the deployed export commit from `build_info.json`. The public export intentionally hides the editor-only map selector unless `--review-map-selector` is explicitly enabled.
+
 Run any map source by path:
 
 ```powershell

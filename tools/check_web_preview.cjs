@@ -33,6 +33,9 @@ function parseArgs(argv) {
 
 const { targetUrl, expectedSha } = parseArgs(process.argv.slice(2));
 const screenshotPath = process.env.WEB_PREVIEW_SCREENSHOT || "exports/web-preview-check.png";
+const primaryViewport = { width: 1280, height: 720 };
+const wideViewport = { width: 1920, height: 1080 };
+const framingThreshold = 18;
 
 const failurePatterns = [
 	/SCRIPT ERROR/i,
@@ -74,14 +77,71 @@ async function checkBuildMetadata() {
 }
 
 async function main() {
-	const messages = [];
-	const failedRequests = [];
-
 	await checkBuildMetadata();
 
 	const browser = await chromium.launch({ args: ["--no-sandbox"] });
 	try {
-		const page = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+		const primary = await inspectPreview(browser, targetUrl, primaryViewport, screenshotPath);
+		const wide = await inspectPreview(browser, targetUrl, wideViewport, "");
+		const framingDiff = compareSignatures(primary.signature, wide.signature);
+
+		fs.mkdirSync(path.dirname(screenshotPath), { recursive: true });
+		const allMessages = primary.messages.concat(wide.messages);
+		const allFailedRequests = primary.failedRequests.concat(wide.failedRequests);
+		const failingMessages = allMessages.filter((message) =>
+			failurePatterns.some((pattern) => pattern.test(message.text))
+		);
+
+		console.log(`Checked ${targetUrl}`);
+		console.log(
+			`Canvas ${primary.canvasSize.width}x${primary.canvasSize.height} (${primary.canvasSize.clientWidth}x${primary.canvasSize.clientHeight} CSS)`
+		);
+		console.log(
+			`Wide canvas ${wide.canvasSize.width}x${wide.canvasSize.height} (${wide.canvasSize.clientWidth}x${wide.canvasSize.clientHeight} CSS)`
+		);
+		console.log(`Framing thumbnail mean difference ${framingDiff.toFixed(2)} (max ${framingThreshold})`);
+
+		if (allMessages.length > 0) {
+			console.log("Console output:");
+			for (const message of allMessages) {
+				console.log(`[${message.type}] ${message.text}`);
+			}
+		}
+
+		if (allFailedRequests.length > 0) {
+			console.log("Failed requests:");
+			for (const request of allFailedRequests) {
+				console.log(request);
+			}
+		}
+
+		if (primary.canvasSize.width <= 0 || primary.canvasSize.height <= 0) {
+			throw new Error("Godot canvas did not initialize.");
+		}
+		if (wide.canvasSize.width <= 0 || wide.canvasSize.height <= 0) {
+			throw new Error("Godot canvas did not initialize at the wide framing check size.");
+		}
+		if (framingDiff > framingThreshold) {
+			throw new Error(
+				`Web preview framing changed across viewport sizes; thumbnail mean difference ${framingDiff.toFixed(2)} exceeds ${framingThreshold}.`
+			);
+		}
+		if (allFailedRequests.length > 0) {
+			throw new Error("Web preview had failed network requests.");
+		}
+		if (failingMessages.length > 0) {
+			throw new Error("Web preview emitted Godot/browser errors.");
+		}
+	} finally {
+		await browser.close();
+	}
+}
+
+async function inspectPreview(browser, url, viewport, outputPath) {
+	const messages = [];
+	const failedRequests = [];
+	const page = await browser.newPage({ viewport });
+	try {
 		page.on("console", (message) => {
 			messages.push({
 				type: message.type(),
@@ -98,11 +158,13 @@ async function main() {
 			failedRequests.push(`${request.method()} ${request.url()} ${request.failure()?.errorText || ""}`);
 		});
 
-		await page.goto(targetUrl, { waitUntil: "networkidle", timeout: 60000 });
+		await page.goto(url, { waitUntil: "networkidle", timeout: 60000 });
 		await page.waitForSelector("canvas", { timeout: 30000 });
 		await page.waitForTimeout(5000);
-		fs.mkdirSync(path.dirname(screenshotPath), { recursive: true });
-		await page.screenshot({ path: screenshotPath });
+		if (outputPath) {
+			fs.mkdirSync(path.dirname(outputPath), { recursive: true });
+			await page.screenshot({ path: outputPath });
+		}
 
 		const canvasSize = await page.locator("canvas").evaluate((canvas) => ({
 			width: canvas.width,
@@ -110,42 +172,32 @@ async function main() {
 			clientWidth: canvas.clientWidth,
 			clientHeight: canvas.clientHeight,
 		}));
+		const signature = await page.locator("canvas").evaluate((canvas) => {
+			const sampleWidth = 64;
+			const sampleHeight = 36;
+			const scratch = document.createElement("canvas");
+			scratch.width = sampleWidth;
+			scratch.height = sampleHeight;
+			const context = scratch.getContext("2d", { willReadFrequently: true });
+			context.drawImage(canvas, 0, 0, sampleWidth, sampleHeight);
+			return Array.from(context.getImageData(0, 0, sampleWidth, sampleHeight).data);
+		});
 
-		const failingMessages = messages.filter((message) =>
-			failurePatterns.some((pattern) => pattern.test(message.text))
-		);
-
-		console.log(`Checked ${targetUrl}`);
-		console.log(
-			`Canvas ${canvasSize.width}x${canvasSize.height} (${canvasSize.clientWidth}x${canvasSize.clientHeight} CSS)`
-		);
-
-		if (messages.length > 0) {
-			console.log("Console output:");
-			for (const message of messages) {
-				console.log(`[${message.type}] ${message.text}`);
-			}
-		}
-
-		if (failedRequests.length > 0) {
-			console.log("Failed requests:");
-			for (const request of failedRequests) {
-				console.log(request);
-			}
-		}
-
-		if (canvasSize.width <= 0 || canvasSize.height <= 0) {
-			throw new Error("Godot canvas did not initialize.");
-		}
-		if (failedRequests.length > 0) {
-			throw new Error("Web preview had failed network requests.");
-		}
-		if (failingMessages.length > 0) {
-			throw new Error("Web preview emitted Godot/browser errors.");
-		}
+		return { canvasSize, failedRequests, messages, signature };
 	} finally {
-		await browser.close();
+		await page.close();
 	}
+}
+
+function compareSignatures(left, right) {
+	if (left.length !== right.length || left.length === 0) {
+		throw new Error("Unable to compare web preview framing signatures.");
+	}
+	let total = 0;
+	for (let index = 0; index < left.length; index += 1) {
+		total += Math.abs(left[index] - right[index]);
+	}
+	return total / left.length;
 }
 
 main().catch((error) => {
