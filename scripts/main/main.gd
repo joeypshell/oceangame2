@@ -18,6 +18,7 @@ const SessionProgression := preload("res://scripts/main/session_progression.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
 const WorldConnectorController := preload("res://scripts/main/world_connector_controller.gd")
 const AudioCuePlayer := preload("res://scripts/main/audio_cue_player.gd")
+const SmokeFeedbackAudioChecks := preload("res://scripts/main/smoke/smoke_feedback_audio_checks.gd")
 const SmokeHazardRouteChecks := preload("res://scripts/main/smoke/smoke_hazard_route_checks.gd")
 const SmokeInteractionChecks := preload("res://scripts/main/smoke/smoke_interaction_checks.gd")
 const SmokeOxygenRestChecks := preload("res://scripts/main/smoke/smoke_oxygen_rest_checks.gd")
@@ -128,6 +129,7 @@ var _session_progression
 var _timed_salvage
 var _world_connector
 var _audio_cues
+var _smoke_feedback_audio_checks
 var _smoke_hazard_route_checks
 var _smoke_interaction_checks
 var _smoke_oxygen_rest_checks
@@ -192,6 +194,7 @@ func _ready() -> void:
 	_world_connector = WorldConnectorController.new()
 	_audio_cues = AudioCuePlayer.new()
 	add_child(_audio_cues)
+	_smoke_feedback_audio_checks = SmokeFeedbackAudioChecks.new(self)
 	_smoke_hazard_route_checks = SmokeHazardRouteChecks.new(self)
 	_smoke_interaction_checks = SmokeInteractionChecks.new(self)
 	_smoke_oxygen_rest_checks = SmokeOxygenRestChecks.new(self)
@@ -276,6 +279,7 @@ func _ready() -> void:
 	var smoke_timed_salvage := _has_arg(user_args, engine_args, "--smoke-timed-salvage")
 	var smoke_pry_salvage := _has_arg(user_args, engine_args, "--smoke-pry-salvage")
 	var smoke_cargo_capacity := _has_arg(user_args, engine_args, "--smoke-cargo-capacity")
+	var smoke_feedback_cues := _has_arg(user_args, engine_args, "--smoke-feedback-cues")
 	var smoke_salvage_feedback := _has_arg(user_args, engine_args, "--smoke-salvage-feedback")
 	var smoke_session_best_score := _has_arg(user_args, engine_args, "--smoke-session-best-score")
 	var smoke_oxygen_bonus_score := _has_arg(user_args, engine_args, "--smoke-oxygen-bonus-score")
@@ -414,6 +418,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_pry_salvage:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_feedback_cues:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_session_best_score:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_salvage_feedback:
@@ -508,6 +514,7 @@ func _ready() -> void:
 		or smoke_timed_salvage
 		or smoke_pry_salvage
 		or smoke_cargo_capacity
+		or smoke_feedback_cues
 		or smoke_salvage_feedback
 		or smoke_session_best_score
 		or smoke_oxygen_bonus_score
@@ -619,6 +626,9 @@ func _ready() -> void:
 		return
 	if smoke_cargo_capacity:
 		_smoke_score_checks._smoke_cargo_capacity_and_quit()
+		return
+	if smoke_feedback_cues:
+		_smoke_feedback_audio_checks._smoke_feedback_cues_and_quit()
 		return
 	if smoke_salvage_feedback:
 		_smoke_score_checks._smoke_salvage_feedback_and_quit()

@@ -146,6 +146,7 @@ jobs:
           }
 
           run_score_smoke --smoke-cargo-capacity cargo-capacity
+          run_score_smoke --smoke-feedback-cues feedback-cues
           run_score_smoke --smoke-salvage-feedback salvage-feedback
           run_score_smoke --smoke-session-best-score session-best-score
           run_score_smoke --smoke-oxygen-bonus-score oxygen-bonus-score
