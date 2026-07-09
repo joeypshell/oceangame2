@@ -157,6 +157,7 @@ jobs:
           run_score_smoke --smoke-current-gate current-gate
           run_score_smoke --smoke-upgrade-chest upgrade-chest
           run_score_smoke --smoke-moving-hazard moving-hazard
+          run_score_smoke --smoke-darkness-light-gate darkness-light-gate
 
       - name: Run map selector smoke check
         run: |
