@@ -341,6 +341,7 @@ def build_map_data(source_map: dict) -> dict:
             },
         ],
         "route_objectives": PASS_13_ROUTE_OBJECTIVES,
+        "primary_route_objective_id": "deep_cache_route_objective",
         "background": [
             {"id": "distant_entry_wall", "type": "background", "x": 30, "y": 6, "w": 18, "h": 22},
             {"id": "distant_crossing_mass", "type": "background", "x": 28, "y": 24, "w": 30, "h": 24},
@@ -489,10 +490,7 @@ def main() -> int:
 
     map_data = build_map_data(source_map)
     OUTPUT_MAP_PATH.write_text(json.dumps(map_data, indent=2) + "\n", encoding="utf-8", newline="\n")
-    print(
-        f"Wrote {OUTPUT_MAP_PATH.relative_to(ROOT)} with "
-        f"{len(map_data['terrain'])} solid row runs."
-    )
+    print(f"Wrote {OUTPUT_MAP_PATH.relative_to(ROOT)} with {len(map_data['terrain'])} solid row runs.")
     return 0
 
 
