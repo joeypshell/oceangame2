@@ -179,6 +179,10 @@ The first compact feedback/audio cue pass is complete under #481-#490. Pass 22 i
 
 Pass 23 is complete under #522-#531: completing the primary deep-cache objective now adds one source-authored next-dive prompt, `Next dive: Investigate lower-left relay`, with validation, runtime result text, smoke, focused capture, visual review, public Web verification, and closeout.
 
+Pass 24 is complete under #542-#551: that next-dive prompt now has one source-authored lower-left relay follow-through payoff. Banking `slice_04_destination_cache` in `production_slice_04` shows `Relay lead confirmed`, with validation, runtime feedback, smoke, focused capture, visual review, public Web verification, and closeout.
+
+Next, decide whether Milestone 06 needs one final-dive/capstone objective seed or should move to Milestone 07 presentation/game feel. Keep the next batch small and player-facing.
+
 The next recommended batch should keep Milestone 06 focused by making that prompt pay off with one lower-left relay follow-through objective. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, broad audio systems, or full-map productionization.
 
 ## Deferred Work
