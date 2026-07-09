@@ -173,9 +173,9 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 ## Current Next Direction
 
-Pass 24 is complete and gives the default slice one deterministic moving hazard as a route-timing beat, not an enemy/combat system. #448 adds the first small visual-only diver swim/idle animation slice.
+The first darkness/light gate is complete: `deep_cache_dark_pocket` is a visual-only deep-route readability zone improved by `dive_light_1`, without changing movement, collision, oxygen, cargo, objective, or salvage semantics.
 
-Use `docs/current/DEPTH_DARKNESS_LIGHT_GATE_CONTRACT.md` for the next light/progression presentation step: one visual-only deep-route darkness zone improved by `dive_light_1`, without changing movement, collision, oxygen, cargo, objective, or salvage semantics. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, or full-map productionization.
+Use #471 to plan the next small Presentation And Game Feel micro-pass. Prefer a player-facing polish step in the existing default slice, such as pickup/banking feel, hazard readability, compact audio/feedback planning, or terrain/prop readability. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, or full-map productionization.
 
 ## Deferred Work
 
