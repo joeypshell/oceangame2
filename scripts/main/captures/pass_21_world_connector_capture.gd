@@ -31,6 +31,8 @@ func capture_and_quit(capture_dir: String) -> void:
 		return
 
 	_main._hazard_interactions_enabled = false
+	_main._session_progression.record_banked_salvage(_main.SessionProgression.PROPULSION_UPGRADE_COST)
+	_main._session_progression.purchase_propulsion_upgrade()
 	_main._player.global_position = connector["center"]
 	if _main._player.has_method("reset_motion"):
 		_main._player.reset_motion()

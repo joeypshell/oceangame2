@@ -193,6 +193,14 @@ Capture the first production slice with debug/review markers visible:
 
 This writes PNGs to `visual_captures/production_slice_01_debug/`. The debug overlay uses cyan source grid, white route rectangles, amber boat/extraction outlines, green entry/spawn labels, yellow salvage diamonds, and red hazard squares. Normal production-slice captures stay terrain-first and should not be overwritten with debug views.
 
+Capture the focused current-gate review state:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-current-gate
+```
+
+This writes `visual_captures/current_gate/production_slice_01_current_gate.png` showing the lower-left connector area with the `Strong current - need propulsion fins` prompt. It is a review capture, not baseline acceptance.
+
 Capture the second production slice:
 
 ```powershell

@@ -40,6 +40,7 @@ var _hazard_entities: Array = []
 var _extraction_zones: Array = []
 var _boat_entities: Array = []
 var _world_connector_zones: Array = []
+var _current_gate_zones: Array = []
 var _spawn_positions_by_id := {}
 var _collected_salvage := {}
 var _salvage_nodes_by_id := {}
@@ -91,6 +92,7 @@ func load_greybox() -> void:
 	_extraction_zones = []
 	_boat_entities = []
 	_world_connector_zones = []
+	_current_gate_zones = []
 	_spawn_positions_by_id = {}
 	_collected_salvage = {}
 	_salvage_nodes_by_id = {}
@@ -191,6 +193,20 @@ func get_world_connectors() -> Array:
 	for zone in _world_connector_zones:
 		connectors.append(_world_connector_runtime_info(zone))
 	return connectors
+
+
+func get_current_gates() -> Array:
+	var gates := []
+	for zone in _current_gate_zones:
+		gates.append(_current_gate_runtime_info(zone))
+	return gates
+
+
+func get_current_gate_at(position: Vector2) -> Dictionary:
+	for zone in _current_gate_zones:
+		if _rect_from_item(zone).has_point(position):
+			return _current_gate_runtime_info(zone)
+	return {}
 
 
 func get_world_connector_at(position: Vector2) -> Dictionary:
@@ -372,6 +388,19 @@ func _world_connector_runtime_info(zone: Dictionary) -> Dictionary:
 	}
 
 
+func _current_gate_runtime_info(zone: Dictionary) -> Dictionary:
+	return {
+		"id": str(zone.get("id", "current_gate")),
+		"center": _rect_center(zone),
+		"rect": _rect_from_item(zone),
+		"current_gate_label": str(zone.get("current_gate_label", "")),
+		"current_direction": str(zone.get("current_direction", "")),
+		"current_strength": float(zone.get("current_strength", 1.0)),
+		"required_upgrade_id": str(zone.get("required_upgrade_id", "")),
+		"route_context": str(zone.get("route_context", "")),
+	}
+
+
 func reset_salvage() -> void:
 	_collected_salvage = {}
 	for salvage_id in _salvage_nodes_by_id.keys():
@@ -482,6 +511,8 @@ func _build_zones(zones: Array) -> void:
 		elif zone.get("type", "") == "marker":
 			if bool(zone.get("world_connector", false)):
 				_world_connector_zones.append(zone)
+			if bool(zone.get("current_gate", false)):
+				_current_gate_zones.append(zone)
 			_route_marker_renderer_helper().add_route_marker(_marker_root, zone, tile_size, show_debug_overlay, _debug_renderer_helper())
 
 

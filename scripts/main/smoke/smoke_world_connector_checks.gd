@@ -30,10 +30,11 @@ func _smoke_pass_21_world_connector_and_quit() -> void:
 		get_tree().quit(1)
 		return
 
-	_main._session_progression.record_banked_salvage(2500)
+	_main._session_progression.record_banked_salvage(3600)
 	_main._session_progression.purchase_oxygen_tank_upgrade()
 	_main._session_progression.purchase_cargo_capacity_upgrade()
 	_main._session_progression.purchase_light_upgrade()
+	_main._session_progression.purchase_propulsion_upgrade()
 	var wallet_before := _session_wallet()
 
 	_held_salvage = 1
@@ -83,13 +84,14 @@ func _smoke_pass_21_world_connector_and_quit() -> void:
 		])
 		get_tree().quit(1)
 		return
-	if not _has_oxygen_tank_upgrade() or not _has_cargo_capacity_upgrade() or not _has_light_upgrade() or _session_wallet() != wallet_before:
-		push_error("Pass 21 connector smoke session progression changed: wallet=%d before=%d oxygen=%s cargo=%s light=%s." % [
+	if not _has_oxygen_tank_upgrade() or not _has_cargo_capacity_upgrade() or not _has_light_upgrade() or not _main._has_propulsion_upgrade() or _session_wallet() != wallet_before:
+		push_error("Pass 21 connector smoke session progression changed: wallet=%d before=%d oxygen=%s cargo=%s light=%s propulsion=%s." % [
 			_session_wallet(),
 			wallet_before,
 			str(_has_oxygen_tank_upgrade()),
 			str(_has_cargo_capacity_upgrade()),
 			str(_has_light_upgrade()),
+			str(_main._has_propulsion_upgrade()),
 		])
 		get_tree().quit(1)
 		return
@@ -113,7 +115,7 @@ func _smoke_pass_21_world_connector_and_quit() -> void:
 		get_tree().quit(1)
 		return
 
-	print("Pass 21 connector smoke passed: connector=%s origin=production_slice_01 destination=%s entry=%s wallet=%d upgrades=o2:%s,cargo:%s,light:%s held=%d oxygen=%.1f status=\"%s\"." % [
+	print("Pass 21 connector smoke passed: connector=%s origin=production_slice_01 destination=%s entry=%s wallet=%d upgrades=o2:%s,cargo:%s,light:%s,propulsion:%s held=%d oxygen=%.1f status=\"%s\"." % [
 		PASS_21_CONNECTOR_ID,
 		_world.map_id,
 		PASS_21_DESTINATION_ENTRY_ID,
@@ -121,6 +123,7 @@ func _smoke_pass_21_world_connector_and_quit() -> void:
 		str(_has_oxygen_tank_upgrade()),
 		str(_has_cargo_capacity_upgrade()),
 		str(_has_light_upgrade()),
+		str(_main._has_propulsion_upgrade()),
 		_held_salvage,
 		_oxygen_seconds,
 		final_status,
