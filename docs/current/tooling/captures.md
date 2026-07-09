@@ -153,6 +153,14 @@ Capture the focused upgrade-chest reward view:
 
 This loads the default production slice, opens `lower_loop_upgrade_chest` through the normal runtime path, frames compact `Upgrade chest +400 wallet` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/upgrade_chest/production_slice_01_upgrade_chest.png`.
 
+Capture the focused moving-hazard dodge view:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-moving-hazard
+```
+
+This loads the default production slice, advances `deep_route_jellyfish_patrol` to a readable patrol state, frames the route with compact `Jellyfish patrol - wait` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/moving_hazard/production_slice_01_moving_hazard.png`.
+
 Capture the original rectangular salvage map comparison views:
 
 ```powershell

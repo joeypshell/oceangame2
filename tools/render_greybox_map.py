@@ -20,6 +20,7 @@ COLORS = {
     "spawn": "#29d66f",
     "salvage": "#ffd34a",
     "hazard": "#ff4b5f",
+    "moving_hazard": "#ff96b0",
     "marker": "#ffffff",
     "container": "#d68cff",
     "label": "#eaffff",
@@ -152,11 +153,28 @@ def render_svg(map_data: dict) -> str:
         )
         parts.append(text(x + 8, y - 10, container["id"], 22))
 
+    for hazard in map_data.get("moving_hazards", []):
+        path = hazard.get("path", [])
+        if len(path) >= 2:
+            points = []
+            for point in path:
+                cx = (point["x"] + 0.5) * tile_size
+                cy = (point["y"] + 0.5) * tile_size
+                points.append(f"{cx},{cy}")
+            parts.append(
+                f'<polyline points="{" ".join(points)}" fill="none" stroke="{COLORS["moving_hazard"]}" '
+                'stroke-width="5" stroke-dasharray="12 8"/>'
+            )
+        x = (hazard["x"] + 0.5) * tile_size
+        y = (hazard["y"] + 0.5) * tile_size
+        parts.append(f'<circle cx="{x}" cy="{y}" r="15" fill="{COLORS["moving_hazard"]}" stroke="#721d35" stroke-width="5"/>')
+        parts.append(text(x + 18, y - 18, hazard["id"], 22))
+
     parts.extend(
         [
             f'<rect x="0" y="0" width="{width_px}" height="{height_px}" fill="url(#grid)"/>',
             text(24, 42, f'{map_data["id"]} - greybox source preview', 30),
-            text(24, height_px - 24, "cyan=open water | gray=solid | tan=extraction | orange=boat | green=start | yellow=salvage | red=hazard | purple=container", 24),
+            text(24, height_px - 24, "cyan=open | gray=solid | tan=extraction | orange=boat | green=start | yellow=salvage | red=hazard | pink=moving | purple=container", 24),
             "</svg>",
             "",
         ]
