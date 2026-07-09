@@ -627,6 +627,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool) -> void:
 	_player = player
 	player.position = world.spawn_position
 	add_child(player)
+	_apply_session_light_profile()
 
 	if player.has_method("set_camera_limits"):
 		player.set_camera_limits(Rect2(Vector2.ZERO, world.map_pixel_size))
@@ -861,6 +862,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		_try_purchase_oxygen_tank_upgrade()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_C:
 		_try_purchase_cargo_capacity_upgrade()
+	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_L:
+		_try_purchase_light_upgrade()
 
 
 func _reset_run() -> void:
@@ -1233,6 +1236,8 @@ func _is_progression_status_note(status_note: String) -> bool:
 		or status_note == "O2 tank already upgraded"
 		or status_note == "Cargo +1 upgraded"
 		or status_note == "Cargo +1 already upgraded"
+		or status_note == "Light +range upgraded"
+		or status_note == "Light +range already upgraded"
 		or status_note == "Upgrade at extraction"
 		or status_note == "Upgrade blocked"
 		or status_note.begins_with("Need ")
@@ -1412,12 +1417,46 @@ func _try_purchase_cargo_capacity_upgrade() -> bool:
 	return false
 
 
+func _try_purchase_light_upgrade() -> bool:
+	if _world == null or _player == null or _session_progression == null:
+		return false
+	if not _world.is_inside_extraction(_player.global_position):
+		_last_status_note = "Upgrade at extraction"
+		_update_status_label()
+		return false
+	var result: Dictionary = _session_progression.purchase_light_upgrade()
+	if bool(result.get("purchased", false)):
+		_apply_session_light_profile()
+		_last_status_note = "Light +range upgraded"
+		_update_status_label()
+		return true
+	var reason := str(result.get("reason", "blocked"))
+	if reason == "insufficient_funds":
+		_last_status_note = "Need %d more" % int(result.get("needed", 0))
+	elif reason == "already_purchased":
+		_last_status_note = "Light +range already upgraded"
+	else:
+		_last_status_note = "Upgrade blocked"
+	_update_status_label()
+	return false
+
+
 func _has_oxygen_tank_upgrade() -> bool:
 	return _session_progression != null and _session_progression.has_oxygen_tank_upgrade()
 
 
 func _has_cargo_capacity_upgrade() -> bool:
 	return _session_progression != null and _session_progression.has_cargo_capacity_upgrade()
+
+
+func _has_light_upgrade() -> bool:
+	return _session_progression != null and _session_progression.has_light_upgrade()
+
+
+func _apply_session_light_profile() -> void:
+	if _player == null or _session_progression == null or not _player.has_method("apply_light_profile"):
+		return
+	_player.apply_light_profile(_session_progression.light_range_scale(), _session_progression.light_alpha())
 
 
 func _held_salvage_capacity() -> int:
@@ -1445,17 +1484,22 @@ func _progression_overlay_text() -> String:
 			int(SessionProgression.CARGO_CAPACITY_UPGRADE_BONUS),
 			SessionProgression.CARGO_CAPACITY_UPGRADE_COST,
 		]
-	return "Wallet %d\n%s | %s" % [
+	var light_text := "Light +range"
+	if not _has_light_upgrade():
+		light_text = "L: Light +range (%d)" % SessionProgression.LIGHT_UPGRADE_COST
+	return "Wallet %d\n%s | %s | %s" % [
 		_session_wallet(),
 		oxygen_text,
 		cargo_text,
+		light_text,
 	]
 
 
 func _progression_result_text() -> String:
 	var oxygen_text := "O2 tank +%ds" % int(SessionProgression.OXYGEN_TANK_UPGRADE_SECONDS) if _has_oxygen_tank_upgrade() else "O2 tank base"
 	var cargo_text := "Cargo +%d" % int(SessionProgression.CARGO_CAPACITY_UPGRADE_BONUS) if _has_cargo_capacity_upgrade() else "Cargo base"
-	return "Wallet %d | %s | %s" % [_session_wallet(), oxygen_text, cargo_text]
+	var light_text := "Light +range" if _has_light_upgrade() else "Light base"
+	return "Wallet %d | %s | %s | %s" % [_session_wallet(), oxygen_text, cargo_text, light_text]
 
 
 func _update_result_panel() -> void:
