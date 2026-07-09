@@ -3,6 +3,8 @@ extends Node2D
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
+const CurrentGateCapture := preload("res://scripts/main/captures/current_gate_capture.gd")
+const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
 const OxygenRestPocketFeedback := preload("res://scripts/main/oxygen_rest_pocket_feedback.gd")
 const PrePickupRouteCueFeedback := preload("res://scripts/main/pre_pickup_route_cue_feedback.gd")
 const PrimaryDiveObjective := preload("res://scripts/main/primary_dive_objective.gd")
@@ -23,6 +25,7 @@ const SmokeRouteExtensionChecks := preload("res://scripts/main/smoke/smoke_route
 const SmokeRouteChecks := preload("res://scripts/main/smoke/smoke_route_checks.gd")
 const SmokeScoreChecks := preload("res://scripts/main/smoke/smoke_score_checks.gd")
 const SmokeWorldConnectorChecks := preload("res://scripts/main/smoke/smoke_world_connector_checks.gd")
+const SmokeCurrentGateChecks := preload("res://scripts/main/smoke/smoke_current_gate_checks.gd")
 const DEFAULT_MAP_PATH := "res://maps/production_slice_01.greybox.json"
 const ORIGINAL_MAP_PATH := "res://maps/cave_salvage_test_01.greybox.json"
 const TILESET_TEST_MAP_PATH := "res://maps/cave_tileset_test_01.greybox.json"
@@ -64,6 +67,7 @@ const PASS_18_PROGRESSION_CAPTURE_DIR := "res://visual_captures/pass_18_progress
 const PASS_19_CARGO_UPGRADE_CAPTURE_DIR := "res://visual_captures/pass_19_cargo_upgrade"
 const PASS_20_LIGHT_UPGRADE_CAPTURE_DIR := "res://visual_captures/pass_20_light_upgrade"
 const PASS_21_WORLD_CONNECTOR_CAPTURE_DIR := "res://visual_captures/pass_21_world_connector"
+const CURRENT_GATE_CAPTURE_DIR := "res://visual_captures/current_gate"
 const PRIMARY_DIVE_COMPLETION_CAPTURE_DIR := "res://visual_captures/primary_dive_completion"
 const BUILD_INFO_PATH := "res://build_info.json"
 const MOVEMENT_FEEL_PROBE_CENTER_TILES := Vector2(42, 25)
@@ -99,6 +103,7 @@ const REVIEW_MAP_OPTIONS := [
 var _world
 var _player
 var _capture_controller
+var _current_gate
 var _oxygen_rest_feedback
 var _pre_pickup_route_cue_feedback
 var _primary_dive_objective
@@ -119,6 +124,7 @@ var _smoke_route_extension_checks
 var _smoke_route_checks
 var _smoke_score_checks
 var _smoke_world_connector_checks
+var _smoke_current_gate_checks
 var _review_canvas: CanvasLayer
 var _review_label: Label
 var _status_label: Label
@@ -150,6 +156,7 @@ var _last_status_note := ""
 
 func _ready() -> void:
 	_capture_controller = CaptureController.new(self)
+	_current_gate = CurrentGateController.new()
 	_oxygen_rest_feedback = OxygenRestPocketFeedback.new()
 	_pre_pickup_route_cue_feedback = PrePickupRouteCueFeedback.new()
 	_primary_dive_objective = PrimaryDiveObjective.new()
@@ -170,6 +177,7 @@ func _ready() -> void:
 	_smoke_route_checks = SmokeRouteChecks.new(self)
 	_smoke_score_checks = SmokeScoreChecks.new(self)
 	_smoke_world_connector_checks = SmokeWorldConnectorChecks.new(self)
+	_smoke_current_gate_checks = SmokeCurrentGateChecks.new(self)
 	var user_args := OS.get_cmdline_user_args()
 	var engine_args := OS.get_cmdline_args()
 	var capture_original_map := _has_arg(user_args, engine_args, "--capture-original-map")
@@ -203,6 +211,7 @@ func _ready() -> void:
 	var capture_pass_19_cargo_upgrade := _has_arg(user_args, engine_args, "--capture-pass-19-cargo-upgrade")
 	var capture_pass_20_light_upgrade := _has_arg(user_args, engine_args, "--capture-pass-20-light-upgrade")
 	var capture_pass_21_world_connector := _has_arg(user_args, engine_args, "--capture-pass-21-world-connector")
+	var capture_current_gate := _has_arg(user_args, engine_args, "--capture-current-gate")
 	var capture_primary_dive_completion := _has_arg(user_args, engine_args, "--capture-primary-dive-completion")
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
@@ -226,6 +235,7 @@ func _ready() -> void:
 	var smoke_pass_19_cargo_upgrade := _has_arg(user_args, engine_args, "--smoke-pass-19-cargo-upgrade")
 	var smoke_pass_20_light_upgrade := _has_arg(user_args, engine_args, "--smoke-pass-20-light-upgrade")
 	var smoke_pass_21_world_connector := _has_arg(user_args, engine_args, "--smoke-pass-21-world-connector")
+	var smoke_current_gate := _has_arg(user_args, engine_args, "--smoke-current-gate")
 	var smoke_primary_dive_completion := _has_arg(user_args, engine_args, "--smoke-primary-dive-completion")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var smoke_timed_salvage := _has_arg(user_args, engine_args, "--smoke-timed-salvage")
@@ -307,6 +317,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_pass_21_world_connector:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif capture_current_gate:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_primary_dive_completion:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_route:
@@ -344,6 +356,8 @@ func _ready() -> void:
 	elif smoke_pass_20_light_upgrade:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_pass_21_world_connector:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_current_gate:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_primary_dive_completion:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
@@ -412,6 +426,7 @@ func _ready() -> void:
 		or capture_pass_19_cargo_upgrade
 		or capture_pass_20_light_upgrade
 		or capture_pass_21_world_connector
+		or capture_current_gate
 		or capture_primary_dive_completion
 		or smoke_salvage_loop
 		or smoke_production_slice_route
@@ -434,6 +449,7 @@ func _ready() -> void:
 		or smoke_pass_19_cargo_upgrade
 		or smoke_pass_20_light_upgrade
 		or smoke_pass_21_world_connector
+		or smoke_current_gate
 		or smoke_primary_dive_completion
 		or smoke_oxygen_pressure
 		or smoke_timed_salvage
@@ -523,6 +539,9 @@ func _ready() -> void:
 		return
 	if smoke_pass_21_world_connector:
 		_smoke_world_connector_checks._smoke_pass_21_world_connector_and_quit()
+		return
+	if smoke_current_gate:
+		_smoke_current_gate_checks._smoke_current_gate_and_quit()
 		return
 	if smoke_primary_dive_completion:
 		_smoke_primary_completion_checks._smoke_primary_dive_completion_and_quit()
@@ -636,6 +655,9 @@ func _ready() -> void:
 		_capture_controller.capture_pass_20_light_upgrade_and_quit(PASS_20_LIGHT_UPGRADE_CAPTURE_DIR)
 	elif capture_pass_21_world_connector:
 		_capture_controller.capture_pass_21_world_connector_and_quit(PASS_21_WORLD_CONNECTOR_CAPTURE_DIR)
+	elif capture_current_gate:
+		var capture := CurrentGateCapture.new(self)
+		await capture.capture_and_quit(CURRENT_GATE_CAPTURE_DIR)
 	elif capture_primary_dive_completion:
 		_capture_controller.capture_primary_dive_completion_and_quit(PRIMARY_DIVE_COMPLETION_CAPTURE_DIR)
 
@@ -676,6 +698,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_held_salvage_score = 0
 	_banked_score = 0
 	_completion_oxygen_bonus = 0
+	_current_gate.reset()
 	_pry_salvage.reset()
 	_timed_salvage.reset()
 	_primary_dive_objective.reset(world)
@@ -733,6 +756,7 @@ func _process(delta: float) -> void:
 	if _update_oxygen(delta):
 		_update_status_label()
 		return
+	_update_current_gate(delta)
 
 	if _hazard_cooldown_seconds > 0.0:
 		_hazard_cooldown_seconds = maxf(0.0, _hazard_cooldown_seconds - delta)
@@ -898,6 +922,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		_try_purchase_cargo_capacity_upgrade()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_L:
 		_try_purchase_light_upgrade()
+	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_P:
+		_try_purchase_propulsion_upgrade()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_E:
 		_try_world_connector_transition()
 
@@ -908,6 +934,7 @@ func _reset_run() -> void:
 
 	_world.reset_salvage()
 	_oxygen_rest_feedback.reset()
+	_current_gate.reset()
 	_pry_salvage.reset()
 	_timed_salvage.reset()
 	_held_salvage = 0
@@ -941,6 +968,11 @@ func _try_world_connector_transition() -> bool:
 
 	var connector: Dictionary = _world_connector.connector_at(_world, _player.global_position)
 	if connector.is_empty():
+		return false
+	var blocking_gate: Dictionary = _current_gate.gate_blocks_position(_world, _player.global_position, Callable(self, "_has_upgrade_id"))
+	if not blocking_gate.is_empty():
+		_last_status_note = _current_gate_block_prompt(blocking_gate)
+		_update_status_label()
 		return false
 
 	var destination_map_path := str(connector.get("destination_map_path", "")).strip_edges()
@@ -977,8 +1009,23 @@ func _update_oxygen(delta: float) -> bool:
 	return true
 
 
+func _update_current_gate(delta: float) -> void:
+	if _current_gate == null:
+		return
+	_current_gate.update(_world, _player, Callable(self, "_has_upgrade_id"), delta)
+
+
+func _current_gate_block_prompt(gate: Dictionary) -> String:
+	var label := str(gate.get("current_gate_label", "Strong current")).strip_edges()
+	if label.is_empty():
+		label = "Strong current"
+	var upgrade_label := str(gate.get("required_upgrade_id", "upgrade")).replace("_", " ")
+	return "%s - need %s" % [label.replace("_", " "), upgrade_label]
+
+
 func _handle_oxygen_depleted() -> void:
 	_oxygen_rest_feedback.reset()
+	_current_gate.reset()
 	_pry_salvage.reset()
 	_timed_salvage.reset()
 	if not _held_salvage_ids.is_empty():
@@ -1003,6 +1050,7 @@ func _handle_oxygen_depleted() -> void:
 func _handle_hazard_hit(hazard_id: String) -> void:
 	_hazard_warning_id = ""
 	_oxygen_rest_feedback.reset()
+	_current_gate.reset()
 	_pry_salvage.reset()
 	_timed_salvage.reset()
 	var oxygen_depleted := _apply_hazard_oxygen_penalty()
@@ -1162,6 +1210,7 @@ func _update_status_label() -> void:
 	var objective_step_cue_blocked := false
 	var oxygen_feedback := _oxygen_feedback_label()
 	var oxygen_rest_prompt := _oxygen_rest_prompt()
+	var current_gate_prompt := _current_gate_prompt()
 	var pre_pickup_route_cue := _pre_pickup_route_cue_prompt()
 	var world_connector_prompt := _world_connector_prompt()
 	if _run_complete:
@@ -1178,6 +1227,9 @@ func _update_status_label() -> void:
 		objective_step_cue_blocked = true
 	elif not oxygen_rest_prompt.is_empty():
 		prompt = oxygen_rest_prompt
+		objective_step_cue_blocked = true
+	elif not current_gate_prompt.is_empty():
+		prompt = current_gate_prompt
 		objective_step_cue_blocked = true
 	elif not pre_pickup_route_cue.is_empty():
 		prompt = pre_pickup_route_cue
@@ -1237,6 +1289,12 @@ func _oxygen_rest_prompt() -> String:
 	if _oxygen_rest_feedback == null:
 		return ""
 	return _oxygen_rest_feedback.current_prompt()
+
+
+func _current_gate_prompt() -> String:
+	if _current_gate == null:
+		return ""
+	return _current_gate.current_prompt()
 
 
 func _world_connector_prompt() -> String:
@@ -1307,6 +1365,8 @@ func _is_progression_status_note(status_note: String) -> bool:
 		or status_note == "Cargo +1 already upgraded"
 		or status_note == "Light +range upgraded"
 		or status_note == "Light +range already upgraded"
+		or status_note == "Fins upgraded"
+		or status_note == "Fins already upgraded"
 		or status_note == "Upgrade at extraction"
 		or status_note == "Upgrade blocked"
 		or status_note.begins_with("Need ")
@@ -1510,6 +1570,29 @@ func _try_purchase_light_upgrade() -> bool:
 	return false
 
 
+func _try_purchase_propulsion_upgrade() -> bool:
+	if _world == null or _player == null or _session_progression == null:
+		return false
+	if not _world.is_inside_extraction(_player.global_position):
+		_last_status_note = "Upgrade at extraction"
+		_update_status_label()
+		return false
+	var result: Dictionary = _session_progression.purchase_propulsion_upgrade()
+	if bool(result.get("purchased", false)):
+		_last_status_note = "Fins upgraded"
+		_update_status_label()
+		return true
+	var reason := str(result.get("reason", "blocked"))
+	if reason == "insufficient_funds":
+		_last_status_note = "Need %d more" % int(result.get("needed", 0))
+	elif reason == "already_purchased":
+		_last_status_note = "Fins already upgraded"
+	else:
+		_last_status_note = "Upgrade blocked"
+	_update_status_label()
+	return false
+
+
 func _has_oxygen_tank_upgrade() -> bool:
 	return _session_progression != null and _session_progression.has_oxygen_tank_upgrade()
 
@@ -1520,6 +1603,23 @@ func _has_cargo_capacity_upgrade() -> bool:
 
 func _has_light_upgrade() -> bool:
 	return _session_progression != null and _session_progression.has_light_upgrade()
+
+
+func _has_propulsion_upgrade() -> bool:
+	return _session_progression != null and _session_progression.has_propulsion_upgrade()
+
+
+func _has_upgrade_id(upgrade_id: String) -> bool:
+	match upgrade_id:
+		SessionProgression.OXYGEN_TANK_UPGRADE_ID:
+			return _has_oxygen_tank_upgrade()
+		SessionProgression.CARGO_CAPACITY_UPGRADE_ID:
+			return _has_cargo_capacity_upgrade()
+		SessionProgression.LIGHT_UPGRADE_ID:
+			return _has_light_upgrade()
+		SessionProgression.PROPULSION_UPGRADE_ID:
+			return _has_propulsion_upgrade()
+	return false
 
 
 func _apply_session_light_profile() -> void:
@@ -1558,11 +1658,15 @@ func _progression_overlay_text() -> String:
 		light_text = "Light base"
 		if _world != null and _player != null and _world.is_inside_extraction(_player.global_position):
 			light_text = "L: Light +range (%d)" % SessionProgression.LIGHT_UPGRADE_COST
-	return "Wallet %d\n%s | %s | %s" % [
+	var fins_text := "Fins" if _has_propulsion_upgrade() else "Fins base"
+	if not _has_propulsion_upgrade() and _world != null and _player != null and _world.is_inside_extraction(_player.global_position):
+		fins_text = "P: Fins (%d)" % SessionProgression.PROPULSION_UPGRADE_COST
+	return "Wallet %d\n%s | %s\n%s | %s" % [
 		_session_wallet(),
 		oxygen_text,
 		cargo_text,
 		light_text,
+		fins_text,
 	]
 
 
@@ -1570,7 +1674,8 @@ func _progression_result_text() -> String:
 	var oxygen_text := "O2 tank +%ds" % int(SessionProgression.OXYGEN_TANK_UPGRADE_SECONDS) if _has_oxygen_tank_upgrade() else "O2 tank base"
 	var cargo_text := "Cargo +%d" % int(SessionProgression.CARGO_CAPACITY_UPGRADE_BONUS) if _has_cargo_capacity_upgrade() else "Cargo base"
 	var light_text := "Light +range" if _has_light_upgrade() else "Light base"
-	return "Wallet %d | %s | %s | %s" % [_session_wallet(), oxygen_text, cargo_text, light_text]
+	var fins_text := "Fins" if _has_propulsion_upgrade() else "Fins base"
+	return "Wallet %d | %s | %s | %s | %s" % [_session_wallet(), oxygen_text, cargo_text, light_text, fins_text]
 
 
 func _update_result_panel() -> void:

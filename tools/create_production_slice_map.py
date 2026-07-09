@@ -277,6 +277,7 @@ def build_map_data(source_map: dict) -> dict:
                 "intent": "Lower optional loop for a longer salvage return test.",
             },
             {"id": "lower_left_loop_connector", "type": "marker", "x": 2, "y": 74, "w": 4, "h": 4, "world_connector": True, "connector_label": "Lower-left loop", "destination_map_id": "production_slice_04", "destination_map_path": "res://maps/production_slice_04.greybox.json", "destination_entry_id": "relay_sub_entry", "connector_direction": "forward", "intent": "Pass 21 connector from the default boat hub toward the lower-left loop reference slice."},
+            {"id": "lower_left_loop_current", "type": "marker", "x": 2, "y": 74, "w": 4, "h": 4, "current_gate": True, "current_direction": "right", "current_strength": 2.2, "required_upgrade_id": "propulsion_fins", "current_gate_label": "Strong current", "route_context": "lower_left_loop", "intent": "Pass 22 soft-push current gate on the lower-left connector until the propulsion fins session upgrade is owned."},
             {"id": "deep_cache_first_step_cue", "type": "marker", "x": 28, "y": 58, "w": 4, "h": 3, "objective_step_cue": True, "objective_id": "deep_cache_route_objective", "target_id": "salvage_lower_loop", "route_context": "deep_cache_commitment", "objective_step_label": "Lower loop", "intent": "Pass 15 objective follow-through cue for the first required deep-cache route target."},
             {
                 "id": "return_pressure_to_boat",
@@ -290,16 +291,7 @@ def build_map_data(source_map: dict) -> dict:
                     "where full cargo should prompt banking at the boat."
                 ),
             },
-            {
-                "id": "lower_loop_oxygen_rest_pocket",
-                "type": "marker",
-                "x": 27, "y": 60, "w": 8, "h": 5,
-                "route_context": "oxygen_rest_pressure",
-                "oxygen_rest": True,
-                "oxygen_rest_label": "Rest pocket",
-                "oxygen_rest_cap_seconds": 45, "oxygen_rest_refill_per_second": 8,
-                "intent": "Pass 12 limited oxygen rest pocket in the lower-loop return corridor; supports a brief in-cave oxygen decision without changing extraction, cargo, salvage, hazards, or terrain topology.",
-            },
+            {"id": "lower_loop_oxygen_rest_pocket", "type": "marker", "x": 27, "y": 60, "w": 8, "h": 5, "route_context": "oxygen_rest_pressure", "oxygen_rest": True, "oxygen_rest_label": "Rest pocket", "oxygen_rest_cap_seconds": 45, "oxygen_rest_refill_per_second": 8, "intent": "Pass 12 limited oxygen rest pocket in the lower-loop return corridor; supports a brief in-cave oxygen decision without changing extraction, cargo, salvage, hazards, or terrain topology."},
             {
                 "id": "southwest_return_pocket_extension",
                 "type": "marker",

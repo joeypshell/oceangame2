@@ -2322,6 +2322,21 @@
       "intent": "Pass 21 connector from the default boat hub toward the lower-left loop reference slice."
     },
     {
+      "id": "lower_left_loop_current",
+      "type": "marker",
+      "x": 2,
+      "y": 74,
+      "w": 4,
+      "h": 4,
+      "current_gate": true,
+      "current_direction": "right",
+      "current_strength": 2.2,
+      "required_upgrade_id": "propulsion_fins",
+      "current_gate_label": "Strong current",
+      "route_context": "lower_left_loop",
+      "intent": "Pass 22 soft-push current gate on the lower-left connector until the propulsion fins session upgrade is owned."
+    },
+    {
       "id": "deep_cache_first_step_cue",
       "type": "marker",
       "x": 28,

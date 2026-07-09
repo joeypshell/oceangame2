@@ -24,7 +24,7 @@ Do not use gates as a reason to produce the whole full-sketch map. Each gate mus
 | Gate type | Opens with | Prototype status | First useful target |
 |---|---|---|---|
 | Darkness / light | Existing `Light +range` session upgrade | Prototype-ready as readability pressure, not a hard lock | A darker branch near the connector or lower-loop return where better light makes route choice safer |
-| Current / propulsion | Future movement or propulsion upgrade/check | Source contract targeted by #443 | One current zone near the slice 01 to slice 04 connection or inside slice 04's return route |
+| Current / propulsion | `propulsion_fins` session upgrade | First source/runtime prototype implemented by #443/#444 | `lower_left_loop_current` overlapping the slice 01 connector to slice 04 |
 | Locked chest / key | Key flag, opened cache flag, or reward state | Prototype-ready after contract #445 | One small cache/chest in slice 01 or slice 04 that rewards a simple upgrade/currency beat |
 | Tool interaction | Existing timed/pry salvage patterns or one future tool flag | Partly ready; keep to one interaction family at a time | A sealed cache or obstruction that reuses source-authored marker/salvage interaction semantics |
 | Dodge hazard / enemy | Learned route timing, route cue, or future upgrade | Design-only for now; treat as moving hazard, not combat | One deterministic patrol/dodge beat after planning #449, if it improves the core dive loop |
@@ -57,7 +57,7 @@ The next implementation should choose exactly one of these:
 2. Treasure/cache contract, then one upgrade chest or locked cache reward with flag-like runtime state.
 3. Darkness/light contract, then one visual readability gate tied to the existing light upgrade.
 
-The strongest Milestone 05 continuation is current gating because it adds player-facing value to the new connector without needing full-map productionization. The first behavior should be soft pushback until a movement upgrade is owned.
+The first current gate is now `lower_left_loop_current`: it soft-pushes the diver away from the lower-left connector until `propulsion_fins` is purchased. Future gate work should evaluate this single authored beat before adding more current zones.
 
 ## Deferred
 
