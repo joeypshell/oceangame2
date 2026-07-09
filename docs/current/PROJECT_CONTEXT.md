@@ -216,7 +216,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-09:
 
-- Active roadmap queue: none after Pass 23 closeout; create the next small Milestone 06 batch before new implementation. #52/#53 remain deferred slice-03 polish.
+- Active roadmap queue: #542-#551 cover Controlled Gameplay Pass 24 lower-left relay follow-through objective work. #52/#53 remain deferred slice-03 polish.
 - Closed: #522-#531 completed Pass 23 planning, next-dive prompt contract, validation, source authoring, runtime result text, smoke, focused capture, visual/Web verification, and closeout.
 - Closed: #502-#511 completed Pass 22 planning, destination payoff contract, validation, source target authoring, runtime feedback, smoke, capture, visual decision, Web verification, and closeout.
 - Closed: #420-#429 completed Pass 21 planning, connector contract, schema validation, source connector authoring, runtime transition, smoke, capture, visual decision, Web verification, and closeout.
