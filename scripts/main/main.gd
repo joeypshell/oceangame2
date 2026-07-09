@@ -9,6 +9,7 @@ const DestinationPayoffFeedback := preload("res://scripts/main/destination_payof
 const MovingHazardCapture := preload("res://scripts/main/captures/moving_hazard_capture.gd")
 const MovingHazardController := preload("res://scripts/main/moving_hazard_controller.gd")
 const OxygenRestPocketFeedback := preload("res://scripts/main/oxygen_rest_pocket_feedback.gd")
+const Pass22DestinationPayoffCapture := preload("res://scripts/main/captures/pass_22_destination_payoff_capture.gd")
 const PrePickupRouteCueFeedback := preload("res://scripts/main/pre_pickup_route_cue_feedback.gd")
 const PrimaryDiveObjective := preload("res://scripts/main/primary_dive_objective.gd")
 const ProgressionContainerController := preload("res://scripts/main/progression_container_controller.gd")
@@ -77,6 +78,7 @@ const PASS_18_PROGRESSION_CAPTURE_DIR := "res://visual_captures/pass_18_progress
 const PASS_19_CARGO_UPGRADE_CAPTURE_DIR := "res://visual_captures/pass_19_cargo_upgrade"
 const PASS_20_LIGHT_UPGRADE_CAPTURE_DIR := "res://visual_captures/pass_20_light_upgrade"
 const PASS_21_WORLD_CONNECTOR_CAPTURE_DIR := "res://visual_captures/pass_21_world_connector"
+const PASS_22_DESTINATION_PAYOFF_CAPTURE_DIR := "res://visual_captures/pass_22_destination_payoff"
 const DARKNESS_LIGHT_CAPTURE_DIR := "res://visual_captures/darkness_light_gate"
 const CURRENT_GATE_CAPTURE_DIR := "res://visual_captures/current_gate"
 const MOVING_HAZARD_CAPTURE_DIR := "res://visual_captures/moving_hazard"
@@ -246,6 +248,7 @@ func _ready() -> void:
 	var capture_pass_19_cargo_upgrade := _has_arg(user_args, engine_args, "--capture-pass-19-cargo-upgrade")
 	var capture_pass_20_light_upgrade := _has_arg(user_args, engine_args, "--capture-pass-20-light-upgrade")
 	var capture_pass_21_world_connector := _has_arg(user_args, engine_args, "--capture-pass-21-world-connector")
+	var capture_pass_22_destination_payoff := _has_arg(user_args, engine_args, "--capture-pass-22-destination-payoff")
 	var capture_darkness_light_gate := _has_arg(user_args, engine_args, "--capture-darkness-light-gate")
 	var capture_current_gate := _has_arg(user_args, engine_args, "--capture-current-gate")
 	var capture_moving_hazard := _has_arg(user_args, engine_args, "--capture-moving-hazard")
@@ -360,6 +363,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_pass_21_world_connector:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif capture_pass_22_destination_payoff:
+		selected_map_path = PRODUCTION_SLICE_04_MAP_PATH
 	elif capture_darkness_light_gate:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_current_gate:
@@ -485,6 +490,7 @@ func _ready() -> void:
 		or capture_pass_19_cargo_upgrade
 		or capture_pass_20_light_upgrade
 		or capture_pass_21_world_connector
+		or capture_pass_22_destination_payoff
 		or capture_darkness_light_gate
 		or capture_current_gate
 		or capture_moving_hazard
@@ -737,6 +743,9 @@ func _ready() -> void:
 		_capture_controller.capture_pass_20_light_upgrade_and_quit(PASS_20_LIGHT_UPGRADE_CAPTURE_DIR)
 	elif capture_pass_21_world_connector:
 		_capture_controller.capture_pass_21_world_connector_and_quit(PASS_21_WORLD_CONNECTOR_CAPTURE_DIR)
+	elif capture_pass_22_destination_payoff:
+		var capture := Pass22DestinationPayoffCapture.new(self)
+		await capture.capture_and_quit(PASS_22_DESTINATION_PAYOFF_CAPTURE_DIR)
 	elif capture_darkness_light_gate:
 		_capture_controller.capture_darkness_light_gate_and_quit(DARKNESS_LIGHT_CAPTURE_DIR)
 	elif capture_current_gate:
