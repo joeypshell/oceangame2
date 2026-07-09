@@ -60,6 +60,7 @@ const PASS_14_OBJECTIVE_CUE_CAPTURE_DIR := "res://visual_captures/pass_14_object
 const PASS_15_OBJECTIVE_FOLLOW_THROUGH_CAPTURE_DIR := "res://visual_captures/pass_15_objective_follow_through"
 const PASS_18_PROGRESSION_CAPTURE_DIR := "res://visual_captures/pass_18_progression"
 const PASS_19_CARGO_UPGRADE_CAPTURE_DIR := "res://visual_captures/pass_19_cargo_upgrade"
+const PASS_20_LIGHT_UPGRADE_CAPTURE_DIR := "res://visual_captures/pass_20_light_upgrade"
 const PRIMARY_DIVE_COMPLETION_CAPTURE_DIR := "res://visual_captures/primary_dive_completion"
 const BUILD_INFO_PATH := "res://build_info.json"
 const MOVEMENT_FEEL_PROBE_CENTER_TILES := Vector2(42, 25)
@@ -193,6 +194,7 @@ func _ready() -> void:
 	var capture_pass_15_objective_follow_through := _has_arg(user_args, engine_args, "--capture-pass-15-objective-follow-through")
 	var capture_pass_18_progression := _has_arg(user_args, engine_args, "--capture-pass-18-progression")
 	var capture_pass_19_cargo_upgrade := _has_arg(user_args, engine_args, "--capture-pass-19-cargo-upgrade")
+	var capture_pass_20_light_upgrade := _has_arg(user_args, engine_args, "--capture-pass-20-light-upgrade")
 	var capture_primary_dive_completion := _has_arg(user_args, engine_args, "--capture-primary-dive-completion")
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
@@ -291,6 +293,8 @@ func _ready() -> void:
 	elif capture_pass_18_progression:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_pass_19_cargo_upgrade:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif capture_pass_20_light_upgrade:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_primary_dive_completion:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
@@ -393,6 +397,7 @@ func _ready() -> void:
 		or capture_pass_15_objective_follow_through
 		or capture_pass_18_progression
 		or capture_pass_19_cargo_upgrade
+		or capture_pass_20_light_upgrade
 		or capture_primary_dive_completion
 		or smoke_salvage_loop
 		or smoke_production_slice_route
@@ -609,6 +614,8 @@ func _ready() -> void:
 		_capture_controller.capture_pass_18_progression_and_quit(PASS_18_PROGRESSION_CAPTURE_DIR)
 	elif capture_pass_19_cargo_upgrade:
 		_capture_controller.capture_pass_19_cargo_upgrade_and_quit(PASS_19_CARGO_UPGRADE_CAPTURE_DIR)
+	elif capture_pass_20_light_upgrade:
+		_capture_controller.capture_pass_20_light_upgrade_and_quit(PASS_20_LIGHT_UPGRADE_CAPTURE_DIR)
 	elif capture_primary_dive_completion:
 		_capture_controller.capture_primary_dive_completion_and_quit(PRIMARY_DIVE_COMPLETION_CAPTURE_DIR)
 

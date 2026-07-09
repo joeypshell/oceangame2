@@ -30,6 +30,8 @@
 
 `visual_captures/pass_19_cargo_upgrade/` contains a focused generated screenshot of the Pass 19 wallet and cargo capacity upgrade feedback after banking enough salvage and purchasing at extraction.
 
+`visual_captures/pass_20_light_upgrade/` contains a focused generated screenshot of the Pass 20 wallet and light upgrade feedback after banking enough salvage and purchasing at extraction.
+
 These captures are not automatically approved baselines. They are review artifacts used to compare the current in-engine result against `visual_baselines/` and the art direction docs.
 
 Preview captures include the compact review overlay with map id, build label, and salvage progress.
@@ -145,3 +147,11 @@ Regenerate the focused Pass 18 progression capture with:
 ```
 
 This capture frames the extraction area with wallet spend and `O2 tank upgraded` feedback visible, and is a review artifact, not an accepted baseline by itself.
+
+Regenerate the focused Pass 20 light upgrade capture with:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-20-light-upgrade
+```
+
+This capture frames the extraction area with wallet spend, `Light +range upgraded` feedback, and the upgraded light cone visible, and is a review artifact, not an accepted baseline by itself.
