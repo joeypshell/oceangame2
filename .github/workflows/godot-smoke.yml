@@ -159,6 +159,7 @@ jobs:
           run_score_smoke --smoke-pass-24-relay-follow-through pass-24-relay-follow-through
           run_score_smoke --smoke-pass-25-final-dive-objective pass-25-final-dive-objective
           run_score_smoke --smoke-pass-26-result-presentation pass-26-result-presentation
+          run_score_smoke --smoke-release-journey release-journey
           run_score_smoke --smoke-current-gate current-gate
           run_score_smoke --smoke-upgrade-chest upgrade-chest
           run_score_smoke --smoke-moving-hazard moving-hazard

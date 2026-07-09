@@ -49,6 +49,7 @@ const SmokeMovingHazardChecks := preload("res://scripts/main/smoke/smoke_moving_
 const SmokeNextDiveObjectiveChecks := preload("res://scripts/main/smoke/smoke_next_dive_objective_checks.gd")
 const SmokePlayerFacingTransitionChecks := preload("res://scripts/main/smoke/smoke_player_facing_transition_checks.gd")
 const SmokeDarknessLightChecks := preload("res://scripts/main/smoke/smoke_darkness_light_checks.gd")
+const SmokeReleaseJourneyChecks := preload("res://scripts/main/smoke/smoke_release_journey_checks.gd")
 const UpgradeChestCapture := preload("res://scripts/main/captures/upgrade_chest_capture.gd")
 const DEFAULT_MAP_PATH := "res://maps/production_slice_01.greybox.json"
 const ORIGINAL_MAP_PATH := "res://maps/cave_salvage_test_01.greybox.json"
@@ -174,6 +175,7 @@ var _smoke_moving_hazard_checks
 var _smoke_next_dive_objective_checks
 var _smoke_player_facing_transition_checks
 var _smoke_darkness_light_checks
+var _smoke_release_journey_checks
 var _review_canvas: CanvasLayer
 var _review_label: Label
 var _status_label: Label
@@ -247,6 +249,7 @@ func _ready() -> void:
 	_smoke_next_dive_objective_checks = SmokeNextDiveObjectiveChecks.new(self)
 	_smoke_player_facing_transition_checks = SmokePlayerFacingTransitionChecks.new(self)
 	_smoke_darkness_light_checks = SmokeDarknessLightChecks.new(self)
+	_smoke_release_journey_checks = SmokeReleaseJourneyChecks.new(self)
 	var user_args := OS.get_cmdline_user_args()
 	var engine_args := OS.get_cmdline_args()
 	var capture_original_map := _has_arg(user_args, engine_args, "--capture-original-map")
@@ -339,6 +342,7 @@ func _ready() -> void:
 	var smoke_player_facing := _has_arg(user_args, engine_args, "--smoke-player-facing")
 	var smoke_pass_27_facing_transitions := _has_arg(user_args, engine_args, "--smoke-pass-27-facing-transitions")
 	var smoke_movement_feel := _has_arg(user_args, engine_args, "--smoke-movement-feel")
+	var smoke_release_journey := _has_arg(user_args, engine_args, "--smoke-release-journey")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
 	var parity_output_path := _arg_value(user_args, engine_args, "--parity-output")
 
@@ -505,6 +509,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_pass_27_facing_transitions:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_release_journey:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif not requested_map_path.is_empty():
 		selected_map_path = requested_map_path
 
@@ -606,6 +612,7 @@ func _ready() -> void:
 		or smoke_player_facing
 		or smoke_pass_27_facing_transitions
 		or smoke_movement_feel
+		or smoke_release_journey
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
 		or _has_arg(user_args, engine_args, "--capture-camera-tests")
 	)
@@ -711,6 +718,9 @@ func _ready() -> void:
 		return
 	if smoke_pass_23_next_dive_objective:
 		_smoke_next_dive_objective_checks._smoke_pass_23_next_dive_objective_and_quit()
+		return
+	if smoke_release_journey:
+		_smoke_release_journey_checks._smoke_release_journey_and_quit()
 		return
 	if smoke_oxygen_pressure:
 		_smoke_interaction_checks._smoke_oxygen_pressure_and_quit()
