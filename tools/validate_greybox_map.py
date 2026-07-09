@@ -25,8 +25,8 @@ POINT_ENTITY_TYPES = {"spawn", "salvage", "hazard"}
 KIND_ENTITY_TYPES = {"salvage", "hazard"}
 SALVAGE_VALUE_TIERS = {"common", "valuable"}
 ROUTE_CHOICE_METADATA_FIELDS = {"route_choice_id", "validation_route", "route_order"}
-SALVAGE_INTERACTIONS = {"instant", "timed_salvage"}
-SALVAGE_INTERACTION_METADATA_FIELDS = {"interaction", "interaction_seconds", "interaction_label"}
+SALVAGE_INTERACTIONS = {"instant", "timed_salvage", "pry_salvage"}
+SALVAGE_INTERACTION_METADATA_FIELDS = {"interaction", "interaction_seconds", "interaction_label", "pry_stages"}
 OXYGEN_MAX_SECONDS = 90.0
 OXYGEN_REST_METADATA_FIELDS = {
     "oxygen_rest",
@@ -148,15 +148,25 @@ def validate_salvage_interaction_metadata(entity: dict, item_label: str) -> list
         allowed = ", ".join(sorted(SALVAGE_INTERACTIONS))
         failures.append(f"{item_label} interaction {interaction!r} must be one of: {allowed}.")
 
-    if interaction == "timed_salvage":
+    if interaction in {"timed_salvage", "pry_salvage"}:
         if "interaction_seconds" not in entity:
-            failures.append(f"{item_label} timed_salvage requires interaction_seconds.")
+            failures.append(f"{item_label} {interaction} requires interaction_seconds.")
         elif not is_number_value(entity["interaction_seconds"]):
             failures.append(f"{item_label} interaction_seconds must be a positive number.")
         elif float(entity["interaction_seconds"]) <= 0.0:
             failures.append(f"{item_label} interaction_seconds must be greater than 0.")
     elif "interaction_seconds" in entity:
-        failures.append(f"{item_label} interaction_seconds is only supported for timed_salvage.")
+        failures.append(f"{item_label} interaction_seconds is only supported for timed_salvage or pry_salvage.")
+
+    if interaction == "pry_salvage":
+        if "pry_stages" not in entity:
+            failures.append(f"{item_label} pry_salvage requires pry_stages.")
+        elif not is_int_value(entity["pry_stages"]):
+            failures.append(f"{item_label} pry_stages must be a positive integer.")
+        elif int(entity["pry_stages"]) <= 0:
+            failures.append(f"{item_label} pry_stages must be greater than 0.")
+    elif "pry_stages" in entity:
+        failures.append(f"{item_label} pry_stages is only supported for pry_salvage.")
 
     if "interaction_label" in entity:
         label = entity["interaction_label"]
