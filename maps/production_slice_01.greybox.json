@@ -2480,6 +2480,17 @@
     }
   ],
   "primary_route_objective_id": "deep_cache_route_objective",
+  "next_dive_objective_prompts": [
+    {
+      "id": "deep_cache_next_dive_prompt",
+      "trigger": "primary_objective_complete",
+      "objective_id": "deep_cache_route_objective",
+      "target_id": "lower_left_loop_connector",
+      "label": "Next dive: Investigate lower-left relay",
+      "route_context": "lower_left_loop",
+      "intent": "Pass 23 result prompt pointing the next dive toward the lower-left relay after Deep cache completion."
+    }
+  ],
   "background": [
     {
       "id": "distant_entry_wall",

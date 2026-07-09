@@ -338,6 +338,7 @@ def build_map_data(source_map: dict) -> dict:
         "moving_hazards": [{"id": "deep_route_jellyfish_patrol", "kind": "jellyfish", "x": 54, "y": 68, "movement": "linear_patrol", "path": [{"x": 54, "y": 68}, {"x": 64, "y": 68}], "speed_tiles_per_second": 1.0, "route_context": "deep_cache_pressure", "display_label": "Jellyfish patrol", "intent": "First deterministic moving hazard on the lower-loop to deep-cache route."}],
         "route_objectives": PASS_13_ROUTE_OBJECTIVES,
         "primary_route_objective_id": "deep_cache_route_objective",
+        "next_dive_objective_prompts": [{"id": "deep_cache_next_dive_prompt", "trigger": "primary_objective_complete", "objective_id": "deep_cache_route_objective", "target_id": "lower_left_loop_connector", "label": "Next dive: Investigate lower-left relay", "route_context": "lower_left_loop", "intent": "Pass 23 result prompt pointing the next dive toward the lower-left relay after Deep cache completion."}],
         "background": [
             {"id": "distant_entry_wall", "type": "background", "x": 30, "y": 6, "w": 18, "h": 22},
             {"id": "distant_crossing_mass", "type": "background", "x": 28, "y": 24, "w": 30, "h": 24},
