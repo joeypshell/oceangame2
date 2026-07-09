@@ -41,6 +41,16 @@ func result_text(banked_ids: Array[String]) -> String:
 	return ""
 
 
+func is_feedback_note(status_note: String) -> bool:
+	var note := status_note.strip_edges()
+	if note.is_empty():
+		return false
+	for objective in _objectives:
+		if note == _label_text(objective, "label"):
+			return true
+	return false
+
+
 func _label_text(objective: Dictionary, field: String) -> String:
 	var label := str(objective.get(field, "")).strip_edges()
 	if label.is_empty() and field == "result_label":

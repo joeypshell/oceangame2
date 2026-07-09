@@ -289,6 +289,7 @@ func _ready() -> void:
 	var smoke_pass_20_light_upgrade := _has_arg(user_args, engine_args, "--smoke-pass-20-light-upgrade")
 	var smoke_pass_21_world_connector := _has_arg(user_args, engine_args, "--smoke-pass-21-world-connector")
 	var smoke_pass_22_destination_payoff := _has_arg(user_args, engine_args, "--smoke-pass-22-destination-payoff")
+	var smoke_pass_24_relay_follow_through := _has_arg(user_args, engine_args, "--smoke-pass-24-relay-follow-through")
 	var smoke_current_gate := _has_arg(user_args, engine_args, "--smoke-current-gate")
 	var smoke_moving_hazard := _has_arg(user_args, engine_args, "--smoke-moving-hazard")
 	var smoke_darkness_light_gate := _has_arg(user_args, engine_args, "--smoke-darkness-light-gate")
@@ -536,6 +537,7 @@ func _ready() -> void:
 		or smoke_pass_20_light_upgrade
 		or smoke_pass_21_world_connector
 		or smoke_pass_22_destination_payoff
+		or smoke_pass_24_relay_follow_through
 		or smoke_current_gate
 		or smoke_moving_hazard
 		or smoke_darkness_light_gate
@@ -634,6 +636,9 @@ func _ready() -> void:
 		return
 	if smoke_pass_22_destination_payoff:
 		_smoke_world_connector_checks._smoke_pass_22_destination_payoff_and_quit()
+		return
+	if smoke_pass_24_relay_follow_through:
+		_smoke_world_connector_checks._smoke_pass_24_relay_follow_through_and_quit()
 		return
 	if smoke_current_gate:
 		_smoke_current_gate_checks._smoke_current_gate_and_quit()
@@ -1474,6 +1479,9 @@ func _update_status_label() -> void:
 	elif not current_gate_prompt.is_empty():
 		prompt = current_gate_prompt
 		objective_step_cue_blocked = true
+	elif _is_relay_follow_through_status_note(_last_status_note):
+		prompt = _last_status_note
+		objective_step_cue_blocked = true
 	elif _is_progression_status_note(_last_status_note):
 		prompt = _last_status_note
 		objective_step_cue_blocked = true
@@ -1621,6 +1629,10 @@ func _is_collection_status_note(status_note: String) -> bool:
 		or (_destination_payoff_feedback != null and _destination_payoff_feedback.is_collection_note(status_note))
 		or status_note == "Salvage interrupted"
 	)
+
+
+func _is_relay_follow_through_status_note(status_note: String) -> bool:
+	return _relay_follow_through_feedback != null and _relay_follow_through_feedback.is_feedback_note(status_note)
 
 
 func _is_progression_status_note(status_note: String) -> bool:

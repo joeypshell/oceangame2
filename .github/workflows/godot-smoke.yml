@@ -156,6 +156,7 @@ jobs:
           run_score_smoke --smoke-pass-20-light-upgrade pass-20-light-upgrade
           run_score_smoke --smoke-pass-21-world-connector pass-21-world-connector
           run_score_smoke --smoke-pass-22-destination-payoff pass-22-destination-payoff
+          run_score_smoke --smoke-pass-24-relay-follow-through pass-24-relay-follow-through
           run_score_smoke --smoke-current-gate current-gate
           run_score_smoke --smoke-upgrade-chest upgrade-chest
           run_score_smoke --smoke-moving-hazard moving-hazard
