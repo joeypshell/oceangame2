@@ -244,6 +244,22 @@ jobs:
             exit 1
           fi
 
+      - name: Run Pass 27 facing transition smoke check
+        run: |
+          set +e
+          godot --headless --path . --smoke-pass-27-facing-transitions 2>&1 | tee godot-pass-27-facing-transitions.log
+          godot_status=${PIPESTATUS[0]}
+          set -e
+
+          if [ "${godot_status}" -ne 0 ]; then
+            exit "${godot_status}"
+          fi
+
+          if grep -E "SCRIPT ERROR|ERROR:" godot-pass-27-facing-transitions.log; then
+            echo "Godot reported errors during Pass 27 facing transition smoke check."
+            exit 1
+          fi
+
       - name: Run production slice route smoke checks
         run: |
           run_route_smoke() {
