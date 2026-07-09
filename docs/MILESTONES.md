@@ -41,7 +41,9 @@ The open GitHub milestones should mirror this roadmap:
 
 ## Current Next Direction
 
-Controlled Gameplay Pass 21 completed the first Milestone 05 connected-slice proof: `production_slice_01` now has a source-authored prompted connector into `production_slice_04`, with validation, runtime transition, smoke, focused capture, visual decision, and Web verification. The next meaningful batch should add player-facing value to that connection, such as a constrained destination-side payoff, return-loop reason, or objective/run-structure step; do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, or full-map productionization.
+Controlled Gameplay Pass 22 completed the first Milestone 05 destination-side payoff: `production_slice_04` now has one source-authored destination cache for the existing lower-left connector, with validation, runtime feedback, smoke, focused capture, visual decision, Web verification, and closeout.
+
+The next meaningful batch should probably move to Milestone 06 with a tiny objective/run-structure step that makes the existing dive feel more directed. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, broad art replacement, or full-map productionization.
 
 ## Recently Completed Prototype Passes
 
@@ -63,3 +65,4 @@ Controlled Gameplay Pass 21 completed the first Milestone 05 connected-slice pro
 - #380-#389 completed Controlled Gameplay Pass 19 cargo capacity progression, including planning, cargo contract, session cargo upgrade, overlay feedback, smoke, capture, visual decision, Web verification, and closeout.
 - #400-#409 completed Controlled Gameplay Pass 20 light confidence progression, including planning, light contract, session light upgrade, overlay feedback, smoke, capture, visual decision, Web verification, and closeout.
 - #420-#429 completed Controlled Gameplay Pass 21 world-slice connector proof, including planning, connector contract, schema validation, source connector authoring, runtime transition, smoke, capture, visual decision, Web verification, and closeout.
+- #502-#511 completed Controlled Gameplay Pass 22 destination payoff, including planning, payoff contract, validation, source target authoring, runtime feedback, smoke, capture, visual decision, Web verification, and closeout.
