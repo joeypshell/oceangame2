@@ -463,7 +463,7 @@ Recent important commits:
 
 Use `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md` as the current north star. The project should now finish the small diver game before planning the larger 2D Subnautica-like expansion.
 
-Pass 21 gives Milestone 05 its first connected-space proof: `production_slice_01` now has a source-authored prompted connector into `production_slice_04`, with validation, runtime transition, smoke, focused capture, visual review, and public Web verification. The next batch should build player-facing value on that connection only if it creates clearer destination-side payoff, return-loop purpose, remembered-place progress, or objective/run-structure value.
+Pass 23 gives the default slice one small source-authored upgrade-chest payoff after the first current/propulsion gate. The next active Milestone 02 hazard-pressure step is one deterministic moving hazard as a dodge/timing beat, documented in `docs/current/MOVING_HAZARD_DODGE_CONTRACT.md`, not a combat or broad enemy-AI system.
 
 Accepted constraints for the next batch:
 

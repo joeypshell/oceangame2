@@ -173,9 +173,9 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 ## Current Next Direction
 
-Controlled Gameplay Pass 21 is complete and gives Milestone 05 its first connected-space proof: `production_slice_01` now has a source-authored prompted connector into `production_slice_04`, with validation, runtime transition, smoke, focused capture, visual review, and public Web verification.
+Controlled Gameplay Pass 23 is complete and gives the default slice one small source-authored upgrade-chest payoff after the first current/propulsion gate.
 
-Use `docs/current/SIMPLE_DIVER_PROGRESSION_GATES_PLAN.md` and `docs/current/LOCKED_CACHE_PROGRESSION_CONTRACT.md` to keep the next Milestone 05 progression work source-authored and scoped. The next new implementation should be one small `upgrade_chest`/wallet reward beat in `production_slice_01` if it creates payoff for an optional route. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, or full-map productionization.
+Use `docs/current/MOVING_HAZARD_DODGE_CONTRACT.md` for the next Milestone 02 hazard-pressure step: one deterministic moving hazard as a route-timing beat, not an enemy/combat system. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, or full-map productionization.
 
 ## Deferred Work
 
