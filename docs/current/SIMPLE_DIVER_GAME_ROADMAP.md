@@ -173,11 +173,11 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 ## Current Next Direction
 
-Pass 26 completed the first Milestone 07 presentation/game-feel pass. Completed-run result presentation now prioritizes objective/payoff text before bookkeeping and adds the compact `Final dive signal locked` cue, with smoke, focused capture, visual review, Web verification, and closeout.
+Pass 26 completed the first Milestone 07 presentation/game-feel pass, and Pass 27 completed the player movement/facing readability pass. Result presentation, direction-change rendering, smoke coverage, focused captures, visual decisions, and public Web verification are now in place for those selected release-readiness gaps.
 
-The next selected direction is a small Pass 27 player movement/facing readability pass. The highest-value Milestone 07 gap is the reported direction-change flash where the diver can briefly appear to face both directions. Fixing that improves every dive without adding new systems or map scope.
+The next selected direction is Simple Diver Game 08 release-candidate hardening under #622-#631. The batch should prove and document the current small game with a release-candidate plan, validation matrix, one-command validation runner, release journey smoke, capture inventory, local/Web handoff checks, documentation refresh, and go/no-go closeout.
 
-Keep the next batch small and player-facing. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, broad audio systems, broad art replacement, or full-map productionization.
+Keep the next batch validation-focused. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, broad audio systems, broad art replacement, or full-map productionization.
 
 ## Deferred Work
 
