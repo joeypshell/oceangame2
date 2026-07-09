@@ -39,6 +39,8 @@ var _salvage_entities: Array = []
 var _hazard_entities: Array = []
 var _extraction_zones: Array = []
 var _boat_entities: Array = []
+var _world_connector_zones: Array = []
+var _spawn_positions_by_id := {}
 var _collected_salvage := {}
 var _salvage_nodes_by_id := {}
 var _background_root: Node2D
@@ -88,6 +90,8 @@ func load_greybox() -> void:
 	_hazard_entities = []
 	_extraction_zones = []
 	_boat_entities = []
+	_world_connector_zones = []
+	_spawn_positions_by_id = {}
 	_collected_salvage = {}
 	_salvage_nodes_by_id = {}
 
@@ -180,6 +184,27 @@ func get_marker_zone(marker_id: String) -> Dictionary:
 		if zone.get("type", "") == "marker" and str(zone.get("id", "")) == marker_id:
 			return zone
 	return {}
+
+
+func get_world_connectors() -> Array:
+	var connectors := []
+	for zone in _world_connector_zones:
+		connectors.append(_world_connector_runtime_info(zone))
+	return connectors
+
+
+func get_world_connector_at(position: Vector2) -> Dictionary:
+	for zone in _world_connector_zones:
+		if _rect_from_item(zone).has_point(position):
+			return _world_connector_runtime_info(zone)
+	return {}
+
+
+func get_entry_position(entry_id: String) -> Vector2:
+	var id := entry_id.strip_edges()
+	if not id.is_empty() and _spawn_positions_by_id.has(id):
+		return _spawn_positions_by_id[id]
+	return spawn_position
 
 
 func get_nearest_hazard_within(position: Vector2, radius_px: float) -> Dictionary:
@@ -334,6 +359,19 @@ func _salvage_interaction(entity: Dictionary) -> String:
 	return str(entity.get("interaction", "instant"))
 
 
+func _world_connector_runtime_info(zone: Dictionary) -> Dictionary:
+	return {
+		"id": str(zone.get("id", "world_connector")),
+		"center": _rect_center(zone),
+		"rect": _rect_from_item(zone),
+		"connector_label": str(zone.get("connector_label", "")),
+		"destination_map_id": str(zone.get("destination_map_id", "")),
+		"destination_map_path": str(zone.get("destination_map_path", "")),
+		"destination_entry_id": str(zone.get("destination_entry_id", "")),
+		"connector_direction": str(zone.get("connector_direction", "")),
+	}
+
+
 func reset_salvage() -> void:
 	_collected_salvage = {}
 	for salvage_id in _salvage_nodes_by_id.keys():
@@ -442,6 +480,8 @@ func _build_zones(zones: Array) -> void:
 				_add_rect_outline(zone, "%sDebugOutline" % base.name, COLOR_DEBUG_EXTRACTION, 3.0, 22)
 				_add_debug_label("EXTRACTION", _rect_from_item(zone).position + Vector2(6, 6), COLOR_DEBUG_EXTRACTION)
 		elif zone.get("type", "") == "marker":
+			if bool(zone.get("world_connector", false)):
+				_world_connector_zones.append(zone)
 			_route_marker_renderer_helper().add_route_marker(_marker_root, zone, tile_size, show_debug_overlay, _debug_renderer_helper())
 
 
@@ -454,6 +494,7 @@ func _build_entities(entities: Array) -> void:
 		if entity_type == "boat_spawn":
 			_boat_entities.append(entity)
 			spawn_position = _boat_entry_center(entity)
+			_spawn_positions_by_id[str(entity.get("id", "boat_spawn"))] = spawn_position
 			var boat_rect := _entity_rect_from_item(entity)
 			var boat_entry_local := _boat_entry_center(entity) - boat_rect.position
 			var boat_node: Node2D = _extraction_renderer_helper().add_boat_marker(
@@ -472,6 +513,7 @@ func _build_entities(entities: Array) -> void:
 				_add_debug_label("BOAT / RETURN", boat_rect.position + Vector2(6, boat_rect.size.y + 8), COLOR_DEBUG_EXTRACTION)
 				_add_debug_label("ENTRY", boat_rect.position + boat_entry_local + Vector2(18, -20), COLOR_DEBUG_ENTRY)
 		elif entity_type == "spawn":
+			_spawn_positions_by_id[str(entity.get("id", "spawn"))] = center
 			if has_boat_spawn:
 				var legacy_marker := _add_marker("LegacyPlayerStart", center, COLOR_MARKER, 18.0)
 				if show_debug_overlay:
