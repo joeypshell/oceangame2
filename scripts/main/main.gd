@@ -6,6 +6,7 @@ const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const OxygenRestPocketFeedback := preload("res://scripts/main/oxygen_rest_pocket_feedback.gd")
 const PrePickupRouteCueFeedback := preload("res://scripts/main/pre_pickup_route_cue_feedback.gd")
 const PrimaryDiveObjective := preload("res://scripts/main/primary_dive_objective.gd")
+const PrySalvageController := preload("res://scripts/main/pry_salvage_controller.gd")
 const ReturnPressureFeedback := preload("res://scripts/main/return_pressure_feedback.gd")
 const RouteCommitmentFeedback := preload("res://scripts/main/route_commitment_feedback.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
@@ -91,6 +92,7 @@ var _capture_controller
 var _oxygen_rest_feedback
 var _pre_pickup_route_cue_feedback
 var _primary_dive_objective
+var _pry_salvage
 var _return_pressure_feedback
 var _route_commitment_feedback
 var _timed_salvage
@@ -136,6 +138,7 @@ func _ready() -> void:
 	_oxygen_rest_feedback = OxygenRestPocketFeedback.new()
 	_pre_pickup_route_cue_feedback = PrePickupRouteCueFeedback.new()
 	_primary_dive_objective = PrimaryDiveObjective.new()
+	_pry_salvage = PrySalvageController.new()
 	_return_pressure_feedback = ReturnPressureFeedback.new()
 	_route_commitment_feedback = RouteCommitmentFeedback.new()
 	_timed_salvage = TimedSalvageController.new()
@@ -587,6 +590,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool) -> void:
 	_held_salvage_score = 0
 	_banked_score = 0
 	_completion_oxygen_bonus = 0
+	_pry_salvage.reset()
 	_timed_salvage.reset()
 	_primary_dive_objective.reset(world)
 	_refresh_route_commitment_feedback(world)
@@ -656,7 +660,9 @@ func _process(delta: float) -> void:
 
 	if _held_salvage < HELD_SALVAGE_CAPACITY:
 		var nearby_salvage: Dictionary = _world.get_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
-		if not nearby_salvage.is_empty() and str(nearby_salvage.get("interaction", "instant")) == "timed_salvage":
+		var nearby_interaction := str(nearby_salvage.get("interaction", "instant"))
+		if not nearby_salvage.is_empty() and nearby_interaction == "timed_salvage":
+			_pry_salvage.update({}, delta)
 			var timed_result: Dictionary = _timed_salvage.update(nearby_salvage, delta)
 			if str(timed_result.get("state", "")) == "complete":
 				var timed_salvage_id := str(timed_result.get("id", ""))
@@ -665,16 +671,30 @@ func _process(delta: float) -> void:
 					_collect_salvage_into_cargo(timed_salvage_id, completed_note)
 			elif timed_result.has("note"):
 				_last_status_note = str(timed_result["note"])
+		elif not nearby_salvage.is_empty() and nearby_interaction == "pry_salvage":
+			_timed_salvage.update({}, delta)
+			var pry_result: Dictionary = _pry_salvage.update(nearby_salvage, delta)
+			if str(pry_result.get("state", "")) == "complete":
+				var pry_salvage_id := str(pry_result.get("id", ""))
+				if _world.collect_salvage_by_id(pry_salvage_id):
+					var completed_note := _pry_salvage_completion_feedback(pry_salvage_id, str(pry_result.get("label", "")))
+					_collect_salvage_into_cargo(pry_salvage_id, completed_note)
+			elif pry_result.has("note"):
+				_last_status_note = str(pry_result["note"])
 		else:
 			var timed_cancel: Dictionary = _timed_salvage.update({}, delta)
 			if str(timed_cancel.get("state", "")) == "canceled":
 				_last_status_note = str(timed_cancel.get("note", "Salvage interrupted"))
+			var pry_cancel: Dictionary = _pry_salvage.update({}, delta)
+			if str(pry_cancel.get("state", "")) == "canceled":
+				_last_status_note = str(pry_cancel.get("note", "Pry interrupted"))
 			var collected_salvage: String = _world.collect_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
 			if not collected_salvage.is_empty():
 				_collect_salvage_into_cargo(collected_salvage)
 	else:
 		var blocked_salvage: Dictionary = _world.get_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
 		_timed_salvage.reset()
+		_pry_salvage.update({}, delta)
 		if not blocked_salvage.is_empty():
 			_last_status_note = _return_pressure_feedback.cargo_full_prompt(blocked_salvage)
 
@@ -734,11 +754,15 @@ func _collect_salvage_for_review_state(salvage: Dictionary) -> void:
 	_process(0.0)
 	if _world.is_salvage_collected(salvage_id):
 		return
-	if str(salvage.get("interaction", "instant")) != "timed_salvage":
+	var interaction := str(salvage.get("interaction", "instant"))
+	if interaction == "timed_salvage":
+		var interaction_seconds := maxf(0.01, float(salvage.get("interaction_seconds", 0.0)))
+		_process(interaction_seconds + 0.1)
 		return
-
-	var interaction_seconds := maxf(0.01, float(salvage.get("interaction_seconds", 0.0)))
-	_process(interaction_seconds + 0.1)
+	if interaction == "pry_salvage":
+		var interaction_seconds := maxf(0.01, float(salvage.get("interaction_seconds", 0.0)))
+		var pry_stages: int = max(1, int(salvage.get("pry_stages", 1)))
+		_process(interaction_seconds * float(pry_stages) + 0.1)
 
 
 func _collect_salvage_into_cargo(salvage_id: String, status_note := "") -> void:
@@ -762,6 +786,18 @@ func _timed_salvage_completion_feedback(salvage_id: String, label: String) -> St
 	return "%s secured +%d" % [display_label, _world.get_salvage_score(salvage_id)]
 
 
+func _pry_salvage_completion_feedback(salvage_id: String, label: String) -> String:
+	var display_label := label
+	if display_label.is_empty():
+		display_label = salvage_id
+		if display_label.begins_with("salvage_"):
+			display_label = display_label.substr("salvage_".length())
+		display_label = display_label.replace("_", " ")
+	if not display_label.is_empty():
+		display_label = display_label.substr(0, 1).to_upper() + display_label.substr(1)
+	return "%s opened +%d" % [display_label, _world.get_salvage_score(salvage_id)]
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if not event is InputEventKey:
 		return
@@ -777,6 +813,7 @@ func _reset_run() -> void:
 
 	_world.reset_salvage()
 	_oxygen_rest_feedback.reset()
+	_pry_salvage.reset()
 	_timed_salvage.reset()
 	_held_salvage = 0
 	_held_salvage_ids = []
@@ -827,6 +864,7 @@ func _update_oxygen(delta: float) -> bool:
 
 func _handle_oxygen_depleted() -> void:
 	_oxygen_rest_feedback.reset()
+	_pry_salvage.reset()
 	_timed_salvage.reset()
 	if not _held_salvage_ids.is_empty():
 		_world.restore_salvage(_held_salvage_ids)
@@ -850,6 +888,7 @@ func _handle_oxygen_depleted() -> void:
 func _handle_hazard_hit(hazard_id: String) -> void:
 	_hazard_warning_id = ""
 	_oxygen_rest_feedback.reset()
+	_pry_salvage.reset()
 	_timed_salvage.reset()
 	var oxygen_depleted := _apply_hazard_oxygen_penalty()
 	if oxygen_depleted:
@@ -1122,7 +1161,10 @@ func _is_collection_status_note(status_note: String) -> bool:
 	return (
 		status_note.begins_with("Collected ")
 		or status_note.begins_with("Salvaging ")
+		or status_note.begins_with("Prying ")
+		or status_note.begins_with("Pry interrupted")
 		or status_note.find(" secured +") != -1
+		or status_note.find(" opened +") != -1
 		or status_note == "Salvage interrupted"
 	)
 

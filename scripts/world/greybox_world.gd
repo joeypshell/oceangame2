@@ -266,7 +266,7 @@ func collect_salvage_near(position: Vector2, radius_px: float) -> String:
 			continue
 		if position.distance_to(_entity_center(entity)) > radius_px:
 			continue
-		if _salvage_interaction(entity) == "timed_salvage":
+		if _salvage_interaction(entity) != "instant":
 			continue
 
 		return salvage_id if collect_salvage_by_id(salvage_id) else ""
@@ -325,6 +325,7 @@ func _salvage_runtime_info(entity: Dictionary) -> Dictionary:
 		"score": _salvage_score(entity),
 		"interaction": _salvage_interaction(entity),
 		"interaction_seconds": float(entity.get("interaction_seconds", 0.0)),
+		"pry_stages": int(entity.get("pry_stages", 1)),
 		"interaction_label": str(entity.get("interaction_label", "")),
 	}
 
