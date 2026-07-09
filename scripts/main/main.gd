@@ -11,6 +11,7 @@ const ReturnPressureFeedback := preload("res://scripts/main/return_pressure_feed
 const RouteCommitmentFeedback := preload("res://scripts/main/route_commitment_feedback.gd")
 const SessionProgression := preload("res://scripts/main/session_progression.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
+const WorldConnectorController := preload("res://scripts/main/world_connector_controller.gd")
 const SmokeHazardRouteChecks := preload("res://scripts/main/smoke/smoke_hazard_route_checks.gd")
 const SmokeInteractionChecks := preload("res://scripts/main/smoke/smoke_interaction_checks.gd")
 const SmokeOxygenRestChecks := preload("res://scripts/main/smoke/smoke_oxygen_rest_checks.gd")
@@ -104,6 +105,7 @@ var _return_pressure_feedback
 var _route_commitment_feedback
 var _session_progression
 var _timed_salvage
+var _world_connector
 var _smoke_hazard_route_checks
 var _smoke_interaction_checks
 var _smoke_oxygen_rest_checks
@@ -153,6 +155,7 @@ func _ready() -> void:
 	_route_commitment_feedback = RouteCommitmentFeedback.new()
 	_session_progression = SessionProgression.new()
 	_timed_salvage = TimedSalvageController.new()
+	_world_connector = WorldConnectorController.new()
 	_smoke_hazard_route_checks = SmokeHazardRouteChecks.new(self)
 	_smoke_interaction_checks = SmokeInteractionChecks.new(self)
 	_smoke_oxygen_rest_checks = SmokeOxygenRestChecks.new(self)
@@ -634,12 +637,12 @@ func _create_world(map_path: String, show_debug_overlay: bool) -> Node:
 	return world
 
 
-func _load_playable_map(map_path: String, show_debug_overlay: bool) -> void:
+func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := "", status_note := "") -> void:
 	_clear_loaded_review_nodes()
 	var world := _create_world(map_path, show_debug_overlay)
 	var player := PLAYER_SCENE.instantiate()
 	_player = player
-	player.position = world.spawn_position
+	player.position = world.get_entry_position(entry_id) if not entry_id.is_empty() and world.has_method("get_entry_position") else world.spawn_position
 	add_child(player)
 	_apply_session_light_profile()
 
@@ -669,7 +672,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool) -> void:
 	_oxygen_seconds = _oxygen_capacity_seconds()
 	_run_complete = false
 	_run_failed = false
-	_last_status_note = ""
+	_last_status_note = status_note
 	_create_review_overlay(world)
 	_update_status_label()
 
@@ -878,6 +881,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		_try_purchase_cargo_capacity_upgrade()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_L:
 		_try_purchase_light_upgrade()
+	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_E:
+		_try_world_connector_transition()
 
 
 func _reset_run() -> void:
@@ -911,6 +916,26 @@ func _reset_run() -> void:
 	if _player.has_method("snap_camera"):
 		_player.snap_camera()
 	_update_status_label()
+
+
+func _try_world_connector_transition() -> bool:
+	if _world_connector == null or _world == null or _player == null or _run_complete or _run_failed:
+		return false
+
+	var connector: Dictionary = _world_connector.connector_at(_world, _player.global_position)
+	if connector.is_empty():
+		return false
+
+	var destination_map_path := str(connector.get("destination_map_path", "")).strip_edges()
+	if destination_map_path.is_empty():
+		_last_status_note = "Connector unavailable"
+		_update_status_label()
+		return false
+
+	var destination_entry_id := str(connector.get("destination_entry_id", "")).strip_edges()
+	var arrival_note: String = _world_connector.arrival_note(connector)
+	_load_playable_map(destination_map_path, _debug_overlay_enabled, destination_entry_id, arrival_note)
+	return true
 
 
 func _update_oxygen(delta: float) -> bool:
@@ -1121,6 +1146,7 @@ func _update_status_label() -> void:
 	var oxygen_feedback := _oxygen_feedback_label()
 	var oxygen_rest_prompt := _oxygen_rest_prompt()
 	var pre_pickup_route_cue := _pre_pickup_route_cue_prompt()
+	var world_connector_prompt := _world_connector_prompt()
 	if _run_complete:
 		prompt = "Run complete - press R"
 		objective_step_cue_blocked = true
@@ -1139,6 +1165,12 @@ func _update_status_label() -> void:
 	elif not pre_pickup_route_cue.is_empty():
 		prompt = pre_pickup_route_cue
 		objective_step_cue_blocked = true
+	elif _last_status_note.begins_with("Arrived:") and not world_connector_prompt.is_empty():
+		prompt = "%s\n%s" % [_last_status_note, world_connector_prompt]
+	elif _last_status_note.begins_with("Arrived:"):
+		prompt = _last_status_note
+	elif not world_connector_prompt.is_empty():
+		prompt = world_connector_prompt
 	elif not _last_status_note.is_empty():
 		prompt = _last_status_note
 		objective_step_cue_blocked = _is_collection_status_note(_last_status_note)
@@ -1188,6 +1220,12 @@ func _oxygen_rest_prompt() -> String:
 	if _oxygen_rest_feedback == null:
 		return ""
 	return _oxygen_rest_feedback.current_prompt()
+
+
+func _world_connector_prompt() -> String:
+	if _world_connector == null or _world == null or _player == null or _run_complete or _run_failed:
+		return ""
+	return _world_connector.prompt_for(_world, _player.global_position)
 
 
 func _route_commitment_overlay_text(show_step_cue := true) -> String:
