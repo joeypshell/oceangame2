@@ -1,6 +1,6 @@
 # Production Slice Index
 
-Date: 2026-07-06
+Date: 2026-07-09
 
 Issue: #66 `Add production slice status index`
 
@@ -14,10 +14,10 @@ Detailed rationale remains in the slice decision, evaluation, and baseline docs 
 
 | Slice | Role | Source Bounds | Entry And Extraction | Preview Status | Baseline Status |
 |---|---|---:|---|---|---|
-| `production_slice_01` | Top-center entry hub and first-area onboarding slice with `salvage_lower_loop` as the valuable route-choice payoff target | `x=58, y=0, w=72, h=84` | `boat_spawn` at top water | Default Godot and public preview map | Accepted baseline at `visual_baselines/production_slice_01_accepted/` |
+| `production_slice_01` | Top-center entry hub and first-area onboarding slice with the Pass 21 `lower_left_loop_connector` to slice 04 | `x=58, y=0, w=72, h=84` | `boat_spawn` at top water | Default Godot and public preview map | Accepted baseline at `visual_baselines/production_slice_01_accepted/` |
 | `production_slice_02` | Lower-right later-game chamber route and relay-base proof | `x=88, y=78, w=66, h=72` | In-water `spawn` plus `base` relay extraction | Reference slice only | Accepted baseline at `visual_baselines/production_slice_02_accepted/` |
 | `production_slice_03` | Upper-left compact connector / landmark room-cluster slice | `x=0, y=8, w=76, h=82` | In-water `spawn` plus `base` relay extraction | Reference slice only | Accepted baseline at `visual_baselines/production_slice_03_accepted/` |
-| `production_slice_04` | Lower-left connector / return-loop slice with curved corridor movement | `x=0, y=86, w=88, h=50` | In-water `spawn` plus `base` relay extraction | Reference slice only | Accepted baseline at `visual_baselines/production_slice_04_accepted/` |
+| `production_slice_04` | Lower-left connector / return-loop slice with curved corridor movement and Pass 21 relay entry from slice 01 | `x=0, y=86, w=88, h=50` | In-water `spawn` plus `base` relay extraction | Reachable reference slice via Pass 21 connector | Accepted baseline at `visual_baselines/production_slice_04_accepted/` |
 
 ## Source And Review Artifacts
 
@@ -39,6 +39,8 @@ Detailed rationale remains in the slice decision, evaluation, and baseline docs 
 
 Local/editor review runs also expose the map selector in the overlay, so the supported review maps can be switched without relaunching.
 
+Pass 21 also adds `--smoke-pass-21-world-connector` to verify the prompted transition from `production_slice_01` to `production_slice_04` and the relay entry placement.
+
 ## Capture And Baseline Artifacts
 
 | Slice | Normal Captures | Debug Captures | Baseline Review Sheet | Notes |
@@ -52,10 +54,10 @@ Local/editor review runs also expose the map selector in the overlay, so the sup
 
 | Slice | Decision And Evaluation Records |
 |---|---|
-| `production_slice_01` | `docs/current/PRODUCTION_SLICE_SELECTION_CRITERIA.md`, `docs/current/PRODUCTION_SLICE_01_VISUAL_BASELINE_RECONCILIATION.md`, plus issue history #21, #23, #31, #36, #75 |
+| `production_slice_01` | `docs/current/PRODUCTION_SLICE_SELECTION_CRITERIA.md`, `docs/current/PRODUCTION_SLICE_01_VISUAL_BASELINE_RECONCILIATION.md`, `docs/current/CONTROLLED_GAMEPLAY_PASS_21_CLOSEOUT.md`, plus issue history #21, #23, #31, #36, #75 |
 | `production_slice_02` | `docs/current/PRODUCTION_SLICE_02_DECISION.md`, `docs/current/PRODUCTION_SLICE_02_EVALUATION.md`, `docs/current/PRODUCTION_SLICE_02_VISUAL_BASELINE_DECISION.md` |
 | `production_slice_03` | `docs/current/PRODUCTION_SLICE_03_DECISION.md`, `docs/current/PRODUCTION_SLICE_03_EVALUATION.md`, `docs/current/PRODUCTION_SLICE_03_VISUAL_BASELINE_DECISION.md`, `docs/current/PRODUCTION_SLICE_03_DEFAULT_PREVIEW_DECISION.md` |
-| `production_slice_04` | `docs/current/PRODUCTION_SLICE_04_DECISION.md`, `docs/current/PRODUCTION_SLICE_04_EVALUATION.md`, `docs/current/PRODUCTION_SLICE_04_VISUAL_BASELINE_DECISION.md` |
+| `production_slice_04` | `docs/current/PRODUCTION_SLICE_04_DECISION.md`, `docs/current/PRODUCTION_SLICE_04_EVALUATION.md`, `docs/current/PRODUCTION_SLICE_04_VISUAL_BASELINE_DECISION.md`, `docs/current/CONTROLLED_GAMEPLAY_PASS_21_CLOSEOUT.md` |
 
 ## Next-Use Guidance
 
