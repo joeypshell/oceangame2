@@ -175,7 +175,9 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 The first darkness/light gate is complete: `deep_cache_dark_pocket` is a visual-only deep-route readability zone improved by `dive_light_1`, without changing movement, collision, oxygen, cargo, objective, or salvage semantics.
 
-Use #481-#490 for the next small Presentation And Game Feel micro-pass: a first compact feedback/audio cue layer for existing pickup, banking, oxygen, and hazard events. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, broad audio systems, or full-map productionization.
+The first compact feedback/audio cue pass is complete under #481-#490. It added placeholder cue assets, runtime cue playback, Web-safe startup, deterministic event-log smoke coverage, and public Web verification without changing map, collision, oxygen, cargo, hazard, objective, or scoring rules.
+
+The next batch should be selected before implementation. Good candidates are a tiny follow-up Presentation And Game Feel pass for upgrade-purchase cue feedback, or a roadmap step that advances the finished simple diver game more directly, such as the next small salvage/tool interaction or objective/run-structure beat. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, broad audio systems, or full-map productionization.
 
 ## Deferred Work
 
