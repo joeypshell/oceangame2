@@ -16,7 +16,7 @@ func _smoke_salvage_route_and_quit(expected_map_id: String, extraction_label: St
 
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
-	var salvage_targets: Array = _world.get_salvage_centers()
+	var salvage_targets: Array = _salvage_centers_for_full_collection()
 	var extraction_center: Vector2 = _world.get_extraction_center()
 	for salvage in salvage_targets:
 		if _held_salvage >= HELD_SALVAGE_CAPACITY:

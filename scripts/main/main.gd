@@ -5,6 +5,7 @@ const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const OxygenRestPocketFeedback := preload("res://scripts/main/oxygen_rest_pocket_feedback.gd")
 const PrePickupRouteCueFeedback := preload("res://scripts/main/pre_pickup_route_cue_feedback.gd")
+const PrimaryDiveObjective := preload("res://scripts/main/primary_dive_objective.gd")
 const ReturnPressureFeedback := preload("res://scripts/main/return_pressure_feedback.gd")
 const RouteCommitmentFeedback := preload("res://scripts/main/route_commitment_feedback.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
@@ -87,6 +88,7 @@ var _player
 var _capture_controller
 var _oxygen_rest_feedback
 var _pre_pickup_route_cue_feedback
+var _primary_dive_objective
 var _return_pressure_feedback
 var _route_commitment_feedback
 var _timed_salvage
@@ -130,6 +132,7 @@ func _ready() -> void:
 	_capture_controller = CaptureController.new(self)
 	_oxygen_rest_feedback = OxygenRestPocketFeedback.new()
 	_pre_pickup_route_cue_feedback = PrePickupRouteCueFeedback.new()
+	_primary_dive_objective = PrimaryDiveObjective.new()
 	_return_pressure_feedback = ReturnPressureFeedback.new()
 	_route_commitment_feedback = RouteCommitmentFeedback.new()
 	_timed_salvage = TimedSalvageController.new()
@@ -568,6 +571,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool) -> void:
 	_banked_score = 0
 	_completion_oxygen_bonus = 0
 	_timed_salvage.reset()
+	_primary_dive_objective.reset(world)
 	_refresh_route_commitment_feedback(world)
 	_refresh_salvage_route_metadata(world)
 	_banked_validation_route_counts = {}
@@ -665,7 +669,7 @@ func _process(delta: float) -> void:
 		_held_salvage = 0
 		_held_salvage_ids = []
 		_held_salvage_score = 0
-		if _total_salvage > 0 and _banked_salvage >= _total_salvage:
+		if _should_complete_run_after_banking():
 			_run_complete = true
 			_completion_oxygen_bonus = _calculate_oxygen_completion_bonus()
 			_record_session_best_score()
@@ -677,7 +681,7 @@ func _process(delta: float) -> void:
 
 
 func _complete_route_outcome_review_state() -> bool:
-	for salvage in _world.get_salvage_centers():
+	for salvage in _salvage_centers_for_full_collection():
 		_player.global_position = salvage["center"]
 		_collect_salvage_for_review_state(salvage)
 		if _held_salvage >= HELD_SALVAGE_CAPACITY:
@@ -692,6 +696,20 @@ func _complete_route_outcome_review_state() -> bool:
 		push_error("Route outcome review setup did not complete after collecting and returning.")
 		return false
 	return true
+
+
+func _salvage_centers_for_full_collection() -> Array:
+	if _world == null or not _world.has_method("get_salvage_centers"):
+		return []
+	if _primary_dive_objective == null:
+		return _world.get_salvage_centers()
+	return _primary_dive_objective.ordered_salvage_for_full_collection(_world.get_salvage_centers())
+
+
+func _should_complete_run_after_banking() -> bool:
+	if _primary_dive_objective != null and _primary_dive_objective.has_primary_objective():
+		return _primary_dive_objective.is_complete(_banked_salvage_ids)
+	return _total_salvage > 0 and _banked_salvage >= _total_salvage
 
 
 func _collect_salvage_for_review_state(salvage: Dictionary) -> void:

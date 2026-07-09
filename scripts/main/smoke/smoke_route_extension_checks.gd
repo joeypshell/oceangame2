@@ -267,11 +267,12 @@ func _smoke_pass_10_return_pressure_and_quit() -> void:
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
 	var oxygen_start := _oxygen_seconds
-	_player.global_position = lower_loop["center"]
-	_collect_salvage_for_smoke(lower_loop)
-	_player.global_position = deep_cache["center"]
-	_collect_salvage_for_smoke(deep_cache)
-	var expected_banked_score := int(lower_loop.get("score", 0)) + int(deep_cache.get("score", 0))
+	var cargo_targets: Array = _salvage_centers_for_full_collection().slice(0, HELD_SALVAGE_CAPACITY)
+	var expected_banked_score := 0
+	for cargo_target in cargo_targets:
+		expected_banked_score += int(cargo_target.get("score", 0))
+		_player.global_position = cargo_target["center"]
+		_collect_salvage_for_smoke(cargo_target)
 	if _held_salvage != HELD_SALVAGE_CAPACITY or _held_salvage_score != expected_banked_score:
 		push_error("Pass 10 return-pressure smoke did not fill cargo with planned pickups: held=%d score=%d expected=%d ids=%s." % [
 			_held_salvage,
