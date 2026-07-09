@@ -463,7 +463,7 @@ Recent important commits:
 
 Use `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md` as the current north star. The project should now finish the small diver game before planning the larger 2D Subnautica-like expansion.
 
-Pass 24 adds `deep_route_jellyfish_patrol`, one deterministic source-authored moving hazard as a dodge/timing beat on the lower-loop-to-deep-cache route. The next presentation step is the #447/#448 diver animation path in `docs/current/DIVER_ANIMATION_PLAN.md`: one small swim/idle slice, not a broad player redesign or gameplay rewrite.
+Pass 24 adds `deep_route_jellyfish_patrol`, one deterministic source-authored moving hazard as a dodge/timing beat on the lower-loop-to-deep-cache route. #447/#448 add the first diver swim/idle animation path in `docs/current/DIVER_ANIMATION_PLAN.md`: one small visual-only slice, not a broad player redesign or gameplay rewrite.
 
 Accepted constraints for the next batch:
 

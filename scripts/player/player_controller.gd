@@ -7,6 +7,8 @@ extends CharacterBody2D
 const LIGHT_CONE_OFFSET_X := 88.0
 const BASE_LIGHT_RANGE_SCALE := 1.0
 const BASE_LIGHT_ALPHA := 0.38
+const SWIM_FRAME_COUNT := 4
+const SWIM_FRAME_RATE := 8.0
 
 @onready var _body := $Body as Sprite2D
 @onready var _light_cone := $LightCone as Sprite2D
@@ -14,6 +16,7 @@ const BASE_LIGHT_ALPHA := 0.38
 var _facing_sign := 1.0
 var _light_range_scale := BASE_LIGHT_RANGE_SCALE
 var _light_alpha := BASE_LIGHT_ALPHA
+var _swim_frame_time := 0.0
 
 
 func _ready() -> void:
@@ -35,6 +38,7 @@ func swim_in_direction(direction: Vector2, delta: float) -> void:
 
 	if direction.x != 0.0:
 		_set_facing(1.0 if direction.x > 0.0 else -1.0)
+	_update_swim_animation(direction, delta)
 
 
 func _input_direction() -> Vector2:
@@ -53,6 +57,7 @@ func set_camera_limits(world_rect: Rect2) -> void:
 
 func reset_motion() -> void:
 	velocity = Vector2.ZERO
+	_update_swim_animation(Vector2.ZERO, 0.0)
 
 
 func snap_camera() -> void:
@@ -74,6 +79,8 @@ func get_facing_report() -> Dictionary:
 		"light_cone_scale_x": _light_cone.scale.x,
 		"light_cone_range_scale": absf(_light_cone.scale.x),
 		"light_cone_alpha": _light_cone.modulate.a,
+		"body_frame": _body.frame,
+		"body_hframes": _body.hframes,
 	}
 
 
@@ -100,3 +107,13 @@ func _set_facing(sign: float) -> void:
 	var light_color := _light_cone.modulate
 	light_color.a = _light_alpha
 	_light_cone.modulate = light_color
+
+
+func _update_swim_animation(direction: Vector2, delta: float) -> void:
+	if direction == Vector2.ZERO and velocity.length() < 1.0:
+		_swim_frame_time = 0.0
+		_body.frame = 0
+		return
+
+	_swim_frame_time += delta * SWIM_FRAME_RATE
+	_body.frame = int(floor(_swim_frame_time)) % SWIM_FRAME_COUNT

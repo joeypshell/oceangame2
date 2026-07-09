@@ -16,7 +16,9 @@ SPRITE_SIZE = (96, 64)
 SCALE = 4
 CANVAS_SIZE = (SPRITE_SIZE[0] * SCALE, SPRITE_SIZE[1] * SCALE)
 SPRITE_PATH = ASSET_DIR / "player_diver_01.png"
+SWIM_SHEET_PATH = ASSET_DIR / "player_diver_swim_01.png"
 REVIEW_PATH = REVIEW_DIR / "player_sprite_01_review.png"
+SWIM_REVIEW_PATH = REVIEW_DIR / "player_diver_swim_01_review.png"
 
 OUTLINE = (18, 35, 42, 255)
 SUIT = (31, 73, 86, 255)
@@ -52,38 +54,54 @@ def load_font(size: int) -> ImageFont.ImageFont:
         return ImageFont.load_default()
 
 
-def draw_diver() -> Image.Image:
+def offset_points(points: list[tuple[int, int]], offset: tuple[int, int]) -> list[tuple[int, int]]:
+    return [(x + offset[0], y + offset[1]) for x, y in points]
+
+
+def draw_diver(swim_phase: int = 0) -> Image.Image:
     image = Image.new("RGBA", CANVAS_SIZE, (0, 0, 0, 0))
     draw = ImageDraw.Draw(image, "RGBA")
+    phase = swim_phase % 4
+    body_bob = [0, 1, 0, -1][phase]
+    rear_fin_lift = [0, -2, 1, 2][phase]
+    lower_fin_lift = [0, 2, 1, -2][phase]
+    arm_lift = [0, -1, 0, 1][phase]
 
     # Back tank and hose.
-    draw.rounded_rectangle(rect((16, 21, 42, 37)), radius=5 * SCALE, fill=TANK_DARK)
-    draw.rounded_rectangle(rect((19, 18, 45, 34)), radius=5 * SCALE, fill=TANK, outline=OUTLINE, width=2 * SCALE)
-    draw.line(scaled([(43, 24), (52, 18), (64, 20)]), fill=ACCENT, width=2 * SCALE)
+    draw.rounded_rectangle(rect((16, 21 + body_bob, 42, 37 + body_bob)), radius=5 * SCALE, fill=TANK_DARK)
+    draw.rounded_rectangle(rect((19, 18 + body_bob, 45, 34 + body_bob)), radius=5 * SCALE, fill=TANK, outline=OUTLINE, width=2 * SCALE)
+    draw.line(scaled(offset_points([(43, 24), (52, 18), (64, 20)], (0, body_bob))), fill=ACCENT, width=2 * SCALE)
 
     # Flippers and trailing leg silhouette.
-    draw.polygon(scaled([(14, 43), (3, 53), (22, 53), (34, 44)]), fill=SUIT_DARK, outline=OUTLINE)
-    draw.polygon(scaled([(20, 36), (7, 43), (26, 47), (39, 39)]), fill=SUIT_DARK, outline=OUTLINE)
+    draw.polygon(scaled(offset_points([(14, 43), (3, 53), (22, 53), (34, 44)], (0, lower_fin_lift))), fill=SUIT_DARK, outline=OUTLINE)
+    draw.polygon(scaled(offset_points([(20, 36), (7, 43), (26, 47), (39, 39)], (0, rear_fin_lift))), fill=SUIT_DARK, outline=OUTLINE)
 
     # Main body, arm, and head face right by default.
     draw.polygon(
-        scaled([(28, 25), (48, 18), (69, 21), (82, 31), (70, 43), (44, 45), (25, 38)]),
+        scaled(offset_points([(28, 25), (48, 18), (69, 21), (82, 31), (70, 43), (44, 45), (25, 38)], (0, body_bob))),
         fill=SUIT,
         outline=OUTLINE,
     )
-    draw.line(scaled([(40, 27), (58, 34), (74, 34)]), fill=SUIT_LIGHT, width=4 * SCALE)
-    draw.polygon(scaled([(36, 41), (52, 49), (68, 47), (53, 39)]), fill=SUIT_DARK, outline=OUTLINE)
+    draw.line(scaled(offset_points([(40, 27), (58, 34), (74, 34)], (0, body_bob + arm_lift))), fill=SUIT_LIGHT, width=4 * SCALE)
+    draw.polygon(scaled(offset_points([(36, 41), (52, 49), (68, 47), (53, 39)], (0, body_bob - arm_lift))), fill=SUIT_DARK, outline=OUTLINE)
 
-    draw.ellipse(rect((58, 17, 84, 43)), fill=SUIT, outline=OUTLINE, width=2 * SCALE)
-    draw.polygon(scaled([(66, 23), (83, 25), (88, 32), (82, 38), (65, 37), (61, 31)]), fill=VISOR_DARK)
-    draw.polygon(scaled([(68, 25), (81, 27), (84, 32), (80, 36), (67, 35), (64, 31)]), fill=VISOR)
-    draw.line(scaled([(71, 26), (80, 28)]), fill=(191, 255, 255, 230), width=2 * SCALE)
+    draw.ellipse(rect((58, 17 + body_bob, 84, 43 + body_bob)), fill=SUIT, outline=OUTLINE, width=2 * SCALE)
+    draw.polygon(scaled(offset_points([(66, 23), (83, 25), (88, 32), (82, 38), (65, 37), (61, 31)], (0, body_bob))), fill=VISOR_DARK)
+    draw.polygon(scaled(offset_points([(68, 25), (81, 27), (84, 32), (80, 36), (67, 35), (64, 31)], (0, body_bob))), fill=VISOR)
+    draw.line(scaled(offset_points([(71, 26), (80, 28)], (0, body_bob))), fill=(191, 255, 255, 230), width=2 * SCALE)
 
     # Small warm points keep continuity with boat/prop accents.
-    draw.rectangle(rect((46, 23, 51, 28)), fill=ACCENT)
-    draw.line(scaled([(30, 32), (44, 36)]), fill=ACCENT, width=2 * SCALE)
+    draw.rectangle(rect((46, 23 + body_bob, 51, 28 + body_bob)), fill=ACCENT)
+    draw.line(scaled(offset_points([(30, 32), (44, 36)], (0, body_bob))), fill=ACCENT, width=2 * SCALE)
 
     return downsample(image)
+
+
+def draw_swim_sheet() -> Image.Image:
+    sheet = Image.new("RGBA", (SPRITE_SIZE[0] * 4, SPRITE_SIZE[1]), (0, 0, 0, 0))
+    for phase in range(4):
+        sheet.alpha_composite(draw_diver(phase), (SPRITE_SIZE[0] * phase, 0))
+    return sheet
 
 
 def save_review(sprite: Image.Image) -> None:
@@ -122,6 +140,44 @@ def save_review(sprite: Image.Image) -> None:
     review.convert("RGB").save(REVIEW_PATH)
 
 
+def save_swim_review(sheet: Image.Image) -> None:
+    review = Image.new("RGBA", (760, 380), PANEL)
+    draw = ImageDraw.Draw(review)
+    title_font = load_font(18)
+    label_font = load_font(13)
+
+    draw.text((20, 16), "Player Diver Swim 01", fill=TEXT, font=title_font)
+    draw.text((20, 42), "4x 96x64 right-facing frames; runtime flips Body only", fill=TEXT, font=label_font)
+
+    water_panel = Image.new("RGBA", (SPRITE_SIZE[0] * 4 + 32, SPRITE_SIZE[1] + 40), WATER_REVIEW)
+    water_panel.alpha_composite(sheet, (16, 16))
+    review.alpha_composite(water_panel, (20, 76))
+    draw.rectangle((20, 76, 20 + water_panel.width - 1, 76 + water_panel.height - 1), outline=(126, 158, 168, 220), width=1)
+    draw.text((26, 184), "actual sheet", fill=TEXT, font=label_font)
+
+    for phase in range(4):
+        frame = sheet.crop((phase * SPRITE_SIZE[0], 0, (phase + 1) * SPRITE_SIZE[0], SPRITE_SIZE[1]))
+        enlarged = frame.resize((SPRITE_SIZE[0] * 2, SPRITE_SIZE[1] * 2), Image.Resampling.NEAREST)
+        x = 20 + phase * 180
+        y = 230
+        review.alpha_composite(enlarged, (x, y))
+        origin = (x + SPRITE_SIZE[0], y + SPRITE_SIZE[1])
+        collision_half = (26, 18)
+        draw.rectangle(
+            (
+                origin[0] - collision_half[0],
+                origin[1] - collision_half[1],
+                origin[0] + collision_half[0],
+                origin[1] + collision_half[1],
+            ),
+            outline=COLLISION,
+            width=1,
+        )
+        draw.text((x, y - 18), "frame %d" % phase, fill=TEXT, font=label_font)
+
+    review.convert("RGB").save(SWIM_REVIEW_PATH)
+
+
 def main() -> int:
     ASSET_DIR.mkdir(parents=True, exist_ok=True)
     REVIEW_DIR.mkdir(parents=True, exist_ok=True)
@@ -132,6 +188,13 @@ def main() -> int:
 
     save_review(sprite)
     print(f"Wrote {REVIEW_PATH.relative_to(ROOT)}")
+
+    swim_sheet = draw_swim_sheet()
+    swim_sheet.save(SWIM_SHEET_PATH)
+    print(f"Wrote {SWIM_SHEET_PATH.relative_to(ROOT)}")
+
+    save_swim_review(swim_sheet)
+    print(f"Wrote {SWIM_REVIEW_PATH.relative_to(ROOT)}")
     return 0
 
 
