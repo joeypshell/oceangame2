@@ -41,7 +41,7 @@ The open GitHub milestones should mirror this roadmap:
 
 ## Current Next Direction
 
-Controlled Gameplay Pass 15 is complete. The next implementation batch should come from Milestone 02 or 03, with Milestone 02 preferred if the goal is to make the current default dive feel like a complete start-middle-return run. Avoid creating another narrow objective-label pass unless it directly supports the finished simple diver game.
+Controlled Gameplay Pass 16 completed the prototype-level Milestone 02 goal: the default dive now has one source-authored primary objective that can be completed from boat to return. The next implementation batch should come from Milestone 03 by adding one more small, source-authored salvage/tool interaction before economy, upgrades, enemies, procedural generation, or map-scale expansion.
 
 ## Recently Completed Prototype Passes
 
@@ -57,3 +57,4 @@ Controlled Gameplay Pass 15 is complete. The next implementation batch should co
 - #236-#245 completed Controlled Gameplay Pass 13 route commitment objective.
 - #278-#286 completed Controlled Gameplay Pass 14 start-of-run objective cue.
 - #298-#307 completed Controlled Gameplay Pass 15 objective follow-through, including source marker, validation, runtime cue, smoke, capture, visual decision, Web verification, and closeout.
+- #320-#329 completed Controlled Gameplay Pass 16 primary dive completion, including source contract, validation, runtime completion gate, smoke, capture, visual decision, Web verification, and closeout.
