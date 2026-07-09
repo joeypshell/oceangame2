@@ -116,6 +116,7 @@ Build a small side-view salvage game that proves:
 - [Pass 26 Result Presentation Web Preview Verification](docs/current/PASS_26_RESULT_PRESENTATION_WEB_PREVIEW_VERIFICATION.md)
 - [Milestone 07 Release-Readiness Audit](docs/current/MILESTONE_07_RELEASE_READINESS_AUDIT.md)
 - [Controlled Gameplay Pass 27 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_27_PLAN.md)
+- [Pass 27 Player-Facing Reproduction Note](docs/current/PASS_27_PLAYER_FACING_REPRODUCTION.md)
 - [First Feedback Audio Micro-Pass Plan](docs/current/FIRST_FEEDBACK_AUDIO_MICRO_PASS_PLAN.md)
 - [First Feedback Audio Cue Contract](docs/current/FIRST_FEEDBACK_AUDIO_CUE_CONTRACT.md)
 - [First Feedback Audio Review Note](docs/current/FIRST_FEEDBACK_AUDIO_REVIEW.md)
