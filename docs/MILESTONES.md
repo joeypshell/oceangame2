@@ -41,9 +41,9 @@ The open GitHub milestones should mirror this roadmap:
 
 ## Current Next Direction
 
-Controlled Gameplay Pass 25 completed the final-dive/capstone objective seed for Milestone 06. Banking the destination cache in `production_slice_04` now confirms the relay and shows `Final dive signal discovered`, with source metadata, validation, runtime feedback, smoke, focused capture, visual review, Web verification, and closeout.
+Controlled Gameplay Pass 26 completed the first Milestone 07 presentation/game-feel pass. Completed-run result presentation now prioritizes objective/payoff text before bookkeeping, adds the compact `Final dive signal locked` cue, and is protected by smoke, focused capture, visual review, Web verification, and closeout.
 
-Milestone 06 is complete enough for the current compact diver-game target. The next recommended batch should move to Milestone 07 presentation/game feel and improve the clarity, feel, and payoff of the existing objective/result loop. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, broad art replacement, broad audio systems, or full-map productionization.
+The next recommended step is the #591 Milestone 07 release-readiness audit. Use that audit to decide whether the next small batch should address player movement/facing feel, additional result/UI polish, visual readability, or release-candidate blockers. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, broad art replacement, broad audio systems, or full-map productionization.
 
 ## Recently Completed Prototype Passes
 
@@ -69,3 +69,4 @@ Milestone 06 is complete enough for the current compact diver-game target. The n
 - #522-#531 completed Controlled Gameplay Pass 23 next-dive objective prompt, including planning, prompt contract, validation, source authoring, runtime result text, smoke, capture, visual/Web verification, and closeout.
 - #542-#551 completed Controlled Gameplay Pass 24 relay follow-through, including planning, objective contract, validation, source authoring, runtime feedback, smoke, capture, visual decision, Web verification, and closeout.
 - #562-#571 completed Controlled Gameplay Pass 25 final-dive objective seed, including planning, final-dive contract, validation, source authoring, runtime feedback, smoke, capture, visual decision, Web verification, and closeout.
+- #582-#590 completed Controlled Gameplay Pass 26 result presentation polish, including planning, result-presentation contract, runtime hierarchy, final-dive cue, smoke, focused capture, visual decision, Web verification, and closeout.
