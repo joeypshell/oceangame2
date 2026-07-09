@@ -173,6 +173,34 @@ def validate_route_objective_schema(map_data: dict, entities: list[dict], zones:
     return failures
 
 
+def validate_primary_route_objective_schema(map_data: dict) -> list[str]:
+    if "primary_route_objective_id" not in map_data:
+        return []
+
+    failures: list[str] = []
+    primary_id = map_data["primary_route_objective_id"]
+    if not isinstance(primary_id, str) or not primary_id:
+        return ["primary_route_objective_id must be a non-empty lower_snake_case string."]
+    if not ID_PATTERN.match(primary_id):
+        failures.append(f"primary_route_objective_id {primary_id!r} must use lower_snake_case.")
+
+    objectives = map_data.get("route_objectives", [])
+    if not isinstance(objectives, list):
+        failures.append("primary_route_objective_id requires route_objectives to be a list.")
+        return failures
+
+    objective_ids = {
+        objective.get("id")
+        for objective in objectives
+        if isinstance(objective, dict) and isinstance(objective.get("id"), str)
+    }
+    if primary_id not in objective_ids:
+        failures.append(
+            f"primary_route_objective_id {primary_id!r} must reference an existing route objective."
+        )
+    return failures
+
+
 def validate_objective_step_cue_schema(map_data: dict, entities: list[dict], zones: list[dict]) -> list[str]:
     failures: list[str] = []
     objectives = map_data.get("route_objectives", [])

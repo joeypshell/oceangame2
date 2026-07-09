@@ -12,6 +12,7 @@ from pathlib import Path
 from validate_route_objectives import (
     validate_objective_step_cue_reachability,
     validate_objective_step_cue_schema,
+    validate_primary_route_objective_schema,
     validate_route_objective_reachability,
     validate_route_objective_schema,
 )
@@ -380,6 +381,7 @@ def main() -> int:
     failures.extend(validate_entity_schema(entities, width, height, base_zones))
     failures.extend(validate_zone_schema(zones, width, height))
     failures.extend(validate_route_objective_schema(map_data, entities, zones))
+    failures.extend(validate_primary_route_objective_schema(map_data))
     failures.extend(validate_objective_step_cue_schema(map_data, entities, zones))
     if failures:
         for failure in failures:
