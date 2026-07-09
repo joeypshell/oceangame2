@@ -39,9 +39,10 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest completed pass closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_27_CLOSEOUT.md`
-- Current next direction: resolve the Simple Diver Game 08 release-candidate hardening batch #622-#631.
-- Latest Web verification: `docs/current/PASS_27_PLAYER_FACING_WEB_PREVIEW_VERIFICATION.md`
+- Current release-candidate plan: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_PLAN.md`
+- Current validation matrix: `docs/current/SIMPLE_DIVER_GAME_08_VALIDATION_MATRIX.md`
+- Current next direction: complete #631, the Simple Diver Game 08 go/no-go closeout.
+- Latest Web verification: `docs/current/SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -216,7 +217,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-09:
 
-- Active roadmap queue: #611 refreshed release-readiness blockers and created #622-#631 for Simple Diver Game 08 release-candidate hardening. #52/#53 remain deferred slice-03 polish.
+- Active roadmap queue: #622-#630 completed Simple Diver Game 08 release-candidate planning, validation, release journey, capture, local run, Web, baseline, and docs handoff work. #631 remains the go/no-go closeout. #52/#53 remain deferred slice-03 polish.
 - Closed: #562-#571 completed Pass 25 planning, final-dive contract, validation, source authoring, runtime feedback, smoke, focused capture, visual decision, public Web verification, and closeout.
 - Closed: #542-#551 completed Pass 24 planning, relay objective contract, validation, source authoring, runtime feedback, smoke, focused capture, visual decision, public Web verification, and closeout.
 - Closed: #522-#531 completed Pass 23 planning, next-dive prompt contract, validation, source authoring, runtime result text, smoke, focused capture, visual/Web verification, and closeout.
@@ -467,13 +468,9 @@ Recent important commits:
 
 Use `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md` as the current north star. The project should now finish the small diver game before planning the larger 2D Subnautica-like expansion.
 
-The first compact feedback/audio cue layer is complete under #481-#490. Pass 22 is complete under #502-#511: the existing lower-left connector now leads to one source-authored `production_slice_04` destination cache with compact `Destination cache +300` feedback, smoke, focused capture, visual review, and public Web verification.
+Milestone 07 result-presentation and player-facing readability work is complete. Simple Diver Game 08 release-candidate hardening has recorded the plan, validation matrix, one-command validation runner, release journey smoke, capture review index, local run verification, public Web export handoff, baseline/capture audit, and this docs refresh. The remaining release-candidate task is #631: write the go/no-go closeout, separating blockers from deferred polish.
 
-Pass 25 is complete under #562-#571: the Pass 24 relay follow-through now seeds a compact final-dive/capstone cue. Banking `slice_04_destination_cache` in `production_slice_04` shows `Relay lead confirmed` and `Final dive signal discovered`, with validation, runtime feedback, smoke, focused capture, visual review, public Web verification, and closeout.
-
-Milestone 07 now has result-presentation and player-facing readability passes complete: Pass 26 made completed-run result hierarchy clearer, and Pass 27 addressed the reported direction-change flash with sprite-frame clipping, repeated-reversal smoke, a focused player-facing capture, visual baseline decision, public Web verification, and closeout. #611 found no remaining Milestone 07 player-facing blocker to starting Simple Diver Game 08 and created #622-#631 for release-candidate hardening. Keep it validation-focused: no music, ambience, audio options menu, enemy AI, inventory/loadouts, save systems, broad economy, procedural generation, broad art replacement, broad audio systems, or full-map productionization.
-
-Accepted constraints for the next batch:
+Accepted constraints for next work:
 
 - Keep `production_slice_01` as the default preview map.
 - Preserve `maps/full_cave_sketch_01.greybox.json` as a topology draft and planning source.
