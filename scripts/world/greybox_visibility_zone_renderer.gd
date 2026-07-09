@@ -3,10 +3,11 @@ extends RefCounted
 const COLOR_DIM_ZONE := Color(0.02, 0.08, 0.13, 0.22)
 const COLOR_DARK_ZONE := Color(0.01, 0.03, 0.08, 0.36)
 const COLOR_DEBUG_VISIBILITY_EDGE := Color(0.48, 0.74, 1.0, 0.88)
+const UPGRADED_READABILITY_ALPHA_SCALE := 0.42
 
 
 func add_visibility_zone(parent: Node2D, item: Dictionary, tile_size: int, show_debug_overlay: bool, debug_renderer) -> Polygon2D:
-	var zone := _rect_polygon(item, tile_size, _color_for_level(str(item.get("visibility_level", "dim"))))
+	var zone := _rect_polygon(item, tile_size, color_for_zone(item, false))
 	zone.name = str(item.get("id", "VisibilityZone"))
 	zone.z_index = 9
 	parent.add_child(zone)
@@ -17,6 +18,23 @@ func add_visibility_zone(parent: Node2D, item: Dictionary, tile_size: int, show_
 			debug_renderer.add_rect_outline(parent, rect, "%sDebugOutline" % zone.name, COLOR_DEBUG_VISIBILITY_EDGE, 2.0, 24)
 			debug_renderer.add_debug_label(parent, "VISIBILITY", rect.position + Vector2(6, 28), COLOR_DEBUG_VISIBILITY_EDGE)
 	return zone
+
+
+func update_zone_readability(zone_node: Polygon2D, item: Dictionary, upgrade_active: bool) -> void:
+	if zone_node == null:
+		return
+	zone_node.color = color_for_zone(item, upgrade_active)
+
+
+func overlay_alpha(item: Dictionary, upgrade_active: bool) -> float:
+	return color_for_zone(item, upgrade_active).a
+
+
+func color_for_zone(item: Dictionary, upgrade_active: bool) -> Color:
+	var color := _color_for_level(str(item.get("visibility_level", "dim")))
+	if upgrade_active:
+		color.a *= UPGRADED_READABILITY_ALPHA_SCALE
+	return color
 
 
 func _color_for_level(level: String) -> Color:
