@@ -1,6 +1,6 @@
 # Finished Simple Diver Game Roadmap
 
-Last updated: 2026-07-08
+Last updated: 2026-07-09
 
 ## Decision
 
@@ -173,7 +173,9 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 ## Current Next Direction
 
-The roadmap reset and Controlled Gameplay Pass 15 are complete. The next new implementation batch should come from Milestone 02 or 03, not from another narrow objective-label pass. Prefer Milestone 02 if the goal is to make the current default dive feel like a complete start-middle-return run.
+Controlled Gameplay Pass 16 is complete and proves Milestone 02's default-dive vertical slice at prototype level: the current slice has a source-authored primary objective, route pressure, cargo/oxygen/hazard tension, return banking, result feedback, smoke coverage, capture review, and Web verification.
+
+The next new implementation batch should come from Milestone 03. Add one more small, source-authored salvage/tool interaction before economy, upgrades, enemies, procedural generation, or map-scale expansion. Keep it narrower than an inventory or loadout system.
 
 ## Deferred Work
 

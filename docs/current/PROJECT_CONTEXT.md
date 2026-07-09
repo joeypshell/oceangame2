@@ -1,6 +1,6 @@
 # Project Context
 
-Last updated: 2026-07-08
+Last updated: 2026-07-09
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
@@ -39,9 +39,9 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest completed pass closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_15_CLOSEOUT.md`
-- Latest pass docs: `docs/current/CONTROLLED_GAMEPLAY_PASS_15_PLAN.md`, `docs/current/CONTROLLED_GAMEPLAY_PASS_15_OBJECTIVE_STEP_CUE_CONTRACT.md`
-- Latest visual/Web verification: `docs/current/PASS_15_OBJECTIVE_FOLLOW_THROUGH_VISUAL_BASELINE_DECISION.md`, `docs/current/PASS_15_OBJECTIVE_FOLLOW_THROUGH_WEB_PREVIEW_VERIFICATION.md`
+- Latest completed pass closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_16_CLOSEOUT.md`
+- Latest pass docs: `docs/current/CONTROLLED_GAMEPLAY_PASS_16_PLAN.md`
+- Latest visual/Web verification: `docs/current/PASS_16_PRIMARY_DIVE_COMPLETION_VISUAL_BASELINE_DECISION.md`, `docs/current/PASS_16_PRIMARY_DIVE_COMPLETION_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -214,9 +214,10 @@ Open `http://127.0.0.1:8060/`. Do not open `exports/web/index.html` directly.
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Issues should include acceptance criteria, relevant files, implementation notes, and verification steps. When implementing immediately, still create the issue and close it with commit hashes and verification notes.
 
-Current issue state as of 2026-07-08:
+Current issue state as of 2026-07-09:
 
-- Active roadmap queue: Pass 15 is closed out by #307; create the next implementation batch from Milestone 02 core loop or Milestone 03 salvage-tool work.
+- Active roadmap queue: Pass 16 is closed out by #329; create the next implementation batch from Milestone 03 salvage tools and interaction work.
+- Closed: #320-#329 completed Pass 16 primary dive completion, including planning, source contract, validation, source authoring, runtime completion gate, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
 - Closed: #298-#307 completed Pass 15 objective follow-through, including planning, source/text contract, metadata validation, source marker authoring, compact runtime feedback, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
 - Active tooling/skill queue: none; #210 documented repo drift, #211 committed Pass 10 UID sidecars, #212 updated drift issue batching, and #223 added drift-batch-resolve.
 - Deferred optional slice-03 polish: #52 and #53 remain open.
@@ -409,7 +410,7 @@ Recent important commits:
 - `--capture-feedback-overlay` writes `visual_captures/feedback_overlay/production_slice_01_feedback_overlay.png` as the focused review capture for the salvage/oxygen feedback overlay pass.
 - `--capture-route-outcome-result` writes `visual_captures/route_outcome/production_slice_01_route_outcome_result.png` after completing a deterministic route-tagged collect-return run; it is a review aid for Pass 04 result-panel readability, not baseline acceptance.
 - `--capture-pass-09-southwest-pocket-decision` writes `visual_captures/southwest_pocket_decision/production_slice_01_southwest_pocket_decision.png` after collecting the pocket payoff through the normal runtime path; it is a review aid, not baseline acceptance.
-- The `Godot Smoke` workflow runs the salvage loop, scoring/cargo/salvage-feedback/best-score/oxygen-bonus/route-outcome smoke, hazard-pressure smoke, all four production-slice route smokes, the default-slice route-choice smoke, the route-choice metadata smoke, the expanded and safe/deep route-choice smokes, Pass 08/09 southwest pocket smokes, and the player-facing smoke, so CI covers the default slice, its valuable salvage routes, safe-vs-deep route pressure, cargo banking, route-outcome result text, hazard pressure, later reference slices, the southwest pocket decision, and the direction-change regression path.
+- The `Godot Smoke` workflow runs the salvage loop, scoring/cargo/salvage-feedback/best-score/oxygen-bonus/route-outcome smoke, hazard-pressure smoke, all four production-slice route smokes, route-choice metadata and safe/deep route-choice smokes, Pass 08-16 focused route/objective smokes, and player-facing smoke, so CI covers the default slice, valuable salvage routes, safe-vs-deep pressure, cargo banking, primary objective completion, hazard pressure, later reference slices, and direction-change regressions.
 - `production_slice_02` has five tuned camera captures: overview, relay entry, main chamber, lower terminal, and return route. Normal captures live in `visual_captures/production_slice_02/`; debug captures live in `visual_captures/production_slice_02_debug/`.
 - `production_slice_03` has five authored camera captures: overview, relay entry, stacked rooms, connector, and return route. Normal captures live in `visual_captures/production_slice_03/`; debug captures live in `visual_captures/production_slice_03_debug/`.
 - `production_slice_04` has five authored camera captures: overview, relay entry, lower-left loop, curved corridor, and return route. Normal captures live in `visual_captures/production_slice_04/`; debug captures live in `visual_captures/production_slice_04_debug/`.
@@ -435,10 +436,10 @@ Recent important commits:
 - The first scoped expedition pressure is a simple oxygen timer: oxygen drains away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held/unbanked salvage to the map.
 - Current oxygen pressure timing keeps a 90-second tank, starts `LOW` feedback at 40 seconds, and escalates to `CRITICAL` at 15 seconds. The safe/deep route comparison smoke keeps the short safe route comfortable while verifying the deeper route shows `LOW` and `CRITICAL` before returning.
 - `lower_loop_oxygen_rest_pocket` provides the Pass 12 limited oxygen-rest beat: compact `Rest pocket +oxygen` feedback, slow recovery up to a 45-second cap, and deterministic `--smoke-pass-12-oxygen-rest-pressure` coverage.
-- `deep_cache_route_objective` provides the Pass 13 route-commitment beat, Pass 14 start cue, and Pass 15 first-step route cue: bank `salvage_lower_loop` and the timed `salvage_deep_right_cache` in one committed route chain, with compact objective overlay/result text, `Objective: Deep cache 0/2` at the boat before progress, and `Objective route: Lower loop` near the first required target.
+- `deep_cache_route_objective` provides the Pass 13 route-commitment beat, Pass 14 start cue, Pass 15 first-step route cue, and Pass 16 primary dive completion gate: bank `salvage_lower_loop` and the timed `salvage_deep_right_cache` in one committed route chain, with compact objective overlay/result text, `Objective: Deep cache 0/2` at the boat before progress, and `Objective route: Lower loop` near the first required target.
 - Salvage map data may include optional `tier` values. Missing tiers default conceptually to `common`; the current supported tiers are `common` and `valuable`. Runtime salvage score is tier-derived for now: `common` is worth 100 and `valuable` is worth 300, and pickup status feedback names the tier and score. Completed expeditions add a small runtime oxygen bonus of 1 point per remaining oxygen second; failed expeditions receive no oxygen bonus.
 - Held salvage capacity is currently 2 pickups. Full cargo blocks additional collection without hiding or banking the blocked pickup, shows a compact return-to-extraction status prompt, and returning to extraction frees capacity.
-- Run completion shows a compact result panel with final total score, salvage score, oxygen bonus, current map session-best score, salvage banked, optional route outcome, oxygen, and retry prompt. Route-tagged production-slice completions currently summarize the strongest banked route as `Route: Deep route` or `Route: Safe route`; untagged and failed runs stay generic. Oxygen depletion now shows the same result panel as a failed expedition with zero oxygen bonus and pauses the run until reset without overwriting session best. The panel stays hidden during normal exploration.
+- Run completion shows a compact result panel with final total score, salvage score, oxygen bonus, current map session-best score, salvage banked, optional route outcome, oxygen, and retry prompt. Maps with `primary_route_objective_id` complete after the primary objective's required salvage is banked and returned to extraction; maps without it preserve all-salvage completion. Route-tagged production-slice completions currently summarize the strongest banked route as `Route: Deep route` or `Route: Safe route`; untagged and failed runs stay generic. Oxygen depletion now shows the same result panel as a failed expedition with zero oxygen bonus and pauses the run until reset without overwriting session best. The panel stays hidden during normal exploration.
 - There is no health, inventory screen, upgrade economy, or real enemy behavior yet.
 - Background art is still rough and secondary to proving terrain readability.
 - Normal preview uses approved current-prototype sprite assets for salvage and hazard props, with procedural fallback if a sprite cannot be loaded.
@@ -455,13 +456,15 @@ Recent important commits:
 
 Use `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md` as the current north star. The project should now finish the small diver game before planning the larger 2D Subnautica-like expansion.
 
+Pass 16 proves the Milestone 02 core diver loop at prototype level. The next batch should start Milestone 03 with one additional source-authored salvage/tool interaction in `production_slice_01`, not another narrow objective-label pass.
+
 Accepted constraints for the next batch:
 
 - Keep `production_slice_01` as the default preview map.
 - Preserve `maps/full_cave_sketch_01.greybox.json` as a topology draft and planning source.
 - Do not move the entire full sketch into production yet; grow route scale only when it supports the roadmap.
 - Keep map topology, collision, spawn, extraction, and camera tests source-driven.
-- Keep gameplay scoped, but start selecting work that builds the finished simple diver game: core loop clarity, salvage tools, limited progression, objective structure, and presentation.
+- Keep gameplay scoped, but start selecting work that builds the finished simple diver game: salvage tools, limited progression, objective structure, and presentation.
 - Do not expand into enemies, procedural generation, complex inventory, base building, save-heavy sandbox systems, or broad art replacement.
 - Do not start another map-scale connector pass until it creates clearer moment-to-moment tension, payoff, progression, or route memory.
 - Keep #52/#53 as optional post-baseline slice-03 improvement issues unless the selected goal shifts back to slice-03 presentation.
