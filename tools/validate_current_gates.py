@@ -18,7 +18,7 @@ CURRENT_GATE_FIELDS = {
     "required_upgrade_id",
     "route_context",
 }
-CURRENT_GATE_TRIGGER_FIELDS = CURRENT_GATE_FIELDS - {"route_context"}
+CURRENT_GATE_TRIGGER_FIELDS = CURRENT_GATE_FIELDS - {"required_upgrade_id", "route_context"}
 
 
 def _rect_cells(item: dict[str, Any]) -> set[tuple[int, int]]:

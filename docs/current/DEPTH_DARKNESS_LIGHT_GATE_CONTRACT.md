@@ -35,10 +35,10 @@ Recommended first metadata shape:
 {
   "id": "deep_cache_dark_pocket",
   "type": "marker",
-  "x": 54,
-  "y": 64,
-  "w": 13,
-  "h": 13,
+  "x": 50,
+  "y": 68,
+  "w": 16,
+  "h": 11,
   "visibility_zone": true,
   "visibility_level": "dark",
   "visibility_label": "Dark pocket",
@@ -51,7 +51,7 @@ Recommended first metadata shape:
 
 ## Candidate Placement
 
-First candidate: `production_slice_01`, overlapping the existing `lower_loop_to_deep_cache_pressure` route-pressure marker near `salvage_deep_right_cache`.
+First authored marker: `production_slice_01`, inside the existing `lower_loop_to_deep_cache_pressure` route-pressure area near `salvage_deep_right_cache`. The rectangle is tightened to the reachable lower portion of that pressure area so the marker does not include ceiling/terrain cells.
 
 Reasons:
 

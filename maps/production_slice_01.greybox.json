@@ -2403,6 +2403,21 @@
       "w": 13,
       "h": 13,
       "intent": "Pass 07 hazard/navigation pressure segment covering the hazard_right_branch warning corridor and approach to timed salvage_deep_right_cache."
+    },
+    {
+      "id": "deep_cache_dark_pocket",
+      "type": "marker",
+      "x": 50,
+      "y": 68,
+      "w": 16,
+      "h": 11,
+      "visibility_zone": true,
+      "visibility_level": "dark",
+      "visibility_label": "Dark pocket",
+      "route_context": "deep_cache_pressure",
+      "required_upgrade_id": "dive_light_1",
+      "visual_only": true,
+      "intent": "First visual-only darkness pressure zone around the lower-loop-to-deep-cache route."
     }
   ],
   "progression_containers": [
