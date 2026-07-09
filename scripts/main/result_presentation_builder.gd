@@ -1,5 +1,7 @@
 extends RefCounted
 
+const FINAL_DIVE_COMPLETION_CUE := "Final dive signal locked"
+
 
 static func build_text(context: Dictionary) -> String:
 	if not bool(context.get("run_complete", false)) and not bool(context.get("run_failed", false)):
@@ -10,7 +12,10 @@ static func build_text(context: Dictionary) -> String:
 	_append_if_present(result_lines, str(context.get("objective_text", "")))
 	_append_if_present(result_lines, str(context.get("next_dive_text", "")))
 	_append_if_present(result_lines, str(context.get("relay_follow_through_text", "")))
-	_append_if_present(result_lines, str(context.get("final_dive_text", "")))
+	var final_dive_text := str(context.get("final_dive_text", ""))
+	_append_if_present(result_lines, final_dive_text)
+	if not final_dive_text.strip_edges().is_empty():
+		_append_if_present(result_lines, FINAL_DIVE_COMPLETION_CUE)
 	_append_if_present(result_lines, str(context.get("route_text", "")))
 	result_lines.append("Score %d" % int(context.get("score", 0)))
 	result_lines.append("Salvage score %d" % int(context.get("salvage_score", 0)))
