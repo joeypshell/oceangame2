@@ -183,6 +183,7 @@ func _ready() -> void:
 	var smoke_pass_12_oxygen_rest_pressure := _has_arg(user_args, engine_args, "--smoke-pass-12-oxygen-rest-pressure")
 	var smoke_pass_13_route_commitment := _has_arg(user_args, engine_args, "--smoke-pass-13-route-commitment")
 	var smoke_pass_14_objective_cue := _has_arg(user_args, engine_args, "--smoke-pass-14-objective-cue")
+	var smoke_pass_15_objective_follow_through := _has_arg(user_args, engine_args, "--smoke-pass-15-objective-follow-through")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var smoke_timed_salvage := _has_arg(user_args, engine_args, "--smoke-timed-salvage")
 	var smoke_cargo_capacity := _has_arg(user_args, engine_args, "--smoke-cargo-capacity")
@@ -276,6 +277,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_pass_14_objective_cue:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_pass_15_objective_follow_through:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_oxygen_pressure:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_timed_salvage:
@@ -349,6 +352,7 @@ func _ready() -> void:
 		or smoke_pass_12_oxygen_rest_pressure
 		or smoke_pass_13_route_commitment
 		or smoke_pass_14_objective_cue
+		or smoke_pass_15_objective_follow_through
 		or smoke_oxygen_pressure
 		or smoke_timed_salvage
 		or smoke_cargo_capacity
@@ -421,6 +425,9 @@ func _ready() -> void:
 		return
 	if smoke_pass_14_objective_cue:
 		_smoke_route_commitment_checks._smoke_pass_14_objective_cue_and_quit()
+		return
+	if smoke_pass_15_objective_follow_through:
+		_smoke_route_commitment_checks._smoke_pass_15_objective_follow_through_and_quit()
 		return
 	if smoke_oxygen_pressure:
 		_smoke_interaction_checks._smoke_oxygen_pressure_and_quit()

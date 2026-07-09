@@ -7,11 +7,13 @@ const DEEP_CACHE_ID := "salvage_deep_right_cache"
 const SAFE_TARGET_ID := "salvage_entry_shaft"
 const CARGO_BLOCK_TARGET_ID := "salvage_return_branch"
 const REST_MARKER_ID := "lower_loop_oxygen_rest_pocket"
+const STEP_CUE_MARKER_ID := "deep_cache_first_step_cue"
 const EXPECTED_ONE_HELD := "Objective: Deep cache 1/2"
 const EXPECTED_TWO_HELD := "Objective: Deep cache 2/2 - bank"
 const EXPECTED_ONE_BANKED := "Objective: Deep cache 1/2 banked"
 const EXPECTED_COMPLETE := "Objective complete: Deep cache"
 const EXPECTED_START_CUE := "Objective: Deep cache 0/2"
+const EXPECTED_STEP_CUE := "Objective route: Lower loop"
 const EXPECTED_RESULT_COMPLETE := "Objective: Deep cache complete"
 const EXPECTED_RESULT_INCOMPLETE := "Objective: Deep cache incomplete"
 
@@ -233,6 +235,101 @@ func _smoke_pass_14_objective_cue_and_quit() -> void:
 	get_tree().quit()
 
 
+func _smoke_pass_15_objective_follow_through_and_quit() -> void:
+	if _world.map_id != "production_slice_01":
+		_fail("Pass 15 objective follow-through smoke loaded unexpected map: %s." % _world.map_id)
+		return
+
+	var objective := _objective_by_id(OBJECTIVE_ID)
+	var lower_loop := _salvage_by_id(LOWER_LOOP_ID)
+	var deep_cache := _salvage_by_id(DEEP_CACHE_ID)
+	var marker: Dictionary = _world.get_marker_zone(STEP_CUE_MARKER_ID)
+	if objective.is_empty() or lower_loop.is_empty() or deep_cache.is_empty() or marker.is_empty():
+		_fail("Pass 15 smoke missing source data: objective=%s lower=%s deep=%s marker=%s." % [
+			str(not objective.is_empty()),
+			str(not lower_loop.is_empty()),
+			str(not deep_cache.is_empty()),
+			str(not marker.is_empty()),
+		])
+		return
+
+	var required_targets: Array = objective.get("required_banked_targets", [])
+	if str(marker.get("objective_id", "")) != OBJECTIVE_ID or str(marker.get("target_id", "")) != LOWER_LOOP_ID:
+		_fail("Pass 15 marker metadata mismatch: %s." % str(marker))
+		return
+	if str(marker.get("route_context", "")) != ROUTE_CONTEXT or str(objective.get("route_context", "")) != ROUTE_CONTEXT:
+		_fail("Pass 15 route context mismatch: objective=%s marker=%s." % [str(objective), str(marker)])
+		return
+	if not required_targets.has(LOWER_LOOP_ID) or not required_targets.has(DEEP_CACHE_ID):
+		_fail("Pass 15 objective required targets mismatch: %s." % str(objective))
+		return
+
+	_player.set_physics_process(false)
+	_hazard_interactions_enabled = false
+	var marker_center := _marker_center(marker)
+
+	_player.global_position = _world.get_extraction_center()
+	_update_status_label()
+	if _status_text().find(EXPECTED_START_CUE) == -1 or _status_has_step_cue():
+		_fail("Pass 15 start state should show Pass 14 cue only: %s." % _status_text())
+		return
+
+	_player.global_position = marker_center
+	_update_status_label()
+	if not _status_has_step_cue():
+		_fail("Pass 15 step cue missing at marker: %s." % _status_text())
+		return
+	var cue_oxygen := _oxygen_seconds
+
+	_collect_target(lower_loop)
+	_player.global_position = marker_center
+	_update_status_label()
+	if not _held_salvage_ids.has(LOWER_LOOP_ID) or _status_has_step_cue() or _status_text().find(EXPECTED_ONE_HELD) == -1:
+		_fail("Pass 15 step cue did not hide after target held: held=%s status=%s." % [_held_salvage_ids, _status_text()])
+		return
+	var held_count := _held_salvage
+
+	_player.global_position = _world.get_extraction_center()
+	_process(0.0)
+	_player.global_position = marker_center
+	_update_status_label()
+	if not _banked_salvage_ids.has(LOWER_LOOP_ID) or _status_has_step_cue() or _status_text().find(EXPECTED_ONE_BANKED) == -1:
+		_fail("Pass 15 step cue did not hide after target banked: banked=%s status=%s." % [_banked_salvage_ids, _status_text()])
+		return
+
+	_collect_and_bank_target(deep_cache)
+	_player.global_position = marker_center
+	_update_status_label()
+	if _status_has_step_cue() or _status_text().find(EXPECTED_COMPLETE) == -1:
+		_fail("Pass 15 step cue did not hide after objective complete: %s." % _status_text())
+		return
+	var completed_banked_score := _banked_score
+
+	_reset_run()
+	_hazard_interactions_enabled = false
+	_player.global_position = marker_center
+	_update_status_label()
+	if not _status_has_step_cue():
+		_fail("Pass 15 step cue missing after reset before oxygen failure: %s." % _status_text())
+		return
+	_oxygen_seconds = 0.1
+	_process(0.2)
+	if not _run_failed or _status_has_step_cue() or _result_text().find(EXPECTED_RESULT_INCOMPLETE) == -1:
+		_fail("Pass 15 failure state did not suppress cue/report incomplete objective: status=%s result=%s." % [_status_text(), _result_text()])
+		return
+
+	print("Pass 15 objective follow-through smoke passed: objective=%s marker=%s target=%s cue=\"%s\" held_after_target=%d banked_score=%d oxygen=%.1f start_hidden=true held_hidden=true banked_hidden=true complete_hidden=true failure_hidden=true." % [
+		OBJECTIVE_ID,
+		STEP_CUE_MARKER_ID,
+		LOWER_LOOP_ID,
+		EXPECTED_STEP_CUE,
+		held_count,
+		completed_banked_score,
+		cue_oxygen,
+	])
+	get_tree().quit()
+
+
 func _collect_target(target: Dictionary) -> void:
 	_player.global_position = target["center"]
 	_collect_salvage_for_smoke(target)
@@ -287,6 +384,10 @@ func _status_text() -> String:
 
 func _status_has_objective_text() -> bool:
 	return _status_text().find("Objective:") != -1 or _status_text().find("Objective complete") != -1
+
+
+func _status_has_step_cue() -> bool:
+	return _status_text().find(EXPECTED_STEP_CUE) != -1
 
 
 func _result_text() -> String:
