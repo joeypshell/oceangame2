@@ -173,17 +173,11 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 ## Current Next Direction
 
-The first darkness/light gate is complete: `deep_cache_dark_pocket` is a visual-only deep-route readability zone improved by `dive_light_1`, without changing movement, collision, oxygen, cargo, objective, or salvage semantics.
+Pass 26 completed the first Milestone 07 presentation/game-feel pass. Completed-run result presentation now prioritizes objective/payoff text before bookkeeping and adds the compact `Final dive signal locked` cue, with smoke, focused capture, visual review, Web verification, and closeout.
 
-The first compact feedback/audio cue pass is complete under #481-#490. Pass 22 is complete under #502-#511: the existing lower-left connector now has a source-authored `production_slice_04` destination cache with compact runtime feedback, smoke, focused capture, visual decision, and public Web verification.
+The next selected direction is a small Pass 27 player movement/facing readability pass. The highest-value Milestone 07 gap is the reported direction-change flash where the diver can briefly appear to face both directions. Fixing that improves every dive without adding new systems or map scope.
 
-Pass 23 is complete under #522-#531: completing the primary deep-cache objective now adds one source-authored next-dive prompt, `Next dive: Investigate lower-left relay`, with validation, runtime result text, smoke, focused capture, visual review, public Web verification, and closeout.
-
-Pass 24 is complete under #542-#551: that next-dive prompt now has one source-authored lower-left relay follow-through payoff. Banking `slice_04_destination_cache` in `production_slice_04` shows `Relay lead confirmed`, with validation, runtime feedback, smoke, focused capture, visual review, public Web verification, and closeout.
-
-Next, decide whether Milestone 06 needs one final-dive/capstone objective seed or should move to Milestone 07 presentation/game feel. Keep the next batch small and player-facing.
-
-The next recommended batch should keep Milestone 06 focused by making that prompt pay off with one lower-left relay follow-through objective. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, broad audio systems, or full-map productionization.
+Keep the next batch small and player-facing. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, broad audio systems, broad art replacement, or full-map productionization.
 
 ## Deferred Work
 
