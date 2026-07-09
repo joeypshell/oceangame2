@@ -41,6 +41,16 @@ python tools/check_file_lengths.py
 
 This fails on new non-allowlisted source/docs/config files over 500 lines, while separating temporary human-authored debt from generated map data. Keep new tooling docs small enough that the audit no longer needs a temporary `docs/current/TOOLING.md` exception.
 
+Run the Simple Diver Game release-candidate validation gates:
+
+```bash
+python tools/run_release_candidate_validation.py
+python tools/run_release_candidate_validation.py --list
+python tools/run_release_candidate_validation.py --skip-godot
+```
+
+The runner composes existing checks in release-candidate order: file-length audit, whitespace, asset manifest, committed capture inventory, accepted-baseline directory cleanliness, map validation, headless import/startup, Godot map parity, and selected core smokes. It skips Godot-backed gates only when Godot is unavailable or `--skip-godot` is passed; use `--require-godot` for a strict release gate.
+
 Regenerate the SVG preview from source data:
 
 ```bash
