@@ -175,9 +175,9 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 Pass 26 and Pass 27 completed the selected Milestone 07 result-presentation and player-facing readability gaps.
 
-The current selected direction is Simple Diver Game 08 release-candidate closeout. Issues #622-#630 have proven and documented the current small game with a release-candidate plan, validation matrix, one-command validation runner, release journey smoke, capture inventory, local/Web handoff checks, baseline audit, and documentation refresh. The remaining active issue is #631: write the go/no-go closeout.
+Simple Diver Game 08 release-candidate hardening is complete. Issues #622-#631 proved and documented the current small game with a release-candidate plan, validation matrix, one-command validation runner, release journey smoke, capture inventory, local/Web handoff checks, baseline audit, documentation refresh, and GO closeout.
 
-Keep the closeout validation-focused. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, broad audio systems, broad art replacement, or full-map productionization.
+Pause validation batching unless playtest/public-preview review finds a blocker; otherwise select the next roadmap milestone deliberately. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, broad audio systems, broad art replacement, or full-map productionization.
 
 ## Deferred Work
 
