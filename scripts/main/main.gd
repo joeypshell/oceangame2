@@ -620,7 +620,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool) -> void:
 	_hazard_feedback_seconds = 0.0
 	_hazard_interactions_enabled = true
 	_hazard_warning_id = ""
-	_oxygen_seconds = OXYGEN_MAX_SECONDS
+	_oxygen_seconds = _oxygen_capacity_seconds()
 	_run_complete = false
 	_run_failed = false
 	_last_status_note = ""
@@ -826,6 +826,8 @@ func _unhandled_input(event: InputEvent) -> void:
 	var key_event := event as InputEventKey
 	if key_event.pressed and not key_event.echo and key_event.keycode == KEY_R:
 		_reset_run()
+	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_U:
+		_try_purchase_oxygen_tank_upgrade()
 
 
 func _reset_run() -> void:
@@ -848,7 +850,7 @@ func _reset_run() -> void:
 	_hazard_feedback_seconds = 0.0
 	_hazard_interactions_enabled = true
 	_hazard_warning_id = ""
-	_oxygen_seconds = OXYGEN_MAX_SECONDS
+	_oxygen_seconds = _oxygen_capacity_seconds()
 	_run_complete = false
 	_run_failed = false
 	_last_status_note = "Reset"
@@ -864,7 +866,7 @@ func _reset_run() -> void:
 func _update_oxygen(delta: float) -> bool:
 	if _world.is_inside_extraction(_player.global_position):
 		_oxygen_rest_feedback.reset()
-		_oxygen_seconds = minf(OXYGEN_MAX_SECONDS, _oxygen_seconds + OXYGEN_REFILL_SECONDS_PER_SECOND * delta)
+		_oxygen_seconds = minf(_oxygen_capacity_seconds(), _oxygen_seconds + OXYGEN_REFILL_SECONDS_PER_SECOND * delta)
 		return false
 
 	var rest_result: Dictionary = _oxygen_rest_feedback.update(_world, _player.global_position, _oxygen_seconds, delta)
@@ -896,7 +898,7 @@ func _handle_oxygen_depleted() -> void:
 	else:
 		_last_status_note = "Oxygen depleted - press R"
 
-	_oxygen_seconds = OXYGEN_MAX_SECONDS
+	_oxygen_seconds = _oxygen_capacity_seconds()
 	_run_failed = true
 	_hazard_cooldown_seconds = HAZARD_COOLDOWN_SECONDS
 	_player.global_position = _world.spawn_position
@@ -1315,6 +1317,39 @@ func _session_payout_total() -> int:
 	if _session_progression == null:
 		return 0
 	return _session_progression.total_payout_earned()
+
+
+func _try_purchase_oxygen_tank_upgrade() -> bool:
+	if _world == null or _player == null or _session_progression == null:
+		return false
+	if not _world.is_inside_extraction(_player.global_position):
+		_last_status_note = "Upgrade at extraction"
+		_update_status_label()
+		return false
+	var result: Dictionary = _session_progression.purchase_oxygen_tank_upgrade()
+	if bool(result.get("purchased", false)):
+		_last_status_note = "O2 tank upgraded"
+		_update_status_label()
+		return true
+	var reason := str(result.get("reason", "blocked"))
+	if reason == "insufficient_funds":
+		_last_status_note = "Need %d more" % int(result.get("needed", 0))
+	elif reason == "already_purchased":
+		_last_status_note = "O2 tank already upgraded"
+	else:
+		_last_status_note = "Upgrade blocked"
+	_update_status_label()
+	return false
+
+
+func _has_oxygen_tank_upgrade() -> bool:
+	return _session_progression != null and _session_progression.has_oxygen_tank_upgrade()
+
+
+func _oxygen_capacity_seconds() -> float:
+	if _session_progression == null:
+		return OXYGEN_MAX_SECONDS
+	return OXYGEN_MAX_SECONDS + _session_progression.oxygen_bonus_seconds()
 
 
 func _update_result_panel() -> void:
