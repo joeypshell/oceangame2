@@ -175,7 +175,7 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 Controlled Gameplay Pass 21 is complete and gives Milestone 05 its first connected-space proof: `production_slice_01` now has a source-authored prompted connector into `production_slice_04`, with validation, runtime transition, smoke, focused capture, visual review, and public Web verification.
 
-The next new implementation batch should build player-facing value on top of that connection only if it creates a clearer destination-side payoff, return-loop reason, remembered-place progress, or objective/run-structure step. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, or full-map productionization.
+Use `docs/current/SIMPLE_DIVER_PROGRESSION_GATES_PLAN.md` to keep the next Milestone 05 gate work source-authored and scoped. The next new implementation batch should build player-facing value on top of the slice-01 to slice-04 connection only if it creates a clearer destination-side payoff, return-loop reason, remembered-place progress, or objective/run-structure step. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, or full-map productionization.
 
 ## Deferred Work
 
