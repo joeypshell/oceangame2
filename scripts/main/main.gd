@@ -211,6 +211,7 @@ func _ready() -> void:
 	var smoke_pass_14_objective_cue := _has_arg(user_args, engine_args, "--smoke-pass-14-objective-cue")
 	var smoke_pass_15_objective_follow_through := _has_arg(user_args, engine_args, "--smoke-pass-15-objective-follow-through")
 	var smoke_pass_18_progression := _has_arg(user_args, engine_args, "--smoke-pass-18-progression")
+	var smoke_pass_19_cargo_upgrade := _has_arg(user_args, engine_args, "--smoke-pass-19-cargo-upgrade")
 	var smoke_primary_dive_completion := _has_arg(user_args, engine_args, "--smoke-primary-dive-completion")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var smoke_timed_salvage := _has_arg(user_args, engine_args, "--smoke-timed-salvage")
@@ -318,6 +319,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_pass_18_progression:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_pass_19_cargo_upgrade:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_primary_dive_completion:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_oxygen_pressure:
@@ -401,6 +404,7 @@ func _ready() -> void:
 		or smoke_pass_14_objective_cue
 		or smoke_pass_15_objective_follow_through
 		or smoke_pass_18_progression
+		or smoke_pass_19_cargo_upgrade
 		or smoke_primary_dive_completion
 		or smoke_oxygen_pressure
 		or smoke_timed_salvage
@@ -481,6 +485,9 @@ func _ready() -> void:
 		return
 	if smoke_pass_18_progression:
 		_smoke_progression_checks._smoke_pass_18_progression_and_quit()
+		return
+	if smoke_pass_19_cargo_upgrade:
+		_smoke_progression_checks._smoke_pass_19_cargo_upgrade_and_quit()
 		return
 	if smoke_primary_dive_completion:
 		_smoke_primary_completion_checks._smoke_primary_dive_completion_and_quit()
