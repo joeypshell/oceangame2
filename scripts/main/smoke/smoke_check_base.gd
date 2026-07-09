@@ -196,11 +196,18 @@ func _collect_salvage_for_smoke(salvage: Dictionary) -> bool:
 	_process(0.0)
 	if _world.is_salvage_collected(salvage_id):
 		return true
-	if str(salvage.get("interaction", "instant")) != "timed_salvage":
+	var interaction := str(salvage.get("interaction", "instant"))
+	if interaction == "timed_salvage":
+		var interaction_seconds := maxf(0.01, float(salvage.get("interaction_seconds", 0.0)))
+		_process(interaction_seconds + SMOKE_TIMED_SALVAGE_MARGIN_SECONDS)
+		return _world.is_salvage_collected(salvage_id)
+	if interaction == "pry_salvage":
+		var interaction_seconds := maxf(0.01, float(salvage.get("interaction_seconds", 0.0)))
+		var pry_stages: int = max(1, int(salvage.get("pry_stages", 1)))
+		_process(interaction_seconds * float(pry_stages) + SMOKE_TIMED_SALVAGE_MARGIN_SECONDS)
+		return _world.is_salvage_collected(salvage_id)
+	if str(salvage.get("interaction", "instant")) != "instant":
 		return false
-
-	var interaction_seconds := maxf(0.01, float(salvage.get("interaction_seconds", 0.0)))
-	_process(interaction_seconds + SMOKE_TIMED_SALVAGE_MARGIN_SECONDS)
 	return _world.is_salvage_collected(salvage_id)
 
 
