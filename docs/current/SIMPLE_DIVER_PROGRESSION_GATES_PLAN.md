@@ -57,7 +57,7 @@ The next implementation should choose exactly one of these:
 2. Treasure/cache contract, then one upgrade chest or locked cache reward with flag-like runtime state.
 3. Darkness/light contract, then one visual readability gate tied to the existing light upgrade.
 
-The first current gate is now `lower_left_loop_current`: it soft-pushes the diver away from the lower-left connector until `propulsion_fins` is purchased. The first upgrade chest is `lower_loop_upgrade_chest`, a one-time wallet reward on an optional lower-loop detour. Do not add keys, locked salvage caches, or more current zones until that reward beat has been reviewed.
+The first current gate is now `lower_left_loop_current`: it soft-pushes the diver away from the lower-left connector until `propulsion_fins` is purchased. The first upgrade chest is `lower_loop_upgrade_chest`, a one-time wallet reward on an optional lower-loop detour. The moving-hazard contract is now `docs/current/MOVING_HAZARD_DODGE_CONTRACT.md`; keep #450 to one deterministic patrol before adding keys, locked caches, more current zones, or additional hazards.
 
 ## Deferred
 
