@@ -113,6 +113,14 @@ Capture the focused primary dive completion result view:
 
 This loads the default production slice, collects the primary objective targets through the normal runtime path, banks them at extraction, frames the completed result panel, keeps map data and accepted baselines unchanged, and writes `visual_captures/primary_dive_completion/production_slice_01_primary_dive_completion.png`.
 
+Capture the focused Pass 18 progression upgrade view:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-18-progression
+```
+
+This loads the default production slice, banks enough salvage through the normal runtime path to afford the oxygen tank upgrade, purchases it at extraction, frames the compact wallet/upgrade feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_18_progression/production_slice_01_pass_18_progression.png`.
+
 Capture the original rectangular salvage map comparison views:
 
 ```powershell
