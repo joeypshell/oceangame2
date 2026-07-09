@@ -1569,6 +1569,20 @@
       "kind": "relic"
     },
     {
+      "id": "slice_04_destination_cache",
+      "type": "salvage",
+      "x": 18,
+      "y": 23,
+      "kind": "relic",
+      "tier": "valuable",
+      "route_choice_id": "slice_04_destination_cache",
+      "validation_route": "slice_04_destination_payoff",
+      "destination_payoff_id": "slice_04_destination_payoff",
+      "destination_payoff_label": "Destination cache",
+      "destination_payoff_connector_id": "lower_left_loop_connector",
+      "intent": "Pass 22 destination-side payoff for using the lower-left connector into production_slice_04."
+    },
+    {
       "id": "salvage_mid_loop_wreck",
       "type": "salvage",
       "x": 44,
