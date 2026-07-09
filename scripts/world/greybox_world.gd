@@ -174,6 +174,14 @@ func get_primary_route_objective_id() -> String:
 	return str(_map_data.get("primary_route_objective_id", "")).strip_edges()
 
 
+func get_next_dive_objective_prompts() -> Array:
+	var prompts := []
+	for prompt in _map_data.get("next_dive_objective_prompts", []):
+		if typeof(prompt) == TYPE_DICTIONARY:
+			prompts.append(prompt.duplicate(true))
+	return prompts
+
+
 func get_salvage_score(salvage_id: String) -> int:
 	for entity in _salvage_entities:
 		if str(entity.get("id", "salvage")) == salvage_id:

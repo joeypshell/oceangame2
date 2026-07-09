@@ -11,6 +11,7 @@ const MovingHazardController := preload("res://scripts/main/moving_hazard_contro
 const OxygenRestPocketFeedback := preload("res://scripts/main/oxygen_rest_pocket_feedback.gd")
 const Pass22DestinationPayoffCapture := preload("res://scripts/main/captures/pass_22_destination_payoff_capture.gd")
 const PrePickupRouteCueFeedback := preload("res://scripts/main/pre_pickup_route_cue_feedback.gd")
+const NextDiveObjectivePrompt := preload("res://scripts/main/next_dive_objective_prompt.gd")
 const PrimaryDiveObjective := preload("res://scripts/main/primary_dive_objective.gd")
 const ProgressionContainerController := preload("res://scripts/main/progression_container_controller.gd")
 const PrySalvageController := preload("res://scripts/main/pry_salvage_controller.gd")
@@ -122,6 +123,7 @@ var _capture_controller
 var _current_gate
 var _destination_payoff_feedback
 var _moving_hazards
+var _next_dive_objective_prompt
 var _oxygen_rest_feedback
 var _pre_pickup_route_cue_feedback
 var _primary_dive_objective
@@ -187,6 +189,7 @@ func _ready() -> void:
 	_current_gate = CurrentGateController.new()
 	_destination_payoff_feedback = DestinationPayoffFeedback.new()
 	_moving_hazards = MovingHazardController.new()
+	_next_dive_objective_prompt = NextDiveObjectivePrompt.new()
 	_oxygen_rest_feedback = OxygenRestPocketFeedback.new()
 	_pre_pickup_route_cue_feedback = PrePickupRouteCueFeedback.new()
 	_primary_dive_objective = PrimaryDiveObjective.new()
@@ -808,6 +811,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_timed_salvage.reset()
 	_progression_containers.apply_opened_to_world(world)
 	_primary_dive_objective.reset(world)
+	_next_dive_objective_prompt.reset(world)
 	_refresh_route_commitment_feedback(world)
 	_refresh_salvage_route_metadata(world)
 	_refresh_destination_payoff_feedback(world)
@@ -1544,6 +1548,17 @@ func _route_commitment_result_text() -> String:
 	return _route_commitment_feedback.result_text(_banked_salvage_ids)
 
 
+func _next_dive_objective_result_text() -> String:
+	if _next_dive_objective_prompt == null:
+		return ""
+	return _next_dive_objective_prompt.result_text(
+		_run_complete,
+		_run_failed,
+		_primary_dive_objective,
+		_banked_salvage_ids
+	)
+
+
 func _hazard_warning_prompt() -> String:
 	if _moving_hazards != null and _hazard_warning_id == _moving_hazards.warning_id():
 		return _moving_hazards.warning_prompt()
@@ -1956,6 +1971,9 @@ func _update_result_panel() -> void:
 	var objective_text := _route_commitment_result_text()
 	if not objective_text.is_empty():
 		result_lines.append(objective_text)
+	var next_dive_text := _next_dive_objective_result_text()
+	if not next_dive_text.is_empty():
+		result_lines.append(next_dive_text)
 	result_lines.append(_progression_result_text())
 	if _is_progression_status_note(_last_status_note):
 		result_lines.append(_last_status_note)
