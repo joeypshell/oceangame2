@@ -101,6 +101,7 @@ Build a small side-view salvage game that proves:
 - [Controlled Gameplay Pass 23 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_23_CLOSEOUT.md)
 - [Controlled Gameplay Pass 24 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_24_PLAN.md)
 - [Controlled Gameplay Pass 24 Relay Objective Contract](docs/current/CONTROLLED_GAMEPLAY_PASS_24_RELAY_OBJECTIVE_CONTRACT.md)
+- [Controlled Gameplay Pass 24 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_24_CLOSEOUT.md)
 - [Pass 24 Relay Follow-Through Visual Baseline Decision](docs/current/PASS_24_RELAY_FOLLOW_THROUGH_VISUAL_BASELINE_DECISION.md)
 - [Pass 24 Relay Follow-Through Web Preview Verification](docs/current/PASS_24_RELAY_FOLLOW_THROUGH_WEB_PREVIEW_VERIFICATION.md)
 - [First Feedback Audio Micro-Pass Plan](docs/current/FIRST_FEEDBACK_AUDIO_MICRO_PASS_PLAN.md)
