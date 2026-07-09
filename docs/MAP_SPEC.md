@@ -127,11 +127,14 @@ Collection feedback should name the tier-derived payoff in compact status text: 
 
 Playable salvage may also include optional interaction metadata. If omitted, runtime and validation should treat the pickup as `instant`.
 
-- `interaction`: optional interaction type. Supported values are `instant` and `timed_salvage`.
-- `interaction_seconds`: required for `timed_salvage`; must be a positive number of seconds.
+- `interaction`: optional interaction type. Supported values are `instant`, `timed_salvage`, and `pry_salvage`.
+- `interaction_seconds`: required for `timed_salvage` and `pry_salvage`; must be a positive number of seconds.
+- `pry_stages`: required for `pry_salvage`; must be a positive integer count of completed pry stages required before collection.
 - `interaction_label`: optional compact label for overlay/capture text. Use lower_snake_case or short display-safe text.
 
-The first timed interaction is intentionally narrow: a `timed_salvage` pickup remains a normal salvage entity for placement, reachability, cargo, score, banking, route metadata, hazard reset, and oxygen failure. The only source-authored difference is that runtime may require the player to stay near the target for the authored duration before the pickup enters held cargo. Interaction metadata is supported on salvage entities only.
+Interaction metadata is intentionally narrow: an interacted pickup remains a normal salvage entity for placement, reachability, cargo, score, banking, route metadata, hazard reset, oxygen failure, and primary-objective rules. The only source-authored difference is that runtime may require the player to complete the authored interaction before the pickup enters held cargo. Interaction metadata is supported on salvage entities only.
+
+A `timed_salvage` pickup uses `interaction_seconds` as one continuous in-range duration. Leaving range cancels the current timed progress according to runtime rules, and completing the duration allows the pickup to enter held cargo if capacity permits.
 
 ```json
 {
@@ -146,6 +149,27 @@ The first timed interaction is intentionally narrow: a `timed_salvage` pickup re
   "interaction_label": "deep cache"
 }
 ```
+
+A `pry_salvage` pickup uses `interaction_seconds` as the duration of each pry stage and `pry_stages` as the required stage count. Completed pry stages may persist during normal exploration, while leaving range cancels only the current partial stage. Manual reset, hazard reset, or oxygen failure may clear uncollected pry progress. If all stages complete while cargo is full, the target must remain available and uncollected until cargo space is freed.
+
+Recommended Pass 17 metadata:
+
+```json
+{
+  "id": "salvage_pry_locker",
+  "type": "salvage",
+  "x": 36,
+  "y": 64,
+  "kind": "crate",
+  "tier": "valuable",
+  "interaction": "pry_salvage",
+  "interaction_seconds": 1.2,
+  "pry_stages": 3,
+  "interaction_label": "sealed cache"
+}
+```
+
+Interaction metadata must not author terrain topology, collision changes, score values, oxygen values, cargo limits, progress state, completion state, or primary-objective state.
 
 Playable salvage may also include optional route-choice metadata. These fields are source annotations for validation, smoke tests, and review tooling; they do not change collision or collection behavior by themselves.
 
@@ -342,7 +366,7 @@ Validation expectations:
 - Entity ids must be unique.
 - Entity ids and kinds use lower_snake_case.
 - Salvage `tier`, when present, must be `common` or `valuable`.
-- Salvage interaction metadata, when present, must use supported fields: `interaction` as `instant` or `timed_salvage`, positive numeric `interaction_seconds` for timed salvage, and optional lower_snake_case or short display-safe `interaction_label`.
+- Salvage interaction metadata, when present, must use supported fields: `interaction` as `instant`, `timed_salvage`, or `pry_salvage`; positive numeric `interaction_seconds` for timed or pry salvage; positive integer `pry_stages` for pry salvage; and optional lower_snake_case or short display-safe `interaction_label`.
 - Salvage route-choice metadata, when present, must use supported fields: lower_snake_case `route_choice_id`, lower_snake_case `validation_route`, and/or integer `route_order` greater than or equal to zero.
 - Route commitment objectives, when present, must reference existing reachable playable salvage ids and optional reachable marker zones without authoring runtime state.
 - Objective-step cue metadata is supported only on marker zones. Cue rectangles must be in bounds, non-solid, reachable, outside the boat/extraction area, linked to an existing objective, and targeted at a required playable salvage id.
