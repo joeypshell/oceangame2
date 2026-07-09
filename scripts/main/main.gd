@@ -1702,9 +1702,12 @@ func _has_upgrade_id(upgrade_id: String) -> bool:
 
 
 func _apply_session_light_profile() -> void:
-	if _player == null or _session_progression == null or not _player.has_method("apply_light_profile"):
+	if _session_progression == null:
 		return
-	_player.apply_light_profile(_session_progression.light_range_scale(), _session_progression.light_alpha())
+	if _player != null and _player.has_method("apply_light_profile"):
+		_player.apply_light_profile(_session_progression.light_range_scale(), _session_progression.light_alpha())
+	if _world != null and _world.has_method("set_visibility_upgrade_state"):
+		_world.set_visibility_upgrade_state(SessionProgression.LIGHT_UPGRADE_ID, _session_progression.has_light_upgrade())
 
 
 func _held_salvage_capacity() -> int:

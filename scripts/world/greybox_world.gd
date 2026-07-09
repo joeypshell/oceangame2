@@ -51,6 +51,8 @@ var _salvage_nodes_by_id := {}
 var _container_nodes_by_id := {}
 var _moving_hazard_nodes_by_id := {}
 var _moving_hazard_positions_by_id := {}
+var _visibility_zone_nodes_by_id := {}
+var _visibility_zone_upgrade_states := {}
 var _background_root: Node2D
 var _solid_layer: TileMapLayer
 var _terrain_layer: TileMapLayer
@@ -111,6 +113,8 @@ func load_greybox() -> void:
 	_container_nodes_by_id = {}
 	_moving_hazard_nodes_by_id = {}
 	_moving_hazard_positions_by_id = {}
+	_visibility_zone_nodes_by_id = {}
+	_visibility_zone_upgrade_states = {}
 
 	_background_root = Node2D.new()
 	_background_root.name = "BackgroundArt"
@@ -238,6 +242,23 @@ func get_visibility_zone_at(position: Vector2) -> Dictionary:
 		if _rect_from_item(zone).has_point(position):
 			return _visibility_zone_runtime_info(zone)
 	return {}
+
+
+func set_visibility_upgrade_state(upgrade_id: String, active: bool) -> void:
+	if upgrade_id.is_empty():
+		return
+	_visibility_zone_upgrade_states[upgrade_id] = active
+	for zone in _visibility_zones:
+		if str(zone.get("required_upgrade_id", "")) != upgrade_id:
+			continue
+		var zone_id := str(zone.get("id", "visibility_zone"))
+		if not _visibility_zone_nodes_by_id.has(zone_id):
+			continue
+		_visibility_zone_renderer_helper().update_zone_readability(
+			_visibility_zone_nodes_by_id[zone_id] as Polygon2D,
+			zone,
+			active
+		)
 
 
 func get_moving_hazards() -> Array:
@@ -484,6 +505,7 @@ func _current_gate_runtime_info(zone: Dictionary) -> Dictionary:
 
 
 func _visibility_zone_runtime_info(zone: Dictionary) -> Dictionary:
+	var upgraded := _visibility_zone_upgrade_active(zone)
 	return {
 		"id": str(zone.get("id", "visibility_zone")),
 		"center": _rect_center(zone),
@@ -492,8 +514,15 @@ func _visibility_zone_runtime_info(zone: Dictionary) -> Dictionary:
 		"visibility_label": str(zone.get("visibility_label", "")),
 		"required_upgrade_id": str(zone.get("required_upgrade_id", "")),
 		"route_context": str(zone.get("route_context", "")),
+		"readability_upgraded": upgraded,
+		"overlay_alpha": _visibility_zone_renderer_helper().overlay_alpha(zone, upgraded),
 		"visual_only": bool(zone.get("visual_only", false)),
 	}
+
+
+func _visibility_zone_upgrade_active(zone: Dictionary) -> bool:
+	var upgrade_id := str(zone.get("required_upgrade_id", ""))
+	return not upgrade_id.is_empty() and bool(_visibility_zone_upgrade_states.get(upgrade_id, false))
 
 
 func _moving_hazard_runtime_info(hazard: Dictionary) -> Dictionary:
@@ -644,7 +673,8 @@ func _build_zones(zones: Array) -> void:
 				_current_gate_zones.append(zone)
 			if bool(zone.get("visibility_zone", false)):
 				_visibility_zones.append(zone)
-				_visibility_zone_renderer_helper().add_visibility_zone(_marker_root, zone, tile_size, show_debug_overlay, _debug_renderer_helper())
+				var visibility_node: Polygon2D = _visibility_zone_renderer_helper().add_visibility_zone(_marker_root, zone, tile_size, show_debug_overlay, _debug_renderer_helper())
+				_visibility_zone_nodes_by_id[str(zone.get("id", "visibility_zone"))] = visibility_node
 			else:
 				_route_marker_renderer_helper().add_route_marker(_marker_root, zone, tile_size, show_debug_overlay, _debug_renderer_helper())
 
