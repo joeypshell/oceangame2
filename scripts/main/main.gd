@@ -16,6 +16,7 @@ const NextDiveObjectivePrompt := preload("res://scripts/main/next_dive_objective
 const PrimaryDiveObjective := preload("res://scripts/main/primary_dive_objective.gd")
 const ProgressionContainerController := preload("res://scripts/main/progression_container_controller.gd")
 const PrySalvageController := preload("res://scripts/main/pry_salvage_controller.gd")
+const RelayFollowThroughFeedback := preload("res://scripts/main/relay_follow_through_feedback.gd")
 const ReturnPressureFeedback := preload("res://scripts/main/return_pressure_feedback.gd")
 const RouteCommitmentFeedback := preload("res://scripts/main/route_commitment_feedback.gd")
 const SessionProgression := preload("res://scripts/main/session_progression.gd")
@@ -132,6 +133,7 @@ var _pre_pickup_route_cue_feedback
 var _primary_dive_objective
 var _progression_containers
 var _pry_salvage
+var _relay_follow_through_feedback
 var _return_pressure_feedback
 var _route_commitment_feedback
 var _session_progression
@@ -199,6 +201,7 @@ func _ready() -> void:
 	_primary_dive_objective = PrimaryDiveObjective.new()
 	_progression_containers = ProgressionContainerController.new()
 	_pry_salvage = PrySalvageController.new()
+	_relay_follow_through_feedback = RelayFollowThroughFeedback.new()
 	_return_pressure_feedback = ReturnPressureFeedback.new()
 	_route_commitment_feedback = RouteCommitmentFeedback.new()
 	_session_progression = SessionProgression.new()
@@ -831,6 +834,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_progression_containers.apply_opened_to_world(world)
 	_primary_dive_objective.reset(world)
 	_next_dive_objective_prompt.reset(world)
+	_relay_follow_through_feedback.reset(world)
 	_refresh_route_commitment_feedback(world)
 	_refresh_salvage_route_metadata(world)
 	_refresh_destination_payoff_feedback(world)
@@ -984,6 +988,7 @@ func _process(delta: float) -> void:
 		_record_session_payout(_held_salvage_score)
 		_record_banked_route_outcomes(_held_salvage_ids)
 		_banked_salvage_ids.append_array(_held_salvage_ids)
+		var relay_follow_through_note: String = _relay_follow_through_feedback.banked_feedback(_held_salvage_ids)
 		_held_salvage = 0
 		_held_salvage_ids = []
 		_held_salvage_score = 0
@@ -992,6 +997,8 @@ func _process(delta: float) -> void:
 			_completion_oxygen_bonus = _calculate_oxygen_completion_bonus()
 			_record_session_best_score()
 			_last_status_note = "Run complete"
+		elif not relay_follow_through_note.is_empty():
+			_last_status_note = relay_follow_through_note
 		else:
 			_last_status_note = "Banked salvage"
 		_play_feedback_cue("salvage_bank", banked_cue_key)
@@ -1109,6 +1116,7 @@ func _reset_run() -> void:
 	_current_gate.reset()
 	_pry_salvage.reset()
 	_timed_salvage.reset()
+	_relay_follow_through_feedback.reset(_world)
 	_held_salvage = 0
 	_held_salvage_ids = []
 	_banked_salvage_ids = []
@@ -1578,6 +1586,12 @@ func _next_dive_objective_result_text() -> String:
 	)
 
 
+func _relay_follow_through_result_text() -> String:
+	if _relay_follow_through_feedback == null or not _run_complete or _run_failed:
+		return ""
+	return _relay_follow_through_feedback.result_text(_banked_salvage_ids)
+
+
 func _hazard_warning_prompt() -> String:
 	if _moving_hazards != null and _hazard_warning_id == _moving_hazards.warning_id():
 		return _moving_hazards.warning_prompt()
@@ -1993,6 +2007,9 @@ func _update_result_panel() -> void:
 	var next_dive_text := _next_dive_objective_result_text()
 	if not next_dive_text.is_empty():
 		result_lines.append(next_dive_text)
+	var relay_follow_through_text := _relay_follow_through_result_text()
+	if not relay_follow_through_text.is_empty():
+		result_lines.append(relay_follow_through_text)
 	result_lines.append(_progression_result_text())
 	if _is_progression_status_note(_last_status_note):
 		result_lines.append(_last_status_note)
