@@ -27,23 +27,17 @@ The project has already proven:
 
 ## Current GitHub Milestones
 
-The open GitHub milestones should mirror this roadmap:
+Simple Diver Game 01 through 08 are complete and closed. The only open roadmap milestone is:
 
-1. Simple Diver Game 01: Prototype Stabilization
-2. Simple Diver Game 02: Core Diver Loop Vertical Slice
-3. Simple Diver Game 03: Salvage Tools And Interaction Set
-4. Simple Diver Game 04: Progression And Economy Slice
-5. Simple Diver Game 05: World Slice Expansion
-6. Simple Diver Game 06: Objective And Run Structure
-7. Simple Diver Game 07: Presentation And Game Feel
-8. Simple Diver Game 08: Release Candidate
-9. Simple Diver Game 09: 2D Subnautica Expansion Planning
+1. Simple Diver Game 09: 2D Subnautica Expansion Planning
+
+Milestone 09 issues #643-#652 are documentation and decision work. They must select one bounded next implementation milestone before larger systems are added.
 
 ## Current Next Direction
 
 Simple Diver Game 08 release-candidate hardening is complete. Issues #622-#631 completed the release-candidate plan, validation matrix, one-command validation runner, release journey smoke, capture review index, local run verification, public Web export handoff, baseline/capture audit, documentation refresh, and go/no-go closeout.
 
-The closeout decision is GO. Pause validation batching unless playtest/public-preview review finds a blocker; otherwise select the next roadmap milestone deliberately. Keep #52/#53 deferred as optional slice-03 polish unless slice-03 presentation becomes the selected goal. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, broad art replacement, broad audio systems, or full-map productionization.
+The closeout decision is GO. Simple Diver Game 09 is now the selected planning milestone; #643-#652 must define the first bounded expansion outcome before implementation. Keep #52/#53 deferred as optional slice-03 polish unless slice-03 presentation becomes the selected goal. Do not add another connector merely because the first one works, and do not jump directly to procedural generation, full inventory/loadout systems, save-heavy progression, broad economy work, full enemy AI, broad art/audio replacement, or full-map productionization.
 
 ## Recently Completed Prototype Passes
 

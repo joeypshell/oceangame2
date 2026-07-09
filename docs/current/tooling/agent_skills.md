@@ -22,7 +22,7 @@ Good triggers:
 - source-of-truth workflow review
 - AGENTS.md alignment review
 
-Default behavior is evaluation-only. The skill should report evidence, drift findings, documentation updates needed, issue/backlog recommendations, validation results, and one next recommended action. It should not edit files, create issues, close issues, accept baselines, or change map sources unless the user explicitly asks for that follow-up work.
+Default behavior is evidence-based evaluation plus issue creation when the actionable backlog is below the repository target. The skill should report evidence, drift findings, documentation updates needed, created issue numbers, validation results, and one next recommended action. It remains evaluation-only when the user explicitly asks for report-only/no issue creation, and it does not edit files, close issues, accept baselines, or change map sources during the audit.
 
 ## Issue Resolution
 
