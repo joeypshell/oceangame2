@@ -243,8 +243,20 @@ func _try_purchase_oxygen_tank_upgrade() -> bool:
 	return _main._try_purchase_oxygen_tank_upgrade()
 
 
+func _try_purchase_cargo_capacity_upgrade() -> bool:
+	return _main._try_purchase_cargo_capacity_upgrade()
+
+
 func _has_oxygen_tank_upgrade() -> bool:
 	return _main._has_oxygen_tank_upgrade()
+
+
+func _has_cargo_capacity_upgrade() -> bool:
+	return _main._has_cargo_capacity_upgrade()
+
+
+func _held_salvage_capacity() -> int:
+	return _main._held_salvage_capacity()
 
 
 func _oxygen_capacity_seconds() -> float:
