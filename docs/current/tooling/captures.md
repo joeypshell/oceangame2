@@ -137,6 +137,14 @@ Capture the focused Pass 25 final-dive objective feedback view:
 
 This loads production slice 04, collects and banks `slice_04_destination_cache` through the normal runtime path, frames the combined `Relay lead confirmed` and `Final dive signal discovered` overlay feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_25_final_dive_objective/production_slice_04_pass_25_final_dive_objective.png`.
 
+Capture the focused Pass 26 result presentation view:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-26-result-presentation
+```
+
+This starts from the default production slice, travels through the lower-left connector by the normal runtime path, completes the slice-04 final-dive payoff, frames the completed result panel with `Final dive signal locked`, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_26_result_presentation/production_slice_04_pass_26_result_presentation.png`.
+
 Capture the focused Pass 18 progression upgrade view:
 
 ```powershell
