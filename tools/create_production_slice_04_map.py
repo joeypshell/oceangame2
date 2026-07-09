@@ -288,6 +288,18 @@ def build_map_data(source_map: dict) -> dict:
                 "intent": "Pass 24 follow-through for the Pass 23 next-dive prompt after reaching the lower-left relay destination cache.",
             },
         ],
+        "final_dive_objective_seeds": [
+            {
+                "id": "lower_left_final_dive_signal",
+                "trigger": "relay_follow_through_complete",
+                "source_objective_id": "lower_left_relay_follow_through",
+                "target_id": "slice_04_destination_cache",
+                "label": "Final dive signal discovered",
+                "result_label": "Final dive signal found",
+                "route_context": "final_dive_seed",
+                "intent": "Pass 25 capstone seed after confirming the lower-left relay lead.",
+            },
+        ],
         "camera_tests": [
             {
                 "id": "production_slice_04_overview",
