@@ -173,9 +173,9 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 ## Current Next Direction
 
-Controlled Gameplay Pass 18 is complete and gives Milestone 04 its first progression step: banked salvage now creates session wallet payout, and the player can buy one session-only `O2 tank +15` upgrade at extraction. The current slice now has timed salvage, staged pry salvage, primary-objective completion, cargo/oxygen/hazard pressure, and a small reason to retry with more range.
+Controlled Gameplay Pass 19 is complete and gives Milestone 04 a second progression step: banked salvage now creates session wallet payout, and the player can buy one session-only `O2 tank +15` upgrade plus one session-only `Cargo +1` upgrade at extraction. The current slice now has timed salvage, staged pry salvage, primary-objective completion, cargo/oxygen/hazard pressure, and two small reasons to retry with more range or capacity.
 
-The next new implementation batch should stay in Milestone 04. Add one more small upgrade or unlock that changes route planning, such as cargo capacity +1, a light/range upgrade, or one source-authored tool-gated salvage/obstruction beat, before enemies, procedural generation, full inventory/loadout systems, save files, or map-scale expansion.
+The next new implementation batch should either stay in Milestone 04 for one more tiny light/tool-style unlock or deliberately move to Milestone 05 only if the work creates clearer pressure, payoff, progression, or route memory. Do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, or full-map productionization.
 
 ## Deferred Work
 
