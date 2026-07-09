@@ -226,6 +226,39 @@ Validation expectations:
 - Objective cue visibility state must not be authored in map data; it is derived from existing objective metadata and runtime player/extraction state.
 - `production_slice_01` should author only one Pass 13 route commitment objective.
 
+## Primary Dive Objective Selection
+
+Playable maps may optionally choose one route objective as the primary dive
+completion objective with a top-level `primary_route_objective_id` field.
+
+The field is a pointer to an existing `route_objectives` record. It does not
+create a new objective, duplicate required targets, or author runtime state.
+Runtime may use it to decide whether extraction completes the current run:
+
+- When omitted, legacy behavior remains valid: the run completes after all
+  playable salvage is banked.
+- When present, returning to extraction may complete the run after the referenced
+  route objective's `required_banked_targets` have been banked.
+- Returning with partial or optional cargo should still bank that cargo and keep
+  the dive active.
+
+Recommended Pass 16 metadata:
+
+```json
+{
+  "primary_route_objective_id": "deep_cache_route_objective"
+}
+```
+
+Validation expectations:
+
+- `primary_route_objective_id`, when present, must be a lower_snake_case string.
+- The id must reference an existing route objective in `route_objectives`.
+- The referenced route objective must satisfy normal route-objective validation.
+- The source must not author completion flags, progress state, score values,
+  oxygen values, cargo limits, result text state, or duplicate required target
+  lists for the primary objective.
+
 ## Objective Step Cue Markers
 
 Playable maps may include one optional objective-step cue marker under `zones`. This is a source-authored readability cue for an existing route objective, not a new objective, pickup, reward, or route.
