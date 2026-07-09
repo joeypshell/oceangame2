@@ -484,6 +484,7 @@ func _facing_report_matches(report: Dictionary, body_flip_h: bool, light_x: floa
 	return (
 		is_equal_approx(float(report.get("root_scale_x", 0.0)), 1.0)
 		and bool(report.get("body_flip_h", not body_flip_h)) == body_flip_h
+		and bool(report.get("body_region_filter_clip_enabled", false))
 		and int(report.get("body_hframes", 0)) == 4
 		and is_equal_approx(float(report.get("light_cone_position_x", 0.0)), light_x)
 		and is_equal_approx(float(report.get("light_cone_scale_x", 0.0)), light_scale_x)
