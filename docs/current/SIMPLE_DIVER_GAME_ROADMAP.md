@@ -173,9 +173,9 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 ## Current Next Direction
 
-Controlled Gameplay Pass 17 is complete and gives Milestone 03 a second non-instant salvage rhythm at prototype level: the current slice has timed salvage plus a source-authored staged `pry_salvage` target, with cargo/oxygen pressure, reset semantics, smoke coverage, capture review, visual decision, and Web verification.
+Controlled Gameplay Pass 18 is complete and gives Milestone 04 its first progression step: banked salvage now creates session wallet payout, and the player can buy one session-only `O2 tank +15` upgrade at extraction. The current slice now has timed salvage, staged pry salvage, primary-objective completion, cargo/oxygen/hazard pressure, and a small reason to retry with more range.
 
-The next new implementation batch should come from Milestone 04. Add one small source-safe reason for salvage to matter across attempts, such as a minimal payout/progression decision or one upgrade/unlock prototype, before enemies, procedural generation, full inventory/loadout systems, or map-scale expansion.
+The next new implementation batch should stay in Milestone 04. Add one more small upgrade or unlock that changes route planning, such as cargo capacity +1, a light/range upgrade, or one source-authored tool-gated salvage/obstruction beat, before enemies, procedural generation, full inventory/loadout systems, save files, or map-scale expansion.
 
 ## Deferred Work
 

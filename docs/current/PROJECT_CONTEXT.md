@@ -39,9 +39,9 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest completed pass closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_17_CLOSEOUT.md`
-- Latest pass docs: `docs/current/CONTROLLED_GAMEPLAY_PASS_17_PLAN.md`
-- Latest visual/Web verification: `docs/current/PASS_17_PRY_SALVAGE_VISUAL_BASELINE_DECISION.md`, `docs/current/PASS_17_PRY_SALVAGE_WEB_PREVIEW_VERIFICATION.md`
+- Latest completed pass closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_18_CLOSEOUT.md`
+- Latest pass docs: `docs/current/CONTROLLED_GAMEPLAY_PASS_18_PLAN.md`, `docs/current/CONTROLLED_GAMEPLAY_PASS_18_PROGRESSION_CONTRACT.md`
+- Latest visual/Web verification: `docs/current/PASS_18_PROGRESSION_VISUAL_BASELINE_DECISION.md`, `docs/current/PASS_18_PROGRESSION_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -216,7 +216,8 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-09:
 
-- Active roadmap queue: Pass 17 is closed out by #349; create the next implementation batch from Milestone 04 progression/economy work unless the team deliberately adds another narrow Milestone 03 tool interaction first.
+- Active roadmap queue: Pass 18 is closed out by #369; create the next implementation batch from Milestone 04 progression/economy work, preferably one more small upgrade or unlock that changes route planning.
+- Closed: #360-#369 completed Pass 18 session progression, including planning, progression contract, session wallet, one oxygen tank upgrade, compact overlay feedback, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
 - Closed: #340-#349 completed Pass 17 pry salvage, including planning, source contract, validation, source target authoring, staged runtime interaction, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
 - Closed: #320-#329 completed Pass 16 primary dive completion, including planning, source contract, validation, source authoring, runtime completion gate, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
 - Closed: #298-#307 completed Pass 15 objective follow-through, including planning, source/text contract, metadata validation, source marker authoring, compact runtime feedback, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
@@ -439,6 +440,7 @@ Recent important commits:
 - `lower_loop_oxygen_rest_pocket` provides the Pass 12 limited oxygen-rest beat: compact `Rest pocket +oxygen` feedback, slow recovery up to a 45-second cap, and deterministic `--smoke-pass-12-oxygen-rest-pressure` coverage.
 - `deep_cache_route_objective` provides the Pass 13 route-commitment beat, Pass 14 start cue, Pass 15 first-step route cue, and Pass 16 primary dive completion gate: bank `salvage_lower_loop` and the timed `salvage_deep_right_cache` in one committed route chain, with compact objective overlay/result text, `Objective: Deep cache 0/2` at the boat before progress, and `Objective route: Lower loop` near the first required target.
 - `salvage_pry_locker` provides the Pass 17 staged pry salvage beat: 3 in-range stages at 1.2 seconds each, partial-stage cancel on leaving range, completed-stage persistence during normal exploration, cargo-full blocking without deletion, and deterministic `--smoke-pry-salvage` coverage.
+- Pass 18 session progression gives banked salvage a spendable session wallet use and one `O2 tank +15` purchase at extraction. `--smoke-pass-18-progression` covers payout, no-payout failure cases, purchase spend, upgraded capacity, and reset/refill persistence.
 - Salvage map data may include optional `tier` values. Missing tiers default conceptually to `common`; the current supported tiers are `common` and `valuable`. Runtime salvage score is tier-derived for now: `common` is worth 100 and `valuable` is worth 300, and pickup status feedback names the tier and score. Completed expeditions add a small runtime oxygen bonus of 1 point per remaining oxygen second; failed expeditions receive no oxygen bonus.
 - Held salvage capacity is currently 2 pickups. Full cargo blocks additional collection without hiding or banking the blocked pickup, shows a compact return-to-extraction status prompt, and returning to extraction frees capacity.
 - Run completion shows a compact result panel with final total score, salvage score, oxygen bonus, current map session-best score, salvage banked, optional route outcome, oxygen, and retry prompt. Maps with `primary_route_objective_id` complete after the primary objective's required salvage is banked and returned to extraction; maps without it preserve all-salvage completion. Route-tagged production-slice completions currently summarize the strongest banked route as `Route: Deep route` or `Route: Safe route`; untagged and failed runs stay generic. Oxygen depletion now shows the same result panel as a failed expedition with zero oxygen bonus and pauses the run until reset without overwriting session best. The panel stays hidden during normal exploration.
@@ -458,7 +460,7 @@ Recent important commits:
 
 Use `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md` as the current north star. The project should now finish the small diver game before planning the larger 2D Subnautica-like expansion.
 
-Pass 17 gives Milestone 03 a second non-instant salvage rhythm at prototype level. The next batch should start Milestone 04 with one small source-safe progression or payout decision, unless the team deliberately chooses one more narrow salvage/tool interaction first.
+Pass 18 gives Milestone 04 its first small progression loop: banked salvage creates session wallet payout, and one oxygen tank upgrade changes the next attempt. The next batch should stay in Milestone 04 with one more small upgrade or unlock before map-scale expansion.
 
 Accepted constraints for the next batch:
 

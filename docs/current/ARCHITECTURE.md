@@ -88,8 +88,8 @@ Additional current map sources:
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
   - Shows compact preview review context, salvage progress, timed/pry salvage feedback, oxygen-rest feedback, route-objective progress/start cue, session wallet/upgrade feedback, and scoped oxygen pressure.
   - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress/cancel/complete feedback, staged pry salvage progress/cancel/complete feedback, cargo banking, session wallet payout, one session oxygen tank upgrade, oxygen pressure, limited oxygen-rest recovery, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, route outcome result text, source-tagged return-pressure feedback, source-tagged pre-pickup route cue feedback, route-objective feedback, and primary-objective completion gating.
-  - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, focused timed/pry salvage captures, focused Pass 07-15 captures, and focused primary dive completion capture.
-  - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, timed/pry salvage, hazard pressure, oxygen pressure, oxygen-rest pressure, cargo/scoring, route outcome result, player-facing, movement-feel, Pass 08-15 objective/route smokes, primary dive completion, and production-slice route checks.
+  - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, focused timed/pry salvage captures, focused Pass 07-15 captures, focused primary dive completion capture, and focused Pass 18 progression capture.
+  - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, timed/pry salvage, hazard pressure, oxygen pressure, oxygen-rest pressure, cargo/scoring, route outcome result, player-facing, movement-feel, Pass 08-15 objective/route smokes, primary dive completion, Pass 18 progression, and production-slice route checks.
   - Uses `scripts/main/timed_salvage_controller.gd` for the narrow timed salvage interaction.
   - Uses `scripts/main/pry_salvage_controller.gd` for the narrow staged pry salvage interaction.
   - Uses `scripts/main/return_pressure_feedback.gd` for the narrow source-tagged cargo-full banking prompt.
@@ -182,4 +182,5 @@ Art placement must not create, remove, or move collision.
 - `--capture-pass-15-objective-follow-through` provides a focused review capture for the first in-route deep-cache objective step cue without replacing normal accepted baselines.
 - `--capture-primary-dive-completion` provides a focused review capture for the completed primary dive result state without replacing normal accepted baselines.
 - `--capture-pry-salvage` provides a focused review capture for the Pass 17 staged pry salvage state without replacing normal accepted baselines.
+- `--capture-pass-18-progression` provides a focused review capture for the Pass 18 wallet and oxygen upgrade state without replacing normal accepted baselines.
 - First screenshot baseline is committed at `visual_baselines/001_greybox_in_engine.png`.
