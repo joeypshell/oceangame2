@@ -274,6 +274,20 @@ def build_map_data(source_map: dict) -> dict:
             {"id": "hazard_mid_bend", "type": "hazard", "x": 52, "y": 26, "kind": "jellyfish"},
             {"id": "hazard_lower_return", "type": "hazard", "x": 61, "y": 36, "kind": "mine"},
         ],
+        "relay_follow_through_objectives": [
+            {
+                "id": "lower_left_relay_follow_through",
+                "trigger": "destination_payoff_banked",
+                "connector_id": "lower_left_loop_connector",
+                "entry_id": "relay_sub_entry",
+                "target_id": "slice_04_destination_cache",
+                "label": "Relay lead confirmed",
+                "result_label": "Lower-left relay investigated",
+                "route_context": "lower_left_loop",
+                "source_prompt_id": "deep_cache_next_dive_prompt",
+                "intent": "Pass 24 follow-through for the Pass 23 next-dive prompt after reaching the lower-left relay destination cache.",
+            },
+        ],
         "camera_tests": [
             {
                 "id": "production_slice_04_overview",
