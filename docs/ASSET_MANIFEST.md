@@ -79,12 +79,14 @@ references/asset_reviews/prop_sprites_01_review.png
 | Asset | Size | Purpose | Status | Notes |
 |---|---:|---|---|---|
 | `assets/player/player_diver_01.png` | 96x64 | Player diver | approved | Implemented under #77 and accepted under #78 as the current prototype player-art baseline. |
+| `assets/player/player_diver_swim_01.png` | 384x64 | First 4-frame diver swim sheet | planned | Planned by #447 for #448; should preserve `player_diver_01.png` palette, silhouette, center, and collision relationship. |
 | `research_sub_01.png` | 192x96 | Player or support vehicle | planned | Side-view, clean illustrated style. |
 
 Review sheet:
 
 ```text
 references/asset_reviews/player_sprite_01_review.png
+references/asset_reviews/player_diver_swim_01_review.png
 ```
 
 ## Vehicles And Extraction
