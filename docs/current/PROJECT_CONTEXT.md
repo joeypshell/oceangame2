@@ -41,7 +41,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
 - Current release-candidate plan: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_PLAN.md`
 - Current validation matrix: `docs/current/SIMPLE_DIVER_GAME_08_VALIDATION_MATRIX.md`
-- Current next direction: complete #631, the Simple Diver Game 08 go/no-go closeout.
+- Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; next select playtest feedback or the next roadmap milestone).
 - Latest Web verification: `docs/current/SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
@@ -217,7 +217,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-09:
 
-- Active roadmap queue: #622-#630 completed Simple Diver Game 08 release-candidate planning, validation, release journey, capture, local run, Web, baseline, and docs handoff work. #631 remains the go/no-go closeout. #52/#53 remain deferred slice-03 polish.
+- Active roadmap queue: #622-#631 completed Simple Diver Game 08 release-candidate hardening with a GO decision. #52/#53 remain deferred slice-03 polish.
 - Closed: #562-#571 completed Pass 25 planning, final-dive contract, validation, source authoring, runtime feedback, smoke, focused capture, visual decision, public Web verification, and closeout.
 - Closed: #542-#551 completed Pass 24 planning, relay objective contract, validation, source authoring, runtime feedback, smoke, focused capture, visual decision, public Web verification, and closeout.
 - Closed: #522-#531 completed Pass 23 planning, next-dive prompt contract, validation, source authoring, runtime result text, smoke, focused capture, visual/Web verification, and closeout.
@@ -468,7 +468,7 @@ Recent important commits:
 
 Use `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md` as the current north star. The project should now finish the small diver game before planning the larger 2D Subnautica-like expansion.
 
-Milestone 07 result-presentation and player-facing readability work is complete. Simple Diver Game 08 release-candidate hardening has recorded the plan, validation matrix, one-command validation runner, release journey smoke, capture review index, local run verification, public Web export handoff, baseline/capture audit, and this docs refresh. The remaining release-candidate task is #631: write the go/no-go closeout, separating blockers from deferred polish.
+Milestone 07 result-presentation and player-facing readability work is complete. Simple Diver Game 08 release-candidate hardening has a GO closeout with full validation runner, local run, public Web, baseline/capture, and docs handoff evidence. Pause validation batching unless feedback reveals a blocker; otherwise select the next roadmap milestone deliberately.
 
 Accepted constraints for next work:
 

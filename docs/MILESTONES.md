@@ -41,9 +41,9 @@ The open GitHub milestones should mirror this roadmap:
 
 ## Current Next Direction
 
-Simple Diver Game 08 is the active release-candidate milestone. Issues #622-#630 have completed the release-candidate plan, validation matrix, one-command validation runner, release journey smoke, capture review index, local run verification, public Web export handoff, baseline/capture audit, and documentation refresh.
+Simple Diver Game 08 release-candidate hardening is complete. Issues #622-#631 completed the release-candidate plan, validation matrix, one-command validation runner, release journey smoke, capture review index, local run verification, public Web export handoff, baseline/capture audit, documentation refresh, and go/no-go closeout.
 
-The remaining active release-candidate issue is #631: write the go/no-go closeout and explicitly separate blockers from deferred polish. Keep #52/#53 deferred as optional slice-03 polish unless slice-03 presentation becomes the selected goal. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, broad art replacement, broad audio systems, or full-map productionization.
+The closeout decision is GO. Pause validation batching unless playtest/public-preview review finds a blocker; otherwise select the next roadmap milestone deliberately. Keep #52/#53 deferred as optional slice-03 polish unless slice-03 presentation becomes the selected goal. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, broad art replacement, broad audio systems, or full-map productionization.
 
 ## Recently Completed Prototype Passes
 
