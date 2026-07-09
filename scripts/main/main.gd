@@ -9,6 +9,7 @@ const PrimaryDiveObjective := preload("res://scripts/main/primary_dive_objective
 const PrySalvageController := preload("res://scripts/main/pry_salvage_controller.gd")
 const ReturnPressureFeedback := preload("res://scripts/main/return_pressure_feedback.gd")
 const RouteCommitmentFeedback := preload("res://scripts/main/route_commitment_feedback.gd")
+const SessionProgression := preload("res://scripts/main/session_progression.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
 const SmokeHazardRouteChecks := preload("res://scripts/main/smoke/smoke_hazard_route_checks.gd")
 const SmokeInteractionChecks := preload("res://scripts/main/smoke/smoke_interaction_checks.gd")
@@ -97,6 +98,7 @@ var _primary_dive_objective
 var _pry_salvage
 var _return_pressure_feedback
 var _route_commitment_feedback
+var _session_progression
 var _timed_salvage
 var _smoke_hazard_route_checks
 var _smoke_interaction_checks
@@ -144,6 +146,7 @@ func _ready() -> void:
 	_pry_salvage = PrySalvageController.new()
 	_return_pressure_feedback = ReturnPressureFeedback.new()
 	_route_commitment_feedback = RouteCommitmentFeedback.new()
+	_session_progression = SessionProgression.new()
 	_timed_salvage = TimedSalvageController.new()
 	_smoke_hazard_route_checks = SmokeHazardRouteChecks.new(self)
 	_smoke_interaction_checks = SmokeInteractionChecks.new(self)
@@ -718,6 +721,7 @@ func _process(delta: float) -> void:
 	if _held_salvage > 0 and _world.is_inside_extraction(_player.global_position):
 		_banked_salvage += _held_salvage
 		_banked_score += _held_salvage_score
+		_record_session_payout(_held_salvage_score)
 		_record_banked_route_outcomes(_held_salvage_ids)
 		_banked_salvage_ids.append_array(_held_salvage_ids)
 		_held_salvage = 0
@@ -1293,6 +1297,24 @@ func _record_session_best_score() -> void:
 	var score := _current_expedition_score()
 	if score > _session_best_score():
 		_session_best_scores_by_map[key] = score
+
+
+func _record_session_payout(banked_score: int) -> int:
+	if _session_progression == null:
+		return 0
+	return _session_progression.record_banked_salvage(banked_score)
+
+
+func _session_wallet() -> int:
+	if _session_progression == null:
+		return 0
+	return _session_progression.wallet()
+
+
+func _session_payout_total() -> int:
+	if _session_progression == null:
+		return 0
+	return _session_progression.total_payout_earned()
 
 
 func _update_result_panel() -> void:

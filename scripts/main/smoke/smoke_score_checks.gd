@@ -36,12 +36,20 @@ func _smoke_salvage_loop_and_quit() -> void:
 		push_error("Salvage loop smoke banked score %d, expected %d." % [_banked_score, expected_score])
 		get_tree().quit(1)
 		return
+	if _session_wallet() != expected_score or _session_payout_total() != expected_score:
+		push_error("Salvage loop smoke session wallet %d payout %d, expected banked salvage score %d." % [_session_wallet(), _session_payout_total(), expected_score])
+		get_tree().quit(1)
+		return
 
 	var completed_total := _total_salvage
 	var completed_score := _banked_score
 	_reset_run()
 	if _held_salvage != 0 or _banked_salvage != 0 or _held_salvage_score != 0 or _banked_score != 0 or _completion_oxygen_bonus != 0 or _run_complete or _run_failed:
 		push_error("Salvage loop smoke reset left stale run state.")
+		get_tree().quit(1)
+		return
+	if _session_wallet() != completed_score or _session_payout_total() != completed_score:
+		push_error("Salvage loop smoke reset cleared session wallet; wallet=%d payout=%d expected=%d." % [_session_wallet(), _session_payout_total(), completed_score])
 		get_tree().quit(1)
 		return
 
