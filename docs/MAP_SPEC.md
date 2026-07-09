@@ -316,7 +316,7 @@ Recommended Pass 15 metadata:
 }
 ```
 
-Next-dive objective prompts are defined in `docs/current/CONTROLLED_GAMEPLAY_PASS_23_NEXT_DIVE_PROMPT_CONTRACT.md`. Use the top-level `next_dive_objective_prompts` list only for compact result prompts after existing objective completion; it must not author coordinates, score, oxygen, cargo, reward, save, completion, or UI visibility state.
+Next-dive objective prompts are defined in `docs/current/CONTROLLED_GAMEPLAY_PASS_23_NEXT_DIVE_PROMPT_CONTRACT.md`, and relay follow-through objectives are defined in `docs/current/CONTROLLED_GAMEPLAY_PASS_24_RELAY_OBJECTIVE_CONTRACT.md`. Use `next_dive_objective_prompts` only for compact result prompts after existing objective completion, and use `relay_follow_through_objectives` only for one compact lower-left relay follow-through beat after normal destination payoff banking; neither list may author coordinates, score, oxygen, cargo, wallet rewards, save state, connector unlocks, travel behavior, completion flags, or UI visibility state.
 
 ## Oxygen Rest Markers
 Playable maps may include one optional oxygen rest marker under `zones`. This is a source-authored route-pressure aid, not a second extraction zone.
