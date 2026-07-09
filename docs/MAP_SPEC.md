@@ -284,7 +284,6 @@ Validation expectations:
   lists for the primary objective.
 
 ## Objective Step Cue Markers
-
 Playable maps may include one optional objective-step cue marker under `zones`. This is a source-authored readability cue for an existing route objective, not a new objective, pickup, reward, or route.
 
 The first supported cue is intentionally narrow:
@@ -317,8 +316,9 @@ Recommended Pass 15 metadata:
 }
 ```
 
-## Oxygen Rest Markers
+Next-dive objective prompts are defined in `docs/current/CONTROLLED_GAMEPLAY_PASS_23_NEXT_DIVE_PROMPT_CONTRACT.md`. Use the top-level `next_dive_objective_prompts` list only for compact result prompts after existing objective completion; it must not author coordinates, score, oxygen, cargo, reward, save, completion, or UI visibility state.
 
+## Oxygen Rest Markers
 Playable maps may include one optional oxygen rest marker under `zones`. This is a source-authored route-pressure aid, not a second extraction zone.
 
 The first supported rest marker is intentionally narrow:
@@ -453,6 +453,7 @@ Validation expectations:
 - Salvage route-choice metadata, when present, must use supported fields: lower_snake_case `route_choice_id`, lower_snake_case `validation_route`, and/or integer `route_order` greater than or equal to zero.
 - Route commitment objectives, when present, must reference existing reachable playable salvage ids and optional reachable marker zones without authoring runtime state.
 - Objective-step cue metadata is supported only on marker zones. Cue rectangles must be in bounds, non-solid, reachable, outside the boat/extraction area, linked to an existing objective, and targeted at a required playable salvage id.
+- Next-dive objective prompts, when present, must use a supported trigger, reference an existing objective, point at an existing optional target id, and avoid authoring runtime state.
 - Oxygen rest metadata is supported only on marker zones. Rest rectangles must be in bounds, non-solid, reachable, and use positive cap/refill values.
 - World connector metadata is supported only on marker zones. Connector rectangles must be in bounds, non-solid, reachable, and reference a committed destination map plus an existing destination `spawn` or `boat_spawn` entry id.
 - Current gate metadata is supported only on marker zones. Current rectangles must be in bounds, non-solid, reachable, use a supported direction, positive strength, and a lower_snake_case required upgrade id.

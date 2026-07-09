@@ -12,6 +12,7 @@ from pathlib import Path
 from validate_current_gates import validate_current_gate_reachability, validate_current_gate_schema
 from validate_destination_payoffs import validate_destination_payoff_schema
 from validate_moving_hazards import validate_moving_hazard_reachability, validate_moving_hazard_schema
+from validate_next_dive_prompts import validate_next_dive_prompt_schema
 from validate_progression_containers import (
     validate_progression_container_reachability,
     validate_progression_container_schema,
@@ -25,7 +26,6 @@ from validate_route_objectives import (
 )
 from validate_visibility_zones import validate_visibility_zone_reachability, validate_visibility_zone_schema
 from validate_world_connectors import validate_world_connector_reachability, validate_world_connector_schema
-
 
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 DISPLAY_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,31}$")
@@ -45,7 +45,6 @@ OXYGEN_REST_METADATA_FIELDS = {
     "route_context",
 }
 OXYGEN_REST_TRIGGER_FIELDS = OXYGEN_REST_METADATA_FIELDS - {"route_context"}
-
 
 def rect_cells(item: dict) -> set[tuple[int, int]]:
     cells: set[tuple[int, int]] = set()
@@ -402,6 +401,7 @@ def main() -> int:
     failures.extend(validate_current_gate_schema(map_data))
     failures.extend(validate_destination_payoff_schema(args.map_json, map_data))
     failures.extend(validate_moving_hazard_schema(map_data))
+    failures.extend(validate_next_dive_prompt_schema(map_data, entities, zones))
     failures.extend(validate_progression_container_schema(map_data))
     failures.extend(validate_visibility_zone_schema(map_data))
     failures.extend(validate_world_connector_schema(args.map_json, map_data))
