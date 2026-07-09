@@ -3,6 +3,9 @@ extends "res://scripts/main/smoke/smoke_check_base.gd"
 const PASS_21_CONNECTOR_ID := "lower_left_loop_connector"
 const PASS_21_DESTINATION_MAP_ID := "production_slice_04"
 const PASS_21_DESTINATION_ENTRY_ID := "relay_sub_entry"
+const PASS_22_PAYOFF_TARGET_ID := "slice_04_destination_cache"
+const PASS_22_PAYOFF_ID := "slice_04_destination_payoff"
+const PASS_22_PAYOFF_LABEL := "Destination cache"
 
 
 func _smoke_pass_21_world_connector_and_quit() -> void:
@@ -131,10 +134,124 @@ func _smoke_pass_21_world_connector_and_quit() -> void:
 	get_tree().quit()
 
 
+func _smoke_pass_22_destination_payoff_and_quit() -> void:
+	if _world.map_id != "production_slice_01":
+		push_error("Pass 22 destination payoff smoke loaded unexpected origin map: %s." % _world.map_id)
+		get_tree().quit(1)
+		return
+
+	var connector := _connector_by_id(PASS_21_CONNECTOR_ID)
+	if connector.is_empty():
+		push_error("Pass 22 destination payoff smoke did not find connector %s." % PASS_21_CONNECTOR_ID)
+		get_tree().quit(1)
+		return
+	if str(connector.get("destination_map_id", "")) != PASS_21_DESTINATION_MAP_ID:
+		push_error("Pass 22 destination payoff smoke connector destination mismatch: %s." % connector)
+		get_tree().quit(1)
+		return
+
+	_player.set_physics_process(false)
+	_hazard_interactions_enabled = false
+	_main._session_progression.record_banked_salvage(1200)
+	_main._session_progression.purchase_propulsion_upgrade()
+	_player.global_position = connector["center"]
+	_update_status_label()
+	if _status_text().find("E: Enter Lower-left loop") == -1:
+		push_error("Pass 22 destination payoff smoke prompt missing before transition: %s." % _status_text())
+		get_tree().quit(1)
+		return
+	if not _main._try_world_connector_transition():
+		push_error("Pass 22 destination payoff smoke did not trigger connector transition.")
+		get_tree().quit(1)
+		return
+	if _world.map_id != PASS_21_DESTINATION_MAP_ID:
+		push_error("Pass 22 destination payoff smoke loaded wrong destination map: %s." % _world.map_id)
+		get_tree().quit(1)
+		return
+
+	_player.set_physics_process(false)
+	_hazard_interactions_enabled = false
+	var target := _salvage_by_id(PASS_22_PAYOFF_TARGET_ID)
+	if target.is_empty():
+		push_error("Pass 22 destination payoff smoke did not find payoff target %s." % PASS_22_PAYOFF_TARGET_ID)
+		get_tree().quit(1)
+		return
+	if str(target.get("destination_payoff_id", "")) != PASS_22_PAYOFF_ID:
+		push_error("Pass 22 destination payoff smoke payoff id mismatch: %s." % target)
+		get_tree().quit(1)
+		return
+	if str(target.get("destination_payoff_connector_id", "")) != PASS_21_CONNECTOR_ID:
+		push_error("Pass 22 destination payoff smoke connector id mismatch: %s." % target)
+		get_tree().quit(1)
+		return
+	if _world.find_open_path(_player.global_position, target["center"]).is_empty():
+		push_error("Pass 22 destination payoff smoke target is not reachable from destination entry.")
+		get_tree().quit(1)
+		return
+
+	_player.global_position = target["center"]
+	if not _collect_salvage_for_smoke(target):
+		push_error("Pass 22 destination payoff smoke did not collect target %s." % PASS_22_PAYOFF_TARGET_ID)
+		get_tree().quit(1)
+		return
+
+	var target_score := int(target.get("score", 0))
+	var expected_feedback := "%s +%d" % [PASS_22_PAYOFF_LABEL, target_score]
+	if _last_status_note != expected_feedback or _status_text().find(expected_feedback) == -1:
+		push_error("Pass 22 destination payoff smoke expected feedback '%s', got note='%s' status='%s'." % [
+			expected_feedback,
+			_last_status_note,
+			_status_text(),
+		])
+		get_tree().quit(1)
+		return
+	if _held_salvage != 1 or _held_salvage_score != target_score or not _held_salvage_ids.has(PASS_22_PAYOFF_TARGET_ID):
+		push_error("Pass 22 destination payoff smoke cargo mismatch: held=%d score=%d ids=%s." % [
+			_held_salvage,
+			_held_salvage_score,
+			_held_salvage_ids,
+		])
+		get_tree().quit(1)
+		return
+
+	_player.global_position = _world.get_extraction_center()
+	_process(0.0)
+	if _held_salvage != 0 or _banked_salvage != 1 or _banked_score != target_score:
+		push_error("Pass 22 destination payoff smoke banking mismatch: held=%d banked=%d score=%d expected=%d." % [
+			_held_salvage,
+			_banked_salvage,
+			_banked_score,
+			target_score,
+		])
+		get_tree().quit(1)
+		return
+
+	print("Pass 22 destination payoff smoke passed: origin=production_slice_01 destination=%s connector=%s target=%s payoff=%s label=\"%s\" state=banked held=%d banked=%d score=%d oxygen=%.1f feedback=\"%s\"." % [
+		_world.map_id,
+		PASS_21_CONNECTOR_ID,
+		PASS_22_PAYOFF_TARGET_ID,
+		PASS_22_PAYOFF_ID,
+		PASS_22_PAYOFF_LABEL,
+		_held_salvage,
+		_banked_salvage,
+		_banked_score,
+		_oxygen_seconds,
+		expected_feedback,
+	])
+	get_tree().quit()
+
+
 func _connector_by_id(connector_id: String) -> Dictionary:
 	for connector in _world.get_world_connectors():
 		if str(connector.get("id", "")) == connector_id:
 			return connector
+	return {}
+
+
+func _salvage_by_id(salvage_id: String) -> Dictionary:
+	for salvage in _world.get_salvage_centers():
+		if str(salvage.get("id", "")) == salvage_id:
+			return salvage
 	return {}
 
 
