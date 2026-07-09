@@ -2472,6 +2472,22 @@
       "intent": "Route-choice payoff target for the lower optional loop."
     },
     {
+      "id": "salvage_pry_locker",
+      "type": "salvage",
+      "x": 36,
+      "y": 64,
+      "kind": "crate",
+      "tier": "valuable",
+      "interaction": "pry_salvage",
+      "interaction_seconds": 1.2,
+      "pry_stages": 3,
+      "interaction_label": "sealed cache",
+      "route_choice_id": "lower_bend_pry_detour",
+      "validation_route": "pry_salvage_detour",
+      "route_order": 0,
+      "intent": "Pass 17 optional pry target near the lower-bend hazard, adding a deliberate oxygen-time spend without changing topology."
+    },
+    {
       "id": "salvage_deep_right_cache",
       "type": "salvage",
       "x": 64,
