@@ -81,15 +81,15 @@ Additional current map sources:
   - Loads world and player scenes.
   - Applies camera bounds from the world map size.
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
-  - Shows compact preview review context, salvage progress, timed-salvage feedback, oxygen-rest feedback, route-objective progress, and scoped oxygen pressure.
-  - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress/cancel/complete feedback, cargo banking, oxygen pressure, limited oxygen-rest recovery, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, route outcome result text, source-tagged return-pressure feedback, source-tagged pre-pickup route cue feedback, and Pass 13 route-commitment objective result text.
-  - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, focused timed-salvage capture, focused Pass 07 hazard-pressure capture, focused Pass 08 route-extension capture, focused Pass 09 southwest-pocket decision capture, focused Pass 10 return-pressure capture, focused Pass 11 pre-pickup route-cue capture, focused Pass 12 oxygen-rest capture, and focused Pass 13 route-commitment capture.
-  - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, timed salvage, hazard pressure, oxygen pressure, oxygen-rest pressure, cargo/scoring, route outcome result, player-facing, movement-feel, Pass 08 route-extension, Pass 09 southwest-pocket decision, Pass 10 return pressure, Pass 11 pre-pickup route cue, Pass 13 route commitment, and production-slice route checks.
+  - Shows compact preview review context, salvage progress, timed-salvage feedback, oxygen-rest feedback, route-objective progress/start cue, and scoped oxygen pressure.
+  - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress/cancel/complete feedback, cargo banking, oxygen pressure, limited oxygen-rest recovery, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, route outcome result text, source-tagged return-pressure feedback, source-tagged pre-pickup route cue feedback, Pass 13 route-commitment objective result text, and Pass 14 start-of-run objective cue text.
+  - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, focused timed-salvage capture, focused Pass 07 hazard-pressure capture, focused Pass 08 route-extension capture, focused Pass 09 southwest-pocket decision capture, focused Pass 10 return-pressure capture, focused Pass 11 pre-pickup route-cue capture, focused Pass 12 oxygen-rest capture, focused Pass 13 route-commitment capture, and focused Pass 14 objective-cue capture.
+  - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, timed salvage, hazard pressure, oxygen pressure, oxygen-rest pressure, cargo/scoring, route outcome result, player-facing, movement-feel, Pass 08 route-extension, Pass 09 southwest-pocket decision, Pass 10 return pressure, Pass 11 pre-pickup route cue, Pass 13 route commitment, Pass 14 objective cue, and production-slice route checks.
   - Uses `scripts/main/timed_salvage_controller.gd` for the narrow timed salvage interaction.
   - Uses `scripts/main/return_pressure_feedback.gd` for the narrow source-tagged cargo-full banking prompt.
   - Uses `scripts/main/pre_pickup_route_cue_feedback.gd` for the narrow source-tagged pre-pickup route cue prompt.
   - Uses `scripts/main/oxygen_rest_pocket_feedback.gd` for the narrow source-tagged oxygen-rest prompt and cap text.
-  - Uses `scripts/main/route_commitment_feedback.gd` for the narrow source-authored route objective overlay and result text.
+  - Uses `scripts/main/route_commitment_feedback.gd` for the narrow source-authored route objective overlay, start cue, and result text.
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.
@@ -153,6 +153,7 @@ Art placement must not create, remove, or move collision.
 - Pass 11 tags `southwest_pocket_pre_pickup_cue` as the selected pre-pickup cue marker, adds compact `Optional pocket ahead` feedback while `salvage_southwest_return_cache` is uncollected, and protects the behavior with `--smoke-pass-11-pre-pickup-route-cue`.
 - Pass 12 tags `lower_loop_oxygen_rest_pocket` as the selected oxygen/rest marker, adds compact `Rest pocket +oxygen` feedback with recovery capped below the boat/extraction maximum, and protects the behavior with `--smoke-pass-12-oxygen-rest-pressure`.
 - Pass 13 authors `deep_cache_route_objective`, requires `salvage_lower_loop` and `salvage_deep_right_cache` to be banked for completion, adds compact objective overlay/result feedback, and protects the behavior with `--smoke-pass-13-route-commitment`.
+- Pass 14 derives the start-of-run `Objective: Deep cache 0/2` cue from `deep_cache_route_objective` while the player is at the boat/extraction area before objective progress, and protects the behavior with `--smoke-pass-14-objective-cue`.
 - The default slice has one source-authored `timed_salvage` target, `salvage_deep_right_cache`, that renders a small in-world affordance and requires 2.5 seconds of in-range progress before entering held cargo.
 - Timed-salvage feedback covers progress, cancel, completion, cargo-full blocking, hazard reset, and oxygen failure/reset through `--smoke-timed-salvage`.
 - `--capture-route-outcome-result` provides a focused review capture for the completed-run route outcome panel without replacing normal accepted baselines.
@@ -164,4 +165,5 @@ Art placement must not create, remove, or move collision.
 - `--capture-pass-11-pre-pickup-route-cue` provides a focused review capture for the selected pre-pickup route cue without replacing normal accepted baselines.
 - `--capture-pass-12-oxygen-rest-pressure` provides a focused review capture for the selected oxygen-rest route-pressure state without replacing normal accepted baselines.
 - `--capture-pass-13-route-commitment` provides a focused review capture for the selected deep-cache route objective state without replacing normal accepted baselines.
+- `--capture-pass-14-objective-cue` provides a focused review capture for the start-of-run deep-cache objective cue without replacing normal accepted baselines.
 - First screenshot baseline is committed at `visual_baselines/001_greybox_in_engine.png`.
