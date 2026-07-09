@@ -35,6 +35,10 @@ func has_primary_objective() -> bool:
 	return not _primary_objective_id.is_empty() and not _required_target_ids.is_empty()
 
 
+func objective_id() -> String:
+	return _primary_objective_id
+
+
 func is_complete(banked_salvage_ids: Array[String]) -> bool:
 	if not has_primary_objective():
 		return false
