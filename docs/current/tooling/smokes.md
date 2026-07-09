@@ -31,6 +31,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-session-best-score
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-bonus-score
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-route-outcome-result
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-pass-18-progression
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-timed-salvage
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-player-facing
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-movement-feel
@@ -79,6 +80,8 @@ The session-best score smoke loads `production_slice_01`, completes a full colle
 The oxygen-bonus score smoke loads `production_slice_01`, completes a full collect-return run, confirms salvage banked score remains tier-derived, confirms the completion-only oxygen bonus is based on remaining oxygen, and confirms failed expeditions receive zero oxygen bonus.
 
 The route-outcome result smoke loads `production_slice_01`, completes a route-tagged collect-return run, confirms the compact result panel includes `Route: Deep route`, resets, and confirms a generic failure result does not show stale route text.
+
+The Pass 18 progression smoke loads `production_slice_01`, confirms held and failed unbanked salvage do not create wallet payout, confirms banked salvage creates spendable wallet, confirms insufficient-funds purchase is blocked, buys the single oxygen tank upgrade, verifies wallet spend and upgraded capacity, then confirms reset/refill preserve the session upgrade.
 
 The timed-salvage smoke loads `production_slice_01` and reports the active timed target id, interaction seconds, progress, cancel feedback, completion feedback, held cargo, banked score, oxygen, cargo-blocked state, hazard restoration, and oxygen-reset behavior.
 

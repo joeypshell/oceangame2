@@ -150,6 +150,7 @@ jobs:
           run_score_smoke --smoke-session-best-score session-best-score
           run_score_smoke --smoke-oxygen-bonus-score oxygen-bonus-score
           run_score_smoke --smoke-route-outcome-result route-outcome-result
+          run_score_smoke --smoke-pass-18-progression pass-18-progression
 
       - name: Run map selector smoke check
         run: |
