@@ -13,6 +13,7 @@ const Pass19CargoUpgradeCapture := preload("res://scripts/main/captures/pass_19_
 const Pass20LightUpgradeCapture := preload("res://scripts/main/captures/pass_20_light_upgrade_capture.gd")
 const Pass21WorldConnectorCapture := preload("res://scripts/main/captures/pass_21_world_connector_capture.gd")
 const PrimaryDiveCompletionCapture := preload("res://scripts/main/captures/primary_dive_completion_capture.gd")
+const DarknessLightCapture := preload("res://scripts/main/captures/darkness_light_capture.gd")
 const SCREENSHOT_PATH := "res://visual_baselines/001_greybox_in_engine.png"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 const PLAYER_READABILITY_CAPTURE_ZOOM := Vector2(2.0, 2.0)
@@ -455,6 +456,11 @@ func capture_pass_20_light_upgrade_and_quit(capture_dir: String) -> void:
 
 func capture_pass_21_world_connector_and_quit(capture_dir: String) -> void:
 	var capture := Pass21WorldConnectorCapture.new(_main)
+	await capture.capture_and_quit(capture_dir)
+
+
+func capture_darkness_light_gate_and_quit(capture_dir: String) -> void:
+	var capture := DarknessLightCapture.new(_main)
 	await capture.capture_and_quit(capture_dir)
 
 

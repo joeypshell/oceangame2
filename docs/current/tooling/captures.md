@@ -137,6 +137,14 @@ Capture the focused Pass 20 light upgrade view:
 
 This loads the default production slice, banks enough salvage through the normal runtime path to afford the light upgrade, purchases it at extraction, frames compact wallet and `Light +range upgraded` feedback with the upgraded light cone visible, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_20_light_upgrade/production_slice_01_pass_20_light_upgrade.png`.
 
+Capture the focused darkness/light gate review pair:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-darkness-light-gate
+```
+
+This loads the default production slice, frames `deep_cache_dark_pocket` with the player in the zone, writes a base-light shot and then a `Light +range` readability shot, keeps map data and accepted baselines unchanged, and writes `visual_captures/darkness_light_gate/production_slice_01_darkness_light_before_light.png` and `visual_captures/darkness_light_gate/production_slice_01_darkness_light_after_light.png`.
+
 Capture the focused Pass 21 world-connector arrival view:
 
 ```powershell
