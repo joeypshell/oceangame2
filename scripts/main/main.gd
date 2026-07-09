@@ -21,6 +21,7 @@ const ProgressionContainerController := preload("res://scripts/main/progression_
 const PrySalvageController := preload("res://scripts/main/pry_salvage_controller.gd")
 const RelayFollowThroughFeedback := preload("res://scripts/main/relay_follow_through_feedback.gd")
 const ReturnPressureFeedback := preload("res://scripts/main/return_pressure_feedback.gd")
+const ResultPresentationBuilder := preload("res://scripts/main/result_presentation_builder.gd")
 const RouteCommitmentFeedback := preload("res://scripts/main/route_commitment_feedback.gd")
 const SessionProgression := preload("res://scripts/main/session_progression.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
@@ -2055,38 +2056,27 @@ func _update_result_panel() -> void:
 		_result_label.text = ""
 		return
 
-	var title := "Expedition complete" if _run_complete else "Expedition failed"
 	var oxygen_text := "Oxygen %ds" % int(ceil(_oxygen_seconds))
 	if _run_failed:
 		oxygen_text = "Oxygen depleted"
-	var result_lines := PackedStringArray()
-	result_lines.append(title)
-	result_lines.append("Score %d" % _current_expedition_score())
-	result_lines.append("Salvage score %d" % _banked_score)
-	result_lines.append("Oxygen bonus +%d" % _completion_oxygen_bonus)
-	result_lines.append("Best %d" % _session_best_score())
-	result_lines.append("Salvage %d/%d" % [_banked_salvage, _total_salvage])
-	var route_text := _route_outcome_text()
-	if not route_text.is_empty():
-		result_lines.append(route_text)
-	var objective_text := _route_commitment_result_text()
-	if not objective_text.is_empty():
-		result_lines.append(objective_text)
-	var next_dive_text := _next_dive_objective_result_text()
-	if not next_dive_text.is_empty():
-		result_lines.append(next_dive_text)
-	var relay_follow_through_text := _relay_follow_through_result_text()
-	if not relay_follow_through_text.is_empty():
-		result_lines.append(relay_follow_through_text)
-	var final_dive_text := _final_dive_objective_result_text()
-	if not final_dive_text.is_empty():
-		result_lines.append(final_dive_text)
-	result_lines.append(_progression_result_text())
-	if _is_progression_status_note(_last_status_note):
-		result_lines.append(_last_status_note)
-	result_lines.append(oxygen_text)
-	result_lines.append("Press R to retry")
-	_result_label.text = "\n".join(result_lines)
+	_result_label.text = ResultPresentationBuilder.build_text({
+		"run_complete": _run_complete,
+		"run_failed": _run_failed,
+		"score": _current_expedition_score(),
+		"salvage_score": _banked_score,
+		"oxygen_bonus": _completion_oxygen_bonus,
+		"best_score": _session_best_score(),
+		"banked_salvage": _banked_salvage,
+		"total_salvage": _total_salvage,
+		"route_text": _route_outcome_text(),
+		"objective_text": _route_commitment_result_text(),
+		"next_dive_text": _next_dive_objective_result_text(),
+		"relay_follow_through_text": _relay_follow_through_result_text(),
+		"final_dive_text": _final_dive_objective_result_text(),
+		"progression_text": _progression_result_text(),
+		"progression_status_note": _last_status_note if _is_progression_status_note(_last_status_note) else "",
+		"oxygen_text": oxygen_text,
+	})
 
 
 func _build_label() -> String:
