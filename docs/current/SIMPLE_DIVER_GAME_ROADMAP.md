@@ -173,9 +173,9 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 ## Current Next Direction
 
-Controlled Gameplay Pass 16 is complete and proves Milestone 02's default-dive vertical slice at prototype level: the current slice has a source-authored primary objective, route pressure, cargo/oxygen/hazard tension, return banking, result feedback, smoke coverage, capture review, and Web verification.
+Controlled Gameplay Pass 17 is complete and gives Milestone 03 a second non-instant salvage rhythm at prototype level: the current slice has timed salvage plus a source-authored staged `pry_salvage` target, with cargo/oxygen pressure, reset semantics, smoke coverage, capture review, visual decision, and Web verification.
 
-The next new implementation batch should come from Milestone 03. Add one more small, source-authored salvage/tool interaction before economy, upgrades, enemies, procedural generation, or map-scale expansion. Keep it narrower than an inventory or loadout system.
+The next new implementation batch should come from Milestone 04. Add one small source-safe reason for salvage to matter across attempts, such as a minimal payout/progression decision or one upgrade/unlock prototype, before enemies, procedural generation, full inventory/loadout systems, or map-scale expansion.
 
 ## Deferred Work
 

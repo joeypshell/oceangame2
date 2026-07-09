@@ -79,6 +79,8 @@ Build a small side-view salvage game that proves:
 - [Controlled Gameplay Pass 15 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_15_CLOSEOUT.md)
 - [Controlled Gameplay Pass 16 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_16_PLAN.md)
 - [Controlled Gameplay Pass 16 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_16_CLOSEOUT.md)
+- [Controlled Gameplay Pass 17 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_17_PLAN.md)
+- [Controlled Gameplay Pass 17 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_17_CLOSEOUT.md)
 - [Oxygen Pressure Baseline Decision](docs/current/OXYGEN_PRESSURE_BASELINE_DECISION.md)
 - [Route Payoff Visual Baseline Decision](docs/current/ROUTE_PAYOFF_VISUAL_BASELINE_DECISION.md)
 - [Route Payoff Web Preview Verification](docs/current/ROUTE_PAYOFF_WEB_PREVIEW_VERIFICATION.md)
@@ -107,6 +109,8 @@ Build a small side-view salvage game that proves:
 - [Pass 15 Objective Follow-Through Web Preview Verification](docs/current/PASS_15_OBJECTIVE_FOLLOW_THROUGH_WEB_PREVIEW_VERIFICATION.md)
 - [Pass 16 Primary Dive Completion Visual Baseline Decision](docs/current/PASS_16_PRIMARY_DIVE_COMPLETION_VISUAL_BASELINE_DECISION.md)
 - [Pass 16 Primary Dive Completion Web Preview Verification](docs/current/PASS_16_PRIMARY_DIVE_COMPLETION_WEB_PREVIEW_VERIFICATION.md)
+- [Pass 17 Pry Salvage Visual Baseline Decision](docs/current/PASS_17_PRY_SALVAGE_VISUAL_BASELINE_DECISION.md)
+- [Pass 17 Pry Salvage Web Preview Verification](docs/current/PASS_17_PRY_SALVAGE_WEB_PREVIEW_VERIFICATION.md)
 
 ## Locked Visual Direction
 
