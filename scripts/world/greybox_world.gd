@@ -42,10 +42,13 @@ var _boat_entities: Array = []
 var _world_connector_zones: Array = []
 var _current_gate_zones: Array = []
 var _progression_containers: Array = []
+var _moving_hazards: Array = []
 var _spawn_positions_by_id := {}
 var _collected_salvage := {}
 var _salvage_nodes_by_id := {}
 var _container_nodes_by_id := {}
+var _moving_hazard_nodes_by_id := {}
+var _moving_hazard_positions_by_id := {}
 var _background_root: Node2D
 var _solid_layer: TileMapLayer
 var _terrain_layer: TileMapLayer
@@ -96,10 +99,13 @@ func load_greybox() -> void:
 	_world_connector_zones = []
 	_current_gate_zones = []
 	_progression_containers = []
+	_moving_hazards = []
 	_spawn_positions_by_id = {}
 	_collected_salvage = {}
 	_salvage_nodes_by_id = {}
 	_container_nodes_by_id = {}
+	_moving_hazard_nodes_by_id = {}
+	_moving_hazard_positions_by_id = {}
 
 	_background_root = Node2D.new()
 	_background_root.name = "BackgroundArt"
@@ -119,6 +125,7 @@ func load_greybox() -> void:
 	add_child(_marker_root)
 	_build_zones(map_data.get("zones", []))
 	_build_progression_containers(map_data.get("progression_containers", []))
+	_build_moving_hazards(map_data.get("moving_hazards", []))
 	_build_entities(map_data.get("entities", []))
 	queue_redraw()
 
@@ -214,6 +221,21 @@ func get_current_gate_at(position: Vector2) -> Dictionary:
 	return {}
 
 
+func get_moving_hazards() -> Array:
+	var hazards := []
+	for hazard in _moving_hazards:
+		hazards.append(_moving_hazard_runtime_info(hazard))
+	return hazards
+
+
+func set_moving_hazard_center(hazard_id: String, center: Vector2) -> void:
+	_moving_hazard_positions_by_id[hazard_id] = center
+	if not _moving_hazard_nodes_by_id.has(hazard_id):
+		return
+	var hazard_node := _moving_hazard_nodes_by_id[hazard_id] as Node2D
+	hazard_node.global_position = center
+
+
 func get_progression_containers() -> Array:
 	var containers := []
 	for container in _progression_containers:
@@ -262,6 +284,18 @@ func get_nearest_hazard_within(position: Vector2, radius_px: float) -> Dictionar
 				"distance": distance,
 			}
 			nearest_distance = distance
+	for hazard in get_moving_hazards():
+		var center := hazard["center"] as Vector2
+		var distance := position.distance_to(center)
+		if distance <= radius_px and (nearest.is_empty() or distance < nearest_distance):
+			nearest = {
+				"id": str(hazard.get("id", "moving_hazard")),
+				"center": center,
+				"distance": distance,
+				"moving": true,
+				"display_label": str(hazard.get("display_label", "")),
+			}
+			nearest_distance = distance
 	return nearest
 
 
@@ -269,6 +303,9 @@ func get_hazard_near(position: Vector2, radius_px: float) -> String:
 	for entity in _hazard_entities:
 		if position.distance_to(_entity_center(entity)) <= radius_px:
 			return str(entity.get("id", "hazard"))
+	for hazard in get_moving_hazards():
+		if position.distance_to(hazard["center"]) <= radius_px:
+			return str(hazard.get("id", "moving_hazard"))
 	return ""
 
 
@@ -427,6 +464,25 @@ func _current_gate_runtime_info(zone: Dictionary) -> Dictionary:
 	}
 
 
+func _moving_hazard_runtime_info(hazard: Dictionary) -> Dictionary:
+	var hazard_id := str(hazard.get("id", "moving_hazard"))
+	var center: Vector2 = _moving_hazard_positions_by_id.get(hazard_id, _moving_hazard_initial_center(hazard))
+	var path := []
+	for point in hazard.get("path", []):
+		path.append(_point_center(point))
+	return {
+		"id": hazard_id,
+		"center": center,
+		"kind": str(hazard.get("kind", "jellyfish")),
+		"movement": str(hazard.get("movement", "")),
+		"path": path,
+		"speed_px_per_second": float(hazard.get("speed_tiles_per_second", 1.0)) * float(tile_size),
+		"phase_offset_seconds": float(hazard.get("phase_offset_seconds", 0.0)),
+		"route_context": str(hazard.get("route_context", "")),
+		"display_label": str(hazard.get("display_label", "")),
+	}
+
+
 func _progression_container_runtime_info(container: Dictionary) -> Dictionary:
 	return {
 		"id": str(container.get("id", "progression_container")),
@@ -567,6 +623,26 @@ func _build_progression_containers(containers: Array) -> void:
 		if show_debug_overlay:
 			_add_rect_outline(container, "%sDebugOutline" % container_id, Color(0.84, 0.55, 1.0, 0.65), 3.0, 23)
 			_add_debug_label("CHEST", rect.position + Vector2(6, -18), Color(0.84, 0.55, 1.0, 0.9))
+
+
+func _build_moving_hazards(hazards: Array) -> void:
+	for hazard in hazards:
+		_moving_hazards.append(hazard)
+		var hazard_id := str(hazard.get("id", "MovingHazard"))
+		var center := _moving_hazard_initial_center(hazard)
+		var hazard_node: Node2D = _prop_renderer_helper().add_hazard_prop(
+			_marker_root,
+			hazard_id,
+			center,
+			str(hazard.get("kind", "jellyfish")),
+			_asset_lookup_helper()
+		)
+		hazard_node.z_index = 12
+		_moving_hazard_nodes_by_id[hazard_id] = hazard_node
+		_moving_hazard_positions_by_id[hazard_id] = center
+		_add_moving_hazard_path_marker(hazard_id, hazard.get("path", []))
+		if show_debug_overlay:
+			_add_debug_label("MOVING HAZARD", center + Vector2(18, -22), Color(1.0, 0.58, 0.69, 0.9))
 
 
 func _build_entities(entities: Array) -> void:
@@ -758,6 +834,16 @@ func _add_chest_marker(marker_name: String, rect: Rect2) -> Node2D:
 	return root
 
 
+func _add_moving_hazard_path_marker(marker_name: String, path: Array) -> void:
+	if path.size() < 2:
+		return
+	var points := PackedVector2Array()
+	for point in path:
+		points.append(_point_center(point))
+	var line := _add_local_line(_marker_root, "%sPatrolPath" % marker_name, points, Color(1.0, 0.58, 0.69, 0.42), 3.0)
+	line.z_index = 6
+
+
 func _add_local_polygon(parent: Node2D, polygon_name: String, points: PackedVector2Array, color: Color) -> Polygon2D:
 	var poly := Polygon2D.new()
 	poly.name = polygon_name
@@ -842,6 +928,14 @@ func _rect_center(item: Dictionary) -> Vector2:
 		(float(item["x"]) + float(item["w"]) * 0.5) * tile_size,
 		(float(item["y"]) + float(item["h"]) * 0.5) * tile_size
 	)
+
+
+func _point_center(item: Dictionary) -> Vector2:
+	return Vector2((float(item["x"]) + 0.5) * tile_size, (float(item["y"]) + 0.5) * tile_size)
+
+
+func _moving_hazard_initial_center(hazard: Dictionary) -> Vector2:
+	return _point_center({"x": int(hazard.get("x", 0)), "y": int(hazard.get("y", 0))})
 
 
 func _rect_size(item: Dictionary) -> Vector2:

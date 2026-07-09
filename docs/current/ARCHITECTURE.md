@@ -81,7 +81,7 @@ Additional current map sources:
 
 - `scenes/world/GreyboxWorld.tscn`
   - Runtime renderer for the greybox map.
-  - Orchestrates focused world helpers that render source JSON, cave terrain, collision, background art, route markers, extraction zones, boat spawns, salvage, timed-salvage affordance markers, hazards, and spawn markers.
+  - Orchestrates focused world helpers that render source JSON, cave terrain, collision, background art, route markers, extraction zones, boat spawns, salvage, timed-salvage affordance markers, static hazards, moving hazards, and spawn markers.
 
 - `scenes/player/Player.tscn`
   - Basic placeholder diver/sub-style player.
@@ -95,15 +95,16 @@ Additional current map sources:
   - Applies camera bounds from the world map size.
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
   - Shows compact preview review context, salvage progress, timed/pry salvage feedback, oxygen-rest/current-gate feedback, route-objective progress/start cue, session wallet/upgrade feedback, world-connector prompts, and scoped oxygen pressure.
-  - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress/cancel/complete feedback, staged pry salvage progress/cancel/complete feedback, cargo banking, session wallet payout, session oxygen/cargo/light/propulsion upgrades, one source-authored upgrade-chest reward, prompted world-slice transition, oxygen pressure, limited oxygen-rest recovery, current-gate pushback, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, route outcome result text, source-tagged return-pressure feedback, source-tagged pre-pickup route cue feedback, route-objective feedback, and primary-objective completion gating.
-  - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, focused timed/pry salvage captures, focused Pass 07-15 captures, focused primary dive completion capture, Pass 18 progression capture, Pass 19 cargo upgrade capture, Pass 20 light upgrade capture, Pass 21 world connector capture, current-gate capture, and upgrade-chest capture.
-  - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, timed/pry salvage, hazard pressure, oxygen pressure, oxygen-rest pressure, current gates, upgrade chest, cargo/scoring, route outcome result, player-facing, movement-feel, Pass 08-15 objective/route smokes, primary dive completion, Pass 18 progression, Pass 19 cargo upgrade, Pass 20 light upgrade, Pass 21 world connector, and production-slice route checks.
+  - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress/cancel/complete feedback, staged pry salvage progress/cancel/complete feedback, cargo banking, session wallet payout, session oxygen/cargo/light/propulsion upgrades, one source-authored upgrade-chest reward, prompted world-slice transition, oxygen pressure, limited oxygen-rest recovery, current-gate pushback, moving-hazard patrol/contact, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, route outcome result text, source-tagged return-pressure feedback, source-tagged pre-pickup route cue feedback, route-objective feedback, and primary-objective completion gating.
+  - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, focused timed/pry salvage captures, focused Pass 07-15 captures, focused primary dive completion capture, Pass 18 progression capture, Pass 19 cargo upgrade capture, Pass 20 light upgrade capture, Pass 21 world connector capture, current-gate capture, upgrade-chest capture, and moving-hazard capture.
+  - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, timed/pry salvage, hazard pressure, oxygen pressure, oxygen-rest pressure, current gates, upgrade chest, moving hazards, cargo/scoring, route outcome result, player-facing, movement-feel, Pass 08-15 objective/route smokes, primary dive completion, Pass 18 progression, Pass 19 cargo upgrade, Pass 20 light upgrade, Pass 21 world connector, and production-slice route checks.
   - Uses `scripts/main/timed_salvage_controller.gd` for the narrow timed salvage interaction.
   - Uses `scripts/main/pry_salvage_controller.gd` for the narrow staged pry salvage interaction.
   - Uses `scripts/main/return_pressure_feedback.gd` for the narrow source-tagged cargo-full banking prompt.
   - Uses `scripts/main/pre_pickup_route_cue_feedback.gd` for the narrow source-tagged pre-pickup route cue prompt.
   - Uses `scripts/main/oxygen_rest_pocket_feedback.gd` for the narrow source-tagged oxygen-rest prompt and cap text.
   - Uses `scripts/main/current_gate_controller.gd` for the narrow source-authored current pushback gate.
+  - Uses `scripts/main/moving_hazard_controller.gd` for the first deterministic source-authored moving hazard patrol.
   - Uses `scripts/main/progression_container_controller.gd` for the narrow source-authored upgrade-chest reward state.
   - Uses `scripts/main/route_commitment_feedback.gd` for the narrow source-authored route objective overlay, start cue, objective step cue, and result text.
   - Uses `scripts/main/primary_dive_objective.gd` for maps that opt into source-authored primary objective completion.
@@ -182,7 +183,7 @@ Art placement must not create, remove, or move collision.
 - Pass 21 adds a source-authored prompted connector from `production_slice_01` to `production_slice_04`, preserving session wallet/upgrades while resetting destination-local expedition state, protected by `--smoke-pass-21-world-connector`.
 - Pass 22 adds `lower_left_loop_current`, a source-authored soft-push current gate overlapping the lower-left connector. It blocks connector use and pushes the diver right until the session-only `propulsion_fins` upgrade is purchased, while oxygen continues draining. It is protected by `--smoke-current-gate`.
 - Pass 23 adds `lower_loop_upgrade_chest`, a source-authored `upgrade_chest` that grants a one-time session wallet reward on an optional lower-loop detour without entering cargo or adding inventory UI. It is protected by `--smoke-upgrade-chest`.
-- The next moving-hazard work is design-scoped in `docs/current/MOVING_HAZARD_DODGE_CONTRACT.md`: one deterministic patrol as dodge pressure, not combat or broad enemy AI.
+- Pass 24 adds `deep_route_jellyfish_patrol`, one source-authored deterministic `linear_patrol` moving hazard on the lower-loop-to-deep-cache route. Contact reuses existing hazard reset/oxygen semantics, and the scope remains dodge pressure, not combat or broad enemy AI. It is protected by `--smoke-moving-hazard`.
 - The default slice has one source-authored `timed_salvage` target, `salvage_deep_right_cache`, that renders a small in-world affordance and requires 2.5 seconds of in-range progress before entering held cargo.
 - Timed-salvage feedback covers progress, cancel, completion, cargo-full blocking, hazard reset, and oxygen failure/reset through `--smoke-timed-salvage`.
 - The default slice has one source-authored `pry_salvage` target, `salvage_pry_locker`, that requires staged in-range progress before entering held cargo and keeps completed stages during normal exploration.
@@ -205,4 +206,5 @@ Art placement must not create, remove, or move collision.
 - `--capture-pass-21-world-connector` provides a focused review capture for the Pass 21 destination-arrival connector state without replacing normal accepted baselines.
 - `--capture-current-gate` provides a focused review capture for the current-gate blocked prompt and connector area without replacing normal accepted baselines.
 - `--capture-upgrade-chest` provides a focused review capture for the first upgrade-chest reward state without replacing normal accepted baselines.
+- `--capture-moving-hazard` provides a focused review capture for the first deterministic moving-hazard patrol without replacing normal accepted baselines.
 - First screenshot baseline is committed at `visual_baselines/001_greybox_in_engine.png`.

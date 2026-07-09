@@ -2,13 +2,13 @@
 
 Date: 2026-07-09
 
-Issue: #449 `Design first enemy-as-moving-hazard dodge encounter`
+Issues: #449 `Design first enemy-as-moving-hazard dodge encounter`; #450 `Prototype one moving-hazard dodge encounter`
 
 ## Decision
 
 Treat the first enemy-like encounter as one deterministic moving hazard, not as combat, creature AI, health, loot, drops, or an ecosystem. Its purpose is a readable dodge-pressure beat on an authored route.
 
-The first implementation should add one source-authored patrol in `production_slice_01`, then stop for smoke/capture review before adding more moving hazards.
+The first implementation adds one source-authored patrol in `production_slice_01`, then stops for smoke/capture review before adding more moving hazards.
 
 ## Target Experience
 
@@ -17,6 +17,7 @@ The player sees a slow hazard crossing a route, waits or swims around it, and un
 Recommended first route:
 
 - Map: `production_slice_01`
+- Implemented hazard: `deep_route_jellyfish_patrol`
 - Context: the `lower_loop_to_deep_cache_pressure` / `hazard_right_branch` route toward the primary deep-cache objective
 - Role: make the lower-loop-to-deep-cache transition feel more alive and risky after the player has committed to the deeper route
 - Non-role: do not block the route permanently, require a weapon, or add a new objective
@@ -120,6 +121,6 @@ Add one focused capture:
 - hard route locks that require defeating or disabling the hazard
 - adding the moving hazard to slice 03 or the full sketch before the default slice proves the beat
 
-## Next Issue
+## Implementation Status
 
-#450 should implement only the first `linear_patrol` moving hazard, its validator/runtime support, one smoke, one capture, and compact docs/tooling updates.
+#450 implements only the first `linear_patrol` moving hazard, its validator/runtime support, one smoke, one capture, and compact docs/tooling updates. Next work should review the capture/baseline impact before adding additional moving hazards.

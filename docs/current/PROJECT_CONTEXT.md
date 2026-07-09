@@ -463,7 +463,7 @@ Recent important commits:
 
 Use `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md` as the current north star. The project should now finish the small diver game before planning the larger 2D Subnautica-like expansion.
 
-Pass 23 gives the default slice one small source-authored upgrade-chest payoff after the first current/propulsion gate. The next active Milestone 02 hazard-pressure step is one deterministic moving hazard as a dodge/timing beat, documented in `docs/current/MOVING_HAZARD_DODGE_CONTRACT.md`, not a combat or broad enemy-AI system.
+Pass 23 gives the default slice one small source-authored upgrade-chest payoff after the first current/propulsion gate. Pass 24 adds `deep_route_jellyfish_patrol`, one deterministic source-authored moving hazard as a dodge/timing beat on the lower-loop-to-deep-cache route, documented in `docs/current/MOVING_HAZARD_DODGE_CONTRACT.md`, not a combat or broad enemy-AI system.
 
 Accepted constraints for the next batch:
 

@@ -2422,6 +2422,29 @@
       "intent": "Pass 23 first small progression chest rewarding the lower-loop detour without adding inventory UI."
     }
   ],
+  "moving_hazards": [
+    {
+      "id": "deep_route_jellyfish_patrol",
+      "kind": "jellyfish",
+      "x": 54,
+      "y": 68,
+      "movement": "linear_patrol",
+      "path": [
+        {
+          "x": 54,
+          "y": 68
+        },
+        {
+          "x": 64,
+          "y": 68
+        }
+      ],
+      "speed_tiles_per_second": 1.0,
+      "route_context": "deep_cache_pressure",
+      "display_label": "Jellyfish patrol",
+      "intent": "Pass 24 first deterministic moving hazard on the lower-loop to deep-cache route."
+    }
+  ],
   "route_objectives": [
     {
       "id": "deep_cache_route_objective",

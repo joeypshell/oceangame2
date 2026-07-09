@@ -5,6 +5,8 @@ const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const CurrentGateCapture := preload("res://scripts/main/captures/current_gate_capture.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
+const MovingHazardCapture := preload("res://scripts/main/captures/moving_hazard_capture.gd")
+const MovingHazardController := preload("res://scripts/main/moving_hazard_controller.gd")
 const OxygenRestPocketFeedback := preload("res://scripts/main/oxygen_rest_pocket_feedback.gd")
 const PrePickupRouteCueFeedback := preload("res://scripts/main/pre_pickup_route_cue_feedback.gd")
 const PrimaryDiveObjective := preload("res://scripts/main/primary_dive_objective.gd")
@@ -28,6 +30,7 @@ const SmokeScoreChecks := preload("res://scripts/main/smoke/smoke_score_checks.g
 const SmokeWorldConnectorChecks := preload("res://scripts/main/smoke/smoke_world_connector_checks.gd")
 const SmokeCurrentGateChecks := preload("res://scripts/main/smoke/smoke_current_gate_checks.gd")
 const SmokeProgressionContainerChecks := preload("res://scripts/main/smoke/smoke_progression_container_checks.gd")
+const SmokeMovingHazardChecks := preload("res://scripts/main/smoke/smoke_moving_hazard_checks.gd")
 const UpgradeChestCapture := preload("res://scripts/main/captures/upgrade_chest_capture.gd")
 const DEFAULT_MAP_PATH := "res://maps/production_slice_01.greybox.json"
 const ORIGINAL_MAP_PATH := "res://maps/cave_salvage_test_01.greybox.json"
@@ -71,6 +74,7 @@ const PASS_19_CARGO_UPGRADE_CAPTURE_DIR := "res://visual_captures/pass_19_cargo_
 const PASS_20_LIGHT_UPGRADE_CAPTURE_DIR := "res://visual_captures/pass_20_light_upgrade"
 const PASS_21_WORLD_CONNECTOR_CAPTURE_DIR := "res://visual_captures/pass_21_world_connector"
 const CURRENT_GATE_CAPTURE_DIR := "res://visual_captures/current_gate"
+const MOVING_HAZARD_CAPTURE_DIR := "res://visual_captures/moving_hazard"
 const UPGRADE_CHEST_CAPTURE_DIR := "res://visual_captures/upgrade_chest"
 const PRIMARY_DIVE_COMPLETION_CAPTURE_DIR := "res://visual_captures/primary_dive_completion"
 const BUILD_INFO_PATH := "res://build_info.json"
@@ -108,6 +112,7 @@ var _world
 var _player
 var _capture_controller
 var _current_gate
+var _moving_hazards
 var _oxygen_rest_feedback
 var _pre_pickup_route_cue_feedback
 var _primary_dive_objective
@@ -131,6 +136,7 @@ var _smoke_score_checks
 var _smoke_world_connector_checks
 var _smoke_current_gate_checks
 var _smoke_progression_container_checks
+var _smoke_moving_hazard_checks
 var _review_canvas: CanvasLayer
 var _review_label: Label
 var _status_label: Label
@@ -163,6 +169,7 @@ var _last_status_note := ""
 func _ready() -> void:
 	_capture_controller = CaptureController.new(self)
 	_current_gate = CurrentGateController.new()
+	_moving_hazards = MovingHazardController.new()
 	_oxygen_rest_feedback = OxygenRestPocketFeedback.new()
 	_pre_pickup_route_cue_feedback = PrePickupRouteCueFeedback.new()
 	_primary_dive_objective = PrimaryDiveObjective.new()
@@ -186,6 +193,7 @@ func _ready() -> void:
 	_smoke_world_connector_checks = SmokeWorldConnectorChecks.new(self)
 	_smoke_current_gate_checks = SmokeCurrentGateChecks.new(self)
 	_smoke_progression_container_checks = SmokeProgressionContainerChecks.new(self)
+	_smoke_moving_hazard_checks = SmokeMovingHazardChecks.new(self)
 	var user_args := OS.get_cmdline_user_args()
 	var engine_args := OS.get_cmdline_args()
 	var capture_original_map := _has_arg(user_args, engine_args, "--capture-original-map")
@@ -220,6 +228,7 @@ func _ready() -> void:
 	var capture_pass_20_light_upgrade := _has_arg(user_args, engine_args, "--capture-pass-20-light-upgrade")
 	var capture_pass_21_world_connector := _has_arg(user_args, engine_args, "--capture-pass-21-world-connector")
 	var capture_current_gate := _has_arg(user_args, engine_args, "--capture-current-gate")
+	var capture_moving_hazard := _has_arg(user_args, engine_args, "--capture-moving-hazard")
 	var capture_upgrade_chest := _has_arg(user_args, engine_args, "--capture-upgrade-chest")
 	var capture_primary_dive_completion := _has_arg(user_args, engine_args, "--capture-primary-dive-completion")
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
@@ -245,6 +254,7 @@ func _ready() -> void:
 	var smoke_pass_20_light_upgrade := _has_arg(user_args, engine_args, "--smoke-pass-20-light-upgrade")
 	var smoke_pass_21_world_connector := _has_arg(user_args, engine_args, "--smoke-pass-21-world-connector")
 	var smoke_current_gate := _has_arg(user_args, engine_args, "--smoke-current-gate")
+	var smoke_moving_hazard := _has_arg(user_args, engine_args, "--smoke-moving-hazard")
 	var smoke_upgrade_chest := _has_arg(user_args, engine_args, "--smoke-upgrade-chest")
 	var smoke_primary_dive_completion := _has_arg(user_args, engine_args, "--smoke-primary-dive-completion")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
@@ -329,6 +339,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_current_gate:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif capture_moving_hazard:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_upgrade_chest:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_primary_dive_completion:
@@ -370,6 +382,8 @@ func _ready() -> void:
 	elif smoke_pass_21_world_connector:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_current_gate:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_moving_hazard:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_upgrade_chest:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
@@ -441,6 +455,7 @@ func _ready() -> void:
 		or capture_pass_20_light_upgrade
 		or capture_pass_21_world_connector
 		or capture_current_gate
+		or capture_moving_hazard
 		or capture_upgrade_chest
 		or capture_primary_dive_completion
 		or smoke_salvage_loop
@@ -465,6 +480,7 @@ func _ready() -> void:
 		or smoke_pass_20_light_upgrade
 		or smoke_pass_21_world_connector
 		or smoke_current_gate
+		or smoke_moving_hazard
 		or smoke_upgrade_chest
 		or smoke_primary_dive_completion
 		or smoke_oxygen_pressure
@@ -558,6 +574,9 @@ func _ready() -> void:
 		return
 	if smoke_current_gate:
 		_smoke_current_gate_checks._smoke_current_gate_and_quit()
+		return
+	if smoke_moving_hazard:
+		_smoke_moving_hazard_checks._smoke_moving_hazard_and_quit()
 		return
 	if smoke_upgrade_chest:
 		_smoke_progression_container_checks._smoke_upgrade_chest_and_quit()
@@ -677,6 +696,9 @@ func _ready() -> void:
 	elif capture_current_gate:
 		var capture := CurrentGateCapture.new(self)
 		await capture.capture_and_quit(CURRENT_GATE_CAPTURE_DIR)
+	elif capture_moving_hazard:
+		var capture := MovingHazardCapture.new(self)
+		await capture.capture_and_quit(MOVING_HAZARD_CAPTURE_DIR)
 	elif capture_upgrade_chest:
 		var capture := UpgradeChestCapture.new(self)
 		await capture.capture_and_quit(UPGRADE_CHEST_CAPTURE_DIR)
@@ -721,6 +743,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_banked_score = 0
 	_completion_oxygen_bonus = 0
 	_current_gate.reset()
+	_moving_hazards.reset(world)
 	_pry_salvage.reset()
 	_timed_salvage.reset()
 	_progression_containers.apply_opened_to_world(world)
@@ -780,6 +803,7 @@ func _process(delta: float) -> void:
 		_update_status_label()
 		return
 	_update_current_gate(delta)
+	_update_moving_hazards(delta)
 	_update_progression_containers()
 
 	if _hazard_cooldown_seconds > 0.0:
@@ -1039,6 +1063,12 @@ func _update_current_gate(delta: float) -> void:
 	_current_gate.update(_world, _player, Callable(self, "_has_upgrade_id"), delta)
 
 
+func _update_moving_hazards(delta: float) -> void:
+	if _moving_hazards == null or _world == null or _player == null:
+		return
+	_moving_hazards.update(_world, _player.global_position, HAZARD_WARNING_RADIUS, delta)
+
+
 func _current_gate_block_prompt(gate: Dictionary) -> String:
 	var label := str(gate.get("current_gate_label", "Strong current")).strip_edges()
 	if label.is_empty():
@@ -1050,6 +1080,7 @@ func _current_gate_block_prompt(gate: Dictionary) -> String:
 func _handle_oxygen_depleted() -> void:
 	_oxygen_rest_feedback.reset()
 	_current_gate.reset()
+	_moving_hazards.reset(_world)
 	_pry_salvage.reset()
 	_timed_salvage.reset()
 	if not _held_salvage_ids.is_empty():
@@ -1075,6 +1106,7 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 	_hazard_warning_id = ""
 	_oxygen_rest_feedback.reset()
 	_current_gate.reset()
+	_moving_hazards.reset(_world)
 	_pry_salvage.reset()
 	_timed_salvage.reset()
 	var oxygen_depleted := _apply_hazard_oxygen_penalty()
@@ -1108,6 +1140,9 @@ func _apply_hazard_oxygen_penalty() -> bool:
 func _update_hazard_warning() -> void:
 	_hazard_warning_id = ""
 	if not _hazard_interactions_enabled or _hazard_cooldown_seconds > 0.0:
+		return
+	if _moving_hazards != null and not _moving_hazards.warning_id().is_empty():
+		_hazard_warning_id = _moving_hazards.warning_id()
 		return
 	var hazard: Dictionary = _world.get_nearest_hazard_within(_player.global_position, HAZARD_WARNING_RADIUS)
 	if hazard.is_empty():
@@ -1357,6 +1392,8 @@ func _route_commitment_result_text() -> String:
 
 
 func _hazard_warning_prompt() -> String:
+	if _moving_hazards != null and _hazard_warning_id == _moving_hazards.warning_id():
+		return _moving_hazards.warning_prompt()
 	if _hazard_warning_id == PASS_07_PRESSURE_HAZARD_ID:
 		return PRESSURE_HAZARD_WARNING_PROMPT
 	return GENERIC_HAZARD_WARNING_PROMPT
