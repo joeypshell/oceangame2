@@ -278,6 +278,7 @@ jobs:
           run_route_smoke --smoke-pass-14-objective-cue pass-14-objective-cue
           run_route_smoke --smoke-pass-15-objective-follow-through pass-15-objective-follow-through
           run_route_smoke --smoke-primary-dive-completion primary-dive-completion
+          run_route_smoke --smoke-pass-23-next-dive-objective pass-23-next-dive-objective
           run_route_smoke --smoke-production-slice-02-route production-slice-02-route
           run_route_smoke --smoke-production-slice-03-route production-slice-03-route
           run_route_smoke --smoke-production-slice-04-route production-slice-04-route
