@@ -247,12 +247,20 @@ func _try_purchase_cargo_capacity_upgrade() -> bool:
 	return _main._try_purchase_cargo_capacity_upgrade()
 
 
+func _try_purchase_light_upgrade() -> bool:
+	return _main._try_purchase_light_upgrade()
+
+
 func _has_oxygen_tank_upgrade() -> bool:
 	return _main._has_oxygen_tank_upgrade()
 
 
 func _has_cargo_capacity_upgrade() -> bool:
 	return _main._has_cargo_capacity_upgrade()
+
+
+func _has_light_upgrade() -> bool:
+	return _main._has_light_upgrade()
 
 
 func _held_salvage_capacity() -> int:
