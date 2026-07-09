@@ -199,6 +199,22 @@ jobs:
             exit 1
           fi
 
+      - name: Run pry salvage smoke check
+        run: |
+          set +e
+          godot --headless --path . --smoke-pry-salvage 2>&1 | tee godot-pry-salvage.log
+          godot_status=${PIPESTATUS[0]}
+          set -e
+
+          if [ "${godot_status}" -ne 0 ]; then
+            exit "${godot_status}"
+          fi
+
+          if grep -E "SCRIPT ERROR|ERROR:" godot-pry-salvage.log; then
+            echo "Godot reported errors during pry salvage smoke check."
+            exit 1
+          fi
+
       - name: Run player-facing smoke check
         run: |
           set +e
