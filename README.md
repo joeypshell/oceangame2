@@ -131,6 +131,7 @@ Current release-candidate handoff starts with the Simple Diver Game 08 plan, val
 - [Simple Diver Game 08 Web Export Handoff](docs/current/SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md)
 - [Simple Diver Game 08 Baseline And Capture Audit](docs/current/SIMPLE_DIVER_GAME_08_BASELINE_CAPTURE_AUDIT.md)
 - [Simple Diver Game 08 Release-Candidate Closeout](docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md)
+- [Simple Diver Game 09 Expansion Planning](docs/current/SIMPLE_DIVER_GAME_09_EXPANSION_PLAN.md)
 - [First Feedback Audio Micro-Pass Plan](docs/current/FIRST_FEEDBACK_AUDIO_MICRO_PASS_PLAN.md)
 - [First Feedback Audio Cue Contract](docs/current/FIRST_FEEDBACK_AUDIO_CUE_CONTRACT.md)
 - [First Feedback Audio Review Note](docs/current/FIRST_FEEDBACK_AUDIO_REVIEW.md)
