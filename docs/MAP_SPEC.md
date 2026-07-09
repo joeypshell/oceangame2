@@ -385,6 +385,44 @@ Recommended Pass 21 metadata:
 }
 ```
 
+## Current Gate Markers
+
+Playable maps may include optional current gate markers under `zones`. A current gate is a source-authored water volume that pushes against entry or return travel until the player has the required movement upgrade. It is route pressure, not terrain collision.
+
+The first supported current gate is intentionally narrow:
+
+- `type`: must be `marker`.
+- `current_gate`: must be `true` when current metadata is present.
+- zone `id`: current gate id; must be unique and lower_snake_case.
+- `current_direction`: required `left`, `right`, `up`, or `down`; this is the direction the water pushes the diver.
+- `current_strength`: required positive number; prototype runtime treats it as a relative pushback strength.
+- `required_upgrade_id`: required lower_snake_case upgrade id that disables or overcomes the current.
+- `current_gate_label`: optional compact label for overlay/capture text. Use lower_snake_case or short display-safe text.
+- `route_context`: optional lower_snake_case route grouping for smoke/capture discovery.
+
+First runtime behavior should be soft pushback before the required upgrade, not hard no-entry and not an oxygen/time penalty. The marker rectangle must stay in bounds, contain only non-solid reachable water cells, and remain source-authored through the map generator/source path. It must not author collision, terrain edits, score, wallet, cargo, oxygen values, objective completion, upgrade ownership, save state, or destination loading.
+
+Recommended first placement is one current gate near the `production_slice_01` to `production_slice_04` connection or inside `production_slice_04`'s return route, where it can make the new connected route feel like a meaningful place without expanding the full map.
+
+Recommended metadata:
+
+```json
+{
+  "id": "lower_loop_return_current",
+  "type": "marker",
+  "x": 38,
+  "y": 68,
+  "w": 5,
+  "h": 4,
+  "current_gate": true,
+  "current_direction": "left",
+  "current_strength": 1.0,
+  "required_upgrade_id": "propulsion_fins",
+  "current_gate_label": "Strong current",
+  "route_context": "lower_loop_return"
+}
+```
+
 `hazard` entities require `kind`. Current valid-style examples are `mine`, `jellyfish`, and `stress_marker`.
 Production previews may use `kind` to choose first-pass prop art, but hazard behavior is still determined by `type: "hazard"`.
 
@@ -409,6 +447,7 @@ Validation expectations:
 - Objective-step cue metadata is supported only on marker zones. Cue rectangles must be in bounds, non-solid, reachable, outside the boat/extraction area, linked to an existing objective, and targeted at a required playable salvage id.
 - Oxygen rest metadata is supported only on marker zones. Rest rectangles must be in bounds, non-solid, reachable, and use positive cap/refill values.
 - World connector metadata is supported only on marker zones. Connector rectangles must be in bounds, non-solid, reachable, and reference a committed destination map plus an existing destination `spawn` or `boat_spawn` entry id.
+- Current gate metadata is supported only on marker zones. Current rectangles must be in bounds, non-solid, reachable, use a supported direction, positive strength, and a lower_snake_case required upgrade id.
 - Entity coordinates must be inside map bounds, non-solid, and reachable from the player entry cell.
 - Maps must define exactly one `spawn` or `boat_spawn`.
 - Playable salvage maps must define a base extraction zone or use `boat_spawn` extraction. Renderer stress-test maps may use `stress_marker` salvage without an extraction zone.
