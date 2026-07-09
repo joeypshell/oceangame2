@@ -830,6 +830,35 @@ func _play_feedback_cue(cue_id: String, dedupe_key := "") -> bool:
 	return _audio_cues.play_cue(cue_id, dedupe_key)
 
 
+func _input(event: InputEvent) -> void:
+	_unlock_feedback_audio_from_event(event)
+
+
+func _unlock_feedback_audio_from_event(event: InputEvent) -> void:
+	if _audio_cues == null or not _audio_cues.has_method("unlock_playback"):
+		return
+	if event is InputEventKey:
+		var key_event := event as InputEventKey
+		if key_event.pressed and not key_event.echo:
+			_audio_cues.unlock_playback()
+	elif event is InputEventMouseButton:
+		var mouse_event := event as InputEventMouseButton
+		if mouse_event.pressed:
+			_audio_cues.unlock_playback()
+	elif event is InputEventScreenTouch:
+		var touch_event := event as InputEventScreenTouch
+		if touch_event.pressed:
+			_audio_cues.unlock_playback()
+	elif event is InputEventJoypadButton:
+		var button_event := event as InputEventJoypadButton
+		if button_event.pressed:
+			_audio_cues.unlock_playback()
+	elif event is InputEventJoypadMotion:
+		var motion_event := event as InputEventJoypadMotion
+		if absf(motion_event.axis_value) > 0.2:
+			_audio_cues.unlock_playback()
+
+
 func _process(delta: float) -> void:
 	if _world == null or _player == null:
 		return
