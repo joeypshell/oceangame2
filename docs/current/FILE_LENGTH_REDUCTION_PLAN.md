@@ -6,12 +6,14 @@ Planning-only note. Do not move code or change gameplay behavior in this pass.
 
 ## 1. Current Confirmed Oversized Files
 
-`python tools/check_file_lengths.py` currently reports these oversized files:
+The 2026-07-09 audit reports two remaining temporary human-authored exceptions:
 
-- `scripts/main/main.gd`: 2318 lines, human-authored gameplay shell.
-- `scripts/world/greybox_world.gd`: 1315 lines, human-authored world/source renderer.
-- `docs/current/TOOLING.md`: 639 lines, human-authored tooling index.
-- `docs/current/PROJECT_CONTEXT.md`: 556 lines, human-authored session handoff.
+- `scripts/main/main.gd`: 2175 lines, gameplay/application orchestration shell.
+- `scripts/world/greybox_world.gd`: 1088 lines, world/source coordinator.
+
+`docs/current/TOOLING.md` is now a compact index with focused child docs, and `docs/current/PROJECT_CONTEXT.md` is under 500 lines. Neither remains allowlist debt.
+
+Near-limit files also need growth guards: `capture_controller.gd` is 500 lines, several smoke helpers are 491-497 lines, and expansion checks must use new domain files.
 - `maps/full_cave_sketch_01.greybox.json`: 3035 lines, generated/source map data.
 - `maps/production_slice_01.greybox.json`: 2433 lines, generated/source map data.
 - `maps/production_slice_03.greybox.json`: 2218 lines, generated/source map data.
@@ -26,7 +28,7 @@ Keep `maps/*.greybox.json` temporarily allowlisted. These files are source data 
 
 Do not split generated map JSON by hand. If map data becomes hard to review, create a separate source-format/generator issue that preserves source-of-truth validation, map parity, reachability checks, and rendered review sheets.
 
-`docs/current/PROJECT_CONTEXT.md` is also temporarily allowlisted. Reduce it later by archiving stale issue history and moving dense command lists into smaller current docs.
+Human-authored Markdown is no longer temporarily allowlisted. Keep current handoff docs concise and replace/archive stale detail instead of crossing 500 lines again.
 
 ## 3. Proposed Split Of `scripts/main/main.gd`
 
@@ -42,6 +44,8 @@ Recommended extraction boundaries:
 
 Keep the first split narrow: extract mode resolution without changing runtime semantics. Then extract one domain at a time with smoke coverage after each move.
 
+Status: capture and smoke responsibilities have focused helpers, but `main.gd` remains oversized. The next expansion gate is a no-behavior extraction of progression transaction/presentation wrappers before scanner/profile growth; see `SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`.
+
 ## 4. Proposed Split Of `scripts/world/greybox_world.gd`
 
 Goal: keep `greybox_world.gd` as world coordination. It should load validated map data, own top-level node roots, expose stable runtime query methods, and delegate rendering/query details.
@@ -55,7 +59,9 @@ Recommended extraction boundaries:
 
 Preserve the public method names used by `main.gd` until call sites are intentionally updated. Do not change JSON map semantics, collision derivation, spawn/extraction behavior, or parity reports during these splits.
 
-## 5. Proposed Split Of `docs/current/TOOLING.md`
+Status: terrain, collision, debug, background, prop, extraction, route-marker, visibility, and asset lookup helpers have been extracted. The next expansion gate is a no-behavior world query/path helper extraction before survey/fauna queries.
+
+## 5. Completed Split Of `docs/current/TOOLING.md`
 
 Goal: make `TOOLING.md` a short index under 500 lines and move dense command/reference sections into focused docs under `docs/current/tooling/`.
 
@@ -68,22 +74,14 @@ Suggested files:
 - `docs/current/tooling/web_preview.md`: local web export, Pages verification, build metadata.
 - `docs/current/tooling/assets.md`: asset manifest, terrain atlas coverage, sprite generation, local asset processing.
 
-Keep `TOOLING.md` as a compact table of contents plus the most common commands. Avoid duplicating long command blocks between the index and child docs.
+`TOOLING.md` is now a compact table of contents plus common commands. Keep it that way and avoid duplicating long command blocks between the index and child docs.
 
-## 6. Recommended Issue Order
+## 6. Recommended Remaining Order
 
-1. Split `docs/current/TOOLING.md` into `docs/current/tooling/` child docs and keep the root index under 500 lines.
-2. Trim/archive `docs/current/PROJECT_CONTEXT.md` issue-history and command-list detail so it returns under 500 lines.
-3. Extract command-line mode resolution from `scripts/main/main.gd`.
-4. Extract capture controller code from `scripts/main/main.gd`.
-5. Extract review/result overlay code from `scripts/main/main.gd`.
-6. Extract expedition/run state from `scripts/main/main.gd`.
-7. Split `main.gd` smoke checks into domain files.
-8. Extract terrain rendering from `scripts/world/greybox_world.gd`.
-9. Extract entity/prop rendering from `scripts/world/greybox_world.gd`.
-10. Extract world query/path/reachability helpers from `scripts/world/greybox_world.gd`.
-11. Extract texture loading/asset lookup from `scripts/world/greybox_world.gd` if it remains a meaningful reduction.
-12. Remove temporary allowlist entries from `tools/check_file_lengths.py` after each human-authored file is under 500 lines.
+1. Extract progression transaction/presentation wrappers from `scripts/main/main.gd` before scanner/profile integration.
+2. Extract world query/path/reachability helpers from `scripts/world/greybox_world.gd` before survey/fauna query growth.
+3. Continue domain-driven extractions only when a selected feature needs the ownership boundary.
+4. Remove each temporary allowlist entry after its owner file is under 500 lines.
 
 ## 7. Verification Commands After Each Split
 
