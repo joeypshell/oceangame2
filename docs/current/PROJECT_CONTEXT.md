@@ -40,7 +40,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
 - Latest completed pass closeout: `docs/current/DEPTH_DARKNESS_LIGHT_GATE_CLOSEOUT.md`
-- Latest pass docs: `docs/current/DEPTH_DARKNESS_LIGHT_GATE_CONTRACT.md`, `docs/current/DEPTH_DARKNESS_LIGHT_GATE_VISUAL_BASELINE_DECISION.md`
+- Current next plan: `docs/current/FIRST_FEEDBACK_AUDIO_MICRO_PASS_PLAN.md`
 - Latest Web verification: `docs/current/DEPTH_DARKNESS_LIGHT_GATE_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
@@ -216,7 +216,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-09:
 
-- Active roadmap queue: #471 should plan the next Presentation And Game Feel micro-pass; #52/#53 remain deferred slice-03 polish. Closed: #462-#470 completed the first visual-only darkness/light gate, including schema, source authoring, runtime readability, smoke, capture, visual decision, Web verification, and closeout.
+- Active roadmap queue: #481-#490 cover the first compact feedback/audio micro-pass; #52/#53 remain deferred slice-03 polish. Closed: #462-#471 completed the darkness/light gate closeout and selected the next Presentation And Game Feel batch.
 - Closed: #420-#429 completed Pass 21 planning, connector contract, schema validation, source connector authoring, runtime transition, smoke, capture, visual decision, Web verification, and closeout.
 - Closed: #400-#409 completed Pass 20 light confidence progression, including planning, light contract, session light upgrade, compact overlay feedback, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
 - Closed: #380-#389 completed Pass 19 cargo capacity progression, including planning, cargo contract, session cargo upgrade, compact overlay feedback, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
@@ -463,7 +463,7 @@ Recent important commits:
 
 Use `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md` as the current north star. The project should now finish the small diver game before planning the larger 2D Subnautica-like expansion.
 
-The darkness/light gate pass (#462-#470) is complete: `deep_cache_dark_pocket` is a visual-only deep-route readability zone improved by `dive_light_1`, not a hard gate or global fog system. #471 should plan the next small Presentation And Game Feel micro-pass.
+The next selected Presentation And Game Feel batch is #481-#490: a first compact feedback/audio cue layer for existing events such as salvage pickup, banking, oxygen pressure, and hazard warning/contact. Keep it tiny: no music, ambience, audio options menu, enemy AI, inventory/loadouts, save systems, or map expansion.
 
 Accepted constraints for the next batch:
 
