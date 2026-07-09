@@ -177,7 +177,7 @@ The first darkness/light gate is complete: `deep_cache_dark_pocket` is a visual-
 
 The first compact feedback/audio cue pass is complete under #481-#490. Pass 22 is also complete under #502-#511: the existing lower-left connector now has a source-authored `production_slice_04` destination cache with compact runtime feedback, smoke, focused capture, visual decision, and public Web verification.
 
-The next batch should be selected before implementation. Best candidate: a tiny Milestone 06 objective/run-structure pass that gives the existing default-slice dive a clearer directed next beat. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, broad audio systems, or full-map productionization.
+The next batch is selected under #523-#531: Controlled Gameplay Pass 23 should add one source-authored next-dive objective prompt after the existing primary deep-cache objective. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, broad audio systems, or full-map productionization.
 
 ## Deferred Work
 
