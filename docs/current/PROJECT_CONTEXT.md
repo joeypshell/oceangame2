@@ -216,7 +216,8 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-09:
 
-- Active roadmap queue: Pass 20 is closed out by #409; choose the next batch from Milestone 05 only if it creates a clearer playable route loop, remembered-place progress, or pressure/payoff decision.
+- Active roadmap queue: Pass 21 is closed out by #429; next work should add player-facing value to the new slice-01 -> slice-04 connection or choose a small Milestone 06 objective/run-structure pass.
+- Closed: #420-#429 completed Pass 21 planning, connector contract, schema validation, source connector authoring, runtime transition, smoke, capture, visual decision, Web verification, and closeout.
 - Closed: #400-#409 completed Pass 20 light confidence progression, including planning, light contract, session light upgrade, compact overlay feedback, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
 - Closed: #380-#389 completed Pass 19 cargo capacity progression, including planning, cargo contract, session cargo upgrade, compact overlay feedback, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
 - Closed: #360-#369 completed Pass 18 session progression, including planning, progression contract, session wallet, one oxygen tank upgrade, compact overlay feedback, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
@@ -462,7 +463,7 @@ Recent important commits:
 
 Use `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md` as the current north star. The project should now finish the small diver game before planning the larger 2D Subnautica-like expansion.
 
-Pass 20 gives Milestone 04 a third small progression loop: banked salvage creates session wallet payout, and oxygen/cargo/light upgrades change the next attempt. The next batch should move to Milestone 05 only if the work creates clearer pressure, payoff, progression, route memory, or a more playable connected route loop.
+Pass 21 gives Milestone 05 its first connected-space proof: `production_slice_01` now has a source-authored prompted connector into `production_slice_04`, with validation, runtime transition, smoke, focused capture, visual review, and public Web verification. The next batch should build player-facing value on that connection only if it creates clearer destination-side payoff, return-loop purpose, remembered-place progress, or objective/run-structure value.
 
 Accepted constraints for the next batch:
 

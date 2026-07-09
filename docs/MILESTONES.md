@@ -41,7 +41,7 @@ The open GitHub milestones should mirror this roadmap:
 
 ## Current Next Direction
 
-Controlled Gameplay Pass 20 completed the current Milestone 04 progression trio: banked salvage now supports one session-only `O2 tank +15` upgrade, one session-only `Cargo +1` upgrade, and one session-only `Light +range` upgrade at extraction. The next meaningful batch should move toward Milestone 05 only if it creates a clearer playable route loop, remembered-place progress, or pressure/payoff decision; do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, or full-map productionization.
+Controlled Gameplay Pass 21 completed the first Milestone 05 connected-slice proof: `production_slice_01` now has a source-authored prompted connector into `production_slice_04`, with validation, runtime transition, smoke, focused capture, visual decision, and Web verification. The next meaningful batch should add player-facing value to that connection, such as a constrained destination-side payoff, return-loop reason, or objective/run-structure step; do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, or full-map productionization.
 
 ## Recently Completed Prototype Passes
 
@@ -62,3 +62,4 @@ Controlled Gameplay Pass 20 completed the current Milestone 04 progression trio:
 - #360-#369 completed Controlled Gameplay Pass 18 session progression, including planning, runtime progression contract, session wallet, one oxygen tank upgrade, overlay feedback, smoke, capture, visual decision, Web verification, and closeout.
 - #380-#389 completed Controlled Gameplay Pass 19 cargo capacity progression, including planning, cargo contract, session cargo upgrade, overlay feedback, smoke, capture, visual decision, Web verification, and closeout.
 - #400-#409 completed Controlled Gameplay Pass 20 light confidence progression, including planning, light contract, session light upgrade, overlay feedback, smoke, capture, visual decision, Web verification, and closeout.
+- #420-#429 completed Controlled Gameplay Pass 21 world-slice connector proof, including planning, connector contract, schema validation, source connector authoring, runtime transition, smoke, capture, visual decision, Web verification, and closeout.
