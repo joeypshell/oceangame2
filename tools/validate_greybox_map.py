@@ -10,6 +10,7 @@ from collections import deque
 from pathlib import Path
 
 from validate_current_gates import validate_current_gate_reachability, validate_current_gate_schema
+from validate_destination_payoffs import validate_destination_payoff_schema
 from validate_moving_hazards import validate_moving_hazard_reachability, validate_moving_hazard_schema
 from validate_progression_containers import (
     validate_progression_container_reachability,
@@ -399,6 +400,7 @@ def main() -> int:
     failures.extend(validate_entity_schema(entities, width, height, base_zones))
     failures.extend(validate_zone_schema(zones, width, height))
     failures.extend(validate_current_gate_schema(map_data))
+    failures.extend(validate_destination_payoff_schema(args.map_json, map_data))
     failures.extend(validate_moving_hazard_schema(map_data))
     failures.extend(validate_progression_container_schema(map_data))
     failures.extend(validate_visibility_zone_schema(map_data))
@@ -411,9 +413,7 @@ def main() -> int:
             print(failure)
         return 1
 
-    spawn_entities = [
-        entity for entity in entities if entity.get("type") in ("spawn", "boat_spawn")
-    ]
+    spawn_entities = [entity for entity in entities if entity.get("type") in ("spawn", "boat_spawn")]
     if len(spawn_entities) != 1:
         print(f"Expected exactly one spawn or boat_spawn entity, found {len(spawn_entities)}.")
         return 1
