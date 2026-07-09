@@ -26,6 +26,7 @@ const TimedSalvageController := preload("res://scripts/main/timed_salvage_contro
 const WorldConnectorController := preload("res://scripts/main/world_connector_controller.gd")
 const AudioCuePlayer := preload("res://scripts/main/audio_cue_player.gd")
 const SmokeFeedbackAudioChecks := preload("res://scripts/main/smoke/smoke_feedback_audio_checks.gd")
+const SmokeFinalDiveObjectiveChecks := preload("res://scripts/main/smoke/smoke_final_dive_objective_checks.gd")
 const SmokeHazardRouteChecks := preload("res://scripts/main/smoke/smoke_hazard_route_checks.gd")
 const SmokeInteractionChecks := preload("res://scripts/main/smoke/smoke_interaction_checks.gd")
 const SmokeOxygenRestChecks := preload("res://scripts/main/smoke/smoke_oxygen_rest_checks.gd")
@@ -145,6 +146,7 @@ var _timed_salvage
 var _world_connector
 var _audio_cues
 var _smoke_feedback_audio_checks
+var _smoke_final_dive_objective_checks
 var _smoke_hazard_route_checks
 var _smoke_interaction_checks
 var _smoke_oxygen_rest_checks
@@ -215,6 +217,7 @@ func _ready() -> void:
 	_audio_cues = AudioCuePlayer.new()
 	add_child(_audio_cues)
 	_smoke_feedback_audio_checks = SmokeFeedbackAudioChecks.new(self)
+	_smoke_final_dive_objective_checks = SmokeFinalDiveObjectiveChecks.new(self)
 	_smoke_hazard_route_checks = SmokeHazardRouteChecks.new(self)
 	_smoke_interaction_checks = SmokeInteractionChecks.new(self)
 	_smoke_oxygen_rest_checks = SmokeOxygenRestChecks.new(self)
@@ -296,6 +299,7 @@ func _ready() -> void:
 	var smoke_pass_21_world_connector := _has_arg(user_args, engine_args, "--smoke-pass-21-world-connector")
 	var smoke_pass_22_destination_payoff := _has_arg(user_args, engine_args, "--smoke-pass-22-destination-payoff")
 	var smoke_pass_24_relay_follow_through := _has_arg(user_args, engine_args, "--smoke-pass-24-relay-follow-through")
+	var smoke_pass_25_final_dive_objective := _has_arg(user_args, engine_args, "--smoke-pass-25-final-dive-objective")
 	var smoke_current_gate := _has_arg(user_args, engine_args, "--smoke-current-gate")
 	var smoke_moving_hazard := _has_arg(user_args, engine_args, "--smoke-moving-hazard")
 	var smoke_darkness_light_gate := _has_arg(user_args, engine_args, "--smoke-darkness-light-gate")
@@ -547,6 +551,7 @@ func _ready() -> void:
 		or smoke_pass_21_world_connector
 		or smoke_pass_22_destination_payoff
 		or smoke_pass_24_relay_follow_through
+		or smoke_pass_25_final_dive_objective
 		or smoke_current_gate
 		or smoke_moving_hazard
 		or smoke_darkness_light_gate
@@ -648,6 +653,10 @@ func _ready() -> void:
 		return
 	if smoke_pass_24_relay_follow_through:
 		_smoke_world_connector_checks._smoke_pass_24_relay_follow_through_and_quit()
+		return
+
+	if smoke_pass_25_final_dive_objective:
+		_smoke_final_dive_objective_checks._smoke_pass_25_final_dive_objective_and_quit()
 		return
 	if smoke_current_gate:
 		_smoke_current_gate_checks._smoke_current_gate_and_quit()
