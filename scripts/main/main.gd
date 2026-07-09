@@ -273,6 +273,7 @@ func _ready() -> void:
 	var smoke_pass_19_cargo_upgrade := _has_arg(user_args, engine_args, "--smoke-pass-19-cargo-upgrade")
 	var smoke_pass_20_light_upgrade := _has_arg(user_args, engine_args, "--smoke-pass-20-light-upgrade")
 	var smoke_pass_21_world_connector := _has_arg(user_args, engine_args, "--smoke-pass-21-world-connector")
+	var smoke_pass_22_destination_payoff := _has_arg(user_args, engine_args, "--smoke-pass-22-destination-payoff")
 	var smoke_current_gate := _has_arg(user_args, engine_args, "--smoke-current-gate")
 	var smoke_moving_hazard := _has_arg(user_args, engine_args, "--smoke-moving-hazard")
 	var smoke_darkness_light_gate := _has_arg(user_args, engine_args, "--smoke-darkness-light-gate")
@@ -405,6 +406,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_pass_21_world_connector:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_pass_22_destination_payoff:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_current_gate:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_moving_hazard:
@@ -508,6 +511,7 @@ func _ready() -> void:
 		or smoke_pass_19_cargo_upgrade
 		or smoke_pass_20_light_upgrade
 		or smoke_pass_21_world_connector
+		or smoke_pass_22_destination_payoff
 		or smoke_current_gate
 		or smoke_moving_hazard
 		or smoke_darkness_light_gate
@@ -602,6 +606,9 @@ func _ready() -> void:
 		return
 	if smoke_pass_21_world_connector:
 		_smoke_world_connector_checks._smoke_pass_21_world_connector_and_quit()
+		return
+	if smoke_pass_22_destination_payoff:
+		_smoke_world_connector_checks._smoke_pass_22_destination_payoff_and_quit()
 		return
 	if smoke_current_gate:
 		_smoke_current_gate_checks._smoke_current_gate_and_quit()
