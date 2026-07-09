@@ -11,6 +11,7 @@ from pathlib import Path
 
 from validate_current_gates import validate_current_gate_reachability, validate_current_gate_schema
 from validate_destination_payoffs import validate_destination_payoff_schema
+from validate_final_dive_objective_seeds import validate_final_dive_objective_seed_reachability, validate_final_dive_objective_seed_schema
 from validate_moving_hazards import validate_moving_hazard_reachability, validate_moving_hazard_schema
 from validate_next_dive_prompts import validate_next_dive_prompt_schema
 from validate_progression_containers import validate_progression_container_reachability, validate_progression_container_schema
@@ -51,16 +52,13 @@ def rect_cells(item: dict) -> set[tuple[int, int]]:
             cells.add((x, y))
     return cells
 
-
 def neighbors(x: int, y: int) -> tuple[tuple[int, int], ...]:
     return ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1))
-
 
 def spawn_cell(entity: dict) -> tuple[int, int]:
     if entity.get("type") == "boat_spawn":
         return (int(entity["entry_x"]), int(entity["entry_y"]))
     return (int(entity["x"]), int(entity["y"]))
-
 
 def is_int_value(value) -> bool:
     return isinstance(value, int) and not isinstance(value, bool)
@@ -398,6 +396,7 @@ def main() -> int:
     failures.extend(validate_zone_schema(zones, width, height))
     failures.extend(validate_current_gate_schema(map_data))
     failures.extend(validate_destination_payoff_schema(args.map_json, map_data))
+    failures.extend(validate_final_dive_objective_seed_schema(map_data, entities))
     failures.extend(validate_moving_hazard_schema(map_data))
     failures.extend(validate_next_dive_prompt_schema(map_data, entities, zones))
     failures.extend(validate_progression_container_schema(map_data))
@@ -481,6 +480,7 @@ def main() -> int:
     failures.extend(validate_route_objective_reachability(map_data, entities, zones, solid, reachable))
     failures.extend(validate_objective_step_cue_reachability(map_data, entities, zones, solid, reachable))
     failures.extend(validate_current_gate_reachability(zones, solid, reachable))
+    failures.extend(validate_final_dive_objective_seed_reachability(map_data, entities, solid, reachable))
     failures.extend(validate_moving_hazard_reachability(map_data.get("moving_hazards", []), solid, reachable))
     failures.extend(validate_progression_container_reachability(map_data.get("progression_containers", []), solid, reachable))
     failures.extend(validate_relay_follow_through_objective_reachability(map_data, entities, solid, reachable))
