@@ -54,7 +54,7 @@ Manual reset should preserve opened container rewards that already updated sessi
 
 ## First Candidate
 
-Use one `upgrade_chest` in `production_slice_01`, placed on an optional lower-loop or southwest-return detour where it rewards exploration without blocking the primary deep-cache objective.
+Use one `upgrade_chest` in `production_slice_01`, placed on an optional lower-loop or southwest-return detour where it rewards exploration without blocking the primary deep-cache objective. Issue #446 implements the first instance as `lower_loop_upgrade_chest`.
 
 Recommended first metadata:
 
@@ -78,7 +78,7 @@ Recommended first metadata:
 
 ## Validation Expectations
 
-Future validation should confirm container ids are unique, rectangles are in bounds/non-solid/reachable, labels are compact, reward ids use lower_snake_case, wallet rewards have positive amounts, locked caches reference an authored key id, and salvage unlocks reference an existing playable salvage entity.
+Validation confirms container ids are unique, rectangles are in bounds/non-solid/reachable, labels are compact, reward ids use lower_snake_case, wallet rewards have positive amounts, locked caches reference an authored key id, and salvage unlocks reference an existing playable salvage entity.
 
 ## Verification For Implementation
 

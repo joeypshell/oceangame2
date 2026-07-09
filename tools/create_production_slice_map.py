@@ -333,6 +333,7 @@ def build_map_data(source_map: dict) -> dict:
                 ),
             },
         ],
+        "progression_containers": [{"id": "lower_loop_upgrade_chest", "container_type": "upgrade_chest", "x": 18, "y": 72, "w": 2, "h": 2, "display_label": "Upgrade chest", "interaction": "instant", "reward_type": "wallet", "reward_id": "upgrade_wallet_bonus", "reward_amount": 400, "route_context": "lower_loop_reward", "intent": "Pass 23 first small progression chest rewarding the lower-loop detour without adding inventory UI."}],
         "route_objectives": PASS_13_ROUTE_OBJECTIVES,
         "primary_route_objective_id": "deep_cache_route_objective",
         "background": [

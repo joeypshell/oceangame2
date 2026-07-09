@@ -41,9 +41,11 @@ var _extraction_zones: Array = []
 var _boat_entities: Array = []
 var _world_connector_zones: Array = []
 var _current_gate_zones: Array = []
+var _progression_containers: Array = []
 var _spawn_positions_by_id := {}
 var _collected_salvage := {}
 var _salvage_nodes_by_id := {}
+var _container_nodes_by_id := {}
 var _background_root: Node2D
 var _solid_layer: TileMapLayer
 var _terrain_layer: TileMapLayer
@@ -93,9 +95,11 @@ func load_greybox() -> void:
 	_boat_entities = []
 	_world_connector_zones = []
 	_current_gate_zones = []
+	_progression_containers = []
 	_spawn_positions_by_id = {}
 	_collected_salvage = {}
 	_salvage_nodes_by_id = {}
+	_container_nodes_by_id = {}
 
 	_background_root = Node2D.new()
 	_background_root.name = "BackgroundArt"
@@ -114,6 +118,7 @@ func load_greybox() -> void:
 	_marker_root.name = "Markers"
 	add_child(_marker_root)
 	_build_zones(map_data.get("zones", []))
+	_build_progression_containers(map_data.get("progression_containers", []))
 	_build_entities(map_data.get("entities", []))
 	queue_redraw()
 
@@ -207,6 +212,27 @@ func get_current_gate_at(position: Vector2) -> Dictionary:
 		if _rect_from_item(zone).has_point(position):
 			return _current_gate_runtime_info(zone)
 	return {}
+
+
+func get_progression_containers() -> Array:
+	var containers := []
+	for container in _progression_containers:
+		containers.append(_progression_container_runtime_info(container))
+	return containers
+
+
+func get_progression_container_at(position: Vector2) -> Dictionary:
+	for container in _progression_containers:
+		if _rect_from_item(container).has_point(position):
+			return _progression_container_runtime_info(container)
+	return {}
+
+
+func set_progression_container_opened(container_id: String, opened: bool) -> void:
+	if not _container_nodes_by_id.has(container_id):
+		return
+	var container_node := _container_nodes_by_id[container_id] as Node2D
+	container_node.modulate.a = 0.42 if opened else 1.0
 
 
 func get_world_connector_at(position: Vector2) -> Dictionary:
@@ -401,6 +427,21 @@ func _current_gate_runtime_info(zone: Dictionary) -> Dictionary:
 	}
 
 
+func _progression_container_runtime_info(container: Dictionary) -> Dictionary:
+	return {
+		"id": str(container.get("id", "progression_container")),
+		"center": _rect_center(container),
+		"rect": _rect_from_item(container),
+		"container_type": str(container.get("container_type", "")),
+		"display_label": str(container.get("display_label", "")),
+		"interaction": str(container.get("interaction", "instant")),
+		"reward_type": str(container.get("reward_type", "")),
+		"reward_id": str(container.get("reward_id", "")),
+		"reward_amount": int(container.get("reward_amount", 0)),
+		"route_context": str(container.get("route_context", "")),
+	}
+
+
 func reset_salvage() -> void:
 	_collected_salvage = {}
 	for salvage_id in _salvage_nodes_by_id.keys():
@@ -514,6 +555,18 @@ func _build_zones(zones: Array) -> void:
 			if bool(zone.get("current_gate", false)):
 				_current_gate_zones.append(zone)
 			_route_marker_renderer_helper().add_route_marker(_marker_root, zone, tile_size, show_debug_overlay, _debug_renderer_helper())
+
+
+func _build_progression_containers(containers: Array) -> void:
+	for container in containers:
+		_progression_containers.append(container)
+		var container_id := str(container.get("id", "ProgressionContainer"))
+		var rect := _rect_from_item(container)
+		var container_node := _add_chest_marker(container_id, rect)
+		_container_nodes_by_id[container_id] = container_node
+		if show_debug_overlay:
+			_add_rect_outline(container, "%sDebugOutline" % container_id, Color(0.84, 0.55, 1.0, 0.65), 3.0, 23)
+			_add_debug_label("CHEST", rect.position + Vector2(6, -18), Color(0.84, 0.55, 1.0, 0.9))
 
 
 func _build_entities(entities: Array) -> void:
@@ -681,6 +734,28 @@ func _add_diamond(marker_name: String, center: Vector2, color: Color, radius: fl
 	])
 	_marker_root.add_child(poly)
 	return poly
+
+
+func _add_chest_marker(marker_name: String, rect: Rect2) -> Node2D:
+	var root := Node2D.new()
+	root.name = marker_name
+	root.position = rect.position + rect.size * 0.5
+	root.z_index = 16
+	_marker_root.add_child(root)
+
+	var body_size := Vector2(maxf(20.0, rect.size.x * 0.7), maxf(14.0, rect.size.y * 0.46))
+	var body := _add_local_polygon(root, "ChestBody", _rect_points(body_size), Color(0.57, 0.23, 0.80, 0.92))
+	body.position.y = body_size.y * 0.18
+	body.z_index = 1
+
+	var lid_size := Vector2(body_size.x * 0.88, maxf(8.0, body_size.y * 0.5))
+	var lid := _add_local_polygon(root, "ChestLid", _rect_points(lid_size), Color(0.82, 0.55, 1.0, 0.95))
+	lid.position.y = -body_size.y * 0.36
+	lid.z_index = 2
+
+	var latch := _add_local_polygon(root, "ChestLatch", _diamond_points(minf(7.0, body_size.y * 0.34)), Color(1.0, 0.86, 0.28, 0.98))
+	latch.z_index = 3
+	return root
 
 
 func _add_local_polygon(parent: Node2D, polygon_name: String, points: PackedVector2Array, color: Color) -> Polygon2D:

@@ -145,6 +145,14 @@ Capture the focused Pass 21 world-connector arrival view:
 
 This loads the default production slice, moves the player to `lower_left_loop_connector`, triggers the source-authored transition into `production_slice_04`, frames compact `Arrived: Lower-left loop` and return-connector feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_21_world_connector/production_slice_04_world_connector_arrival.png`.
 
+Capture the focused upgrade-chest reward view:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-upgrade-chest
+```
+
+This loads the default production slice, opens `lower_loop_upgrade_chest` through the normal runtime path, frames compact `Upgrade chest +400 wallet` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/upgrade_chest/production_slice_01_upgrade_chest.png`.
+
 Capture the original rectangular salvage map comparison views:
 
 ```powershell
