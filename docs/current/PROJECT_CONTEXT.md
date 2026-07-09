@@ -39,9 +39,9 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest completed pass closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_22_CLOSEOUT.md`
-- Current next plan: `docs/current/CONTROLLED_GAMEPLAY_PASS_23_PLAN.md`
-- Latest Web verification: `docs/current/PASS_22_DESTINATION_PAYOFF_WEB_PREVIEW_VERIFICATION.md`
+- Latest completed pass closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_23_CLOSEOUT.md`
+- Current next direction: one lower-left relay follow-through objective for Milestone 06.
+- Latest Web verification: `docs/current/PASS_23_NEXT_DIVE_OBJECTIVE_VISUAL_WEB_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -216,7 +216,8 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-09:
 
-- Active roadmap queue: #523-#531 cover Controlled Gameplay Pass 23 next-dive objective prompt work. #52/#53 remain deferred slice-03 polish.
+- Active roadmap queue: none after Pass 23 closeout; create the next small Milestone 06 batch before new implementation. #52/#53 remain deferred slice-03 polish.
+- Closed: #522-#531 completed Pass 23 planning, next-dive prompt contract, validation, source authoring, runtime result text, smoke, focused capture, visual/Web verification, and closeout.
 - Closed: #502-#511 completed Pass 22 planning, destination payoff contract, validation, source target authoring, runtime feedback, smoke, capture, visual decision, Web verification, and closeout.
 - Closed: #420-#429 completed Pass 21 planning, connector contract, schema validation, source connector authoring, runtime transition, smoke, capture, visual decision, Web verification, and closeout.
 - Closed: #400-#409 completed Pass 20 light confidence progression, including planning, light contract, session light upgrade, compact overlay feedback, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
@@ -466,7 +467,9 @@ Use `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md` as the current north star. The p
 
 The first compact feedback/audio cue layer is complete under #481-#490. Pass 22 is complete under #502-#511: the existing lower-left connector now leads to one source-authored `production_slice_04` destination cache with compact `Destination cache +300` feedback, smoke, focused capture, visual review, and public Web verification.
 
-The next selected batch is Pass 23 under #523-#531. It should add one source-authored next-dive objective prompt after the existing primary deep-cache objective so the result flow gives the player a clearer reason to try another expedition. Keep it tiny: no music, ambience, audio options menu, enemy AI, inventory/loadouts, save systems, broad economy, procedural generation, broad art replacement, or full-map productionization.
+Pass 23 is complete under #522-#531: completing the primary deep-cache objective now adds the source-authored result prompt `Next dive: Investigate lower-left relay`, with smoke, focused capture, visual review, public Web verification, and closeout.
+
+The next recommended batch should stay in Milestone 06 and make the Pass 23 prompt pay off with one lower-left relay follow-through objective. Keep it tiny: no music, ambience, audio options menu, enemy AI, inventory/loadouts, save systems, broad economy, procedural generation, broad art replacement, broad audio systems, or full-map productionization.
 
 Accepted constraints for the next batch:
 

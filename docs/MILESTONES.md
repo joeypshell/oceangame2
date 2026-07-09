@@ -41,9 +41,9 @@ The open GitHub milestones should mirror this roadmap:
 
 ## Current Next Direction
 
-Controlled Gameplay Pass 22 completed the first Milestone 05 destination-side payoff: `production_slice_04` now has one source-authored destination cache for the existing lower-left connector, with validation, runtime feedback, smoke, focused capture, visual decision, Web verification, and closeout.
+Controlled Gameplay Pass 23 completed the first Milestone 06 next-run prompt: completing the primary deep-cache objective now adds `Next dive: Investigate lower-left relay` to the result panel, with source metadata, validation, runtime display, smoke, focused capture, visual review, Web verification, and closeout.
 
-Controlled Gameplay Pass 23 is now selected for Milestone 06: one source-authored next-dive objective prompt after the existing primary deep-cache objective. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, broad art replacement, or full-map productionization.
+The next recommended batch should stay small and make that prompt pay off with one lower-left relay follow-through objective. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, broad art replacement, broad audio systems, or full-map productionization.
 
 ## Recently Completed Prototype Passes
 
@@ -66,3 +66,4 @@ Controlled Gameplay Pass 23 is now selected for Milestone 06: one source-authore
 - #400-#409 completed Controlled Gameplay Pass 20 light confidence progression, including planning, light contract, session light upgrade, overlay feedback, smoke, capture, visual decision, Web verification, and closeout.
 - #420-#429 completed Controlled Gameplay Pass 21 world-slice connector proof, including planning, connector contract, schema validation, source connector authoring, runtime transition, smoke, capture, visual decision, Web verification, and closeout.
 - #502-#511 completed Controlled Gameplay Pass 22 destination payoff, including planning, payoff contract, validation, source target authoring, runtime feedback, smoke, capture, visual decision, Web verification, and closeout.
+- #522-#531 completed Controlled Gameplay Pass 23 next-dive objective prompt, including planning, prompt contract, validation, source authoring, runtime result text, smoke, capture, visual/Web verification, and closeout.

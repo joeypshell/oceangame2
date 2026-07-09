@@ -175,9 +175,11 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 The first darkness/light gate is complete: `deep_cache_dark_pocket` is a visual-only deep-route readability zone improved by `dive_light_1`, without changing movement, collision, oxygen, cargo, objective, or salvage semantics.
 
-The first compact feedback/audio cue pass is complete under #481-#490. Pass 22 is also complete under #502-#511: the existing lower-left connector now has a source-authored `production_slice_04` destination cache with compact runtime feedback, smoke, focused capture, visual decision, and public Web verification.
+The first compact feedback/audio cue pass is complete under #481-#490. Pass 22 is complete under #502-#511: the existing lower-left connector now has a source-authored `production_slice_04` destination cache with compact runtime feedback, smoke, focused capture, visual decision, and public Web verification.
 
-The next batch is selected under #523-#531: Controlled Gameplay Pass 23 should add one source-authored next-dive objective prompt after the existing primary deep-cache objective. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, broad audio systems, or full-map productionization.
+Pass 23 is complete under #522-#531: completing the primary deep-cache objective now adds one source-authored next-dive prompt, `Next dive: Investigate lower-left relay`, with validation, runtime result text, smoke, focused capture, visual review, public Web verification, and closeout.
+
+The next recommended batch should keep Milestone 06 focused by making that prompt pay off with one lower-left relay follow-through objective. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, broad audio systems, or full-map productionization.
 
 ## Deferred Work
 
