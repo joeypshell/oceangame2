@@ -1486,7 +1486,9 @@ func _progression_overlay_text() -> String:
 		]
 	var light_text := "Light +range"
 	if not _has_light_upgrade():
-		light_text = "L: Light +range (%d)" % SessionProgression.LIGHT_UPGRADE_COST
+		light_text = "Light base"
+		if _world != null and _player != null and _world.is_inside_extraction(_player.global_position):
+			light_text = "L: Light +range (%d)" % SessionProgression.LIGHT_UPGRADE_COST
 	return "Wallet %d\n%s | %s | %s" % [
 		_session_wallet(),
 		oxygen_text,
