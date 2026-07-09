@@ -76,6 +76,7 @@ Build a small side-view salvage game that proves:
 - [Controlled Gameplay Pass 14 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_14_CLOSEOUT.md)
 - [Controlled Gameplay Pass 15 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_15_PLAN.md)
 - [Controlled Gameplay Pass 15 Objective Step Cue Contract](docs/current/CONTROLLED_GAMEPLAY_PASS_15_OBJECTIVE_STEP_CUE_CONTRACT.md)
+- [Controlled Gameplay Pass 15 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_15_CLOSEOUT.md)
 - [Oxygen Pressure Baseline Decision](docs/current/OXYGEN_PRESSURE_BASELINE_DECISION.md)
 - [Route Payoff Visual Baseline Decision](docs/current/ROUTE_PAYOFF_VISUAL_BASELINE_DECISION.md)
 - [Route Payoff Web Preview Verification](docs/current/ROUTE_PAYOFF_WEB_PREVIEW_VERIFICATION.md)
@@ -100,6 +101,8 @@ Build a small side-view salvage game that proves:
 - [Pass 13 Route Commitment Web Preview Verification](docs/current/PASS_13_ROUTE_COMMITMENT_WEB_PREVIEW_VERIFICATION.md)
 - [Pass 14 Objective Cue Visual Baseline Decision](docs/current/PASS_14_OBJECTIVE_CUE_VISUAL_BASELINE_DECISION.md)
 - [Pass 14 Objective Cue Web Preview Verification](docs/current/PASS_14_OBJECTIVE_CUE_WEB_PREVIEW_VERIFICATION.md)
+- [Pass 15 Objective Follow-Through Visual Baseline Decision](docs/current/PASS_15_OBJECTIVE_FOLLOW_THROUGH_VISUAL_BASELINE_DECISION.md)
+- [Pass 15 Objective Follow-Through Web Preview Verification](docs/current/PASS_15_OBJECTIVE_FOLLOW_THROUGH_WEB_PREVIEW_VERIFICATION.md)
 
 ## Locked Visual Direction
 

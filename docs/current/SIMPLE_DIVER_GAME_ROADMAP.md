@@ -66,7 +66,7 @@ Exit criteria:
 - roadmap docs and GitHub milestones match
 - active non-deferred issues are assigned to the first roadmap milestone
 - `production_slice_01` remains stable as the default preview
-- remaining Pass 15 objective-follow-through work is completed or explicitly deferred
+- Pass 15 objective-follow-through work is complete
 - smoke/capture/Web-preview workflow is still green
 
 ### 02. Core Diver Loop Vertical Slice
@@ -173,7 +173,7 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 ## Current Next Direction
 
-Finish the roadmap reset, then complete or explicitly defer the remaining Pass 15 objective-follow-through review tail under Milestone 01. The next new implementation batch after that should come from Milestone 02 or 03, not from another narrow objective-label pass.
+The roadmap reset and Controlled Gameplay Pass 15 are complete. The next new implementation batch should come from Milestone 02 or 03, not from another narrow objective-label pass. Prefer Milestone 02 if the goal is to make the current default dive feel like a complete start-middle-return run.
 
 ## Deferred Work
 
