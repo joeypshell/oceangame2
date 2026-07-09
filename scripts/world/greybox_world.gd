@@ -190,6 +190,14 @@ func get_relay_follow_through_objectives() -> Array:
 	return objectives
 
 
+func get_final_dive_objective_seeds() -> Array:
+	var seeds := []
+	for seed in _map_data.get("final_dive_objective_seeds", []):
+		if typeof(seed) == TYPE_DICTIONARY:
+			seeds.append(seed.duplicate(true))
+	return seeds
+
+
 func get_salvage_score(salvage_id: String) -> int:
 	for entity in _salvage_entities:
 		if str(entity.get("id", "salvage")) == salvage_id:

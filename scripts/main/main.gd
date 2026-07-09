@@ -6,6 +6,7 @@ const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const CurrentGateCapture := preload("res://scripts/main/captures/current_gate_capture.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
 const DestinationPayoffFeedback := preload("res://scripts/main/destination_payoff_feedback.gd")
+const FinalDiveObjectiveSeed := preload("res://scripts/main/final_dive_objective_seed.gd")
 const MovingHazardCapture := preload("res://scripts/main/captures/moving_hazard_capture.gd")
 const MovingHazardController := preload("res://scripts/main/moving_hazard_controller.gd")
 const OxygenRestPocketFeedback := preload("res://scripts/main/oxygen_rest_pocket_feedback.gd")
@@ -128,6 +129,7 @@ var _player
 var _capture_controller
 var _current_gate
 var _destination_payoff_feedback
+var _final_dive_objective_seed
 var _moving_hazards
 var _next_dive_objective_prompt
 var _oxygen_rest_feedback
@@ -196,6 +198,7 @@ func _ready() -> void:
 	_capture_controller = CaptureController.new(self)
 	_current_gate = CurrentGateController.new()
 	_destination_payoff_feedback = DestinationPayoffFeedback.new()
+	_final_dive_objective_seed = FinalDiveObjectiveSeed.new()
 	_moving_hazards = MovingHazardController.new()
 	_next_dive_objective_prompt = NextDiveObjectivePrompt.new()
 	_oxygen_rest_feedback = OxygenRestPocketFeedback.new()
@@ -849,6 +852,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_primary_dive_objective.reset(world)
 	_next_dive_objective_prompt.reset(world)
 	_relay_follow_through_feedback.reset(world)
+	_final_dive_objective_seed.reset(world)
 	_refresh_route_commitment_feedback(world)
 	_refresh_salvage_route_metadata(world)
 	_refresh_destination_payoff_feedback(world)
@@ -1003,6 +1007,7 @@ func _process(delta: float) -> void:
 		_record_banked_route_outcomes(_held_salvage_ids)
 		_banked_salvage_ids.append_array(_held_salvage_ids)
 		var relay_follow_through_note: String = _relay_follow_through_feedback.banked_feedback(_held_salvage_ids)
+		var final_dive_note: String = _final_dive_objective_seed.banked_feedback(_held_salvage_ids)
 		_held_salvage = 0
 		_held_salvage_ids = []
 		_held_salvage_score = 0
@@ -1013,6 +1018,10 @@ func _process(delta: float) -> void:
 			_last_status_note = "Run complete"
 		elif not relay_follow_through_note.is_empty():
 			_last_status_note = relay_follow_through_note
+			if not final_dive_note.is_empty():
+				_last_status_note = "%s\n%s" % [relay_follow_through_note, final_dive_note]
+		elif not final_dive_note.is_empty():
+			_last_status_note = final_dive_note
 		else:
 			_last_status_note = "Banked salvage"
 		_play_feedback_cue("salvage_bank", banked_cue_key)
@@ -1131,6 +1140,7 @@ func _reset_run() -> void:
 	_pry_salvage.reset()
 	_timed_salvage.reset()
 	_relay_follow_through_feedback.reset(_world)
+	_final_dive_objective_seed.reset(_world)
 	_held_salvage = 0
 	_held_salvage_ids = []
 	_banked_salvage_ids = []
@@ -1488,7 +1498,7 @@ func _update_status_label() -> void:
 	elif not current_gate_prompt.is_empty():
 		prompt = current_gate_prompt
 		objective_step_cue_blocked = true
-	elif _is_relay_follow_through_status_note(_last_status_note):
+	elif _is_relay_follow_through_status_note(_last_status_note) or _is_final_dive_status_note(_last_status_note):
 		prompt = _last_status_note
 		objective_step_cue_blocked = true
 	elif _is_progression_status_note(_last_status_note):
@@ -1609,6 +1619,12 @@ func _relay_follow_through_result_text() -> String:
 	return _relay_follow_through_feedback.result_text(_banked_salvage_ids)
 
 
+func _final_dive_objective_result_text() -> String:
+	if _final_dive_objective_seed == null or not _run_complete or _run_failed:
+		return ""
+	return _final_dive_objective_seed.result_text(_banked_salvage_ids)
+
+
 func _hazard_warning_prompt() -> String:
 	if _moving_hazards != null and _hazard_warning_id == _moving_hazards.warning_id():
 		return _moving_hazards.warning_prompt()
@@ -1641,7 +1657,20 @@ func _is_collection_status_note(status_note: String) -> bool:
 
 
 func _is_relay_follow_through_status_note(status_note: String) -> bool:
-	return _relay_follow_through_feedback != null and _relay_follow_through_feedback.is_feedback_note(status_note)
+	return _status_note_contains_feedback(status_note, _relay_follow_through_feedback)
+
+
+func _is_final_dive_status_note(status_note: String) -> bool:
+	return _status_note_contains_feedback(status_note, _final_dive_objective_seed)
+
+
+func _status_note_contains_feedback(status_note: String, feedback) -> bool:
+	if feedback == null or not feedback.has_method("is_feedback_note"):
+		return false
+	for line in status_note.split("\n", false):
+		if feedback.is_feedback_note(str(line)):
+			return true
+	return false
 
 
 func _is_progression_status_note(status_note: String) -> bool:
@@ -2031,6 +2060,9 @@ func _update_result_panel() -> void:
 	var relay_follow_through_text := _relay_follow_through_result_text()
 	if not relay_follow_through_text.is_empty():
 		result_lines.append(relay_follow_through_text)
+	var final_dive_text := _final_dive_objective_result_text()
+	if not final_dive_text.is_empty():
+		result_lines.append(final_dive_text)
 	result_lines.append(_progression_result_text())
 	if _is_progression_status_note(_last_status_note):
 		result_lines.append(_last_status_note)
