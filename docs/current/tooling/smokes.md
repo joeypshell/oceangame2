@@ -76,6 +76,8 @@ The oxygen-pressure smoke loads `production_slice_01`, collects one salvage item
 
 The cargo-capacity smoke loads `production_slice_01`, fills the current two-pickup held capacity, confirms held score is not banked before extraction, confirms a third pickup remains available and visibly uncollected while cargo is full, confirms the status says to return to extraction, banks held cargo/score at extraction, then confirms the blocked pickup can be collected after capacity frees up.
 
+The feedback-cue smoke loads `production_slice_01`, triggers pickup, banking, oxygen warning/failure, and hazard warning/contact paths, then reports deterministic audio cue event counts without requiring audio hardware. Use `docs/current/FIRST_FEEDBACK_AUDIO_REVIEW.md` as the focused review artifact.
+
 The salvage-feedback smoke loads `production_slice_01`, collects one common pickup and one valuable pickup in separate reset runs, and confirms the status text reports the correct tier and score for each pickup.
 
 The session-best score smoke loads `production_slice_01`, completes a full collect-return run, confirms the result panel shows score and best score, confirms reset preserves the current map's best score, and confirms oxygen failure does not overwrite that best score.
