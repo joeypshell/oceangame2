@@ -87,6 +87,9 @@ Build a small side-view salvage game that proves:
 - [Controlled Gameplay Pass 19 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_19_PLAN.md)
 - [Controlled Gameplay Pass 19 Cargo Contract](docs/current/CONTROLLED_GAMEPLAY_PASS_19_CARGO_CONTRACT.md)
 - [Controlled Gameplay Pass 19 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_19_CLOSEOUT.md)
+- [Controlled Gameplay Pass 20 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_20_PLAN.md)
+- [Controlled Gameplay Pass 20 Light Contract](docs/current/CONTROLLED_GAMEPLAY_PASS_20_LIGHT_CONTRACT.md)
+- [Controlled Gameplay Pass 20 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_20_CLOSEOUT.md)
 - [Oxygen Pressure Baseline Decision](docs/current/OXYGEN_PRESSURE_BASELINE_DECISION.md)
 - [Route Payoff Visual Baseline Decision](docs/current/ROUTE_PAYOFF_VISUAL_BASELINE_DECISION.md)
 - [Route Payoff Web Preview Verification](docs/current/ROUTE_PAYOFF_WEB_PREVIEW_VERIFICATION.md)
@@ -121,6 +124,8 @@ Build a small side-view salvage game that proves:
 - [Pass 18 Progression Web Preview Verification](docs/current/PASS_18_PROGRESSION_WEB_PREVIEW_VERIFICATION.md)
 - [Pass 19 Cargo Upgrade Visual Baseline Decision](docs/current/PASS_19_CARGO_UPGRADE_VISUAL_BASELINE_DECISION.md)
 - [Pass 19 Cargo Upgrade Web Preview Verification](docs/current/PASS_19_CARGO_UPGRADE_WEB_PREVIEW_VERIFICATION.md)
+- [Pass 20 Light Upgrade Visual Baseline Decision](docs/current/PASS_20_LIGHT_UPGRADE_VISUAL_BASELINE_DECISION.md)
+- [Pass 20 Light Upgrade Web Preview Verification](docs/current/PASS_20_LIGHT_UPGRADE_WEB_PREVIEW_VERIFICATION.md)
 
 ## Locked Visual Direction
 

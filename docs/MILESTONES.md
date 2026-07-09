@@ -41,7 +41,7 @@ The open GitHub milestones should mirror this roadmap:
 
 ## Current Next Direction
 
-Controlled Gameplay Pass 19 completed a second Milestone 04 progression step: banked salvage now supports both one session-only `O2 tank +15` upgrade and one session-only `Cargo +1` upgrade at extraction. The next batch should either add one more tiny light/tool-style unlock or deliberately move to a pressure/payoff-driven Milestone 05 world-slice expansion; do not jump to enemies, procedural generation, full inventory/loadout systems, save files, or broad economy work.
+Controlled Gameplay Pass 20 completed the current Milestone 04 progression trio: banked salvage now supports one session-only `O2 tank +15` upgrade, one session-only `Cargo +1` upgrade, and one session-only `Light +range` upgrade at extraction. The next meaningful batch should move toward Milestone 05 only if it creates a clearer playable route loop, remembered-place progress, or pressure/payoff decision; do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, or full-map productionization.
 
 ## Recently Completed Prototype Passes
 
@@ -61,3 +61,4 @@ Controlled Gameplay Pass 19 completed a second Milestone 04 progression step: ba
 - #340-#349 completed Controlled Gameplay Pass 17 pry salvage, including source contract, validation, source target authoring, staged runtime interaction, smoke, capture, visual decision, Web verification, and closeout.
 - #360-#369 completed Controlled Gameplay Pass 18 session progression, including planning, runtime progression contract, session wallet, one oxygen tank upgrade, overlay feedback, smoke, capture, visual decision, Web verification, and closeout.
 - #380-#389 completed Controlled Gameplay Pass 19 cargo capacity progression, including planning, cargo contract, session cargo upgrade, overlay feedback, smoke, capture, visual decision, Web verification, and closeout.
+- #400-#409 completed Controlled Gameplay Pass 20 light confidence progression, including planning, light contract, session light upgrade, overlay feedback, smoke, capture, visual decision, Web verification, and closeout.
