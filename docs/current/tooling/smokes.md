@@ -87,6 +87,8 @@ The oxygen-bonus score smoke loads `production_slice_01`, completes a full colle
 
 The route-outcome result smoke loads `production_slice_01`, completes a route-tagged collect-return run, confirms the compact result panel includes `Route: Deep route`, resets, and confirms a generic failure result does not show stale route text.
 
+The release-journey smoke loads `production_slice_01`, collects and banks the required primary deep-cache objective targets, verifies the completed result and next-dive prompt, resets, unlocks the lower-left connector through session progression, transitions to `production_slice_04`, banks the destination payoff, and verifies the final-dive result cue. Run it with `--smoke-release-journey`.
+
 The Pass 18 progression smoke loads `production_slice_01`, confirms held and failed unbanked salvage do not create wallet payout, confirms banked salvage creates spendable wallet, confirms insufficient-funds purchase is blocked, buys the single oxygen tank upgrade, verifies wallet spend and upgraded capacity, then confirms reset/refill preserve the session upgrade.
 
 The current-gate smoke loads `production_slice_01`, verifies the source-authored `lower_left_loop_current` soft-push marker blocks the lower-left connector before `propulsion_fins`, confirms oxygen continues draining while blocked, buys the propulsion upgrade, then confirms the connector works afterward.
