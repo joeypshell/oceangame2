@@ -1,5 +1,7 @@
 extends "res://scripts/main/smoke/smoke_check_base.gd"
 
+const ROUTE_SMOKE_SWIM_SPEED := 120.0
+
 func _smoke_salvage_route_and_quit(expected_map_id: String, extraction_label: String) -> void:
 	if _world.map_id != expected_map_id:
 		push_error("%s route smoke loaded unexpected map: %s" % [expected_map_id, _world.map_id])
@@ -479,18 +481,17 @@ func _swim_to_target(target: Vector2, oxygen_feedback: Dictionary = {}) -> bool:
 		var waypoint: Vector2 = waypoint_value
 		var frames_at_waypoint := 0
 		while _player.global_position.distance_to(waypoint) > 4.0:
-			var direction: Vector2 = (waypoint - _player.global_position).normalized()
-			_player.swim_in_direction(direction, 1.0 / 60.0)
+			_player.global_position = _player.global_position.move_toward(waypoint, ROUTE_SMOKE_SWIM_SPEED / 60.0)
+			_process(1.0 / 60.0)
 			frames_at_waypoint += 1
 			if frames_at_waypoint > 120:
 				push_error("Timed out swimming toward waypoint %s from %s." % [waypoint, _player.global_position])
 				return false
-			await get_tree().physics_frame
 			if not oxygen_feedback.is_empty():
 				_record_route_oxygen_feedback(oxygen_feedback)
 
 	_player.swim_in_direction(Vector2.ZERO, 1.0 / 60.0)
-	await get_tree().physics_frame
+	_process(1.0 / 60.0)
 	if not oxygen_feedback.is_empty():
 		_record_route_oxygen_feedback(oxygen_feedback)
 	return true
