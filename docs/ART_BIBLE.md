@@ -69,6 +69,10 @@ Normal gameplay previews should use small readable in-world props instead of abs
 - Debug/review overlays may use cyan source grid, white route rectangles, amber extraction/boat outlines, green entry/spawn labels, yellow salvage diamonds, and red hazard squares.
 - Entity behavior remains driven by JSON `type`; `kind` selects the first-pass visual variant.
 
+## Current Player Animation Direction
+
+The approved `assets/player/player_diver_01.png` remains the style and scale anchor for player animation. First animation work should add a small swim/idle slice with matching 96x64 frame bounds, right-facing source frames, runtime visual-only flipping, and no collision, camera, movement, map, oxygen, cargo, or light-cone behavior changes.
+
 ## Current Boat Entry Pass
 
 Production-style `boat_spawn` visuals should read as the top-water start and return craft, not as an abstract rectangle:

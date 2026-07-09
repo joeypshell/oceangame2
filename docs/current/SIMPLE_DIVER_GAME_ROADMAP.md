@@ -173,9 +173,9 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 ## Current Next Direction
 
-Controlled Gameplay Pass 23 is complete and gives the default slice one small source-authored upgrade-chest payoff after the first current/propulsion gate.
+Pass 24 is complete and gives the default slice one deterministic moving hazard as a route-timing beat, not an enemy/combat system.
 
-Use `docs/current/MOVING_HAZARD_DODGE_CONTRACT.md` for the next Milestone 02 hazard-pressure step: one deterministic moving hazard as a route-timing beat, not an enemy/combat system. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, or full-map productionization.
+Use `docs/current/DIVER_ANIMATION_PLAN.md` for the next Milestone 07 presentation step: one small swim/idle animation slice that improves player readability without changing movement, collision, camera, light, or gameplay semantics. Do not add another connector merely because the first one works, and do not jump to procedural generation, full inventory/loadout systems, save files, broad economy work, full enemy AI, or full-map productionization.
 
 ## Deferred Work
 
