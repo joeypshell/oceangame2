@@ -217,7 +217,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-09:
 
-- Active roadmap queue: #622-#631 completed Simple Diver Game 08 release-candidate hardening with a GO decision. #52/#53 remain deferred slice-03 polish.
+- Active roadmap queue: #643-#652 plan Simple Diver Game 09 expansion after the Simple Diver Game 08 GO decision. #52/#53 remain deferred slice-03 polish.
 - Closed: #562-#571 completed Pass 25 planning, final-dive contract, validation, source authoring, runtime feedback, smoke, focused capture, visual decision, public Web verification, and closeout.
 - Closed: #542-#551 completed Pass 24 planning, relay objective contract, validation, source authoring, runtime feedback, smoke, focused capture, visual decision, public Web verification, and closeout.
 - Closed: #522-#531 completed Pass 23 planning, next-dive prompt contract, validation, source authoring, runtime result text, smoke, focused capture, visual/Web verification, and closeout.
@@ -468,7 +468,7 @@ Recent important commits:
 
 Use `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md` as the current north star. The project should now finish the small diver game before planning the larger 2D Subnautica-like expansion.
 
-Milestone 07 result-presentation and player-facing readability work is complete. Simple Diver Game 08 release-candidate hardening has a GO closeout with full validation runner, local run, public Web, baseline/capture, and docs handoff evidence. Pause validation batching unless feedback reveals a blocker; otherwise select the next roadmap milestone deliberately.
+Simple Diver Game 08 has a GO closeout with full validation runner, local run, public Web, baseline/capture, and docs handoff evidence. Simple Diver Game 09 issues #643-#652 are now the active planning lane; they must select one bounded expansion outcome before gameplay, map, asset, persistence, inventory, or fauna implementation begins.
 
 Accepted constraints for next work:
 
