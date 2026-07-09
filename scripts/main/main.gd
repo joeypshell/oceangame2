@@ -31,6 +31,7 @@ const SmokeWorldConnectorChecks := preload("res://scripts/main/smoke/smoke_world
 const SmokeCurrentGateChecks := preload("res://scripts/main/smoke/smoke_current_gate_checks.gd")
 const SmokeProgressionContainerChecks := preload("res://scripts/main/smoke/smoke_progression_container_checks.gd")
 const SmokeMovingHazardChecks := preload("res://scripts/main/smoke/smoke_moving_hazard_checks.gd")
+const SmokeDarknessLightChecks := preload("res://scripts/main/smoke/smoke_darkness_light_checks.gd")
 const UpgradeChestCapture := preload("res://scripts/main/captures/upgrade_chest_capture.gd")
 const DEFAULT_MAP_PATH := "res://maps/production_slice_01.greybox.json"
 const ORIGINAL_MAP_PATH := "res://maps/cave_salvage_test_01.greybox.json"
@@ -137,6 +138,7 @@ var _smoke_world_connector_checks
 var _smoke_current_gate_checks
 var _smoke_progression_container_checks
 var _smoke_moving_hazard_checks
+var _smoke_darkness_light_checks
 var _review_canvas: CanvasLayer
 var _review_label: Label
 var _status_label: Label
@@ -194,6 +196,7 @@ func _ready() -> void:
 	_smoke_current_gate_checks = SmokeCurrentGateChecks.new(self)
 	_smoke_progression_container_checks = SmokeProgressionContainerChecks.new(self)
 	_smoke_moving_hazard_checks = SmokeMovingHazardChecks.new(self)
+	_smoke_darkness_light_checks = SmokeDarknessLightChecks.new(self)
 	var user_args := OS.get_cmdline_user_args()
 	var engine_args := OS.get_cmdline_args()
 	var capture_original_map := _has_arg(user_args, engine_args, "--capture-original-map")
@@ -255,6 +258,7 @@ func _ready() -> void:
 	var smoke_pass_21_world_connector := _has_arg(user_args, engine_args, "--smoke-pass-21-world-connector")
 	var smoke_current_gate := _has_arg(user_args, engine_args, "--smoke-current-gate")
 	var smoke_moving_hazard := _has_arg(user_args, engine_args, "--smoke-moving-hazard")
+	var smoke_darkness_light_gate := _has_arg(user_args, engine_args, "--smoke-darkness-light-gate")
 	var smoke_upgrade_chest := _has_arg(user_args, engine_args, "--smoke-upgrade-chest")
 	var smoke_primary_dive_completion := _has_arg(user_args, engine_args, "--smoke-primary-dive-completion")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
@@ -385,6 +389,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_moving_hazard:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_darkness_light_gate:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_upgrade_chest:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_primary_dive_completion:
@@ -481,6 +487,7 @@ func _ready() -> void:
 		or smoke_pass_21_world_connector
 		or smoke_current_gate
 		or smoke_moving_hazard
+		or smoke_darkness_light_gate
 		or smoke_upgrade_chest
 		or smoke_primary_dive_completion
 		or smoke_oxygen_pressure
@@ -577,6 +584,9 @@ func _ready() -> void:
 		return
 	if smoke_moving_hazard:
 		_smoke_moving_hazard_checks._smoke_moving_hazard_and_quit()
+		return
+	if smoke_darkness_light_gate:
+		_smoke_darkness_light_checks._smoke_darkness_light_gate_and_quit()
 		return
 	if smoke_upgrade_chest:
 		_smoke_progression_container_checks._smoke_upgrade_chest_and_quit()
