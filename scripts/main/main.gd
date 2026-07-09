@@ -1102,8 +1102,9 @@ func _update_status_label() -> void:
 	var oxygen_text := "Oxygen %ds" % oxygen_seconds
 	if not oxygen_feedback.is_empty():
 		oxygen_text = "Oxygen %ds %s" % [oxygen_seconds, oxygen_feedback]
+	var progression_text := _progression_overlay_text()
 
-	_status_label.text = "Score %d\nSalvage banked %d/%d\nHeld %d/%d (%d pts)\n%s" % [
+	_status_label.text = "Score %d\nSalvage banked %d/%d\nHeld %d/%d (%d pts)\n%s\n%s" % [
 		_banked_score,
 		_banked_salvage,
 		_total_salvage,
@@ -1111,6 +1112,7 @@ func _update_status_label() -> void:
 		HELD_SALVAGE_CAPACITY,
 		_held_salvage_score,
 		oxygen_text,
+		progression_text,
 	]
 	if not objective_text.is_empty():
 		_status_label.text += "\n%s" % objective_text
@@ -1189,6 +1191,16 @@ func _is_collection_status_note(status_note: String) -> bool:
 		or status_note.find(" secured +") != -1
 		or status_note.find(" opened +") != -1
 		or status_note == "Salvage interrupted"
+	)
+
+
+func _is_progression_status_note(status_note: String) -> bool:
+	return (
+		status_note == "O2 tank upgraded"
+		or status_note == "O2 tank already upgraded"
+		or status_note == "Upgrade at extraction"
+		or status_note == "Upgrade blocked"
+		or status_note.begins_with("Need ")
 	)
 
 
@@ -1352,6 +1364,22 @@ func _oxygen_capacity_seconds() -> float:
 	return OXYGEN_MAX_SECONDS + _session_progression.oxygen_bonus_seconds()
 
 
+func _progression_overlay_text() -> String:
+	if _has_oxygen_tank_upgrade():
+		return "Wallet %d | O2 tank +%ds" % [_session_wallet(), int(SessionProgression.OXYGEN_TANK_UPGRADE_SECONDS)]
+	return "Wallet %d | U: O2 +%ds (%d)" % [
+		_session_wallet(),
+		int(SessionProgression.OXYGEN_TANK_UPGRADE_SECONDS),
+		SessionProgression.OXYGEN_TANK_UPGRADE_COST,
+	]
+
+
+func _progression_result_text() -> String:
+	if _has_oxygen_tank_upgrade():
+		return "Wallet %d | O2 tank +%ds" % [_session_wallet(), int(SessionProgression.OXYGEN_TANK_UPGRADE_SECONDS)]
+	return "Wallet %d | O2 tank base" % _session_wallet()
+
+
 func _update_result_panel() -> void:
 	if _result_panel == null or _result_label == null:
 		return
@@ -1377,6 +1405,9 @@ func _update_result_panel() -> void:
 	var objective_text := _route_commitment_result_text()
 	if not objective_text.is_empty():
 		result_lines.append(objective_text)
+	result_lines.append(_progression_result_text())
+	if _is_progression_status_note(_last_status_note):
+		result_lines.append(_last_status_note)
 	result_lines.append(oxygen_text)
 	result_lines.append("Press R to retry")
 	_result_label.text = "\n".join(result_lines)

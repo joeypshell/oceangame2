@@ -86,8 +86,8 @@ Additional current map sources:
   - Loads world and player scenes.
   - Applies camera bounds from the world map size.
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
-  - Shows compact preview review context, salvage progress, timed/pry salvage feedback, oxygen-rest feedback, route-objective progress/start cue, and scoped oxygen pressure.
-  - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress/cancel/complete feedback, staged pry salvage progress/cancel/complete feedback, cargo banking, oxygen pressure, limited oxygen-rest recovery, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, route outcome result text, source-tagged return-pressure feedback, source-tagged pre-pickup route cue feedback, route-objective feedback, and primary-objective completion gating.
+  - Shows compact preview review context, salvage progress, timed/pry salvage feedback, oxygen-rest feedback, route-objective progress/start cue, session wallet/upgrade feedback, and scoped oxygen pressure.
+  - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress/cancel/complete feedback, staged pry salvage progress/cancel/complete feedback, cargo banking, session wallet payout, one session oxygen tank upgrade, oxygen pressure, limited oxygen-rest recovery, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, route outcome result text, source-tagged return-pressure feedback, source-tagged pre-pickup route cue feedback, route-objective feedback, and primary-objective completion gating.
   - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, focused timed/pry salvage captures, focused Pass 07-15 captures, and focused primary dive completion capture.
   - Delegates smoke checks to `scripts/main/smoke/`, including safe/deep route comparison, timed/pry salvage, hazard pressure, oxygen pressure, oxygen-rest pressure, cargo/scoring, route outcome result, player-facing, movement-feel, Pass 08-15 objective/route smokes, primary dive completion, and production-slice route checks.
   - Uses `scripts/main/timed_salvage_controller.gd` for the narrow timed salvage interaction.
@@ -97,6 +97,7 @@ Additional current map sources:
   - Uses `scripts/main/oxygen_rest_pocket_feedback.gd` for the narrow source-tagged oxygen-rest prompt and cap text.
   - Uses `scripts/main/route_commitment_feedback.gd` for the narrow source-authored route objective overlay, start cue, objective step cue, and result text.
   - Uses `scripts/main/primary_dive_objective.gd` for maps that opt into source-authored primary objective completion.
+  - Uses `scripts/main/session_progression.gd` for the session-only wallet and one oxygen tank upgrade.
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.
@@ -164,6 +165,7 @@ Art placement must not create, remove, or move collision.
 - Pass 15 adds `deep_cache_first_step_cue` for compact `Objective route: Lower loop` follow-through feedback near the first required deep-cache route target, protected by `--smoke-pass-15-objective-follow-through`.
 - Pass 16 makes `deep_cache_route_objective` the primary dive completion condition for `production_slice_01`, while maps without `primary_route_objective_id` preserve all-salvage completion, protected by `--smoke-primary-dive-completion`.
 - Pass 17 adds `salvage_pry_locker` as a staged `pry_salvage` target with 3 stages at 1.2 seconds each, partial-stage cancel on leaving range, completed-stage persistence during normal exploration, cargo-full blocking, and hazard/oxygen reset cleanup, protected by `--smoke-pry-salvage`.
+- Pass 18 tracks a session wallet from newly banked salvage score, supports one session-only `O2 tank +15` upgrade at extraction, and shows compact wallet/upgrade feedback in the status/result overlays.
 - The default slice has one source-authored `timed_salvage` target, `salvage_deep_right_cache`, that renders a small in-world affordance and requires 2.5 seconds of in-range progress before entering held cargo.
 - Timed-salvage feedback covers progress, cancel, completion, cargo-full blocking, hazard reset, and oxygen failure/reset through `--smoke-timed-salvage`.
 - The default slice has one source-authored `pry_salvage` target, `salvage_pry_locker`, that requires staged in-range progress before entering held cargo and keeps completed stages during normal exploration.
