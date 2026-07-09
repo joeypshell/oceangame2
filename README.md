@@ -137,6 +137,7 @@ Current handoff starts with the Simple Diver Game 08 GO closeout and the Simple 
 - [Simple Diver Game 09 Connected-World And Map Strategy](docs/current/SIMPLE_DIVER_GAME_09_WORLD_MAP_STRATEGY.md)
 - [Simple Diver Game 09 Persistence And Expedition State Contract](docs/current/SIMPLE_DIVER_GAME_09_STATE_CONTRACT.md)
 - [Simple Diver Game 09 Tool And Resource Contract](docs/current/SIMPLE_DIVER_GAME_09_TOOL_RESOURCE_CONTRACT.md)
+- [Simple Diver Game 09 Fauna And Hazard Contract](docs/current/SIMPLE_DIVER_GAME_09_FAUNA_HAZARD_CONTRACT.md)
 - [First Feedback Audio Micro-Pass Plan](docs/current/FIRST_FEEDBACK_AUDIO_MICRO_PASS_PLAN.md)
 - [First Feedback Audio Cue Contract](docs/current/FIRST_FEEDBACK_AUDIO_CUE_CONTRACT.md)
 - [First Feedback Audio Review Note](docs/current/FIRST_FEEDBACK_AUDIO_REVIEW.md)
