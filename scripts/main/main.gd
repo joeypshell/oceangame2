@@ -1419,19 +1419,29 @@ func _oxygen_capacity_seconds() -> float:
 
 
 func _progression_overlay_text() -> String:
-	if _has_oxygen_tank_upgrade():
-		return "Wallet %d | O2 tank +%ds" % [_session_wallet(), int(SessionProgression.OXYGEN_TANK_UPGRADE_SECONDS)]
-	return "Wallet %d | U: O2 +%ds (%d)" % [
+	var oxygen_text := "O2 tank +%ds" % int(SessionProgression.OXYGEN_TANK_UPGRADE_SECONDS)
+	if not _has_oxygen_tank_upgrade():
+		oxygen_text = "U: O2 +%ds (%d)" % [
+			int(SessionProgression.OXYGEN_TANK_UPGRADE_SECONDS),
+			SessionProgression.OXYGEN_TANK_UPGRADE_COST,
+		]
+	var cargo_text := "Cargo +%d" % int(SessionProgression.CARGO_CAPACITY_UPGRADE_BONUS)
+	if not _has_cargo_capacity_upgrade():
+		cargo_text = "C: Cargo +%d (%d)" % [
+			int(SessionProgression.CARGO_CAPACITY_UPGRADE_BONUS),
+			SessionProgression.CARGO_CAPACITY_UPGRADE_COST,
+		]
+	return "Wallet %d\n%s | %s" % [
 		_session_wallet(),
-		int(SessionProgression.OXYGEN_TANK_UPGRADE_SECONDS),
-		SessionProgression.OXYGEN_TANK_UPGRADE_COST,
+		oxygen_text,
+		cargo_text,
 	]
 
 
 func _progression_result_text() -> String:
-	if _has_oxygen_tank_upgrade():
-		return "Wallet %d | O2 tank +%ds" % [_session_wallet(), int(SessionProgression.OXYGEN_TANK_UPGRADE_SECONDS)]
-	return "Wallet %d | O2 tank base" % _session_wallet()
+	var oxygen_text := "O2 tank +%ds" % int(SessionProgression.OXYGEN_TANK_UPGRADE_SECONDS) if _has_oxygen_tank_upgrade() else "O2 tank base"
+	var cargo_text := "Cargo +%d" % int(SessionProgression.CARGO_CAPACITY_UPGRADE_BONUS) if _has_cargo_capacity_upgrade() else "Cargo base"
+	return "Wallet %d | %s | %s" % [_session_wallet(), oxygen_text, cargo_text]
 
 
 func _update_result_panel() -> void:
