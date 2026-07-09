@@ -232,6 +232,10 @@ func _complete_route_outcome_review_state() -> bool:
 	return _main._complete_route_outcome_review_state()
 
 
+func _salvage_centers_for_full_collection() -> Array:
+	return _main._salvage_centers_for_full_collection()
+
+
 func _oxygen_feedback_label() -> String:
 	return _main._oxygen_feedback_label()
 

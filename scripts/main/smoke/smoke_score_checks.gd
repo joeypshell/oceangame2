@@ -7,7 +7,7 @@ func _smoke_salvage_loop_and_quit() -> void:
 		return
 
 	var expected_score := 0
-	for salvage in _world.get_salvage_centers():
+	for salvage in _salvage_centers_for_full_collection():
 		expected_score += int(salvage.get("score", 0))
 		_player.global_position = salvage["center"]
 		_collect_salvage_for_smoke(salvage)
@@ -66,7 +66,7 @@ func _smoke_session_best_score_and_quit() -> void:
 
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
-	var salvage_targets: Array = _world.get_salvage_centers()
+	var salvage_targets: Array = _salvage_centers_for_full_collection()
 	var expected_score := 0
 	for salvage in salvage_targets:
 		expected_score += int(salvage.get("score", 0))
@@ -158,7 +158,7 @@ func _smoke_oxygen_bonus_score_and_quit() -> void:
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
 	var expected_salvage_score := 0
-	for salvage in _world.get_salvage_centers():
+	for salvage in _salvage_centers_for_full_collection():
 		expected_salvage_score += int(salvage.get("score", 0))
 		if _held_salvage >= HELD_SALVAGE_CAPACITY:
 			_player.global_position = _world.get_extraction_center()
