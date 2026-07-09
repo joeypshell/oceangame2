@@ -33,6 +33,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-route-outcome-result
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-pass-18-progression
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-current-gate
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-upgrade-chest
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-timed-salvage
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-player-facing
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-movement-feel
@@ -85,6 +86,8 @@ The route-outcome result smoke loads `production_slice_01`, completes a route-ta
 The Pass 18 progression smoke loads `production_slice_01`, confirms held and failed unbanked salvage do not create wallet payout, confirms banked salvage creates spendable wallet, confirms insufficient-funds purchase is blocked, buys the single oxygen tank upgrade, verifies wallet spend and upgraded capacity, then confirms reset/refill preserve the session upgrade.
 
 The current-gate smoke loads `production_slice_01`, verifies the source-authored `lower_left_loop_current` soft-push marker blocks the lower-left connector before `propulsion_fins`, confirms oxygen continues draining while blocked, buys the propulsion upgrade, then confirms the connector works afterward.
+
+The upgrade-chest smoke loads `production_slice_01`, verifies `lower_loop_upgrade_chest` grants a one-time session wallet reward without mutating cargo, confirms reset does not regrant or show stale feedback, and confirms oxygen failure preserves the opened reward state.
 
 The timed-salvage smoke loads `production_slice_01` and reports the active timed target id, interaction seconds, progress, cancel feedback, completion feedback, held cargo, banked score, oxygen, cargo-blocked state, hazard restoration, and oxygen-reset behavior.
 

@@ -155,6 +155,7 @@ jobs:
           run_score_smoke --smoke-pass-20-light-upgrade pass-20-light-upgrade
           run_score_smoke --smoke-pass-21-world-connector pass-21-world-connector
           run_score_smoke --smoke-current-gate current-gate
+          run_score_smoke --smoke-upgrade-chest upgrade-chest
 
       - name: Run map selector smoke check
         run: |

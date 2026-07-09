@@ -27,6 +27,12 @@ func record_banked_salvage(banked_score: int) -> int:
 	return payout
 
 
+func grant_wallet_reward(amount: int) -> int:
+	var reward: int = maxi(0, amount)
+	_wallet += reward
+	return _wallet
+
+
 func purchase_oxygen_tank_upgrade() -> Dictionary:
 	if has_oxygen_tank_upgrade():
 		return {"purchased": false, "reason": "already_purchased", "wallet": _wallet}

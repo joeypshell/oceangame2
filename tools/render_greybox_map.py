@@ -21,6 +21,7 @@ COLORS = {
     "salvage": "#ffd34a",
     "hazard": "#ff4b5f",
     "marker": "#ffffff",
+    "container": "#d68cff",
     "label": "#eaffff",
 }
 
@@ -143,11 +144,19 @@ def render_svg(map_data: dict) -> str:
             parts.append(f'<line x1="{cx - 12}" y1="{cy - 12}" x2="{cx + 12}" y2="{cy + 12}" stroke="#ffffff" stroke-width="5"/>')
             parts.append(f'<line x1="{cx + 12}" y1="{cy - 12}" x2="{cx - 12}" y2="{cy + 12}" stroke="#ffffff" stroke-width="5"/>')
 
+    for container in map_data.get("progression_containers", []):
+        x, y, w, h = tile_rect(container, tile_size)
+        parts.append(
+            f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="{COLORS["container"]}" '
+            'stroke="#5b236b" stroke-width="5"/>'
+        )
+        parts.append(text(x + 8, y - 10, container["id"], 22))
+
     parts.extend(
         [
             f'<rect x="0" y="0" width="{width_px}" height="{height_px}" fill="url(#grid)"/>',
             text(24, 42, f'{map_data["id"]} - greybox source preview', 30),
-            text(24, height_px - 24, "cyan=open water | gray=solid | tan=extraction | orange=boat | green=start | yellow=salvage | red=hazard", 24),
+            text(24, height_px - 24, "cyan=open water | gray=solid | tan=extraction | orange=boat | green=start | yellow=salvage | red=hazard | purple=container", 24),
             "</svg>",
             "",
         ]
