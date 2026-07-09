@@ -39,9 +39,9 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest completed pass closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_26_CLOSEOUT.md`
-- Current next direction: continue Milestone 07 with a small Pass 27 player movement/facing readability batch focused on the reported direction-change flash.
-- Latest Web verification: `docs/current/PASS_26_RESULT_PRESENTATION_WEB_PREVIEW_VERIFICATION.md`
+- Latest completed pass closeout: `docs/current/CONTROLLED_GAMEPLAY_PASS_27_CLOSEOUT.md`
+- Current next direction: resolve #611 to refresh release-readiness blockers, then either choose one small Milestone 07 follow-up or move toward Simple Diver Game 08 release-candidate preparation.
+- Latest Web verification: `docs/current/PASS_27_PLAYER_FACING_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -216,7 +216,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-09:
 
-- Active roadmap queue: Pass 26 is complete after #582-#590. #591 selected #602-#611, a small Pass 27 player movement/facing readability batch. #52/#53 remain deferred slice-03 polish.
+- Active roadmap queue: Pass 27 player movement/facing work is complete through #610. #611 remains the next release-readiness blocker refresh. #52/#53 remain deferred slice-03 polish.
 - Closed: #562-#571 completed Pass 25 planning, final-dive contract, validation, source authoring, runtime feedback, smoke, focused capture, visual decision, public Web verification, and closeout.
 - Closed: #542-#551 completed Pass 24 planning, relay objective contract, validation, source authoring, runtime feedback, smoke, focused capture, visual decision, public Web verification, and closeout.
 - Closed: #522-#531 completed Pass 23 planning, next-dive prompt contract, validation, source authoring, runtime result text, smoke, focused capture, visual/Web verification, and closeout.
@@ -471,7 +471,7 @@ The first compact feedback/audio cue layer is complete under #481-#490. Pass 22 
 
 Pass 25 is complete under #562-#571: the Pass 24 relay follow-through now seeds a compact final-dive/capstone cue. Banking `slice_04_destination_cache` in `production_slice_04` shows `Relay lead confirmed` and `Final dive signal discovered`, with validation, runtime feedback, smoke, focused capture, visual review, public Web verification, and closeout.
 
-Milestone 07 has its first result-presentation pass complete: Pass 26 makes completed-run result hierarchy clearer, adds `Final dive signal locked`, and verifies smoke/capture/visual/Web review. #591 selected the next small batch: Pass 27 should address player movement/facing readability and the reported direction-change flash before broader presentation polish or release-candidate preparation. Keep it tiny: no music, ambience, audio options menu, enemy AI, inventory/loadouts, save systems, broad economy, procedural generation, broad art replacement, broad audio systems, or full-map productionization.
+Milestone 07 now has result-presentation and player-facing readability passes complete: Pass 26 made completed-run result hierarchy clearer, and Pass 27 addressed the reported direction-change flash with sprite-frame clipping, repeated-reversal smoke, a focused player-facing capture, visual baseline decision, public Web verification, and closeout. Resolve #611 next to refresh release-readiness blockers. After that, choose one small Milestone 07 follow-up only if it materially improves release readiness; otherwise move toward Simple Diver Game 08 release-candidate preparation. Keep it tiny: no music, ambience, audio options menu, enemy AI, inventory/loadouts, save systems, broad economy, procedural generation, broad art replacement, broad audio systems, or full-map productionization.
 
 Accepted constraints for the next batch:
 
