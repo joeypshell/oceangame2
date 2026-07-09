@@ -6,6 +6,10 @@ const OXYGEN_TANK_UPGRADE_SECONDS := 15.0
 const CARGO_CAPACITY_UPGRADE_ID := "cargo_pouch_1"
 const CARGO_CAPACITY_UPGRADE_COST := 700
 const CARGO_CAPACITY_UPGRADE_BONUS := 1
+const LIGHT_UPGRADE_ID := "dive_light_1"
+const LIGHT_UPGRADE_COST := 900
+const LIGHT_UPGRADE_RANGE_SCALE := 1.25
+const LIGHT_UPGRADE_ALPHA := 0.48
 
 var _wallet := 0
 var _total_payout_earned := 0
@@ -51,12 +55,31 @@ func purchase_cargo_capacity_upgrade() -> Dictionary:
 	return {"purchased": true, "wallet": _wallet, "upgrade_id": CARGO_CAPACITY_UPGRADE_ID}
 
 
+func purchase_light_upgrade() -> Dictionary:
+	if has_light_upgrade():
+		return {"purchased": false, "reason": "already_purchased", "wallet": _wallet}
+	if _wallet < LIGHT_UPGRADE_COST:
+		return {
+			"purchased": false,
+			"reason": "insufficient_funds",
+			"wallet": _wallet,
+			"needed": LIGHT_UPGRADE_COST - _wallet,
+		}
+	_wallet -= LIGHT_UPGRADE_COST
+	_purchased_upgrades[LIGHT_UPGRADE_ID] = true
+	return {"purchased": true, "wallet": _wallet, "upgrade_id": LIGHT_UPGRADE_ID}
+
+
 func has_oxygen_tank_upgrade() -> bool:
 	return bool(_purchased_upgrades.get(OXYGEN_TANK_UPGRADE_ID, false))
 
 
 func has_cargo_capacity_upgrade() -> bool:
 	return bool(_purchased_upgrades.get(CARGO_CAPACITY_UPGRADE_ID, false))
+
+
+func has_light_upgrade() -> bool:
+	return bool(_purchased_upgrades.get(LIGHT_UPGRADE_ID, false))
 
 
 func oxygen_bonus_seconds() -> float:
@@ -67,8 +90,20 @@ func cargo_capacity_bonus() -> int:
 	return CARGO_CAPACITY_UPGRADE_BONUS if has_cargo_capacity_upgrade() else 0
 
 
+func light_range_scale() -> float:
+	return LIGHT_UPGRADE_RANGE_SCALE if has_light_upgrade() else 1.0
+
+
+func light_alpha() -> float:
+	return LIGHT_UPGRADE_ALPHA if has_light_upgrade() else 0.38
+
+
 func cargo_capacity_upgrade_cost() -> int:
 	return CARGO_CAPACITY_UPGRADE_COST
+
+
+func light_upgrade_cost() -> int:
+	return LIGHT_UPGRADE_COST
 
 
 func wallet() -> int:
