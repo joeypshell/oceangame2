@@ -5,6 +5,8 @@ Date: 2026-07-09
 Issue: #471 `Plan next presentation micro-pass after darkness/light gate`
 Milestone: Simple Diver Game 07 `Presentation And Game Feel`
 
+Cue contract: `docs/current/FIRST_FEEDBACK_AUDIO_CUE_CONTRACT.md`
+
 ## Decision
 
 The next Presentation And Game Feel micro-pass should add the first compact feedback/audio cue layer for existing gameplay events.
