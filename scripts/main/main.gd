@@ -53,6 +53,7 @@ const PASS_12_OXYGEN_REST_PRESSURE_CAPTURE_DIR := "res://visual_captures/pass_12
 const PASS_13_ROUTE_COMMITMENT_CAPTURE_DIR := "res://visual_captures/pass_13_route_commitment"
 const PASS_14_OBJECTIVE_CUE_CAPTURE_DIR := "res://visual_captures/pass_14_objective_cue"
 const PASS_15_OBJECTIVE_FOLLOW_THROUGH_CAPTURE_DIR := "res://visual_captures/pass_15_objective_follow_through"
+const PRIMARY_DIVE_COMPLETION_CAPTURE_DIR := "res://visual_captures/primary_dive_completion"
 const BUILD_INFO_PATH := "res://build_info.json"
 const MOVEMENT_FEEL_PROBE_CENTER_TILES := Vector2(42, 25)
 const SALVAGE_COLLECTION_RADIUS := 34.0
@@ -174,6 +175,7 @@ func _ready() -> void:
 	var capture_pass_13_route_commitment := _has_arg(user_args, engine_args, "--capture-pass-13-route-commitment")
 	var capture_pass_14_objective_cue := _has_arg(user_args, engine_args, "--capture-pass-14-objective-cue")
 	var capture_pass_15_objective_follow_through := _has_arg(user_args, engine_args, "--capture-pass-15-objective-follow-through")
+	var capture_primary_dive_completion := _has_arg(user_args, engine_args, "--capture-primary-dive-completion")
 	var check_map_parity := _has_arg(user_args, engine_args, "--check-map-parity")
 	var smoke_salvage_loop := _has_arg(user_args, engine_args, "--smoke-salvage-loop")
 	var smoke_production_slice_route := _has_arg(user_args, engine_args, "--smoke-production-slice-route")
@@ -261,6 +263,8 @@ func _ready() -> void:
 	elif capture_pass_14_objective_cue:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_pass_15_objective_follow_through:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif capture_primary_dive_completion:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_route:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
@@ -350,6 +354,7 @@ func _ready() -> void:
 		or capture_pass_13_route_commitment
 		or capture_pass_14_objective_cue
 		or capture_pass_15_objective_follow_through
+		or capture_primary_dive_completion
 		or smoke_salvage_loop
 		or smoke_production_slice_route
 		or smoke_production_slice_02_route
@@ -543,6 +548,8 @@ func _ready() -> void:
 		_capture_controller.capture_pass_14_objective_cue_and_quit(PASS_14_OBJECTIVE_CUE_CAPTURE_DIR)
 	elif capture_pass_15_objective_follow_through:
 		_capture_controller.capture_pass_15_objective_follow_through_and_quit(PASS_15_OBJECTIVE_FOLLOW_THROUGH_CAPTURE_DIR)
+	elif capture_primary_dive_completion:
+		_capture_controller.capture_primary_dive_completion_and_quit(PRIMARY_DIVE_COMPLETION_CAPTURE_DIR)
 
 
 func _review_map_selector_allowed(user_args: PackedStringArray, engine_args: PackedStringArray) -> bool:

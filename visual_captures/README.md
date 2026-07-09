@@ -22,6 +22,8 @@
 
 `visual_captures/pass_15_objective_follow_through/` contains a focused generated screenshot of the Pass 15 in-route objective-follow-through cue before collecting `salvage_lower_loop`.
 
+`visual_captures/primary_dive_completion/` contains a focused generated screenshot of the Pass 16 primary dive completion result panel after banking the required objective targets.
+
 These captures are not automatically approved baselines. They are review artifacts used to compare the current in-engine result against `visual_baselines/` and the art direction docs.
 
 Preview captures include the compact review overlay with map id, build label, and salvage progress.
@@ -113,3 +115,11 @@ Regenerate the focused Pass 15 objective-follow-through capture with:
 ```
 
 This capture frames `deep_cache_first_step_cue` with `Objective route: Lower loop` visible before collecting `salvage_lower_loop`, and is a review artifact, not an accepted baseline by itself.
+
+Regenerate the focused primary dive completion capture with:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-primary-dive-completion
+```
+
+This capture frames the completed primary objective result panel after banking the required deep-cache targets, and is a review artifact, not an accepted baseline by itself.
