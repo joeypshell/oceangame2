@@ -5,11 +5,15 @@ extends CharacterBody2D
 @export var deceleration := 900.0
 
 const LIGHT_CONE_OFFSET_X := 88.0
+const BASE_LIGHT_RANGE_SCALE := 1.0
+const BASE_LIGHT_ALPHA := 0.38
 
 @onready var _body := $Body as Sprite2D
 @onready var _light_cone := $LightCone as Sprite2D
 
 var _facing_sign := 1.0
+var _light_range_scale := BASE_LIGHT_RANGE_SCALE
+var _light_alpha := BASE_LIGHT_ALPHA
 
 
 func _ready() -> void:
@@ -56,12 +60,20 @@ func snap_camera() -> void:
 	camera.reset_smoothing()
 
 
+func apply_light_profile(range_scale: float, alpha: float) -> void:
+	_light_range_scale = maxf(0.01, range_scale)
+	_light_alpha = clampf(alpha, 0.0, 1.0)
+	_set_facing(_facing_sign)
+
+
 func get_facing_report() -> Dictionary:
 	return {
 		"root_scale_x": scale.x,
 		"body_flip_h": _body.flip_h,
 		"light_cone_position_x": _light_cone.position.x,
 		"light_cone_scale_x": _light_cone.scale.x,
+		"light_cone_range_scale": absf(_light_cone.scale.x),
+		"light_cone_alpha": _light_cone.modulate.a,
 	}
 
 
@@ -84,4 +96,7 @@ func _set_facing(sign: float) -> void:
 	scale.x = 1.0
 	_body.flip_h = _facing_sign < 0.0
 	_light_cone.position.x = LIGHT_CONE_OFFSET_X * _facing_sign
-	_light_cone.scale.x = _facing_sign
+	_light_cone.scale.x = _facing_sign * _light_range_scale
+	var light_color := _light_cone.modulate
+	light_color.a = _light_alpha
+	_light_cone.modulate = light_color
