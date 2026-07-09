@@ -123,6 +123,7 @@ Build a small side-view salvage game that proves:
 - [Controlled Gameplay Pass 27 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_27_CLOSEOUT.md)
 - [Milestone 07 Release-Readiness Blockers After Pass 27](docs/current/MILESTONE_07_RELEASE_READINESS_BLOCKERS_AFTER_PASS_27.md)
 - [Simple Diver Game 08 Release-Candidate Plan](docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_PLAN.md)
+- [Simple Diver Game 08 Validation Matrix](docs/current/SIMPLE_DIVER_GAME_08_VALIDATION_MATRIX.md)
 - [First Feedback Audio Micro-Pass Plan](docs/current/FIRST_FEEDBACK_AUDIO_MICRO_PASS_PLAN.md)
 - [First Feedback Audio Cue Contract](docs/current/FIRST_FEEDBACK_AUDIO_CUE_CONTRACT.md)
 - [First Feedback Audio Review Note](docs/current/FIRST_FEEDBACK_AUDIO_REVIEW.md)
