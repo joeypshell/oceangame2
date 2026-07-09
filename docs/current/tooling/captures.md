@@ -113,6 +113,14 @@ Capture the focused primary dive completion result view:
 
 This loads the default production slice, collects the primary objective targets through the normal runtime path, banks them at extraction, frames the completed result panel, keeps map data and accepted baselines unchanged, and writes `visual_captures/primary_dive_completion/production_slice_01_primary_dive_completion.png`.
 
+Capture the focused Pass 23 next-dive objective result view:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-23-next-dive-objective
+```
+
+This loads the default production slice, completes the primary objective through the normal runtime path, frames the result panel with `Next dive: Investigate lower-left relay`, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_23_next_dive_objective/production_slice_01_pass_23_next_dive_objective.png`.
+
 Capture the focused Pass 18 progression upgrade view:
 
 ```powershell
