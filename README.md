@@ -24,6 +24,8 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
+Current release-candidate handoff starts with the Simple Diver Game 08 plan, validation matrix, capture/local/Web/baseline audits, and leaves #631 as the remaining go/no-go closeout.
+
 - [Game Spec](docs/GAME_SPEC.md)
 - [Art Bible](docs/ART_BIBLE.md)
 - [Map Spec](docs/MAP_SPEC.md)

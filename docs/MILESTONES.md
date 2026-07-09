@@ -41,9 +41,9 @@ The open GitHub milestones should mirror this roadmap:
 
 ## Current Next Direction
 
-Controlled Gameplay Pass 27 completed the player movement/facing readability work selected by the #591 Milestone 07 release-readiness audit. Direction changes now keep the player root stable, clip the active swim-sheet frame, and verify body/light alignment through smoke, focused capture, visual review, Web verification, and closeout.
+Simple Diver Game 08 is the active release-candidate milestone. Issues #622-#630 have completed the release-candidate plan, validation matrix, one-command validation runner, release journey smoke, capture review index, local run verification, public Web export handoff, baseline/capture audit, and documentation refresh.
 
-The #611 blocker refresh found no remaining Milestone 07 player-facing blocker that prevents starting Simple Diver Game 08. The active next batch is #622-#631: release-candidate hardening through planning, validation matrix, one-command validation runner, release journey smoke, capture inventory, local/Web handoff checks, documentation refresh, and go/no-go closeout. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, broad art replacement, broad audio systems, or full-map productionization.
+The remaining active release-candidate issue is #631: write the go/no-go closeout and explicitly separate blockers from deferred polish. Keep #52/#53 deferred as optional slice-03 polish unless slice-03 presentation becomes the selected goal. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, broad art replacement, broad audio systems, or full-map productionization.
 
 ## Recently Completed Prototype Passes
 
