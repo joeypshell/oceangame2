@@ -35,6 +35,7 @@ const SmokeOxygenRestChecks := preload("res://scripts/main/smoke/smoke_oxygen_re
 const SmokePrimaryCompletionChecks := preload("res://scripts/main/smoke/smoke_primary_completion_checks.gd")
 const SmokeProgressionChecks := preload("res://scripts/main/smoke/smoke_progression_checks.gd")
 const SmokePrySalvageChecks := preload("res://scripts/main/smoke/smoke_pry_salvage_checks.gd")
+const SmokeResultPresentationChecks := preload("res://scripts/main/smoke/smoke_result_presentation_checks.gd")
 const SmokeRouteCommitmentChecks := preload("res://scripts/main/smoke/smoke_route_commitment_checks.gd")
 const SmokeRouteExtensionChecks := preload("res://scripts/main/smoke/smoke_route_extension_checks.gd")
 const SmokeRouteChecks := preload("res://scripts/main/smoke/smoke_route_checks.gd")
@@ -156,6 +157,7 @@ var _smoke_oxygen_rest_checks
 var _smoke_primary_completion_checks
 var _smoke_progression_checks
 var _smoke_pry_salvage_checks
+var _smoke_result_presentation_checks
 var _smoke_route_commitment_checks
 var _smoke_route_extension_checks
 var _smoke_route_checks
@@ -227,6 +229,7 @@ func _ready() -> void:
 	_smoke_primary_completion_checks = SmokePrimaryCompletionChecks.new(self)
 	_smoke_progression_checks = SmokeProgressionChecks.new(self)
 	_smoke_pry_salvage_checks = SmokePrySalvageChecks.new(self)
+	_smoke_result_presentation_checks = SmokeResultPresentationChecks.new(self)
 	_smoke_route_commitment_checks = SmokeRouteCommitmentChecks.new(self)
 	_smoke_route_extension_checks = SmokeRouteExtensionChecks.new(self)
 	_smoke_route_checks = SmokeRouteChecks.new(self)
@@ -304,6 +307,7 @@ func _ready() -> void:
 	var smoke_pass_22_destination_payoff := _has_arg(user_args, engine_args, "--smoke-pass-22-destination-payoff")
 	var smoke_pass_24_relay_follow_through := _has_arg(user_args, engine_args, "--smoke-pass-24-relay-follow-through")
 	var smoke_pass_25_final_dive_objective := _has_arg(user_args, engine_args, "--smoke-pass-25-final-dive-objective")
+	var smoke_pass_26_result_presentation := _has_arg(user_args, engine_args, "--smoke-pass-26-result-presentation")
 	var smoke_current_gate := _has_arg(user_args, engine_args, "--smoke-current-gate")
 	var smoke_moving_hazard := _has_arg(user_args, engine_args, "--smoke-moving-hazard")
 	var smoke_darkness_light_gate := _has_arg(user_args, engine_args, "--smoke-darkness-light-gate")
@@ -447,6 +451,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_pass_22_destination_payoff:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_pass_26_result_presentation:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_current_gate:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_moving_hazard:
@@ -559,6 +565,7 @@ func _ready() -> void:
 		or smoke_pass_22_destination_payoff
 		or smoke_pass_24_relay_follow_through
 		or smoke_pass_25_final_dive_objective
+		or smoke_pass_26_result_presentation
 		or smoke_current_gate
 		or smoke_moving_hazard
 		or smoke_darkness_light_gate
@@ -664,6 +671,9 @@ func _ready() -> void:
 
 	if smoke_pass_25_final_dive_objective:
 		_smoke_final_dive_objective_checks._smoke_pass_25_final_dive_objective_and_quit()
+		return
+	if smoke_pass_26_result_presentation:
+		_smoke_result_presentation_checks._smoke_pass_26_result_presentation_and_quit()
 		return
 	if smoke_current_gate:
 		_smoke_current_gate_checks._smoke_current_gate_and_quit()
