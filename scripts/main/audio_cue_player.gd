@@ -33,9 +33,13 @@ var _players: Dictionary = {}
 var _last_played_at: Dictionary = {}
 var _event_log: Array[Dictionary] = []
 var _enabled := true
+var _playback_available := true
 
 
 func _ready() -> void:
+	_playback_available = DisplayServer.get_name() != "headless"
+	if not _playback_available:
+		return
 	_load_streams()
 	_create_players()
 
@@ -57,6 +61,9 @@ func play_cue(cue_id: String, dedupe_key := "") -> bool:
 	if not CUE_PATHS.has(cue_id):
 		event["reason"] = "unknown_cue"
 		return false
+	if not _playback_available:
+		event["reason"] = "headless_audio"
+		return false
 	if not _streams.has(cue_id):
 		event["reason"] = "missing_stream"
 		return false
@@ -69,6 +76,8 @@ func play_cue(cue_id: String, dedupe_key := "") -> bool:
 		event["reason"] = "missing_player"
 		return false
 
+	player.stop()
+	player.stream = null
 	player.stream = _streams[cue_id]
 	player.volume_db = HIGH_PRIORITY_VOLUME_DB if priority == "high" else DEFAULT_VOLUME_DB
 	player.play()
@@ -85,10 +94,21 @@ func set_enabled(enabled: bool) -> void:
 	for player in _players.values():
 		if player is AudioStreamPlayer:
 			player.stop()
+			player.stream = null
+
+
+func shutdown() -> void:
+	for player in _players.values():
+		if player is AudioStreamPlayer:
+			player.stop()
+			player.stream = null
+	_streams.clear()
 
 
 func has_cue(cue_id: String) -> bool:
-	return _streams.has(cue_id)
+	if not CUE_PATHS.has(cue_id):
+		return false
+	return not _playback_available or _streams.has(cue_id)
 
 
 func event_log() -> Array[Dictionary]:

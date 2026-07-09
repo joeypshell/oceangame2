@@ -727,6 +727,11 @@ func _ready() -> void:
 		_capture_controller.capture_primary_dive_completion_and_quit(PRIMARY_DIVE_COMPLETION_CAPTURE_DIR)
 
 
+func _exit_tree() -> void:
+	if _audio_cues != null and _audio_cues.has_method("shutdown"):
+		_audio_cues.shutdown()
+
+
 func _review_map_selector_allowed(user_args: PackedStringArray, engine_args: PackedStringArray) -> bool:
 	return OS.has_feature("editor") or _has_arg(user_args, engine_args, "--review-map-selector")
 
@@ -884,6 +889,7 @@ func _process(delta: float) -> void:
 			_last_status_note = _return_pressure_feedback.cargo_full_prompt(blocked_salvage)
 
 	if _held_salvage > 0 and _world.is_inside_extraction(_player.global_position):
+		var banked_cue_key := "%d:%s" % [_banked_salvage + _held_salvage, str(_held_salvage_ids)]
 		_banked_salvage += _held_salvage
 		_banked_score += _held_salvage_score
 		_record_session_payout(_held_salvage_score)
@@ -899,6 +905,7 @@ func _process(delta: float) -> void:
 			_last_status_note = "Run complete"
 		else:
 			_last_status_note = "Banked salvage"
+		_play_feedback_cue("salvage_bank", banked_cue_key)
 
 	_update_status_label()
 
@@ -958,6 +965,7 @@ func _collect_salvage_into_cargo(salvage_id: String, status_note := "") -> void:
 	_held_salvage_ids.append(salvage_id)
 	_held_salvage_score += collected_score
 	_last_status_note = status_note if not status_note.is_empty() else _salvage_collection_feedback_for_id(salvage_id, collected_tier, collected_score)
+	_play_feedback_cue("salvage_pickup", salvage_id)
 
 
 func _timed_salvage_completion_feedback(salvage_id: String, label: String) -> String:
