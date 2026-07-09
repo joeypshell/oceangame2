@@ -137,6 +137,14 @@ Capture the focused Pass 20 light upgrade view:
 
 This loads the default production slice, banks enough salvage through the normal runtime path to afford the light upgrade, purchases it at extraction, frames compact wallet and `Light +range upgraded` feedback with the upgraded light cone visible, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_20_light_upgrade/production_slice_01_pass_20_light_upgrade.png`.
 
+Capture the focused Pass 21 world-connector arrival view:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-21-world-connector
+```
+
+This loads the default production slice, moves the player to `lower_left_loop_connector`, triggers the source-authored transition into `production_slice_04`, frames compact `Arrived: Lower-left loop` and return-connector feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_21_world_connector/production_slice_04_world_connector_arrival.png`.
+
 Capture the original rectangular salvage map comparison views:
 
 ```powershell
