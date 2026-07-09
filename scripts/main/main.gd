@@ -17,6 +17,7 @@ const RouteCommitmentFeedback := preload("res://scripts/main/route_commitment_fe
 const SessionProgression := preload("res://scripts/main/session_progression.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
 const WorldConnectorController := preload("res://scripts/main/world_connector_controller.gd")
+const AudioCuePlayer := preload("res://scripts/main/audio_cue_player.gd")
 const SmokeHazardRouteChecks := preload("res://scripts/main/smoke/smoke_hazard_route_checks.gd")
 const SmokeInteractionChecks := preload("res://scripts/main/smoke/smoke_interaction_checks.gd")
 const SmokeOxygenRestChecks := preload("res://scripts/main/smoke/smoke_oxygen_rest_checks.gd")
@@ -125,6 +126,7 @@ var _route_commitment_feedback
 var _session_progression
 var _timed_salvage
 var _world_connector
+var _audio_cues
 var _smoke_hazard_route_checks
 var _smoke_interaction_checks
 var _smoke_oxygen_rest_checks
@@ -183,6 +185,8 @@ func _ready() -> void:
 	_session_progression = SessionProgression.new()
 	_timed_salvage = TimedSalvageController.new()
 	_world_connector = WorldConnectorController.new()
+	_audio_cues = AudioCuePlayer.new()
+	add_child(_audio_cues)
 	_smoke_hazard_route_checks = SmokeHazardRouteChecks.new(self)
 	_smoke_interaction_checks = SmokeInteractionChecks.new(self)
 	_smoke_oxygen_rest_checks = SmokeOxygenRestChecks.new(self)
@@ -806,6 +810,12 @@ func _on_review_map_selected(index: int) -> void:
 	if _world != null and _world.map_path == map_path:
 		return
 	_load_playable_map(map_path, _debug_overlay_enabled)
+
+
+func _play_feedback_cue(cue_id: String, dedupe_key := "") -> bool:
+	if _audio_cues == null:
+		return false
+	return _audio_cues.play_cue(cue_id, dedupe_key)
 
 
 func _process(delta: float) -> void:

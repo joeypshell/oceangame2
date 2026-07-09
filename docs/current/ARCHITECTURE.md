@@ -94,7 +94,7 @@ Additional current map sources:
   - Loads world and player scenes.
   - Applies camera bounds from the world map size.
   - Supports `--map-path=<res://...>` for loading alternate JSON map sources.
-  - Does not yet own runtime audio; the selected first cue contract is documented in `docs/current/FIRST_FEEDBACK_AUDIO_CUE_CONTRACT.md`.
+  - Owns the first lightweight feedback cue helper from `scripts/main/audio_cue_player.gd`; event triggers remain scoped to #484-#487.
   - Shows compact preview review context, salvage progress, timed/pry salvage feedback, oxygen-rest/current-gate feedback, route-objective progress/start cue, session wallet/upgrade feedback, world-connector prompts, and scoped oxygen pressure.
   - Runs the minimal expedition loop: instant salvage pickup, timed salvage progress/cancel/complete feedback, staged pry salvage progress/cancel/complete feedback, cargo banking, session wallet payout, session oxygen/cargo/light/propulsion upgrades, one source-authored upgrade-chest reward, prompted world-slice transition, oxygen pressure, limited oxygen-rest recovery, current-gate pushback, moving-hazard patrol/contact, hazard warning, hazard oxygen penalty/reset, completion/failure state, session best score, route outcome result text, source-tagged return-pressure feedback, source-tagged pre-pickup route cue feedback, route-objective feedback, and primary-objective completion gating.
   - Delegates visual capture flags to `scripts/main/capture_controller.gd`, including camera-test captures, focused route-outcome result capture, focused timed/pry salvage captures, focused Pass 07-15 captures, focused primary dive completion capture, Pass 18 progression capture, Pass 19 cargo upgrade capture, Pass 20 light upgrade capture, Pass 21 world connector capture, current-gate capture, upgrade-chest capture, and moving-hazard capture.
@@ -111,6 +111,7 @@ Additional current map sources:
   - Uses `scripts/main/primary_dive_objective.gd` for maps that opt into source-authored primary objective completion.
   - Uses `scripts/main/session_progression.gd` for the session-only wallet and oxygen, cargo, light, and propulsion upgrades.
   - Uses `scripts/main/world_connector_controller.gd` for source-authored prompted world-slice connectors.
+  - Uses `scripts/main/audio_cue_player.gd` for cue lookup/playback, cooldown/dedupe, graceful missing-asset handling, and future smoke event logs.
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.
