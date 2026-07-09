@@ -13,10 +13,8 @@ from validate_current_gates import validate_current_gate_reachability, validate_
 from validate_destination_payoffs import validate_destination_payoff_schema
 from validate_moving_hazards import validate_moving_hazard_reachability, validate_moving_hazard_schema
 from validate_next_dive_prompts import validate_next_dive_prompt_schema
-from validate_progression_containers import (
-    validate_progression_container_reachability,
-    validate_progression_container_schema,
-)
+from validate_progression_containers import validate_progression_container_reachability, validate_progression_container_schema
+from validate_relay_follow_through_objectives import validate_relay_follow_through_objective_reachability, validate_relay_follow_through_objective_schema
 from validate_route_objectives import (
     validate_objective_step_cue_reachability,
     validate_objective_step_cue_schema,
@@ -403,6 +401,7 @@ def main() -> int:
     failures.extend(validate_moving_hazard_schema(map_data))
     failures.extend(validate_next_dive_prompt_schema(map_data, entities, zones))
     failures.extend(validate_progression_container_schema(map_data))
+    failures.extend(validate_relay_follow_through_objective_schema(map_data, entities))
     failures.extend(validate_visibility_zone_schema(map_data))
     failures.extend(validate_world_connector_schema(args.map_json, map_data))
     failures.extend(validate_route_objective_schema(map_data, entities, zones))
@@ -484,6 +483,7 @@ def main() -> int:
     failures.extend(validate_current_gate_reachability(zones, solid, reachable))
     failures.extend(validate_moving_hazard_reachability(map_data.get("moving_hazards", []), solid, reachable))
     failures.extend(validate_progression_container_reachability(map_data.get("progression_containers", []), solid, reachable))
+    failures.extend(validate_relay_follow_through_objective_reachability(map_data, entities, solid, reachable))
     failures.extend(validate_visibility_zone_reachability(zones, solid, reachable))
     failures.extend(validate_world_connector_reachability(zones, solid, reachable))
 
