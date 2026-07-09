@@ -22,6 +22,7 @@ const SmokeRouteCommitmentChecks := preload("res://scripts/main/smoke/smoke_rout
 const SmokeRouteExtensionChecks := preload("res://scripts/main/smoke/smoke_route_extension_checks.gd")
 const SmokeRouteChecks := preload("res://scripts/main/smoke/smoke_route_checks.gd")
 const SmokeScoreChecks := preload("res://scripts/main/smoke/smoke_score_checks.gd")
+const SmokeWorldConnectorChecks := preload("res://scripts/main/smoke/smoke_world_connector_checks.gd")
 const DEFAULT_MAP_PATH := "res://maps/production_slice_01.greybox.json"
 const ORIGINAL_MAP_PATH := "res://maps/cave_salvage_test_01.greybox.json"
 const TILESET_TEST_MAP_PATH := "res://maps/cave_tileset_test_01.greybox.json"
@@ -116,6 +117,7 @@ var _smoke_route_commitment_checks
 var _smoke_route_extension_checks
 var _smoke_route_checks
 var _smoke_score_checks
+var _smoke_world_connector_checks
 var _review_canvas: CanvasLayer
 var _review_label: Label
 var _status_label: Label
@@ -166,6 +168,7 @@ func _ready() -> void:
 	_smoke_route_extension_checks = SmokeRouteExtensionChecks.new(self)
 	_smoke_route_checks = SmokeRouteChecks.new(self)
 	_smoke_score_checks = SmokeScoreChecks.new(self)
+	_smoke_world_connector_checks = SmokeWorldConnectorChecks.new(self)
 	var user_args := OS.get_cmdline_user_args()
 	var engine_args := OS.get_cmdline_args()
 	var capture_original_map := _has_arg(user_args, engine_args, "--capture-original-map")
@@ -220,6 +223,7 @@ func _ready() -> void:
 	var smoke_pass_18_progression := _has_arg(user_args, engine_args, "--smoke-pass-18-progression")
 	var smoke_pass_19_cargo_upgrade := _has_arg(user_args, engine_args, "--smoke-pass-19-cargo-upgrade")
 	var smoke_pass_20_light_upgrade := _has_arg(user_args, engine_args, "--smoke-pass-20-light-upgrade")
+	var smoke_pass_21_world_connector := _has_arg(user_args, engine_args, "--smoke-pass-21-world-connector")
 	var smoke_primary_dive_completion := _has_arg(user_args, engine_args, "--smoke-primary-dive-completion")
 	var smoke_oxygen_pressure := _has_arg(user_args, engine_args, "--smoke-oxygen-pressure")
 	var smoke_timed_salvage := _has_arg(user_args, engine_args, "--smoke-timed-salvage")
@@ -335,6 +339,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_pass_20_light_upgrade:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_pass_21_world_connector:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_primary_dive_completion:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_oxygen_pressure:
@@ -422,6 +428,7 @@ func _ready() -> void:
 		or smoke_pass_18_progression
 		or smoke_pass_19_cargo_upgrade
 		or smoke_pass_20_light_upgrade
+		or smoke_pass_21_world_connector
 		or smoke_primary_dive_completion
 		or smoke_oxygen_pressure
 		or smoke_timed_salvage
@@ -508,6 +515,9 @@ func _ready() -> void:
 		return
 	if smoke_pass_20_light_upgrade:
 		_smoke_progression_checks._smoke_pass_20_light_upgrade_and_quit()
+		return
+	if smoke_pass_21_world_connector:
+		_smoke_world_connector_checks._smoke_pass_21_world_connector_and_quit()
 		return
 	if smoke_primary_dive_completion:
 		_smoke_primary_completion_checks._smoke_primary_dive_completion_and_quit()

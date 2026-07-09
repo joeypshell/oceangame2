@@ -1,0 +1,139 @@
+extends "res://scripts/main/smoke/smoke_check_base.gd"
+
+const PASS_21_CONNECTOR_ID := "lower_left_loop_connector"
+const PASS_21_DESTINATION_MAP_ID := "production_slice_04"
+const PASS_21_DESTINATION_ENTRY_ID := "relay_sub_entry"
+
+
+func _smoke_pass_21_world_connector_and_quit() -> void:
+	if _world.map_id != "production_slice_01":
+		push_error("Pass 21 connector smoke loaded unexpected origin map: %s." % _world.map_id)
+		get_tree().quit(1)
+		return
+	if not _world.has_method("get_world_connectors") or not _world.has_method("get_entry_position"):
+		push_error("Pass 21 connector smoke requires world connector runtime queries.")
+		get_tree().quit(1)
+		return
+
+	var connector := _connector_by_id(PASS_21_CONNECTOR_ID)
+	if connector.is_empty():
+		push_error("Pass 21 connector smoke did not find connector %s." % PASS_21_CONNECTOR_ID)
+		get_tree().quit(1)
+		return
+
+	if str(connector.get("destination_map_id", "")) != PASS_21_DESTINATION_MAP_ID:
+		push_error("Pass 21 connector smoke destination mismatch: %s." % connector)
+		get_tree().quit(1)
+		return
+	if str(connector.get("destination_entry_id", "")) != PASS_21_DESTINATION_ENTRY_ID:
+		push_error("Pass 21 connector smoke destination entry mismatch: %s." % connector)
+		get_tree().quit(1)
+		return
+
+	_main._session_progression.record_banked_salvage(2500)
+	_main._session_progression.purchase_oxygen_tank_upgrade()
+	_main._session_progression.purchase_cargo_capacity_upgrade()
+	_main._session_progression.purchase_light_upgrade()
+	var wallet_before := _session_wallet()
+
+	_held_salvage = 1
+	_held_salvage_score = 100
+	_banked_salvage = 2
+	_banked_score = 200
+	_held_salvage_ids = ["origin_probe_salvage"]
+	_main._banked_validation_route_counts = {"origin_probe_route": 1}
+	_last_status_note = "Collected common salvage +100"
+	_player.global_position = connector["center"]
+	_update_status_label()
+	var status_before := _status_text()
+	if status_before.find("E: Enter Lower-left loop") == -1:
+		push_error("Pass 21 connector smoke prompt missing before transition: %s." % status_before)
+		get_tree().quit(1)
+		return
+
+	if not _main._try_world_connector_transition():
+		push_error("Pass 21 connector smoke did not trigger transition.")
+		get_tree().quit(1)
+		return
+	var destination_entry: Vector2 = _world.get_entry_position(PASS_21_DESTINATION_ENTRY_ID)
+	if _world.map_id != PASS_21_DESTINATION_MAP_ID:
+		push_error("Pass 21 connector smoke loaded wrong destination map: %s." % _world.map_id)
+		get_tree().quit(1)
+		return
+	if _player.global_position.distance_to(destination_entry) > 1.0:
+		push_error("Pass 21 connector smoke arrival position mismatch: %s expected %s." % [_player.global_position, destination_entry])
+		get_tree().quit(1)
+		return
+	if _held_salvage != 0 or _held_salvage_score != 0 or _banked_salvage != 0 or _banked_score != 0 or not _held_salvage_ids.is_empty():
+		push_error("Pass 21 connector smoke local state did not reset: held=%d held_score=%d banked=%d banked_score=%d ids=%s." % [
+			_held_salvage,
+			_held_salvage_score,
+			_banked_salvage,
+			_banked_score,
+			_held_salvage_ids,
+		])
+		get_tree().quit(1)
+		return
+	if not _main._banked_validation_route_counts.is_empty() or _run_complete or _run_failed or (_result_panel != null and _result_panel.visible):
+		push_error("Pass 21 connector smoke leaked origin result/route state: counts=%s complete=%s failed=%s result_visible=%s." % [
+			_main._banked_validation_route_counts,
+			str(_run_complete),
+			str(_run_failed),
+			str(_result_panel != null and _result_panel.visible),
+		])
+		get_tree().quit(1)
+		return
+	if not _has_oxygen_tank_upgrade() or not _has_cargo_capacity_upgrade() or not _has_light_upgrade() or _session_wallet() != wallet_before:
+		push_error("Pass 21 connector smoke session progression changed: wallet=%d before=%d oxygen=%s cargo=%s light=%s." % [
+			_session_wallet(),
+			wallet_before,
+			str(_has_oxygen_tank_upgrade()),
+			str(_has_cargo_capacity_upgrade()),
+			str(_has_light_upgrade()),
+		])
+		get_tree().quit(1)
+		return
+	if not is_equal_approx(_oxygen_seconds, _oxygen_capacity_seconds()):
+		push_error("Pass 21 connector smoke destination oxygen mismatch: oxygen=%.1f capacity=%.1f." % [_oxygen_seconds, _oxygen_capacity_seconds()])
+		get_tree().quit(1)
+		return
+	if _total_salvage != _world.get_total_salvage_count() or _world.get_salvage_centers().is_empty():
+		push_error("Pass 21 connector smoke destination salvage state mismatch: total=%d runtime=%d." % [_total_salvage, _world.get_total_salvage_count()])
+		get_tree().quit(1)
+		return
+	if _world.find_open_path(_player.global_position, _world.get_salvage_centers()[0]["center"]).is_empty():
+		push_error("Pass 21 connector smoke destination route was corrupted after transition.")
+		get_tree().quit(1)
+		return
+
+	_update_status_label()
+	var final_status := _status_text().replace("\n", " | ")
+	if final_status.find("Arrived: Lower-left loop") == -1 or final_status.find("E: Enter Boat hub") == -1:
+		push_error("Pass 21 connector smoke final status missing arrival/return prompt: %s." % final_status)
+		get_tree().quit(1)
+		return
+
+	print("Pass 21 connector smoke passed: connector=%s origin=production_slice_01 destination=%s entry=%s wallet=%d upgrades=o2:%s,cargo:%s,light:%s held=%d oxygen=%.1f status=\"%s\"." % [
+		PASS_21_CONNECTOR_ID,
+		_world.map_id,
+		PASS_21_DESTINATION_ENTRY_ID,
+		_session_wallet(),
+		str(_has_oxygen_tank_upgrade()),
+		str(_has_cargo_capacity_upgrade()),
+		str(_has_light_upgrade()),
+		_held_salvage,
+		_oxygen_seconds,
+		final_status,
+	])
+	get_tree().quit()
+
+
+func _connector_by_id(connector_id: String) -> Dictionary:
+	for connector in _world.get_world_connectors():
+		if str(connector.get("id", "")) == connector_id:
+			return connector
+	return {}
+
+
+func _status_text() -> String:
+	return _status_label.text if _status_label != null else ""
