@@ -2394,6 +2394,7 @@
       "intent": "Pass 13 route commitment objective requiring the player to bank the lower-loop payoff and timed deep-right cache in one committed route chain."
     }
   ],
+  "primary_route_objective_id": "deep_cache_route_objective",
   "background": [
     {
       "id": "distant_entry_wall",
