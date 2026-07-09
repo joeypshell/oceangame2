@@ -52,8 +52,7 @@ TARGETED_FILL_OPEN_CELLS = {
     (1, 80),
     (59, 80),
 }
-PASS_13_ROUTE_OBJECTIVES = [{"id": "deep_cache_route_objective", "route_context": "deep_cache_commitment", "label": "Deep cache route", "required_banked_targets": ["salvage_lower_loop", "salvage_deep_right_cache"], "supporting_marker_ids": ["lower_loop_route", "lower_loop_to_deep_cache_pressure", "lower_loop_oxygen_rest_pocket", "return_pressure_to_boat"], "intent": "Pass 13 route commitment objective requiring the player to bank the lower-loop payoff and timed deep-right cache in one committed route chain."}]
-
+PASS_13_ROUTE_OBJECTIVES = [{"id": "deep_cache_route_objective", "route_context": "deep_cache_commitment", "label": "Deep cache route", "required_banked_targets": ["salvage_lower_loop", "salvage_deep_right_cache"], "supporting_marker_ids": ["lower_loop_route", "deep_cache_first_step_cue", "lower_loop_to_deep_cache_pressure", "lower_loop_oxygen_rest_pocket", "return_pressure_to_boat"], "intent": "Pass 13 route commitment objective requiring the player to bank the lower-loop payoff and timed deep-right cache in one committed route chain."}]
 
 def rect_cells(item: dict) -> set[tuple[int, int]]:
     return {
@@ -277,6 +276,7 @@ def build_map_data(source_map: dict) -> dict:
                 "h": 24,
                 "intent": "Lower optional loop for a longer salvage return test.",
             },
+            {"id": "deep_cache_first_step_cue", "type": "marker", "x": 28, "y": 58, "w": 4, "h": 3, "objective_step_cue": True, "objective_id": "deep_cache_route_objective", "target_id": "salvage_lower_loop", "route_context": "deep_cache_commitment", "objective_step_label": "Lower loop", "intent": "Pass 15 objective follow-through cue for the first required deep-cache route target."},
             {
                 "id": "return_pressure_to_boat",
                 "type": "marker",

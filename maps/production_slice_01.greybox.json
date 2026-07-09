@@ -2307,6 +2307,20 @@
       "intent": "Lower optional loop for a longer salvage return test."
     },
     {
+      "id": "deep_cache_first_step_cue",
+      "type": "marker",
+      "x": 28,
+      "y": 58,
+      "w": 4,
+      "h": 3,
+      "objective_step_cue": true,
+      "objective_id": "deep_cache_route_objective",
+      "target_id": "salvage_lower_loop",
+      "route_context": "deep_cache_commitment",
+      "objective_step_label": "Lower loop",
+      "intent": "Pass 15 objective follow-through cue for the first required deep-cache route target."
+    },
+    {
       "id": "return_pressure_to_boat",
       "type": "marker",
       "x": 12,
@@ -2372,6 +2386,7 @@
       ],
       "supporting_marker_ids": [
         "lower_loop_route",
+        "deep_cache_first_step_cue",
         "lower_loop_to_deep_cache_pressure",
         "lower_loop_oxygen_rest_pocket",
         "return_pressure_to_boat"
