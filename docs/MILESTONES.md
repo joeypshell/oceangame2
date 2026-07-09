@@ -43,7 +43,7 @@ The open GitHub milestones should mirror this roadmap:
 
 Controlled Gameplay Pass 22 completed the first Milestone 05 destination-side payoff: `production_slice_04` now has one source-authored destination cache for the existing lower-left connector, with validation, runtime feedback, smoke, focused capture, visual decision, Web verification, and closeout.
 
-The next meaningful batch should probably move to Milestone 06 with a tiny objective/run-structure step that makes the existing dive feel more directed. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, broad art replacement, or full-map productionization.
+Controlled Gameplay Pass 23 is now selected for Milestone 06: one source-authored next-dive objective prompt after the existing primary deep-cache objective. Do not add another connector merely because the first one works, and do not jump to enemies, procedural generation, full inventory/loadout systems, save files, broad economy work, broad art replacement, or full-map productionization.
 
 ## Recently Completed Prototype Passes
 

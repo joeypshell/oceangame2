@@ -96,6 +96,7 @@ Build a small side-view salvage game that proves:
 - [Controlled Gameplay Pass 22 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_22_PLAN.md)
 - [Controlled Gameplay Pass 22 Destination Payoff Contract](docs/current/CONTROLLED_GAMEPLAY_PASS_22_DESTINATION_PAYOFF_CONTRACT.md)
 - [Controlled Gameplay Pass 22 Closeout](docs/current/CONTROLLED_GAMEPLAY_PASS_22_CLOSEOUT.md)
+- [Controlled Gameplay Pass 23 Plan](docs/current/CONTROLLED_GAMEPLAY_PASS_23_PLAN.md)
 - [First Feedback Audio Micro-Pass Plan](docs/current/FIRST_FEEDBACK_AUDIO_MICRO_PASS_PLAN.md)
 - [First Feedback Audio Cue Contract](docs/current/FIRST_FEEDBACK_AUDIO_CUE_CONTRACT.md)
 - [First Feedback Audio Review Note](docs/current/FIRST_FEEDBACK_AUDIO_REVIEW.md)
