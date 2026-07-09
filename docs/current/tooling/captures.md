@@ -129,6 +129,14 @@ Capture the focused Pass 19 cargo upgrade view:
 
 This loads the default production slice, banks enough salvage through the normal runtime path to afford the cargo capacity upgrade, purchases it at extraction, frames compact wallet, `Cargo +1`, and `Held 0/3` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_19_cargo_upgrade/production_slice_01_pass_19_cargo_upgrade.png`.
 
+Capture the focused Pass 20 light upgrade view:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-20-light-upgrade
+```
+
+This loads the default production slice, banks enough salvage through the normal runtime path to afford the light upgrade, purchases it at extraction, frames compact wallet and `Light +range upgraded` feedback with the upgraded light cone visible, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_20_light_upgrade/production_slice_01_pass_20_light_upgrade.png`.
+
 Capture the original rectangular salvage map comparison views:
 
 ```powershell
