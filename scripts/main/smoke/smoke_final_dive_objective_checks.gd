@@ -9,6 +9,7 @@ const SEED_ID := "lower_left_final_dive_signal"
 const SEED_TRIGGER := "relay_follow_through_complete"
 const SEED_LABEL := "Final dive signal discovered"
 const SEED_RESULT_LABEL := "Final dive signal found"
+const SEED_CUE_LABEL := "Final dive signal locked"
 
 
 func _smoke_pass_25_final_dive_objective_and_quit() -> void:
@@ -82,7 +83,7 @@ func _smoke_pass_25_final_dive_objective_and_quit() -> void:
 	_main._run_complete = true
 	_main._run_failed = false
 	_main._update_result_panel()
-	if _final_dive_result_text() != SEED_RESULT_LABEL or _result_text().find(SEED_RESULT_LABEL) == -1:
+	if _final_dive_result_text() != SEED_RESULT_LABEL or _result_text().find(SEED_RESULT_LABEL) == -1 or _result_text().find(SEED_CUE_LABEL) == -1:
 		_fail("missing complete result: helper=%s result=%s" % [_final_dive_result_text(), _result_text()])
 		return
 
@@ -93,7 +94,7 @@ func _smoke_pass_25_final_dive_objective_and_quit() -> void:
 	_main._run_complete = false
 	_main._run_failed = true
 	_main._update_result_panel()
-	if not _final_dive_result_text().is_empty() or _result_text().find(SEED_RESULT_LABEL) != -1:
+	if not _final_dive_result_text().is_empty() or _result_text().find(SEED_RESULT_LABEL) != -1 or _result_text().find(SEED_CUE_LABEL) != -1:
 		_fail("failed state leaked result: helper=%s result=%s" % [_final_dive_result_text(), _result_text()])
 		return
 
@@ -102,13 +103,14 @@ func _smoke_pass_25_final_dive_objective_and_quit() -> void:
 		_fail("reset leaked state: helper=%s status=%s" % [_final_dive_result_text(), _status_text()])
 		return
 
-	print("Pass 25 final-dive objective smoke passed: seed=%s source=%s target=%s trigger=%s label=\"%s\" result=\"%s\" completed_banked=%d completed_score=%d completed_oxygen=%.1f reset_banked=%d reset_score=%d reset_oxygen=%.1f." % [
+	print("Pass 25 final-dive objective smoke passed: seed=%s source=%s target=%s trigger=%s label=\"%s\" result=\"%s\" cue=\"%s\" completed_banked=%d completed_score=%d completed_oxygen=%.1f reset_banked=%d reset_score=%d reset_oxygen=%.1f." % [
 		SEED_ID,
 		RELAY_OBJECTIVE_ID,
 		PAYOFF_TARGET_ID,
 		SEED_TRIGGER,
 		SEED_LABEL,
 		SEED_RESULT_LABEL,
+		SEED_CUE_LABEL,
 		completed_banked,
 		completed_score,
 		completed_oxygen,
