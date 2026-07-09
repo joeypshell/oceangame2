@@ -26,6 +26,8 @@
 
 `visual_captures/pry_salvage/` contains a focused generated screenshot of the Pass 17 pry salvage interaction with staged progress visible.
 
+`visual_captures/pass_18_progression/` contains a focused generated screenshot of the Pass 18 wallet and oxygen tank upgrade feedback after banking enough salvage and purchasing at extraction.
+
 These captures are not automatically approved baselines. They are review artifacts used to compare the current in-engine result against `visual_baselines/` and the art direction docs.
 
 Preview captures include the compact review overlay with map id, build label, and salvage progress.
@@ -133,3 +135,11 @@ Regenerate the focused pry salvage capture with:
 ```
 
 This capture frames `salvage_pry_locker` with staged pry progress visible, and is a review artifact, not an accepted baseline by itself.
+
+Regenerate the focused Pass 18 progression capture with:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-18-progression
+```
+
+This capture frames the extraction area with wallet spend and `O2 tank upgraded` feedback visible, and is a review artifact, not an accepted baseline by itself.
