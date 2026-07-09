@@ -239,6 +239,18 @@ func _session_payout_total() -> int:
 	return _main._session_payout_total()
 
 
+func _try_purchase_oxygen_tank_upgrade() -> bool:
+	return _main._try_purchase_oxygen_tank_upgrade()
+
+
+func _has_oxygen_tank_upgrade() -> bool:
+	return _main._has_oxygen_tank_upgrade()
+
+
+func _oxygen_capacity_seconds() -> float:
+	return _main._oxygen_capacity_seconds()
+
+
 func _current_expedition_score() -> int:
 	return _main._current_expedition_score()
 
