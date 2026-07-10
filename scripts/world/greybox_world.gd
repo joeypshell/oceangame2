@@ -20,6 +20,7 @@ const GreyboxVisibilityZoneRenderer := preload("res://scripts/world/greybox_visi
 const GreyboxWorldQueries := preload("res://scripts/world/greybox_world_queries.gd")
 const GreyboxSurveyTargets := preload("res://scripts/world/greybox_survey_targets.gd")
 const GreyboxMaterialCandidates := preload("res://scripts/world/greybox_material_candidates.gd")
+const GreyboxToolTargets := preload("res://scripts/world/greybox_tool_targets.gd")
 
 const SALVAGE_TIER_SCORES := {
 	"common": 100,
@@ -74,6 +75,7 @@ var _visibility_zone_renderer
 var _world_queries
 var _survey_target_runtime
 var _material_candidate_runtime
+var _tool_target_runtime
 
 
 func _ready() -> void:
@@ -89,6 +91,7 @@ func _ready() -> void:
 	_world_queries = GreyboxWorldQueries.new()
 	_survey_target_runtime = GreyboxSurveyTargets.new()
 	_material_candidate_runtime = GreyboxMaterialCandidates.new()
+	_tool_target_runtime = GreyboxToolTargets.new()
 	load_greybox()
 
 
@@ -145,6 +148,14 @@ func load_greybox() -> void:
 	add_child(_marker_root)
 	_survey_target_runtime.build(_marker_root, map_data.get("survey_targets", []), tile_size, show_debug_overlay)
 	_material_candidate_runtime.build(
+		_marker_root,
+		map_data.get("entities", []),
+		tile_size,
+		show_debug_overlay,
+		_prop_renderer_helper(),
+		_asset_lookup_helper()
+	)
+	_tool_target_runtime.build(
 		_marker_root,
 		map_data.get("entities", []),
 		tile_size,
@@ -258,10 +269,33 @@ func restore_material_candidate(candidate_id: String) -> void:
 func get_material_candidate_report() -> Dictionary:
 	return _material_candidate_runtime.report()
 
+
+func get_tool_target_count() -> int:
+	return _tool_target_runtime.targets().size()
+
+
+func get_tool_targets() -> Array:
+	return _tool_target_runtime.targets()
+
+
+func get_tool_target_near(position: Vector2, radius_px: float) -> Dictionary:
+	return _tool_target_runtime.target_near(position, radius_px)
+
+
+func collect_tool_target(target_id: String) -> bool:
+	return _tool_target_runtime.collect(target_id)
+
+
+func get_tool_target_report() -> Dictionary:
+	return _tool_target_runtime.report()
+
 func get_salvage_score(salvage_id: String) -> int:
 	for entity in _salvage_entities:
 		if str(entity.get("id", "salvage")) == salvage_id:
 			return _salvage_score(entity)
+	var tool_target: Dictionary = _tool_target_runtime.target_by_id(salvage_id)
+	if not tool_target.is_empty():
+		return _salvage_score(tool_target)
 	return int(SALVAGE_TIER_SCORES["common"])
 
 
@@ -269,11 +303,14 @@ func get_salvage_tier(salvage_id: String) -> String:
 	for entity in _salvage_entities:
 		if str(entity.get("id", "salvage")) == salvage_id:
 			return str(entity.get("tier", "common"))
+	var tool_target: Dictionary = _tool_target_runtime.target_by_id(salvage_id)
+	if not tool_target.is_empty():
+		return str(tool_target.get("tier", "common"))
 	return "common"
 
 
 func is_salvage_collected(salvage_id: String) -> bool:
-	return bool(_collected_salvage.get(salvage_id, false))
+	return bool(_collected_salvage.get(salvage_id, false)) or _tool_target_runtime.is_collected(salvage_id)
 
 
 func get_hazard_centers() -> Array:
@@ -575,6 +612,7 @@ func reset_salvage() -> void:
 	for salvage_id in _salvage_nodes_by_id.keys():
 		var salvage_node := _salvage_nodes_by_id[salvage_id] as Node2D
 		salvage_node.visible = true
+	_tool_target_runtime.reset()
 
 
 func restore_salvage(salvage_ids: Array) -> void:
@@ -584,6 +622,7 @@ func restore_salvage(salvage_ids: Array) -> void:
 		if _salvage_nodes_by_id.has(id):
 			var salvage_node := _salvage_nodes_by_id[id] as Node2D
 			salvage_node.visible = true
+		_tool_target_runtime.restore(id)
 
 
 func is_inside_extraction(position: Vector2) -> bool:

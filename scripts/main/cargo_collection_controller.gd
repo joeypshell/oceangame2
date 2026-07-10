@@ -20,8 +20,11 @@ func update(delta: float) -> void:
 	)
 	if material_result.has("note"):
 		_main._last_status_note = str(material_result["note"])
-	if not bool(material_result.get("changed", false)) and not bool(material_result.get("blocked", false)):
-		_update_salvage(delta)
+	if bool(material_result.get("changed", false)) or bool(material_result.get("blocked", false)):
+		_main._cutter_salvage.reset()
+	else:
+		if not _update_tool_target(delta):
+			_update_salvage(delta)
 	OffloadController.try_offload(_main)
 	var material_commit: Dictionary = _main._material_runtime.try_commit_at_boat(
 		_main._world,
@@ -29,6 +32,42 @@ func update(delta: float) -> void:
 	)
 	if material_commit.has("note"):
 		_main._last_status_note = str(material_commit["note"])
+
+
+func _update_tool_target(delta: float) -> bool:
+	var target: Dictionary = _main._world.get_tool_target_near(
+		_main._player.global_position,
+		_main.SALVAGE_COLLECTION_RADIUS
+	)
+	var result: Dictionary = _main._cutter_salvage.update(
+		target,
+		delta,
+		_main._held_cargo_count(),
+		_main._held_salvage_capacity()
+	)
+	if target.is_empty():
+		if str(result.get("state", "")) == "canceled":
+			_main._last_status_note = str(result.get("note", "Cutter interrupted"))
+		return false
+
+	_main._timed_salvage.update({}, delta)
+	_main._pry_salvage.update({}, delta)
+	if str(result.get("state", "")) == "complete":
+		var target_id := str(result.get("id", ""))
+		if _main._world.collect_tool_target(target_id):
+			var note := "%s opened +%d" % [
+				_display_label(str(result.get("label", "sealed wreck"))),
+				_main._world.get_salvage_score(target_id),
+			]
+			_main._collect_salvage_into_cargo(target_id, note)
+	elif result.has("note"):
+		_main._last_status_note = str(result["note"])
+	return true
+
+
+func _display_label(label: String) -> String:
+	var value := label.strip_edges()
+	return value.substr(0, 1).to_upper() + value.substr(1) if not value.is_empty() else "Sealed wreck"
 
 
 func _update_salvage(delta: float) -> void:

@@ -6,6 +6,7 @@ const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime
 const AnomalySurveyCapture := preload("res://scripts/main/captures/anomaly_survey_capture.gd")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const CargoCollectionController := preload("res://scripts/main/cargo_collection_controller.gd")
+const CutterSalvageController := preload("res://scripts/main/cutter_salvage_controller.gd")
 const CurrentGateCapture := preload("res://scripts/main/captures/current_gate_capture.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
 const DestinationPayoffFeedback := preload("res://scripts/main/destination_payoff_feedback.gd")
@@ -156,6 +157,7 @@ var _anomaly_survey
 var _capture_controller
 var _cargo_collection
 var _current_gate
+var _cutter_salvage
 var _destination_payoff_feedback
 var _final_dive_objective_seed
 var _moving_hazards
@@ -651,6 +653,7 @@ func _ready() -> void:
 	_anomaly_survey = AnomalySurveyRuntime.new(_progression_runtime, not automated_review)
 	_material_runtime = MaterialRuntimeController.new(_anomaly_survey.profile_state())
 	_material_project = MaterialProjectRuntime.new(_anomaly_survey.profile_state())
+	_cutter_salvage = CutterSalvageController.new(_anomaly_survey.profile_state())
 	_cargo_collection = CargoCollectionController.new(self)
 	_map_selector_enabled = (not automated_review) and _review_map_selector_allowed(user_args, engine_args)
 
@@ -944,6 +947,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_expedition_day_state.on_map_loaded(str(world.map_id))
 	_material_runtime.on_map_loaded(world, _expedition_day_state)
 	_material_project.on_map_loaded(world)
+	_cutter_salvage.on_map_loaded(world)
 	_sortie_state.begin_map_leg(str(world.map_id), entry_id, _oxygen_capacity_seconds(), preserve_sortie)
 	player.position = world.get_entry_position(entry_id) if not entry_id.is_empty() and world.has_method("get_entry_position") else world.spawn_position
 	add_child(player)
@@ -956,6 +960,8 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 
 	_banked_salvage = 0
 	_total_salvage = world.get_total_salvage_count()
+	if _cutter_salvage.has_cutter():
+		_total_salvage += _cutter_salvage.available_target_count(world)
 	_banked_salvage_ids = []
 	_banked_score = 0
 	_completion_oxygen_bonus = 0
@@ -1178,11 +1184,14 @@ func _reset_run() -> void:
 	_current_gate.reset()
 	_pry_salvage.reset()
 	_timed_salvage.reset()
+	_cutter_salvage.reset()
+	_cutter_salvage.apply_banked_to_world(_world)
 	_relay_follow_through_feedback.reset(_world)
 	_final_dive_objective_seed.reset(_world)
 	_sortie_state.begin_map_leg(str(_world.map_id), "", _oxygen_capacity_seconds())
 	_banked_salvage_ids = []
 	_banked_salvage = 0
+	_total_salvage = _world.get_total_salvage_count() + (_cutter_salvage.available_target_count(_world) if _cutter_salvage.has_cutter() else 0)
 	_banked_score = 0
 	_completion_oxygen_bonus = 0
 	_banked_validation_route_counts = {}
@@ -1308,6 +1317,7 @@ func _handle_oxygen_depleted() -> void:
 	_moving_hazards.reset(_world)
 	_pry_salvage.reset()
 	_timed_salvage.reset()
+	_cutter_salvage.reset()
 	_material_runtime.restore_unbanked(_world, _expedition_day_state, "oxygen_failure")
 	if not _sortie_state.held_salvage_ids.is_empty():
 		_world.restore_salvage(_sortie_state.clear_held())
@@ -1334,6 +1344,7 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 	_moving_hazards.reset(_world)
 	_pry_salvage.reset()
 	_timed_salvage.reset()
+	_cutter_salvage.reset()
 	_anomaly_survey.clear_unbanked("hazard", _world)
 	var material_drop: Dictionary = _material_runtime.restore_unbanked(_world, _expedition_day_state, "hazard")
 	var oxygen_depleted := _apply_hazard_oxygen_penalty()
@@ -1589,6 +1600,10 @@ func _update_status_label() -> void:
 
 
 func _cargo_full_prompt() -> String:
+	if _world != null and _player != null:
+		var tool_target: Dictionary = _world.get_tool_target_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
+		if not tool_target.is_empty():
+			return "Cargo full - bank salvage at boat" if _cutter_salvage.has_cutter() else "Sealed wreck | Cutter required"
 	if _world != null and _player != null and not _world.get_material_candidate_near(_player.global_position, SALVAGE_COLLECTION_RADIUS).is_empty():
 		return "Cargo full - bank materials at boat"
 	if _return_pressure_feedback == null or _world == null or _player == null:
@@ -1693,7 +1708,10 @@ func _is_collection_status_note(status_note: String) -> bool:
 		status_note.begins_with("Collected ")
 		or status_note.begins_with("Salvaging ")
 		or status_note.begins_with("Prying ")
+		or status_note.begins_with("Cutting ")
 		or status_note.begins_with("Pry interrupted")
+		or status_note.begins_with("Cutter interrupted")
+		or status_note.find("Cutter required") != -1
 		or status_note.find(" secured +") != -1
 		or status_note.find(" opened +") != -1
 		or (_destination_payoff_feedback != null and _destination_payoff_feedback.is_collection_note(status_note))

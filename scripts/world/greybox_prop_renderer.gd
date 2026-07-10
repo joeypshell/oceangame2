@@ -29,7 +29,7 @@ func add_salvage_prop(parent: Node2D, marker_name: String, center: Vector2, kind
 				_add_crate_prop(root)
 	if tier == "valuable":
 		_add_valuable_salvage_cue(root)
-	if interaction == "timed_salvage":
+	if interaction in ["timed_salvage", "cutter_salvage"]:
 		_add_timed_salvage_affordance(root)
 	return root
 
