@@ -61,27 +61,37 @@ func attack_target(player_position: Vector2, facing_sign: float, range_px: float
 	return nearest
 
 
-func apply_weapon_hit(world, hostile_id: String, damage: int) -> Dictionary:
+func apply_weapon_hit(world, hostile_id: String, damage: int, interrupt_requested := false) -> Dictionary:
 	if damage <= 0 or not _states.has(hostile_id):
 		return {"changed": false, "reason": "invalid_target", "defeated": false}
 	var state: Dictionary = _states[hostile_id]
 	if str(state.get("phase", "")) == PHASE_DEFEATED:
 		return {"changed": false, "reason": "already_defeated", "defeated": true}
+	var pre_hit_phase := str(state.get("phase", PHASE_HOME))
 	state["health"] = maxi(0, int(state.get("health", 0)) - damage)
 	var defeated := int(state["health"]) == 0
+	var interrupted := false
 	if defeated:
 		state["phase"] = PHASE_DEFEATED
 		state["phase_seconds"] = 0.0
 		_defeated_ids[hostile_id] = true
 		_current_prompt = str(state.get("defeated_label", "Territory clear for today"))
+	elif interrupt_requested and pre_hit_phase in [PHASE_WARNING, PHASE_LUNGE]:
+		state["phase"] = PHASE_RECOVERY
+		state["phase_seconds"] = float(state.get("recovery_seconds", 1.25))
+		state["contact_consumed"] = true
+		interrupted = true
+		_current_prompt = "Lunge interrupted"
 	_states[hostile_id] = state
 	_sync_visual(world, state)
 	return {
 		"changed": true,
-		"reason": "defeated" if defeated else "damaged",
+		"reason": "defeated" if defeated else "interrupted" if interrupted else "damaged",
 		"id": hostile_id,
 		"health": int(state["health"]),
 		"defeated": defeated,
+		"interrupted": interrupted,
+		"pre_hit_phase": pre_hit_phase,
 	}
 
 
