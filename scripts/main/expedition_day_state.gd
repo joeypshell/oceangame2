@@ -53,8 +53,9 @@ func advance_daylight(delta: float) -> Dictionary:
 	return _daylight_result(true)
 
 
-func record_sortie_started() -> void:
+func record_sortie_started() -> int:
 	sortie_count += 1
+	return sortie_count
 
 
 func record_bank(salvage_count: int, score: int) -> void:

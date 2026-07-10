@@ -905,14 +905,14 @@ func _create_world(map_path: String, show_debug_overlay: bool) -> Node:
 	world.load_greybox()
 	return world
 
-func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := "", status_note := "") -> void:
+func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := "", status_note := "", preserve_sortie := false) -> void:
 	_clear_loaded_review_nodes()
 	var world := _create_world(map_path, show_debug_overlay)
 	var player := PLAYER_SCENE.instantiate()
 	_player = player
 	_anomaly_survey.on_map_loaded(world)
 	_expedition_day_state.on_map_loaded(str(world.map_id))
-	_sortie_state.begin_map_leg(str(world.map_id), entry_id, _oxygen_capacity_seconds())
+	_sortie_state.begin_map_leg(str(world.map_id), entry_id, _oxygen_capacity_seconds(), preserve_sortie)
 	player.position = world.get_entry_position(entry_id) if not entry_id.is_empty() and world.has_method("get_entry_position") else world.spawn_position
 	add_child(player)
 	_apply_session_light_profile()
@@ -990,6 +990,10 @@ func _process(delta: float) -> void:
 	if _world == null or _player == null:
 		return
 	_update_hazard_feedback(delta)
+	if _sortie_state.update_offload_presence(_world.is_inside_extraction(_player.global_position), _oxygen_capacity_seconds()):
+		_expedition_day_state.record_sortie_started()
+		_run_complete = false
+		_completion_oxygen_bonus = 0
 	if _run_complete or _sortie_state.failed:
 		_update_status_label()
 		return
@@ -1244,7 +1248,7 @@ func _try_world_connector_transition() -> bool:
 	var arrival_note: String = _world_connector.arrival_note(connector)
 	_anomaly_survey.on_map_transition(destination_map_id)
 	_expedition_day_state.on_map_transition(destination_map_id)
-	_load_playable_map(destination_map_path, _debug_overlay_enabled, destination_entry_id, arrival_note)
+	_load_playable_map(destination_map_path, _debug_overlay_enabled, destination_entry_id, arrival_note, true)
 	return true
 
 
