@@ -97,6 +97,7 @@ def godot_gates(godot: str) -> list[Gate]:
         ("smoke: expansion 04 current pocket", ["--quit-after", "1", "--smoke-expansion-04-current-pocket"]),
         ("smoke: expansion 05 practical research", ["--quit-after", "1", "--smoke-expansion-05-practical-research"]),
         ("smoke: expansion 06 combat foundation", ["--quit-after", "1", "--smoke-expansion-06-combat-foundation"]),
+        ("smoke: expansion 07 biological progression", ["--quit-after", "1", "--smoke-expansion-07-biological-progression"]),
         ("smoke: pass 18 progression", ["--quit-after", "1", "--smoke-pass-18-progression"]),
         ("smoke: pass 19 cargo upgrade", ["--quit-after", "1", "--smoke-pass-19-cargo-upgrade"]),
         ("smoke: pass 20 light upgrade", ["--quit-after", "1", "--smoke-pass-20-light-upgrade"]),
