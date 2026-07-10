@@ -86,6 +86,10 @@ func get_facing_report() -> Dictionary:
 	}
 
 
+func get_facing_sign() -> float:
+	return _facing_sign
+
+
 func _wasd_vector() -> Vector2:
 	var x := 0.0
 	var y := 0.0

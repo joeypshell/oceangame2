@@ -22,6 +22,7 @@ const GreyboxWorldQueries := preload("res://scripts/world/greybox_world_queries.
 const GreyboxSurveyTargets := preload("res://scripts/world/greybox_survey_targets.gd")
 const GreyboxMaterialCandidates := preload("res://scripts/world/greybox_material_candidates.gd")
 const GreyboxToolTargets := preload("res://scripts/world/greybox_tool_targets.gd")
+const GreyboxHostileRenderer := preload("res://scripts/world/greybox_hostile_renderer.gd")
 
 const SALVAGE_TIER_SCORES := {
 	"common": 100,
@@ -51,6 +52,7 @@ var _current_gate_zones: Array = []
 var _visibility_zones: Array = []
 var _progression_containers: Array = []
 var _moving_hazards: Array = []
+var _hostile_encounters: Array = []
 var _spawn_positions_by_id := {}
 var _collected_salvage := {}
 var _salvage_nodes_by_id := {}
@@ -77,6 +79,7 @@ var _world_queries
 var _survey_target_runtime
 var _material_candidate_runtime
 var _tool_target_runtime
+var _hostile_renderer
 
 
 func _ready() -> void:
@@ -93,6 +96,7 @@ func _ready() -> void:
 	_survey_target_runtime = GreyboxSurveyTargets.new()
 	_material_candidate_runtime = GreyboxMaterialCandidates.new()
 	_tool_target_runtime = GreyboxToolTargets.new()
+	_hostile_renderer = GreyboxHostileRenderer.new()
 	load_greybox()
 
 
@@ -122,6 +126,7 @@ func load_greybox() -> void:
 	_visibility_zones = []
 	_progression_containers = []
 	_moving_hazards = []
+	_hostile_encounters = []
 	_spawn_positions_by_id = {}
 	_collected_salvage = {}
 	_salvage_nodes_by_id = {}
@@ -167,6 +172,7 @@ func load_greybox() -> void:
 	_build_zones(map_data.get("zones", []))
 	_build_progression_containers(map_data.get("progression_containers", []))
 	_build_moving_hazards(map_data.get("moving_hazards", []))
+	_build_hostile_encounters(map_data.get("hostile_encounters", []))
 	_build_entities(map_data.get("entities", []))
 	queue_redraw()
 
@@ -385,6 +391,21 @@ func set_moving_hazard_center(hazard_id: String, center: Vector2) -> void:
 	hazard_node.global_position = center
 
 
+func get_hostile_encounters() -> Array:
+	var encounters := []
+	for encounter in _hostile_encounters:
+		encounters.append(_hostile_runtime_info(encounter))
+	return encounters
+
+
+func set_hostile_visual_state(hostile_id: String, center: Vector2, phase: String, health: int) -> void:
+	_hostile_renderer_helper().set_state(hostile_id, center, phase, health)
+
+
+func get_hostile_visual_report() -> Dictionary:
+	return _hostile_renderer_helper().report()
+
+
 func get_progression_containers() -> Array:
 	var containers := []
 	for container in _progression_containers:
@@ -595,6 +616,16 @@ func _moving_hazard_runtime_info(hazard: Dictionary) -> Dictionary:
 	}
 
 
+func _hostile_runtime_info(encounter: Dictionary) -> Dictionary:
+	var runtime := encounter.duplicate(true)
+	runtime["home_center"] = _point_center(encounter)
+	runtime["territory_rect"] = _rect_from_item(encounter.get("territory", {}))
+	runtime["warning_radius_px"] = float(encounter.get("warning_radius_tiles", 0.0)) * float(tile_size)
+	runtime["contact_radius_px"] = float(encounter.get("contact_radius_tiles", 0.0)) * float(tile_size)
+	runtime["lunge_speed_px_per_second"] = float(encounter.get("lunge_speed_tiles_per_second", 0.0)) * float(tile_size)
+	return runtime
+
+
 func _progression_container_runtime_info(container: Dictionary) -> Dictionary:
 	return {
 		"id": str(container.get("id", "progression_container")),
@@ -772,6 +803,11 @@ func _build_moving_hazards(hazards: Array) -> void:
 			_add_debug_label("MOVING HAZARD", center + Vector2(18, -22), Color(1.0, 0.58, 0.69, 0.9))
 
 
+func _build_hostile_encounters(encounters: Array) -> void:
+	_hostile_encounters = _duplicate_dictionary_array(encounters)
+	_hostile_renderer_helper().build(_marker_root, _hostile_encounters, tile_size, show_debug_overlay)
+
+
 func _build_entities(entities: Array) -> void:
 	var has_boat_spawn := _has_entity_type(entities, "boat_spawn")
 	for entity in entities:
@@ -889,6 +925,12 @@ func _prop_renderer_helper():
 	if _prop_renderer == null:
 		_prop_renderer = GreyboxPropRenderer.new()
 	return _prop_renderer
+
+
+func _hostile_renderer_helper():
+	if _hostile_renderer == null:
+		_hostile_renderer = GreyboxHostileRenderer.new()
+	return _hostile_renderer
 
 
 func _extraction_renderer_helper():

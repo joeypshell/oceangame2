@@ -17,6 +17,8 @@ const Expansion05PracticalResearchCapture := preload("res://scripts/main/capture
 const FinalDiveObjectiveSeed := preload("res://scripts/main/final_dive_objective_seed.gd")
 const MovingHazardCapture := preload("res://scripts/main/captures/moving_hazard_capture.gd")
 const MovingHazardController := preload("res://scripts/main/moving_hazard_controller.gd")
+const ShockProdController := preload("res://scripts/main/shock_prod_controller.gd")
+const TerritorialHostileController := preload("res://scripts/main/territorial_hostile_controller.gd")
 const OxygenRestPocketFeedback := preload("res://scripts/main/oxygen_rest_pocket_feedback.gd")
 const Pass22DestinationPayoffCapture := preload("res://scripts/main/captures/pass_22_destination_payoff_capture.gd")
 const Pass23NextDiveObjectiveCapture := preload("res://scripts/main/captures/pass_23_next_dive_objective_capture.gd")
@@ -139,6 +141,7 @@ const HAZARD_OXYGEN_PENALTY_SECONDS := 12.0
 const HAZARD_COOLDOWN_SECONDS := 1.0
 const HAZARD_FEEDBACK_SECONDS := 0.45
 const HAZARD_WARNING_CUE_COOLDOWN_SECONDS := 1.0
+const COMBAT_FEEDBACK_SECONDS := 1.4
 const PASS_07_PRESSURE_SEGMENT_ID := "lower_loop_to_deep_cache_pressure"
 const PASS_07_PRESSURE_HAZARD_ID := "hazard_right_branch"
 const GENERIC_HAZARD_WARNING_PROMPT := "Hazard nearby - keep clear"
@@ -171,6 +174,8 @@ var _cutter_salvage
 var _destination_payoff_feedback
 var _final_dive_objective_seed
 var _moving_hazards
+var _shock_prod
+var _hostiles
 var _material_runtime
 var _material_project
 var _next_dive_objective_prompt
@@ -234,6 +239,7 @@ var _hazard_interactions_enabled := true
 var _hazard_warning_id := ""
 var _hazard_warning_cue_id := ""
 var _hazard_warning_cue_cooldown_seconds := 0.0
+var _combat_feedback_seconds := 0.0
 var _oxygen_low_cue_emitted := false
 var _oxygen_critical_cue_emitted := false
 var _run_complete := false
@@ -246,6 +252,8 @@ func _ready() -> void:
 	_destination_payoff_feedback = DestinationPayoffFeedback.new()
 	_final_dive_objective_seed = FinalDiveObjectiveSeed.new()
 	_moving_hazards = MovingHazardController.new()
+	_shock_prod = ShockProdController.new()
+	_hostiles = TerritorialHostileController.new()
 	_next_dive_objective_prompt = NextDiveObjectivePrompt.new()
 	_oxygen_rest_feedback = OxygenRestPocketFeedback.new()
 	_pre_pickup_route_cue_feedback = PrePickupRouteCueFeedback.new()
@@ -995,6 +1003,8 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_material_runtime.on_map_loaded(world, _expedition_day_state)
 	_material_project.on_map_loaded(world)
 	_cutter_salvage.on_map_loaded(world)
+	_hostiles.on_map_loaded(world, preserve_sortie)
+	_shock_prod.reset()
 	_sortie_state.begin_map_leg(str(world.map_id), entry_id, _oxygen_capacity_seconds(), preserve_sortie)
 	_player_health.begin_map_leg(preserve_sortie)
 	player.position = world.get_entry_position(entry_id) if not entry_id.is_empty() and world.has_method("get_entry_position") else world.spawn_position
@@ -1076,6 +1086,8 @@ func _process(delta: float) -> void:
 	if _world == null or _player == null:
 		return
 	_player_health.update(delta)
+	_shock_prod.update(delta)
+	_update_combat_feedback(delta)
 	if not _sortie_state.failed and _at_canonical_boat():
 		_player_health.refill_at_boat()
 	_update_hazard_feedback(delta)
@@ -1097,6 +1109,9 @@ func _process(delta: float) -> void:
 		return
 	_update_current_gate(delta)
 	_update_moving_hazards(delta)
+	if _update_hostile_encounter(delta):
+		_update_status_label()
+		return
 	_update_progression_containers()
 
 	if _hazard_cooldown_seconds > 0.0:
@@ -1196,14 +1211,18 @@ func _pry_salvage_completion_feedback(salvage_id: String, label: String) -> Stri
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _expedition_day_state.phase == ExpeditionDayState.PHASE_DEBRIEF:
+		if event is InputEventKey and event.pressed and not event.echo:
+			var key_event := event as InputEventKey
+			ExpeditionDayDebrief.handle_debrief_key(self, key_event.keycode)
+		return
+	if event.is_action_pressed("combat_attack"):
+		_try_combat_attack()
+		return
 	if not event is InputEventKey:
 		return
 
 	var key_event := event as InputEventKey
-	if _expedition_day_state.phase == ExpeditionDayState.PHASE_DEBRIEF:
-		if key_event.pressed and not key_event.echo:
-			ExpeditionDayDebrief.handle_debrief_key(self, key_event.keycode)
-		return
 	if key_event.pressed and not key_event.echo and key_event.keycode == KEY_R:
 		_reset_run()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_U:
@@ -1236,6 +1255,9 @@ func _reset_run() -> void:
 	_pry_salvage.reset()
 	_timed_salvage.reset()
 	_cutter_salvage.reset()
+	_hostiles.reset_for_failure(_world)
+	_shock_prod.reset()
+	_combat_feedback_seconds = 0.0
 	_cutter_salvage.apply_banked_to_world(_world)
 	_player_health.reset()
 	_relay_follow_through_feedback.reset(_world)
@@ -1351,6 +1373,44 @@ func _update_moving_hazards(delta: float) -> void:
 	_moving_hazards.update(_world, _player.global_position, HAZARD_WARNING_RADIUS, delta)
 
 
+func _update_hostile_encounter(delta: float) -> bool:
+	if _hostiles == null or _world == null or _player == null:
+		return false
+	var event: Dictionary = _hostiles.update(_world, _player.global_position, delta)
+	if str(event.get("kind", "")) != "contact":
+		return false
+	var damage: Dictionary = _apply_combat_damage(int(event.get("damage", 1)), str(event.get("id", "hostile")))
+	if bool(damage.get("changed", false)):
+		_combat_feedback_seconds = COMBAT_FEEDBACK_SECONDS
+		return true
+	return false
+
+
+func _try_combat_attack() -> bool:
+	if _shock_prod == null or _hostiles == null or _world == null or _player == null or _run_complete or _sortie_state.failed:
+		return false
+	var facing_sign: float = float(_player.get_facing_sign()) if _player.has_method("get_facing_sign") else 1.0
+	var result: Dictionary = _shock_prod.try_attack(
+		_hostiles,
+		_world,
+		_player.global_position,
+		facing_sign,
+		_material_project.has_shock_prod()
+	)
+	_last_status_note = str(result.get("note", _last_status_note))
+	_combat_feedback_seconds = COMBAT_FEEDBACK_SECONDS
+	_update_status_label()
+	return bool(result.get("changed", false))
+
+
+func _update_combat_feedback(delta: float) -> void:
+	if _combat_feedback_seconds <= 0.0:
+		return
+	_combat_feedback_seconds = maxf(0.0, _combat_feedback_seconds - maxf(0.0, delta))
+	if _combat_feedback_seconds == 0.0 and _is_combat_status_note(_last_status_note):
+		_last_status_note = ""
+
+
 func _current_gate_block_prompt(gate: Dictionary) -> String:
 	return _current_gate.block_prompt(gate) if _current_gate != null else ""
 
@@ -1366,6 +1426,9 @@ func _handle_oxygen_depleted() -> void:
 	_pry_salvage.reset()
 	_timed_salvage.reset()
 	_cutter_salvage.reset()
+	_hostiles.reset_for_failure(_world)
+	_shock_prod.reset()
+	_combat_feedback_seconds = 0.0
 	_material_runtime.restore_unbanked(_world, _expedition_day_state, "oxygen_failure")
 	if not _sortie_state.held_salvage_ids.is_empty():
 		_world.restore_salvage(_sortie_state.clear_held())
@@ -1405,6 +1468,8 @@ func _handle_combat_defeat(_source_id: String) -> void:
 	_pry_salvage.reset()
 	_timed_salvage.reset()
 	_cutter_salvage.reset()
+	_shock_prod.reset()
+	_combat_feedback_seconds = 0.0
 	_material_runtime.restore_unbanked(_world, _expedition_day_state, "combat_defeat")
 	if not _sortie_state.held_salvage_ids.is_empty():
 		_world.restore_salvage(_sortie_state.clear_held())
@@ -1428,6 +1493,9 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 	_pry_salvage.reset()
 	_timed_salvage.reset()
 	_cutter_salvage.reset()
+	_hostiles.reset_for_failure(_world)
+	_shock_prod.reset()
+	_combat_feedback_seconds = 0.0
 	_anomaly_survey.clear_unbanked("hazard", _world)
 	var material_drop: Dictionary = _material_runtime.restore_unbanked(_world, _expedition_day_state, "hazard")
 	var oxygen_depleted := _apply_hazard_oxygen_penalty()
@@ -1599,7 +1667,7 @@ func _update_status_label() -> void:
 		return
 
 	if _total_salvage <= 0:
-		_status_label.text = ExpeditionDayPresentation.decorate_status(self, "Score 0\nSalvage banked 0/0\nHeld 0/%d\n%s\nOxygen --" % [_held_salvage_capacity(), _player_health.overlay_text()])
+		_status_label.text = ExpeditionDayPresentation.decorate_status(self, "Score 0\nSalvage banked 0/0\nHeld 0/%d\n%s\nOxygen --" % [_held_salvage_capacity(), _combat_overlay_text()])
 		_update_result_panel()
 		return
 
@@ -1615,6 +1683,12 @@ func _update_status_label() -> void:
 		objective_step_cue_blocked = true
 	elif _sortie_state.failed:
 		prompt = _failure_retry_prompt()
+		objective_step_cue_blocked = true
+	elif _is_combat_status_note(_last_status_note):
+		prompt = _last_status_note
+		objective_step_cue_blocked = true
+	elif _hostiles != null and not _hostiles.prompt().is_empty():
+		prompt = _hostiles.prompt()
 		objective_step_cue_blocked = true
 	elif _held_cargo_count() >= _held_salvage_capacity():
 		prompt = _cargo_full_prompt()
@@ -1667,7 +1741,7 @@ func _update_status_label() -> void:
 		_held_cargo_count(),
 		_held_salvage_capacity(),
 		_sortie_state.held_salvage_score,
-		_player_health.overlay_text(),
+		_combat_overlay_text(),
 		oxygen_text,
 		progression_text,
 	]
@@ -1685,6 +1759,13 @@ func _update_status_label() -> void:
 
 func _failure_retry_prompt() -> String:
 	return "Injured - surfaced, press R" if _sortie_state.failure_reason == "combat_defeat" else "Oxygen depleted - press R"
+
+
+func _combat_overlay_text() -> String:
+	var weapon_text := "Shock prod locked"
+	if _shock_prod != null and _material_project != null:
+		weapon_text = _shock_prod.overlay_text(_material_project.has_shock_prod())
+	return "%s | %s" % [_player_health.overlay_text(), weapon_text]
 
 
 func _at_canonical_boat() -> bool:
@@ -1834,6 +1915,14 @@ func _status_note_contains_feedback(status_note: String, feedback) -> bool:
 
 func _is_progression_status_note(status_note: String) -> bool:
 	return _progression_runtime != null and _progression_runtime.is_status_note(status_note)
+
+
+func _is_combat_status_note(status_note: String) -> bool:
+	return (
+		status_note.begins_with("Eel hit")
+		or status_note.begins_with("Shock prod")
+		or status_note.begins_with("Territory clear")
+	)
 
 
 func _session_best_map_key() -> String:
