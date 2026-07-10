@@ -12,6 +12,7 @@ from pathlib import Path
 from validate_current_gates import validate_current_gate_reachability, validate_current_gate_schema
 from validate_destination_payoffs import validate_destination_payoff_schema
 from validate_final_dive_objective_seeds import validate_final_dive_objective_seed_reachability, validate_final_dive_objective_seed_schema
+from validate_material_sources import validate_material_source_reachability, validate_material_source_schema
 from validate_moving_hazards import validate_moving_hazard_reachability, validate_moving_hazard_schema
 from validate_next_dive_prompts import validate_next_dive_prompt_schema
 from validate_progression_containers import validate_progression_container_reachability, validate_progression_container_schema
@@ -34,7 +35,7 @@ POINT_ENTITY_TYPES = {"spawn", "salvage", "hazard"}
 KIND_ENTITY_TYPES = {"salvage", "hazard"}
 SALVAGE_VALUE_TIERS = {"common", "valuable"}
 ROUTE_CHOICE_METADATA_FIELDS = {"route_choice_id", "validation_route", "route_order"}
-SALVAGE_INTERACTIONS = {"instant", "timed_salvage", "pry_salvage"}
+SALVAGE_INTERACTIONS = {"instant", "timed_salvage", "pry_salvage", "cutter_salvage"}
 SALVAGE_INTERACTION_METADATA_FIELDS = {"interaction", "interaction_seconds", "interaction_label", "pry_stages"}
 OXYGEN_MAX_SECONDS = 90.0
 OXYGEN_REST_METADATA_FIELDS = {
@@ -63,7 +64,6 @@ def spawn_cell(entity: dict) -> tuple[int, int]:
 def is_int_value(value) -> bool:
     return isinstance(value, int) and not isinstance(value, bool)
 
-
 def is_number_value(value) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool)
 
@@ -74,7 +74,6 @@ def validate_required_fields(item: dict, item_label: str, required_fields: tuple
         if field not in item:
             failures.append(f"{item_label} is missing required field {field}.")
     return failures
-
 
 def validate_id(value, item_label: str) -> list[str]:
     if not isinstance(value, str) or not value:
@@ -152,7 +151,7 @@ def validate_salvage_interaction_metadata(entity: dict, item_label: str) -> list
         allowed = ", ".join(sorted(SALVAGE_INTERACTIONS))
         failures.append(f"{item_label} interaction {interaction!r} must be one of: {allowed}.")
 
-    if interaction in {"timed_salvage", "pry_salvage"}:
+    if interaction in {"timed_salvage", "pry_salvage", "cutter_salvage"}:
         if "interaction_seconds" not in entity:
             failures.append(f"{item_label} {interaction} requires interaction_seconds.")
         elif not is_number_value(entity["interaction_seconds"]):
@@ -160,7 +159,7 @@ def validate_salvage_interaction_metadata(entity: dict, item_label: str) -> list
         elif float(entity["interaction_seconds"]) <= 0.0:
             failures.append(f"{item_label} interaction_seconds must be greater than 0.")
     elif "interaction_seconds" in entity:
-        failures.append(f"{item_label} interaction_seconds is only supported for timed_salvage or pry_salvage.")
+        failures.append(f"{item_label} interaction_seconds is only supported for timed_salvage, pry_salvage, or cutter_salvage.")
 
     if interaction == "pry_salvage":
         if "pry_stages" not in entity:
@@ -337,7 +336,6 @@ def validate_zone_schema(zones: list[dict], width: int, height: int) -> list[str
         failures.append(f"Only one oxygen-rest marker is currently supported. Found: {oxygen_rest_zone_ids}.")
     return failures
 
-
 def validate_boat_spawn(entity: dict, solid: set[tuple[int, int]], width: int, height: int) -> list[str]:
     failures: list[str] = []
     required_fields = ("x", "y", "w", "h", "entry_x", "entry_y")
@@ -396,6 +394,7 @@ def main() -> int:
     failures.extend(validate_current_gate_schema(map_data))
     failures.extend(validate_destination_payoff_schema(args.map_json, map_data))
     failures.extend(validate_final_dive_objective_seed_schema(map_data, entities))
+    failures.extend(validate_material_source_schema(map_data))
     failures.extend(validate_moving_hazard_schema(map_data))
     failures.extend(validate_next_dive_prompt_schema(map_data, entities, zones))
     failures.extend(validate_progression_container_schema(map_data))
@@ -481,6 +480,7 @@ def main() -> int:
     failures.extend(validate_objective_step_cue_reachability(map_data, entities, zones, solid, reachable))
     failures.extend(validate_current_gate_reachability(zones, solid, reachable))
     failures.extend(validate_final_dive_objective_seed_reachability(map_data, entities, solid, reachable))
+    failures.extend(validate_material_source_reachability(entities, solid, reachable))
     failures.extend(validate_moving_hazard_reachability(map_data.get("moving_hazards", []), solid, reachable))
     failures.extend(validate_progression_container_reachability(map_data.get("progression_containers", []), solid, reachable))
     failures.extend(validate_relay_follow_through_objective_reachability(map_data, entities, solid, reachable))
