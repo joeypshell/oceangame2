@@ -23,6 +23,7 @@ var nightfall_event_count := 0
 var material_day_seed := 1
 var _material_selected_by_map := {}
 var _material_depleted_by_map := {}
+var _material_researched_pools_by_map := {}
 
 
 func _init(daylight_seconds := DEFAULT_DAYLIGHT_SECONDS) -> void:
@@ -45,6 +46,7 @@ func begin_day(next_day_number: int) -> void:
 	material_day_seed = day_number
 	_material_selected_by_map = {}
 	_material_depleted_by_map = {}
+	_material_researched_pools_by_map = {}
 
 
 func begin_next_day() -> void:
@@ -92,16 +94,24 @@ func on_map_transition(destination_map_id: String) -> void:
 	current_map_id = destination_map_id
 
 
-func material_selection_for(map_id: String, pools: Array) -> Array[String]:
+func material_selection_for(map_id: String, pools: Array, completed_discovery_ids := []) -> Array[String]:
 	if _material_selected_by_map.has(map_id):
 		var stored: Array = _material_selected_by_map[map_id]
 		var copy: Array[String] = []
 		for candidate_id in stored:
 			copy.append(str(candidate_id))
 		return copy
-	var selected := MaterialCandidateSelector.select_for_day(map_id, pools, material_day_seed)
+	var selected := MaterialCandidateSelector.select_for_day(map_id, pools, material_day_seed, completed_discovery_ids)
 	_material_selected_by_map[map_id] = selected.duplicate()
+	_material_researched_pools_by_map[map_id] = MaterialCandidateSelector.researched_pool_ids(pools, completed_discovery_ids)
 	return selected
+
+
+func material_researched_pool_ids(map_id: String) -> Array[String]:
+	var values: Array[String] = []
+	for pool_id in _material_researched_pools_by_map.get(map_id, []):
+		values.append(str(pool_id))
+	return values
 
 
 func material_depleted_ids(map_id: String) -> Array[String]:
@@ -161,6 +171,7 @@ func report() -> Dictionary:
 		"material_day_seed": material_day_seed,
 		"material_selected_by_map": _duplicate_nested(_material_selected_by_map),
 		"material_depleted_by_map": _duplicate_nested(_material_depleted_by_map),
+		"material_researched_pools_by_map": _duplicate_nested(_material_researched_pools_by_map),
 	}
 
 
