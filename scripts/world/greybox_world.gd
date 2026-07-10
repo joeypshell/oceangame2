@@ -17,6 +17,7 @@ const GreyboxPropRenderer := preload("res://scripts/world/greybox_prop_renderer.
 const GreyboxExtractionRenderer := preload("res://scripts/world/greybox_extraction_renderer.gd")
 const GreyboxRouteMarkerRenderer := preload("res://scripts/world/greybox_route_marker_renderer.gd")
 const GreyboxVisibilityZoneRenderer := preload("res://scripts/world/greybox_visibility_zone_renderer.gd")
+const GreyboxWorldQueries := preload("res://scripts/world/greybox_world_queries.gd")
 
 const SALVAGE_TIER_SCORES := {
 	"common": 100,
@@ -67,6 +68,7 @@ var _prop_renderer
 var _extraction_renderer
 var _route_marker_renderer
 var _visibility_zone_renderer
+var _world_queries
 
 
 func _ready() -> void:
@@ -79,6 +81,7 @@ func _ready() -> void:
 	_extraction_renderer = GreyboxExtractionRenderer.new()
 	_route_marker_renderer = GreyboxRouteMarkerRenderer.new()
 	_visibility_zone_renderer = GreyboxVisibilityZoneRenderer.new()
+	_world_queries = GreyboxWorldQueries.new()
 	load_greybox()
 
 
@@ -217,20 +220,11 @@ func is_salvage_collected(salvage_id: String) -> bool:
 
 
 func get_hazard_centers() -> Array:
-	var centers := []
-	for entity in _hazard_entities:
-		centers.append({
-			"id": str(entity.get("id", "hazard")),
-			"center": _entity_center(entity),
-		})
-	return centers
+	return _world_queries.get_hazard_centers(_hazard_entities, tile_size)
 
 
 func get_marker_zone(marker_id: String) -> Dictionary:
-	for zone in _map_data.get("zones", []):
-		if zone.get("type", "") == "marker" and str(zone.get("id", "")) == marker_id:
-			return zone
-	return {}
+	return _world_queries.get_marker_zone(_map_data, marker_id)
 
 
 func get_world_connectors() -> Array:
@@ -248,10 +242,8 @@ func get_current_gates() -> Array:
 
 
 func get_current_gate_at(position: Vector2) -> Dictionary:
-	for zone in _current_gate_zones:
-		if _rect_from_item(zone).has_point(position):
-			return _current_gate_runtime_info(zone)
-	return {}
+	var zone: Dictionary = _world_queries.zone_at(_current_gate_zones, position, tile_size)
+	return _current_gate_runtime_info(zone) if not zone.is_empty() else {}
 
 
 func get_visibility_zones() -> Array:
@@ -262,10 +254,8 @@ func get_visibility_zones() -> Array:
 
 
 func get_visibility_zone_at(position: Vector2) -> Dictionary:
-	for zone in _visibility_zones:
-		if _rect_from_item(zone).has_point(position):
-			return _visibility_zone_runtime_info(zone)
-	return {}
+	var zone: Dictionary = _world_queries.zone_at(_visibility_zones, position, tile_size)
+	return _visibility_zone_runtime_info(zone) if not zone.is_empty() else {}
 
 
 func set_visibility_upgrade_state(upgrade_id: String, active: bool) -> void:
@@ -308,10 +298,8 @@ func get_progression_containers() -> Array:
 
 
 func get_progression_container_at(position: Vector2) -> Dictionary:
-	for container in _progression_containers:
-		if _rect_from_item(container).has_point(position):
-			return _progression_container_runtime_info(container)
-	return {}
+	var container: Dictionary = _world_queries.zone_at(_progression_containers, position, tile_size)
+	return _progression_container_runtime_info(container) if not container.is_empty() else {}
 
 
 func set_progression_container_opened(container_id: String, opened: bool) -> void:
@@ -322,109 +310,41 @@ func set_progression_container_opened(container_id: String, opened: bool) -> voi
 
 
 func get_world_connector_at(position: Vector2) -> Dictionary:
-	for zone in _world_connector_zones:
-		if _rect_from_item(zone).has_point(position):
-			return _world_connector_runtime_info(zone)
-	return {}
+	var zone: Dictionary = _world_queries.zone_at(_world_connector_zones, position, tile_size)
+	return _world_connector_runtime_info(zone) if not zone.is_empty() else {}
 
 
 func get_entry_position(entry_id: String) -> Vector2:
-	var id := entry_id.strip_edges()
-	if not id.is_empty() and _spawn_positions_by_id.has(id):
-		return _spawn_positions_by_id[id]
-	return spawn_position
+	return _world_queries.get_entry_position(_spawn_positions_by_id, entry_id, spawn_position)
 
 
 func get_nearest_hazard_within(position: Vector2, radius_px: float) -> Dictionary:
-	var nearest := {}
-	var nearest_distance := radius_px
-	for entity in _hazard_entities:
-		var center := _entity_center(entity)
-		var distance := position.distance_to(center)
-		if distance <= radius_px and (nearest.is_empty() or distance < nearest_distance):
-			nearest = {
-				"id": str(entity.get("id", "hazard")),
-				"center": center,
-				"distance": distance,
-			}
-			nearest_distance = distance
-	for hazard in get_moving_hazards():
-		var center := hazard["center"] as Vector2
-		var distance := position.distance_to(center)
-		if distance <= radius_px and (nearest.is_empty() or distance < nearest_distance):
-			nearest = {
-				"id": str(hazard.get("id", "moving_hazard")),
-				"center": center,
-				"distance": distance,
-				"moving": true,
-				"display_label": str(hazard.get("display_label", "")),
-			}
-			nearest_distance = distance
-	return nearest
+	return _world_queries.get_nearest_hazard_within(
+		position,
+		radius_px,
+		_hazard_entities,
+		get_moving_hazards(),
+		tile_size
+	)
 
 
 func get_hazard_near(position: Vector2, radius_px: float) -> String:
-	for entity in _hazard_entities:
-		if position.distance_to(_entity_center(entity)) <= radius_px:
-			return str(entity.get("id", "hazard"))
-	for hazard in get_moving_hazards():
-		if position.distance_to(hazard["center"]) <= radius_px:
-			return str(hazard.get("id", "moving_hazard"))
-	return ""
+	return _world_queries.get_hazard_near(
+		position,
+		radius_px,
+		_hazard_entities,
+		get_moving_hazards(),
+		tile_size
+	)
 
 
 func find_open_path(start_position: Vector2, target_position: Vector2) -> Array:
-	var start := _position_to_cell(start_position)
-	var target := _position_to_cell(target_position)
 	var solid_cells := _solid_cells_from_terrain(_map_data.get("terrain", []))
-	if solid_cells.has(start) or solid_cells.has(target):
-		return []
-
-	var queue: Array[Vector2i] = [start]
-	var cursor := 0
-	var came_from := {start: start}
-	while cursor < queue.size():
-		var cell: Vector2i = queue[cursor]
-		cursor += 1
-		if cell == target:
-			break
-
-		for neighbor in [
-			cell + Vector2i.RIGHT,
-			cell + Vector2i.LEFT,
-			cell + Vector2i.DOWN,
-			cell + Vector2i.UP,
-		]:
-			if neighbor.x < 0 or neighbor.y < 0 or neighbor.x >= map_tile_size.x or neighbor.y >= map_tile_size.y:
-				continue
-			if solid_cells.has(neighbor) or came_from.has(neighbor):
-				continue
-			came_from[neighbor] = cell
-			queue.append(neighbor)
-
-	if not came_from.has(target):
-		return []
-
-	var cells: Array[Vector2i] = []
-	var current := target
-	while current != start:
-		cells.append(current)
-		current = came_from[current]
-	cells.append(start)
-	cells.reverse()
-
-	var path := []
-	for cell in cells:
-		path.append(_cell_center(cell))
-	return path
+	return _world_queries.find_open_path(start_position, target_position, map_tile_size, tile_size, solid_cells)
 
 
 func get_extraction_center() -> Vector2:
-	if _extraction_zones.is_empty():
-		if not _boat_entities.is_empty():
-			return _boat_entry_center(_boat_entities[0])
-		return spawn_position
-	return _rect_center(_extraction_zones[0])
+	return _world_queries.get_extraction_center(_extraction_zones, _boat_entities, spawn_position, tile_size)
 
 
 func collect_salvage_near(position: Vector2, radius_px: float) -> String:
@@ -603,13 +523,7 @@ func restore_salvage(salvage_ids: Array) -> void:
 
 
 func is_inside_extraction(position: Vector2) -> bool:
-	for zone in _extraction_zones:
-		if _rect_from_item(zone).has_point(position):
-			return true
-	for boat in _boat_entities:
-		if _entity_rect_from_item(boat).has_point(position):
-			return true
-	return false
+	return _world_queries.is_inside_extraction(position, _extraction_zones, _boat_entities, tile_size)
 
 
 func get_runtime_parity_report() -> Dictionary:
@@ -1023,22 +937,19 @@ func _star_points(inner_radius: float, outer_radius: float, spikes: int) -> Pack
 
 
 func _rect_center(item: Dictionary) -> Vector2:
-	return Vector2(
-		(float(item["x"]) + float(item["w"]) * 0.5) * tile_size,
-		(float(item["y"]) + float(item["h"]) * 0.5) * tile_size
-	)
+	return _world_queries.rect_center(item, tile_size)
 
 
 func _point_center(item: Dictionary) -> Vector2:
-	return Vector2((float(item["x"]) + 0.5) * tile_size, (float(item["y"]) + 0.5) * tile_size)
+	return _world_queries.point_center(item, tile_size)
 
 
 func _moving_hazard_initial_center(hazard: Dictionary) -> Vector2:
-	return _point_center({"x": int(hazard.get("x", 0)), "y": int(hazard.get("y", 0))})
+	return _world_queries.moving_hazard_initial_center(hazard, tile_size)
 
 
 func _rect_size(item: Dictionary) -> Vector2:
-	return Vector2(float(item["w"]) * tile_size, float(item["h"]) * tile_size)
+	return _world_queries.rect_size(item, tile_size)
 
 
 func _add_rect_outline(item: Dictionary, outline_name: String, color: Color, width: float, z_index: int) -> Line2D:
@@ -1050,39 +961,24 @@ func _add_debug_label(label_text: String, position: Vector2, color: Color) -> La
 
 
 func _rect_from_item(item: Dictionary) -> Rect2:
-	return Rect2(
-		Vector2(float(item["x"]) * tile_size, float(item["y"]) * tile_size),
-		_rect_size(item)
-	)
+	return _world_queries.rect_from_item(item, tile_size)
 
 
 func _entity_rect_from_item(item: Dictionary) -> Rect2:
-	return Rect2(
-		Vector2(float(item["x"]) * tile_size, float(item["y"]) * tile_size),
-		Vector2(
-			float(item.get("w", 1)) * tile_size,
-			float(item.get("h", 1)) * tile_size
-		)
-	)
+	return _world_queries.entity_rect_from_item(item, tile_size)
 
 
 func _entity_center(item: Dictionary) -> Vector2:
-	return Vector2((float(item["x"]) + 0.5) * tile_size, (float(item["y"]) + 0.5) * tile_size)
+	return _world_queries.entity_center(item, tile_size)
 
 
 func _position_to_cell(position: Vector2) -> Vector2i:
-	return Vector2i(
-		clampi(int(floor(position.x / tile_size)), 0, map_tile_size.x - 1),
-		clampi(int(floor(position.y / tile_size)), 0, map_tile_size.y - 1)
-	)
+	return _world_queries.position_to_cell(position, tile_size, map_tile_size)
 
 
 func _cell_center(cell: Vector2i) -> Vector2:
-	return Vector2((float(cell.x) + 0.5) * tile_size, (float(cell.y) + 0.5) * tile_size)
+	return _world_queries.cell_center(cell, tile_size)
 
 
 func _boat_entry_center(item: Dictionary) -> Vector2:
-	return Vector2(
-		(float(item.get("entry_x", item["x"])) + 0.5) * tile_size,
-		(float(item.get("entry_y", item["y"])) + 0.5) * tile_size
-	)
+	return _world_queries.boat_entry_center(item, tile_size)
