@@ -2,7 +2,7 @@
 
 Date: 2026-07-10
 
-Status: Expansion 03 is complete with a GO. Expansion 04 is selected directionally for the next issue batch; Expansions 05-09 remain directional until the preceding closeout selects them.
+Status: Expansion 03 is complete with a GO. Expansion 04 issues #726-#735 are the active committed batch; Expansions 05-09 remain directional until the preceding closeout selects them.
 
 ## Decision
 
@@ -87,11 +87,11 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-OceanGame Expansion 03's issue-level batch #706-#715 is complete. Expansion 04 is selected next, but its issue batch belongs to the next drift cycle and must be planned before implementation.
+OceanGame Expansion 03's issue-level batch #706-#715 is complete. Expansion 04 issues #726-#735 are the only active committed batch.
 
 ### Directional
 
-Expansions 04-09 have GitHub milestones, goals, boundaries, and exit criteria. Expansion 04 is the only selected next milestone; create its issue batch in the next drift cycle, and create later batches only after the prior closeout confirms readiness.
+Expansions 05-09 have GitHub milestones, goals, boundaries, and exit criteria. Create their issue batches only after the prior closeout confirms readiness.
 
 ### Vision
 
@@ -145,7 +145,7 @@ Exit question: does finding material create anticipation for a specific return r
 
 ### Expansion 04: Capability-Gated Map Progression
 
-Status: Selected next; issue batch not yet created.
+Status: Active committed batch #726-#735.
 
 Goal: prove that the world is planned around diver capabilities.
 

@@ -8,6 +8,7 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - `docs/current/OCEANGAME_EXPANSION_03_PLAN.md`
 - `docs/current/OCEANGAME_EXPANSION_03_CLOSEOUT.md`
+- `docs/current/OCEANGAME_EXPANSION_04_PLAN.md`
 
 ## Current State
 
@@ -19,8 +20,8 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: Expansion 03 issues #706-#715 are closed with a GO. No new implementation batch is committed during this closeout.
-- Directional: Expansion 04 is selected next; Expansions 04-09 have open milestones with goals and exit criteria, but no issue batches yet.
+- Committed: Expansion 04 issues #726-#735 are active in dependency order, beginning with its experience and ownership contracts.
+- Directional: Expansions 05-09 have open milestones with goals and exit criteria, but no issue batches yet.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Open GitHub Milestones
@@ -36,9 +37,9 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 #706-#715 are complete with a GO. Seeded materials now produce a specific cutter project and remembered sealed-wreck return; one capability-planned place is selected as the next proof.
 
-## Next Batch Boundary
+## Active Issue Batch
 
-There is no active Expansion 04 implementation batch in this closeout. The next drift cycle should create approximately ten scoped Expansion 04 issues around one source-authored blocker, one diver capability, one remembered return, and one payoff before implementation begins.
+#726-#735 plan and implement one optional upper-right current pocket, one durable stabilizer project/capability, source validation, deterministic journey smoke, controlled visual review, Web verification, and closeout. Do not create the Expansion 05 batch before #735 records GO or HOLD.
 
 ## Roadmap Rules
 
