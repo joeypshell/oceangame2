@@ -169,6 +169,14 @@ Capture the focused Expansion 02 expedition-day views:
 
 This writes deterministic dusk surface-refill, boat-offload, and night-debrief frames under `visual_captures/expedition_day/`. The frames keep daylight, oxygen, and cargo context together for review and do not accept or replace production-slice baselines.
 
+Capture the focused Expansion 03 material-project views:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 30 --capture-expansion-03-material-project
+```
+
+This writes held-material, locked sealed-wreck, project-ready debrief, and 50% cutter-progress states at 1280x720 and 1920x1080 under `visual_captures/expansion_03_material_project/`. The command verifies output dimensions and does not accept or replace production-slice baselines.
+
 Capture the focused Pass 18 progression upgrade view:
 
 ```powershell
