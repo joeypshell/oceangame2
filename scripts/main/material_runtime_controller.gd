@@ -1,6 +1,7 @@
 extends RefCounted
 
 const MaterialCargoState := preload("res://scripts/main/material_cargo_state.gd")
+const PracticalResearchPresentation := preload("res://scripts/main/practical_research_presentation.gd")
 const CANONICAL_MAP_ID := "production_slice_01"
 const TITANIUM_ID := "titanium_scrap"
 const COIL_ID := "conductive_coil"
@@ -8,6 +9,8 @@ const COIL_ID := "conductive_coil"
 var _profile
 var _cargo := MaterialCargoState.new()
 var _current_map_has_materials := false
+var _research_lead_text := ""
+var _researched_pool_ids: Array[String] = []
 
 
 func _init(profile_state) -> void:
@@ -16,11 +19,17 @@ func _init(profile_state) -> void:
 
 func on_map_loaded(world, day_state) -> Dictionary:
 	_current_map_has_materials = false
+	_research_lead_text = ""
+	_researched_pool_ids = []
 	if world == null or day_state == null or not world.has_method("get_material_candidate_pools"):
 		return report()
 	var pools: Array = world.get_material_candidate_pools()
 	_current_map_has_materials = not pools.is_empty()
-	var selected: Array[String] = day_state.material_selection_for(str(world.map_id), pools)
+	var profile_report: Dictionary = _profile.report() if _profile != null else {}
+	var completed_discoveries: Array = profile_report.get("completed_discoveries", [])
+	var selected: Array[String] = day_state.material_selection_for(str(world.map_id), pools, completed_discoveries)
+	_researched_pool_ids = day_state.material_researched_pool_ids(str(world.map_id))
+	_research_lead_text = PracticalResearchPresentation.lead_text(pools, _researched_pool_ids)
 	var depleted: Array[String] = day_state.material_depleted_ids(str(world.map_id))
 	world.configure_material_candidates(selected, depleted)
 	return report()
@@ -106,20 +115,25 @@ func overlay_text() -> String:
 	var held := held_quantities()
 	var titanium_banked := banked_quantity(TITANIUM_ID)
 	var coil_banked := banked_quantity(COIL_ID)
-	if not _current_map_has_materials and held_count() <= 0 and titanium_banked <= 0 and coil_banked <= 0:
-		return ""
-	return "Materials Ti %d (+%d) | Coil %d (+%d)" % [
-		titanium_banked,
-		int(held.get(TITANIUM_ID, 0)),
-		coil_banked,
-		int(held.get(COIL_ID, 0)),
-	]
+	var lines: Array[String] = []
+	if _current_map_has_materials or held_count() > 0 or titanium_banked > 0 or coil_banked > 0:
+		lines.append("Materials Ti %d (+%d) | Coil %d (+%d)" % [
+			titanium_banked,
+			int(held.get(TITANIUM_ID, 0)),
+			coil_banked,
+			int(held.get(COIL_ID, 0)),
+		])
+	if not _research_lead_text.is_empty():
+		lines.append(_research_lead_text)
+	return "\n".join(lines)
 
 
 func report() -> Dictionary:
 	var value := _cargo.report()
 	value["banked_materials"] = _profile.material_inventory() if _profile != null else {}
 	value["current_map_has_materials"] = _current_map_has_materials
+	value["researched_pool_ids"] = _researched_pool_ids.duplicate()
+	value["research_lead_text"] = _research_lead_text
 	return value
 
 
