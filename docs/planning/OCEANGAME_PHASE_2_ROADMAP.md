@@ -1,8 +1,8 @@
 # OceanGame Phase 2 Roadmap
 
-Date: 2026-07-09
+Date: 2026-07-10
 
-Status: Expansion 02 is complete with a GO. Expansion 03 is selected for the next issue batch; Expansions 04-09 remain directional until the preceding closeout selects them.
+Status: Expansion 03 is complete with a GO. Expansion 04 is selected directionally for the next issue batch; Expansions 05-09 remain directional until the preceding closeout selects them.
 
 ## Decision
 
@@ -87,11 +87,11 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-OceanGame Expansion 02's issue-level batch #685-#694 is complete. Expansion 03 is the only selected next batch and should be planned before implementation.
+OceanGame Expansion 03's issue-level batch #706-#715 is complete. Expansion 04 is selected next, but its issue batch belongs to the next drift cycle and must be planned before implementation.
 
 ### Directional
 
-Expansions 04-09 have GitHub milestones, goals, boundaries, and exit criteria. Create their issue batches only after the prior closeout confirms the next dependency is ready.
+Expansions 04-09 have GitHub milestones, goals, boundaries, and exit criteria. Expansion 04 is the only selected next milestone; create its issue batch in the next drift cycle, and create later batches only after the prior closeout confirms readiness.
 
 ### Vision
 
@@ -112,6 +112,8 @@ These references support OceanGame's own side-view expedition identity; none rep
 
 ### Expansion 02: Expedition Day Foundation
 
+Status: Complete with GO.
+
 Goal: make daylight and multiple sorties the organizing loop.
 
 Prove:
@@ -127,6 +129,8 @@ Exit question: does the player understand why to surface, why to return to the b
 
 ### Expansion 03: Seeded Materials And First Tool Project
 
+Status: Complete with GO.
+
 Goal: make gathering support one concrete capability project.
 
 Prove:
@@ -140,6 +144,8 @@ Prove:
 Exit question: does finding material create anticipation for a specific return rather than feel like generic currency?
 
 ### Expansion 04: Capability-Gated Map Progression
+
+Status: Selected next; issue batch not yet created.
 
 Goal: prove that the world is planned around diver capabilities.
 

@@ -1,12 +1,12 @@
 # Project Context
 
-Last updated: 2026-07-09
+Last updated: 2026-07-10
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
 ## Current Goal
 
-`oceangame2` has a GO release candidate and two completed bounded Phase 2 expansions. OceanGame Expansion 01 proved:
+`oceangame2` has a GO release candidate and three completed bounded Phase 2 expansions. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -18,7 +18,9 @@ This file is the compact handoff for new Codex or ChatGPT Project sessions. It c
 
 Expansion 02 added a visible daylight budget, source-derived open-surface oxygen refill, repeated sorties, boat return, explicit night resolution, next-day reset, integrated smoke, focused visual review, and verified Web deployment.
 
-The selected next target is Expansion 03: deterministic authored material candidates and one concrete tool project that changes a remembered interaction. Later milestones cover capability-gated map returns, practical research, enemies/weapons, biological resources, daily conditions, and authored regions.
+Expansion 03 added deterministic authored material candidates, typed cargo and canonical-boat commitment, one exact-once night cutter project, a durable capability, and one remembered sealed-wreck return/payoff.
+
+The selected next direction is Expansion 04: prove one source-authored place planned around a diver capability. Its issue batch belongs to the next drift cycle. Later milestones cover practical research, enemies/weapons, biological resources, daily conditions, and authored regions.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -43,16 +45,17 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Current docs index: `README.md`
 - Finished foundation roadmap: `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`
 - Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
-- Active Expansion 03 contracts: `docs/current/OCEANGAME_EXPANSION_03_PLAN.md`, `docs/current/OCEANGAME_EXPANSION_03_STATE_CONTRACT.md`
+- Completed Expansion 03 contracts: `docs/current/OCEANGAME_EXPANSION_03_PLAN.md`, `docs/current/OCEANGAME_EXPANSION_03_STATE_CONTRACT.md`, `docs/current/OCEANGAME_EXPANSION_03_SOURCE_CONTRACT.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest expansion decision: `docs/current/OCEANGAME_EXPANSION_02_CLOSEOUT.md`
-- Completed expansion plan: `docs/current/OCEANGAME_EXPANSION_02_PLAN.md`
+- Latest expansion decision: `docs/current/OCEANGAME_EXPANSION_03_CLOSEOUT.md`
+- Completed expansion plan: `docs/current/OCEANGAME_EXPANSION_03_PLAN.md`
+- Latest visual decision: `docs/current/OCEANGAME_EXPANSION_03_VISUAL_BASELINE_DECISION.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: `docs/current/OCEANGAME_EXPANSION_02_WEB_PREVIEW_VERIFICATION.md`
+- Latest Web verification: `docs/current/OCEANGAME_EXPANSION_03_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -119,7 +122,7 @@ Current map-loading helper:
 
 ## Web Preview Status
 
-The public preview is verified at build `a2dab3c` and should show the cave terrain plus the compact expedition-day line, not the blue greybox fallback:
+The public preview is verified at build `9322863` and should show the cave terrain plus the compact expedition-day/material HUD, not the blue greybox fallback:
 
 ```text
 https://joeypshell.github.io/oceangame2/
@@ -151,11 +154,11 @@ Use `docs/current/TOOLING.md` and its focused pages for detailed commands. The c
 
 ```powershell
 python tools/run_release_candidate_validation.py --require-godot
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expedition-day
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-expedition-day
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-03-material-project
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 30 --capture-expansion-03-material-project
 python tools/manage_production_slice_baseline.py compare-all
 python tools/manage_production_slice_baseline.py check-clean --all-slices
-node tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha a2dab3c930785aa753495e29c4dbcf24ec06c0be
+node tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha 9322863ac25486a2a869d5e7f154cc58dbb70183
 python tools/check_file_lengths.py
 git diff --check
 ```
@@ -166,11 +169,12 @@ For map changes, run the relevant generator, SVG renderer, validator, parity che
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Each issue needs acceptance criteria, relevant files, implementation notes, and verification steps.
 
-Current issue state as of 2026-07-09:
+Current issue state as of 2026-07-10:
 
 - Closed: #662-#671 completed Expansion 01 with a GO.
 - Closed: #685-#694 completed Expansion 02 with a GO.
-- Active milestone: Expansion 03 issues #706-#715; work them in plan, ownership, schema, source, runtime, smoke, visual, Web, and closeout order.
+- Closed: #706-#715 completed Expansion 03 with a GO.
+- Selected next: Expansion 04 directionally; its scoped issue batch belongs to the next drift cycle.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
@@ -307,7 +311,7 @@ Current issue state as of 2026-07-09:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star, `docs/current/OCEANGAME_EXPANSION_02_CLOSEOUT.md` as the latest completed decision, and `docs/current/OCEANGAME_EXPANSION_03_PLAN.md` as the active implementation contract. Expansions 01 and 02 are complete with GO decisions; #706-#715 are the only active Expansion 03 batch.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_03_CLOSEOUT.md` as the latest completed decision. Expansions 01-03 are complete with GO decisions. Expansion 04 is selected directionally, but its scoped issue batch must be planned in the next drift cycle before implementation.
 
 Accepted constraints for next work:
 
@@ -316,13 +320,13 @@ Accepted constraints for next work:
 - Do not move the entire full sketch into production yet; grow route scale only when it supports the roadmap.
 - Keep map topology, collision, spawn, extraction, and camera tests source-driven.
 - Preserve the Expansion 01 scanner, slice-02 anomaly, returned discovery, and source-authored slice-04/slice-02 travel.
-- Preserve daylight, surface oxygen, repeated sorties, boat return, and night transition while adding one typed material-to-tool loop.
-- Define day-seeded resource ownership, connector cargo, canonical-boat commitment, and durable tool state before runtime or map authoring.
+- Preserve daylight, surface oxygen, repeated sorties, boat return, night transition, seeded material ownership, canonical-boat commitment, and the durable cutter loop.
+- Plan one blocker/capability/remembered-place/payoff chain before changing map source or runtime.
 - Night consumes no Food, Water, Power, or other survival tax.
-- Do not add another destination or connector merely to host Expansion 03 materials.
+- Do not expand the map broadly merely to host the first capability gate.
 - Keep future resource and encounter variation inside authored candidates; never reroll geography or required progression arbitrarily.
 - Do not add shortcut or fast-travel networks.
-- Enemies, weapons, and biological resources are selected future pillars, but wait for their named milestones.
+- Practical research, enemies, weapons, and biological resources are selected future pillars, but wait for their named milestones.
 - Keep #52/#53 as optional post-baseline slice-03 improvement issues unless the selected goal shifts back to slice-03 presentation.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
