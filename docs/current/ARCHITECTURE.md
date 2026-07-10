@@ -50,6 +50,7 @@ Additional current map sources:
   - Sets `primary_route_objective_id` to `deep_cache_route_objective` so the default dive completes after the authored primary objective is banked.
   - Authors the Pass 17 `salvage_pry_locker` valuable `pry_salvage` target for a staged lower-bend oxygen/cargo decision.
   - Authors the Pass 21 `lower_left_loop_connector` marker as a prompted transition into `production_slice_04`.
+  - Authors the Expansion 04 `upper_right_current_pocket_gate`, source-ordered `current_stabilizer_project`, and visible `salvage_current_pocket_cache` inside existing open topology; the legacy lower-left current remains session-owned.
   - Current default preview map.
   - Can also be selected explicitly with `.\tools\open_godot_project.ps1 -Run -ProductionSliceMap`.
 - `maps/production_slice_02.greybox.json`

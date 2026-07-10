@@ -6,7 +6,7 @@ from __future__ import annotations
 import json
 from collections import deque
 from pathlib import Path
-from production_slice_01_expansion_03 import expansion_03_entities, material_candidate_pools, material_projects
+from production_slice_01_expansions import expansion_entities, expansion_zones, material_candidate_pools, material_projects
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -278,7 +278,7 @@ def build_map_data(source_map: dict) -> dict:
                 "intent": "Lower optional loop for a longer salvage return test.",
             },
             {"id": "lower_left_loop_connector", "type": "marker", "x": 2, "y": 74, "w": 4, "h": 4, "world_connector": True, "connector_label": "Lower-left loop", "destination_map_id": "production_slice_04", "destination_map_path": "res://maps/production_slice_04.greybox.json", "destination_entry_id": "relay_sub_entry", "connector_direction": "forward", "intent": "Pass 21 connector from the default boat hub toward the lower-left loop reference slice."},
-            {"id": "lower_left_loop_current", "type": "marker", "x": 2, "y": 74, "w": 4, "h": 4, "current_gate": True, "current_direction": "right", "current_strength": 2.2, "required_upgrade_id": "propulsion_fins", "current_gate_label": "Strong current", "route_context": "lower_left_loop", "intent": "Progression-gate soft-push current on the lower-left connector until the propulsion fins session upgrade is owned."},
+            *expansion_zones(),
             {"id": "deep_cache_first_step_cue", "type": "marker", "x": 28, "y": 58, "w": 4, "h": 3, "objective_step_cue": True, "objective_id": "deep_cache_route_objective", "target_id": "salvage_lower_loop", "route_context": "deep_cache_commitment", "objective_step_label": "Lower loop", "intent": "Pass 15 objective follow-through cue for the first required deep-cache route target."},
             {
                 "id": "return_pressure_to_boat",
@@ -431,7 +431,7 @@ def build_map_data(source_map: dict) -> dict:
             {"id": "hazard_crossing_choke", "type": "hazard", "x": 52, "y": 34, "kind": "mine"},
             {"id": "hazard_lower_bend", "type": "hazard", "x": 36, "y": 61, "kind": "jellyfish"},
             {"id": "hazard_right_branch", "type": "hazard", "x": 57, "y": 66, "kind": "mine"},
-            *expansion_03_entities(),
+            *expansion_entities(),
         ],
         "camera_tests": [
             {
