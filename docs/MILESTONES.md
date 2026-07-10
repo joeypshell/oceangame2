@@ -6,13 +6,12 @@ This is the compact milestone index. Detailed direction lives in:
 
 - `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
-- `docs/current/OCEANGAME_EXPANSION_03_PLAN.md`
-- `docs/current/OCEANGAME_EXPANSION_03_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_04_PLAN.md`
+- `docs/current/OCEANGAME_EXPANSION_04_CLOSEOUT.md`
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-03 are complete. Expansion 03 issues #706-#715 proved deterministic authored material candidates, typed cargo and canonical-boat commitment, one exact-once night project, a durable cutter, one remembered sealed-wreck payoff, deterministic coverage, focused visual review, and public Web deployment.
+Simple Diver Game 01-09 and OceanGame Expansions 01-04 are complete. Expansion 04 issues #726-#735 proved one visible source-authored current pocket, a durable stabilizer project/capability, unchanged remembered geography, a valuable return payoff, deterministic coverage, focused visual review, and public Web deployment. #739 resolved a narrow validator blocker found during authoring.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
@@ -20,30 +19,29 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: Expansion 04 issues #726-#735 are active in dependency order, beginning with its experience and ownership contracts.
-- Directional: Expansions 05-09 have open milestones with goals and exit criteria, but no issue batches yet.
+- Committed: no issue-level batch is active after the Expansion 04 GO.
+- Directional: Expansion 05 is selected next, with its scoped batch assigned to the next drift cycle; Expansions 06-09 retain goals and exit criteria only.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Open GitHub Milestones
 
-1. [Expansion 04: Capability-Gated Map Progression](https://github.com/joeypshell/oceangame2/milestone/30) - one remembered place opened by a diver capability.
-2. [Expansion 05: Practical Research Foundation](https://github.com/joeypshell/oceangame2/milestone/31) - scans and samples that change preparation and progression.
-3. [Expansion 06: Combat Foundation](https://github.com/joeypshell/oceangame2/milestone/32) - health, one weapon, one hostile enemy, and readable defeat/recovery.
-4. [Expansion 07: Biological Resources And Weapon Progression](https://github.com/joeypshell/oceangame2/milestone/33) - passive/hostile creature materials and one equipment progression step.
-5. [Expansion 08: Daily Conditions And Enemy Ecology](https://github.com/joeypshell/oceangame2/milestone/34) - readable seeded opportunities inside stable geography and a broader small ecology.
-6. [Expansion 09: Regional World Growth](https://github.com/joeypshell/oceangame2/milestone/35) - memorable authored regions through the JSON pipeline.
+1. [Expansion 05: Practical Research Foundation](https://github.com/joeypshell/oceangame2/milestone/31) - scans and samples that change preparation and progression.
+2. [Expansion 06: Combat Foundation](https://github.com/joeypshell/oceangame2/milestone/32) - health, one weapon, one hostile enemy, and readable defeat/recovery.
+3. [Expansion 07: Biological Resources And Weapon Progression](https://github.com/joeypshell/oceangame2/milestone/33) - passive/hostile creature materials and one equipment progression step.
+4. [Expansion 08: Daily Conditions And Enemy Ecology](https://github.com/joeypshell/oceangame2/milestone/34) - readable seeded opportunities inside stable geography and a broader small ecology.
+5. [Expansion 09: Regional World Growth](https://github.com/joeypshell/oceangame2/milestone/35) - memorable authored regions through the JSON pipeline.
 
-## Completed Expansion 03
+## Completed Expansion 04
 
-#706-#715 are complete with a GO. Seeded materials now produce a specific cutter project and remembered sealed-wreck return; one capability-planned place is selected as the next proof.
+#726-#735 are complete with a GO. The stabilizer turns one previously visible but unreachable current pocket into an optional remembered return and valuable cargo payoff without changing terrain or creating a shortcut.
 
 ## Active Issue Batch
 
-#726-#735 plan and implement one optional upper-right current pocket, one durable stabilizer project/capability, source validation, deterministic journey smoke, controlled visual review, Web verification, and closeout. Do not create the Expansion 05 batch before #735 records GO or HOLD.
+None. Expansion 05 Practical Research Foundation is selected next; the next drift cycle should create its scoped batch before implementation.
 
 ## Roadmap Rules
 
-- Do not create issue batches for Expansions 04-09 until the preceding closeout selects the next milestone.
+- Create only the Expansion 05 batch next. Do not create issue batches for Expansions 06-09 until the preceding closeout selects them.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_slice_01` as the default boat hub unless a separate source-driven decision changes it.
 - Preserve source-authored maps, reachability, parity, focused captures, and public Web verification in every milestone.
