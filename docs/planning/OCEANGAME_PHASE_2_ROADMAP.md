@@ -91,7 +91,7 @@ Expansion 05's issue-level batch #748-#757 is complete. Expansion 06 issues #768
 
 ### Directional
 
-Expansion 06 is the selected directional milestone. Expansions 07-09 remain directional; create each batch only after the prior closeout confirms readiness.
+Expansion 06 is the committed active milestone. Expansions 07-09 remain directional; create each batch only after the prior closeout confirms readiness.
 
 ### Vision
 
