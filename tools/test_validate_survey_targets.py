@@ -65,6 +65,22 @@ class SurveyTargetValidationTests(unittest.TestCase):
             ["survey_targets must be a list when present."],
         )
 
+    def test_allows_durable_current_requirement_but_rejects_survey_fields_on_gate(self) -> None:
+        map_data = valid_map()
+        gate = {
+            "id": "durable_current_gate",
+            "type": "marker",
+            "current_gate": True,
+            "required_capability_id": "current_stabilizer",
+        }
+        map_data["zones"] = [gate]
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertFalse(any("zones[0] survey metadata" in failure for failure in failures), failures)
+
+        gate["discovery_id"] = "misplaced_discovery"
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertTrue(any("zones[0] survey metadata (discovery_id)" in failure for failure in failures), failures)
+
     def test_rejects_invalid_interaction_and_runtime_state(self) -> None:
         map_data = valid_map()
         target = map_data["survey_targets"][0]
