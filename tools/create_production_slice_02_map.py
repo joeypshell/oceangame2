@@ -15,6 +15,8 @@ OUTPUT_MAP_PATH = ROOT / "maps" / "production_slice_02.greybox.json"
 SLICE_BOUNDS = {"x": 88, "y": 78, "w": 66, "h": 72}
 TILE_SIZE = 32
 ENTRY = (8, 34)
+RETURN_CONNECTOR_RECT = {"x": 4, "y": 32, "w": 4, "h": 3}
+ANOMALY_SURVEY_RECT = {"x": 31, "y": 67, "w": 3, "h": 3}
 
 
 def rect_cells(item: dict) -> set[tuple[int, int]]:
@@ -162,6 +164,7 @@ def build_map_data(source_map: dict) -> dict:
             "salvage": "Collectible objective",
             "hazard": "Avoidance pressure marker",
             "marker": "Non-gameplay annotation",
+            "survey": "Non-salvage anomaly interaction area",
         },
         "terrain": row_run_terrain(solid),
         "zones": [
@@ -182,6 +185,18 @@ def build_map_data(source_map: dict) -> dict:
                 "w": 9,
                 "h": 5,
                 "intent": "In-water relay entry and return zone for a later-game destination slice.",
+            },
+            {
+                "id": "return_to_lower_left_relay_connector",
+                "type": "marker",
+                **RETURN_CONNECTOR_RECT,
+                "world_connector": True,
+                "connector_label": "Lower-left relay",
+                "destination_map_id": "production_slice_04",
+                "destination_map_path": "res://maps/production_slice_04.greybox.json",
+                "destination_entry_id": "relay_sub_entry",
+                "connector_direction": "return",
+                "intent": "Expansion 01 reciprocal return connector from the anomaly destination to the remembered relay route.",
             },
             {
                 "id": "approach_route",
@@ -235,6 +250,23 @@ def build_map_data(source_map: dict) -> dict:
             {"id": "hazard_right_chamber", "type": "hazard", "x": 55, "y": 36, "kind": "mine"},
             {"id": "hazard_lower_gate", "type": "hazard", "x": 46, "y": 63, "kind": "jellyfish"},
         ],
+        "survey_targets": [
+            {
+                "id": "lower_right_anomaly_survey",
+                "target_type": "anomaly",
+                **ANOMALY_SURVEY_RECT,
+                "required_capability_id": "survey_scanner_1",
+                "interaction": "survey",
+                "interaction_seconds": 3.0,
+                "interaction_label": "Survey anomaly",
+                "discovery_id": "lower_right_anomaly_discovery",
+                "route_context": "lower_right_anomaly_route",
+                "commit_map_id": "production_slice_01",
+                "commit_map_path": "res://maps/production_slice_01.greybox.json",
+                "commit_entry_id": "surface_boat_entry",
+                "intent": "Expansion 01 anomaly pocket in the deep lower terminal, separated from salvage and cargo state.",
+            },
+        ],
         "camera_tests": [
             {
                 "id": "production_slice_02_overview",
@@ -276,6 +308,7 @@ def build_map_data(source_map: dict) -> dict:
             "Does this slice read as a deeper destination/connector rather than another first area?",
             "Does the in-water relay extraction plan feel appropriate without forcing a top-water boat?",
             "Do the main chamber and lower terminal create distinct salvage route choices?",
+            "Does the deep lower-terminal anomaly create a stable survey pocket with a legible return commitment?",
             "Do sealed crop edges feel like natural cave boundaries rather than arbitrary cutoffs?",
         ],
     }

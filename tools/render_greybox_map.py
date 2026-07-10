@@ -21,6 +21,7 @@ COLORS = {
     "salvage": "#ffd34a",
     "hazard": "#ff4b5f",
     "moving_hazard": "#ff96b0",
+    "survey": "#69f0dc",
     "marker": "#ffffff",
     "container": "#d68cff",
     "label": "#eaffff",
@@ -153,6 +154,16 @@ def render_svg(map_data: dict) -> str:
         )
         parts.append(text(x + 8, y - 10, container["id"], 22))
 
+    for target in map_data.get("survey_targets", []):
+        x, y, w, h = tile_rect(target, tile_size)
+        cx, cy = x + w * 0.5, y + h * 0.5
+        parts.append(
+            f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="{COLORS["survey"]}" '
+            'fill-opacity="0.28" stroke="#07584f" stroke-width="6"/>'
+        )
+        parts.append(f'<circle cx="{cx}" cy="{cy}" r="14" fill="none" stroke="{COLORS["survey"]}" stroke-width="6"/>')
+        parts.append(text(x + 8, y - 10, target["id"], 22))
+
     for hazard in map_data.get("moving_hazards", []):
         path = hazard.get("path", [])
         if len(path) >= 2:
@@ -174,7 +185,7 @@ def render_svg(map_data: dict) -> str:
         [
             f'<rect x="0" y="0" width="{width_px}" height="{height_px}" fill="url(#grid)"/>',
             text(24, 42, f'{map_data["id"]} - greybox source preview', 30),
-            text(24, height_px - 24, "cyan=open | gray=solid | tan=extraction | orange=boat | green=start | yellow=salvage | red=hazard | pink=moving | purple=container", 24),
+            text(24, height_px - 24, "cyan=open | gray=solid | tan=extraction | orange=boat | green=start | yellow=salvage | red=hazard | pink=moving | purple=container | teal=survey", 24),
             "</svg>",
             "",
         ]

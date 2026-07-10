@@ -22,6 +22,7 @@ MARKER = (255, 255, 255, 42)
 BOAT = (240, 163, 58, 255)
 SALVAGE = (255, 211, 74, 255)
 HAZARD = (255, 75, 95, 255)
+SURVEY = (105, 240, 220, 255)
 TEXT = (232, 244, 246, 255)
 MUTED_TEXT = (180, 209, 216, 255)
 BACKGROUND = (22, 38, 47, 255)
@@ -88,6 +89,20 @@ def draw_entities(draw: ImageDraw.ImageDraw, map_data: dict, scale: int) -> None
             draw.rectangle((cx - r, cy - r, cx + r, cy + r), fill=HAZARD, outline=(100, 18, 29, 255))
 
 
+def draw_survey_targets(draw: ImageDraw.ImageDraw, map_data: dict, scale: int) -> None:
+    for target in map_data.get("survey_targets", []):
+        x0, y0, x1, y1 = rect(target, scale)
+        draw.rectangle(
+            (x0, y0, x1, y1),
+            fill=(SURVEY[0], SURVEY[1], SURVEY[2], 70),
+            outline=SURVEY,
+            width=max(2, scale // 2),
+        )
+        cx, cy = (x0 + x1) // 2, (y0 + y1) // 2
+        r = max(3, scale // 2)
+        draw.ellipse((cx - r, cy - r, cx + r, cy + r), outline=SURVEY, width=max(1, scale // 3))
+
+
 def draw_map_panel(map_data: dict, mode: str, scale: int) -> Image.Image:
     units = map_data["units"]
     width_tiles = int(units["width_tiles"])
@@ -115,6 +130,7 @@ def draw_map_panel(map_data: dict, mode: str, scale: int) -> Image.Image:
             draw.rectangle(rect(item, scale), fill=COLLISION_FILL, outline=COLLISION_EDGE, width=max(1, scale // 3))
 
     draw_entities(draw, map_data, scale)
+    draw_survey_targets(draw, map_data, scale)
     draw_grid(draw, width_tiles, height_tiles, scale)
     draw.rectangle((0, 0, width_tiles * scale - 1, height_tiles * scale - 1), outline=(196, 226, 232, 180), width=2)
     return image
