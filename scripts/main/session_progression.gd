@@ -1,17 +1,19 @@
 extends RefCounted
 
-const OXYGEN_TANK_UPGRADE_ID := "oxygen_tank_1"
-const OXYGEN_TANK_UPGRADE_COST := 500
+const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
+
+const OXYGEN_TANK_UPGRADE_ID := ProgressionContract.OXYGEN_TANK_UPGRADE_ID
+const OXYGEN_TANK_UPGRADE_COST := ProgressionContract.OXYGEN_TANK_UPGRADE_COST
 const OXYGEN_TANK_UPGRADE_SECONDS := 15.0
-const CARGO_CAPACITY_UPGRADE_ID := "cargo_pouch_1"
-const CARGO_CAPACITY_UPGRADE_COST := 700
+const CARGO_CAPACITY_UPGRADE_ID := ProgressionContract.CARGO_CAPACITY_UPGRADE_ID
+const CARGO_CAPACITY_UPGRADE_COST := ProgressionContract.CARGO_CAPACITY_UPGRADE_COST
 const CARGO_CAPACITY_UPGRADE_BONUS := 1
-const LIGHT_UPGRADE_ID := "dive_light_1"
-const LIGHT_UPGRADE_COST := 900
+const LIGHT_UPGRADE_ID := ProgressionContract.LIGHT_UPGRADE_ID
+const LIGHT_UPGRADE_COST := ProgressionContract.LIGHT_UPGRADE_COST
 const LIGHT_UPGRADE_RANGE_SCALE := 1.25
 const LIGHT_UPGRADE_ALPHA := 0.48
-const PROPULSION_UPGRADE_ID := "propulsion_fins"
-const PROPULSION_UPGRADE_COST := 1000
+const PROPULSION_UPGRADE_ID := ProgressionContract.PROPULSION_UPGRADE_ID
+const PROPULSION_UPGRADE_COST := ProgressionContract.PROPULSION_UPGRADE_COST
 
 var _wallet := 0
 var _total_payout_earned := 0

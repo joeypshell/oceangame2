@@ -37,6 +37,7 @@ Core sources and operating docs:
 - [Finished Simple Diver Game Roadmap](docs/current/SIMPLE_DIVER_GAME_ROADMAP.md)
 - [OceanGame Phase 2 Roadmap](docs/planning/OCEANGAME_PHASE_2_ROADMAP.md)
 - [Capability And Resource Progression Framework](docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md)
+- [Executable Cross-Map Progression Graph](docs/current/PROGRESSION_GRAPH.md)
 - [Current Architecture](docs/current/ARCHITECTURE.md)
 - [Tooling](docs/current/TOOLING.md)
 - [Production Slice Index](docs/current/PRODUCTION_SLICE_INDEX.md)
