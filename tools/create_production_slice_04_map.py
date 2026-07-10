@@ -15,6 +15,7 @@ OUTPUT_MAP_PATH = ROOT / "maps" / "production_slice_04.greybox.json"
 SLICE_BOUNDS = {"x": 0, "y": 86, "w": 88, "h": 50}
 TILE_SIZE = 32
 ENTRY = (74, 18)
+ANOMALY_CONNECTOR_RECT = {"x": 79, "y": 26, "w": 4, "h": 3}
 
 
 def rect_cells(item: dict) -> set[tuple[int, int]]:
@@ -209,6 +210,18 @@ def build_map_data(source_map: dict) -> dict:
                 "intent": "Pass 21 return connector from the lower-left relay back toward the default boat hub.",
             },
             {
+                "id": "lower_right_anomaly_connector",
+                "type": "marker",
+                **ANOMALY_CONNECTOR_RECT,
+                "world_connector": True,
+                "connector_label": "Lower-right anomaly",
+                "destination_map_id": "production_slice_02",
+                "destination_map_path": "res://maps/production_slice_02.greybox.json",
+                "destination_entry_id": "relay_sub_entry",
+                "connector_direction": "forward",
+                "intent": "Expansion 01 forward connector from the remembered lower-left relay route to the anomaly destination.",
+            },
+            {
                 "id": "upper_loop_route",
                 "type": "marker",
                 "x": 8,
@@ -341,6 +354,7 @@ def build_map_data(source_map: dict) -> dict:
             "Does this slice read as a lower-left connector loop instead of another chamber or first area?",
             "Does the east-side relay feel like believable larger-map context without forcing a top-water boat?",
             "Do the curved corridor bends create readable movement pressure without trapping the player?",
+            "Does the forward anomaly connector read as a deliberate next route without competing with the boat return?",
             "Do the sealed crop edges feel like bounded cave walls rather than arbitrary cutoffs?",
         ],
     }
