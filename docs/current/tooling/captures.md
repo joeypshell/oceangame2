@@ -177,6 +177,14 @@ Capture the focused Expansion 03 material-project views:
 
 This writes held-material, locked sealed-wreck, project-ready debrief, and 50% cutter-progress states at 1280x720 and 1920x1080 under `visual_captures/expansion_03_material_project/`. The command verifies output dimensions and does not accept or replace production-slice baselines.
 
+Capture the Expansion 04 current-pocket review states:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 30 --capture-expansion-04-current-pocket
+```
+
+This writes locked-current, stabilizer-ready debrief, unlocked-crossing, payoff-held, and payoff-banked states at 1280x720 and 1920x1080 under `visual_captures/expansion_04_current_pocket/`. The command verifies output dimensions and does not accept or replace production-slice baselines.
+
 Capture the focused Pass 18 progression upgrade view:
 
 ```powershell
