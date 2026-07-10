@@ -10,6 +10,7 @@ from production_slice_01_expansion_03 import (
 )
 from production_slice_01_expansion_04 import expansion_04_entities, expansion_04_projects, expansion_04_zones
 from production_slice_01_expansion_05 import apply_expansion_05_material_research, expansion_05_survey_targets
+from production_slice_01_expansion_06 import expansion_06_hostile_encounters, expansion_06_projects
 
 
 def material_candidate_pools() -> list[dict]:
@@ -17,7 +18,11 @@ def material_candidate_pools() -> list[dict]:
 
 
 def material_projects() -> list[dict]:
-    return [*expansion_03_projects(), *expansion_04_projects()]
+    return [*expansion_03_projects(), *expansion_04_projects(), *expansion_06_projects()]
+
+
+def hostile_encounters() -> list[dict]:
+    return expansion_06_hostile_encounters()
 
 
 def expansion_entities() -> list[dict]:

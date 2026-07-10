@@ -343,7 +343,11 @@
 <polyline points="1744.0,2192.0 2064.0,2192.0" fill="none" stroke="#ff96b0" stroke-width="5" stroke-dasharray="12 8"/>
 <circle cx="1744.0" cy="2192.0" r="15" fill="#ff96b0" stroke="#721d35" stroke-width="5"/>
 <text x="1762.0" y="2174.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">deep_route_jellyfish_patrol</text>
+<rect x="1920" y="2272" width="320" height="256" fill="#ff745e" fill-opacity="0.09" stroke="#8f281c" stroke-width="5" stroke-dasharray="14 8"/>
+<ellipse cx="2128.0" cy="2384.0" rx="28" ry="14" fill="#ff745e" stroke="#64180f" stroke-width="5"/>
+<text x="2162.0" y="2366.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">deep_cache_territorial_eel</text>
 <rect x="0" y="0" width="2304" height="2688" fill="url(#grid)"/>
 <text x="24.0" y="42.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="30" paint-order="stroke" stroke="#10384a" stroke-width="4">production_slice_01 - greybox source preview</text>
-<text x="24.0" y="2664.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">cyan=open | gray=solid | tan=extraction | orange=boat/tool | green=start | yellow=salvage | teal=material/survey | red=hazard | pink=moving | purple=container</text>
+<text x="24.0" y="2646.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">cyan=open | gray=solid | tan=extraction | orange=boat/tool | green=start | yellow=salvage | teal=material/survey</text>
+<text x="24.0" y="2672.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">red=hazard | pink=moving | coral=hostile | purple=container</text>
 </svg>
