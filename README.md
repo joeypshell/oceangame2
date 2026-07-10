@@ -62,6 +62,7 @@ Current release and expansion handoff:
 - [Expansion 03 Closeout](docs/current/OCEANGAME_EXPANSION_03_CLOSEOUT.md)
 - [OceanGame Expansion 04 Plan](docs/current/OCEANGAME_EXPANSION_04_PLAN.md)
 - [Expansion 04 State Contract](docs/current/OCEANGAME_EXPANSION_04_STATE_CONTRACT.md)
+- [Expansion 04 Source Contract](docs/current/OCEANGAME_EXPANSION_04_SOURCE_CONTRACT.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 

@@ -16,9 +16,11 @@ CURRENT_GATE_FIELDS = {
     "current_strength",
     "current_gate_label",
     "required_upgrade_id",
+    "required_capability_id",
     "route_context",
 }
-CURRENT_GATE_TRIGGER_FIELDS = CURRENT_GATE_FIELDS - {"required_upgrade_id", "route_context"}
+CURRENT_REQUIREMENT_FIELDS = {"required_upgrade_id", "required_capability_id"}
+CURRENT_GATE_TRIGGER_FIELDS = CURRENT_GATE_FIELDS - CURRENT_REQUIREMENT_FIELDS - {"route_context"}
 
 
 def _rect_cells(item: dict[str, Any]) -> set[tuple[int, int]]:
@@ -109,7 +111,15 @@ def validate_current_gate_schema(map_data: dict[str, Any]) -> list[str]:
         if not _is_number_value(strength) or float(strength) <= 0.0:
             failures.append(f"{item_label} current_strength must be a positive number.")
 
-        failures.extend(_validate_id(zone.get("required_upgrade_id"), item_label, "required_upgrade_id"))
+        requirement_fields = [field for field in CURRENT_REQUIREMENT_FIELDS if field in zone]
+        if len(requirement_fields) != 1:
+            failures.append(
+                f"{item_label} current gate must define exactly one of: "
+                f"{', '.join(sorted(CURRENT_REQUIREMENT_FIELDS))}."
+            )
+        else:
+            requirement_field = requirement_fields[0]
+            failures.extend(_validate_id(zone[requirement_field], item_label, requirement_field))
 
         if "current_gate_label" in zone:
             failures.extend(_validate_label(zone["current_gate_label"], item_label, "current_gate_label"))

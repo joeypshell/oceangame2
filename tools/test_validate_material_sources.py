@@ -79,12 +79,44 @@ def valid_map() -> dict:
     }
 
 
+def with_stabilizer_project(map_data: dict) -> dict:
+    map_data["zones"].append(
+        {
+            "id": "upper_right_current_pocket_gate",
+            "type": "marker",
+            "x": 9,
+            "y": 3,
+            "w": 2,
+            "h": 2,
+            "current_gate": True,
+            "current_direction": "left",
+            "current_strength": 2.2,
+            "required_capability_id": "current_stabilizer",
+        }
+    )
+    map_data["material_projects"].append(
+        {
+            "id": "current_stabilizer_project",
+            "required_project_id": "salvage_cutter_project",
+            "required_discovery_id": "lower_right_anomaly_discovery",
+            "required_materials": {"titanium_scrap": 2, "conductive_coil": 1},
+            "unlocks_capability_id": "current_stabilizer",
+            "target_gate_id": "upper_right_current_pocket_gate",
+            "build_phase": "night_debrief",
+        }
+    )
+    return map_data
+
+
 class MaterialSourceValidationTests(unittest.TestCase):
     def test_valid_schema_and_reachability(self) -> None:
         map_data = valid_map()
         self.assertEqual(validate_material_source_schema(map_data), [])
         reachable = {(x, y) for y in range(8) for x in range(12)}
         self.assertEqual(validate_material_source_reachability(map_data["entities"], set(), reachable), [])
+
+    def test_accepts_ordered_stabilizer_project_and_durable_gate(self) -> None:
+        self.assertEqual(validate_material_source_schema(with_stabilizer_project(valid_map())), [])
 
     def test_rejects_invalid_and_duplicate_candidate_pools(self) -> None:
         map_data = valid_map()
@@ -133,7 +165,7 @@ class MaterialSourceValidationTests(unittest.TestCase):
             "required_materials must be exactly",
             "unlocks_capability_id must be one of",
             "cutter target must use tier 'valuable'",
-            "required_tool_id must be one of",
+            "required_tool_id must be salvage_cutter",
             "tool_project_id must be one of",
         ):
             self.assertTrue(any(expected in failure for failure in failures), expected)
@@ -158,8 +190,32 @@ class MaterialSourceValidationTests(unittest.TestCase):
         map_data = valid_map()
         map_data["material_projects"] = []
         failures = validate_material_source_schema(map_data)
-        self.assertTrue(any("requires exactly one material project" in failure for failure in failures))
+        self.assertTrue(any("requires at least one material project" in failure for failure in failures))
         self.assertTrue(any("not referenced by a material project" in failure for failure in failures))
+
+    def test_rejects_invalid_project_order_target_kind_and_gate_link(self) -> None:
+        map_data = with_stabilizer_project(valid_map())
+        project = map_data["material_projects"].pop()
+        project["target_id"] = "salvage_sealed_wreck_cache"
+        map_data["material_projects"].insert(0, project)
+        map_data["zones"][0]["required_capability_id"] = "wrong_capability"
+        failures = validate_material_source_schema(map_data)
+        for expected in (
+            "required_project_id must reference an earlier project",
+            "must define exactly one of target_gate_id or target_id",
+            "not referenced by a material project",
+        ):
+            self.assertTrue(any(expected in failure for failure in failures), (expected, failures))
+
+    def test_rejects_missing_project_prerequisite_and_unguaranteed_recipe(self) -> None:
+        map_data = with_stabilizer_project(valid_map())
+        project = map_data["material_projects"][1]
+        project["required_project_id"] = "missing_project"
+        project["required_materials"] = {"titanium_scrap": 3, "conductive_coil": 1}
+        failures = validate_material_source_schema(map_data)
+        self.assertTrue(any("required_project_id must be 'salvage_cutter_project'" in failure for failure in failures))
+        self.assertTrue(any("does not exist" in failure for failure in failures))
+        self.assertTrue(any("required_materials must be exactly" in failure for failure in failures))
 
     def test_input_mutations_do_not_affect_fixture_factory(self) -> None:
         first = valid_map()
