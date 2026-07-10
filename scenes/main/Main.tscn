@@ -1,6 +1,11 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/main/main.gd" id="1_main"]
+[ext_resource type="Script" path="res://scripts/main/mobile_test_controls.gd" id="2_mobile_controls"]
 
 [node name="Main" type="Node2D"]
 script = ExtResource("1_main")
+
+[node name="MobileTestControls" type="CanvasLayer" parent="."]
+layer = 90
+script = ExtResource("2_mobile_controls")
