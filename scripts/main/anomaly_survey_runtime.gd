@@ -10,6 +10,8 @@ const CANONICAL_MAP_ID := "production_slice_01"
 const CANONICAL_ENTRY_ID := "surface_boat_entry"
 const COMMIT_NOTE := "Discovery committed at surface boat"
 const COMMIT_RESULT := "Discovery logged: Lower-right anomaly\nNext lead: investigate territorial signal"
+const RESOURCE_TARGET_TYPE := "resource"
+const RESOURCE_COMMIT_NOTE := "Research committed at surface boat"
 
 var _progression_runtime
 var _profile
@@ -83,12 +85,13 @@ func update(world, player, delta: float) -> Dictionary:
 	if _profile.has_completed_discovery(discovery_id):
 		_interaction.reset()
 		_set_target_state(world, target_id, "completed")
-		return _note_result(false, "completed", "Anomaly already logged")
+		return _note_result(false, "completed", _completed_note(target))
 	if _expedition.has_pending():
 		_interaction.reset()
-		_set_target_state(world, target_id, "pending")
-		return _note_result(false, "pending", "Discovery pending - return to surface boat")
-	if not _lead_available:
+		var same_pending: bool = _expedition.pending_discovery_id() == discovery_id
+		_set_target_state(world, target_id, "pending" if same_pending else "locked")
+		return _note_result(false, "pending" if same_pending else "pending_exists", _pending_status_note())
+	if _target_requires_lead(target) and not _lead_available:
 		_interaction.reset()
 		_set_target_state(world, target_id, "locked")
 		return _note_result(false, "lead_required", "Anomaly lead required")
@@ -108,13 +111,14 @@ func update(world, player, delta: float) -> Dictionary:
 		str(world.map_id),
 		target_id,
 		str(target.get("commit_map_id", "")),
-		str(target.get("commit_entry_id", ""))
+		str(target.get("commit_entry_id", "")),
+		_pending_metadata(target)
 	)
 	if str(pending.get("status", "")) not in ["pending_created", "already_pending"]:
 		_set_target_state(world, target_id, "available")
 		return _note_result(false, str(pending.get("status", "pending_error")), "Survey could not be recorded")
 	_set_target_state(world, target_id, "pending")
-	return _note_result(true, "pending_created", "Survey complete - return to surface boat", {"pending": true})
+	return _note_result(true, "pending_created", _survey_complete_note(target), {"pending": true})
 
 
 func on_map_loaded(world) -> void:
@@ -139,7 +143,15 @@ func overlay_text(world, player) -> String:
 	if not _last_result.is_empty():
 		return _last_result
 	if _expedition.has_pending():
-		return "Discovery pending | Return to surface boat"
+		return _pending_overlay_text()
+	var nearby_target := _survey_target_at(world, player.global_position) if world != null and player != null else {}
+	if not nearby_target.is_empty():
+		var discovery_id := str(nearby_target.get("discovery_id", ""))
+		if _profile.has_completed_discovery(discovery_id):
+			return _completed_overlay_text(nearby_target)
+		if _is_resource_target(nearby_target):
+			var clue := str(nearby_target.get("clue_label", "Mineral trace")).strip_edges()
+			return clue if has_scanner() else "%s | Scanner required" % clue
 	if _profile.has_completed_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID):
 		return "Discovery logged | Lower-right anomaly"
 	if not _lead_available:
@@ -161,6 +173,8 @@ func is_status_note(status_note: String) -> bool:
 		or status_note.begins_with("Survey")
 		or status_note.begins_with("Discovery")
 		or status_note.begins_with("Anomaly")
+		or status_note.begins_with("Research")
+		or status_note.begins_with("Mineral")
 	)
 
 
@@ -172,8 +186,12 @@ func has_pending_discovery() -> bool:
 	return _expedition.has_pending()
 
 
-func has_completed_discovery() -> bool:
-	return _profile.has_completed_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID)
+func has_completed_discovery(discovery_id := ExpansionProfileState.ANOMALY_DISCOVERY_ID) -> bool:
+	return _profile.has_completed_discovery(str(discovery_id))
+
+
+func has_completed_research() -> bool:
+	return has_completed_discovery(ExpansionProfileState.MINERAL_TRACE_RESEARCH_ID)
 
 
 func profile_state():
@@ -201,13 +219,19 @@ func _try_commit(world, player) -> Dictionary:
 	var status := str(commit.get("status", ""))
 	if status not in ["committed", "already_committed"]:
 		return _note_result(false, status, "Discovery commit failed")
-	_lead_available = false
-	_last_note = COMMIT_NOTE
-	_last_result = COMMIT_RESULT
+	var discovery_id := str(commit.get("committed_discovery_id", ""))
+	var metadata: Dictionary = commit.get("metadata", {})
+	if discovery_id == ExpansionProfileState.ANOMALY_DISCOVERY_ID:
+		_lead_available = false
+		_last_note = COMMIT_NOTE
+		_last_result = COMMIT_RESULT
+	else:
+		_last_note = RESOURCE_COMMIT_NOTE
+		_last_result = str(metadata.get("finding_label", "Research finding committed"))
 	return {
 		"state": status,
 		"committed": true,
-		"discovery_id": str(commit.get("committed_discovery_id", "")),
+		"discovery_id": discovery_id,
 		"note": _last_note,
 		"result_text": _last_result,
 	}
@@ -223,7 +247,7 @@ func _refresh_world_targets(world) -> void:
 			state = "completed"
 		elif _expedition.pending_discovery_id() == discovery_id:
 			state = "pending"
-		elif _lead_available and _profile.has_capability(str(target.get("required_capability_id", ""))):
+		elif _target_available(target):
 			state = "available"
 		_set_target_state(world, str(target.get("id", "")), state)
 
@@ -255,3 +279,47 @@ func _note_result(changed: bool, reason: String, note: String, extra := {}) -> D
 	for key in extra:
 		result[key] = extra[key]
 	return result
+
+
+func _target_available(target: Dictionary) -> bool:
+	return (
+		_profile.has_capability(str(target.get("required_capability_id", "")))
+		and (not _target_requires_lead(target) or _lead_available)
+	)
+
+
+func _target_requires_lead(target: Dictionary) -> bool:
+	return not _is_resource_target(target)
+
+
+func _is_resource_target(target: Dictionary) -> bool:
+	return str(target.get("target_type", "")) == RESOURCE_TARGET_TYPE
+
+
+func _pending_metadata(target: Dictionary) -> Dictionary:
+	return {
+		"target_type": str(target.get("target_type", "")),
+		"finding_label": str(target.get("finding_label", "")),
+	}
+
+
+func _survey_complete_note(target: Dictionary) -> String:
+	return "Research complete - return to surface boat" if _is_resource_target(target) else "Survey complete - return to surface boat"
+
+
+func _completed_note(target: Dictionary) -> String:
+	return str(target.get("finding_label", "Research already logged")) if _is_resource_target(target) else "Anomaly already logged"
+
+
+func _completed_overlay_text(target: Dictionary) -> String:
+	return str(target.get("finding_label", "Research logged")) if _is_resource_target(target) else "Discovery logged | Lower-right anomaly"
+
+
+func _pending_overlay_text() -> String:
+	var metadata: Dictionary = _expedition.pending_metadata()
+	return "Research pending | Return to surface boat" if str(metadata.get("target_type", "")) == RESOURCE_TARGET_TYPE else "Discovery pending | Return to surface boat"
+
+
+func _pending_status_note() -> String:
+	var metadata: Dictionary = _expedition.pending_metadata()
+	return "Research pending - return to surface boat" if str(metadata.get("target_type", "")) == RESOURCE_TARGET_TYPE else "Discovery pending - return to surface boat"
