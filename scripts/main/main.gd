@@ -8,6 +8,7 @@ const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const CurrentGateCapture := preload("res://scripts/main/captures/current_gate_capture.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
 const DestinationPayoffFeedback := preload("res://scripts/main/destination_payoff_feedback.gd")
+const ExpeditionDayCapture := preload("res://scripts/main/captures/expedition_day_capture.gd")
 const FinalDiveObjectiveSeed := preload("res://scripts/main/final_dive_objective_seed.gd")
 const MovingHazardCapture := preload("res://scripts/main/captures/moving_hazard_capture.gd")
 const MovingHazardController := preload("res://scripts/main/moving_hazard_controller.gd")
@@ -109,6 +110,7 @@ const PASS_25_FINAL_DIVE_OBJECTIVE_CAPTURE_DIR := "res://visual_captures/pass_25
 const PASS_26_RESULT_PRESENTATION_CAPTURE_DIR := "res://visual_captures/pass_26_result_presentation"
 const PASS_27_PLAYER_FACING_CAPTURE_DIR := "res://visual_captures/pass_27_player_facing"
 const ANOMALY_SURVEY_CAPTURE_DIR := "res://visual_captures/anomaly_survey"
+const EXPEDITION_DAY_CAPTURE_DIR := "res://visual_captures/expedition_day"
 const DARKNESS_LIGHT_CAPTURE_DIR := "res://visual_captures/darkness_light_gate"
 const CURRENT_GATE_CAPTURE_DIR := "res://visual_captures/current_gate"
 const MOVING_HAZARD_CAPTURE_DIR := "res://visual_captures/moving_hazard"
@@ -305,6 +307,7 @@ func _ready() -> void:
 	var capture_pass_26_result_presentation := _has_arg(user_args, engine_args, "--capture-pass-26-result-presentation")
 	var capture_pass_27_player_facing := _has_arg(user_args, engine_args, "--capture-pass-27-player-facing")
 	var capture_anomaly_survey := _has_arg(user_args, engine_args, "--capture-anomaly-survey")
+	var capture_expedition_day := _has_arg(user_args, engine_args, "--capture-expedition-day")
 	var capture_darkness_light_gate := _has_arg(user_args, engine_args, "--capture-darkness-light-gate")
 	var capture_current_gate := _has_arg(user_args, engine_args, "--capture-current-gate")
 	var capture_moving_hazard := _has_arg(user_args, engine_args, "--capture-moving-hazard")
@@ -581,6 +584,7 @@ func _ready() -> void:
 		or capture_pass_26_result_presentation
 		or capture_pass_27_player_facing
 		or capture_anomaly_survey
+		or capture_expedition_day
 		or capture_darkness_light_gate
 		or capture_current_gate
 		or capture_moving_hazard
@@ -888,6 +892,9 @@ func _ready() -> void:
 	elif capture_anomaly_survey:
 		var capture := AnomalySurveyCapture.new(self)
 		await capture.capture_and_quit(ANOMALY_SURVEY_CAPTURE_DIR)
+	elif capture_expedition_day:
+		var capture := ExpeditionDayCapture.new(self)
+		await capture.capture_and_quit(EXPEDITION_DAY_CAPTURE_DIR)
 	elif capture_darkness_light_gate:
 		_capture_controller.capture_darkness_light_gate_and_quit(DARKNESS_LIGHT_CAPTURE_DIR)
 	elif capture_current_gate:

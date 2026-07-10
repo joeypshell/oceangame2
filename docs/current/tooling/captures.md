@@ -161,6 +161,14 @@ Capture the focused Expansion 01 anomaly survey and commit views:
 
 This uses the source-authored slice-02 target and focused survey runtime to write a stable 50% progress view plus the committed slice-01 boat result under `visual_captures/anomaly_survey/`. The command is review-only and does not accept or replace production-slice baselines.
 
+Capture the focused Expansion 02 expedition-day views:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-expedition-day
+```
+
+This writes deterministic dusk surface-refill, boat-offload, and night-debrief frames under `visual_captures/expedition_day/`. The frames keep daylight, oxygen, and cargo context together for review and do not accept or replace production-slice baselines.
+
 Capture the focused Pass 18 progression upgrade view:
 
 ```powershell
