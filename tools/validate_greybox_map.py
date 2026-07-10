@@ -8,6 +8,7 @@ import json
 import re
 from collections import deque
 from pathlib import Path
+from validate_biological_resources import validate_biological_resource_reachability, validate_biological_resource_schema
 from validate_current_gates import validate_current_gate_reachability, validate_current_gate_schema
 from validate_destination_payoffs import validate_destination_payoff_schema
 from validate_final_dive_objective_seeds import validate_final_dive_objective_seed_reachability, validate_final_dive_objective_seed_schema
@@ -27,7 +28,6 @@ from validate_route_objectives import (
 from validate_survey_targets import validate_survey_target_reachability, validate_survey_target_schema
 from validate_visibility_zones import validate_visibility_zone_reachability, validate_visibility_zone_schema
 from validate_world_connectors import validate_world_connector_reachability, validate_world_connector_schema
-
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 DISPLAY_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,31}$")
 ENTITY_TYPES = {"spawn", "boat_spawn", "salvage", "hazard", "material_candidate", "tool_target"}
@@ -63,8 +63,6 @@ def is_int_value(value) -> bool:
 
 def is_number_value(value) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool)
-
-
 def validate_required_fields(item: dict, item_label: str, required_fields: tuple[str, ...]) -> list[str]:
     failures: list[str] = []
     for field in required_fields:
@@ -389,6 +387,7 @@ def main() -> int:
     zones = map_data.get("zones", [])
     failures.extend(validate_entity_schema(entities, width, height, base_zones))
     failures.extend(validate_zone_schema(zones, width, height))
+    failures.extend(validate_biological_resource_schema(map_data))
     failures.extend(validate_current_gate_schema(map_data))
     failures.extend(validate_destination_payoff_schema(args.map_json, map_data))
     failures.extend(validate_final_dive_objective_seed_schema(map_data, entities))
@@ -476,6 +475,7 @@ def main() -> int:
             failures.append(f"{zone['id']} is unreachable.")
 
     failures.extend(validate_route_objective_reachability(map_data, entities, zones, solid, reachable))
+    failures.extend(validate_biological_resource_reachability(map_data, solid, reachable))
     failures.extend(validate_objective_step_cue_reachability(map_data, entities, zones, solid, reachable))
     failures.extend(validate_current_gate_reachability(zones, solid, reachable))
     failures.extend(validate_final_dive_objective_seed_reachability(map_data, entities, solid, reachable))

@@ -132,6 +132,29 @@ def with_shock_prod_project(map_data: dict) -> dict:
     return map_data
 
 
+def with_capacitor_project(map_data: dict) -> dict:
+    with_shock_prod_project(map_data)
+    map_data["biological_resource_sources"] = [
+        {"id": "upper_right_glow_anemone_sample", "material_id": "insulating_gel", "material_quantity": 1},
+        {"id": "deep_cache_eel_electrocyte_harvest", "material_id": "eel_electrocyte", "material_quantity": 1},
+    ]
+    map_data["material_projects"].append(
+        {
+            "id": "shock_prod_capacitor_project",
+            "required_project_id": "shock_prod_project",
+            "required_discovery_id": "lower_right_anomaly_discovery",
+            "required_materials": {"conductive_coil": 1, "insulating_gel": 1, "eel_electrocyte": 1},
+            "unlocks_capability_id": "shock_prod_capacitor",
+            "target_hostile_id": "deep_cache_territorial_eel",
+            "capability_effect": "interrupt_warning_lunge",
+            "build_phase": "night_debrief",
+            "project_label": "Shock-prod capacitor project",
+            "completion_label": "Shock-prod capacitor built",
+        }
+    )
+    return map_data
+
+
 class MaterialSourceValidationTests(unittest.TestCase):
     def test_valid_schema_and_reachability(self) -> None:
         map_data = valid_map()
@@ -144,6 +167,17 @@ class MaterialSourceValidationTests(unittest.TestCase):
 
     def test_accepts_non_enemy_shock_prod_recipe_and_hostile_link(self) -> None:
         self.assertEqual(validate_material_source_schema(with_shock_prod_project(valid_map())), [])
+
+    def test_accepts_guaranteed_biological_capacitor_recipe(self) -> None:
+        self.assertEqual(validate_material_source_schema(with_capacitor_project(valid_map())), [])
+
+    def test_rejects_capacitor_effect_or_unguaranteed_biology(self) -> None:
+        map_data = with_capacitor_project(valid_map())
+        map_data["biological_resource_sources"].pop()
+        map_data["material_projects"][-1]["capability_effect"] = "double_damage"
+        failures = validate_material_source_schema(map_data)
+        self.assertTrue(any("capability_effect" in failure for failure in failures), failures)
+        self.assertTrue(any("daily sources guarantee only 0" in failure for failure in failures), failures)
 
     def test_rejects_unlinked_or_mislabeled_shock_prod_project(self) -> None:
         map_data = with_shock_prod_project(valid_map())

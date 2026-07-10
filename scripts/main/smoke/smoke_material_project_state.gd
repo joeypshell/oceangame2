@@ -66,6 +66,7 @@ func _run() -> void:
 	_expect(not bool(repeated.get("changed", true)) and repeated.get("reason") == "already_completed", "repeat build was not idempotent")
 	_expect(profile.material_inventory().is_empty(), "repeat build changed material inventory")
 	_test_shock_prod_project(profile, world)
+	_test_capacitor_project(profile)
 
 	var reloaded := ExpansionProfileState.new(TEST_PATH)
 	var reload_report: Dictionary = reloaded.load_profile()
@@ -74,6 +75,8 @@ func _run() -> void:
 	_expect(reloaded.has_capability(ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID), "profile reload lost cutter")
 	_expect(reloaded.has_completed_project(ExpansionProfileState.SHOCK_PROD_PROJECT_ID), "profile reload lost shock prod project")
 	_expect(reloaded.has_capability(ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID), "profile reload lost shock prod")
+	_expect(reloaded.has_completed_project(ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID), "profile reload lost capacitor project")
+	_expect(reloaded.has_capability(ExpansionProfileState.SHOCK_PROD_CAPACITOR_CAPABILITY_ID), "profile reload lost capacitor")
 	var day := ExpeditionDayState.new()
 	day.begin_next_day()
 	_expect(reloaded.has_capability(ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID), "next day lost durable cutter")
@@ -85,7 +88,7 @@ func _run() -> void:
 			push_error("Material project state smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Material project state smoke passed: project=%s recipe=2_titanium+1_coil knowledge_gate=true debrief_only=true exact_once=true cutter_persistent=true shock_prod_non_enemy=true shock_prod_persistent=true migration=v1_to_v3 inconsistent_pair_rejected=true." % ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID)
+	print("Material project state smoke passed: project=%s recipe=2_titanium+1_coil knowledge_gate=true debrief_only=true exact_once=true cutter_persistent=true shock_prod_non_enemy=true shock_prod_persistent=true capacitor_recipe=coil1+gel1+electrocyte1 capacitor_persistent=true migration=v1_to_v3 inconsistent_pair_rejected=true." % ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID)
 	quit(0)
 
 
@@ -116,6 +119,33 @@ func _test_shock_prod_project(profile, world) -> void:
 	_expect(repeated.get("reason") == "already_completed", "shock prod repeat build was not idempotent")
 
 
+func _test_capacitor_project(profile) -> void:
+	var direct_unlock: Dictionary = profile.unlock_capability(ExpansionProfileState.SHOCK_PROD_CAPACITOR_CAPABILITY_ID, false)
+	_expect(direct_unlock.get("reason") == "project_transaction_required", "capacitor unlocked outside project transaction")
+	var recipe := {
+		ExpansionProfileState.COIL_MATERIAL_ID: 1,
+		ExpansionProfileState.INSULATING_GEL_MATERIAL_ID: 1,
+		ExpansionProfileState.EEL_ELECTROCYTE_MATERIAL_ID: 1,
+	}
+	profile.deposit_materials(recipe, true)
+	var definition := {
+		"id": ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID,
+		"required_project_id": ExpansionProfileState.SHOCK_PROD_PROJECT_ID,
+		"required_discovery_id": ExpansionProfileState.ANOMALY_DISCOVERY_ID,
+		"required_materials": recipe,
+		"unlocks_capability_id": ExpansionProfileState.SHOCK_PROD_CAPACITOR_CAPABILITY_ID,
+		"target_hostile_id": ExpansionProfileState.SHOCK_PROD_TARGET_ID,
+		"capability_effect": "interrupt_warning_lunge",
+		"build_phase": "night_debrief",
+	}
+	var completed: Dictionary = profile.complete_material_project(definition, true)
+	_expect(bool(completed.get("changed", false)), "capacitor project did not complete")
+	_expect(profile.has_capability(ExpansionProfileState.SHOCK_PROD_CAPACITOR_CAPABILITY_ID), "capacitor capability was not unlocked")
+	_expect(profile.material_inventory().is_empty(), "capacitor project did not spend the exact recipe")
+	var repeated: Dictionary = profile.complete_material_project(definition, true)
+	_expect(repeated.get("reason") == "already_completed", "capacitor repeat build was not idempotent")
+
+
 func _test_inconsistent_profiles() -> void:
 	for payload in [
 		_profile_payload([], [ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID]),
@@ -127,6 +157,7 @@ func _test_inconsistent_profiles() -> void:
 	for payload in [
 		_profile_payload_v3([ExpansionProfileState.SHOCK_PROD_PROJECT_ID], [ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID]),
 		_profile_payload_v3([ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID, ExpansionProfileState.SHOCK_PROD_PROJECT_ID], [ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID]),
+		_profile_payload_v3([ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID], [ExpansionProfileState.SHOCK_PROD_CAPACITOR_CAPABILITY_ID]),
 	]:
 		_write_profile(payload)
 		var shock_profile := ExpansionProfileState.new(TEST_PATH)

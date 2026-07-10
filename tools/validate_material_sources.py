@@ -15,10 +15,15 @@ from validate_research_sources import validate_research_source_schema
 
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 DISPLAY_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,47}$")
-SUPPORTED_MATERIALS = {"titanium_scrap", "conductive_coil"}
-SUPPORTED_PROJECTS = {"salvage_cutter_project", "current_stabilizer_project", "shock_prod_project"}
+SUPPORTED_MATERIALS = {"titanium_scrap", "conductive_coil", "insulating_gel", "eel_electrocyte"}
+SUPPORTED_PROJECTS = {
+    "salvage_cutter_project",
+    "current_stabilizer_project",
+    "shock_prod_project",
+    "shock_prod_capacitor_project",
+}
 SUPPORTED_DISCOVERIES = {"lower_right_anomaly_discovery"}
-SUPPORTED_CAPABILITIES = {"salvage_cutter", "current_stabilizer", "shock_prod"}
+SUPPORTED_CAPABILITIES = {"salvage_cutter", "current_stabilizer", "shock_prod", "shock_prod_capacitor"}
 SUPPORTED_STRATEGIES = {"day_rotation_v1"}
 SUPPORTED_BUILD_PHASES = {"night_debrief"}
 MINIMUM_CANDIDATES = {"titanium_scrap": 4, "conductive_coil": 2}
@@ -26,6 +31,11 @@ EXPECTED_RECIPES = {
     "salvage_cutter_project": {"titanium_scrap": 2, "conductive_coil": 1},
     "current_stabilizer_project": {"titanium_scrap": 2, "conductive_coil": 1},
     "shock_prod_project": {"titanium_scrap": 2, "conductive_coil": 1},
+    "shock_prod_capacitor_project": {
+        "conductive_coil": 1,
+        "insulating_gel": 1,
+        "eel_electrocyte": 1,
+    },
 }
 PROJECT_RULES = {
     "salvage_cutter_project": {
@@ -42,13 +52,21 @@ PROJECT_RULES = {
         "capability_id": "shock_prod",
         "required_project_id": "current_stabilizer_project",
         "target_field": "target_hostile_id",
+        "hostile_required_capability_id": "shock_prod",
+    },
+    "shock_prod_capacitor_project": {
+        "capability_id": "shock_prod_capacitor",
+        "required_project_id": "shock_prod_project",
+        "target_field": "target_hostile_id",
+        "hostile_required_capability_id": "shock_prod",
+        "capability_effect": "interrupt_warning_lunge",
     },
 }
 MATERIAL_FIELDS = {"material_id", "material_quantity", "candidate_pool_id"}
 TOOL_FIELDS = {"required_tool_id", "tool_project_id"}
 PROJECT_FIELDS = {
     "id", "required_project_id", "required_discovery_id", "required_materials", "unlocks_capability_id",
-    "target_id", "target_gate_id", "target_hostile_id", "build_phase", "project_label", "completion_label",
+    "target_id", "target_gate_id", "target_hostile_id", "capability_effect", "build_phase", "project_label", "completion_label",
 }
 RUNTIME_FIELDS = {
     "active",
@@ -94,7 +112,10 @@ def _items(map_data: dict[str, Any], collection: str) -> list[dict[str, Any]]:
 def _reserved_ids(map_data: dict[str, Any]) -> set[str]:
     return {
         item["id"]
-        for collection in ("entities", "zones", "progression_containers", "moving_hazards", "hostile_encounters", "survey_targets")
+        for collection in (
+            "entities", "zones", "progression_containers", "moving_hazards", "hostile_encounters",
+            "survey_targets", "biological_resource_sources",
+        )
         for item in _items(map_data, collection)
         if isinstance(item.get("id"), str)
     }
@@ -241,6 +262,12 @@ def _validate_projects(
     referenced_hostiles: set[str] = set()
     projects: dict[str, dict[str, Any]] = {}
     project_order: list[str] = []
+    guaranteed_yields = selected_yields.copy()
+    for source in _items(map_data, "biological_resource_sources"):
+        material_id = source.get("material_id")
+        quantity = source.get("material_quantity")
+        if material_id in SUPPORTED_MATERIALS and _is_int(quantity) and int(quantity) > 0:
+            guaranteed_yields[str(material_id)] = guaranteed_yields.get(str(material_id), 0) + int(quantity)
     current_gates = {
         str(zone.get("id")): zone
         for zone in _items(map_data, "zones")
@@ -287,7 +314,7 @@ def _validate_projects(
         if project.get("build_phase") not in SUPPORTED_BUILD_PHASES:
             failures.append(f"{label} build_phase must be one of: {', '.join(sorted(SUPPORTED_BUILD_PHASES))}.")
         for label_field in ("project_label", "completion_label"):
-            if project_id == "shock_prod_project" and label_field not in project:
+            if project_id in {"shock_prod_project", "shock_prod_capacitor_project"} and label_field not in project:
                 failures.append(f"{label} requires {label_field}.")
             elif label_field in project:
                 value = project[label_field]
@@ -309,6 +336,9 @@ def _validate_projects(
                     failures.append(f"{label} required_project_id {authored_prerequisite!r} does not exist.")
                 elif prerequisite_index >= index:
                     failures.append(f"{label} required_project_id must reference an earlier project.")
+            expected_effect = rules.get("capability_effect")
+            if project.get("capability_effect") != expected_effect:
+                failures.append(f"{label} capability_effect must be {expected_effect!r}.")
 
         recipe = project.get("required_materials")
         expected_recipe = EXPECTED_RECIPES.get(str(project_id))
@@ -316,10 +346,10 @@ def _validate_projects(
             failures.append(f"{label} required_materials must be exactly {expected_recipe}.")
         else:
             for material_id, required in recipe.items():
-                if selected_yields.get(material_id, 0) < required:
+                if guaranteed_yields.get(material_id, 0) < required:
                     failures.append(
-                        f"{label} requires {required} {material_id}, but daily pool selection guarantees "
-                        f"only {selected_yields.get(material_id, 0)}."
+                        f"{label} requires {required} {material_id}, but daily sources guarantee "
+                        f"only {guaranteed_yields.get(material_id, 0)}."
                     )
         target_fields = [field for field in ("target_id", "target_gate_id", "target_hostile_id") if field in project]
         if len(target_fields) != 1:
@@ -347,9 +377,14 @@ def _validate_projects(
             elif target_field == "target_hostile_id" and isinstance(target_id, str):
                 referenced_hostiles.add(target_id)
                 hostile = hostile_encounters.get(target_id)
+                expected_hostile_capability = (
+                    rules.get("hostile_required_capability_id", project.get("unlocks_capability_id"))
+                    if rules is not None
+                    else project.get("unlocks_capability_id")
+                )
                 if hostile is None:
                     failures.append(f"{label} target_hostile_id {target_id!r} does not reference a hostile encounter.")
-                elif hostile.get("required_weapon_capability_id") != project.get("unlocks_capability_id"):
+                elif hostile.get("required_weapon_capability_id") != expected_hostile_capability:
                     failures.append(f"{label} target hostile does not link back to the project capability.")
         runtime_fields = RUNTIME_FIELDS & set(project)
         if runtime_fields:
