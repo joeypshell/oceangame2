@@ -337,6 +337,9 @@
 <polygon points="2224.0,1279.0 2241.0,1296.0 2224.0,1313.0 2207.0,1296.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
 <rect x="576" y="2304" width="64" height="64" rx="8" fill="#d68cff" stroke="#5b236b" stroke-width="5"/>
 <text x="584.0" y="2294.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">lower_loop_upgrade_chest</text>
+<rect x="2208" y="1312" width="64" height="64" rx="8" fill="#69f0dc" fill-opacity="0.28" stroke="#07584f" stroke-width="6"/>
+<circle cx="2240.0" cy="1344.0" r="14" fill="none" stroke="#69f0dc" stroke-width="6"/>
+<text x="2216.0" y="1302.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">upper_right_mineral_trace_survey</text>
 <polyline points="1744.0,2192.0 2064.0,2192.0" fill="none" stroke="#ff96b0" stroke-width="5" stroke-dasharray="12 8"/>
 <circle cx="1744.0" cy="2192.0" r="15" fill="#ff96b0" stroke="#721d35" stroke-width="5"/>
 <text x="1762.0" y="2174.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">deep_route_jellyfish_patrol</text>

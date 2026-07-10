@@ -16,8 +16,8 @@ The new record remains in top-level `survey_targets`:
 {
   "id": "upper_right_mineral_trace_survey",
   "target_type": "resource",
-  "x": 68,
-  "y": 38,
+  "x": 69,
+  "y": 41,
   "w": 2,
   "h": 2,
   "required_capability_id": "survey_scanner_1",
@@ -35,7 +35,7 @@ The new record remains in top-level `survey_targets`:
 }
 ```
 
-The rectangle is the locked target area for schema work and should be confirmed as open, reachable pocket space during authoring. If source validation proves a neighboring 2x2 open rectangle is required, #751 may adjust only the rectangle while preserving the target's pocket/gate relationship.
+The rectangle is confirmed as an open, reachable 2x2 area below the existing valuable cache and beyond the gate boundary. The earlier schema draft at `68,38` intersected solid terrain and was corrected through source inspection before generated-map authoring.
 
 Existing `target_type: "anomaly"` records keep their current required fields and session-lead behavior. New clue/finding/pool fields are required for `resource` and unsupported for `anomaly` in this pass.
 
