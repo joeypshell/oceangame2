@@ -396,13 +396,13 @@ The first supported current gate is intentionally narrow:
 - zone `id`: current gate id; must be unique and lower_snake_case.
 - `current_direction`: required `left`, `right`, `up`, or `down`; this is the direction the water pushes the diver.
 - `current_strength`: required positive number; prototype runtime treats it as a relative pushback strength.
-- `required_upgrade_id`: required lower_snake_case upgrade id that disables or overcomes the current.
+- Requirement: exactly one of lower_snake_case `required_upgrade_id` (session) or `required_capability_id` (durable profile).
 - `current_gate_label`: optional compact label for overlay/capture text. Use lower_snake_case or short display-safe text.
 - `route_context`: optional lower_snake_case route grouping for smoke/capture discovery.
 
 First runtime behavior should be soft pushback before the required upgrade, not hard no-entry and not an oxygen/time penalty. The marker rectangle must stay in bounds, contain only non-solid reachable water cells, and remain source-authored through the map generator/source path. It must not author collision, terrain edits, score, wallet, cargo, oxygen values, objective completion, upgrade ownership, save state, or destination loading.
 
-Recommended first placement is one current gate near the `production_slice_01` to `production_slice_04` connection or inside `production_slice_04`'s return route, where it can make the new connected route feel like a meaningful place without expanding the full map.
+Expansion 04 permits one stronger optional-pocket current whose authored strength defeats normal swim progress until `required_capability_id: current_stabilizer` is owned. This remains source-derived pushback rather than collision. Durable current gates must be referenced by one ordered material project whose `unlocks_capability_id` matches the gate requirement.
 
 Recommended metadata:
 
@@ -432,7 +432,7 @@ The first implementation target is one `upgrade_chest` in `production_slice_01` 
 Future darkness/light metadata is defined in `docs/current/DEPTH_DARKNESS_LIGHT_GATE_CONTRACT.md`. First-pass visibility zones should be visual-only marker zones, not terrain, collision, oxygen, pickup, or objective gates.
 `hazard` entities are static point hazards and require `kind`. Current valid-style examples are `mine`, `jellyfish`, and `stress_marker`.
 Moving hazards are defined separately in `docs/current/MOVING_HAZARD_DODGE_CONTRACT.md` using top-level `moving_hazards`; production previews may use `kind` to choose first-pass prop art, but hazard behavior is still source-driven.
-Non-salvage anomaly surveys use the top-level `survey_targets` contract in `docs/current/OCEANGAME_EXPANSION_01_SURVEY_SOURCE_CONTRACT.md`; survey metadata must not be placed on salvage entities or author runtime/profile state. Expansion 03 material candidates, pools, projects, and cutter targets follow `docs/current/OCEANGAME_EXPANSION_03_SOURCE_CONTRACT.md`.
+Non-salvage anomaly surveys use the top-level `survey_targets` contract in `docs/current/OCEANGAME_EXPANSION_01_SURVEY_SOURCE_CONTRACT.md`; survey metadata must not be placed on salvage entities or author runtime/profile state. Expansion 03 material candidates, pools, projects, and cutter targets follow `docs/current/OCEANGAME_EXPANSION_03_SOURCE_CONTRACT.md`; Expansion 04 ordered project prerequisites and durable current targets follow `docs/current/OCEANGAME_EXPANSION_04_SOURCE_CONTRACT.md`.
 
 ```json
 {

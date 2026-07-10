@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate source-authored Expansion 03 material pools, projects, and tool target."""
+"""Validate source-authored material pools, ordered projects, and capability targets."""
 
 from __future__ import annotations
 
@@ -13,13 +13,28 @@ from typing import Any
 
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 SUPPORTED_MATERIALS = {"titanium_scrap", "conductive_coil"}
-SUPPORTED_PROJECTS = {"salvage_cutter_project"}
+SUPPORTED_PROJECTS = {"salvage_cutter_project", "current_stabilizer_project"}
 SUPPORTED_DISCOVERIES = {"lower_right_anomaly_discovery"}
-SUPPORTED_TOOLS = {"salvage_cutter"}
+SUPPORTED_CAPABILITIES = {"salvage_cutter", "current_stabilizer"}
 SUPPORTED_STRATEGIES = {"day_rotation_v1"}
 SUPPORTED_BUILD_PHASES = {"night_debrief"}
 MINIMUM_CANDIDATES = {"titanium_scrap": 4, "conductive_coil": 2}
-EXPECTED_RECIPE = {"titanium_scrap": 2, "conductive_coil": 1}
+EXPECTED_RECIPES = {
+    "salvage_cutter_project": {"titanium_scrap": 2, "conductive_coil": 1},
+    "current_stabilizer_project": {"titanium_scrap": 2, "conductive_coil": 1},
+}
+PROJECT_RULES = {
+    "salvage_cutter_project": {
+        "capability_id": "salvage_cutter",
+        "required_project_id": None,
+        "target_field": "target_id",
+    },
+    "current_stabilizer_project": {
+        "capability_id": "current_stabilizer",
+        "required_project_id": "salvage_cutter_project",
+        "target_field": "target_gate_id",
+    },
+}
 MATERIAL_FIELDS = {"material_id", "material_quantity", "candidate_pool_id"}
 TOOL_FIELDS = {"required_tool_id", "tool_project_id"}
 RUNTIME_FIELDS = {
@@ -109,8 +124,8 @@ def _validate_entity_metadata(
             for field in TOOL_FIELDS:
                 if field not in entity:
                     failures.append(f"{label} cutter target is missing required field {field}.")
-            if entity.get("required_tool_id") not in SUPPORTED_TOOLS:
-                failures.append(f"{label} required_tool_id must be one of: {', '.join(sorted(SUPPORTED_TOOLS))}.")
+            if entity.get("required_tool_id") != "salvage_cutter":
+                failures.append(f"{label} required_tool_id must be salvage_cutter.")
             if entity.get("tool_project_id") not in SUPPORTED_PROJECTS:
                 failures.append(f"{label} tool_project_id must be one of: {', '.join(sorted(SUPPORTED_PROJECTS))}.")
             if entity.get("tier") != "valuable":
@@ -204,25 +219,25 @@ def _validate_projects(
     raw_projects = map_data.get("material_projects", [])
     if not isinstance(raw_projects, list):
         return ["material_projects must be a list when present."]
-    if pools or tool_entities:
-        if len(raw_projects) != 1:
-            failures.append("Expansion 03 material source requires exactly one material project.")
+    if (pools or tool_entities) and not raw_projects:
+        failures.append("Material source requires at least one material project.")
     seen_ids: set[str] = set()
     reserved = _reserved_ids(map_data) | set(pools)
     referenced_targets: set[str] = set()
+    referenced_gates: set[str] = set()
+    projects: dict[str, dict[str, Any]] = {}
+    project_order: list[str] = []
+    current_gates = {
+        str(zone.get("id")): zone
+        for zone in _items(map_data, "zones")
+        if zone.get("current_gate") is True and isinstance(zone.get("id"), str)
+    }
     for index, project in enumerate(raw_projects):
         if not isinstance(project, dict):
             failures.append(f"material_projects[{index}] must be an object.")
             continue
         label = str(project.get("id", f"material_projects[{index}]"))
-        for field in (
-            "id",
-            "required_discovery_id",
-            "required_materials",
-            "unlocks_capability_id",
-            "target_id",
-            "build_phase",
-        ):
+        for field in ("id", "required_discovery_id", "required_materials", "unlocks_capability_id", "build_phase"):
             if field not in project:
                 failures.append(f"{label} material project is missing required field {field}.")
         failures.extend(_validate_id(project.get("id"), label, "id"))
@@ -231,17 +246,45 @@ def _validate_projects(
             if project_id in seen_ids or project_id in reserved:
                 failures.append(f"Duplicate material project id {project_id!r}.")
             seen_ids.add(project_id)
+            projects[project_id] = project
+            project_order.append(project_id)
+
+    for index, project in enumerate(raw_projects):
+        if not isinstance(project, dict):
+            continue
+        label = str(project.get("id", f"material_projects[{index}]"))
+        project_id = project.get("id")
         if project_id not in SUPPORTED_PROJECTS:
             failures.append(f"{label} id must be one of: {', '.join(sorted(SUPPORTED_PROJECTS))}.")
         if project.get("required_discovery_id") not in SUPPORTED_DISCOVERIES:
             failures.append(f"{label} required_discovery_id must be one of: {', '.join(sorted(SUPPORTED_DISCOVERIES))}.")
-        if project.get("unlocks_capability_id") not in SUPPORTED_TOOLS:
-            failures.append(f"{label} unlocks_capability_id must be one of: {', '.join(sorted(SUPPORTED_TOOLS))}.")
+        if project.get("unlocks_capability_id") not in SUPPORTED_CAPABILITIES:
+            failures.append(
+                f"{label} unlocks_capability_id must be one of: {', '.join(sorted(SUPPORTED_CAPABILITIES))}."
+            )
         if project.get("build_phase") not in SUPPORTED_BUILD_PHASES:
             failures.append(f"{label} build_phase must be one of: {', '.join(sorted(SUPPORTED_BUILD_PHASES))}.")
+
+        rules = PROJECT_RULES.get(str(project_id))
+        if rules is not None:
+            if project.get("unlocks_capability_id") != rules["capability_id"]:
+                failures.append(f"{label} must unlock capability {rules['capability_id']}.")
+            expected_prerequisite = rules["required_project_id"]
+            authored_prerequisite = project.get("required_project_id")
+            if authored_prerequisite != expected_prerequisite:
+                failures.append(f"{label} required_project_id must be {expected_prerequisite!r}.")
+            if isinstance(authored_prerequisite, str):
+                failures.extend(_validate_id(authored_prerequisite, label, "required_project_id"))
+                prerequisite_index = project_order.index(authored_prerequisite) if authored_prerequisite in project_order else -1
+                if prerequisite_index < 0:
+                    failures.append(f"{label} required_project_id {authored_prerequisite!r} does not exist.")
+                elif prerequisite_index >= index:
+                    failures.append(f"{label} required_project_id must reference an earlier project.")
+
         recipe = project.get("required_materials")
-        if recipe != EXPECTED_RECIPE:
-            failures.append(f"{label} required_materials must be exactly {EXPECTED_RECIPE}.")
+        expected_recipe = EXPECTED_RECIPES.get(str(project_id))
+        if recipe != expected_recipe:
+            failures.append(f"{label} required_materials must be exactly {expected_recipe}.")
         else:
             for material_id, required in recipe.items():
                 if selected_yields.get(material_id, 0) < required:
@@ -249,20 +292,39 @@ def _validate_projects(
                         f"{label} requires {required} {material_id}, but daily pool selection guarantees "
                         f"only {selected_yields.get(material_id, 0)}."
                     )
-        target_id = project.get("target_id")
-        failures.extend(_validate_id(target_id, label, "target_id"))
-        if isinstance(target_id, str):
-            referenced_targets.add(target_id)
-            target = tool_entities.get(target_id)
-            if target is None:
-                failures.append(f"{label} target_id {target_id!r} does not reference a cutter salvage target.")
-            elif target.get("tool_project_id") != project_id or target.get("required_tool_id") != project.get("unlocks_capability_id"):
-                failures.append(f"{label} target {target_id!r} does not link back to the project/tool.")
+        target_fields = [field for field in ("target_id", "target_gate_id") if field in project]
+        if len(target_fields) != 1:
+            failures.append(f"{label} must define exactly one of target_gate_id or target_id.")
+        else:
+            target_field = target_fields[0]
+            target_id = project[target_field]
+            failures.extend(_validate_id(target_id, label, target_field))
+            if rules is not None and target_field != rules["target_field"]:
+                failures.append(f"{label} must use {rules['target_field']}.")
+            if target_field == "target_id" and isinstance(target_id, str):
+                referenced_targets.add(target_id)
+                target = tool_entities.get(target_id)
+                if target is None:
+                    failures.append(f"{label} target_id {target_id!r} does not reference a cutter salvage target.")
+                elif target.get("tool_project_id") != project_id or target.get("required_tool_id") != project.get("unlocks_capability_id"):
+                    failures.append(f"{label} target {target_id!r} does not link back to the project/tool.")
+            elif target_field == "target_gate_id" and isinstance(target_id, str):
+                referenced_gates.add(target_id)
+                gate = current_gates.get(target_id)
+                if gate is None:
+                    failures.append(f"{label} target_gate_id {target_id!r} does not reference a current gate.")
+                elif gate.get("required_capability_id") != project.get("unlocks_capability_id"):
+                    failures.append(f"{label} target gate does not link back to the project capability.")
         runtime_fields = RUNTIME_FIELDS & set(project)
         if runtime_fields:
             failures.append(f"{label} must not author runtime/profile state fields: {', '.join(sorted(runtime_fields))}.")
     for target_id in sorted(set(tool_entities) - referenced_targets):
         failures.append(f"Cutter target {target_id!r} is not referenced by a material project.")
+    durable_gates = {
+        gate_id for gate_id, gate in current_gates.items() if isinstance(gate.get("required_capability_id"), str)
+    }
+    for gate_id in sorted(durable_gates - referenced_gates):
+        failures.append(f"Durable current gate {gate_id!r} is not referenced by a material project.")
     return failures
 
 
