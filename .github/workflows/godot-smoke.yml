@@ -164,6 +164,7 @@ jobs:
           run_score_smoke --smoke-expedition-day expedition-day
           run_score_smoke --smoke-expansion-03-material-project expansion-03-material-project
           run_score_smoke --smoke-expansion-04-current-pocket expansion-04-current-pocket
+          run_score_smoke --smoke-expansion-05-practical-research expansion-05-practical-research
           run_score_smoke --smoke-current-gate current-gate
           run_score_smoke --smoke-upgrade-chest upgrade-chest
           run_score_smoke --smoke-moving-hazard moving-hazard
