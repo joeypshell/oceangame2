@@ -201,6 +201,14 @@ Capture the Expansion 06 combat-foundation review states:
 
 This writes locked warning, unarmed lunge/evade, and armed 1/3-health damage states at 1280x720 and 1920x1080 under `visual_captures/expansion_06_combat_foundation/`. The command verifies dimensions and rejects blank or black-region output; it does not accept or replace production-slice baselines.
 
+Capture the Expansion 07 biological-progression review states:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 40 --capture-expansion-07-biological-progression
+```
+
+This writes 50% passive-sample, 50% post-defeat harvest, and capacitor interrupt/recovery states at 1280x720 and 1920x1080 under `visual_captures/expansion_07_biological_progression/`. The command uses in-memory setup, verifies dimensions and nonblank output, and does not accept or replace production-slice baselines.
+
 Capture the focused Pass 18 progression upgrade view:
 
 ```powershell
