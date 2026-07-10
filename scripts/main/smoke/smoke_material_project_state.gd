@@ -65,12 +65,15 @@ func _run() -> void:
 	var repeated: Dictionary = runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
 	_expect(not bool(repeated.get("changed", true)) and repeated.get("reason") == "already_completed", "repeat build was not idempotent")
 	_expect(profile.material_inventory().is_empty(), "repeat build changed material inventory")
+	_test_shock_prod_project(profile, world)
 
 	var reloaded := ExpansionProfileState.new(TEST_PATH)
 	var reload_report: Dictionary = reloaded.load_profile()
 	_expect(reload_report.get("status") == "loaded", "completed project profile did not reload")
 	_expect(reloaded.has_completed_project(ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID), "profile reload lost completed project")
 	_expect(reloaded.has_capability(ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID), "profile reload lost cutter")
+	_expect(reloaded.has_completed_project(ExpansionProfileState.SHOCK_PROD_PROJECT_ID), "profile reload lost shock prod project")
+	_expect(reloaded.has_capability(ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID), "profile reload lost shock prod")
 	var day := ExpeditionDayState.new()
 	day.begin_next_day()
 	_expect(reloaded.has_capability(ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID), "next day lost durable cutter")
@@ -82,8 +85,35 @@ func _run() -> void:
 			push_error("Material project state smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Material project state smoke passed: project=%s recipe=2_titanium+1_coil knowledge_gate=true debrief_only=true exact_once=true cutter_persistent=true migration=v1_to_v3 inconsistent_pair_rejected=true." % ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID)
+	print("Material project state smoke passed: project=%s recipe=2_titanium+1_coil knowledge_gate=true debrief_only=true exact_once=true cutter_persistent=true shock_prod_non_enemy=true shock_prod_persistent=true migration=v1_to_v3 inconsistent_pair_rejected=true." % ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID)
 	quit(0)
+
+
+func _test_shock_prod_project(profile, world) -> void:
+	var stabilizer_runtime := MaterialProjectRuntime.new(profile)
+	stabilizer_runtime.on_map_loaded(world)
+	_expect(stabilizer_runtime.project_definition().get("id") == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID, "stabilizer was not the next ordered project")
+	profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 2, ExpansionProfileState.COIL_MATERIAL_ID: 1}, true)
+	var stabilizer_result: Dictionary = stabilizer_runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
+	_expect(bool(stabilizer_result.get("changed", false)), "stabilizer prerequisite project did not complete")
+	var direct_unlock: Dictionary = profile.unlock_capability(ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID, false)
+	_expect(direct_unlock.get("reason") == "project_transaction_required", "shock prod unlocked outside project transaction")
+	profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 2, ExpansionProfileState.COIL_MATERIAL_ID: 1}, true)
+	var shock_definition := {
+		"id": ExpansionProfileState.SHOCK_PROD_PROJECT_ID,
+		"required_project_id": ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID,
+		"required_discovery_id": ExpansionProfileState.ANOMALY_DISCOVERY_ID,
+		"required_materials": {ExpansionProfileState.TITANIUM_MATERIAL_ID: 2, ExpansionProfileState.COIL_MATERIAL_ID: 1},
+		"unlocks_capability_id": ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID,
+		"target_hostile_id": ExpansionProfileState.SHOCK_PROD_TARGET_ID,
+		"build_phase": "night_debrief",
+	}
+	var shock_result: Dictionary = profile.complete_material_project(shock_definition, true)
+	_expect(bool(shock_result.get("changed", false)), "non-enemy shock prod project did not complete")
+	_expect(profile.has_capability(ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID), "shock prod capability was not unlocked")
+	_expect(profile.material_inventory().is_empty(), "shock prod recipe did not consume exact materials")
+	var repeated: Dictionary = profile.complete_material_project(shock_definition, true)
+	_expect(repeated.get("reason") == "already_completed", "shock prod repeat build was not idempotent")
 
 
 func _test_inconsistent_profiles() -> void:
@@ -94,11 +124,28 @@ func _test_inconsistent_profiles() -> void:
 		_write_profile(payload)
 		var profile := ExpansionProfileState.new(TEST_PATH)
 		_expect(profile.load_profile().get("status") == "invalid_schema", "inconsistent cutter/project pair was accepted")
+	for payload in [
+		_profile_payload_v3([ExpansionProfileState.SHOCK_PROD_PROJECT_ID], [ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID]),
+		_profile_payload_v3([ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID, ExpansionProfileState.SHOCK_PROD_PROJECT_ID], [ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID]),
+	]:
+		_write_profile(payload)
+		var shock_profile := ExpansionProfileState.new(TEST_PATH)
+		_expect(shock_profile.load_profile().get("status") == "invalid_schema", "invalid shock prod project chain/pair was accepted")
 
 
 func _profile_payload(projects: Array, capabilities: Array) -> Dictionary:
 	return {
 		"schema_version": 2,
+		"completed_discoveries": [ExpansionProfileState.ANOMALY_DISCOVERY_ID],
+		"unlocked_capabilities": capabilities,
+		"material_inventory": {},
+		"completed_projects": projects,
+	}
+
+
+func _profile_payload_v3(projects: Array, capabilities: Array) -> Dictionary:
+	return {
+		"schema_version": 3,
 		"completed_discoveries": [ExpansionProfileState.ANOMALY_DISCOVERY_ID],
 		"unlocked_capabilities": capabilities,
 		"material_inventory": {},

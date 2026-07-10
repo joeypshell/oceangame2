@@ -108,6 +108,30 @@ def with_stabilizer_project(map_data: dict) -> dict:
     return map_data
 
 
+def with_shock_prod_project(map_data: dict) -> dict:
+    with_stabilizer_project(map_data)
+    map_data["hostile_encounters"] = [
+        {
+            "id": "deep_cache_territorial_eel",
+            "required_weapon_capability_id": "shock_prod",
+        }
+    ]
+    map_data["material_projects"].append(
+        {
+            "id": "shock_prod_project",
+            "required_project_id": "current_stabilizer_project",
+            "required_discovery_id": "lower_right_anomaly_discovery",
+            "required_materials": {"titanium_scrap": 2, "conductive_coil": 1},
+            "unlocks_capability_id": "shock_prod",
+            "target_hostile_id": "deep_cache_territorial_eel",
+            "build_phase": "night_debrief",
+            "project_label": "Shock prod project",
+            "completion_label": "Shock prod built",
+        }
+    )
+    return map_data
+
+
 class MaterialSourceValidationTests(unittest.TestCase):
     def test_valid_schema_and_reachability(self) -> None:
         map_data = valid_map()
@@ -117,6 +141,21 @@ class MaterialSourceValidationTests(unittest.TestCase):
 
     def test_accepts_ordered_stabilizer_project_and_durable_gate(self) -> None:
         self.assertEqual(validate_material_source_schema(with_stabilizer_project(valid_map())), [])
+
+    def test_accepts_non_enemy_shock_prod_recipe_and_hostile_link(self) -> None:
+        self.assertEqual(validate_material_source_schema(with_shock_prod_project(valid_map())), [])
+
+    def test_rejects_unlinked_or_mislabeled_shock_prod_project(self) -> None:
+        map_data = with_shock_prod_project(valid_map())
+        project = map_data["material_projects"][-1]
+        del project["completion_label"]
+        project["target_hostile_id"] = "missing_hostile"
+        project["weapon_damage"] = 99
+        failures = validate_material_source_schema(map_data)
+        self.assertTrue(any("requires completion_label" in failure for failure in failures), failures)
+        self.assertTrue(any("does not reference a hostile encounter" in failure for failure in failures), failures)
+        self.assertTrue(any("not referenced by a material project" in failure for failure in failures), failures)
+        self.assertTrue(any("unsupported project fields" in failure for failure in failures), failures)
 
     def test_rejects_invalid_and_duplicate_candidate_pools(self) -> None:
         map_data = valid_map()
@@ -202,7 +241,7 @@ class MaterialSourceValidationTests(unittest.TestCase):
         failures = validate_material_source_schema(map_data)
         for expected in (
             "required_project_id must reference an earlier project",
-            "must define exactly one of target_gate_id or target_id",
+            "must define exactly one supported project target field",
             "not referenced by a material project",
         ):
             self.assertTrue(any(expected in failure for failure in failures), (expected, failures))
