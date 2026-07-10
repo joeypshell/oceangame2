@@ -1,4 +1,4 @@
 interface:
   display_name: "Resolve GitHub Issues"
-  short_description: "Resolve selected repo issues"
-  default_prompt: "Use $resolve-github-issues to resolve the next selected GitHub issues in this repository."
+  short_description: "Resolve a frozen issue set through PRs"
+  default_prompt: "Use $resolve-github-issues to resolve the explicit selected GitHub issue set through one clean resolver worktree, per-issue feature branches, proportional validation, PRs, applicable CI, merge comments, and current-run branch cleanup without sweeping unrelated issues."

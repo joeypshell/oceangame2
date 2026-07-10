@@ -1,6 +1,6 @@
 ---
 name: parallel-issue-worker
-description: Work as one Codex agent in oceangame2's parallel GitHub issue workflow. Use when the user asks Codex to work in parallel, claim the next GitHub issue, avoid blocking another agent, use a dedicated Git worktree and branch, preserve a multi-agent queue, or continue active milestone work without draining a whole issue batch.
+description: Work as one Codex agent in oceangame2's optional parallel GitHub issue workflow. Use when the user explicitly resumes parallel work and asks an agent to claim one non-overlapping issue. Reuse one dedicated worktree for that agent, create a fresh branch per issue, use PR/CI/merge discipline, and never create a future milestone merely to keep agents busy.
 ---
 
 # Parallel Issue Worker
@@ -26,8 +26,8 @@ Before claiming, inspect open issues, active milestones, open PRs, and recent is
 - Prefer the active milestone selected by the user or latest current-state docs.
 - Treat `#52` and `#53` as deferred slice-03 polish unless the user explicitly selects slice-03 presentation work.
 - Count active unclaimed issues that can be worked independently.
-- If active unclaimed issues are fewer than the number of active agents, create or request the next scoped issue batch before claiming serial closeout work.
-- If the active milestone has only review, Web verification, or closeout issues left, seed the next milestone batch before one agent monopolizes the dependency chain.
+- If active unclaimed issues are fewer than the number of active agents, let excess agents stop and report that the remaining work is serial.
+- Do not seed the next milestone merely to prevent an agent from sitting idle.
 - If only large risky or overlapping issues remain, report that instead of waiting silently.
 
 Useful commands:
@@ -43,15 +43,15 @@ git status --short --branch
 ## Claim Flow
 
 1. Select one issue whose files do not overlap an active claim.
-2. Create a dedicated worktree from `origin/main`.
-3. Create a branch named `codex/<issue>-<short-slug>`.
+2. Create or reuse the clean dedicated worktree assigned to this agent.
+3. Fetch `origin` and create `codex/<issue>-<short-slug>` from current `origin/main`.
 4. Comment on the issue before editing.
 5. Keep all work scoped to that issue.
 
 Recommended worktree path:
 
 ```text
-C:\Users\pirat\OneDrive\Documents\oceangame2-<issue>-<short-slug>
+C:\Users\pirat\OneDrive\Documents\oceangame2-agent-<name>
 ```
 
 Claim comment template:
@@ -60,7 +60,7 @@ Claim comment template:
 Claimed by <agent name>.
 
 Branch: `codex/<issue>-<short-slug>`
-Worktree: `C:\Users\pirat\OneDrive\Documents\oceangame2-<issue>-<short-slug>`
+Worktree: `C:\Users\pirat\OneDrive\Documents\oceangame2-agent-<name>`
 Expected files:
 - `<path>`
 
@@ -102,7 +102,9 @@ For the claimed issue:
 6. Wait for required checks when practical.
 7. Merge only after the PR is ready.
 8. Close or let GitHub close the issue through the PR.
-9. Refresh the open issue queue and repeat only if the user asked this agent to continue.
+9. Comment with the merge SHA and verification result.
+10. Fetch/prune, detach the worktree at current `origin/main`, and delete only the merged issue branch.
+11. Refresh the selected milestone and repeat only if the user asked this agent to continue.
 
 Final response should report:
 
