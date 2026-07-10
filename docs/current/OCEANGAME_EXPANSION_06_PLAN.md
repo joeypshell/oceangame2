@@ -6,19 +6,21 @@ Issues: #768-#777
 
 Milestone: OceanGame Expansion 06 `Combat Foundation`
 
+Contracts: `docs/current/OCEANGAME_EXPANSION_06_STATE_CONTRACT.md`, `docs/current/OCEANGAME_EXPANSION_06_SOURCE_CONTRACT.md`
+
 ## Decision
 
 Expansion 06 will prove one bounded fight-or-evade encounter inside existing `production_slice_01` geography:
 
 ```text
-remember the upper-right stabilizer pocket
--> recognize a territorial eel warning before entering its lunge lane
--> evade along the pocket edge or retreat without needing a weapon
+remember the lower-loop-to-deep-cache route
+-> recognize a territorial eel warning before entering the deep-cache room
+-> evade along the room edge or retreat without needing a weapon
 -> gather existing titanium and conductive coil outside combat
 -> build one shock prod during the night debrief
 -> return through remembered geography
 -> fight at close range or continue to evade
--> reach the existing pocket payoffs under health, oxygen, and daylight pressure
+-> reach the existing deep-cache payoffs under health, oxygen, and daylight pressure
 ```
 
 Combat is an expedition cost and route choice, not a replacement for salvage, research, or exploration. Defeating the eel makes the territory safer for the rest of the current day but grants no score, cargo, materials, wallet value, discovery, or required progression.
@@ -29,18 +31,18 @@ Before entering, the player should understand: "Something territorial controls t
 
 After building the weapon, the player should understand: "I can spend time and health to clear this territory for today, but fighting is optional."
 
-The encounter reuses the existing upper-right current-pocket route because it already has a remembered gate, valuable cargo, and practical research. Terrain, collision, current-gate placement, survey placement, salvage placement, and the lower-edge evade corridor remain unchanged.
+The encounter reuses the existing deep-cache room because it already has valuable timed salvage, a researched conductive-coil habitat, and approach pressure. The existing jellyfish remains a separate dodge hazard before the room. Terrain, collision, hazard placement, salvage/material placement, and the lower-edge evade corridor remain unchanged.
 
 ## Locked Roles
 
 | Role | Id | Rule |
 | --- | --- | --- |
-| Existing physical gate | `upper_right_current_pocket_gate` | Keeps the encounter beyond the durable stabilizer return. |
-| New territory | `upper_right_hostile_territory` | Source-authored rectangle between the gate and existing pocket payoffs; leaves a legal lower-edge evade lane. |
-| New hostile | `upper_right_territorial_eel` | One `territorial_lunge` actor with a source-authored home point inside the territory. |
+| Existing approach pressure | `deep_route_jellyfish_patrol` | Remains a noncombat moving hazard before the selected room. |
+| New territory | `deep_cache_hostile_territory` | Source-authored rectangle around the deep-right room; leaves a legal lower-edge evade lane. |
+| New hostile | `deep_cache_territorial_eel` | One `territorial_lunge` actor with a source-authored home point inside the territory. |
 | New weapon capability | `shock_prod` | Durable profile capability; short-range attack only, with no ammo or durability. |
 | New project | `shock_prod_project` | Night-debrief project requiring `current_stabilizer_project`, two titanium scrap, and one conductive coil. |
-| Existing payoffs | `upper_right_current_cache`, `upper_right_mineral_trace_survey` | Remain cargo/research rewards; enemy defeat does not replace them. |
+| Existing payoffs | `salvage_deep_right_cache`, `material_coil_deep_cache` | Remain salvage/material rewards; enemy defeat does not replace them. |
 
 Compact source/presentation labels:
 
@@ -60,7 +62,7 @@ Compact source/presentation labels:
 - A lunge contact deals 1 health damage. The player receives 1.0 second of combat invulnerability after a hit.
 - The shock prod uses the `combat_attack` action, with Space as the keyboard default. It reaches 72 pixels in the diver's facing direction and has a 0.65-second cooldown.
 - Attacks outside range, during cooldown, or without the capability do not damage the eel.
-- The lower edge of the territory remains outside the eel's direct home-to-payoff line, so a patient unarmed player can read the cycle and cross without taking damage.
+- The lower edge of the room remains outside the direct home-to-cache line, so a patient unarmed player can read the cycle and cross without taking damage.
 - Oxygen and daylight continue normally during warnings, attacks, recovery, retreat, and combat.
 - No health pickups, armor, status effects, ammo, durability, targeting reticle, damage numbers, or broad combat HUD are added.
 
@@ -101,10 +103,10 @@ Exact timing may change only if deterministic smoke or dual-viewport review show
 
 This pass is valid because it adds:
 
-- curiosity: a readable living threat controls a known valuable pocket
+- curiosity: a readable living threat controls a known valuable deep-cache room
 - pressure: lunge timing competes with oxygen, daylight, health, and cargo risk
 - payoff: a night project changes a future response to that place
-- remembered-place progress: the player returns to an existing stabilizer-gated route
+- remembered-place progress: the player returns to the existing deep-cache route highlighted by practical research
 - route choice: evade remains viable while fighting can clear the day-local territory
 - another-day motivation: the project and return happen across the debrief boundary
 
