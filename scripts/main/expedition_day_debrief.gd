@@ -125,6 +125,7 @@ static func _resolve_nightfall(main) -> void:
 	main._moving_hazards.reset(main._world)
 	main._pry_salvage.reset()
 	main._timed_salvage.reset()
+	main._cutter_salvage.reset()
 	main._material_runtime.discard_unbanked("nightfall")
 	if not main._sortie_state.held_salvage_ids.is_empty():
 		main._world.restore_salvage(main._sortie_state.clear_held())

@@ -25,6 +25,7 @@ static func try_offload(main) -> bool:
 	if not final_dive_note.is_empty():
 		main._anomaly_survey.activate_lead()
 	main._expedition_day_state.record_bank(held_count, held_score)
+	main._cutter_salvage.mark_banked(held_ids)
 	main._sortie_state.clear_held()
 
 	if main._should_complete_run_after_banking():

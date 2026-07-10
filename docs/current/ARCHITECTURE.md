@@ -116,6 +116,7 @@ Additional current map sources:
   - Delegates the deterministic 300-second daylight countdown, exact-once nightfall transition, sortie count, day-bank totals, committed-during-day discovery ids, connector-preserved day context, end-day state, and deterministic material selection/depletion to `scripts/main/expedition_day_state.gd`.
   - Uses `scripts/main/material_candidate_selector.gd` for platform-stable authored-pool day rotation and `scripts/main/material_runtime_controller.gd` for typed held cargo, connector preservation, failure restoration, compact feedback, and canonical-boat deposit.
   - Uses `scripts/main/cargo_collection_controller.gd` to coordinate material pickup with the unchanged instant/timed/pry salvage and offload paths while applying one shared cargo capacity.
+  - Uses `scripts/main/cutter_salvage_controller.gd` for the locked, timed, cancel-on-leave sealed-wreck interaction; completion enters the existing valuable-salvage cargo and boat-banking path.
   - Uses `scripts/main/expedition_day_presentation.gd` for the fixed-width day/time/dive line, surface-versus-boat context, dusk/night warnings, and safe boat-only voluntary end request.
   - Uses `scripts/main/expedition_day_debrief.gd` for voluntary or forced night resolution, compact day totals, unbanked-state cleanup, the one-action salvage-cutter project, and the next-day reset. Forecasts remain outside the current runtime.
   - Uses `scripts/main/offload_controller.gd` so normal boat returns and nightfall-at-boat share one cargo, score, wallet, objective, and day-ledger commit path.
@@ -132,6 +133,7 @@ Additional current map sources:
   - Exposes `camera_tests` from the source map for repeatable visual captures.
   - Exposes runtime terrain/collision parity data, authored salvage/material/extraction positions, boat bounds, and source-derived non-solid top-row surface water.
   - Delegates selected material-candidate rendering, visibility, query, collection, and restoration to `scripts/world/greybox_material_candidates.gd`.
+  - Delegates the always-readable source-authored sealed-wreck node, query, collected visibility, and failure restoration to `scripts/world/greybox_tool_targets.gd`; durable cutter ownership remains profile state.
   - Is a documented cohesive-owner exception at about 1,000 lines. It already delegates focused renderer, query, survey, and material-candidate domains; retain its single map/node-state ownership unless a stable extraction reduces coupling without obscuring Godot lifecycle ordering.
 
 - `scripts/world/greybox_asset_lookup.gd`
