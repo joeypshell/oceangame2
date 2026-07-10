@@ -15,6 +15,7 @@ var banked_salvage := 0
 var banked_score := 0
 var committed_discovery_ids: Array[String] = []
 var end_reason := ""
+var notable_failure_reason := ""
 var current_map_id := ""
 var connector_transition_count := 0
 var nightfall_event_count := 0
@@ -34,6 +35,7 @@ func begin_day(next_day_number: int) -> void:
 	banked_score = 0
 	committed_discovery_ids = []
 	end_reason = ""
+	notable_failure_reason = ""
 	connector_transition_count = 0
 	nightfall_event_count = 0
 
@@ -69,6 +71,11 @@ func record_discovery(discovery_id: String) -> void:
 		committed_discovery_ids.append(discovery_id)
 
 
+func record_failure(reason: String) -> void:
+	if not reason.is_empty():
+		notable_failure_reason = reason
+
+
 func on_map_loaded(map_id: String) -> void:
 	current_map_id = map_id
 
@@ -102,6 +109,7 @@ func report() -> Dictionary:
 		"banked_score": banked_score,
 		"committed_discovery_ids": committed_discovery_ids.duplicate(),
 		"end_reason": end_reason,
+		"notable_failure_reason": notable_failure_reason,
 		"current_map_id": current_map_id,
 		"connector_transition_count": connector_transition_count,
 		"nightfall_event_count": nightfall_event_count,

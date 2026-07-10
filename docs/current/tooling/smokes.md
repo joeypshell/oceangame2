@@ -15,6 +15,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --script res://scripts/main/smoke/smoke_surface_boat_semantics.gd
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --script res://scripts/main/smoke/smoke_multiple_sorties.gd
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --script res://scripts/main/smoke/smoke_daylight_presentation.gd
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --script res://scripts/main/smoke/smoke_night_debrief.gd
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-loop
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-02-route
@@ -56,6 +57,8 @@ The standalone surface/boat smoke derives an open top-row water cell outside the
 The standalone multiple-sortie smoke banks two separate departures into one shared day, verifies refreshed sortie oxygen and persistent daylight/day totals, then confirms a failed third sortie restores only unbanked cargo without duplicating rewards.
 
 The standalone daylight-presentation smoke verifies the fixed-width day/time/dive line, surface-versus-boat action text, dusk/night warnings, and safe boat-only `N` end-day request.
+
+The standalone night-debrief smoke verifies voluntary and forced night resolution, day-summary totals, unbanked-state cleanup, next-day reset at the canonical boat, profile reload persistence, and the absence of unimplemented survival taxes or planning controls.
 
 The salvage-loop smoke check loads the default production slice, collects all authored salvage through the same runtime methods used in play, returns to extraction, confirms completion, resets, and exits.
 
