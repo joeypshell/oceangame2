@@ -17,6 +17,7 @@ const GreyboxPropRenderer := preload("res://scripts/world/greybox_prop_renderer.
 const GreyboxExtractionRenderer := preload("res://scripts/world/greybox_extraction_renderer.gd")
 const GreyboxRouteMarkerRenderer := preload("res://scripts/world/greybox_route_marker_renderer.gd")
 const GreyboxVisibilityZoneRenderer := preload("res://scripts/world/greybox_visibility_zone_renderer.gd")
+const GreyboxCurrentGateRenderer := preload("res://scripts/world/greybox_current_gate_renderer.gd")
 const GreyboxWorldQueries := preload("res://scripts/world/greybox_world_queries.gd")
 const GreyboxSurveyTargets := preload("res://scripts/world/greybox_survey_targets.gd")
 const GreyboxMaterialCandidates := preload("res://scripts/world/greybox_material_candidates.gd")
@@ -501,6 +502,7 @@ func _salvage_runtime_info(entity: Dictionary) -> Dictionary:
 		"tier": str(entity.get("tier", "common")),
 		"route_choice_id": str(entity.get("route_choice_id", "")),
 		"validation_route": str(entity.get("validation_route", "")),
+		"route_context": str(entity.get("route_context", "")),
 		"destination_payoff_id": str(entity.get("destination_payoff_id", "")),
 		"destination_payoff_label": str(entity.get("destination_payoff_label", "")),
 		"destination_payoff_connector_id": str(entity.get("destination_payoff_connector_id", "")),
@@ -728,6 +730,8 @@ func _build_zones(zones: Array) -> void:
 				_world_connector_zones.append(zone)
 			if bool(zone.get("current_gate", false)):
 				_current_gate_zones.append(zone)
+				if not str(zone.get("required_capability_id", "")).is_empty():
+					GreyboxCurrentGateRenderer.new().add_current_affordance(_marker_root, zone, tile_size)
 			if bool(zone.get("visibility_zone", false)):
 				_visibility_zones.append(zone)
 				var visibility_node: Polygon2D = _visibility_zone_renderer_helper().add_visibility_zone(_marker_root, zone, tile_size, show_debug_overlay, _debug_renderer_helper())
