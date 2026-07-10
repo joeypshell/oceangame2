@@ -6,7 +6,7 @@ This file is the compact handoff for new Codex or ChatGPT Project sessions. It c
 
 ## Current Goal
 
-`oceangame2` has a GO release candidate and five completed bounded Phase 2 expansions. OceanGame Expansion 01 proved:
+`oceangame2` has a GO release candidate and six completed bounded Phase 2 expansions. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -22,7 +22,9 @@ Expansion 03 added deterministic authored material candidates, typed cargo and c
 
 Expansion 04 added one visible source-authored current pocket, an exact durable stabilizer project/capability, unchanged remembered geography, and a valuable cargo-and-boat payoff. The pass closed with GO.
 
-Expansion 05 added one stabilizer-gated mineral survey, an exact boat-committed finding, and a source-derived next-day deep-cache coil habitat lead without increasing yield or adding exact-route handholding. The pass closed with GO. Expansion 06 Combat Foundation is active through issues #768-#777; biological resources, daily conditions, and authored regions remain later milestones.
+Expansion 05 added one stabilizer-gated mineral survey, an exact boat-committed finding, and a source-derived next-day deep-cache coil habitat lead without increasing yield or adding exact-route handholding. The pass closed with GO.
+
+Expansion 06 added separate player health, one source-authored territorial eel, a viable unarmed evade route, and one durable shock-prod project built from non-enemy materials. Defeating the eel clears its territory only for the current day and grants no cargo, score, material, or discovery reward. The pass closed with GO after integrated smoke, dual-viewport visual review, and exact-SHA Web verification. Expansion 07 biological resources and weapon progression is the next directional planning candidate; no implementation batch is active yet.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -47,17 +49,17 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Current docs index: `README.md`
 - Finished foundation roadmap: `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`
 - Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
-- Completed Expansion 05 contracts: `docs/current/OCEANGAME_EXPANSION_05_PLAN.md`, `docs/current/OCEANGAME_EXPANSION_05_STATE_CONTRACT.md`, `docs/current/OCEANGAME_EXPANSION_05_SOURCE_CONTRACT.md`
+- Completed Expansion 06 contracts: `docs/current/OCEANGAME_EXPANSION_06_PLAN.md`, `docs/current/OCEANGAME_EXPANSION_06_STATE_CONTRACT.md`, `docs/current/OCEANGAME_EXPANSION_06_SOURCE_CONTRACT.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest expansion decision: `docs/current/OCEANGAME_EXPANSION_05_CLOSEOUT.md`
-- Completed expansion plan: `docs/current/OCEANGAME_EXPANSION_05_PLAN.md`
-- Latest visual decision: `docs/current/OCEANGAME_EXPANSION_05_VISUAL_BASELINE_DECISION.md`
+- Latest expansion decision: `docs/current/OCEANGAME_EXPANSION_06_CLOSEOUT.md`
+- Completed expansion plan: `docs/current/OCEANGAME_EXPANSION_06_PLAN.md`
+- Latest visual decision: `docs/current/OCEANGAME_EXPANSION_06_VISUAL_BASELINE_DECISION.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: `docs/current/OCEANGAME_EXPANSION_05_WEB_PREVIEW_VERIFICATION.md`
+- Latest Web verification: `docs/current/OCEANGAME_EXPANSION_06_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -178,7 +180,8 @@ Current issue state as of 2026-07-10:
 - Closed: #706-#715 completed Expansion 03 with a GO.
 - Closed: #726-#735 completed Expansion 04 with a GO; #739 resolved a narrow validator blocker found during authoring.
 - Closed: #748-#757 completed Expansion 05 with a GO.
-- Active: #768-#777 are the scoped Expansion 06 Combat Foundation batch.
+- Closed: #768-#777 completed Expansion 06 with a GO.
+- Next: Expansion 07 remains directional until the next drift cycle locks its plan and creates a scoped batch.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
@@ -301,7 +304,7 @@ Current issue state as of 2026-07-10:
 - Salvage map data may include optional `tier` values. Missing tiers default conceptually to `common`; the current supported tiers are `common` and `valuable`. Runtime salvage score is tier-derived for now: `common` is worth 100 and `valuable` is worth 300, and pickup status feedback names the tier and score. Completed expeditions add a small runtime oxygen bonus of 1 point per remaining oxygen second; failed expeditions receive no oxygen bonus.
 - Held salvage capacity is 2 pickups by default and 3 after the session `Cargo +1` upgrade. Full cargo blocks additional collection without hiding or banking the blocked pickup, shows a compact return-to-extraction status prompt, and returning to extraction frees capacity.
 - Run completion shows a compact result panel that now orders objective/payoff text before route and score bookkeeping, then shows score, salvage score, oxygen bonus, current map session-best score, salvage banked, progression/wallet, oxygen, and retry prompt. Maps with `primary_route_objective_id` complete after the primary objective's required salvage is banked and returned to extraction; maps without it preserve all-salvage completion. Route-tagged production-slice completions summarize the strongest banked route as `Route: Deep route` or `Route: Safe route`; Pass 26 adds `Final dive signal locked` when the final-dive result is present, while failed/reset states suppress stale success text. Oxygen depletion shows the same result panel as a failed expedition with zero oxygen bonus and pauses the run until reset without overwriting session best. The panel stays hidden during normal exploration.
-- There is no health, inventory screen, upgrade economy, or real enemy behavior yet.
+- Combat is intentionally narrow: one 3-health territorial eel, one short-range shock prod, separate 3-point player health, and no enemy rewards. There is still no inventory screen, broad arsenal, armor, ammo, combat economy, or general enemy ecosystem.
 - Background art is still rough and secondary to proving terrain readability.
 - Normal preview uses approved current-prototype sprite assets for salvage and hazard props, with procedural fallback if a sprite cannot be loaded.
 - `valuable` salvage renders with a small extra gold cue over the existing salvage prop; `common` or omitted tiers keep the existing prop appearance.
@@ -315,7 +318,7 @@ Current issue state as of 2026-07-10:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star, `docs/current/OCEANGAME_EXPANSION_05_CLOSEOUT.md` as the latest completed decision, and `docs/current/OCEANGAME_EXPANSION_06_PLAN.md` as the active bounded contract. Expansions 01-05 are complete with GO decisions; #768-#777 are the only active expansion batch.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_06_CLOSEOUT.md` as the latest completed decision. Expansions 01-06 are complete with GO decisions. Expansion 07 is directional until the next drift cycle writes its bounded plan and creates the only active expansion batch.
 
 Accepted constraints for next work:
 
@@ -326,11 +329,12 @@ Accepted constraints for next work:
 - Preserve the Expansion 01 scanner, slice-02 anomaly, returned discovery, and source-authored slice-04/slice-02 travel.
 - Preserve daylight, surface oxygen, repeated sorties, boat return, night transition, seeded material ownership, canonical-boat commitment, and the durable cutter/stabilizer loops.
 - Preserve the completed mineral research, fresh-day selection, and broad habitat-lead behavior as the practical-knowledge regression surface.
+- Preserve separate health, the source-authored eel territory, viable unarmed evasion, non-circular shock-prod project, day-local defeat, and no-reward combat semantics.
 - Night consumes no Food, Water, Power, or other survival tax.
 - Do not expand the map broadly merely to host the first combat proof.
 - Keep future resource and encounter variation inside authored candidates; never reroll geography or required progression arbitrarily.
 - Do not add shortcut or fast-travel networks.
-- Plan one bounded hostile encounter, separate health state, and non-circular first weapon before changing source or runtime; biological resources wait for Expansion 07.
+- Plan one bounded biological-resource-to-equipment proof before changing source or runtime; do not broaden into a creature catalog, arsenal, ecosystem simulation, grind, or map-scale expansion.
 - Keep #52/#53 as optional post-baseline slice-03 improvement issues unless the selected goal shifts back to slice-03 presentation.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.

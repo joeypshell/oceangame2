@@ -2,7 +2,7 @@
 
 Date: 2026-07-10
 
-Status: Expansion 05 is complete with a GO. Expansion 06 Combat Foundation is active through issues #768-#777; Expansions 07-09 remain directional only.
+Status: Expansion 06 Combat Foundation is complete with a GO. Expansion 07 is the next directional planning candidate; Expansions 08-09 remain directional only.
 
 ## Decision
 
@@ -87,11 +87,11 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 05's issue-level batch #748-#757 is complete. Expansion 06 issues #768-#777 are the only committed implementation batch; Expansions 07-09 remain directional.
+Expansion 06's issue-level batch #768-#777 is complete. No implementation batch is active; the next drift cycle should make Expansion 07 committed only after its bounded plan is approved.
 
 ### Directional
 
-Expansion 06 is the committed active milestone. Expansions 07-09 remain directional; create each batch only after the prior closeout confirms readiness.
+Expansion 07 is the next directional milestone. Expansions 08-09 remain directional; create each batch only after the prior closeout confirms readiness.
 
 ### Vision
 
@@ -178,7 +178,7 @@ Exit question: does research make the player smarter and change the next expedit
 
 ### Expansion 06: Combat Foundation
 
-Status: Active; bounded plan and issues #768-#777 are the committed horizon.
+Status: Complete with GO.
 
 Goal: prove one readable underwater combat encounter.
 
@@ -195,6 +195,8 @@ Exit question: does combat add route pressure and preparation without taking ove
 
 ### Expansion 07: Biological Resources And Weapon Progression
 
+Status: Directional; next planning candidate, with no implementation batch yet.
+
 Goal: connect wildlife and enemies to useful progression.
 
 Prove:
@@ -210,6 +212,8 @@ Exit question: do creatures feel like part of the ocean's ecology and technology
 
 ### Expansion 08: Daily Conditions And Enemy Ecology
 
+Status: Directional.
+
 Goal: make tomorrow meaningfully different without erasing place memory.
 
 Prove:
@@ -223,6 +227,8 @@ Prove:
 Exit question: does the forecast create a reason to plan another day while the map remains learnable?
 
 ### Expansion 09: Regional World Growth
+
+Status: Directional.
 
 Goal: expand into a coherent authored ocean made of memorable regions.
 
