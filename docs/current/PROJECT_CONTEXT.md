@@ -49,6 +49,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - Completed Expansion 04 contracts: `docs/current/OCEANGAME_EXPANSION_04_PLAN.md`, `docs/current/OCEANGAME_EXPANSION_04_STATE_CONTRACT.md`, `docs/current/OCEANGAME_EXPANSION_04_SOURCE_CONTRACT.md`
 - Active Expansion 05 plan: `docs/current/OCEANGAME_EXPANSION_05_PLAN.md`
+- Active Expansion 05 contracts: `docs/current/OCEANGAME_EXPANSION_05_STATE_CONTRACT.md`, `docs/current/OCEANGAME_EXPANSION_05_SOURCE_CONTRACT.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
