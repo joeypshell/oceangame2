@@ -2069,7 +2069,7 @@ func _update_result_panel() -> void:
 
 	var oxygen_text := "Oxygen %ds" % int(ceil(_sortie_state.oxygen_seconds))
 	var failure_text := ""
-	if _sortie_state.failed and _sortie_state.failure_reason == "oxygen_failure":
+	if _sortie_state.failed and _sortie_state.failure_reason != "combat_defeat":
 		oxygen_text = "Oxygen depleted"
 	elif _sortie_state.failed and _sortie_state.failure_reason == "combat_defeat":
 		failure_text = "Combat defeat | %s" % _player_health.overlay_text()
