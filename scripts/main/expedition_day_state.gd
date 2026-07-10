@@ -3,6 +3,7 @@ extends RefCounted
 const DEFAULT_DAYLIGHT_SECONDS := 300.0
 const PHASE_ACTIVE := "active"
 const PHASE_NIGHTFALL_PENDING := "nightfall_pending"
+const PHASE_END_REQUESTED := "end_requested"
 const PHASE_DEBRIEF := "debrief"
 
 var day_number := 1
@@ -75,6 +76,14 @@ func on_map_loaded(map_id: String) -> void:
 func on_map_transition(destination_map_id: String) -> void:
 	connector_transition_count += 1
 	current_map_id = destination_map_id
+
+
+func request_end_day(reason: String) -> bool:
+	if phase != PHASE_ACTIVE:
+		return false
+	phase = PHASE_END_REQUESTED
+	end_reason = reason
+	return true
 
 
 func end_day(reason: String) -> void:
