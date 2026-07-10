@@ -23,9 +23,9 @@ func _run() -> void:
 	world.load_greybox()
 	var legacy_gate := _gate_by_id(world, LEGACY_GATE_ID)
 	var durable_gate := _gate_by_id(world, DURABLE_GATE_ID)
-	_expect(not legacy_gate.is_empty(), "legacy session gate missing")
+	_expect(not legacy_gate.is_empty(), "propulsion capability gate missing")
 	_expect(not durable_gate.is_empty(), "durable capability gate missing")
-	_expect(str(legacy_gate.get("required_upgrade_id", "")) == "propulsion_fins", "legacy gate requirement drifted")
+	_expect(str(legacy_gate.get("required_capability_id", "")) == ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID, "propulsion gate requirement drifted")
 	_expect(str(durable_gate.get("required_capability_id", "")) == ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID, "durable gate requirement drifted")
 
 	var profile := ExpansionProfileState.new(TEST_PATH)
@@ -46,6 +46,15 @@ func _run() -> void:
 	_expect(str(blocked.get("requirement_kind", "")) == "capability", "durable gate did not resolve capability owner")
 	_expect(player.global_position.x < durable_x_before - 1.0, "durable gate did not apply authored left pushback")
 	_expect(controller.current_prompt() == "Ripping current - need current stabilizer", "durable gate prompt drifted")
+	player.global_position = legacy_gate["center"]
+	var propulsion_blocked: Dictionary = controller.update(
+		world,
+		player,
+		Callable(self, "_has_no_upgrade"),
+		Callable(profile, "has_capability"),
+		0.0
+	)
+	_expect(bool(propulsion_blocked.get("blocked", false)), "propulsion gate allowed passage before fins project")
 
 	_build_projects(world, profile)
 	controller.reset()
@@ -62,22 +71,14 @@ func _run() -> void:
 	_expect(profile.has_capability(ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID), "controller reset removed durable capability")
 
 	player.global_position = legacy_gate["center"]
-	var legacy_blocked: Dictionary = controller.update(
+	var propulsion_unlocked: Dictionary = controller.update(
 		world,
 		player,
 		Callable(self, "_has_no_upgrade"),
 		Callable(profile, "has_capability"),
 		0.0
 	)
-	_expect(bool(legacy_blocked.get("blocked", false)), "stabilizer incorrectly unlocked legacy session gate")
-	var legacy_unlocked: Dictionary = controller.update(
-		world,
-		player,
-		Callable(self, "_has_propulsion_upgrade"),
-		Callable(profile, "has_capability"),
-		0.0
-	)
-	_expect(not bool(legacy_unlocked.get("blocked", true)), "propulsion fins did not unlock legacy gate")
+	_expect(not bool(propulsion_unlocked.get("blocked", true)), "recipe-built propulsion fins did not unlock gate")
 
 	var reloaded := ExpansionProfileState.new(TEST_PATH)
 	var reload_report: Dictionary = reloaded.load_profile()
@@ -100,19 +101,20 @@ func _run() -> void:
 			push_error("Current stabilizer gate state smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Current stabilizer gate state smoke passed: legacy=session_upgrade durable=profile_capability blocked_push=left reset_persistent=true reload_persistent=true.")
+	print("Current stabilizer gate state smoke passed: propulsion=profile_recipe current_stabilizer=profile_project blocked_push=left reset_persistent=true reload_persistent=true.")
 	quit(0)
 
 
 func _build_projects(world, profile) -> void:
 	profile.complete_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID, false)
 	profile.deposit_materials({
-		ExpansionProfileState.TITANIUM_MATERIAL_ID: 4,
+		ExpansionProfileState.TITANIUM_MATERIAL_ID: 6,
+		ExpansionProfileState.RUBBER_MATERIAL_ID: 1,
 		ExpansionProfileState.COIL_MATERIAL_ID: 2,
 	}, false)
 	for project in world.get_material_projects():
 		var project_id := str(project.get("id", ""))
-		if project_id not in [ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID]:
+		if project_id not in [ExpansionProfileState.PROPULSION_FINS_PROJECT_ID, ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID]:
 			continue
 		var result: Dictionary = profile.complete_material_project(project, true)
 		_expect(bool(result.get("changed", false)), "project %s did not complete: %s" % [project_id, str(result)])
@@ -127,10 +129,6 @@ func _gate_by_id(world, gate_id: String) -> Dictionary:
 
 func _has_no_upgrade(_upgrade_id: String) -> bool:
 	return false
-
-
-func _has_propulsion_upgrade(upgrade_id: String) -> bool:
-	return upgrade_id == "propulsion_fins"
 
 
 func _cleanup_profile() -> void:

@@ -41,7 +41,8 @@ func _smoke_pass_21_world_connector_and_quit() -> void:
 	_main._session_progression.purchase_oxygen_tank_upgrade()
 	_main._session_progression.purchase_cargo_capacity_upgrade()
 	_main._session_progression.purchase_light_upgrade()
-	_main._session_progression.purchase_propulsion_upgrade()
+	if not _prepare_propulsion_fins():
+		return
 	var wallet_before := _session_wallet()
 
 	_held_salvage = 1
@@ -54,7 +55,7 @@ func _smoke_pass_21_world_connector_and_quit() -> void:
 	_player.global_position = connector["center"]
 	_update_status_label()
 	var status_before := _status_text()
-	if status_before.find("E: Enter Lower-left loop") == -1:
+	if status_before.find("E: Enter Lower-left relay") == -1:
 		push_error("Pass 21 connector smoke prompt missing before transition: %s." % status_before)
 		get_tree().quit(1)
 		return
@@ -117,7 +118,7 @@ func _smoke_pass_21_world_connector_and_quit() -> void:
 
 	_update_status_label()
 	var final_status := _status_text().replace("\n", " | ")
-	if final_status.find("Arrived: Lower-left loop") == -1 or final_status.find("E: Enter Boat hub") == -1:
+	if final_status.find("Arrived: Lower-left relay") == -1 or final_status.find("E: Enter Boat hub") == -1:
 		push_error("Pass 21 connector smoke final status missing arrival/return prompt: %s." % final_status)
 		get_tree().quit(1)
 		return
@@ -156,11 +157,11 @@ func _smoke_pass_22_destination_payoff_and_quit() -> void:
 
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
-	_main._session_progression.record_banked_salvage(1200)
-	_main._session_progression.purchase_propulsion_upgrade()
+	if not _prepare_propulsion_fins():
+		return
 	_player.global_position = connector["center"]
 	_update_status_label()
-	if _status_text().find("E: Enter Lower-left loop") == -1:
+	if _status_text().find("E: Enter Lower-left relay") == -1:
 		push_error("Pass 22 destination payoff smoke prompt missing before transition: %s." % _status_text())
 		get_tree().quit(1)
 		return
@@ -266,8 +267,8 @@ func _smoke_pass_24_relay_follow_through_and_quit() -> void:
 
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
-	_main._session_progression.record_banked_salvage(1200)
-	_main._session_progression.purchase_propulsion_upgrade()
+	if not _prepare_propulsion_fins():
+		return
 	_player.global_position = connector["center"]
 	_update_status_label()
 	if not _main._try_world_connector_transition():

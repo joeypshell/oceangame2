@@ -12,8 +12,6 @@ const LIGHT_UPGRADE_ID := ProgressionContract.LIGHT_UPGRADE_ID
 const LIGHT_UPGRADE_COST := ProgressionContract.LIGHT_UPGRADE_COST
 const LIGHT_UPGRADE_RANGE_SCALE := 1.25
 const LIGHT_UPGRADE_ALPHA := 0.48
-const PROPULSION_UPGRADE_ID := ProgressionContract.PROPULSION_UPGRADE_ID
-const PROPULSION_UPGRADE_COST := ProgressionContract.PROPULSION_UPGRADE_COST
 
 var _wallet := 0
 var _total_payout_earned := 0
@@ -94,21 +92,6 @@ func purchase_light_upgrade() -> Dictionary:
 	return {"purchased": true, "wallet": _wallet, "upgrade_id": LIGHT_UPGRADE_ID}
 
 
-func purchase_propulsion_upgrade() -> Dictionary:
-	if has_propulsion_upgrade():
-		return {"purchased": false, "reason": "already_purchased", "wallet": _wallet}
-	if _wallet < PROPULSION_UPGRADE_COST:
-		return {
-			"purchased": false,
-			"reason": "insufficient_funds",
-			"wallet": _wallet,
-			"needed": PROPULSION_UPGRADE_COST - _wallet,
-		}
-	_wallet -= PROPULSION_UPGRADE_COST
-	_purchased_upgrades[PROPULSION_UPGRADE_ID] = true
-	return {"purchased": true, "wallet": _wallet, "upgrade_id": PROPULSION_UPGRADE_ID}
-
-
 func has_oxygen_tank_upgrade() -> bool:
 	return bool(_purchased_upgrades.get(OXYGEN_TANK_UPGRADE_ID, false))
 
@@ -119,10 +102,6 @@ func has_cargo_capacity_upgrade() -> bool:
 
 func has_light_upgrade() -> bool:
 	return bool(_purchased_upgrades.get(LIGHT_UPGRADE_ID, false))
-
-
-func has_propulsion_upgrade() -> bool:
-	return bool(_purchased_upgrades.get(PROPULSION_UPGRADE_ID, false))
 
 
 func oxygen_bonus_seconds() -> float:

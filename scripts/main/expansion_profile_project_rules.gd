@@ -1,0 +1,46 @@
+extends RefCounted
+
+const RULES := {
+	"propulsion_fins_project": {
+		"capability_id": "propulsion_fins",
+		"required_discovery_id": "",
+		"required_project_id": "",
+		"target_field": "target_gate_id",
+		"target_id": "lower_left_loop_current",
+		"required_materials": {"titanium_scrap": 2, "rubber_sheet": 1},
+	},
+	"salvage_cutter_project": {
+		"capability_id": "salvage_cutter",
+		"required_discovery_id": "lower_right_anomaly_discovery",
+		"required_project_id": "",
+		"target_field": "target_id",
+		"target_id": "salvage_sealed_wreck_cache",
+		"required_materials": {"titanium_scrap": 2, "conductive_coil": 1},
+	},
+	"current_stabilizer_project": {
+		"capability_id": "current_stabilizer",
+		"required_discovery_id": "lower_right_anomaly_discovery",
+		"required_project_id": "salvage_cutter_project",
+		"target_field": "target_gate_id",
+		"target_id": "upper_right_current_pocket_gate",
+		"required_materials": {"titanium_scrap": 2, "conductive_coil": 1},
+	},
+	"shock_prod_project": {
+		"capability_id": "shock_prod",
+		"required_discovery_id": "lower_right_anomaly_discovery",
+		"required_project_id": "current_stabilizer_project",
+		"target_field": "target_hostile_id",
+		"target_id": "deep_cache_territorial_eel",
+		"required_materials": {"titanium_scrap": 2, "conductive_coil": 1},
+		"capability_effect": "",
+	},
+	"shock_prod_capacitor_project": {
+		"capability_id": "shock_prod_capacitor",
+		"required_discovery_id": "lower_right_anomaly_discovery",
+		"required_project_id": "shock_prod_project",
+		"target_field": "target_hostile_id",
+		"target_id": "deep_cache_territorial_eel",
+		"required_materials": {"conductive_coil": 1, "insulating_gel": 1, "eel_electrocyte": 1},
+		"capability_effect": "interrupt_warning_lunge",
+	},
+}

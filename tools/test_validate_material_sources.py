@@ -108,6 +108,50 @@ def with_stabilizer_project(map_data: dict) -> dict:
     return map_data
 
 
+def with_propulsion_project(map_data: dict) -> dict:
+    rubber_ids = ["material_rubber_entry", "material_rubber_lower_loop"]
+    map_data["entities"].extend(
+        material_entity(entity_id, "rubber_sheet", "rubber_sheet_pool", index + 9)
+        for index, entity_id in enumerate(rubber_ids)
+    )
+    map_data["material_candidate_pools"].append(
+        {
+            "id": "rubber_sheet_pool",
+            "material_id": "rubber_sheet",
+            "selection_strategy": "day_rotation_v1",
+            "select_count": 1,
+            "candidate_ids": rubber_ids,
+        }
+    )
+    map_data["zones"].append(
+        {
+            "id": "lower_left_loop_current",
+            "type": "marker",
+            "x": 9,
+            "y": 3,
+            "w": 2,
+            "h": 2,
+            "current_gate": True,
+            "current_direction": "right",
+            "current_strength": 2.2,
+            "required_capability_id": "propulsion_fins",
+        }
+    )
+    map_data["material_projects"].insert(
+        0,
+        {
+            "id": "propulsion_fins_project",
+            "required_materials": {"titanium_scrap": 2, "rubber_sheet": 1},
+            "unlocks_capability_id": "propulsion_fins",
+            "target_gate_id": "lower_left_loop_current",
+            "build_phase": "night_debrief",
+            "project_label": "Propulsion fins project",
+            "completion_label": "Propulsion fins built",
+        },
+    )
+    return map_data
+
+
 def with_shock_prod_project(map_data: dict) -> dict:
     with_stabilizer_project(map_data)
     map_data["hostile_encounters"] = [
@@ -164,6 +208,9 @@ class MaterialSourceValidationTests(unittest.TestCase):
 
     def test_accepts_ordered_stabilizer_project_and_durable_gate(self) -> None:
         self.assertEqual(validate_material_source_schema(with_stabilizer_project(valid_map())), [])
+
+    def test_accepts_known_recipe_propulsion_project_without_score_or_discovery(self) -> None:
+        self.assertEqual(validate_material_source_schema(with_propulsion_project(valid_map())), [])
 
     def test_accepts_non_enemy_shock_prod_recipe_and_hostile_link(self) -> None:
         self.assertEqual(validate_material_source_schema(with_shock_prod_project(valid_map())), [])
@@ -234,7 +281,7 @@ class MaterialSourceValidationTests(unittest.TestCase):
         target["tool_project_id"] = "unknown_project"
         failures = validate_material_source_schema(map_data)
         for expected in (
-            "required_discovery_id must be one of",
+            "required_discovery_id must be",
             "required_materials must be exactly",
             "unlocks_capability_id must be one of",
             "cutter target must use tier 'valuable'",

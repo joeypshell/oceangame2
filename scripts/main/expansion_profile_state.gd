@@ -1,10 +1,14 @@
 extends RefCounted
 
 const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
+const ExpansionProfileProjectRules := preload("res://scripts/main/expansion_profile_project_rules.gd")
 const SCHEMA_VERSION := 3
 const MATERIAL_SCHEMA_VERSION := 2
 const LEGACY_SCHEMA_VERSION := 1
 const SURVEY_SCANNER_CAPABILITY_ID := ProgressionContract.SCANNER_CAPABILITY_ID
+const PROPULSION_FINS_CAPABILITY_ID := "propulsion_fins"
+const PROPULSION_FINS_PROJECT_ID := "propulsion_fins_project"
+const PROPULSION_FINS_GATE_ID := "lower_left_loop_current"
 const SALVAGE_CUTTER_CAPABILITY_ID := "salvage_cutter"
 const ANOMALY_DISCOVERY_ID := "lower_right_anomaly_discovery"
 const MINERAL_TRACE_RESEARCH_ID := "upper_right_mineral_trace_research"
@@ -19,6 +23,7 @@ const SHOCK_PROD_TARGET_ID := "deep_cache_territorial_eel"
 const SHOCK_PROD_CAPACITOR_CAPABILITY_ID := "shock_prod_capacitor"
 const SHOCK_PROD_CAPACITOR_PROJECT_ID := "shock_prod_capacitor_project"
 const TITANIUM_MATERIAL_ID := "titanium_scrap"
+const RUBBER_MATERIAL_ID := "rubber_sheet"
 const COIL_MATERIAL_ID := "conductive_coil"
 const INSULATING_GEL_MATERIAL_ID := "insulating_gel"
 const EEL_ELECTROCYTE_MATERIAL_ID := "eel_electrocyte"
@@ -33,43 +38,12 @@ const PROFILE_KEYS := {
 }
 const LEGACY_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true}
 const MATERIAL_SCHEMA_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true}
-const SUPPORTED_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true, CURRENT_STABILIZER_CAPABILITY_ID: true, SHOCK_PROD_CAPABILITY_ID: true, SHOCK_PROD_CAPACITOR_CAPABILITY_ID: true}
+const SUPPORTED_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, PROPULSION_FINS_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true, CURRENT_STABILIZER_CAPABILITY_ID: true, SHOCK_PROD_CAPABILITY_ID: true, SHOCK_PROD_CAPACITOR_CAPABILITY_ID: true}
 const SUPPORTED_DISCOVERY_IDS := {ANOMALY_DISCOVERY_ID: true, MINERAL_TRACE_RESEARCH_ID: true}
-const SUPPORTED_MATERIAL_IDS := {TITANIUM_MATERIAL_ID: true, COIL_MATERIAL_ID: true, INSULATING_GEL_MATERIAL_ID: true, EEL_ELECTROCYTE_MATERIAL_ID: true}
+const SUPPORTED_MATERIAL_IDS := {TITANIUM_MATERIAL_ID: true, RUBBER_MATERIAL_ID: true, COIL_MATERIAL_ID: true, INSULATING_GEL_MATERIAL_ID: true, EEL_ELECTROCYTE_MATERIAL_ID: true}
 const MATERIAL_SCHEMA_PROJECT_IDS := {SALVAGE_CUTTER_PROJECT_ID: true}
-const SUPPORTED_PROJECT_IDS := {SALVAGE_CUTTER_PROJECT_ID: true, CURRENT_STABILIZER_PROJECT_ID: true, SHOCK_PROD_PROJECT_ID: true, SHOCK_PROD_CAPACITOR_PROJECT_ID: true}
-const PROJECT_RULES := {
-    SALVAGE_CUTTER_PROJECT_ID: {
-        "capability_id": SALVAGE_CUTTER_CAPABILITY_ID,
-        "required_project_id": "",
-        "target_field": "target_id",
-        "target_id": SALVAGE_CUTTER_TARGET_ID,
-        "required_materials": {TITANIUM_MATERIAL_ID: 2, COIL_MATERIAL_ID: 1},
-    },
-    CURRENT_STABILIZER_PROJECT_ID: {
-        "capability_id": CURRENT_STABILIZER_CAPABILITY_ID,
-        "required_project_id": SALVAGE_CUTTER_PROJECT_ID,
-        "target_field": "target_gate_id",
-        "target_id": CURRENT_STABILIZER_GATE_ID,
-        "required_materials": {TITANIUM_MATERIAL_ID: 2, COIL_MATERIAL_ID: 1},
-    },
-    SHOCK_PROD_PROJECT_ID: {
-        "capability_id": SHOCK_PROD_CAPABILITY_ID,
-        "required_project_id": CURRENT_STABILIZER_PROJECT_ID,
-        "target_field": "target_hostile_id",
-        "target_id": SHOCK_PROD_TARGET_ID,
-        "required_materials": {TITANIUM_MATERIAL_ID: 2, COIL_MATERIAL_ID: 1},
-        "capability_effect": "",
-    },
-    SHOCK_PROD_CAPACITOR_PROJECT_ID: {
-        "capability_id": SHOCK_PROD_CAPACITOR_CAPABILITY_ID,
-        "required_project_id": SHOCK_PROD_PROJECT_ID,
-        "target_field": "target_hostile_id",
-        "target_id": SHOCK_PROD_TARGET_ID,
-        "required_materials": {COIL_MATERIAL_ID: 1, INSULATING_GEL_MATERIAL_ID: 1, EEL_ELECTROCYTE_MATERIAL_ID: 1},
-        "capability_effect": "interrupt_warning_lunge",
-    },
-}
+const SUPPORTED_PROJECT_IDS := {PROPULSION_FINS_PROJECT_ID: true, SALVAGE_CUTTER_PROJECT_ID: true, CURRENT_STABILIZER_PROJECT_ID: true, SHOCK_PROD_PROJECT_ID: true, SHOCK_PROD_CAPACITOR_PROJECT_ID: true}
+const PROJECT_RULES := ExpansionProfileProjectRules.RULES
 
 var _storage_path: String
 var _persistence_enabled: bool
@@ -139,7 +113,7 @@ func unlock_capability(capability_id: String, persist := true) -> Dictionary:
 		return {"changed": false, "reason": "unsupported_capability", "capability_id": capability_id}
 	if has_capability(capability_id):
 		return {"changed": false, "reason": "already_unlocked", "capability_id": capability_id}
-	if capability_id in [SALVAGE_CUTTER_CAPABILITY_ID, CURRENT_STABILIZER_CAPABILITY_ID, SHOCK_PROD_CAPABILITY_ID, SHOCK_PROD_CAPACITOR_CAPABILITY_ID]:
+	if capability_id in [PROPULSION_FINS_CAPABILITY_ID, SALVAGE_CUTTER_CAPABILITY_ID, CURRENT_STABILIZER_CAPABILITY_ID, SHOCK_PROD_CAPABILITY_ID, SHOCK_PROD_CAPACITOR_CAPABILITY_ID]:
 		return {"changed": false, "reason": "project_transaction_required", "capability_id": capability_id}
 	_unlocked_capabilities[capability_id] = true
 	if persist and not save_profile():
@@ -185,7 +159,8 @@ func complete_material_project(project_definition: Dictionary, persist := true) 
 		if project_complete and capability_unlocked:
 			return {"changed": false, "reason": "already_completed", "project_id": project_id, "capability_id": capability_id}
 		return {"changed": false, "reason": "inconsistent_profile", "project_id": project_id, "capability_id": capability_id}
-	if not has_completed_discovery(str(project_definition["required_discovery_id"])):
+	var required_discovery_id := str(project_definition.get("required_discovery_id", ""))
+	if not required_discovery_id.is_empty() and not has_completed_discovery(required_discovery_id):
 		return {"changed": false, "reason": "missing_discovery", "project_id": project_id}
 	var required_project_id := str(project_definition.get("required_project_id", ""))
 	if not required_project_id.is_empty() and not has_completed_project(required_project_id):
@@ -382,7 +357,7 @@ func _validate_material_project_definition(project_definition: Dictionary) -> Ar
 	if rules.is_empty():
 		failures.append("unsupported project id")
 		return failures
-	if str(project_definition.get("required_discovery_id", "")) != ANOMALY_DISCOVERY_ID:
+	if str(project_definition.get("required_discovery_id", "")) != str(rules.get("required_discovery_id", "")):
 		failures.append("unsupported project discovery")
 	if str(project_definition.get("unlocks_capability_id", "")) != str(rules["capability_id"]):
 		failures.append("unsupported project capability")

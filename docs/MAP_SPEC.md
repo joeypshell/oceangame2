@@ -129,10 +129,8 @@ Playable salvage may also include optional interaction metadata. If omitted, run
 - `interaction_seconds`: required for `timed_salvage` and `pry_salvage`; must be a positive number of seconds.
 - `pry_stages`: required for `pry_salvage`; must be a positive integer count of completed pry stages required before collection.
 - `interaction_label`: optional compact label for overlay/capture text. Use lower_snake_case or short display-safe text.
-- `required_capability_id`: optional durable capability required before interaction may begin.
-- `guarded_by_hostile_id`: optional hostile that must be defeated for the current day before collection; requires `required_capability_id` matching that hostile's weapon counter.
-- `locked_label`: required compact feedback while the capability is missing.
-- `guard_active_label`: required compact feedback while the capability is owned but the guard remains active.
+- `required_capability_id`: optional durable capability required before interaction may begin; use only for an explicit capability lock.
+- `guarded_by_hostile_id`: optional behavioral encounter link. It does not block collection by itself; authored hostile contact may interrupt normal progress.
 
 Interaction metadata is intentionally narrow: an interacted pickup remains a normal salvage entity for placement, reachability, cargo, score, banking, route metadata, hazard reset, oxygen failure, and primary-objective rules. The only source-authored difference is that runtime may require the player to complete the authored interaction before the pickup enters held cargo. Interaction metadata is supported on salvage entities only.
 
@@ -149,10 +147,7 @@ A `timed_salvage` pickup uses `interaction_seconds` as one continuous in-range d
   "interaction": "timed_salvage",
   "interaction_seconds": 2.5,
   "interaction_label": "deep cache",
-  "required_capability_id": "shock_prod",
-  "guarded_by_hostile_id": "deep_cache_territorial_eel",
-  "locked_label": "Shock prod required - return after building it",
-  "guard_active_label": "Shock prod ready - defeat eel to claim cache"
+  "guarded_by_hostile_id": "deep_cache_territorial_eel"
 }
 ```
 
@@ -394,7 +389,7 @@ The first supported current gate is intentionally narrow:
 - zone `id`: current gate id; must be unique and lower_snake_case.
 - `current_direction`: required `left`, `right`, `up`, or `down`; this is the direction the water pushes the diver.
 - `current_strength`: required positive number; prototype runtime treats it as a relative pushback strength.
-- Requirement: exactly one of lower_snake_case `required_upgrade_id` (session) or `required_capability_id` (durable profile).
+- Requirement: exactly one of lower_snake_case `required_upgrade_id` (legacy session) or `required_capability_id` (durable profile).
 - `current_gate_label`: optional compact label for overlay/capture text. Use lower_snake_case or short display-safe text.
 - `route_context`: optional lower_snake_case route grouping for smoke/capture discovery.
 
@@ -415,7 +410,7 @@ Recommended metadata:
   "current_gate": true,
   "current_direction": "left",
   "current_strength": 1.0,
-  "required_upgrade_id": "propulsion_fins",
+  "required_capability_id": "propulsion_fins",
   "current_gate_label": "Strong current",
   "route_context": "lower_loop_return"
 }

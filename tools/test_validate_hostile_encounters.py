@@ -47,10 +47,7 @@ def valid_map() -> dict:
                 "y": 6,
                 "kind": "relic",
                 "interaction": "timed_salvage",
-                "required_capability_id": "shock_prod",
                 "guarded_by_hostile_id": "deep_cache_territorial_eel",
-                "locked_label": "Shock prod required - return after building it",
-                "guard_active_label": "Shock prod ready - defeat eel to claim cache",
             },
         ],
         "zones": [],
@@ -118,11 +115,11 @@ class HostileEncounterValidationTests(unittest.TestCase):
 
         mismatched = valid_map()
         target = mismatched["entities"][1]
-        target["required_capability_id"] = "salvage_cutter"
+        target["required_capability_id"] = "shock_prod"
         target["guarded_by_hostile_id"] = "other_eel"
         target["x"] = 11
         failures = validate_hostile_encounter_schema(mismatched)
-        for expected in ("required_capability_id", "guarded_by_hostile_id", "inside the guarding"):
+        for expected in ("hard collection-lock fields", "guarded_by_hostile_id", "inside the guarding"):
             self.assertTrue(any(expected in failure for failure in failures), (expected, failures))
 
         circular = valid_map()

@@ -228,6 +228,20 @@ func _prepare_guarded_salvage_access(salvage: Dictionary) -> bool:
 	return true
 
 
+func _prepare_profile_capability(capability_id: String) -> bool:
+	var result: Dictionary = ReviewProgressionFixture.complete_capability(_main, capability_id)
+	if not bool(result.get("ready", false)):
+		push_error("Could not prepare capability fixture %s: %s" % [capability_id, str(result)])
+		return false
+	if _main._material_project != null:
+		_main._material_project.on_map_loaded(_world)
+	return true
+
+
+func _prepare_propulsion_fins() -> bool:
+	return _prepare_profile_capability("propulsion_fins")
+
+
 func _reset_run() -> void:
 	_main._reset_run()
 

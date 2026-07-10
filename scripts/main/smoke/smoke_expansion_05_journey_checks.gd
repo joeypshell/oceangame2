@@ -19,7 +19,6 @@ const COIL_POOL_ID := "conductive_coil_pool"
 const RESEARCHED_COIL_ID := "material_coil_deep_cache"
 const NORMAL_DAY_THREE_COIL_ID := "material_coil_deep_approach"
 const RESEARCH_LEAD := "Research lead | Coils near deep-cache machinery"
-const PROPULSION_SEED_WALLET := 1000
 
 
 func _smoke_expansion_05_practical_research_and_quit() -> void:
@@ -83,9 +82,8 @@ func _smoke_expansion_05_practical_research_and_quit() -> void:
 	if not _require(_held_salvage == 0 and _main._material_runtime.held_count() == 0 and _banked_score == 0, "survey changed cargo or score"):
 		return
 
-	_main._session_progression.grant_wallet_reward(PROPULSION_SEED_WALLET)
 	_player.global_position = _world.get_extraction_center()
-	if not _require(_main._try_purchase_propulsion_upgrade(), "connector fixture could not unlock propulsion"):
+	if not _require(_prepare_propulsion_fins(), "connector fixture could not unlock propulsion"):
 		return
 	if not _transition(OUTBOUND_CONNECTOR_ID, RELAY_MAP_ID):
 		return
@@ -164,7 +162,13 @@ func _smoke_expansion_05_practical_research_and_quit() -> void:
 		"fresh-day practical research did not change coil planning"
 	):
 		return
-	if not _require(researched_ids.size() == 3 and _material_count(researched_ids, ExpansionProfileState.TITANIUM_MATERIAL_ID) == 2 and _material_count(researched_ids, ExpansionProfileState.COIL_MATERIAL_ID) == 1, "research changed Ti2+Coil1 yield"):
+	if not _require(
+		researched_ids.size() == 4
+		and _material_count(researched_ids, ExpansionProfileState.TITANIUM_MATERIAL_ID) == 2
+		and _material_count(researched_ids, ExpansionProfileState.RUBBER_MATERIAL_ID) == 1
+		and _material_count(researched_ids, ExpansionProfileState.COIL_MATERIAL_ID) == 1,
+		"research changed Ti2+Rubber1+Coil1 yield"
+	):
 		return
 	if not _collect_and_bank_materials(researched_ids, profile):
 		return
@@ -172,7 +176,7 @@ func _smoke_expansion_05_practical_research_and_quit() -> void:
 	var final_day: int = _main._expedition_day_state.day_number
 	var final_profile: Dictionary = profile.report()
 	_cleanup_profile()
-	print("Expansion 05 practical-research smoke passed: target=%s discovery=%s gate=%s scanner=true blocked_push=%.1f connectors=%s>%s day=2 before=%s same_day=%s normal_day3=%s researched_day3=%s pool=%s pending=false committed=true oxygen=%.1f->%.1f cargo=0 banked=Ti2+Coil1 lead=\"%s\" next_day=%d reload=%s profile=%s." % [
+	print("Expansion 05 practical-research smoke passed: target=%s discovery=%s gate=%s scanner=true blocked_push=%.1f connectors=%s>%s day=2 before=%s same_day=%s normal_day3=%s researched_day3=%s pool=%s pending=false committed=true oxygen=%.1f->%.1f cargo=0 banked=Ti2+Rubber1+Coil1 lead=\"%s\" next_day=%d reload=%s profile=%s." % [
 		TARGET_ID,
 		DISCOVERY_ID,
 		GATE_ID,
@@ -254,6 +258,7 @@ func _collect_and_bank_materials(active_ids: Array, profile) -> bool:
 		return false
 	return _require(
 		profile.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID) == 2
+		and profile.material_quantity(ExpansionProfileState.RUBBER_MATERIAL_ID) == 1
 		and profile.material_quantity(ExpansionProfileState.COIL_MATERIAL_ID) == 1,
 		"boat did not bank unchanged material yield"
 	)

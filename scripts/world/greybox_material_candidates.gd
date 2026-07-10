@@ -2,6 +2,7 @@ extends RefCounted
 
 const MATERIAL_COLORS := {
 	"titanium_scrap": Color(0.68, 0.90, 0.94, 1.0),
+	"rubber_sheet": Color(0.96, 0.76, 0.36, 1.0),
 	"conductive_coil": Color(0.38, 0.96, 0.78, 1.0),
 }
 

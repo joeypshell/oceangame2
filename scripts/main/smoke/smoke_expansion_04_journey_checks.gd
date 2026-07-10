@@ -26,6 +26,8 @@ func _smoke_expansion_04_current_pocket_and_quit() -> void:
 	_prepare_current_map()
 	if not _require(_world.map_id == MAP_ID, "loaded unexpected map %s" % _world.map_id):
 		return
+	if not _require(_prepare_propulsion_fins(), "could not seed the already-covered fins prerequisite"):
+		return
 
 	var parity_signature := _parity_signature()
 	var gate := _gate_by_id(GATE_ID)
@@ -50,7 +52,7 @@ func _smoke_expansion_04_current_pocket_and_quit() -> void:
 
 	var day_one_ids: Array = _active_material_ids()
 	var day_one_recipe := _selected_recipe(day_one_ids)
-	if not _require(_is_exact_recipe(day_one_ids, day_one_recipe), "day one recipe selection drifted: %s" % str(day_one_ids)):
+	if not _require(_is_exact_recipe(day_one_recipe), "day one recipe selection drifted: %s" % str(day_one_ids)):
 		return
 	if not _collect_and_bank_recipe(day_one_recipe):
 		return
@@ -79,7 +81,7 @@ func _smoke_expansion_04_current_pocket_and_quit() -> void:
 	_prepare_current_map()
 	var day_two_ids: Array = _active_material_ids()
 	var day_two_recipe := _selected_recipe(day_two_ids)
-	if not _require(_main._expedition_day_state.day_number == 2 and day_two_ids != day_one_ids and _is_exact_recipe(day_two_ids, day_two_recipe), "day two recipe did not rotate deterministically"):
+	if not _require(_main._expedition_day_state.day_number == 2 and day_two_ids != day_one_ids and _is_exact_recipe(day_two_recipe), "day two recipe did not rotate deterministically"):
 		return
 	if not _collect_and_bank_recipe(day_two_recipe):
 		return
@@ -227,8 +229,8 @@ func _selected_recipe(active_ids: Array) -> Dictionary:
 	return {"titanium": titanium, "coil": coil}
 
 
-func _is_exact_recipe(active_ids: Array, recipe: Dictionary) -> bool:
-	return active_ids.size() == 3 and recipe["titanium"].size() == 2 and recipe["coil"].size() == 1
+func _is_exact_recipe(recipe: Dictionary) -> bool:
+	return recipe["titanium"].size() == 2 and recipe["coil"].size() == 1
 
 
 func _profile_has_exact_recipe(profile) -> bool:

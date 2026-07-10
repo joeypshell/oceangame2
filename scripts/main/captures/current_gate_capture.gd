@@ -1,7 +1,7 @@
 extends RefCounted
 
 const GATE_ID := "lower_left_loop_current"
-const EXPECTED_PROMPT := "Strong current - need propulsion fins"
+const EXPECTED_PROMPT := "Lower-left relay current - need propulsion fins"
 const CAPTURE_ZOOM := Vector2(1.1, 1.1)
 const CAMERA_OFFSET := Vector2(96, -24)
 

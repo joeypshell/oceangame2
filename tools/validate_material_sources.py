@@ -5,87 +5,27 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 from collections import deque
 from pathlib import Path
 from typing import Any
 
+from material_source_contract import (
+    DISPLAY_LABEL_PATTERN,
+    EXPECTED_RECIPES,
+    ID_PATTERN,
+    MATERIAL_FIELDS,
+    MINIMUM_CANDIDATES,
+    PROJECT_FIELDS,
+    PROJECT_RULES,
+    RUNTIME_FIELDS,
+    SUPPORTED_BUILD_PHASES,
+    SUPPORTED_CAPABILITIES,
+    SUPPORTED_MATERIALS,
+    SUPPORTED_PROJECTS,
+    SUPPORTED_STRATEGIES,
+    TOOL_FIELDS,
+)
 from validate_research_sources import validate_research_source_schema
-
-
-ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
-DISPLAY_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,47}$")
-SUPPORTED_MATERIALS = {"titanium_scrap", "conductive_coil", "insulating_gel", "eel_electrocyte"}
-SUPPORTED_PROJECTS = {
-    "salvage_cutter_project",
-    "current_stabilizer_project",
-    "shock_prod_project",
-    "shock_prod_capacitor_project",
-}
-SUPPORTED_DISCOVERIES = {"lower_right_anomaly_discovery"}
-SUPPORTED_CAPABILITIES = {"salvage_cutter", "current_stabilizer", "shock_prod", "shock_prod_capacitor"}
-SUPPORTED_STRATEGIES = {"day_rotation_v1"}
-SUPPORTED_BUILD_PHASES = {"night_debrief"}
-MINIMUM_CANDIDATES = {"titanium_scrap": 4, "conductive_coil": 2}
-EXPECTED_RECIPES = {
-    "salvage_cutter_project": {"titanium_scrap": 2, "conductive_coil": 1},
-    "current_stabilizer_project": {"titanium_scrap": 2, "conductive_coil": 1},
-    "shock_prod_project": {"titanium_scrap": 2, "conductive_coil": 1},
-    "shock_prod_capacitor_project": {
-        "conductive_coil": 1,
-        "insulating_gel": 1,
-        "eel_electrocyte": 1,
-    },
-}
-PROJECT_RULES = {
-    "salvage_cutter_project": {
-        "capability_id": "salvage_cutter",
-        "required_project_id": None,
-        "target_field": "target_id",
-    },
-    "current_stabilizer_project": {
-        "capability_id": "current_stabilizer",
-        "required_project_id": "salvage_cutter_project",
-        "target_field": "target_gate_id",
-    },
-    "shock_prod_project": {
-        "capability_id": "shock_prod",
-        "required_project_id": "current_stabilizer_project",
-        "target_field": "target_hostile_id",
-        "hostile_required_capability_id": "shock_prod",
-    },
-    "shock_prod_capacitor_project": {
-        "capability_id": "shock_prod_capacitor",
-        "required_project_id": "shock_prod_project",
-        "target_field": "target_hostile_id",
-        "hostile_required_capability_id": "shock_prod",
-        "capability_effect": "interrupt_warning_lunge",
-    },
-}
-MATERIAL_FIELDS = {"material_id", "material_quantity", "candidate_pool_id"}
-TOOL_FIELDS = {"required_tool_id", "tool_project_id"}
-PROJECT_FIELDS = {
-    "id", "required_project_id", "required_discovery_id", "required_materials", "unlocks_capability_id",
-    "target_id", "target_gate_id", "target_hostile_id", "capability_effect", "build_phase", "project_label", "completion_label",
-}
-RUNTIME_FIELDS = {
-    "active",
-    "banked",
-    "capability_owned",
-    "collected",
-    "completed",
-    "day_seed",
-    "depleted",
-    "held",
-    "oxygen",
-    "profile_state",
-    "progress",
-    "result_text",
-    "save_path",
-    "score",
-    "selected",
-    "wallet",
-}
 
 
 def _is_int(value: Any) -> bool:
@@ -283,7 +223,7 @@ def _validate_projects(
             failures.append(f"material_projects[{index}] must be an object.")
             continue
         label = str(project.get("id", f"material_projects[{index}]"))
-        for field in ("id", "required_discovery_id", "required_materials", "unlocks_capability_id", "build_phase"):
+        for field in ("id", "required_materials", "unlocks_capability_id", "build_phase"):
             if field not in project:
                 failures.append(f"{label} material project is missing required field {field}.")
         failures.extend(_validate_id(project.get("id"), label, "id"))
@@ -305,8 +245,6 @@ def _validate_projects(
             failures.append(f"{label} has unsupported project fields: {', '.join(sorted(unknown_fields))}.")
         if project_id not in SUPPORTED_PROJECTS:
             failures.append(f"{label} id must be one of: {', '.join(sorted(SUPPORTED_PROJECTS))}.")
-        if project.get("required_discovery_id") not in SUPPORTED_DISCOVERIES:
-            failures.append(f"{label} required_discovery_id must be one of: {', '.join(sorted(SUPPORTED_DISCOVERIES))}.")
         if project.get("unlocks_capability_id") not in SUPPORTED_CAPABILITIES:
             failures.append(
                 f"{label} unlocks_capability_id must be one of: {', '.join(sorted(SUPPORTED_CAPABILITIES))}."
@@ -314,7 +252,7 @@ def _validate_projects(
         if project.get("build_phase") not in SUPPORTED_BUILD_PHASES:
             failures.append(f"{label} build_phase must be one of: {', '.join(sorted(SUPPORTED_BUILD_PHASES))}.")
         for label_field in ("project_label", "completion_label"):
-            if project_id in {"shock_prod_project", "shock_prod_capacitor_project"} and label_field not in project:
+            if project_id in {"propulsion_fins_project", "shock_prod_project", "shock_prod_capacitor_project"} and label_field not in project:
                 failures.append(f"{label} requires {label_field}.")
             elif label_field in project:
                 value = project[label_field]
@@ -323,6 +261,13 @@ def _validate_projects(
 
         rules = PROJECT_RULES.get(str(project_id))
         if rules is not None:
+            expected_discovery = rules.get("required_discovery_id")
+            authored_discovery = project.get("required_discovery_id")
+            if expected_discovery is None:
+                if "required_discovery_id" in project:
+                    failures.append(f"{label} must omit required_discovery_id for a known recipe.")
+            elif authored_discovery != expected_discovery:
+                failures.append(f"{label} required_discovery_id must be {expected_discovery!r}.")
             if project.get("unlocks_capability_id") != rules["capability_id"]:
                 failures.append(f"{label} must unlock capability {rules['capability_id']}.")
             expected_prerequisite = rules["required_project_id"]

@@ -54,8 +54,10 @@ func _run() -> void:
 	var report: Dictionary = runtime.report()
 	_expect(_coil_id(researched_ids) == RESEARCHED_CANDIDATE_ID, "fresh researched day did not select deep-cache coil")
 	_expect(_material_ids(researched_ids, "material_titanium_") == _material_ids(normal_day_three, "material_titanium_"), "research changed unrelated titanium rotation")
-	_expect(researched_ids.size() == 3, "research changed daily material yield")
+	_expect(_material_ids(researched_ids, "material_rubber_") == _material_ids(normal_day_three, "material_rubber_"), "research changed unrelated rubber rotation")
+	_expect(researched_ids.size() == 4, "research changed daily material yield")
 	_expect(_material_count(world, researched_ids, ExpansionProfileState.TITANIUM_MATERIAL_ID) == 2, "research changed titanium guarantee")
+	_expect(_material_count(world, researched_ids, ExpansionProfileState.RUBBER_MATERIAL_ID) == 1, "research changed rubber guarantee")
 	_expect(_material_count(world, researched_ids, ExpansionProfileState.COIL_MATERIAL_ID) == 1, "research changed coil guarantee")
 	_expect(report.get("researched_pool_ids", []) == [COIL_POOL_ID], "day cache did not own researched pool")
 	_expect(report.get("research_lead_text", "") == LEAD_TEXT, "research lead was not source-derived")
@@ -68,7 +70,7 @@ func _run() -> void:
 			push_error("Practical research material state smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Practical research material state smoke passed: day=2 before=%s same_day=%s normal_day3=%s researched_day3=%s pool=%s yield=Ti2+Coil1 lead=\"%s\"." % [
+	print("Practical research material state smoke passed: day=2 before=%s same_day=%s normal_day3=%s researched_day3=%s pool=%s yield=Ti2+Rubber1+Coil1 lead=\"%s\"." % [
 		str(before_ids),
 		str(same_day_ids),
 		str(normal_day_three),

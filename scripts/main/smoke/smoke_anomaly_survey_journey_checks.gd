@@ -1,7 +1,11 @@
 extends "res://scripts/main/smoke/smoke_check_base.gd"
 
 const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime.gd")
+const CutterSalvageController := preload("res://scripts/main/cutter_salvage_controller.gd")
+const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
+const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
 
 const TEST_PROFILE_PATH := "user://oceangame2_anomaly_journey_smoke.json"
 const ORIGIN_MAP_ID := "production_slice_01"
@@ -15,17 +19,14 @@ const PAYOFF_TARGET_ID := "slice_04_destination_cache"
 const SURVEY_TARGET_ID := "lower_right_anomaly_survey"
 const RESOURCE_TARGET_ID := "upper_right_mineral_trace_survey"
 const DISCOVERY_ID := ExpansionProfileState.ANOMALY_DISCOVERY_ID
-const OPENING_TARGET_IDS := ["salvage_lower_loop", "salvage_southwest_return_cache"]
 const GUARDED_CACHE_ID := "salvage_deep_right_cache"
-const OPENING_CHEST_ID := "lower_loop_upgrade_chest"
-const PROPULSION_ROUTE_WALLET := 1000
 
 
 func _smoke_anomaly_survey_journey_and_quit() -> void:
 	_cleanup_profile()
 	var profile := ExpansionProfileState.new(TEST_PROFILE_PATH)
-	_main._anomaly_survey = AnomalySurveyRuntime.new(_main._progression_runtime, true, profile)
-	_main._anomaly_survey.on_map_loaded(_world)
+	profile.load_profile()
+	_attach_profile(profile)
 	_prepare_current_map()
 
 	if not _require(_world.map_id == ORIGIN_MAP_ID, "loaded unexpected origin %s" % _world.map_id):
@@ -35,7 +36,7 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 		return
 	if not _require(_survey_target_by_id(SURVEY_TARGET_ID).is_empty(), "origin map unexpectedly owns anomaly survey source"):
 		return
-	if not _prepare_non_eel_propulsion_route():
+	if not _prepare_non_eel_propulsion_route(profile):
 		return
 
 	if not _transition(ORIGIN_CONNECTOR_ID, RELAY_MAP_ID):
@@ -229,38 +230,96 @@ func _prepare_current_map() -> void:
 	_combat_interactions_enabled = false
 
 
-func _prepare_non_eel_propulsion_route() -> bool:
-	for target_id in OPENING_TARGET_IDS:
-		var target := _salvage_by_id(target_id)
-		if not _require(not target.is_empty(), "missing opening target %s" % target_id):
-			return false
-		_player.global_position = target["center"]
-		if not _require(_collect_salvage_for_smoke(target), "could not collect opening target %s" % target_id):
-			return false
-	var chest := _container_by_id(OPENING_CHEST_ID)
-	if not _require(not chest.is_empty(), "missing opening chest %s" % OPENING_CHEST_ID):
+func _prepare_non_eel_propulsion_route(profile) -> bool:
+	var wallet_before := _session_wallet()
+	var recipe := _selected_propulsion_recipe()
+	if not _require(recipe.size() == 3, "active map did not provide two titanium and one rubber before the eel cache"):
 		return false
-	_player.global_position = chest["center"]
-	_process(0.0)
-	if not _require(_session_wallet() == 400 and _main._progression_containers.is_opened(OPENING_CHEST_ID), "opening chest did not provide the guaranteed 400 wallet"):
+	for candidate in recipe:
+		if _main._material_runtime.held_count() >= _main._held_salvage_capacity():
+			if not _bank_held_materials():
+				return false
+		var held_before: int = _main._material_runtime.held_count()
+		_player.global_position = candidate["center"]
+		_process(0.0)
+		if not _require(_main._material_runtime.held_count() == held_before + 1, "material %s did not enter cargo" % str(candidate.get("id", ""))):
+			return false
+	if not _bank_held_materials():
 		return false
-	_player.global_position = _world.get_extraction_center()
-	_process(0.0)
 	if not _require(
-		_run_complete
-		and _session_wallet() == PROPULSION_ROUTE_WALLET
-		and OPENING_TARGET_IDS.all(func(target_id): return _banked_salvage_ids.has(target_id))
+		profile.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID) == 2
+		and profile.material_quantity(ExpansionProfileState.RUBBER_MATERIAL_ID) == 1
+		and _session_wallet() == wallet_before
 		and not _world.is_salvage_collected(GUARDED_CACHE_ID),
-		"non-eel relay trail did not complete/fund propulsion independently"
+		"pre-eel material route did not bank the exact fins recipe independently"
 	):
 		return false
-	_reset_run()
+	var project := _project_by_id(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID)
+	if not _require(not project.is_empty() and str(project.get("required_discovery_id", "")).is_empty(), "fins project is missing or gained an unintended research lock"):
+		return false
+	if not _main._expedition_day_state.request_end_day("voluntary"):
+		return _require(false, "could not enter debrief to build fins")
+	_process(0.0)
+	if not _require(_main._expedition_day_state.phase == ExpeditionDayState.PHASE_DEBRIEF, "fins build did not enter debrief"):
+		return false
+	_press_key(KEY_P)
+	if not _require(
+		profile.has_completed_project(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID)
+		and profile.has_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID)
+		and profile.material_inventory().is_empty()
+		and _session_wallet() == wallet_before,
+		"fins did not consume the exact recipe without spending wallet"
+	):
+		return false
+	_press_key(KEY_N)
 	_prepare_current_map()
-	if not _require(_session_wallet() == PROPULSION_ROUTE_WALLET and _main._progression_containers.is_opened(OPENING_CHEST_ID), "retry lost opening funding"):
-		return false
-	if not _require(_main._try_purchase_propulsion_upgrade(), "could not purchase propulsion from non-eel funding"):
-		return false
-	return _require(_session_wallet() == 0, "propulsion purchase left wallet=%d" % _session_wallet())
+	return _require(_main._expedition_day_state.phase == ExpeditionDayState.PHASE_ACTIVE, "fins route did not resume on the next day")
+
+
+func _attach_profile(profile) -> void:
+	_main._anomaly_survey = AnomalySurveyRuntime.new(_main._progression_runtime, true, profile)
+	_main._material_runtime = MaterialRuntimeController.new(profile)
+	_main._material_project = MaterialProjectRuntime.new(profile)
+	_main._cutter_salvage = CutterSalvageController.new(profile)
+	_main._anomaly_survey.on_map_loaded(_world)
+	_main._material_runtime.on_map_loaded(_world, _main._expedition_day_state)
+	_main._material_project.on_map_loaded(_world)
+	_main._cutter_salvage.on_map_loaded(_world)
+
+
+func _selected_propulsion_recipe() -> Array:
+	var active_ids: Array = _world.get_material_candidate_report().get("active_ids", [])
+	var titanium := []
+	var rubber := []
+	for candidate in _world.get_material_candidates():
+		if not active_ids.has(str(candidate.get("id", ""))):
+			continue
+		match str(candidate.get("material_id", "")):
+			ExpansionProfileState.TITANIUM_MATERIAL_ID:
+				titanium.append(candidate)
+			ExpansionProfileState.RUBBER_MATERIAL_ID:
+				rubber.append(candidate)
+	return [titanium[0], titanium[1], rubber[0]] if titanium.size() >= 2 and rubber.size() >= 1 else []
+
+
+func _bank_held_materials() -> bool:
+	_player.global_position = _world.get_extraction_center()
+	_process(0.0)
+	return _require(_main._material_runtime.held_count() == 0, "boat did not bank held fins materials")
+
+
+func _project_by_id(project_id: String) -> Dictionary:
+	for project in _world.get_material_projects():
+		if str(project.get("id", "")) == project_id:
+			return project
+	return {}
+
+
+func _press_key(keycode: Key) -> void:
+	var event := InputEventKey.new()
+	event.pressed = true
+	event.keycode = keycode
+	_main._unhandled_input(event)
 
 
 func _connector_by_id(connector_id: String) -> Dictionary:
@@ -274,13 +333,6 @@ func _salvage_by_id(salvage_id: String) -> Dictionary:
 	for salvage in _world.get_salvage_centers():
 		if str(salvage.get("id", "")) == salvage_id:
 			return salvage
-	return {}
-
-
-func _container_by_id(container_id: String) -> Dictionary:
-	for container in _world.get_progression_containers():
-		if str(container.get("id", "")) == container_id:
-			return container
 	return {}
 
 

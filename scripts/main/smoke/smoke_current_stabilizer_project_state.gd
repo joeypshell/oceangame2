@@ -30,7 +30,13 @@ func _run() -> void:
 	world.load_greybox()
 	var runtime := MaterialProjectRuntime.new(profile)
 	var source_report: Dictionary = runtime.on_map_loaded(world)
-	_expect(source_report.get("project_ids") == [ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID, ExpansionProfileState.SHOCK_PROD_PROJECT_ID, ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID], "source catalog did not load four ordered projects")
+	_expect(source_report.get("project_ids") == [ExpansionProfileState.PROPULSION_FINS_PROJECT_ID, ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID, ExpansionProfileState.SHOCK_PROD_PROJECT_ID, ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID], "source catalog did not load five ordered projects")
+	_expect(source_report.get("project_id") == ExpansionProfileState.PROPULSION_FINS_PROJECT_ID, "migrated pre-fins profile did not select the new recipe project")
+	profile.deposit_materials({ExpansionProfileState.RUBBER_MATERIAL_ID: 1}, true)
+	var fins_completed: Dictionary = runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
+	_expect(bool(fins_completed.get("changed", false)) and profile.has_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID), "migrated profile could not build recipe-backed fins")
+	profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 2}, true)
+	source_report = runtime.on_map_loaded(world)
 	_expect(source_report.get("project_id") == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID, "catalog did not select stabilizer after cutter")
 	_expect(runtime.status() == "ready", "migrated cutter profile and exact recipe did not ready stabilizer")
 	_expect(runtime.debrief_lines() == ["P: Build current stabilizer"], "stabilizer ready text drifted")
@@ -64,6 +70,8 @@ func _run() -> void:
 	var reloaded := ExpansionProfileState.new(TEST_PATH)
 	var reload_report: Dictionary = reloaded.load_profile()
 	_expect(reload_report.get("status") == "loaded", "schema-v3 stabilizer profile did not reload")
+	_expect(reloaded.has_completed_project(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID), "reload lost migrated fins project")
+	_expect(reloaded.has_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID), "reload lost migrated fins capability")
 	_expect(reloaded.has_completed_project(ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID), "reload lost cutter prerequisite")
 	_expect(reloaded.has_completed_project(ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID), "reload lost stabilizer project")
 	_expect(reloaded.has_capability(ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID), "reload lost stabilizer capability")
@@ -79,7 +87,7 @@ func _run() -> void:
 			push_error("Current stabilizer project smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Current stabilizer project state smoke passed: schema=v2_to_v3 projects=cutter>stabilizer>shock_prod>capacitor prerequisite=true recipe=2_titanium+1_coil night_only=true exact_once=true rollback_path=preserved profile_reload=true.")
+	print("Current stabilizer project state smoke passed: schema=v2_to_v3 projects=fins>cutter>stabilizer>shock_prod>capacitor migrated_fins=Ti2+Rubber1 prerequisite=true recipe=2_titanium+1_coil night_only=true exact_once=true rollback_path=preserved profile_reload=true.")
 	quit(0)
 
 

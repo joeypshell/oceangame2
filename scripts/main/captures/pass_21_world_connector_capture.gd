@@ -1,8 +1,9 @@
 extends RefCounted
 
+const ReviewProgressionFixture := preload("res://scripts/main/review_progression_fixture.gd")
 const CONNECTOR_ID := "lower_left_loop_connector"
-const EXPECTED_ORIGIN_PROMPT := "E: Enter Lower-left loop"
-const EXPECTED_ARRIVAL := "Arrived: Lower-left loop"
+const EXPECTED_ORIGIN_PROMPT := "E: Enter Lower-left relay"
+const EXPECTED_ARRIVAL := "Arrived: Lower-left relay"
 const EXPECTED_RETURN_PROMPT := "E: Enter Boat hub"
 const CAPTURE_ZOOM := Vector2(1.05, 1.05)
 const CAMERA_OFFSET := Vector2(64, -18)
@@ -31,8 +32,11 @@ func capture_and_quit(capture_dir: String) -> void:
 		return
 
 	_main._hazard_interactions_enabled = false
-	_main._session_progression.record_banked_salvage(_main.SessionProgression.PROPULSION_UPGRADE_COST)
-	_main._session_progression.purchase_propulsion_upgrade()
+	var fins: Dictionary = ReviewProgressionFixture.complete_capability(_main, "propulsion_fins")
+	if not bool(fins.get("ready", false)):
+		push_error("Pass 21 world-connector capture could not prepare recipe-built fins: %s" % str(fins))
+		_main.get_tree().quit(1)
+		return
 	_main._player.global_position = connector["center"]
 	if _main._player.has_method("reset_motion"):
 		_main._player.reset_motion()

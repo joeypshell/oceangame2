@@ -76,6 +76,10 @@ func has_cutter() -> bool:
 	return _profile != null and _profile.has_capability(ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID)
 
 
+func has_propulsion_fins() -> bool:
+	return _profile != null and _profile.has_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID)
+
+
 func has_current_stabilizer() -> bool:
 	return _profile != null and _profile.has_capability(ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID)
 
@@ -86,6 +90,20 @@ func has_shock_prod() -> bool:
 
 func has_shock_prod_capacitor() -> bool:
 	return _profile != null and _profile.has_capability(ExpansionProfileState.SHOCK_PROD_CAPACITOR_CAPABILITY_ID)
+
+
+func propulsion_fins_guidance() -> String:
+	if has_propulsion_fins():
+		return "Fins ready | Enter lower-left relay current"
+	var project := _project_by_id(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID)
+	var project_status := _status_for(project)
+	if project_status == "ready":
+		return "Fins project ready | end day at boat, then P at night"
+	if project_status == "incomplete":
+		return "Fins project | %s | bank at boat, then P at night" % _material_progress_text(project)
+	if project_status == "inconsistent_profile":
+		return "Fins project | profile repair required"
+	return "Fins project unavailable"
 
 
 func shock_prod_guidance() -> String:
@@ -130,8 +148,10 @@ func report() -> Dictionary:
 		"required_project_id": str(project.get("required_project_id", "")),
 		"required_materials": project.get("required_materials", {}).duplicate(true),
 		"titanium_banked": _profile.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID) if _profile != null else 0,
+		"rubber_banked": _profile.material_quantity(ExpansionProfileState.RUBBER_MATERIAL_ID) if _profile != null else 0,
 		"coil_banked": _profile.material_quantity(ExpansionProfileState.COIL_MATERIAL_ID) if _profile != null else 0,
 		"project_completed": _profile.has_completed_project(project_id) if _profile != null and not project_id.is_empty() else false,
+		"propulsion_fins_unlocked": has_propulsion_fins(),
 		"cutter_unlocked": has_cutter(),
 		"current_stabilizer_unlocked": has_current_stabilizer(),
 		"shock_prod_unlocked": has_shock_prod(),
@@ -188,7 +208,8 @@ func _status_for(project: Dictionary) -> String:
 	var required_project_id := str(project.get("required_project_id", ""))
 	if not required_project_id.is_empty() and not _profile.has_completed_project(required_project_id):
 		return "prerequisite_required"
-	if not _profile.has_completed_discovery(str(project.get("required_discovery_id", ""))):
+	var required_discovery_id := str(project.get("required_discovery_id", ""))
+	if not required_discovery_id.is_empty() and not _profile.has_completed_discovery(required_discovery_id):
 		return "knowledge_required"
 	var required: Dictionary = project.get("required_materials", {})
 	for material_id in required:
@@ -235,6 +256,13 @@ func _completed_text(project: Dictionary) -> String:
 
 func _material_progress_text(project: Dictionary) -> String:
 	var required: Dictionary = project.get("required_materials", {})
+	if str(project.get("id", "")) == ExpansionProfileState.PROPULSION_FINS_PROJECT_ID:
+		return "Ti %d/%d | Rubber %d/%d" % [
+			_profile.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.TITANIUM_MATERIAL_ID, 0)),
+			_profile.material_quantity(ExpansionProfileState.RUBBER_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.RUBBER_MATERIAL_ID, 0)),
+		]
 	if str(project.get("id", "")) == ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID:
 		return "Coil %d/%d | Gel %d/%d | Electro %d/%d" % [
 			_profile.material_quantity(ExpansionProfileState.COIL_MATERIAL_ID),
@@ -254,6 +282,8 @@ func _material_progress_text(project: Dictionary) -> String:
 
 func _project_effect_lines(project: Dictionary) -> Array[String]:
 	match str(project.get("id", "")):
+		ExpansionProfileState.PROPULSION_FINS_PROJECT_ID:
+			return ["Access: lower-left relay current"]
 		ExpansionProfileState.SHOCK_PROD_PROJECT_ID:
 			return ["Use: Space at short range | 1 health damage per hit"]
 		ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID:

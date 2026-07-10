@@ -95,13 +95,6 @@ func _update_salvage(delta: float) -> void:
 		_main._player.global_position,
 		_main.SALVAGE_COLLECTION_RADIUS
 	)
-	var guarded_note := _guarded_salvage_block_note(nearby_salvage)
-	if not guarded_note.is_empty():
-		_main._timed_salvage.reset()
-		_main._pry_salvage.update({}, delta)
-		_main._last_status_note = guarded_note
-		return
-
 	if _main._held_cargo_count() >= _main._held_salvage_capacity():
 		_main._timed_salvage.reset()
 		_main._pry_salvage.update({}, delta)
@@ -116,21 +109,6 @@ func _update_salvage(delta: float) -> void:
 		_update_pry(nearby_salvage, delta)
 	else:
 		_cancel_interactions_and_collect(delta)
-
-
-func _guarded_salvage_block_note(salvage: Dictionary) -> String:
-	if salvage.is_empty():
-		return ""
-	var required_capability := str(salvage.get("required_capability_id", ""))
-	var profile = _main._anomaly_survey.profile_state() if _main._anomaly_survey != null else null
-	if not required_capability.is_empty() and (profile == null or not profile.has_capability(required_capability)):
-		return str(salvage.get("locked_label", "Required capability missing"))
-	var guard_id := str(salvage.get("guarded_by_hostile_id", ""))
-	if not guard_id.is_empty():
-		var guard_state: Dictionary = _main._hostiles.state_for(guard_id) if _main._hostiles != null else {}
-		if str(guard_state.get("phase", "missing")) != "defeated":
-			return str(salvage.get("guard_active_label", "Defeat guard before collecting"))
-	return ""
 
 
 func _update_timed(salvage: Dictionary, delta: float) -> void:

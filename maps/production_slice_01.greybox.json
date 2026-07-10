@@ -2314,12 +2314,12 @@
       "w": 4,
       "h": 4,
       "world_connector": true,
-      "connector_label": "Lower-left loop",
+      "connector_label": "Lower-left relay",
       "destination_map_id": "production_slice_04",
       "destination_map_path": "res://maps/production_slice_04.greybox.json",
       "destination_entry_id": "relay_sub_entry",
       "connector_direction": "forward",
-      "intent": "Pass 21 connector from the default boat hub toward the lower-left loop reference slice."
+      "intent": "Visible relay connector from the default boat hub toward the lower-left loop reference slice."
     },
     {
       "id": "lower_left_loop_current",
@@ -2331,10 +2331,10 @@
       "current_gate": true,
       "current_direction": "right",
       "current_strength": 2.2,
-      "required_upgrade_id": "propulsion_fins",
-      "current_gate_label": "Strong current",
+      "required_capability_id": "propulsion_fins",
+      "current_gate_label": "Lower-left relay current",
       "route_context": "lower_left_loop",
-      "intent": "Progression-gate soft-push current on the lower-left connector until the propulsion fins session upgrade is owned."
+      "intent": "Visible relay current blocked until recipe-built propulsion fins are owned."
     },
     {
       "id": "upper_right_current_pocket_gate",
@@ -2622,9 +2622,31 @@
         "material_coil_deep_cache"
       ],
       "research_lead_label": "Research lead | Coils near deep-cache machinery"
+    },
+    {
+      "id": "rubber_sheet_pool",
+      "material_id": "rubber_sheet",
+      "selection_strategy": "day_rotation_v1",
+      "select_count": 1,
+      "candidate_ids": [
+        "material_rubber_entry",
+        "material_rubber_lower_loop"
+      ]
     }
   ],
   "material_projects": [
+    {
+      "id": "propulsion_fins_project",
+      "required_materials": {
+        "titanium_scrap": 2,
+        "rubber_sheet": 1
+      },
+      "unlocks_capability_id": "propulsion_fins",
+      "target_gate_id": "lower_left_loop_current",
+      "build_phase": "night_debrief",
+      "project_label": "Propulsion fins project",
+      "completion_label": "Propulsion fins built"
+    },
     {
       "id": "salvage_cutter_project",
       "required_discovery_id": "lower_right_anomaly_discovery",
@@ -2784,11 +2806,8 @@
       "interaction": "timed_salvage",
       "interaction_seconds": 2.5,
       "interaction_label": "deep cache",
-      "required_capability_id": "shock_prod",
       "guarded_by_hostile_id": "deep_cache_territorial_eel",
-      "locked_label": "Shock prod required - return after building it",
-      "guard_active_label": "Shock prod ready - defeat eel to claim cache",
-      "intent": "Later deep-right payoff collectable only after the shock prod is built and the guarding eel is defeated for the day."
+      "intent": "Timed cache that may be attempted immediately; the active eel interrupts collection through combat behavior."
     },
     {
       "id": "salvage_southwest_return_cache",
@@ -2800,7 +2819,7 @@
       "route_choice_id": "southwest_pocket_detour",
       "validation_route": "southwest_pocket_decision",
       "route_order": 0,
-      "intent": "Non-eel valuable payoff completing the opening relay trail; keeps instant collection and combines with the lower-loop payoff plus upgrade chest to fund propulsion fins."
+      "intent": "Non-eel valuable payoff completing the opening relay trail; keeps instant collection while the separate material route supplies the propulsion-fins recipe."
     },
     {
       "id": "salvage_return_branch",
@@ -2926,6 +2945,30 @@
       "required_tool_id": "salvage_cutter",
       "tool_project_id": "salvage_cutter_project",
       "intent": "Expansion 03 remembered upper-right alcove payoff, visible before the cutter exists and collectable only after the night project."
+    },
+    {
+      "id": "material_rubber_entry",
+      "type": "material_candidate",
+      "x": 43,
+      "y": 22,
+      "kind": "wreck_fragment",
+      "interaction": "material_collect",
+      "material_id": "rubber_sheet",
+      "material_quantity": 1,
+      "candidate_pool_id": "rubber_sheet_pool",
+      "intent": "Entry-shaft rubber candidate beside the first titanium route."
+    },
+    {
+      "id": "material_rubber_lower_loop",
+      "type": "material_candidate",
+      "x": 16,
+      "y": 69,
+      "kind": "wreck_fragment",
+      "interaction": "material_collect",
+      "material_id": "rubber_sheet",
+      "material_quantity": 1,
+      "candidate_pool_id": "rubber_sheet_pool",
+      "intent": "Lower-loop rubber candidate on the non-eel relay approach."
     },
     {
       "id": "salvage_current_pocket_cache",

@@ -19,7 +19,7 @@ see valuable salvage across an overpowering current
 -> cross the current and bring the payoff home
 ```
 
-The pass reuses the current-gate grammar but gives the new capability durable profile ownership. It does not replace or reinterpret the legacy `lower_left_loop_current`, which remains tied to the session-only `propulsion_fins` upgrade and the slice-04 connector regression.
+The pass reuses the current-gate grammar and gives the stabilizer durable profile ownership. #815 later migrated `lower_left_loop_current` from the legacy session upgrade to durable recipe-built `propulsion_fins`; the two gates remain separate capability ids and traversal roles.
 
 ## Player Promise
 
@@ -94,7 +94,7 @@ The gate is route pressure, not collision. It does not teleport the player, cut 
 - The build is available only during night debrief.
 - `P` acts on the first incomplete source-ordered project whose prerequisites are satisfied; there is no recipe menu.
 - Save failure restores consumed materials and leaves project/capability incomplete.
-- Session `propulsion_fins` and durable `current_stabilizer` remain separate ids and owners.
+- Durable `propulsion_fins` and `current_stabilizer` remain separate ids, projects, and gate roles.
 
 ## Ownership Boundaries
 

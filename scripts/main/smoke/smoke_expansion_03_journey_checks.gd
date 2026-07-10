@@ -31,7 +31,7 @@ func _smoke_expansion_03_material_project_and_quit() -> void:
 	var day_one_report: Dictionary = _world.get_material_candidate_report()
 	var day_one_ids: Array = day_one_report.get("active_ids", [])
 	var recipe: Dictionary = _selected_recipe(day_one_ids)
-	if not _require(day_one_ids.size() == 3 and recipe["titanium"].size() == 2 and recipe["coil"].size() == 1, "day one did not guarantee exact recipe: %s" % str(day_one_ids)):
+	if not _require(recipe["titanium"].size() == 2 and recipe["coil"].size() == 1, "day one did not guarantee exact cutter recipe: %s" % str(day_one_ids)):
 		return
 	_main._material_runtime.on_map_loaded(_world, _main._expedition_day_state)
 	if not _require(_world.get_material_candidate_report().get("active_ids", []) == day_one_ids, "same-day selection rerolled"):
@@ -52,8 +52,7 @@ func _smoke_expansion_03_material_project_and_quit() -> void:
 	var titanium: Array = recipe["titanium"]
 	var coils: Array = recipe["coil"]
 	_player.global_position = _world.get_extraction_center()
-	_main._session_progression.grant_wallet_reward(1000)
-	if not _require(_main._try_purchase_propulsion_upgrade(), "could not unlock connector for material preservation probe"):
+	if not _require(_prepare_propulsion_fins(), "could not unlock connector for material preservation probe"):
 		return
 	if not _collect_material(titanium[0], 1):
 		return
@@ -86,7 +85,8 @@ func _smoke_expansion_03_material_project_and_quit() -> void:
 		return
 	var day_one_depleted: Array = _main._expedition_day_state.material_depleted_ids(ORIGIN_MAP_ID)
 	day_one_depleted.sort()
-	if not _require(day_one_depleted == day_one_ids, "banked recipe depletion drifted: active=%s depleted=%s" % [str(day_one_ids), str(day_one_depleted)]):
+	var day_one_recipe_ids := _recipe_candidate_ids(recipe)
+	if not _require(day_one_depleted == day_one_recipe_ids, "banked cutter recipe depletion drifted: recipe=%s depleted=%s" % [str(day_one_recipe_ids), str(day_one_depleted)]):
 		return
 
 	var knowledge_gate: Dictionary = _main._material_project.try_build(ExpeditionDayState.PHASE_DEBRIEF)
@@ -116,7 +116,7 @@ func _smoke_expansion_03_material_project_and_quit() -> void:
 	var day_two_recipe: Dictionary = _selected_recipe(day_two_ids)
 	if not _require(_main._expedition_day_state.day_number == 2 and _main._expedition_day_state.material_day_seed == 2, "next day did not advance day/seed"):
 		return
-	if not _require(day_two_ids.size() == 3 and day_two_ids != day_one_ids and day_two_recipe["titanium"].size() == 2 and day_two_recipe["coil"].size() == 1, "next day did not rotate to a guaranteed recipe"):
+	if not _require(day_two_ids != day_one_ids and day_two_recipe["titanium"].size() == 2 and day_two_recipe["coil"].size() == 1, "next day did not rotate to a guaranteed cutter recipe"):
 		return
 	_attach_profile(reloaded)
 	if not _require(_main._cutter_salvage.has_cutter(), "reloaded runtime did not retain cutter"):
@@ -202,6 +202,14 @@ func _selected_recipe(active_ids: Array) -> Dictionary:
 		elif str(candidate.get("material_id", "")) == ExpansionProfileState.COIL_MATERIAL_ID:
 			coils.append(candidate)
 	return {"titanium": titanium, "coil": coils}
+
+
+func _recipe_candidate_ids(recipe: Dictionary) -> Array:
+	var ids := []
+	for candidate in recipe["titanium"] + recipe["coil"]:
+		ids.append(str(candidate.get("id", "")))
+	ids.sort()
+	return ids
 
 
 func _collect_material(candidate: Dictionary, expected_held: int) -> bool:

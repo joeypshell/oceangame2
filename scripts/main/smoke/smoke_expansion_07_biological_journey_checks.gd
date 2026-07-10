@@ -295,6 +295,8 @@ func _seed_base_shock_prod(profile) -> bool:
 		return false
 	if not _require(bool(profile.complete_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID, false).get("changed", false)), "could not seed anomaly knowledge"):
 		return false
+	if not _require(_prepare_propulsion_fins(), "could not seed recipe-built fins prerequisite"):
+		return false
 	for project_id in [
 		ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID,
 		ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID,
