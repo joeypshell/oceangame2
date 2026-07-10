@@ -12,11 +12,11 @@ from validate_material_sources import validate_material_source_reachability, val
 def material_entity(entity_id: str, material_id: str, pool_id: str, x: int) -> dict:
     return {
         "id": entity_id,
-        "type": "salvage",
+        "type": "material_candidate",
         "x": x,
         "y": 2,
         "kind": "wreck_fragment",
-        "interaction": "instant",
+        "interaction": "material_collect",
         "material_id": material_id,
         "material_quantity": 1,
         "candidate_pool_id": pool_id,
@@ -32,7 +32,7 @@ def valid_map() -> dict:
     entities.append(
         {
             "id": "salvage_sealed_wreck_cache",
-            "type": "salvage",
+            "type": "tool_target",
             "x": 8,
             "y": 2,
             "kind": "crate",
@@ -98,7 +98,7 @@ class MaterialSourceValidationTests(unittest.TestCase):
             "selection_strategy must be one of",
             "Duplicate material candidate id",
             "select_count exceeds its candidate count",
-            "does not reference a material salvage entity",
+            "does not reference a material_candidate entity",
         ):
             self.assertTrue(any(expected in failure for failure in failures), expected)
 
@@ -112,7 +112,7 @@ class MaterialSourceValidationTests(unittest.TestCase):
             "missing required field candidate_pool_id",
             "material_id must be one of",
             "material_quantity must be exactly 1",
-            "material candidate interaction must be instant",
+            "material candidate interaction must be 'material_collect'",
             "must not author runtime/profile state fields: selected",
         ):
             self.assertTrue(any(expected in failure for failure in failures), expected)

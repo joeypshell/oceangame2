@@ -2491,6 +2491,43 @@
       "intent": "Pass 23 result prompt pointing the next dive toward the lower-left relay after Deep cache completion."
     }
   ],
+  "material_candidate_pools": [
+    {
+      "id": "titanium_scrap_pool",
+      "material_id": "titanium_scrap",
+      "selection_strategy": "day_rotation_v1",
+      "select_count": 2,
+      "candidate_ids": [
+        "material_titanium_entry",
+        "material_titanium_crossing",
+        "material_titanium_return",
+        "material_titanium_lower_loop"
+      ]
+    },
+    {
+      "id": "conductive_coil_pool",
+      "material_id": "conductive_coil",
+      "selection_strategy": "day_rotation_v1",
+      "select_count": 1,
+      "candidate_ids": [
+        "material_coil_deep_approach",
+        "material_coil_deep_cache"
+      ]
+    }
+  ],
+  "material_projects": [
+    {
+      "id": "salvage_cutter_project",
+      "required_discovery_id": "lower_right_anomaly_discovery",
+      "required_materials": {
+        "titanium_scrap": 2,
+        "conductive_coil": 1
+      },
+      "unlocks_capability_id": "salvage_cutter",
+      "target_id": "salvage_sealed_wreck_cache",
+      "build_phase": "night_debrief"
+    }
+  ],
   "background": [
     {
       "id": "distant_entry_wall",
@@ -2648,6 +2685,92 @@
       "x": 57,
       "y": 66,
       "kind": "mine"
+    },
+    {
+      "id": "material_titanium_entry",
+      "type": "material_candidate",
+      "x": 44,
+      "y": 20,
+      "kind": "wreck_fragment",
+      "interaction": "material_collect",
+      "material_id": "titanium_scrap",
+      "material_quantity": 1,
+      "candidate_pool_id": "titanium_scrap_pool",
+      "intent": "Safe entry-shaft titanium candidate encountered on the first descent."
+    },
+    {
+      "id": "material_titanium_crossing",
+      "type": "material_candidate",
+      "x": 48,
+      "y": 31,
+      "kind": "wreck_fragment",
+      "interaction": "material_collect",
+      "material_id": "titanium_scrap",
+      "material_quantity": 1,
+      "candidate_pool_id": "titanium_scrap_pool",
+      "intent": "Central-crossing titanium candidate supporting the short route."
+    },
+    {
+      "id": "material_titanium_return",
+      "type": "material_candidate",
+      "x": 27,
+      "y": 58,
+      "kind": "wreck_fragment",
+      "interaction": "material_collect",
+      "material_id": "titanium_scrap",
+      "material_quantity": 1,
+      "candidate_pool_id": "titanium_scrap_pool",
+      "intent": "Return-pressure titanium candidate near the southwest branch decision."
+    },
+    {
+      "id": "material_titanium_lower_loop",
+      "type": "material_candidate",
+      "x": 40,
+      "y": 66,
+      "kind": "wreck_fragment",
+      "interaction": "material_collect",
+      "material_id": "titanium_scrap",
+      "material_quantity": 1,
+      "candidate_pool_id": "titanium_scrap_pool",
+      "intent": "Lower-loop titanium candidate rewarding the longer known route."
+    },
+    {
+      "id": "material_coil_deep_approach",
+      "type": "material_candidate",
+      "x": 55,
+      "y": 68,
+      "kind": "crate",
+      "interaction": "material_collect",
+      "material_id": "conductive_coil",
+      "material_quantity": 1,
+      "candidate_pool_id": "conductive_coil_pool",
+      "intent": "Special component candidate on the moving-hazard deep approach."
+    },
+    {
+      "id": "material_coil_deep_cache",
+      "type": "material_candidate",
+      "x": 61,
+      "y": 73,
+      "kind": "crate",
+      "interaction": "material_collect",
+      "material_id": "conductive_coil",
+      "material_quantity": 1,
+      "candidate_pool_id": "conductive_coil_pool",
+      "intent": "Special component candidate in the deep-cache branch."
+    },
+    {
+      "id": "salvage_sealed_wreck_cache",
+      "type": "tool_target",
+      "x": 61,
+      "y": 40,
+      "kind": "crate",
+      "tier": "valuable",
+      "interaction": "cutter_salvage",
+      "interaction_seconds": 2.0,
+      "interaction_label": "sealed wreck",
+      "required_tool_id": "salvage_cutter",
+      "tool_project_id": "salvage_cutter_project",
+      "intent": "Expansion 03 remembered upper-right alcove payoff, visible before the cutter exists and collectable only after the night project."
     }
   ],
   "camera_tests": [

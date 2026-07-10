@@ -8,7 +8,6 @@ import json
 import re
 from collections import deque
 from pathlib import Path
-
 from validate_current_gates import validate_current_gate_reachability, validate_current_gate_schema
 from validate_destination_payoffs import validate_destination_payoff_schema
 from validate_final_dive_objective_seeds import validate_final_dive_objective_seed_reachability, validate_final_dive_objective_seed_schema
@@ -30,12 +29,12 @@ from validate_world_connectors import validate_world_connector_reachability, val
 
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 DISPLAY_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,31}$")
-ENTITY_TYPES = {"spawn", "boat_spawn", "salvage", "hazard"}
-POINT_ENTITY_TYPES = {"spawn", "salvage", "hazard"}
-KIND_ENTITY_TYPES = {"salvage", "hazard"}
+ENTITY_TYPES = {"spawn", "boat_spawn", "salvage", "hazard", "material_candidate", "tool_target"}
+POINT_ENTITY_TYPES = {"spawn", "salvage", "hazard", "material_candidate", "tool_target"}
+KIND_ENTITY_TYPES = {"salvage", "hazard", "material_candidate", "tool_target"}
 SALVAGE_VALUE_TIERS = {"common", "valuable"}
 ROUTE_CHOICE_METADATA_FIELDS = {"route_choice_id", "validation_route", "route_order"}
-SALVAGE_INTERACTIONS = {"instant", "timed_salvage", "pry_salvage", "cutter_salvage"}
+SALVAGE_INTERACTIONS = {"instant", "timed_salvage", "pry_salvage"}
 SALVAGE_INTERACTION_METADATA_FIELDS = {"interaction", "interaction_seconds", "interaction_label", "pry_stages"}
 OXYGEN_MAX_SECONDS = 90.0
 OXYGEN_REST_METADATA_FIELDS = {
@@ -139,7 +138,8 @@ def validate_salvage_interaction_metadata(entity: dict, item_label: str) -> list
     interaction_fields = SALVAGE_INTERACTION_METADATA_FIELDS & set(entity.keys())
     if not interaction_fields:
         return failures
-
+    if entity.get("type") in {"material_candidate", "tool_target"}:
+        return failures
     if entity.get("type") != "salvage":
         fields = ", ".join(sorted(interaction_fields))
         return [f"{item_label} interaction metadata ({fields}) is only supported on salvage entities."]
@@ -151,7 +151,7 @@ def validate_salvage_interaction_metadata(entity: dict, item_label: str) -> list
         allowed = ", ".join(sorted(SALVAGE_INTERACTIONS))
         failures.append(f"{item_label} interaction {interaction!r} must be one of: {allowed}.")
 
-    if interaction in {"timed_salvage", "pry_salvage", "cutter_salvage"}:
+    if interaction in {"timed_salvage", "pry_salvage"}:
         if "interaction_seconds" not in entity:
             failures.append(f"{item_label} {interaction} requires interaction_seconds.")
         elif not is_number_value(entity["interaction_seconds"]):
@@ -159,7 +159,7 @@ def validate_salvage_interaction_metadata(entity: dict, item_label: str) -> list
         elif float(entity["interaction_seconds"]) <= 0.0:
             failures.append(f"{item_label} interaction_seconds must be greater than 0.")
     elif "interaction_seconds" in entity:
-        failures.append(f"{item_label} interaction_seconds is only supported for timed_salvage, pry_salvage, or cutter_salvage.")
+        failures.append(f"{item_label} interaction_seconds is only supported for timed_salvage or pry_salvage.")
 
     if interaction == "pry_salvage":
         if "pry_stages" not in entity:

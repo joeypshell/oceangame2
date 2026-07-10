@@ -84,8 +84,8 @@ def _validate_entity_metadata(
         tool_fields = TOOL_FIELDS & set(entity)
         is_cutter_target = entity.get("interaction") == "cutter_salvage" or bool(tool_fields)
         if material_fields:
-            if entity.get("type") != "salvage":
-                failures.append(f"{label} material metadata is only supported on salvage entities.")
+            if entity.get("type") != "material_candidate":
+                failures.append(f"{label} material metadata is only supported on material_candidate entities.")
                 continue
             for field in MATERIAL_FIELDS:
                 if field not in entity:
@@ -96,13 +96,13 @@ def _validate_entity_metadata(
             if entity.get("material_quantity") != 1 or not _is_int(entity.get("material_quantity")):
                 failures.append(f"{label} material_quantity must be exactly 1.")
             failures.extend(_validate_id(entity.get("candidate_pool_id"), label, "candidate_pool_id"))
-            if entity.get("interaction", "instant") != "instant":
-                failures.append(f"{label} material candidate interaction must be instant or omitted.")
+            if entity.get("interaction") != "material_collect":
+                failures.append(f"{label} material candidate interaction must be 'material_collect'.")
             if isinstance(entity.get("id"), str):
                 material_entities[entity["id"]] = entity
         if is_cutter_target:
-            if entity.get("type") != "salvage":
-                failures.append(f"{label} cutter metadata is only supported on salvage entities.")
+            if entity.get("type") != "tool_target":
+                failures.append(f"{label} cutter metadata is only supported on tool_target entities.")
                 continue
             if entity.get("interaction") != "cutter_salvage":
                 failures.append(f"{label} required tool metadata requires interaction 'cutter_salvage'.")
@@ -176,7 +176,7 @@ def _validate_pools(
             referenced_candidates.add(candidate_id)
             entity = material_entities.get(candidate_id)
             if entity is None:
-                failures.append(f"{label} candidate id {candidate_id!r} does not reference a material salvage entity.")
+                failures.append(f"{label} candidate id {candidate_id!r} does not reference a material_candidate entity.")
             elif entity.get("candidate_pool_id") != pool_id or entity.get("material_id") != material_id:
                 failures.append(f"{label} candidate {candidate_id!r} metadata does not match its pool/material.")
         if _is_int(select_count) and int(select_count) > len(candidate_ids):
