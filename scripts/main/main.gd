@@ -1417,7 +1417,8 @@ func _try_combat_attack() -> bool:
 		_world,
 		_player.global_position,
 		facing_sign,
-		_material_project.has_shock_prod()
+		_material_project.has_shock_prod(),
+		_material_project.has_shock_prod_capacitor()
 	)
 	_last_status_note = str(result.get("note", _last_status_note))
 	_combat_feedback_seconds = COMBAT_FEEDBACK_SECONDS
@@ -1790,7 +1791,7 @@ func _failure_retry_prompt() -> String:
 func _combat_overlay_text() -> String:
 	var weapon_text := "Shock prod locked"
 	if _shock_prod != null and _material_project != null:
-		weapon_text = _shock_prod.overlay_text(_material_project.has_shock_prod())
+		weapon_text = _shock_prod.overlay_text(_material_project.has_shock_prod(), _material_project.has_shock_prod_capacitor())
 	return "%s | %s" % [_player_health.overlay_text(), weapon_text]
 
 

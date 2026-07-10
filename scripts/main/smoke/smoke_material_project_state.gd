@@ -66,7 +66,7 @@ func _run() -> void:
 	_expect(not bool(repeated.get("changed", true)) and repeated.get("reason") == "already_completed", "repeat build was not idempotent")
 	_expect(profile.material_inventory().is_empty(), "repeat build changed material inventory")
 	_test_shock_prod_project(profile, world)
-	_test_capacitor_project(profile)
+	_test_capacitor_project(profile, world)
 
 	var reloaded := ExpansionProfileState.new(TEST_PATH)
 	var reload_report: Dictionary = reloaded.load_profile()
@@ -119,30 +119,25 @@ func _test_shock_prod_project(profile, world) -> void:
 	_expect(repeated.get("reason") == "already_completed", "shock prod repeat build was not idempotent")
 
 
-func _test_capacitor_project(profile) -> void:
+func _test_capacitor_project(profile, world) -> void:
 	var direct_unlock: Dictionary = profile.unlock_capability(ExpansionProfileState.SHOCK_PROD_CAPACITOR_CAPABILITY_ID, false)
 	_expect(direct_unlock.get("reason") == "project_transaction_required", "capacitor unlocked outside project transaction")
+	var runtime := MaterialProjectRuntime.new(profile)
+	runtime.on_map_loaded(world)
+	_expect(runtime.project_definition().get("id") == ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID, "capacitor was not the next source-ordered project")
+	_expect(runtime.status() == "incomplete" and runtime.debrief_lines()[0].find("Gel 0/1") != -1, "capacitor did not report its biological recipe")
 	var recipe := {
 		ExpansionProfileState.COIL_MATERIAL_ID: 1,
 		ExpansionProfileState.INSULATING_GEL_MATERIAL_ID: 1,
 		ExpansionProfileState.EEL_ELECTROCYTE_MATERIAL_ID: 1,
 	}
 	profile.deposit_materials(recipe, true)
-	var definition := {
-		"id": ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID,
-		"required_project_id": ExpansionProfileState.SHOCK_PROD_PROJECT_ID,
-		"required_discovery_id": ExpansionProfileState.ANOMALY_DISCOVERY_ID,
-		"required_materials": recipe,
-		"unlocks_capability_id": ExpansionProfileState.SHOCK_PROD_CAPACITOR_CAPABILITY_ID,
-		"target_hostile_id": ExpansionProfileState.SHOCK_PROD_TARGET_ID,
-		"capability_effect": "interrupt_warning_lunge",
-		"build_phase": "night_debrief",
-	}
-	var completed: Dictionary = profile.complete_material_project(definition, true)
+	_expect(runtime.status() == "ready", "banked biological recipe did not ready the capacitor")
+	var completed: Dictionary = runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
 	_expect(bool(completed.get("changed", false)), "capacitor project did not complete")
 	_expect(profile.has_capability(ExpansionProfileState.SHOCK_PROD_CAPACITOR_CAPABILITY_ID), "capacitor capability was not unlocked")
 	_expect(profile.material_inventory().is_empty(), "capacitor project did not spend the exact recipe")
-	var repeated: Dictionary = profile.complete_material_project(definition, true)
+	var repeated: Dictionary = runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
 	_expect(repeated.get("reason") == "already_completed", "capacitor repeat build was not idempotent")
 
 

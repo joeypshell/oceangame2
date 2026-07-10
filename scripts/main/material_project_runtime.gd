@@ -66,6 +66,16 @@ func debrief_lines() -> Array[String]:
 	if current_status == "ready":
 		return ["P: Build %s" % _project_action_label(project)]
 	var required: Dictionary = project.get("required_materials", {})
+	if str(project.get("id", "")) == ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID:
+		return ["%s: Coil %d/%d | Gel %d/%d | Electro %d/%d" % [
+			_project_prefix(project),
+			_profile.material_quantity(ExpansionProfileState.COIL_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.COIL_MATERIAL_ID, 0)),
+			_profile.material_quantity(ExpansionProfileState.INSULATING_GEL_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.INSULATING_GEL_MATERIAL_ID, 0)),
+			_profile.material_quantity(ExpansionProfileState.EEL_ELECTROCYTE_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.EEL_ELECTROCYTE_MATERIAL_ID, 0)),
+		]]
 	return ["%s: Ti %d/%d | Coil %d/%d" % [
 		_project_prefix(project),
 		_profile.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID),
@@ -85,6 +95,10 @@ func has_current_stabilizer() -> bool:
 
 func has_shock_prod() -> bool:
 	return _profile != null and _profile.has_capability(ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID)
+
+
+func has_shock_prod_capacitor() -> bool:
+	return _profile != null and _profile.has_capability(ExpansionProfileState.SHOCK_PROD_CAPACITOR_CAPABILITY_ID)
 
 
 func project_definition() -> Dictionary:
@@ -113,6 +127,7 @@ func report() -> Dictionary:
 		"cutter_unlocked": has_cutter(),
 		"current_stabilizer_unlocked": has_current_stabilizer(),
 		"shock_prod_unlocked": has_shock_prod(),
+		"shock_prod_capacitor_unlocked": has_shock_prod_capacitor(),
 	}
 
 
@@ -199,10 +214,14 @@ func _completed_text(project: Dictionary) -> String:
 
 
 func _prerequisite_label(project: Dictionary) -> String:
+	if str(project.get("id", "")) == ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID:
+		return "shock prod"
 	return "cutter" if str(project.get("id", "")) == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID else "current stabilizer"
 
 
 func _prerequisite_project_label(project: Dictionary) -> String:
+	if str(project.get("id", "")) == ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID:
+		return "shock prod project"
 	return "salvage cutter project" if str(project.get("id", "")) == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID else "current stabilizer project"
 
 
