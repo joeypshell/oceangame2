@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver, anomaly-survey, expedition-day, material-to-tool, capability-gated-place, and practical-research foundations are complete. Combat is selected for the next planning cycle; biological resources and broader ecology follow in named milestones. The controlled source/validation/visual workflow remains authoritative while that game grows.
+The compact diver, anomaly-survey, expedition-day, material-to-tool, capability-gated-place, and practical-research foundations are complete. Expansion 06 now has a scoped Combat Foundation plan and issue batch; biological resources and broader ecology follow in named milestones. The controlled source/validation/visual workflow remains authoritative while that game grows.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 05 GO closeout. Expansion 06 Combat Foundation is selected next, but its scoped issue batch belongs to the next drift cycle; later milestones remain directional.
+Current handoff starts with the Expansion 05 GO closeout and the bounded Expansion 06 Combat Foundation plan. Only Expansion 06 has an actionable batch; later milestones remain directional.
 
 Core sources and operating docs:
 
@@ -72,6 +72,7 @@ Current release and expansion handoff:
 - [Expansion 05 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_05_VISUAL_BASELINE_DECISION.md)
 - [Expansion 05 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_05_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 05 Closeout](docs/current/OCEANGAME_EXPANSION_05_CLOSEOUT.md)
+- [OceanGame Expansion 06 Plan](docs/current/OCEANGAME_EXPANSION_06_PLAN.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 

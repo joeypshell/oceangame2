@@ -2,7 +2,7 @@
 
 Date: 2026-07-10
 
-Status: Expansion 05 is complete with a GO. Expansion 06 Combat Foundation is selected for the next planning cycle; no non-deferred implementation batch is active yet.
+Status: Expansion 05 is complete with a GO. Expansion 06 Combat Foundation is active through issues #768-#777; Expansions 07-09 remain directional only.
 
 ## Decision
 
@@ -87,7 +87,7 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 05's issue-level batch #748-#757 is complete. The next drift cycle owns the scoped Expansion 06 issue batch; until then, no non-deferred implementation batch is committed.
+Expansion 05's issue-level batch #748-#757 is complete. Expansion 06 issues #768-#777 are the only committed implementation batch; Expansions 07-09 remain directional.
 
 ### Directional
 
@@ -178,7 +178,7 @@ Exit question: does research make the player smarter and change the next expedit
 
 ### Expansion 06: Combat Foundation
 
-Status: Selected next; issue batch not yet created.
+Status: Active; bounded plan and issues #768-#777 are the committed horizon.
 
 Goal: prove one readable underwater combat encounter.
 

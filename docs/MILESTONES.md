@@ -13,7 +13,7 @@ This is the compact milestone index. Detailed direction lives in:
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-05 are complete. Expansion 05 issues #748-#757 proved one stabilizer-gated mineral survey, boat-committed practical finding, source-derived next-day coil habitat lead, deterministic coverage, focused visual review, and public Web deployment.
+Simple Diver Game 01-09 and OceanGame Expansions 01-05 are complete. Expansion 06 issues #768-#777 are the active bounded Combat Foundation batch: one authored territory, one non-circular first weapon, separate health, an evade-or-fight proof, deterministic review, and Web closeout.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
@@ -21,8 +21,8 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: no non-deferred implementation batch is active after Expansion 05 closeout.
-- Directional: Expansion 06 Combat Foundation is selected next; Expansions 07-09 retain goals and exit criteria only.
+- Committed: Expansion 06 issues #768-#777 are active in dependency order.
+- Directional: Expansions 07-09 retain goals and exit criteria only.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Open GitHub Milestones
@@ -40,13 +40,13 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 #748-#757 are complete with a GO. The source-authored finding gives broad deep-cache habitat knowledge and guarantees the researched coil candidate on the next fresh day without increasing yield or adding an exact map marker.
 
-## Next Issue Batch
+## Active Issue Batch
 
-No non-deferred batch is active. The next drift cycle should turn the Expansion 06 goal and entry conditions into a scoped issue batch; #52/#53 remain deferred optional slice-03 polish.
+Expansion 06 issues #768-#777 cover planning, ownership, schema, source authoring, health/failure, the one hostile/weapon runtime, deterministic smoke, capture, visual review, and Web closeout. #52/#53 remain deferred optional slice-03 polish.
 
 ## Roadmap Rules
 
-- Create the Expansion 06 batch only from the Expansion 05 GO closeout; do not pre-batch Expansions 07-09.
+- Resolve only the scoped Expansion 06 batch from the Expansion 05 GO closeout; do not pre-batch Expansions 07-09.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_slice_01` as the default boat hub unless a separate source-driven decision changes it.
 - Preserve source-authored maps, reachability, parity, focused captures, and public Web verification in every milestone.
