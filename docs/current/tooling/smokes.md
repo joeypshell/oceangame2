@@ -13,6 +13,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --script res://scripts/main/smoke/smoke_daylight_runtime.gd
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --script res://scripts/main/smoke/smoke_surface_boat_semantics.gd
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --script res://scripts/main/smoke/smoke_multiple_sorties.gd
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-loop
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-02-route
@@ -50,6 +51,8 @@ The import command is important on a fresh clone or CI checkout because `.godot/
 The standalone daylight runtime smoke uses a five-second deterministic override to verify countdown, connector preservation, one exact nightfall event, and clean next-day reset without waiting on wall-clock time.
 
 The standalone surface/boat smoke derives an open top-row water cell outside the authored boat, verifies oxygen refill without cargo/profile/wallet mutation, then confirms the canonical boat banks the held cargo.
+
+The standalone multiple-sortie smoke banks two separate departures into one shared day, verifies refreshed sortie oxygen and persistent daylight/day totals, then confirms a failed third sortie restores only unbanked cargo without duplicating rewards.
 
 The salvage-loop smoke check loads the default production slice, collects all authored salvage through the same runtime methods used in play, returns to extraction, confirms completion, resets, and exits.
 
