@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 04 GO closeout. Expansion 05 practical research is selected next, but its scoped issue batch belongs to the next drift cycle; later milestones remain directional.
+Current handoff starts with the Expansion 04 GO closeout and the active Expansion 05 plan/issues #748-#757. Later milestones remain directional until the preceding closeout selects them.
 
 Core sources and operating docs:
 
@@ -66,6 +66,7 @@ Current release and expansion handoff:
 - [Expansion 04 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_04_VISUAL_BASELINE_DECISION.md)
 - [Expansion 04 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_04_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 04 Closeout](docs/current/OCEANGAME_EXPANSION_04_CLOSEOUT.md)
+- [OceanGame Expansion 05 Plan](docs/current/OCEANGAME_EXPANSION_05_PLAN.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
