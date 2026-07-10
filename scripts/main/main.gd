@@ -31,6 +31,8 @@ const RouteCommitmentFeedback := preload("res://scripts/main/route_commitment_fe
 const SessionProgression := preload("res://scripts/main/session_progression.gd")
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpeditionDayPresentation := preload("res://scripts/main/expedition_day_presentation.gd")
+const ExpeditionDayDebrief := preload("res://scripts/main/expedition_day_debrief.gd")
+const OffloadController := preload("res://scripts/main/offload_controller.gd")
 const SortieState := preload("res://scripts/main/sortie_state.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
 const WorldConnectorController := preload("res://scripts/main/world_connector_controller.gd")
@@ -995,10 +997,14 @@ func _process(delta: float) -> void:
 		_expedition_day_state.record_sortie_started()
 		_run_complete = false
 		_completion_oxygen_bonus = 0
-	if _run_complete or _sortie_state.failed:
+	if _sortie_state.failed:
 		_update_status_label()
 		return
-	_expedition_day_state.advance_daylight(delta)
+	if ExpeditionDayDebrief.update(self, delta):
+		return
+	if _run_complete:
+		_update_status_label()
+		return
 
 	if _update_oxygen(delta):
 		_update_status_label()
@@ -1018,6 +1024,8 @@ func _process(delta: float) -> void:
 	var survey_result: Dictionary = _anomaly_survey.update(_world, _player, delta)
 	if survey_result.has("note"):
 		_last_status_note = str(survey_result["note"])
+	if bool(survey_result.get("committed", false)):
+		_expedition_day_state.record_discovery(str(survey_result.get("discovery_id", "")))
 	_update_hazard_warning(delta)
 
 	if _sortie_state.held_salvage < _held_salvage_capacity():
@@ -1060,33 +1068,7 @@ func _process(delta: float) -> void:
 		if not blocked_salvage.is_empty():
 			_last_status_note = _return_pressure_feedback.cargo_full_prompt(blocked_salvage)
 
-	if _sortie_state.held_salvage > 0 and _world.is_inside_extraction(_player.global_position):
-		var banked_cue_key := "%d:%s" % [_banked_salvage + _sortie_state.held_salvage, str(_sortie_state.held_salvage_ids)]
-		_banked_salvage += _sortie_state.held_salvage
-		_banked_score += _sortie_state.held_salvage_score
-		_record_session_payout(_sortie_state.held_salvage_score)
-		_record_banked_route_outcomes(_sortie_state.held_salvage_ids)
-		_banked_salvage_ids.append_array(_sortie_state.held_salvage_ids)
-		var relay_follow_through_note: String = _relay_follow_through_feedback.banked_feedback(_sortie_state.held_salvage_ids)
-		var final_dive_note: String = _final_dive_objective_seed.banked_feedback(_sortie_state.held_salvage_ids)
-		if not final_dive_note.is_empty():
-			_anomaly_survey.activate_lead()
-		_expedition_day_state.record_bank(_sortie_state.held_salvage, _sortie_state.held_salvage_score)
-		_sortie_state.clear_held()
-		if _should_complete_run_after_banking():
-			_run_complete = true
-			_completion_oxygen_bonus = _calculate_oxygen_completion_bonus()
-			_record_session_best_score()
-			_last_status_note = "Run complete"
-		elif not relay_follow_through_note.is_empty():
-			_last_status_note = relay_follow_through_note
-			if not final_dive_note.is_empty():
-				_last_status_note = "%s\n%s" % [relay_follow_through_note, final_dive_note]
-		elif not final_dive_note.is_empty():
-			_last_status_note = final_dive_note
-		else:
-			_last_status_note = "Banked salvage"
-		_play_feedback_cue("salvage_bank", banked_cue_key)
+	OffloadController.try_offload(self)
 
 	_update_status_label()
 
@@ -1172,6 +1154,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 
 	var key_event := event as InputEventKey
+	if _expedition_day_state.phase == ExpeditionDayState.PHASE_DEBRIEF:
+		if key_event.pressed and not key_event.echo and key_event.keycode == KEY_N:
+			ExpeditionDayDebrief.handle_day_key(self)
+		return
 	if key_event.pressed and not key_event.echo and key_event.keycode == KEY_R:
 		_reset_run()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_U:
@@ -1189,7 +1175,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_E:
 		_try_world_connector_transition()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_N:
-		ExpeditionDayPresentation.try_request_voluntary_end(self)
+		ExpeditionDayDebrief.handle_day_key(self)
 
 
 func _reset_run() -> void:
@@ -1339,6 +1325,7 @@ func _handle_oxygen_depleted() -> void:
 	_sortie_state.oxygen_seconds = _oxygen_capacity_seconds()
 	_reset_oxygen_feedback_cues()
 	_sortie_state.mark_failed("oxygen_failure")
+	_expedition_day_state.record_failure("oxygen_depleted")
 	_hazard_cooldown_seconds = HAZARD_COOLDOWN_SECONDS
 	_player.global_position = _world.spawn_position
 	if _player.has_method("reset_motion"):
@@ -1955,6 +1942,8 @@ func _progression_result_text() -> String:
 
 func _update_result_panel() -> void:
 	if _result_panel == null or _result_label == null:
+		return
+	if ExpeditionDayDebrief.apply_result_panel(self):
 		return
 	_result_panel.visible = _run_complete or _sortie_state.failed
 	if not _run_complete and not _sortie_state.failed:

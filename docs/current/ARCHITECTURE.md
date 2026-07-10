@@ -115,6 +115,8 @@ Additional current map sources:
   - Keeps interaction progress in the focused timed, pry, and survey controllers as sortie-local subowners.
   - Delegates the deterministic 300-second daylight countdown, exact-once nightfall transition, sortie count, day-bank totals, committed-during-day discovery ids, connector-preserved day context, and end-day state to `scripts/main/expedition_day_state.gd`.
   - Uses `scripts/main/expedition_day_presentation.gd` for the fixed-width day/time/dive line, surface-versus-boat context, dusk/night warnings, and safe boat-only voluntary end request.
+  - Uses `scripts/main/expedition_day_debrief.gd` for voluntary or forced night resolution, compact day totals, unbanked-state cleanup, and the next-day reset. The helper is the future insertion boundary for projects or forecasts, but neither system exists yet.
+  - Uses `scripts/main/offload_controller.gd` so normal boat returns and nightfall-at-boat share one cargo, score, wallet, objective, and day-ledger commit path.
   - Keeps durable capabilities and committed discoveries in `scripts/main/expansion_profile_state.gd`; session wallet, arbitrary world state, cargo, oxygen, daylight, and in-progress interactions are not profile-persistent.
   - Uses `scripts/main/world_connector_controller.gd` for source-authored prompted world-slice connectors.
   - Uses `scripts/main/final_dive_objective_seed.gd` for the compact source-authored final-dive/capstone cue.

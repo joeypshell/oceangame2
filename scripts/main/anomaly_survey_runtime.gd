@@ -200,7 +200,13 @@ func _try_commit(world, player) -> Dictionary:
 	_lead_available = false
 	_last_note = COMMIT_NOTE
 	_last_result = COMMIT_RESULT
-	return {"state": status, "committed": true, "note": _last_note, "result_text": _last_result}
+	return {
+		"state": status,
+		"committed": true,
+		"discovery_id": str(commit.get("committed_discovery_id", "")),
+		"note": _last_note,
+		"result_text": _last_result,
+	}
 
 
 func _refresh_world_targets(world) -> void:
