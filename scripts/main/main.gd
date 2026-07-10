@@ -40,6 +40,7 @@ const ExpeditionDayPresentation := preload("res://scripts/main/expedition_day_pr
 const ExpeditionDayDebrief := preload("res://scripts/main/expedition_day_debrief.gd")
 const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
+const PlayerHealthState := preload("res://scripts/main/player_health_state.gd")
 const SortieState := preload("res://scripts/main/sortie_state.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
 const WorldConnectorController := preload("res://scripts/main/world_connector_controller.gd")
@@ -183,6 +184,7 @@ var _relay_follow_through_feedback
 var _return_pressure_feedback
 var _route_commitment_feedback
 var _session_progression
+var _player_health
 var _sortie_state
 var _expedition_day_state
 var _timed_salvage
@@ -254,6 +256,7 @@ func _ready() -> void:
 	_return_pressure_feedback = ReturnPressureFeedback.new()
 	_route_commitment_feedback = RouteCommitmentFeedback.new()
 	_session_progression = SessionProgression.new()
+	_player_health = PlayerHealthState.new()
 	_sortie_state = SortieState.new(OXYGEN_MAX_SECONDS)
 	_expedition_day_state = ExpeditionDayState.new()
 	_progression_runtime = ProgressionRuntimeController.new(_session_progression)
@@ -993,6 +996,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_material_project.on_map_loaded(world)
 	_cutter_salvage.on_map_loaded(world)
 	_sortie_state.begin_map_leg(str(world.map_id), entry_id, _oxygen_capacity_seconds(), preserve_sortie)
+	_player_health.begin_map_leg(preserve_sortie)
 	player.position = world.get_entry_position(entry_id) if not entry_id.is_empty() and world.has_method("get_entry_position") else world.spawn_position
 	add_child(player)
 	_apply_session_light_profile()
@@ -1071,6 +1075,9 @@ func _input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	if _world == null or _player == null:
 		return
+	_player_health.update(delta)
+	if not _sortie_state.failed and _at_canonical_boat():
+		_player_health.refill_at_boat()
 	_update_hazard_feedback(delta)
 	if _sortie_state.update_offload_presence(_world.is_inside_extraction(_player.global_position), _oxygen_capacity_seconds()):
 		_expedition_day_state.record_sortie_started()
@@ -1230,6 +1237,7 @@ func _reset_run() -> void:
 	_timed_salvage.reset()
 	_cutter_salvage.reset()
 	_cutter_salvage.apply_banked_to_world(_world)
+	_player_health.reset()
 	_relay_follow_through_feedback.reset(_world)
 	_final_dive_objective_seed.reset(_world)
 	_sortie_state.begin_map_leg(str(_world.map_id), "", _oxygen_capacity_seconds())
@@ -1368,6 +1376,41 @@ func _handle_oxygen_depleted() -> void:
 	_sortie_state.mark_failed("oxygen_failure")
 	_expedition_day_state.record_failure("oxygen_depleted")
 	_hazard_cooldown_seconds = HAZARD_COOLDOWN_SECONDS
+	_player.global_position = _world.spawn_position
+	if _player.has_method("reset_motion"):
+		_player.reset_motion()
+	if _player.has_method("snap_camera"):
+		_player.snap_camera()
+
+
+func _apply_combat_damage(amount: int, source_id: String) -> Dictionary:
+	if _sortie_state.failed or _run_complete:
+		return {"changed": false, "reason": "inactive", "defeated": false}
+	var result: Dictionary = _player_health.apply_damage(amount, source_id)
+	if not bool(result.get("changed", false)):
+		return result
+	if bool(result.get("defeated", false)):
+		_handle_combat_defeat(source_id)
+	else:
+		_last_status_note = "Eel hit - health -%d" % amount
+	_update_status_label()
+	return result
+
+
+func _handle_combat_defeat(_source_id: String) -> void:
+	_anomaly_survey.clear_unbanked("combat_defeat", _world)
+	_oxygen_rest_feedback.reset()
+	_current_gate.reset()
+	_moving_hazards.reset(_world)
+	_pry_salvage.reset()
+	_timed_salvage.reset()
+	_cutter_salvage.reset()
+	_material_runtime.restore_unbanked(_world, _expedition_day_state, "combat_defeat")
+	if not _sortie_state.held_salvage_ids.is_empty():
+		_world.restore_salvage(_sortie_state.clear_held())
+	_last_status_note = "Injured - surfaced, press R"
+	_sortie_state.mark_failed("combat_defeat")
+	_expedition_day_state.record_failure("combat_defeat")
 	_player.global_position = _world.spawn_position
 	if _player.has_method("reset_motion"):
 		_player.reset_motion()
@@ -1556,7 +1599,7 @@ func _update_status_label() -> void:
 		return
 
 	if _total_salvage <= 0:
-		_status_label.text = ExpeditionDayPresentation.decorate_status(self, "Score 0\nSalvage banked 0/0\nHeld 0/%d\nOxygen --" % _held_salvage_capacity())
+		_status_label.text = ExpeditionDayPresentation.decorate_status(self, "Score 0\nSalvage banked 0/0\nHeld 0/%d\n%s\nOxygen --" % [_held_salvage_capacity(), _player_health.overlay_text()])
 		_update_result_panel()
 		return
 
@@ -1571,7 +1614,7 @@ func _update_status_label() -> void:
 		prompt = "Run complete - press R"
 		objective_step_cue_blocked = true
 	elif _sortie_state.failed:
-		prompt = "Oxygen depleted - press R"
+		prompt = _failure_retry_prompt()
 		objective_step_cue_blocked = true
 	elif _held_cargo_count() >= _held_salvage_capacity():
 		prompt = _cargo_full_prompt()
@@ -1617,13 +1660,14 @@ func _update_status_label() -> void:
 	var anomaly_text: String = _anomaly_survey.overlay_text(_world, _player)
 	var material_text: String = _material_runtime.overlay_text()
 
-	_status_label.text = "Score %d\nSalvage banked %d/%d\nHeld %d/%d (%d pts)\n%s\n%s" % [
+	_status_label.text = "Score %d\nSalvage banked %d/%d\nHeld %d/%d (%d pts)\n%s\n%s\n%s" % [
 		_banked_score,
 		_banked_salvage,
 		_total_salvage,
 		_held_cargo_count(),
 		_held_salvage_capacity(),
 		_sortie_state.held_salvage_score,
+		_player_health.overlay_text(),
 		oxygen_text,
 		progression_text,
 	]
@@ -1637,6 +1681,14 @@ func _update_status_label() -> void:
 		_status_label.text += "\n%s" % prompt
 	_status_label.text = ExpeditionDayPresentation.decorate_status(self, _status_label.text)
 	_update_result_panel()
+
+
+func _failure_retry_prompt() -> String:
+	return "Injured - surfaced, press R" if _sortie_state.failure_reason == "combat_defeat" else "Oxygen depleted - press R"
+
+
+func _at_canonical_boat() -> bool:
+	return str(_world.map_id) == "production_slice_01" and _world.is_inside_boat(_player.global_position)
 
 
 func _cargo_full_prompt() -> String:
@@ -2016,11 +2068,15 @@ func _update_result_panel() -> void:
 		return
 
 	var oxygen_text := "Oxygen %ds" % int(ceil(_sortie_state.oxygen_seconds))
-	if _sortie_state.failed:
+	var failure_text := ""
+	if _sortie_state.failed and _sortie_state.failure_reason != "combat_defeat":
 		oxygen_text = "Oxygen depleted"
+	elif _sortie_state.failed and _sortie_state.failure_reason == "combat_defeat":
+		failure_text = "Combat defeat | %s" % _player_health.overlay_text()
 	_result_label.text = ResultPresentationBuilder.build_text({
 		"run_complete": _run_complete,
 		"run_failed": _sortie_state.failed,
+		"failure_text": failure_text,
 		"score": _current_expedition_score(),
 		"salvage_score": _banked_score,
 		"oxygen_bonus": _completion_oxygen_bonus,

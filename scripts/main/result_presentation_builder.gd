@@ -9,6 +9,7 @@ static func build_text(context: Dictionary) -> String:
 
 	var result_lines := PackedStringArray()
 	result_lines.append(_title(context))
+	_append_if_present(result_lines, str(context.get("failure_text", "")))
 	_append_if_present(result_lines, str(context.get("objective_text", "")))
 	_append_if_present(result_lines, str(context.get("next_dive_text", "")))
 	_append_if_present(result_lines, str(context.get("relay_follow_through_text", "")))
