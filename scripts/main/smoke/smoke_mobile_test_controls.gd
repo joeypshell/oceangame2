@@ -40,10 +40,17 @@ func _run() -> void:
 	_expect(bool(report.get("enabled", false)), "forced controls did not enable")
 	var commands: Array = report.get("commands", [])
 	var command_rects: Dictionary = report.get("command_rects", {})
+	var viewport_size: Vector2 = report.get("viewport_size", Vector2.ZERO)
+	var bottom_inset := float(report.get("bottom_inset", 0.0))
 	_expect(commands.size() == EXPECTED_COMMANDS.size(), "command pad did not expose exactly nine commands")
 	_expect(command_rects.size() == EXPECTED_COMMANDS.size(), "command pad did not lay out exactly nine touch regions")
 
 	var stick_rect: Rect2 = report.get("stick_rect", Rect2())
+	var reachable_bottom := viewport_size.y - bottom_inset
+	_expect(stick_rect.end.y <= reachable_bottom, "stick extended into the bottom interaction inset")
+	for command_id in command_rects:
+		var command_rect: Rect2 = command_rects[command_id]
+		_expect(command_rect.end.y <= reachable_bottom, "%s extended into the bottom interaction inset" % command_id)
 	var stick_position := stick_rect.get_center() + Vector2(0.65, -0.55) * stick_rect.size.x * 0.5
 	controls._input(_touch(10, stick_position, true))
 	_expect(Input.get_action_strength("ui_right") > 0.5, "stick did not press right movement")
@@ -59,6 +66,11 @@ func _run() -> void:
 		controls._input(_touch(20, rect.get_center(), false))
 
 	controls._input(_touch(10, stick_position, false))
+	var down_position := stick_rect.get_center() + Vector2.DOWN * stick_rect.size.y * 0.45
+	controls._input(_touch(11, down_position, true))
+	_expect(Input.get_action_strength("ui_down") > 0.8, "lower stick travel did not press down movement")
+	_expect(is_zero_approx(Input.get_action_strength("ui_up")), "lower stick travel pressed up movement")
+	controls._input(_touch(11, down_position, false))
 	for action in [&"ui_left", &"ui_right", &"ui_up", &"ui_down", &"combat_attack"]:
 		_expect(not Input.is_action_pressed(action), "%s remained pressed after touch release" % action)
 
@@ -81,7 +93,7 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: mobile test controls auto_hidden=headless stick=8_direction commands=9 simultaneous_input=true keyboard_events=U,C,L,Q,P,N,R,E attack_action=combat_attack.")
+	print("PASS: mobile test controls auto_hidden=headless stick=8_direction down_reachable=true bottom_inset=104 commands=9 simultaneous_input=true keyboard_events=U,C,L,Q,P,N,R,E attack_action=combat_attack.")
 	quit(0)
 
 

@@ -6,7 +6,8 @@ const FORCE_FLAG := "--show-mobile-controls"
 const STICK_SIZE := 224.0
 const STICK_KNOB_SIZE := 72.0
 const STICK_DEADZONE := 0.18
-const SCREEN_MARGIN := 30.0
+const SIDE_MARGIN := 30.0
+const BOTTOM_INTERACTION_INSET := 104.0
 const BUTTON_SIZE := Vector2(128, 80)
 const BUTTON_GAP := 10.0
 const GRID_COLUMNS := 3
@@ -82,6 +83,8 @@ func _input(event: InputEvent) -> void:
 func get_test_report() -> Dictionary:
 	return {
 		"enabled": _controls_enabled,
+		"bottom_inset": BOTTOM_INTERACTION_INSET,
+		"viewport_size": get_viewport().get_visible_rect().size,
 		"stick_rect": _stick_rect,
 		"commands": COMMANDS.duplicate(true),
 		"command_rects": _command_rects.duplicate(true),
@@ -121,7 +124,7 @@ func _layout_controls() -> void:
 	if _root == null:
 		return
 	var viewport_size := get_viewport().get_visible_rect().size
-	var stick_position := Vector2(SCREEN_MARGIN, viewport_size.y - STICK_SIZE - SCREEN_MARGIN)
+	var stick_position := Vector2(SIDE_MARGIN, viewport_size.y - STICK_SIZE - BOTTOM_INTERACTION_INSET)
 	_stick_rect = Rect2(stick_position, Vector2(STICK_SIZE, STICK_SIZE))
 	_stick_panel.position = stick_position
 	_stick_panel.size = _stick_rect.size
@@ -132,7 +135,10 @@ func _layout_controls() -> void:
 		BUTTON_SIZE.x * GRID_COLUMNS + BUTTON_GAP * (GRID_COLUMNS - 1),
 		BUTTON_SIZE.y * rows + BUTTON_GAP * (rows - 1)
 	)
-	var grid_origin := viewport_size - grid_size - Vector2(SCREEN_MARGIN, SCREEN_MARGIN)
+	var grid_origin := Vector2(
+		viewport_size.x - grid_size.x - SIDE_MARGIN,
+		viewport_size.y - grid_size.y - BOTTOM_INTERACTION_INSET
+	)
 	_command_rects.clear()
 	for index in range(COMMANDS.size()):
 		var command_id := StringName(COMMANDS[index]["id"])
