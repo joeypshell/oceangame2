@@ -88,6 +88,12 @@ var _hazard_interactions_enabled: bool:
 	set(value):
 		_main._hazard_interactions_enabled = value
 
+var _combat_interactions_enabled: bool:
+	get:
+		return _main._combat_interactions_enabled
+	set(value):
+		_main._combat_interactions_enabled = value
+
 var _hazard_warning_id: String:
 	get:
 		return _main._hazard_warning_id

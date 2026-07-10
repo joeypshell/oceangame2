@@ -236,6 +236,7 @@ var _banked_validation_route_counts := {}
 var _hazard_cooldown_seconds := 0.0
 var _hazard_feedback_seconds := 0.0
 var _hazard_interactions_enabled := true
+var _combat_interactions_enabled := true
 var _hazard_warning_id := ""
 var _hazard_warning_cue_id := ""
 var _hazard_warning_cue_cooldown_seconds := 0.0
@@ -1374,7 +1375,7 @@ func _update_moving_hazards(delta: float) -> void:
 
 
 func _update_hostile_encounter(delta: float) -> bool:
-	if _hostiles == null or _world == null or _player == null:
+	if not _combat_interactions_enabled or _hostiles == null or _world == null or _player == null:
 		return false
 	var event: Dictionary = _hostiles.update(_world, _player.global_position, delta)
 	if str(event.get("kind", "")) != "contact":
@@ -1689,6 +1690,8 @@ func _update_status_label() -> void:
 		objective_step_cue_blocked = true
 	elif _hostiles != null and not _hostiles.prompt().is_empty():
 		prompt = _hostiles.prompt()
+		if _is_collection_status_note(_last_status_note):
+			prompt += "\n%s" % _last_status_note
 		objective_step_cue_blocked = true
 	elif _held_cargo_count() >= _held_salvage_capacity():
 		prompt = _cargo_full_prompt()
