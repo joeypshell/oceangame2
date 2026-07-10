@@ -162,6 +162,8 @@ def validate_survey_target_schema(map_path: Path, map_data: dict[str, Any]) -> l
             if not isinstance(item, dict):
                 continue
             fields = SURVEY_SPECIFIC_FIELDS & set(item)
+            if collection_name == "zones" and item.get("type") == "marker" and item.get("current_gate") is True:
+                fields.discard("required_capability_id")
             if item.get("interaction") == "survey":
                 fields.add("interaction")
             if fields:
