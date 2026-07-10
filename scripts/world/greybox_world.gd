@@ -19,6 +19,7 @@ const GreyboxRouteMarkerRenderer := preload("res://scripts/world/greybox_route_m
 const GreyboxVisibilityZoneRenderer := preload("res://scripts/world/greybox_visibility_zone_renderer.gd")
 const GreyboxWorldQueries := preload("res://scripts/world/greybox_world_queries.gd")
 const GreyboxSurveyTargets := preload("res://scripts/world/greybox_survey_targets.gd")
+const GreyboxMaterialCandidates := preload("res://scripts/world/greybox_material_candidates.gd")
 
 const SALVAGE_TIER_SCORES := {
 	"common": 100,
@@ -72,6 +73,7 @@ var _route_marker_renderer
 var _visibility_zone_renderer
 var _world_queries
 var _survey_target_runtime
+var _material_candidate_runtime
 
 
 func _ready() -> void:
@@ -86,6 +88,7 @@ func _ready() -> void:
 	_visibility_zone_renderer = GreyboxVisibilityZoneRenderer.new()
 	_world_queries = GreyboxWorldQueries.new()
 	_survey_target_runtime = GreyboxSurveyTargets.new()
+	_material_candidate_runtime = GreyboxMaterialCandidates.new()
 	load_greybox()
 
 
@@ -141,6 +144,14 @@ func load_greybox() -> void:
 	_marker_root.name = "Markers"
 	add_child(_marker_root)
 	_survey_target_runtime.build(_marker_root, map_data.get("survey_targets", []), tile_size, show_debug_overlay)
+	_material_candidate_runtime.build(
+		_marker_root,
+		map_data.get("entities", []),
+		tile_size,
+		show_debug_overlay,
+		_prop_renderer_helper(),
+		_asset_lookup_helper()
+	)
 	_build_zones(map_data.get("zones", []))
 	_build_progression_containers(map_data.get("progression_containers", []))
 	_build_moving_hazards(map_data.get("moving_hazards", []))
@@ -214,6 +225,38 @@ func get_survey_target_at(position: Vector2) -> Dictionary:
 
 func set_survey_target_state(target_id: String, state: String) -> void:
 	_survey_target_runtime.set_target_state(target_id, state)
+
+
+func get_material_candidate_pools() -> Array:
+	return _duplicate_dictionary_array(_map_data.get("material_candidate_pools", []))
+
+
+func get_material_projects() -> Array:
+	return _duplicate_dictionary_array(_map_data.get("material_projects", []))
+
+
+func get_material_candidates() -> Array:
+	return _material_candidate_runtime.candidates()
+
+
+func configure_material_candidates(selected_ids: Array, depleted_ids: Array) -> void:
+	_material_candidate_runtime.configure(selected_ids, depleted_ids)
+
+
+func get_material_candidate_near(position: Vector2, radius_px: float) -> Dictionary:
+	return _material_candidate_runtime.candidate_near(position, radius_px)
+
+
+func collect_material_candidate(candidate_id: String) -> bool:
+	return _material_candidate_runtime.collect(candidate_id)
+
+
+func restore_material_candidate(candidate_id: String) -> void:
+	_material_candidate_runtime.restore(candidate_id)
+
+
+func get_material_candidate_report() -> Dictionary:
+	return _material_candidate_runtime.report()
 
 func get_salvage_score(salvage_id: String) -> int:
 	for entity in _salvage_entities:
@@ -436,6 +479,14 @@ func _salvage_runtime_info(entity: Dictionary) -> Dictionary:
 
 func _salvage_interaction(entity: Dictionary) -> String:
 	return str(entity.get("interaction", "instant"))
+
+
+func _duplicate_dictionary_array(values: Array) -> Array:
+	var copies := []
+	for value in values:
+		if typeof(value) == TYPE_DICTIONARY:
+			copies.append(value.duplicate(true))
+	return copies
 
 
 func _world_connector_runtime_info(zone: Dictionary) -> Dictionary:

@@ -2689,32 +2689,32 @@
     {
       "id": "material_titanium_entry",
       "type": "material_candidate",
-      "x": 44,
-      "y": 20,
+      "x": 42,
+      "y": 22,
       "kind": "wreck_fragment",
       "interaction": "material_collect",
       "material_id": "titanium_scrap",
       "material_quantity": 1,
       "candidate_pool_id": "titanium_scrap_pool",
-      "intent": "Safe entry-shaft titanium candidate encountered on the first descent."
+      "intent": "Entry-shaft titanium candidate in a small side pocket off the first descent."
     },
     {
       "id": "material_titanium_crossing",
       "type": "material_candidate",
-      "x": 48,
-      "y": 31,
+      "x": 55,
+      "y": 30,
       "kind": "wreck_fragment",
       "interaction": "material_collect",
       "material_id": "titanium_scrap",
       "material_quantity": 1,
       "candidate_pool_id": "titanium_scrap_pool",
-      "intent": "Central-crossing titanium candidate supporting the short route."
+      "intent": "Central-crossing titanium candidate in the right-side branch pocket."
     },
     {
       "id": "material_titanium_return",
       "type": "material_candidate",
-      "x": 27,
-      "y": 58,
+      "x": 23,
+      "y": 59,
       "kind": "wreck_fragment",
       "interaction": "material_collect",
       "material_id": "titanium_scrap",
@@ -2725,38 +2725,38 @@
     {
       "id": "material_titanium_lower_loop",
       "type": "material_candidate",
-      "x": 40,
-      "y": 66,
+      "x": 15,
+      "y": 69,
       "kind": "wreck_fragment",
       "interaction": "material_collect",
       "material_id": "titanium_scrap",
       "material_quantity": 1,
       "candidate_pool_id": "titanium_scrap_pool",
-      "intent": "Lower-loop titanium candidate rewarding the longer known route."
+      "intent": "Lower-loop titanium candidate rewarding a western side-pocket detour."
     },
     {
       "id": "material_coil_deep_approach",
       "type": "material_candidate",
-      "x": 55,
-      "y": 68,
+      "x": 54,
+      "y": 71,
       "kind": "crate",
       "interaction": "material_collect",
       "material_id": "conductive_coil",
       "material_quantity": 1,
       "candidate_pool_id": "conductive_coil_pool",
-      "intent": "Special component candidate on the moving-hazard deep approach."
+      "intent": "Special component candidate in a side pocket off the moving-hazard deep approach."
     },
     {
       "id": "material_coil_deep_cache",
       "type": "material_candidate",
-      "x": 61,
-      "y": 73,
+      "x": 60,
+      "y": 72,
       "kind": "crate",
       "interaction": "material_collect",
       "material_id": "conductive_coil",
       "material_quantity": 1,
       "candidate_pool_id": "conductive_coil_pool",
-      "intent": "Special component candidate in the deep-cache branch."
+      "intent": "Special component candidate in a deliberate deep-cache side detour."
     },
     {
       "id": "salvage_sealed_wreck_cache",

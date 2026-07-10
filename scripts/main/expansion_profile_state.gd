@@ -1,21 +1,34 @@
 extends RefCounted
 
-const SCHEMA_VERSION := 1
+const SCHEMA_VERSION := 2
+const LEGACY_SCHEMA_VERSION := 1
 const SURVEY_SCANNER_CAPABILITY_ID := "survey_scanner_1"
+const SALVAGE_CUTTER_CAPABILITY_ID := "salvage_cutter"
 const ANOMALY_DISCOVERY_ID := "lower_right_anomaly_discovery"
+const SALVAGE_CUTTER_PROJECT_ID := "salvage_cutter_project"
+const TITANIUM_MATERIAL_ID := "titanium_scrap"
+const COIL_MATERIAL_ID := "conductive_coil"
 const DEFAULT_STORAGE_PATH := "user://oceangame2_profile.json"
-const ALLOWED_PROFILE_KEYS := {
+const LEGACY_PROFILE_KEYS := {"schema_version": true, "completed_discoveries": true, "unlocked_capabilities": true}
+const PROFILE_KEYS := {
 	"schema_version": true,
 	"completed_discoveries": true,
 	"unlocked_capabilities": true,
+	"material_inventory": true,
+	"completed_projects": true,
 }
-const SUPPORTED_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true}
+const LEGACY_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true}
+const SUPPORTED_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true}
 const SUPPORTED_DISCOVERY_IDS := {ANOMALY_DISCOVERY_ID: true}
+const SUPPORTED_MATERIAL_IDS := {TITANIUM_MATERIAL_ID: true, COIL_MATERIAL_ID: true}
+const SUPPORTED_PROJECT_IDS := {SALVAGE_CUTTER_PROJECT_ID: true}
 
 var _storage_path: String
 var _persistence_enabled: bool
 var _completed_discoveries := {}
 var _unlocked_capabilities := {}
+var _material_inventory := {}
+var _completed_projects := {}
 var _last_storage_report := {"status": "not_loaded"}
 
 
@@ -33,7 +46,6 @@ func load_profile() -> Dictionary:
 	if not FileAccess.file_exists(_storage_path):
 		_last_storage_report = _report("missing")
 		return _last_storage_report.duplicate(true)
-
 	var file := FileAccess.open(_storage_path, FileAccess.READ)
 	if file == null:
 		_last_storage_report = _report("read_error")
@@ -44,18 +56,19 @@ func load_profile() -> Dictionary:
 	if parse_error != OK or typeof(json.data) != TYPE_DICTIONARY:
 		_last_storage_report = _report("invalid_json")
 		return _last_storage_report.duplicate(true)
-
 	var payload := json.data as Dictionary
 	var failures := _validate_payload(payload)
 	if not failures.is_empty():
 		_last_storage_report = _report("invalid_schema", {"failures": failures})
 		return _last_storage_report.duplicate(true)
-
-	for discovery_id in payload["completed_discoveries"]:
-		_completed_discoveries[str(discovery_id)] = true
-	for capability_id in payload["unlocked_capabilities"]:
-		_unlocked_capabilities[str(capability_id)] = true
-	_last_storage_report = _report("loaded")
+	_load_ids(payload["completed_discoveries"], _completed_discoveries)
+	_load_ids(payload["unlocked_capabilities"], _unlocked_capabilities)
+	var migrated: bool = int(payload.get("schema_version", 0)) == LEGACY_SCHEMA_VERSION
+	if not migrated:
+		for material_id in payload["material_inventory"]:
+			_material_inventory[str(material_id)] = int(payload["material_inventory"][material_id])
+		_load_ids(payload["completed_projects"], _completed_projects)
+	_last_storage_report = _report("migrated_v1" if migrated else "loaded")
 	return _last_storage_report.duplicate(true)
 
 
@@ -92,12 +105,37 @@ func complete_discovery(discovery_id: String, persist := true) -> Dictionary:
 	return {"changed": true, "reason": "completed", "discovery_id": discovery_id}
 
 
+func deposit_materials(quantities: Dictionary, persist := true) -> Dictionary:
+	var validation := _validate_material_delta(quantities)
+	if not validation.is_empty():
+		return {"changed": false, "reason": "invalid_materials", "failures": validation}
+	var snapshot := _material_inventory.duplicate(true)
+	for material_id in quantities:
+		_material_inventory[material_id] = material_quantity(str(material_id)) + int(quantities[material_id])
+	if persist and not save_profile():
+		_material_inventory = snapshot
+		return {"changed": false, "reason": "storage_error"}
+	return {"changed": true, "reason": "deposited", "deposited": quantities.duplicate(true), "inventory": material_inventory()}
+
+
 func has_capability(capability_id: String) -> bool:
 	return bool(_unlocked_capabilities.get(capability_id, false))
 
 
 func has_completed_discovery(discovery_id: String) -> bool:
 	return bool(_completed_discoveries.get(discovery_id, false))
+
+
+func has_completed_project(project_id: String) -> bool:
+	return bool(_completed_projects.get(project_id, false))
+
+
+func material_quantity(material_id: String) -> int:
+	return int(_material_inventory.get(material_id, 0))
+
+
+func material_inventory() -> Dictionary:
+	return _material_inventory.duplicate(true)
 
 
 func report() -> Dictionary:
@@ -113,6 +151,8 @@ func _profile_payload() -> Dictionary:
 		"schema_version": SCHEMA_VERSION,
 		"completed_discoveries": _sorted_ids(_completed_discoveries),
 		"unlocked_capabilities": _sorted_ids(_unlocked_capabilities),
+		"material_inventory": _sorted_materials(),
+		"completed_projects": _sorted_ids(_completed_projects),
 	}
 
 
@@ -130,18 +170,38 @@ func _sorted_ids(source: Dictionary) -> Array:
 	return ids
 
 
+func _sorted_materials() -> Dictionary:
+	var values := {}
+	var ids := _material_inventory.keys()
+	ids.sort()
+	for material_id in ids:
+		if int(_material_inventory[material_id]) > 0:
+			values[material_id] = int(_material_inventory[material_id])
+	return values
+
+
 func _validate_payload(payload: Dictionary) -> Array[String]:
+	var schema = payload.get("schema_version")
+	if schema == LEGACY_SCHEMA_VERSION:
+		return _validate_version(payload, LEGACY_PROFILE_KEYS, LEGACY_CAPABILITY_IDS, false)
+	if schema == SCHEMA_VERSION:
+		return _validate_version(payload, PROFILE_KEYS, SUPPORTED_CAPABILITY_IDS, true)
+	return ["unsupported schema_version"]
+
+
+func _validate_version(payload: Dictionary, allowed_keys: Dictionary, capabilities: Dictionary, include_materials: bool) -> Array[String]:
 	var failures: Array[String] = []
-	for required_key in ALLOWED_PROFILE_KEYS:
+	for required_key in allowed_keys:
 		if not payload.has(required_key):
 			failures.append("missing %s" % required_key)
 	for key in payload:
-		if not ALLOWED_PROFILE_KEYS.has(str(key)):
+		if not allowed_keys.has(str(key)):
 			failures.append("unsupported field %s" % key)
-	if payload.get("schema_version") != SCHEMA_VERSION:
-		failures.append("unsupported schema_version")
 	failures.append_array(_validate_id_array(payload.get("completed_discoveries"), SUPPORTED_DISCOVERY_IDS, "completed_discoveries"))
-	failures.append_array(_validate_id_array(payload.get("unlocked_capabilities"), SUPPORTED_CAPABILITY_IDS, "unlocked_capabilities"))
+	failures.append_array(_validate_id_array(payload.get("unlocked_capabilities"), capabilities, "unlocked_capabilities"))
+	if include_materials:
+		failures.append_array(_validate_material_inventory(payload.get("material_inventory")))
+		failures.append_array(_validate_id_array(payload.get("completed_projects"), SUPPORTED_PROJECT_IDS, "completed_projects"))
 	return failures
 
 
@@ -158,6 +218,42 @@ func _validate_id_array(value, supported_ids: Dictionary, field: String) -> Arra
 		else:
 			seen[str(item)] = true
 	return failures
+
+
+func _validate_material_inventory(value) -> Array[String]:
+	if typeof(value) != TYPE_DICTIONARY:
+		return ["material_inventory must be an object"]
+	var failures: Array[String] = []
+	for material_id in value:
+		if not SUPPORTED_MATERIAL_IDS.has(str(material_id)):
+			failures.append("material_inventory contains unsupported id %s" % material_id)
+		elif not _is_nonnegative_integer_value(value[material_id]):
+			failures.append("material_inventory %s must be a non-negative integer" % material_id)
+	return failures
+
+
+func _validate_material_delta(value: Dictionary) -> Array[String]:
+	var failures: Array[String] = []
+	if value.is_empty():
+		return ["material deposit must not be empty"]
+	for material_id in value:
+		if not SUPPORTED_MATERIAL_IDS.has(str(material_id)):
+			failures.append("unsupported material %s" % material_id)
+		elif typeof(value[material_id]) != TYPE_INT or int(value[material_id]) <= 0:
+			failures.append("material deposit %s must be a positive integer" % material_id)
+	return failures
+
+
+func _load_ids(values: Array, destination: Dictionary) -> void:
+	for value in values:
+		destination[str(value)] = true
+
+
+func _is_nonnegative_integer_value(value) -> bool:
+	if typeof(value) not in [TYPE_INT, TYPE_FLOAT]:
+		return false
+	var number := float(value)
+	return number >= 0.0 and is_equal_approx(number, float(int(number)))
 
 
 func _write_atomic(payload: Dictionary) -> bool:
@@ -215,3 +311,5 @@ func _remove_if_exists(absolute_path: String) -> void:
 func _reset_memory() -> void:
 	_completed_discoveries = {}
 	_unlocked_capabilities = {}
+	_material_inventory = {}
+	_completed_projects = {}

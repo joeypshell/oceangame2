@@ -96,6 +96,7 @@ static func _resolve_nightfall(main) -> void:
 	if main._world.is_inside_boat(main._player.global_position):
 		_commit_boat_discovery(main)
 		OffloadController.try_offload(main)
+		_commit_boat_materials(main)
 		_enter_debrief(main, "nightfall")
 		return
 
@@ -106,6 +107,7 @@ static func _resolve_nightfall(main) -> void:
 	main._moving_hazards.reset(main._world)
 	main._pry_salvage.reset()
 	main._timed_salvage.reset()
+	main._material_runtime.discard_unbanked("nightfall")
 	if not main._sortie_state.held_salvage_ids.is_empty():
 		main._world.restore_salvage(main._sortie_state.clear_held())
 	main._load_playable_map(
@@ -123,7 +125,14 @@ static func _commit_boat_discovery(main) -> void:
 		main._expedition_day_state.record_discovery(str(survey_result.get("discovery_id", "")))
 
 
+static func _commit_boat_materials(main) -> void:
+	if main._material_runtime != null:
+		main._material_runtime.try_commit_at_boat(main._world, main._player.global_position)
+
+
 static func _enter_debrief(main, reason: String) -> void:
+	if reason == "voluntary" and main._world != null and main._player != null and main._world.is_inside_boat(main._player.global_position):
+		_commit_boat_materials(main)
 	main._expedition_day_state.end_day(reason)
 	main._run_complete = false
 	main._sortie_state.failed = false

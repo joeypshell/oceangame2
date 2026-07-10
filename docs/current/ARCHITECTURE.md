@@ -113,11 +113,13 @@ Additional current map sources:
   - Uses `scripts/main/session_progression.gd` for the session-only wallet and oxygen, cargo, light, and propulsion upgrades.
   - Delegates oxygen, held cargo, active/offload lifecycle, current connected-map leg, and local failure storage to `scripts/main/sortie_state.gd`; each departure from an authored offload zone starts a refreshed sortie without resetting daylight.
   - Keeps interaction progress in the focused timed, pry, and survey controllers as sortie-local subowners.
-  - Delegates the deterministic 300-second daylight countdown, exact-once nightfall transition, sortie count, day-bank totals, committed-during-day discovery ids, connector-preserved day context, and end-day state to `scripts/main/expedition_day_state.gd`.
+  - Delegates the deterministic 300-second daylight countdown, exact-once nightfall transition, sortie count, day-bank totals, committed-during-day discovery ids, connector-preserved day context, end-day state, and deterministic material selection/depletion to `scripts/main/expedition_day_state.gd`.
+  - Uses `scripts/main/material_candidate_selector.gd` for platform-stable authored-pool day rotation and `scripts/main/material_runtime_controller.gd` for typed held cargo, connector preservation, failure restoration, compact feedback, and canonical-boat deposit.
+  - Uses `scripts/main/cargo_collection_controller.gd` to coordinate material pickup with the unchanged instant/timed/pry salvage and offload paths while applying one shared cargo capacity.
   - Uses `scripts/main/expedition_day_presentation.gd` for the fixed-width day/time/dive line, surface-versus-boat context, dusk/night warnings, and safe boat-only voluntary end request.
   - Uses `scripts/main/expedition_day_debrief.gd` for voluntary or forced night resolution, compact day totals, unbanked-state cleanup, and the next-day reset. The helper is the future insertion boundary for projects or forecasts, but neither system exists yet.
   - Uses `scripts/main/offload_controller.gd` so normal boat returns and nightfall-at-boat share one cargo, score, wallet, objective, and day-ledger commit path.
-  - Keeps durable capabilities and committed discoveries in `scripts/main/expansion_profile_state.gd`; session wallet, arbitrary world state, cargo, oxygen, daylight, and in-progress interactions are not profile-persistent.
+  - Keeps durable capabilities, committed discoveries, and banked typed materials in versioned `scripts/main/expansion_profile_state.gd`; schema v2 migrates valid v1 scanner/discovery profiles in memory. Session wallet, held cargo, candidate depletion, oxygen, daylight, and in-progress interactions are not profile-persistent.
   - Uses `scripts/main/world_connector_controller.gd` for source-authored prompted world-slice connectors.
   - Uses `scripts/main/final_dive_objective_seed.gd` for the compact source-authored final-dive/capstone cue.
   - Uses `scripts/main/audio_cue_player.gd` for cue lookup/playback, cooldown/dedupe, graceful missing-asset handling, and future smoke event logs.
@@ -128,8 +130,9 @@ Additional current map sources:
   - Owns map state, entity/zone bookkeeping, helper orchestration, and public query APIs used by `scripts/main/main.gd`.
   - Keeps visuals, runtime queries, and collision tied to source topology.
   - Exposes `camera_tests` from the source map for repeatable visual captures.
-  - Exposes runtime terrain/collision parity data, authored salvage/extraction positions, boat bounds, and source-derived non-solid top-row surface water.
-  - Is a documented cohesive-owner exception at about 1,000 lines. It already delegates focused renderer, query, and survey domains; retain its single map/node-state ownership unless a stable extraction reduces coupling without obscuring Godot lifecycle ordering.
+  - Exposes runtime terrain/collision parity data, authored salvage/material/extraction positions, boat bounds, and source-derived non-solid top-row surface water.
+  - Delegates selected material-candidate rendering, visibility, query, collection, and restoration to `scripts/world/greybox_material_candidates.gd`.
+  - Is a documented cohesive-owner exception at about 1,000 lines. It already delegates focused renderer, query, survey, and material-candidate domains; retain its single map/node-state ownership unless a stable extraction reduces coupling without obscuring Godot lifecycle ordering.
 
 - `scripts/world/greybox_asset_lookup.gd`
   - Provides texture path, loading, and fallback helpers for world renderers.

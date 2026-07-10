@@ -1,5 +1,6 @@
 extends RefCounted
 
+const MaterialCandidateSelector := preload("res://scripts/main/material_candidate_selector.gd")
 const DEFAULT_DAYLIGHT_SECONDS := 300.0
 const PHASE_ACTIVE := "active"
 const PHASE_NIGHTFALL_PENDING := "nightfall_pending"
@@ -19,6 +20,9 @@ var notable_failure_reason := ""
 var current_map_id := ""
 var connector_transition_count := 0
 var nightfall_event_count := 0
+var material_day_seed := 1
+var _material_selected_by_map := {}
+var _material_depleted_by_map := {}
 
 
 func _init(daylight_seconds := DEFAULT_DAYLIGHT_SECONDS) -> void:
@@ -38,6 +42,9 @@ func begin_day(next_day_number: int) -> void:
 	notable_failure_reason = ""
 	connector_transition_count = 0
 	nightfall_event_count = 0
+	material_day_seed = day_number
+	_material_selected_by_map = {}
+	_material_depleted_by_map = {}
 
 
 func begin_next_day() -> void:
@@ -85,6 +92,44 @@ func on_map_transition(destination_map_id: String) -> void:
 	current_map_id = destination_map_id
 
 
+func material_selection_for(map_id: String, pools: Array) -> Array[String]:
+	if _material_selected_by_map.has(map_id):
+		var stored: Array = _material_selected_by_map[map_id]
+		var copy: Array[String] = []
+		for candidate_id in stored:
+			copy.append(str(candidate_id))
+		return copy
+	var selected := MaterialCandidateSelector.select_for_day(map_id, pools, material_day_seed)
+	_material_selected_by_map[map_id] = selected.duplicate()
+	return selected
+
+
+func material_depleted_ids(map_id: String) -> Array[String]:
+	var values: Array[String] = []
+	var depleted: Dictionary = _material_depleted_by_map.get(map_id, {})
+	for candidate_id in depleted:
+		if bool(depleted[candidate_id]):
+			values.append(str(candidate_id))
+	values.sort()
+	return values
+
+
+func mark_material_depleted(map_id: String, candidate_id: String) -> void:
+	if map_id.is_empty() or candidate_id.is_empty():
+		return
+	var depleted: Dictionary = _material_depleted_by_map.get(map_id, {})
+	depleted[candidate_id] = true
+	_material_depleted_by_map[map_id] = depleted
+
+
+func restore_material_candidate(map_id: String, candidate_id: String) -> void:
+	if not _material_depleted_by_map.has(map_id):
+		return
+	var depleted: Dictionary = _material_depleted_by_map[map_id]
+	depleted.erase(candidate_id)
+	_material_depleted_by_map[map_id] = depleted
+
+
 func request_end_day(reason: String) -> bool:
 	if phase != PHASE_ACTIVE:
 		return false
@@ -113,6 +158,9 @@ func report() -> Dictionary:
 		"current_map_id": current_map_id,
 		"connector_transition_count": connector_transition_count,
 		"nightfall_event_count": nightfall_event_count,
+		"material_day_seed": material_day_seed,
+		"material_selected_by_map": _duplicate_nested(_material_selected_by_map),
+		"material_depleted_by_map": _duplicate_nested(_material_depleted_by_map),
 	}
 
 
@@ -123,3 +171,7 @@ func _daylight_result(nightfall_triggered: bool) -> Dictionary:
 		"nightfall_triggered": nightfall_triggered,
 		"nightfall_event_count": nightfall_event_count,
 	}
+
+
+func _duplicate_nested(source: Dictionary) -> Dictionary:
+	return source.duplicate(true)
