@@ -2,6 +2,8 @@
 
 Date: 2026-07-09
 
+Roadmap status: historical planning closeout. Later owner decisions supersede its immediate territorial-eel sequencing; use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` for active direction.
+
 Issue: #652
 Milestone: Simple Diver Game 09 `2D Subnautica Expansion Planning`
 

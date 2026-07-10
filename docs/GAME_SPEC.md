@@ -74,15 +74,17 @@ Accepted constraints for the next phase:
 - Visual changes should target individual assets, source map data, or renderer rules; do not regenerate the whole scene to fix one visual problem.
 - Additional gameplay pressure should stay scoped until the production-slice visual workflow is accepted.
 
-## Current Post-RC Expansion Target
+## Current Expansion Direction
 
-The compact diver game has a GO release candidate. The first larger-OceanGame step is one bounded anomaly-survey foundation:
+The compact diver game and first anomaly-survey expansion have GO closeouts. Phase 2 now grows toward the larger OceanGame in dependency order:
 
-- keep `production_slice_01` as the surface boat/default preview
-- travel through the remembered `production_slice_04` relay route into adjacent `production_slice_02`
-- unlock one `survey_scanner_1` capability without an inventory/loadout system
-- survey one source-authored anomaly under normal oxygen/route pressure
-- carry one pending discovery back across connectors and commit it at the boat
-- keep maps, collision, connectors, survey targets, and future fauna source-authored and validated
+- add daylight, open-surface oxygen refill, boat-only banking, multiple sorties, and a compact night transition
+- introduce minimal typed materials, controlled authored candidate pools, one blueprint/project, and one active tool
+- plan remembered map promises around oxygen, darkness, current, pressure, and tool capabilities
+- expand scanner knowledge into practical resource, environment, and creature research
+- add health, enemies, weapons, and later biological materials used by equipment progression
+- broaden daily conditions and regions only after the deterministic authored loops work
 
-This pass does not add territorial fauna yet, procedural generation, base building, major vehicles, inventory grids, crafting trees, combat, full ecosystem AI, broad persistent economy, multiple biomes, or full-map productionization.
+Night does not consume Food, Water, or Power; Emergency Week is not part of the new direction. Stable authored geography remains important, and no shortcut or fast-travel network is planned. Maps, collision, connectors, gates, habitats, resource candidates, and encounter candidates stay source-authored and validated.
+
+Detailed direction: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` and `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`.

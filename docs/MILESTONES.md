@@ -1,69 +1,55 @@
 # Milestones
 
-This file summarizes the product roadmap. The detailed current roadmap is `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`.
+Last updated: 2026-07-09
 
-## Roadmap Decision
+This is the compact milestone index. Detailed direction lives in:
 
-As of 2026-07-08, `oceangame2` is no longer organized only around controlled prototype passes. The next product target is a finished small side-view diver salvage game before any larger 2D Subnautica-like OceanGame expansion.
+- `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
+- `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
+- `docs/current/OCEANGAME_EXPANSION_02_PLAN.md`
 
-Controlled gameplay and visual passes remain useful, but they are now a validation lane inside the roadmap. Each new issue batch should serve player-facing progress: curiosity, pressure, payoff, remembered places, meaningful route choice, or a reason to try another expedition.
+## Current State
 
-## Completed Foundation
+Simple Diver Game 01-09 and OceanGame Expansion 01 are complete. Expansion 01 issues #662-#671 proved a scanner-backed anomaly journey across `production_slice_01 <-> production_slice_04 <-> production_slice_02`, exact return/commit state, deterministic failure cleanup, focused visual review, and public Web deployment.
 
-The project has already proven:
+Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
-- source-authored JSON maps can drive Godot terrain, collision, entities, captures, and previews
-- bounded regions from the supplied full sketch can become validated production slices
-- `production_slice_01` can support salvage, oxygen, cargo, hazards, route metadata, objective feedback, smokes, captures, baselines, and Web preview verification
-- targeted visual and gameplay changes can be reviewed without regenerating or destabilizing the whole scene
+Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
-## Current Constraints
+## Planning Horizons
 
-- Keep `production_slice_01` as the default preview map unless a separate default-preview decision changes it.
-- Preserve `maps/full_cave_sketch_01.greybox.json` as a topology draft and planning source.
-- Keep icons from the supplied sketch out of terrain conversion unless they are reauthored as JSON entities.
-- Grow route scale only when it supports the roadmap, not as automatic whole-map productionization.
-- Keep #52 and #53 as optional slice-03 camera/topology polish unless slice-03 presentation becomes the selected goal.
+- Committed: Expansion 02 has the active ten-issue batch #685-#694.
+- Directional: Expansions 03-09 have open milestones with goals and exit criteria, but no issue batches yet.
+- Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
-## Current GitHub Milestones
+## Open GitHub Milestones
 
-Simple Diver Game 01 through 09 are complete. OceanGame Expansion 01 issues #662-#671 completed the anomaly-survey foundation and close with a documented GO.
+1. [Expansion 02: Expedition Day Foundation](https://github.com/joeypshell/oceangame2/milestone/28) - daylight, open-surface oxygen, boat banking, multiple sorties, and night transition.
+2. [Expansion 03: Seeded Materials And First Tool Project](https://github.com/joeypshell/oceangame2/milestone/29) - typed materials, authored candidate pools, one project, and one active tool.
+3. [Expansion 04: Capability-Gated Map Progression](https://github.com/joeypshell/oceangame2/milestone/30) - one remembered place opened by a diver capability.
+4. [Expansion 05: Practical Research Foundation](https://github.com/joeypshell/oceangame2/milestone/31) - scans and samples that change preparation and progression.
+5. [Expansion 06: Combat Foundation](https://github.com/joeypshell/oceangame2/milestone/32) - health, one weapon, one hostile enemy, and readable defeat/recovery.
+6. [Expansion 07: Biological Resources And Weapon Progression](https://github.com/joeypshell/oceangame2/milestone/33) - passive/hostile creature materials and one equipment progression step.
+7. [Expansion 08: Daily Conditions And Enemy Ecology](https://github.com/joeypshell/oceangame2/milestone/34) - readable seeded opportunities inside stable geography and a broader small ecology.
+8. [Expansion 09: Regional World Growth](https://github.com/joeypshell/oceangame2/milestone/35) - memorable authored regions through the JSON pipeline.
 
-No later implementation milestone is selected yet. The recommended next milestone shape is `OceanGame Expansion 02: Territorial Eel Encounter`, scoped to one source-authored warning/lunge/return/cooldown encounter on the proven anomaly route.
+## Active Issue Order
 
-## Current Next Direction
+1. #685 plan the Expansion 02 experience contract.
+2. #686 define sortie/day/profile state ownership.
+3. #687 implement deterministic daylight runtime.
+4. #688 separate open-surface oxygen from boat banking.
+5. #689 implement multiple sorties per day.
+6. #690 add compact daylight and end-day presentation.
+7. #691 add night debrief and next-day transition.
+8. #692 add integrated smoke and CI/release coverage.
+9. #693 add focused captures and visual review.
+10. #694 verify Web deployment and record GO/HOLD closeout.
 
-Simple Diver Game 08 release-candidate hardening is complete. Issues #622-#631 completed the release-candidate plan, validation matrix, one-command validation runner, release journey smoke, capture review index, local run verification, public Web export handoff, baseline/capture audit, documentation refresh, and go/no-go closeout.
+## Roadmap Rules
 
-OceanGame Expansion 01 closed with a GO after proving one scanner-backed anomaly survey across `production_slice_01 <-> production_slice_04 <-> production_slice_02`, one returned durable discovery, deterministic failure cleanup, focused visual review, and public Web deployment.
-
-The next recommended direction is the previously accepted Phase B territorial eel contract. Keep it to one authored encounter and preserve the anomaly journey as the regression floor. Keep #52/#53 deferred and do not expand into procedural generation, full inventory/loadouts, save-heavy progression, broad economy, combat/ecosystem AI, broad art/audio replacement, or full-map productionization.
-
-## Recently Completed Prototype Passes
-
-- #662-#671 completed OceanGame Expansion 01 anomaly-survey planning, owner extractions, schema/state/source/runtime, deterministic journey smoke, focused visual review, public Web verification, and closeout.
-
-- #129-#148 completed Controlled Gameplay Pass 04.
-- #150-#159 completed Controlled Gameplay Pass 05 and main-file guard work.
-- #160-#169 completed Controlled Gameplay Pass 06 timed-salvage readability.
-- #170-#179 completed Controlled Gameplay Pass 07 hazard/navigation pressure.
-- #180-#190 completed Controlled Gameplay Pass 08 cautious route-scale expansion.
-- #191-#199 completed Controlled Gameplay Pass 09 southwest pocket route-decision payoff.
-- #201-#209 completed Controlled Gameplay Pass 10 return/banking pressure.
-- #213-#222 completed Controlled Gameplay Pass 11 pre-pickup route readability.
-- #224-#233 completed Controlled Gameplay Pass 12 oxygen/rest route pressure.
-- #236-#245 completed Controlled Gameplay Pass 13 route commitment objective.
-- #278-#286 completed Controlled Gameplay Pass 14 start-of-run objective cue.
-- #298-#307 completed Controlled Gameplay Pass 15 objective follow-through, including source marker, validation, runtime cue, smoke, capture, visual decision, Web verification, and closeout.
-- #320-#329 completed Controlled Gameplay Pass 16 primary dive completion, including source contract, validation, runtime completion gate, smoke, capture, visual decision, Web verification, and closeout.
-- #340-#349 completed Controlled Gameplay Pass 17 pry salvage, including source contract, validation, source target authoring, staged runtime interaction, smoke, capture, visual decision, Web verification, and closeout.
-- #360-#369 completed Controlled Gameplay Pass 18 session progression, including planning, runtime progression contract, session wallet, one oxygen tank upgrade, overlay feedback, smoke, capture, visual decision, Web verification, and closeout.
-- #380-#389 completed Controlled Gameplay Pass 19 cargo capacity progression, including planning, cargo contract, session cargo upgrade, overlay feedback, smoke, capture, visual decision, Web verification, and closeout.
-- #400-#409 completed Controlled Gameplay Pass 20 light confidence progression, including planning, light contract, session light upgrade, overlay feedback, smoke, capture, visual decision, Web verification, and closeout.
-- #420-#429 completed Controlled Gameplay Pass 21 world-slice connector proof, including planning, connector contract, schema validation, source connector authoring, runtime transition, smoke, capture, visual decision, Web verification, and closeout.
-- #502-#511 completed Controlled Gameplay Pass 22 destination payoff, including planning, payoff contract, validation, source target authoring, runtime feedback, smoke, capture, visual decision, Web verification, and closeout.
-- #522-#531 completed Controlled Gameplay Pass 23 next-dive objective prompt, including planning, prompt contract, validation, source authoring, runtime result text, smoke, capture, visual/Web verification, and closeout.
-- #542-#551 completed Controlled Gameplay Pass 24 relay follow-through, including planning, objective contract, validation, source authoring, runtime feedback, smoke, capture, visual decision, Web verification, and closeout.
-- #562-#571 completed Controlled Gameplay Pass 25 final-dive objective seed, including planning, final-dive contract, validation, source authoring, runtime feedback, smoke, capture, visual decision, Web verification, and closeout.
-- #582-#590 completed Controlled Gameplay Pass 26 result presentation polish, including planning, result-presentation contract, runtime hierarchy, final-dive cue, smoke, focused capture, visual decision, Web verification, and closeout.
-- #602-#610 completed Controlled Gameplay Pass 27 player movement/facing readability, including planning, reproduction, runtime rendering fix, movement evaluation, repeated-reversal smoke, focused capture, visual decision, Web verification, and closeout.
+- Do not create issue batches for Expansions 03-09 until the preceding closeout selects the next milestone.
+- Keep controlled passes as validation/review structure, not as the product roadmap.
+- Keep `production_slice_01` as the default boat hub unless a separate source-driven decision changes it.
+- Preserve source-authored maps, reachability, parity, focused captures, and public Web verification in every milestone.
+- Keep #52/#53 deferred optional slice-03 polish unless slice-03 presentation becomes the selected goal.
