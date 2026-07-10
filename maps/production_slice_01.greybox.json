@@ -2337,6 +2337,21 @@
       "intent": "Progression-gate soft-push current on the lower-left connector until the propulsion fins session upgrade is owned."
     },
     {
+      "id": "upper_right_current_pocket_gate",
+      "type": "marker",
+      "x": 65,
+      "y": 40,
+      "w": 2,
+      "h": 2,
+      "current_gate": true,
+      "current_direction": "left",
+      "current_strength": 2.2,
+      "required_capability_id": "current_stabilizer",
+      "current_gate_label": "Ripping current",
+      "route_context": "upper_right_current_pocket",
+      "intent": "Expansion 04 optional current boundary across the east pocket of the existing upper-right wreck room."
+    },
+    {
       "id": "deep_cache_first_step_cue",
       "type": "marker",
       "x": 28,
@@ -2525,6 +2540,18 @@
       },
       "unlocks_capability_id": "salvage_cutter",
       "target_id": "salvage_sealed_wreck_cache",
+      "build_phase": "night_debrief"
+    },
+    {
+      "id": "current_stabilizer_project",
+      "required_project_id": "salvage_cutter_project",
+      "required_discovery_id": "lower_right_anomaly_discovery",
+      "required_materials": {
+        "titanium_scrap": 2,
+        "conductive_coil": 1
+      },
+      "unlocks_capability_id": "current_stabilizer",
+      "target_gate_id": "upper_right_current_pocket_gate",
       "build_phase": "night_debrief"
     }
   ],
@@ -2771,6 +2798,17 @@
       "required_tool_id": "salvage_cutter",
       "tool_project_id": "salvage_cutter_project",
       "intent": "Expansion 03 remembered upper-right alcove payoff, visible before the cutter exists and collectable only after the night project."
+    },
+    {
+      "id": "salvage_current_pocket_cache",
+      "type": "salvage",
+      "x": 69,
+      "y": 40,
+      "kind": "relic",
+      "tier": "valuable",
+      "validation_route": "current_stabilizer_payoff",
+      "route_context": "upper_right_current_pocket",
+      "intent": "Expansion 04 visible valuable payoff behind the durable current-stabilizer gate."
     }
   ],
   "camera_tests": [
