@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver, anomaly-survey, expedition-day, material-to-tool, and capability-gated-place foundations are complete. Practical research is selected next; enemies, weapons, and biological resources follow in named milestones. The controlled source/validation/visual workflow remains authoritative while that game grows.
+The compact diver, anomaly-survey, expedition-day, material-to-tool, capability-gated-place, and practical-research foundations are complete. Combat is selected for the next planning cycle; biological resources and broader ecology follow in named milestones. The controlled source/validation/visual workflow remains authoritative while that game grows.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 04 GO closeout and the active Expansion 05 plan/issues #748-#757. Later milestones remain directional until the preceding closeout selects them.
+Current handoff starts with the Expansion 05 GO closeout. Expansion 06 Combat Foundation is selected next, but its scoped issue batch belongs to the next drift cycle; later milestones remain directional.
 
 Core sources and operating docs:
 
@@ -69,6 +69,9 @@ Current release and expansion handoff:
 - [OceanGame Expansion 05 Plan](docs/current/OCEANGAME_EXPANSION_05_PLAN.md)
 - [Expansion 05 State Contract](docs/current/OCEANGAME_EXPANSION_05_STATE_CONTRACT.md)
 - [Expansion 05 Source Contract](docs/current/OCEANGAME_EXPANSION_05_SOURCE_CONTRACT.md)
+- [Expansion 05 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_05_VISUAL_BASELINE_DECISION.md)
+- [Expansion 05 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_05_WEB_PREVIEW_VERIFICATION.md)
+- [Expansion 05 Closeout](docs/current/OCEANGAME_EXPANSION_05_CLOSEOUT.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -202,4 +205,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can cross connected slices, use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials into durable capabilities, revisit remembered targets, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-04 meet that condition. Expansion 05 asks whether research makes the player smarter and changes the next expedition decision.
+The current foundation succeeds when one authored expedition can cross connected slices, use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-05 meet that condition. Expansion 06 should test whether one bounded combat encounter adds preparation and route pressure without taking over the salvage/exploration game.

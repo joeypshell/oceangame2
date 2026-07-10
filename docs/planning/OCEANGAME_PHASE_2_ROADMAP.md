@@ -2,7 +2,7 @@
 
 Date: 2026-07-10
 
-Status: Expansion 04 is complete with a GO. Expansion 05 issues #748-#757 are the active committed batch; Expansions 06-09 remain directional.
+Status: Expansion 05 is complete with a GO. Expansion 06 Combat Foundation is selected for the next planning cycle; no non-deferred implementation batch is active yet.
 
 ## Decision
 
@@ -87,11 +87,11 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 04's issue-level batch #726-#735 is complete. Expansion 05 issues #748-#757 are the only active committed batch.
+Expansion 05's issue-level batch #748-#757 is complete. The next drift cycle owns the scoped Expansion 06 issue batch; until then, no non-deferred implementation batch is committed.
 
 ### Directional
 
-Expansions 06-09 remain directional; create each batch only after the prior closeout confirms readiness.
+Expansion 06 is the selected directional milestone. Expansions 07-09 remain directional; create each batch only after the prior closeout confirms readiness.
 
 ### Vision
 
@@ -162,21 +162,23 @@ Exit question: did the upgrade change the player's relationship with a place the
 
 ### Expansion 05: Practical Research Foundation
 
-Status: Active committed batch #748-#757.
+Status: Complete with GO.
 
-Goal: make scanner knowledge useful to planning, projects, resource discovery, and danger.
+Goal: make one scanner finding useful to next-day resource planning.
 
 Prove:
 
-- resource research names habitat and upgrade relevance
-- environment research explains one capability gate
-- creature research reveals a behavior, risk, material, or countermeasure
-- samples and scans feed projects without becoming a checklist field guide
+- one resource clue appears behind a remembered capability gate
+- the scanner creates one pending finding that commits only at the boat
+- committed research changes a fresh-day material selection and exposes a broad habitat lead
+- practical knowledge changes route planning without increasing yield
 - partial information creates curiosity rather than exact-route instructions
 
 Exit question: does research make the player smarter and change the next expedition decision?
 
 ### Expansion 06: Combat Foundation
+
+Status: Selected next; issue batch not yet created.
 
 Goal: prove one readable underwater combat encounter.
 
