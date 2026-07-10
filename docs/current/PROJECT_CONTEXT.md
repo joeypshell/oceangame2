@@ -6,7 +6,7 @@ This file is the compact handoff for new Codex or ChatGPT Project sessions. It c
 
 ## Current Goal
 
-`oceangame2` has a GO release candidate and a completed first bounded 2D Subnautica-like expansion. OceanGame Expansion 01 proved:
+`oceangame2` has a GO release candidate and two completed bounded Phase 2 expansions. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -16,7 +16,9 @@ This file is the compact handoff for new Codex or ChatGPT Project sessions. It c
 - tool-like salvage interactions and limited progression
 - one scanner-backed, source-authored discovery journey with exact return/commit state
 
-The committed next target is OceanGame Expansion 02: a visible daylight budget, open-surface oxygen refill, boat-only banking, multiple sorties, and a compact night transition. Phase 2 then grows through materials/tools, capability-gated map returns, practical research, enemies/weapons, biological resources, daily conditions, and authored regions.
+Expansion 02 added a visible daylight budget, source-derived open-surface oxygen refill, repeated sorties, boat return, explicit night resolution, next-day reset, integrated smoke, focused visual review, and verified Web deployment.
+
+The selected next target is Expansion 03: deterministic authored material candidates and one concrete tool project that changes a remembered interaction. Later milestones cover capability-gated map returns, practical research, enemies/weapons, biological resources, daily conditions, and authored regions.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -45,11 +47,11 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Completed expansion decision: `docs/current/OCEANGAME_EXPANSION_01_CLOSEOUT.md`
-- Committed expansion plan: `docs/current/OCEANGAME_EXPANSION_02_PLAN.md`
+- Latest expansion decision: `docs/current/OCEANGAME_EXPANSION_02_CLOSEOUT.md`
+- Completed expansion plan: `docs/current/OCEANGAME_EXPANSION_02_PLAN.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: `docs/current/OCEANGAME_EXPANSION_01_WEB_PREVIEW_VERIFICATION.md`
+- Latest Web verification: `docs/current/OCEANGAME_EXPANSION_02_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -116,7 +118,7 @@ Current map-loading helper:
 
 ## Web Preview Status
 
-The public preview is verified at build `3d6a922` and should show the cave terrain, not the blue greybox fallback:
+The public preview is verified at build `a2dab3c` and should show the cave terrain plus the compact expedition-day line, not the blue greybox fallback:
 
 ```text
 https://joeypshell.github.io/oceangame2/
@@ -144,192 +146,32 @@ If the public preview looks stale, fetch `https://joeypshell.github.io/oceangame
 
 ## Current Validation Commands
 
-Run these after relevant changes:
+Use `docs/current/TOOLING.md` and its focused pages for detailed commands. The current high-signal gates are:
 
 ```powershell
-python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
-python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
-python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
-python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
-python tools/validate_greybox_map.py maps/production_slice_01.greybox.json
-python tools/validate_greybox_map.py maps/production_slice_02.greybox.json
-python tools/validate_greybox_map.py maps/production_slice_03.greybox.json
-python tools/validate_greybox_map.py maps/production_slice_04.greybox.json
-python tools/check_production_slice_captures.py
-python tools/check_map_parity.py
-python tools/check_asset_manifest.py
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --import
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-loop
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-route
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-02-route
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-03-route
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-04-route
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-route-choice-metadata
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expanded-route-choice
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-safe-deep-route-choice
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-map-selector
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-interaction
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-hazard-pressure
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-pass-08-route-extension
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-pass-09-southwest-pocket-decision
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-pressure
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-cargo-capacity
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-feedback
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-route-choice
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-session-best-score
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-bonus-score
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-route-outcome-result
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-player-facing
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-movement-feel
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-feedback-overlay
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-route-outcome-result
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-08-route-extension
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-09-southwest-pocket-decision
-& 'C:\Program Files\Git\cmd\git.exe' diff --check
+python tools/run_release_candidate_validation.py --require-godot
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expedition-day
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-expedition-day
+python tools/manage_production_slice_baseline.py compare-all
+python tools/manage_production_slice_baseline.py check-clean --all-slices
+node tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha a2dab3c930785aa753495e29c4dbcf24ec06c0be
+python tools/check_file_lengths.py
+git diff --check
 ```
 
-Capture normal visual views:
-
-```powershell
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-camera-tests
-```
-
-Capture the organic tileset stress-test views:
-
-```powershell
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-tileset-test
-```
-
-Capture the full-map sketch topology draft views:
-
-```powershell
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-full-sketch-map
-```
-
-For local Web export:
-
-```powershell
-python tools/write_web_export_preset.py
-New-Item -ItemType Directory -Force exports/web | Out-Null
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --export-release Web exports/web/index.html
-python -m http.server 8060 --directory exports/web
-```
-
-Open `http://127.0.0.1:8060/`. Do not open `exports/web/index.html` directly.
+For map changes, run the relevant generator, SVG renderer, validator, parity check, route smoke, and focused capture in that order. Godot Web exports must be served over HTTP; never open `exports/web/index.html` directly.
 
 ## Issue Workflow
 
-Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Issues should include acceptance criteria, relevant files, implementation notes, and verification steps. When implementing immediately, still create the issue and close it with commit hashes and verification notes.
+Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Each issue needs acceptance criteria, relevant files, implementation notes, and verification steps.
 
 Current issue state as of 2026-07-09:
 
-- Open: #685-#694 are the committed OceanGame Expansion 02 expedition-day batch; later open milestones remain directional and intentionally have no issue batches.
-- Closed: #662-#671 completed OceanGame Expansion 01 with a documented GO; #52/#53 remain deferred slice-03 polish.
-- Completed pass history and issue ranges are indexed in `docs/MILESTONES.md`; use individual closeouts only for their regression surface.
-- Active tooling/skill queue: none selected.
-- Deferred optional slice-03 polish: #52 and #53 remain open.
-- Closed: #278-#286 completed Pass 14 start-of-run objective cue, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
-- Closed: #236-#245 completed Pass 13 route commitment objective, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
-- Closed: #224-#233 completed Pass 12 oxygen/rest route pressure, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
-- Closed: #213-#222 completed Pass 11 pre-pickup route readability, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
-- Closed: #201-#209 completed Pass 10 return/banking pressure, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
-- Closed: #191-#199 completed Pass 09 southwest pocket route-decision payoff, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
-- Closed: #180-#190 completed Pass 08 cautious route-scale expansion, including planning, segment selection, source rules, source marker/alcove authoring, one common payoff cue, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
-- Closed: #170-#179 completed Pass 07 hazard/navigation pressure planning, segment selection, source marker authoring, feedback tuning, deterministic smoke, focused capture, visual baseline acceptance, public Web verification, and closeout.
-- Closed: #160-#169 completed Pass 06 timed-salvage readability, in-world affordance, progress/cancel/complete feedback, deterministic smoke hardening, focused capture, visual baseline acceptance, public Web verification, and closeout.
-- Closed: #150-#159 completed Pass 05 timed salvage interaction, source metadata/validation, runtime, map authoring, smoke coverage, focused capture, visual review, public Web verification, closeout, and main-file guard work.
-- Closed: #129-#137 completed Pass 04 planning/setup, route-choice metadata, deterministic route metadata smokes, session best score, oxygen bonus/result breakdown, cargo-full feedback, and salvage collection feedback.
-- Closed: #138-#148 completed the remaining Pass 04 implementation/review/closeout work, including hazard warning/penalty pressure, safe-versus-deep metadata and smokes, oxygen threshold tuning, route outcome text/capture, visual baseline review, public Web verification, and pass closeout.
-- Closed: #149 completed related route-pressure tooling-index work.
-- Closed: #120-#128 completed Controlled Gameplay Pass 03 with scored salvage, cargo pressure, run results, retry flow, one additional source-authored route choice, visual review, and Web verification.
-- Closed: #101-#119 completed early movement, salvage/oxygen feedback, and route-payoff gameplay passes with matching smoke, baseline, and Web preview coverage.
-- Closed: #84-#100 completed boat, background-depth, terrain-tileset, player-facing, smoke, baseline, and Web-preview work for controlled visual revisions 03-05.
-- Closed: #69-#83 completed controlled visual-revision setup, prop/player sprite passes, asset/baseline tooling, web-preview hardening, and backlog refresh work.
-- Closed: #57-#68 completed the production-slice status/capture/baseline tooling lane for slices 01-04.
-- Closed: #59 selected the lower-left loop as the production-slice-04 candidate and created #61 for implementation
-- Closed: #58 decided not to promote `production_slice_03`; `production_slice_01` remains the default preview map
-- Closed: #55 accepted the current five-view `production_slice_03` normal captures as a named visual baseline
-- Closed: #54 extended production-slice visual baseline tooling so compare/accept can target slice 01, 02, or 03 without accepting new baselines by default
-- Closed: #51 evaluated `production_slice_03` and recommended keeping it as a validated connector/landmark reference slice, not the default preview
-- Closed: #56 added simple Command Prompt wrappers for production slice 01/02/03 local launches and documented the editor Play/default-map caveat
-- Closed: #50 authored `production_slice_03` from the upper-left room cluster with generator, validation, captures, route smoke, and review sheet
-- Closed: #49 selected upper-left room cluster as production-slice-03 candidate and deferred implementation to follow-up issue
-- Closed: #48 evaluated production-slice-02 against workflow goals and recommended moving to slice 03 planning
-- Closed: #47 added camera capture completeness checker for map-authored camera tests
-- Closed: #46 documented production-slice roles, selection criteria, entry/extraction choices, and lessons from slices 01/02
-- Closed: #45 added readable relay/sub extraction visual for in-water base zones and regenerated slice 02 captures
-- Closed: #44 tuned production-slice-02 camera framing and regenerated normal/debug captures
-- Closed: #43 deferred production-slice-02 visual baseline pending focused framing and relay-extraction visual blockers
-- Closed: #42 added production-slice-02 source/render/collision review sheet
-- Closed: #41 added production-slice-02 route smoke
-- Closed: #40 selected and authored second production slice from the full sketch
-- Closed: #39 scoped oxygen pressure prototype for the production slice
-- Closed: #38 tuned production-slice camera framing and expanded the capture set
-- Closed: #37 debug/review marker meanings and capture route
-- Closed: #36 accepted production-slice visual baseline workflow
-- Closed: #35 readable boat-spawn entry and return visual
-- Closed: #34 readable salvage and hazard props
-- Closed: #33 production-slice topology artifact cleanup
-- Closed: #32 production slice source-render-collision review artifact
-- Closed: #31 production slice promoted to default preview
-- Closed: #30 roadmap expansion after first production slice decision
-- Closed: #29 terrain visual polish pass for accepted production slice
-- Closed: #28 full-sketch conversion fidelity tooling
-- Closed: #27 salvage and object semantics in map JSON
-- Closed: #26 first scoped hazard interaction
-- Closed: #25 player swim feel and collision clearance for production slice
-- Closed: #24 production slice preview shortcut and capture route
-- Closed: #23 first production slice JSON from selected full sketch region
-- Closed: #22 boat and top-water spawn/extraction model
-- Closed: #21 full sketch topology evaluation and first production slice selection
-- Closed: #18 JSON-to-Godot map render and collision parity check
-- Closed: #16 minimal salvage collection and extraction loop
-- Closed: #15 preview review framing and version watermark
-- Closed: #20 full sketch map local preview workflow
-- Closed: #19 full-map sketch topology draft conversion
-- Closed: #17 web preview greybox terrain fallback regression
-- Closed: #14 organic map default preview workflow
-- Closed: #13 local Godot preview helper
-- Closed: #1 Godot greybox scene
-- Closed: #2 modular cave terrain asset kit
-- Closed: #3 terrain modules over greybox
-- Closed: #4 first in-engine visual baseline
-- Closed: #5 Godot headless smoke check workflow
-- Closed: #6 named camera visual capture workflow
-- Closed: #7 grid-aligned cave TileSet visual refinement
-- Closed: #8 first real cave TileSet terrain renderer
-- Closed: #9 exact-mask cave tileset upgrade and stress test
-- Closed: #10 Godot Web export preview pipeline
-- Closed: #11 web preview cave terrain rendering fix
-- Closed: #12 organic salvage cave map source pass
-
-Recent important commits:
-
-- `c2cc2e6` Polish production slice terrain tiles
-- `686c8b9` Add full sketch conversion review artifact
-- `1940ab1` Refine greybox entity validation
-- `3f08ce5` Add scoped hazard interaction
-- `53438f0` Tune production slice swim clearance
-- `bd77145` Add production slice preview shortcut
-- `a55e3de` Add first production slice map
-- `6e18c02` Add boat spawn extraction model
-- `44e758f` Evaluate full sketch production slice
-- `918d0e1` Add parity checks preview overlay and salvage loop
-- `46a833b` Expose full sketch map preview workflow
-- `7bd6d65` Add full cave sketch map draft
-- `9c9abd8` Import Godot assets before smoke check
-- `9c4f34a` Prevent web preview greybox fallback
-- `1ab4c27` Expose organic map as default preview
-- `d2cd895` Add organic salvage cave map pass
-- `367172e` Add local Godot preview helper
-- `1a8ceb6` Refine cave tileset top edges
-- `90d1f10` Add Godot smoke workflow
-- `3c63de4` Package terrain assets in web export
-- `c6f6e6b` Fix web preview cave terrain rendering
-- `6f96fb1` Add Godot web export preview pipeline
-- `280e373` Add organic cave tileset stress test
-- `61501ca` Build grid-aligned cave terrain renderer
+- Closed: #662-#671 completed Expansion 01 with a GO.
+- Closed: #685-#694 completed Expansion 02 with a GO.
+- Selected next milestone: Expansion 03; create its scoped issue batch before implementation.
+- Deferred: #52/#53 remain optional slice-03 presentation polish.
+- Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
 ## Known Limits
 
@@ -464,7 +306,7 @@ Recent important commits:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_02_PLAN.md` as the committed implementation plan. Expansion 01 issues #662-#671 are complete with a GO; Expansion 02 issues #685-#694 are active.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_02_CLOSEOUT.md` as the latest decision. Expansions 01 and 02 are complete with GO decisions; the next batch should plan Expansion 03 only.
 
 Accepted constraints for next work:
 
@@ -473,9 +315,10 @@ Accepted constraints for next work:
 - Do not move the entire full sketch into production yet; grow route scale only when it supports the roadmap.
 - Keep map topology, collision, spawn, extraction, and camera tests source-driven.
 - Preserve the Expansion 01 scanner, slice-02 anomaly, returned discovery, and source-authored slice-04/slice-02 travel.
-- Implement daylight, surface oxygen, boat banking, multiple sorties, and night transition before materials, capability gates, combat, or regional growth.
+- Preserve daylight, surface oxygen, repeated sorties, boat return, and night transition while adding one typed material-to-tool loop.
+- Define day-seeded resource ownership, connector cargo, canonical-boat commitment, and durable tool state before runtime or map authoring.
 - Night consumes no Food, Water, Power, or other survival tax.
-- Do not add another destination or connector in Expansion 02.
+- Do not add another destination or connector merely to host Expansion 03 materials.
 - Keep future resource and encounter variation inside authored candidates; never reroll geography or required progression arbitrarily.
 - Do not add shortcut or fast-travel networks.
 - Enemies, weapons, and biological resources are selected future pillars, but wait for their named milestones.
