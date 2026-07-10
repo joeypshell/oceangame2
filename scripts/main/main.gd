@@ -32,6 +32,7 @@ const TimedSalvageController := preload("res://scripts/main/timed_salvage_contro
 const WorldConnectorController := preload("res://scripts/main/world_connector_controller.gd")
 const AudioCuePlayer := preload("res://scripts/main/audio_cue_player.gd")
 const SmokeFeedbackAudioChecks := preload("res://scripts/main/smoke/smoke_feedback_audio_checks.gd")
+const SmokeAnomalySurveyJourneyChecks := preload("res://scripts/main/smoke/smoke_anomaly_survey_journey_checks.gd")
 const SmokeFinalDiveObjectiveChecks := preload("res://scripts/main/smoke/smoke_final_dive_objective_checks.gd")
 const SmokeHazardRouteChecks := preload("res://scripts/main/smoke/smoke_hazard_route_checks.gd")
 const SmokeInteractionChecks := preload("res://scripts/main/smoke/smoke_interaction_checks.gd")
@@ -348,6 +349,7 @@ func _ready() -> void:
 	var smoke_pass_27_facing_transitions := _has_arg(user_args, engine_args, "--smoke-pass-27-facing-transitions")
 	var smoke_movement_feel := _has_arg(user_args, engine_args, "--smoke-movement-feel")
 	var smoke_release_journey := _has_arg(user_args, engine_args, "--smoke-release-journey")
+	var smoke_anomaly_survey_journey := _has_arg(user_args, engine_args, "--smoke-anomaly-survey-journey")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
 	var parity_output_path := _arg_value(user_args, engine_args, "--parity-output")
 
@@ -618,6 +620,7 @@ func _ready() -> void:
 		or smoke_pass_27_facing_transitions
 		or smoke_movement_feel
 		or smoke_release_journey
+		or smoke_anomaly_survey_journey
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
 		or _has_arg(user_args, engine_args, "--capture-camera-tests")
 	)
@@ -727,6 +730,9 @@ func _ready() -> void:
 		return
 	if smoke_release_journey:
 		_smoke_release_journey_checks._smoke_release_journey_and_quit()
+		return
+	if smoke_anomaly_survey_journey:
+		SmokeAnomalySurveyJourneyChecks.new(self)._smoke_anomaly_survey_journey_and_quit()
 		return
 	if smoke_oxygen_pressure:
 		_smoke_interaction_checks._smoke_oxygen_pressure_and_quit()
@@ -875,15 +881,12 @@ func _ready() -> void:
 	elif capture_primary_dive_completion:
 		_capture_controller.capture_primary_dive_completion_and_quit(PRIMARY_DIVE_COMPLETION_CAPTURE_DIR)
 
-
 func _exit_tree() -> void:
 	if _audio_cues != null and _audio_cues.has_method("shutdown"):
 		_audio_cues.shutdown()
 
-
 func _review_map_selector_allowed(user_args: PackedStringArray, engine_args: PackedStringArray) -> bool:
 	return OS.has_feature("editor") or _has_arg(user_args, engine_args, "--review-map-selector")
-
 
 func _create_world(map_path: String, show_debug_overlay: bool) -> Node:
 	var world := WORLD_SCENE.instantiate()
@@ -893,7 +896,6 @@ func _create_world(map_path: String, show_debug_overlay: bool) -> Node:
 	add_child(world)
 	world.load_greybox()
 	return world
-
 
 func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := "", status_note := "") -> void:
 	_clear_loaded_review_nodes()
@@ -944,7 +946,6 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_create_review_overlay(world)
 	_update_status_label()
 
-
 func _clear_loaded_review_nodes() -> void:
 	for node in [_review_canvas, _player, _world]:
 		if node == null or not is_instance_valid(node):
@@ -960,7 +961,6 @@ func _clear_loaded_review_nodes() -> void:
 	_result_panel = null
 	_result_label = null
 	_map_selector = null
-
 
 func _on_review_map_selected(index: int) -> void:
 	if _map_selector == null or index < 0:
