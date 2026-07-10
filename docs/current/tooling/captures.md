@@ -153,6 +153,14 @@ Capture the focused Pass 27 player-facing review view:
 
 This loads the default production slice, places the player in a readable open-water area, applies deterministic left/right reversals, frames the final right-facing body and light alignment, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_27_player_facing/production_slice_01_pass_27_player_facing.png`.
 
+Capture the focused Expansion 01 anomaly survey and commit views:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-anomaly-survey
+```
+
+This uses the source-authored slice-02 target and focused survey runtime to write a stable 50% progress view plus the committed slice-01 boat result under `visual_captures/anomaly_survey/`. The command is review-only and does not accept or replace production-slice baselines.
+
 Capture the focused Pass 18 progression upgrade view:
 
 ```powershell

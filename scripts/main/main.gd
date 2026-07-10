@@ -3,6 +3,7 @@ extends Node2D
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime.gd")
+const AnomalySurveyCapture := preload("res://scripts/main/captures/anomaly_survey_capture.gd")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const CurrentGateCapture := preload("res://scripts/main/captures/current_gate_capture.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
@@ -101,6 +102,7 @@ const PASS_24_RELAY_FOLLOW_THROUGH_CAPTURE_DIR := "res://visual_captures/pass_24
 const PASS_25_FINAL_DIVE_OBJECTIVE_CAPTURE_DIR := "res://visual_captures/pass_25_final_dive_objective"
 const PASS_26_RESULT_PRESENTATION_CAPTURE_DIR := "res://visual_captures/pass_26_result_presentation"
 const PASS_27_PLAYER_FACING_CAPTURE_DIR := "res://visual_captures/pass_27_player_facing"
+const ANOMALY_SURVEY_CAPTURE_DIR := "res://visual_captures/anomaly_survey"
 const DARKNESS_LIGHT_CAPTURE_DIR := "res://visual_captures/darkness_light_gate"
 const CURRENT_GATE_CAPTURE_DIR := "res://visual_captures/current_gate"
 const MOVING_HAZARD_CAPTURE_DIR := "res://visual_captures/moving_hazard"
@@ -295,6 +297,7 @@ func _ready() -> void:
 	var capture_pass_25_final_dive_objective := _has_arg(user_args, engine_args, "--capture-pass-25-final-dive-objective")
 	var capture_pass_26_result_presentation := _has_arg(user_args, engine_args, "--capture-pass-26-result-presentation")
 	var capture_pass_27_player_facing := _has_arg(user_args, engine_args, "--capture-pass-27-player-facing")
+	var capture_anomaly_survey := _has_arg(user_args, engine_args, "--capture-anomaly-survey")
 	var capture_darkness_light_gate := _has_arg(user_args, engine_args, "--capture-darkness-light-gate")
 	var capture_current_gate := _has_arg(user_args, engine_args, "--capture-current-gate")
 	var capture_moving_hazard := _has_arg(user_args, engine_args, "--capture-moving-hazard")
@@ -567,6 +570,7 @@ func _ready() -> void:
 		or capture_pass_25_final_dive_objective
 		or capture_pass_26_result_presentation
 		or capture_pass_27_player_facing
+		or capture_anomaly_survey
 		or capture_darkness_light_gate
 		or capture_current_gate
 		or capture_moving_hazard
@@ -867,6 +871,9 @@ func _ready() -> void:
 	elif capture_pass_27_player_facing:
 		var capture := Pass27PlayerFacingCapture.new(self)
 		await capture.capture_and_quit(PASS_27_PLAYER_FACING_CAPTURE_DIR)
+	elif capture_anomaly_survey:
+		var capture := AnomalySurveyCapture.new(self)
+		await capture.capture_and_quit(ANOMALY_SURVEY_CAPTURE_DIR)
 	elif capture_darkness_light_gate:
 		_capture_controller.capture_darkness_light_gate_and_quit(DARKNESS_LIGHT_CAPTURE_DIR)
 	elif capture_current_gate:
@@ -972,17 +979,14 @@ func _on_review_map_selected(index: int) -> void:
 		return
 	_load_playable_map(map_path, _debug_overlay_enabled)
 
-
 func _play_feedback_cue(cue_id: String, dedupe_key := "") -> bool:
 	if _audio_cues == null:
 		return false
 	return _audio_cues.play_cue(cue_id, dedupe_key)
 
-
 func _input(event: InputEvent) -> void:
 	if _audio_cues != null:
 		_audio_cues.unlock_from_event(event)
-
 
 func _process(delta: float) -> void:
 	if _world == null or _player == null:
@@ -1083,7 +1087,6 @@ func _process(delta: float) -> void:
 
 	_update_status_label()
 
-
 func _complete_route_outcome_review_state() -> bool:
 	for salvage in _salvage_centers_for_full_collection():
 		_player.global_position = salvage["center"]
@@ -1101,7 +1104,6 @@ func _complete_route_outcome_review_state() -> bool:
 		return false
 	return true
 
-
 func _salvage_centers_for_full_collection() -> Array:
 	if _world == null or not _world.has_method("get_salvage_centers"):
 		return []
@@ -1109,12 +1111,10 @@ func _salvage_centers_for_full_collection() -> Array:
 		return _world.get_salvage_centers()
 	return _primary_dive_objective.ordered_salvage_for_full_collection(_world.get_salvage_centers())
 
-
 func _should_complete_run_after_banking() -> bool:
 	if _primary_dive_objective != null and _primary_dive_objective.has_primary_objective():
 		return _primary_dive_objective.is_complete(_banked_salvage_ids)
 	return _total_salvage > 0 and _banked_salvage >= _total_salvage
-
 
 func _collect_salvage_for_review_state(salvage: Dictionary) -> void:
 	var salvage_id := str(salvage.get("id", "salvage"))
