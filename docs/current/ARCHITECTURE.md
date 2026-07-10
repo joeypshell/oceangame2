@@ -125,7 +125,7 @@ Additional current map sources:
   - Owns map state, entity/zone bookkeeping, helper orchestration, and public query APIs used by `scripts/main/main.gd`.
   - Keeps visuals, runtime queries, and collision tied to source topology.
   - Exposes `camera_tests` from the source map for repeatable visual captures.
-  - Exposes runtime terrain/collision parity data and authored salvage/extraction positions.
+  - Exposes runtime terrain/collision parity data, authored salvage/extraction positions, boat bounds, and source-derived non-solid top-row surface water.
   - Is a documented cohesive-owner exception at 984 lines in the current audit. It already delegates focused renderer, query, and survey domains; retain its single map/node-state ownership unless a stable extraction reduces coupling without obscuring Godot lifecycle ordering.
 
 - `scripts/world/greybox_asset_lookup.gd`

@@ -1250,7 +1250,7 @@ func _try_world_connector_transition() -> bool:
 
 func _update_oxygen(delta: float) -> bool:
 	var previous_oxygen: float = _sortie_state.oxygen_seconds
-	if _world.is_inside_extraction(_player.global_position):
+	if _world.is_at_open_surface(_player.global_position) or _world.is_inside_extraction(_player.global_position):
 		_oxygen_rest_feedback.reset()
 		_sortie_state.oxygen_seconds = minf(_oxygen_capacity_seconds(), _sortie_state.oxygen_seconds + OXYGEN_REFILL_SECONDS_PER_SECOND * delta)
 		_update_oxygen_feedback_cues(previous_oxygen)
