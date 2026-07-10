@@ -43,6 +43,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Current docs index: `README.md`
 - Finished foundation roadmap: `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`
 - Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
+- Active Expansion 03 contracts: `docs/current/OCEANGAME_EXPANSION_03_PLAN.md`, `docs/current/OCEANGAME_EXPANSION_03_STATE_CONTRACT.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
