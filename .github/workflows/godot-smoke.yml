@@ -161,6 +161,7 @@ jobs:
           run_score_smoke --smoke-pass-26-result-presentation pass-26-result-presentation
           run_score_smoke --smoke-release-journey release-journey
           run_score_smoke --smoke-anomaly-survey-journey anomaly-survey-journey
+          run_score_smoke --smoke-expedition-day expedition-day
           run_score_smoke --smoke-current-gate current-gate
           run_score_smoke --smoke-upgrade-chest upgrade-chest
           run_score_smoke --smoke-moving-hazard moving-hazard
