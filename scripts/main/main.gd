@@ -1234,7 +1234,7 @@ func _try_world_connector_transition() -> bool:
 	var connector: Dictionary = _world_connector.connector_at(_world, _player.global_position)
 	if connector.is_empty():
 		return false
-	var blocking_gate: Dictionary = _current_gate.gate_blocks_position(_world, _player.global_position, Callable(self, "_has_upgrade_id"))
+	var blocking_gate: Dictionary = _current_gate.gate_blocks_position(_world, _player.global_position, Callable(self, "_has_upgrade_id"), Callable(_anomaly_survey.profile_state(), "has_capability"))
 	if not blocking_gate.is_empty():
 		_last_status_note = _current_gate_block_prompt(blocking_gate)
 		_update_status_label()
@@ -1305,7 +1305,7 @@ func _reset_oxygen_feedback_cues() -> void:
 func _update_current_gate(delta: float) -> void:
 	if _current_gate == null:
 		return
-	_current_gate.update(_world, _player, Callable(self, "_has_upgrade_id"), delta)
+	_current_gate.update(_world, _player, Callable(self, "_has_upgrade_id"), Callable(_anomaly_survey.profile_state(), "has_capability"), delta)
 
 
 func _update_moving_hazards(delta: float) -> void:
@@ -1315,11 +1315,7 @@ func _update_moving_hazards(delta: float) -> void:
 
 
 func _current_gate_block_prompt(gate: Dictionary) -> String:
-	var label := str(gate.get("current_gate_label", "Strong current")).strip_edges()
-	if label.is_empty():
-		label = "Strong current"
-	var upgrade_label := str(gate.get("required_upgrade_id", "upgrade")).replace("_", " ")
-	return "%s - need %s" % [label.replace("_", " "), upgrade_label]
+	return _current_gate.block_prompt(gate) if _current_gate != null else ""
 
 
 func _handle_oxygen_depleted() -> void:

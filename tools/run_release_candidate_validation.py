@@ -136,6 +136,12 @@ def godot_gates(godot: str) -> list[Gate]:
             fail_on_godot_error=True,
         ),
         Gate(
+            "smoke: current stabilizer gate state",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_current_stabilizer_gate_state.gd"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
             "maps: Godot terrain/collision parity",
             python_command("tools/check_map_parity.py", "--godot", godot),
             godot_backed=True,
