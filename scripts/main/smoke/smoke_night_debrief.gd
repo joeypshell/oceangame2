@@ -94,7 +94,7 @@ func _instant_salvage(world) -> Array:
 
 func _contains_future_tax(text: String) -> bool:
 	var lowered := text.to_lower()
-	for word in ["food", "water", "power", "project", "forecast"]:
+	for word in ["food", "water", "power", "forecast"]:
 		if lowered.find(word) != -1:
 			return true
 	return false

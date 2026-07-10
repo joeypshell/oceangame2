@@ -52,6 +52,21 @@ static func handle_day_key(main) -> Dictionary:
 	}
 
 
+static func handle_debrief_key(main, keycode: Key) -> Dictionary:
+	if main == null or main._expedition_day_state == null:
+		return {"changed": false, "reason": "unavailable"}
+	if main._expedition_day_state.phase != ExpeditionDayState.PHASE_DEBRIEF:
+		return {"changed": false, "reason": "wrong_phase"}
+	if keycode == KEY_N:
+		return handle_day_key(main)
+	if keycode != KEY_P or main._material_project == null:
+		return {"changed": false, "reason": "ignored"}
+	var result: Dictionary = main._material_project.try_build(main._expedition_day_state.phase)
+	main._last_status_note = str(result.get("note", main._last_status_note))
+	main._update_status_label()
+	return result
+
+
 static func apply_result_panel(main) -> bool:
 	if main == null or main._result_panel == null or main._result_label == null:
 		return false
@@ -67,11 +82,11 @@ static func apply_result_panel(main) -> bool:
 		review_panel.visible = false
 	main._result_panel.position = DEBRIEF_PANEL_POSITION
 	main._result_panel.visible = true
-	main._result_label.text = build_text(main._expedition_day_state)
+	main._result_label.text = build_text(main._expedition_day_state, main._material_project)
 	return true
 
 
-static func build_text(day) -> String:
+static func build_text(day, material_project = null) -> String:
 	var reason_text := "Day ended at boat"
 	if day.end_reason == "nightfall":
 		reason_text = "Returned at nightfall"
@@ -88,6 +103,9 @@ static func build_text(day) -> String:
 	var failure_text := _failure_text(day.notable_failure_reason)
 	if not failure_text.is_empty():
 		lines.append("Recovery: %s" % failure_text)
+	if material_project != null and material_project.has_method("debrief_lines"):
+		for line in material_project.debrief_lines():
+			lines.append(str(line))
 	lines.append("N: Start day %d" % (day.day_number + 1))
 	return "\n".join(lines)
 
