@@ -19,7 +19,7 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed next: Expansion 03 is selected by the Expansion 02 GO; its approximately ten-issue batch is the next planning action.
+- Committed: Expansion 03 issues #706-#715 are active in dependency order, beginning with its experience and ownership contracts.
 - Directional: Expansions 04-09 have open milestones with goals and exit criteria, but no issue batches yet.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
@@ -37,9 +37,9 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 #685-#694 are complete with a GO. The day loop is now the organizing foundation; typed materials and one tool project are selected as the next payoff layer.
 
-## Next Issue Batch
+## Active Issue Batch
 
-Create approximately ten scoped Expansion 03 issues only after its plan locks one remembered tool interaction, typed material/project ownership, deterministic authored candidates, guaranteed prerequisites, connector cargo semantics, validation, smoke, visual review, Web verification, and closeout.
+#706-#715 plan and implement one remembered cutter interaction, typed material/project ownership, deterministic authored candidates, guaranteed prerequisites, connector cargo semantics, validation, smoke, visual review, Web verification, and closeout. Do not create the Expansion 04 batch before #715 records GO or HOLD.
 
 ## Roadmap Rules
 

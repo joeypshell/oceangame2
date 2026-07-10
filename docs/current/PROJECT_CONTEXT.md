@@ -169,7 +169,7 @@ Current issue state as of 2026-07-09:
 
 - Closed: #662-#671 completed Expansion 01 with a GO.
 - Closed: #685-#694 completed Expansion 02 with a GO.
-- Selected next milestone: Expansion 03; create its scoped issue batch before implementation.
+- Active milestone: Expansion 03 issues #706-#715; work them in plan, ownership, schema, source, runtime, smoke, visual, Web, and closeout order.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
@@ -306,7 +306,7 @@ Current issue state as of 2026-07-09:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_02_CLOSEOUT.md` as the latest decision. Expansions 01 and 02 are complete with GO decisions; the next batch should plan Expansion 03 only.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star, `docs/current/OCEANGAME_EXPANSION_02_CLOSEOUT.md` as the latest completed decision, and `docs/current/OCEANGAME_EXPANSION_03_PLAN.md` as the active implementation contract. Expansions 01 and 02 are complete with GO decisions; #706-#715 are the only active Expansion 03 batch.
 
 Accepted constraints for next work:
 
