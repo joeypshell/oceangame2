@@ -14,6 +14,7 @@ func collect(candidate: Dictionary, map_id: String) -> bool:
 		"map_id": map_id,
 		"material_id": material_id,
 		"quantity": quantity,
+		"cargo_source_type": str(candidate.get("cargo_source_type", "material_candidate")),
 	})
 	return true
 

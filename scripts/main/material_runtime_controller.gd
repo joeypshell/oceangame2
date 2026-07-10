@@ -5,10 +5,13 @@ const PracticalResearchPresentation := preload("res://scripts/main/practical_res
 const CANONICAL_MAP_ID := "production_slice_01"
 const TITANIUM_ID := "titanium_scrap"
 const COIL_ID := "conductive_coil"
+const INSULATING_GEL_ID := "insulating_gel"
+const EEL_ELECTROCYTE_ID := "eel_electrocyte"
 
 var _profile
 var _cargo := MaterialCargoState.new()
 var _current_map_has_materials := false
+var _current_map_has_biological_resources := false
 var _research_lead_text := ""
 var _researched_pool_ids: Array[String] = []
 
@@ -19,12 +22,15 @@ func _init(profile_state) -> void:
 
 func on_map_loaded(world, day_state) -> Dictionary:
 	_current_map_has_materials = false
+	_current_map_has_biological_resources = false
 	_research_lead_text = ""
 	_researched_pool_ids = []
 	if world == null or day_state == null or not world.has_method("get_material_candidate_pools"):
 		return report()
 	var pools: Array = world.get_material_candidate_pools()
 	_current_map_has_materials = not pools.is_empty()
+	if world.has_method("get_biological_resource_sources"):
+		_current_map_has_biological_resources = not world.get_biological_resource_sources().is_empty()
 	var profile_report: Dictionary = _profile.report() if _profile != null else {}
 	var completed_discoveries: Array = profile_report.get("completed_discoveries", [])
 	var selected: Array[String] = day_state.material_selection_for(str(world.map_id), pools, completed_discoveries)
@@ -57,6 +63,21 @@ func update_collection(world, position: Vector2, radius_px: float, day_state, oc
 	}
 
 
+func collect_biological_source(source: Dictionary, map_id: String, occupied_salvage: int, capacity: int) -> Dictionary:
+	if occupied_salvage + held_count() >= capacity:
+		return {"blocked": true, "reason": "cargo_full", "note": "Cargo full - bank materials at boat"}
+	var cargo_source := source.duplicate(true)
+	cargo_source["cargo_source_type"] = "biological_resource"
+	if not _cargo.collect(cargo_source, map_id):
+		return {"changed": false, "reason": "cargo_rejected"}
+	return {
+		"changed": true,
+		"reason": "collected",
+		"source": cargo_source,
+		"note": "%s held - return to boat" % _display_material(str(source.get("material_id", "material"))),
+	}
+
+
 func try_commit_at_boat(world, position: Vector2) -> Dictionary:
 	if world == null or _profile == null or str(world.map_id) != CANONICAL_MAP_ID:
 		return {}
@@ -82,6 +103,8 @@ func try_commit_at_boat(world, position: Vector2) -> Dictionary:
 func restore_unbanked(world, day_state, reason := "failure") -> Dictionary:
 	var entries := _cargo.clear()
 	for entry in entries:
+		if str(entry.get("cargo_source_type", "material_candidate")) == "biological_resource":
+			continue
 		var map_id := str(entry.get("map_id", ""))
 		var candidate_id := str(entry.get("candidate_id", ""))
 		day_state.restore_material_candidate(map_id, candidate_id)
@@ -115,13 +138,23 @@ func overlay_text() -> String:
 	var held := held_quantities()
 	var titanium_banked := banked_quantity(TITANIUM_ID)
 	var coil_banked := banked_quantity(COIL_ID)
+	var gel_banked := banked_quantity(INSULATING_GEL_ID)
+	var electrocyte_banked := banked_quantity(EEL_ELECTROCYTE_ID)
+	var held_standard := int(held.get(TITANIUM_ID, 0)) + int(held.get(COIL_ID, 0))
 	var lines: Array[String] = []
-	if _current_map_has_materials or held_count() > 0 or titanium_banked > 0 or coil_banked > 0:
+	if _current_map_has_materials or held_standard > 0 or titanium_banked > 0 or coil_banked > 0:
 		lines.append("Materials Ti %d (+%d) | Coil %d (+%d)" % [
 			titanium_banked,
 			int(held.get(TITANIUM_ID, 0)),
 			coil_banked,
 			int(held.get(COIL_ID, 0)),
+		])
+	if _current_map_has_biological_resources or gel_banked > 0 or electrocyte_banked > 0:
+		lines.append("Bio Gel %d (+%d) | Electro %d (+%d)" % [
+			gel_banked,
+			int(held.get(INSULATING_GEL_ID, 0)),
+			electrocyte_banked,
+			int(held.get(EEL_ELECTROCYTE_ID, 0)),
 		])
 	if not _research_lead_text.is_empty():
 		lines.append(_research_lead_text)
@@ -132,6 +165,7 @@ func report() -> Dictionary:
 	var value := _cargo.report()
 	value["banked_materials"] = _profile.material_inventory() if _profile != null else {}
 	value["current_map_has_materials"] = _current_map_has_materials
+	value["current_map_has_biological_resources"] = _current_map_has_biological_resources
 	value["researched_pool_ids"] = _researched_pool_ids.duplicate()
 	value["research_lead_text"] = _research_lead_text
 	return value

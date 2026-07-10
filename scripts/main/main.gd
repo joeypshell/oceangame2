@@ -6,6 +6,7 @@ const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime
 const AnomalySurveyCapture := preload("res://scripts/main/captures/anomaly_survey_capture.gd")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const CargoCollectionController := preload("res://scripts/main/cargo_collection_controller.gd")
+const BiologicalResourceController := preload("res://scripts/main/biological_resource_controller.gd")
 const CutterSalvageController := preload("res://scripts/main/cutter_salvage_controller.gd")
 const CurrentGateCapture := preload("res://scripts/main/captures/current_gate_capture.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
@@ -172,6 +173,7 @@ var _player
 var _anomaly_survey
 var _capture_controller
 var _cargo_collection
+var _biological_resources
 var _current_gate
 var _cutter_salvage
 var _destination_payoff_feedback
@@ -704,6 +706,7 @@ func _ready() -> void:
 	_material_runtime = MaterialRuntimeController.new(_anomaly_survey.profile_state())
 	_material_project = MaterialProjectRuntime.new(_anomaly_survey.profile_state())
 	_cutter_salvage = CutterSalvageController.new(_anomaly_survey.profile_state())
+	_biological_resources = BiologicalResourceController.new(_anomaly_survey.profile_state())
 	_cargo_collection = CargoCollectionController.new(self)
 	_map_selector_enabled = (not automated_review) and _review_map_selector_allowed(user_args, engine_args)
 
@@ -1011,7 +1014,7 @@ func _create_world(map_path: String, show_debug_overlay: bool) -> Node:
 
 func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := "", status_note := "", preserve_sortie := false) -> void:
 	if not preserve_sortie and _world != null and _material_runtime != null:
-		_material_runtime.restore_unbanked(_world, _expedition_day_state, "map_reload")
+		_biological_resources.restore_material_cargo(_material_runtime, _world, _expedition_day_state, _hostiles, "map_reload")
 	_clear_loaded_review_nodes()
 	var world := _create_world(map_path, show_debug_overlay)
 	var player := PLAYER_SCENE.instantiate()
@@ -1022,6 +1025,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_material_project.on_map_loaded(world)
 	_cutter_salvage.on_map_loaded(world)
 	_hostiles.on_map_loaded(world, preserve_sortie)
+	_biological_resources.on_map_loaded(world, preserve_sortie)
 	_shock_prod.reset()
 	_sortie_state.begin_map_leg(str(world.map_id), entry_id, _oxygen_capacity_seconds(), preserve_sortie)
 	_player_health.begin_map_leg(preserve_sortie)
@@ -1267,7 +1271,7 @@ func _reset_run() -> void:
 
 	_world.reset_salvage()
 	_anomaly_survey.clear_unbanked("reset", _world)
-	_material_runtime.restore_unbanked(_world, _expedition_day_state, "reset")
+	_biological_resources.restore_material_cargo(_material_runtime, _world, _expedition_day_state, _hostiles, "reset")
 	_oxygen_rest_feedback.reset()
 	_current_gate.reset()
 	_pry_salvage.reset()
@@ -1447,7 +1451,7 @@ func _handle_oxygen_depleted() -> void:
 	_hostiles.reset_for_failure(_world)
 	_shock_prod.reset()
 	_combat_feedback_seconds = 0.0
-	_material_runtime.restore_unbanked(_world, _expedition_day_state, "oxygen_failure")
+	_biological_resources.restore_material_cargo(_material_runtime, _world, _expedition_day_state, _hostiles, "oxygen_failure")
 	if not _sortie_state.held_salvage_ids.is_empty():
 		_world.restore_salvage(_sortie_state.clear_held())
 	_last_status_note = "Oxygen depleted - press R"
@@ -1488,7 +1492,7 @@ func _handle_combat_defeat(_source_id: String) -> void:
 	_cutter_salvage.reset()
 	_shock_prod.reset()
 	_combat_feedback_seconds = 0.0
-	_material_runtime.restore_unbanked(_world, _expedition_day_state, "combat_defeat")
+	_biological_resources.restore_material_cargo(_material_runtime, _world, _expedition_day_state, _hostiles, "combat_defeat")
 	if not _sortie_state.held_salvage_ids.is_empty():
 		_world.restore_salvage(_sortie_state.clear_held())
 	_last_status_note = "Injured - surfaced, press R"
@@ -1515,7 +1519,7 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 	_shock_prod.reset()
 	_combat_feedback_seconds = 0.0
 	_anomaly_survey.clear_unbanked("hazard", _world)
-	var material_drop: Dictionary = _material_runtime.restore_unbanked(_world, _expedition_day_state, "hazard")
+	var material_drop: Dictionary = _biological_resources.restore_material_cargo(_material_runtime, _world, _expedition_day_state, _hostiles, "hazard")
 	var oxygen_depleted := _apply_hazard_oxygen_penalty()
 	if oxygen_depleted:
 		_handle_oxygen_depleted()
@@ -1908,6 +1912,10 @@ func _is_collection_status_note(status_note: String) -> bool:
 		or status_note.begins_with("Salvaging ")
 		or status_note.begins_with("Prying ")
 		or status_note.begins_with("Cutting ")
+		or status_note.begins_with("Sampling ")
+		or status_note.begins_with("Harvesting ")
+		or status_note.begins_with("Insulating gel ")
+		or status_note.begins_with("Electrocyte ")
 		or status_note.begins_with("Pry interrupted")
 		or status_note.begins_with("Cutter interrupted")
 		or status_note.find("Cutter required") != -1

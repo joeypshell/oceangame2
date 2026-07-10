@@ -23,6 +23,7 @@ const GreyboxSurveyTargets := preload("res://scripts/world/greybox_survey_target
 const GreyboxMaterialCandidates := preload("res://scripts/world/greybox_material_candidates.gd")
 const GreyboxToolTargets := preload("res://scripts/world/greybox_tool_targets.gd")
 const GreyboxHostileRenderer := preload("res://scripts/world/greybox_hostile_renderer.gd")
+const GreyboxBiologicalResources := preload("res://scripts/world/greybox_biological_resources.gd")
 
 const SALVAGE_TIER_SCORES := {
 	"common": 100,
@@ -80,6 +81,7 @@ var _survey_target_runtime
 var _material_candidate_runtime
 var _tool_target_runtime
 var _hostile_renderer
+var _biological_resource_runtime
 
 
 func _ready() -> void:
@@ -97,6 +99,7 @@ func _ready() -> void:
 	_material_candidate_runtime = GreyboxMaterialCandidates.new()
 	_tool_target_runtime = GreyboxToolTargets.new()
 	_hostile_renderer = GreyboxHostileRenderer.new()
+	_biological_resource_runtime = GreyboxBiologicalResources.new()
 	load_greybox()
 
 
@@ -173,6 +176,7 @@ func load_greybox() -> void:
 	_build_progression_containers(map_data.get("progression_containers", []))
 	_build_moving_hazards(map_data.get("moving_hazards", []))
 	_build_hostile_encounters(map_data.get("hostile_encounters", []))
+	_biological_resource_helper().build(_marker_root, map_data.get("biological_resource_sources", []), _hostile_encounters, tile_size, show_debug_overlay)
 	_build_entities(map_data.get("entities", []))
 	queue_redraw()
 
@@ -404,6 +408,18 @@ func set_hostile_visual_state(hostile_id: String, center: Vector2, phase: String
 
 func get_hostile_visual_report() -> Dictionary:
 	return _hostile_renderer_helper().report()
+
+
+func get_biological_resource_sources() -> Array:
+	return _biological_resource_helper().sources()
+
+
+func set_biological_resource_visual_state(source_id: String, center: Vector2, state: String) -> void:
+	_biological_resource_helper().set_state(source_id, center, state)
+
+
+func get_biological_resource_visual_report() -> Dictionary:
+	return _biological_resource_helper().report()
 
 
 func get_progression_containers() -> Array:
@@ -931,6 +947,12 @@ func _hostile_renderer_helper():
 	if _hostile_renderer == null:
 		_hostile_renderer = GreyboxHostileRenderer.new()
 	return _hostile_renderer
+
+
+func _biological_resource_helper():
+	if _biological_resource_runtime == null:
+		_biological_resource_runtime = GreyboxBiologicalResources.new()
+	return _biological_resource_runtime
 
 
 func _extraction_renderer_helper():
