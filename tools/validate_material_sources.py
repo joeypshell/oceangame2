@@ -10,6 +10,8 @@ from collections import deque
 from pathlib import Path
 from typing import Any
 
+from validate_research_sources import validate_research_source_schema
+
 
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 SUPPORTED_MATERIALS = {"titanium_scrap", "conductive_coil"}
@@ -334,6 +336,7 @@ def validate_material_source_schema(map_data: dict[str, Any]) -> list[str]:
     pool_failures, pools, selected_yields = _validate_pools(map_data, material_entities)
     failures.extend(pool_failures)
     failures.extend(_validate_projects(map_data, pools, selected_yields, tool_entities))
+    failures.extend(validate_research_source_schema(map_data))
     return failures
 
 

@@ -432,7 +432,7 @@ The first implementation target is one `upgrade_chest` in `production_slice_01` 
 Future darkness/light metadata is defined in `docs/current/DEPTH_DARKNESS_LIGHT_GATE_CONTRACT.md`. First-pass visibility zones should be visual-only marker zones, not terrain, collision, oxygen, pickup, or objective gates.
 `hazard` entities are static point hazards and require `kind`. Current valid-style examples are `mine`, `jellyfish`, and `stress_marker`.
 Moving hazards are defined separately in `docs/current/MOVING_HAZARD_DODGE_CONTRACT.md` using top-level `moving_hazards`; production previews may use `kind` to choose first-pass prop art, but hazard behavior is still source-driven.
-Non-salvage anomaly surveys use the top-level `survey_targets` contract in `docs/current/OCEANGAME_EXPANSION_01_SURVEY_SOURCE_CONTRACT.md`; survey metadata must not be placed on salvage entities or author runtime/profile state. Expansion 03 material candidates, pools, projects, and cutter targets follow `docs/current/OCEANGAME_EXPANSION_03_SOURCE_CONTRACT.md`; Expansion 04 ordered project prerequisites and durable current targets follow `docs/current/OCEANGAME_EXPANSION_04_SOURCE_CONTRACT.md`.
+Non-salvage surveys use top-level `survey_targets`: anomaly rules live in `docs/current/OCEANGAME_EXPANSION_01_SURVEY_SOURCE_CONTRACT.md`, while the Expansion 05 resource target and researched material-pool link live in `docs/current/OCEANGAME_EXPANSION_05_SOURCE_CONTRACT.md`. Survey metadata must not be placed on salvage entities or author runtime/profile state. Expansion 03 material candidates/projects follow `docs/current/OCEANGAME_EXPANSION_03_SOURCE_CONTRACT.md`; Expansion 04 ordered projects/durable currents follow `docs/current/OCEANGAME_EXPANSION_04_SOURCE_CONTRACT.md`.
 
 ```json
 {
