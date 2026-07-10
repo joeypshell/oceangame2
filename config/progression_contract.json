@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "canonical_start": {
+    "map_id": "production_slice_01",
+    "entry_id": "surface_boat_entry"
+  },
+  "salvage_score_by_tier": {
+    "common": 100,
+    "valuable": 300
+  },
+  "session_upgrades": [
+    {
+      "id": "oxygen_tank_1",
+      "constant_name": "OXYGEN_TANK",
+      "cost": 500,
+      "mandatory": false
+    },
+    {
+      "id": "cargo_pouch_1",
+      "constant_name": "CARGO_CAPACITY",
+      "cost": 700,
+      "mandatory": false
+    },
+    {
+      "id": "dive_light_1",
+      "constant_name": "LIGHT",
+      "cost": 900,
+      "mandatory": false
+    },
+    {
+      "id": "propulsion_fins",
+      "constant_name": "PROPULSION",
+      "cost": 1000,
+      "mandatory": true,
+      "purchase_map_id": "production_slice_01",
+      "purchase_entry_id": "surface_boat_entry",
+      "funding_source_ids": [
+        "salvage_lower_loop",
+        "salvage_southwest_return_cache",
+        "lower_loop_upgrade_chest"
+      ],
+      "unlocks_target_ids": [
+        "lower_left_loop_current"
+      ]
+    }
+  ],
+  "durable_purchases": [
+    {
+      "id": "survey_scanner_1",
+      "constant_name": "SCANNER",
+      "cost": 300,
+      "mandatory": true,
+      "purchase_map_id": "production_slice_01",
+      "purchase_entry_id": "surface_boat_entry",
+      "required_signal_id": "lower_left_final_dive_signal",
+      "funding_source_ids": [
+        "slice_04_destination_cache"
+      ],
+      "unlocks_target_ids": [
+        "lower_right_anomaly_survey",
+        "upper_right_mineral_trace_survey",
+        "upper_right_glow_anemone_sample"
+      ]
+    }
+  ]
+}

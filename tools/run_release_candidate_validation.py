@@ -59,6 +59,8 @@ def base_gates() -> list[Gate]:
     gates = [
         Gate("repo hygiene: file lengths", python_command("tools/check_file_lengths.py")),
         Gate("repo hygiene: whitespace", ["git", "diff", "--check"]),
+        Gate("progression: graph fixtures", python_command("tools/test_progression_graph.py")),
+        Gate("progression: source graph audit", python_command("tools/audit_progression_graph.py")),
         Gate("assets: manifest paths", python_command("tools/check_asset_manifest.py")),
         Gate("maps: current gate validator tests", python_command("tools/test_validate_current_gates.py")),
         Gate("maps: hostile encounter validator tests", python_command("tools/test_validate_hostile_encounters.py")),

@@ -73,6 +73,7 @@ Creature materials should express function. Examples remain provisional: luminou
 - Creature materials occupy cargo and are not secured until banked at the boat.
 - Duplicate scans and already-completed knowledge should have a useful, bounded outcome rather than becoming dead interactions.
 - No project should be only a wallet payment once typed materials exist.
+- `python tools/audit_progression_graph.py` is the executable cross-map safeguard. Production map metadata owns authored relationships; `config/progression_contract.json` owns only runtime purchase/scoring relationships that maps cannot own.
 
 ## Preliminary Progression Matrix
 

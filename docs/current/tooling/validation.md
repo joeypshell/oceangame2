@@ -41,6 +41,14 @@ python tools/check_file_lengths.py
 
 This treats 500 lines as the default target and growth guard for human-authored files. It fails on new non-allowlisted source/docs/config files over that target and reports actionable temporary debt, documented cohesive-owner exceptions, and generated map data separately. A cohesive-owner exception must state why retaining one owner is safer; do not split Godot state or lifecycle code solely to satisfy the number. Keep new tooling docs small enough that the audit does not need an exception.
 
+Audit the cross-map progression graph whenever changing maps, objectives, connectors, rewards, upgrades, discoveries, projects, gates, enemies, or guarded payoffs:
+
+```bash
+python tools/audit_progression_graph.py
+```
+
+The command derives the Expansion 01-07 dependency graph from production map JSON plus the minimal runtime-only `config/progression_contract.json`. It fails on stale generated constants/review docs, unresolved references, hard cycles, self-gated funding/materials, guard/counter inversions, and unreachable mandatory stages. Use `--write` only after intentional source changes to refresh `scripts/main/progression_contract.gd` and `docs/current/PROGRESSION_GRAPH.md`. The standalone `Progression audit` GitHub check runs the focused fixtures and audit on every pull request update and every push to `main`, without downloading Godot.
+
 Run the Simple Diver Game release-candidate validation gates:
 
 ```bash
@@ -49,7 +57,7 @@ python tools/run_release_candidate_validation.py --list
 python tools/run_release_candidate_validation.py --skip-godot
 ```
 
-The runner composes existing checks in release-candidate order: file-length audit, whitespace, asset manifest, committed capture inventory, accepted-baseline directory cleanliness, map validation, headless import/startup, Godot map parity, and selected core smokes. It skips Godot-backed gates only when Godot is unavailable or `--skip-godot` is passed; use `--require-godot` for a strict release gate.
+The runner composes existing checks in release-candidate order: file-length audit, whitespace, progression graph fixtures/audit, asset manifest, committed capture inventory, accepted-baseline directory cleanliness, map validation, headless import/startup, Godot map parity, and selected core smokes. It skips Godot-backed gates only when Godot is unavailable or `--skip-godot` is passed; use `--require-godot` for a strict release gate.
 
 Regenerate the SVG preview from source data:
 

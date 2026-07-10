@@ -2,12 +2,13 @@ extends RefCounted
 
 const ExpeditionDiscoveryState := preload("res://scripts/main/expedition_discovery_state.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
 const SurveyInteractionController := preload("res://scripts/main/survey_interaction_controller.gd")
 
-const SCANNER_CAPABILITY_ID := ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID
-const SCANNER_COST := 300
-const CANONICAL_MAP_ID := "production_slice_01"
-const CANONICAL_ENTRY_ID := "surface_boat_entry"
+const SCANNER_CAPABILITY_ID := ProgressionContract.SCANNER_CAPABILITY_ID
+const SCANNER_COST := ProgressionContract.SCANNER_COST
+const CANONICAL_MAP_ID := ProgressionContract.SCANNER_PURCHASE_MAP_ID
+const CANONICAL_ENTRY_ID := ProgressionContract.SCANNER_PURCHASE_ENTRY_ID
 const COMMIT_NOTE := "Discovery committed at surface boat"
 const COMMIT_RESULT := "Discovery logged: Lower-right anomaly\nNext lead: investigate territorial signal"
 const RESOURCE_TARGET_TYPE := "resource"

@@ -24,11 +24,9 @@ const GreyboxMaterialCandidates := preload("res://scripts/world/greybox_material
 const GreyboxToolTargets := preload("res://scripts/world/greybox_tool_targets.gd")
 const GreyboxHostileRenderer := preload("res://scripts/world/greybox_hostile_renderer.gd")
 const GreyboxBiologicalResources := preload("res://scripts/world/greybox_biological_resources.gd")
+const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
 
-const SALVAGE_TIER_SCORES := {
-	"common": 100,
-	"valuable": 300,
-}
+const SALVAGE_TIER_SCORES := ProgressionContract.SALVAGE_SCORE_BY_TIER
 
 @export var map_path := "res://maps/cave_salvage_test_01.greybox.json"
 @export var show_debug_overlay := false

@@ -1,9 +1,10 @@
 extends RefCounted
 
+const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
 const SCHEMA_VERSION := 3
 const MATERIAL_SCHEMA_VERSION := 2
 const LEGACY_SCHEMA_VERSION := 1
-const SURVEY_SCANNER_CAPABILITY_ID := "survey_scanner_1"
+const SURVEY_SCANNER_CAPABILITY_ID := ProgressionContract.SCANNER_CAPABILITY_ID
 const SALVAGE_CUTTER_CAPABILITY_ID := "salvage_cutter"
 const ANOMALY_DISCOVERY_ID := "lower_right_anomaly_discovery"
 const MINERAL_TRACE_RESEARCH_ID := "upper_right_mineral_trace_research"

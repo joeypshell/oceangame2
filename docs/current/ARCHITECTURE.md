@@ -16,6 +16,8 @@ maps/production_slice_01.greybox.json
 
 The Godot scene reads this JSON at runtime. Do not hand-tune in-engine terrain topology without updating the source map.
 
+Cross-map progression is audited as one dependency system. Production JSON owns authored connectors, objectives, gates, surveys, projects, hostile guards, and payoffs; `config/progression_contract.json` owns only runtime purchase/scoring relationships that maps cannot own. `tools/audit_progression_graph.py` checks the merged graph and deterministic `docs/current/PROGRESSION_GRAPH.md`, while generated `scripts/main/progression_contract.gd` supplies those runtime constants to Godot.
+
 Additional current map sources:
 
 - `maps/cave_salvage_test_01.greybox.json`
