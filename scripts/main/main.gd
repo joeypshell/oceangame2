@@ -993,6 +993,7 @@ func _process(delta: float) -> void:
 	if _run_complete or _sortie_state.failed:
 		_update_status_label()
 		return
+	_expedition_day_state.advance_daylight(delta)
 
 	if _update_oxygen(delta):
 		_update_status_label()
@@ -1326,9 +1327,7 @@ func _handle_oxygen_depleted() -> void:
 	_timed_salvage.reset()
 	if not _sortie_state.held_salvage_ids.is_empty():
 		_world.restore_salvage(_sortie_state.clear_held())
-		_last_status_note = "Oxygen depleted - press R"
-	else:
-		_last_status_note = "Oxygen depleted - press R"
+	_last_status_note = "Oxygen depleted - press R"
 
 	_sortie_state.oxygen_seconds = _oxygen_capacity_seconds()
 	_reset_oxygen_feedback_cues()
