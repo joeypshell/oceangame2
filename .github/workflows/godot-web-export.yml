@@ -80,6 +80,7 @@ jobs:
         env:
           NODE_PATH: ${{ runner.temp }}/web-preview-check/node_modules
           WEB_PREVIEW_SCREENSHOT: exports/web-preview-check.png
+          WEB_PREVIEW_MOBILE_SCREENSHOT: exports/web-preview-mobile-check.png
         run: |
           python -m http.server 8060 --directory exports/web > web-preview-server.log 2>&1 &
           server_pid=$!
@@ -101,6 +102,7 @@ jobs:
           name: web-preview-check
           path: |
             exports/web-preview-check.png
+            exports/web-preview-mobile-check.png
             web-preview-server.log
           if-no-files-found: ignore
 

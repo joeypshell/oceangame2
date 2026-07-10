@@ -33,9 +33,12 @@ function parseArgs(argv) {
 
 const { targetUrl, expectedSha } = parseArgs(process.argv.slice(2));
 const screenshotPath = process.env.WEB_PREVIEW_SCREENSHOT || "exports/web-preview-check.png";
+const mobileScreenshotPath = process.env.WEB_PREVIEW_MOBILE_SCREENSHOT || "";
 const primaryViewport = { width: 1280, height: 720 };
 const wideViewport = { width: 1920, height: 1080 };
+const mobileViewport = { width: 844, height: 390 };
 const framingThreshold = 18;
+const canvasPositionTolerance = 1;
 
 const failurePatterns = [
 	/SCRIPT ERROR/i,
@@ -83,11 +86,18 @@ async function main() {
 	try {
 		const primary = await inspectPreview(browser, targetUrl, primaryViewport, screenshotPath);
 		const wide = await inspectPreview(browser, targetUrl, wideViewport, "");
+		const mobile = await inspectPreview(
+			browser,
+			targetUrl,
+			mobileViewport,
+			mobileScreenshotPath,
+			{ deviceScaleFactor: 3, hasTouch: true, isMobile: true }
+		);
 		const framingDiff = compareSignatures(primary.signature, wide.signature);
 
 		fs.mkdirSync(path.dirname(screenshotPath), { recursive: true });
-		const allMessages = primary.messages.concat(wide.messages);
-		const allFailedRequests = primary.failedRequests.concat(wide.failedRequests);
+		const allMessages = primary.messages.concat(wide.messages, mobile.messages);
+		const allFailedRequests = primary.failedRequests.concat(wide.failedRequests, mobile.failedRequests);
 		const failingMessages = allMessages.filter((message) =>
 			failurePatterns.some((pattern) => pattern.test(message.text))
 		);
@@ -98,6 +108,12 @@ async function main() {
 		);
 		console.log(
 			`Wide canvas ${wide.canvasSize.width}x${wide.canvasSize.height} (${wide.canvasSize.clientWidth}x${wide.canvasSize.clientHeight} CSS)`
+		);
+		console.log(
+			`Mobile canvas ${mobile.canvasSize.width}x${mobile.canvasSize.height} (${mobile.canvasRect.width}x${mobile.canvasRect.height} CSS at ${mobile.canvasRect.left},${mobile.canvasRect.top})`
+		);
+		console.log(
+			`Mobile visual viewport ${mobile.viewportMetrics.visualWidth}x${mobile.viewportMetrics.visualHeight} offset ${mobile.viewportMetrics.visualLeft},${mobile.viewportMetrics.visualTop}`
 		);
 		console.log(`Framing thumbnail mean difference ${framingDiff.toFixed(2)} (max ${framingThreshold})`);
 
@@ -121,6 +137,25 @@ async function main() {
 		if (wide.canvasSize.width <= 0 || wide.canvasSize.height <= 0) {
 			throw new Error("Godot canvas did not initialize at the wide framing check size.");
 		}
+		if (mobile.canvasSize.width <= 0 || mobile.canvasSize.height <= 0) {
+			throw new Error("Godot canvas did not initialize at the mobile framing check size.");
+		}
+		if (
+			Math.abs(mobile.canvasRect.left) > canvasPositionTolerance ||
+			Math.abs(mobile.canvasRect.top) > canvasPositionTolerance
+		) {
+			throw new Error(
+				`Mobile canvas is not top anchored: left=${mobile.canvasRect.left} top=${mobile.canvasRect.top}.`
+			);
+		}
+		if (
+			mobile.canvasRect.width + canvasPositionTolerance < mobile.viewportMetrics.visualWidth ||
+			mobile.canvasRect.height + canvasPositionTolerance < mobile.viewportMetrics.visualHeight
+		) {
+			throw new Error(
+				`Mobile canvas does not cover the visual viewport: canvas=${mobile.canvasRect.width}x${mobile.canvasRect.height} viewport=${mobile.viewportMetrics.visualWidth}x${mobile.viewportMetrics.visualHeight}.`
+			);
+		}
 		if (framingDiff > framingThreshold) {
 			throw new Error(
 				`Web preview framing changed across viewport sizes; thumbnail mean difference ${framingDiff.toFixed(2)} exceeds ${framingThreshold}.`
@@ -137,10 +172,10 @@ async function main() {
 	}
 }
 
-async function inspectPreview(browser, url, viewport, outputPath) {
+async function inspectPreview(browser, url, viewport, outputPath, pageOptions = {}) {
 	const messages = [];
 	const failedRequests = [];
-	const page = await browser.newPage({ viewport });
+	const page = await browser.newPage({ viewport, ...pageOptions });
 	try {
 		page.on("console", (message) => {
 			messages.push({
@@ -172,6 +207,23 @@ async function inspectPreview(browser, url, viewport, outputPath) {
 			clientWidth: canvas.clientWidth,
 			clientHeight: canvas.clientHeight,
 		}));
+		const canvasRect = await page.locator("canvas").evaluate((canvas) => {
+			const rect = canvas.getBoundingClientRect();
+			return {
+				left: rect.left,
+				top: rect.top,
+				width: rect.width,
+				height: rect.height,
+			};
+		});
+		const viewportMetrics = await page.evaluate(() => ({
+			innerWidth: window.innerWidth,
+			innerHeight: window.innerHeight,
+			visualWidth: window.visualViewport?.width || window.innerWidth,
+			visualHeight: window.visualViewport?.height || window.innerHeight,
+			visualLeft: window.visualViewport?.offsetLeft || 0,
+			visualTop: window.visualViewport?.offsetTop || 0,
+		}));
 		const signature = await page.locator("canvas").evaluate((canvas) => {
 			const sampleWidth = 64;
 			const sampleHeight = 36;
@@ -183,7 +235,7 @@ async function inspectPreview(browser, url, viewport, outputPath) {
 			return Array.from(context.getImageData(0, 0, sampleWidth, sampleHeight).data);
 		});
 
-		return { canvasSize, failedRequests, messages, signature };
+		return { canvasRect, canvasSize, failedRequests, messages, signature, viewportMetrics };
 	} finally {
 		await page.close();
 	}
