@@ -16,6 +16,7 @@ static func build_text(context: Dictionary) -> String:
 	_append_if_present(result_lines, final_dive_text)
 	if not final_dive_text.strip_edges().is_empty():
 		_append_if_present(result_lines, FINAL_DIVE_COMPLETION_CUE)
+	_append_if_present(result_lines, str(context.get("discovery_text", "")))
 	_append_if_present(result_lines, str(context.get("route_text", "")))
 	result_lines.append("Score %d" % int(context.get("score", 0)))
 	result_lines.append("Salvage score %d" % int(context.get("salvage_score", 0)))

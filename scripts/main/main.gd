@@ -2,6 +2,7 @@ extends Node2D
 
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
+const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime.gd")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const CurrentGateCapture := preload("res://scripts/main/captures/current_gate_capture.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
@@ -138,6 +139,7 @@ const REVIEW_MAP_OPTIONS := [
 
 var _world
 var _player
+var _anomaly_survey
 var _capture_controller
 var _current_gate
 var _destination_payoff_feedback
@@ -619,6 +621,7 @@ func _ready() -> void:
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
 		or _has_arg(user_args, engine_args, "--capture-camera-tests")
 	)
+	_anomaly_survey = AnomalySurveyRuntime.new(_progression_runtime, not automated_review)
 	_map_selector_enabled = (not automated_review) and _review_map_selector_allowed(user_args, engine_args)
 
 	if check_map_parity:
@@ -897,6 +900,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	var world := _create_world(map_path, show_debug_overlay)
 	var player := PLAYER_SCENE.instantiate()
 	_player = player
+	_anomaly_survey.on_map_loaded(world)
 	player.position = world.get_entry_position(entry_id) if not entry_id.is_empty() and world.has_method("get_entry_position") else world.spawn_position
 	add_child(player)
 	_apply_session_light_profile()
@@ -976,32 +980,8 @@ func _play_feedback_cue(cue_id: String, dedupe_key := "") -> bool:
 
 
 func _input(event: InputEvent) -> void:
-	_unlock_feedback_audio_from_event(event)
-
-
-func _unlock_feedback_audio_from_event(event: InputEvent) -> void:
-	if _audio_cues == null or not _audio_cues.has_method("unlock_playback"):
-		return
-	if event is InputEventKey:
-		var key_event := event as InputEventKey
-		if key_event.pressed and not key_event.echo:
-			_audio_cues.unlock_playback()
-	elif event is InputEventMouseButton:
-		var mouse_event := event as InputEventMouseButton
-		if mouse_event.pressed:
-			_audio_cues.unlock_playback()
-	elif event is InputEventScreenTouch:
-		var touch_event := event as InputEventScreenTouch
-		if touch_event.pressed:
-			_audio_cues.unlock_playback()
-	elif event is InputEventJoypadButton:
-		var button_event := event as InputEventJoypadButton
-		if button_event.pressed:
-			_audio_cues.unlock_playback()
-	elif event is InputEventJoypadMotion:
-		var motion_event := event as InputEventJoypadMotion
-		if absf(motion_event.axis_value) > 0.2:
-			_audio_cues.unlock_playback()
+	if _audio_cues != null:
+		_audio_cues.unlock_from_event(event)
 
 
 func _process(delta: float) -> void:
@@ -1027,6 +1007,9 @@ func _process(delta: float) -> void:
 			_handle_hazard_hit(hazard_id)
 			_update_status_label()
 			return
+	var survey_result: Dictionary = _anomaly_survey.update(_world, _player, delta)
+	if survey_result.has("note"):
+		_last_status_note = str(survey_result["note"])
 	_update_hazard_warning(delta)
 
 	if _held_salvage < _held_salvage_capacity():
@@ -1078,6 +1061,8 @@ func _process(delta: float) -> void:
 		_banked_salvage_ids.append_array(_held_salvage_ids)
 		var relay_follow_through_note: String = _relay_follow_through_feedback.banked_feedback(_held_salvage_ids)
 		var final_dive_note: String = _final_dive_objective_seed.banked_feedback(_held_salvage_ids)
+		if not final_dive_note.is_empty():
+			_anomaly_survey.activate_lead()
 		_held_salvage = 0
 		_held_salvage_ids = []
 		_held_salvage_score = 0
@@ -1196,6 +1181,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		_try_purchase_light_upgrade()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_P:
 		_try_purchase_propulsion_upgrade()
+	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_Q:
+		var scanner_result: Dictionary = _anomaly_survey.try_unlock_scanner(_world, _player)
+		_last_status_note = str(scanner_result.get("note", _last_status_note))
+		_update_status_label()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_E:
 		_try_world_connector_transition()
 
@@ -1205,6 +1194,7 @@ func _reset_run() -> void:
 		return
 
 	_world.reset_salvage()
+	_anomaly_survey.clear_unbanked("reset", _world)
 	_oxygen_rest_feedback.reset()
 	_current_gate.reset()
 	_pry_salvage.reset()
@@ -1259,6 +1249,7 @@ func _try_world_connector_transition() -> bool:
 
 	var destination_entry_id := str(connector.get("destination_entry_id", "")).strip_edges()
 	var arrival_note: String = _world_connector.arrival_note(connector)
+	_anomaly_survey.on_map_transition(str(connector.get("destination_map_id", "")))
 	_load_playable_map(destination_map_path, _debug_overlay_enabled, destination_entry_id, arrival_note)
 	return true
 
@@ -1333,6 +1324,7 @@ func _current_gate_block_prompt(gate: Dictionary) -> String:
 func _handle_oxygen_depleted() -> void:
 	if _run_failed:
 		return
+	_anomaly_survey.clear_unbanked("oxygen_failure", _world)
 	_play_feedback_cue("oxygen_failure", "oxygen_failure")
 	_oxygen_rest_feedback.reset()
 	_current_gate.reset()
@@ -1368,6 +1360,7 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 	_moving_hazards.reset(_world)
 	_pry_salvage.reset()
 	_timed_salvage.reset()
+	_anomaly_survey.clear_unbanked("hazard", _world)
 	var oxygen_depleted := _apply_hazard_oxygen_penalty()
 	if oxygen_depleted:
 		_handle_oxygen_depleted()
@@ -1571,7 +1564,7 @@ func _update_status_label() -> void:
 	elif _is_relay_follow_through_status_note(_last_status_note) or _is_final_dive_status_note(_last_status_note):
 		prompt = _last_status_note
 		objective_step_cue_blocked = true
-	elif _is_progression_status_note(_last_status_note):
+	elif _is_progression_status_note(_last_status_note) or _anomaly_survey.is_status_note(_last_status_note):
 		prompt = _last_status_note
 		objective_step_cue_blocked = true
 	elif not pre_pickup_route_cue.is_empty():
@@ -1597,6 +1590,7 @@ func _update_status_label() -> void:
 	if not oxygen_feedback.is_empty():
 		oxygen_text = "Oxygen %ds %s" % [oxygen_seconds, oxygen_feedback]
 	var progression_text := _progression_overlay_text()
+	var anomaly_text: String = _anomaly_survey.overlay_text(_world, _player)
 
 	_status_label.text = "Score %d\nSalvage banked %d/%d\nHeld %d/%d (%d pts)\n%s\n%s" % [
 		_banked_score,
@@ -1610,6 +1604,8 @@ func _update_status_label() -> void:
 	]
 	if not objective_text.is_empty():
 		_status_label.text += "\n%s" % objective_text
+	if not anomaly_text.is_empty():
+		_status_label.text += "\n%s" % anomaly_text
 	if not prompt.is_empty():
 		_status_label.text += "\n%s" % prompt
 	_update_result_panel()
@@ -1989,6 +1985,7 @@ func _update_result_panel() -> void:
 		"next_dive_text": _next_dive_objective_result_text(),
 		"relay_follow_through_text": _relay_follow_through_result_text(),
 		"final_dive_text": _final_dive_objective_result_text(),
+		"discovery_text": _anomaly_survey.result_text(),
 		"progression_text": _progression_result_text(),
 		"progression_status_note": _last_status_note if _is_progression_status_note(_last_status_note) else "",
 		"oxygen_text": oxygen_text,

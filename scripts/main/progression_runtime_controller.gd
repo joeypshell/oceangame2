@@ -17,6 +17,10 @@ func grant_wallet_reward(amount: int) -> int:
 	return _progression.grant_wallet_reward(amount) if _progression != null else 0
 
 
+func spend_wallet(amount: int) -> Dictionary:
+	return _progression.spend_wallet(amount) if _progression != null else {"spent": false, "reason": "wallet_unavailable"}
+
+
 func wallet() -> int:
 	return _progression.wallet() if _progression != null else 0
 
