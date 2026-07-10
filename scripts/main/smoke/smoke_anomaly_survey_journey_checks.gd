@@ -13,6 +13,7 @@ const ANOMALY_CONNECTOR_ID := "lower_right_anomaly_connector"
 const TARGET_RETURN_CONNECTOR_ID := "return_to_lower_left_relay_connector"
 const PAYOFF_TARGET_ID := "slice_04_destination_cache"
 const SURVEY_TARGET_ID := "lower_right_anomaly_survey"
+const RESOURCE_TARGET_ID := "upper_right_mineral_trace_survey"
 const DISCOVERY_ID := ExpansionProfileState.ANOMALY_DISCOVERY_ID
 const PROPULSION_SEED_WALLET := 1000
 
@@ -26,7 +27,10 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 
 	if not _require(_world.map_id == ORIGIN_MAP_ID, "loaded unexpected origin %s" % _world.map_id):
 		return
-	if not _require(_world.get_survey_targets().is_empty(), "origin map unexpectedly owns survey source"):
+	var resource_target := _survey_target_by_id(RESOURCE_TARGET_ID)
+	if not _require(str(resource_target.get("target_type", "")) == "resource", "origin map missing resource survey source"):
+		return
+	if not _require(_survey_target_by_id(SURVEY_TARGET_ID).is_empty(), "origin map unexpectedly owns anomaly survey source"):
 		return
 	_main._session_progression.grant_wallet_reward(PROPULSION_SEED_WALLET)
 	if not _require(_main._try_purchase_propulsion_upgrade(), "could not purchase required propulsion upgrade"):

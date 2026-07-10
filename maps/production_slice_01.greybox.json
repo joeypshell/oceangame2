@@ -2506,6 +2506,29 @@
       "intent": "Pass 23 result prompt pointing the next dive toward the lower-left relay after Deep cache completion."
     }
   ],
+  "survey_targets": [
+    {
+      "id": "upper_right_mineral_trace_survey",
+      "target_type": "resource",
+      "x": 69,
+      "y": 41,
+      "w": 2,
+      "h": 2,
+      "required_capability_id": "survey_scanner_1",
+      "interaction": "survey",
+      "interaction_seconds": 3.0,
+      "interaction_label": "Survey mineral trace",
+      "clue_label": "Mineral trace | Composition unknown",
+      "finding_label": "Research: coils favor deep-cache machinery",
+      "discovery_id": "upper_right_mineral_trace_research",
+      "research_material_pool_id": "conductive_coil_pool",
+      "route_context": "upper_right_current_pocket",
+      "commit_map_id": "production_slice_01",
+      "commit_map_path": "res://maps/production_slice_01.greybox.json",
+      "commit_entry_id": "surface_boat_entry",
+      "intent": "Expansion 05 mineral trace beyond the durable current gate; its committed finding favors the existing deep-cache coil habitat on a fresh day."
+    }
+  ],
   "material_candidate_pools": [
     {
       "id": "titanium_scrap_pool",
@@ -2527,7 +2550,12 @@
       "candidate_ids": [
         "material_coil_deep_approach",
         "material_coil_deep_cache"
-      ]
+      ],
+      "research_discovery_id": "upper_right_mineral_trace_research",
+      "researched_candidate_ids": [
+        "material_coil_deep_cache"
+      ],
+      "research_lead_label": "Research lead | Coils near deep-cache machinery"
     }
   ],
   "material_projects": [

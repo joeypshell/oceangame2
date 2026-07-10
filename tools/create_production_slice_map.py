@@ -6,8 +6,7 @@ from __future__ import annotations
 import json
 from collections import deque
 from pathlib import Path
-from production_slice_01_expansions import expansion_entities, expansion_zones, material_candidate_pools, material_projects
-
+from production_slice_01_expansions import expansion_entities, expansion_survey_targets, expansion_zones, material_candidate_pools, material_projects
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_MAP_PATH = ROOT / "maps" / "full_cave_sketch_01.greybox.json"
@@ -340,6 +339,7 @@ def build_map_data(source_map: dict) -> dict:
         "route_objectives": PASS_13_ROUTE_OBJECTIVES,
         "primary_route_objective_id": "deep_cache_route_objective",
         "next_dive_objective_prompts": [{"id": "deep_cache_next_dive_prompt", "trigger": "primary_objective_complete", "objective_id": "deep_cache_route_objective", "target_id": "lower_left_loop_connector", "label": "Next dive: Investigate lower-left relay", "route_context": "lower_left_loop", "intent": "Pass 23 result prompt pointing the next dive toward the lower-left relay after Deep cache completion."}],
+        "survey_targets": expansion_survey_targets(),
         "material_candidate_pools": material_candidate_pools(),
         "material_projects": material_projects(),
         "background": [
