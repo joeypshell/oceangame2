@@ -20,6 +20,7 @@ const PrePickupRouteCueFeedback := preload("res://scripts/main/pre_pickup_route_
 const NextDiveObjectivePrompt := preload("res://scripts/main/next_dive_objective_prompt.gd")
 const PrimaryDiveObjective := preload("res://scripts/main/primary_dive_objective.gd")
 const ProgressionContainerController := preload("res://scripts/main/progression_container_controller.gd")
+const ProgressionRuntimeController := preload("res://scripts/main/progression_runtime_controller.gd")
 const PrySalvageController := preload("res://scripts/main/pry_salvage_controller.gd")
 const RelayFollowThroughFeedback := preload("res://scripts/main/relay_follow_through_feedback.gd")
 const ReturnPressureFeedback := preload("res://scripts/main/return_pressure_feedback.gd")
@@ -147,6 +148,7 @@ var _oxygen_rest_feedback
 var _pre_pickup_route_cue_feedback
 var _primary_dive_objective
 var _progression_containers
+var _progression_runtime
 var _pry_salvage
 var _relay_follow_through_feedback
 var _return_pressure_feedback
@@ -225,6 +227,7 @@ func _ready() -> void:
 	_return_pressure_feedback = ReturnPressureFeedback.new()
 	_route_commitment_feedback = RouteCommitmentFeedback.new()
 	_session_progression = SessionProgression.new()
+	_progression_runtime = ProgressionRuntimeController.new(_session_progression)
 	_timed_salvage = TimedSalvageController.new()
 	_world_connector = WorldConnectorController.new()
 	_audio_cues = AudioCuePlayer.new()
@@ -1741,20 +1744,7 @@ func _status_note_contains_feedback(status_note: String, feedback) -> bool:
 
 
 func _is_progression_status_note(status_note: String) -> bool:
-	return (
-		status_note == "O2 tank upgraded"
-		or status_note == "O2 tank already upgraded"
-		or status_note == "Cargo +1 upgraded"
-		or status_note == "Cargo +1 already upgraded"
-		or status_note == "Light +range upgraded"
-		or status_note == "Light +range already upgraded"
-		or status_note == "Fins upgraded"
-		or status_note == "Fins already upgraded"
-		or status_note.begins_with("Upgrade chest +")
-		or status_note == "Upgrade at extraction"
-		or status_note == "Upgrade blocked"
-		or status_note.begins_with("Need ")
-	)
+	return _progression_runtime != null and _progression_runtime.is_status_note(status_note)
 
 
 func _session_best_map_key() -> String:
@@ -1884,27 +1874,19 @@ func _record_session_best_score() -> void:
 
 
 func _record_session_payout(banked_score: int) -> int:
-	if _session_progression == null:
-		return 0
-	return _session_progression.record_banked_salvage(banked_score)
+	return _progression_runtime.record_banked_salvage(banked_score) if _progression_runtime != null else 0
 
 
 func _session_wallet() -> int:
-	if _session_progression == null:
-		return 0
-	return _session_progression.wallet()
+	return _progression_runtime.wallet() if _progression_runtime != null else 0
 
 
 func _session_payout_total() -> int:
-	if _session_progression == null:
-		return 0
-	return _session_progression.total_payout_earned()
+	return _progression_runtime.total_payout_earned() if _progression_runtime != null else 0
 
 
 func _grant_wallet_reward(amount: int) -> int:
-	if _session_progression == null:
-		return 0
-	return _session_progression.grant_wallet_reward(amount)
+	return _progression_runtime.grant_wallet_reward(amount) if _progression_runtime != null else 0
 
 
 func _update_progression_containers() -> void:
@@ -1916,184 +1898,70 @@ func _update_progression_containers() -> void:
 
 
 func _try_purchase_oxygen_tank_upgrade() -> bool:
-	if _world == null or _player == null or _session_progression == null:
-		return false
-	if not _world.is_inside_extraction(_player.global_position):
-		_last_status_note = "Upgrade at extraction"
-		_update_status_label()
-		return false
-	var result: Dictionary = _session_progression.purchase_oxygen_tank_upgrade()
-	if bool(result.get("purchased", false)):
-		_last_status_note = "O2 tank upgraded"
-		_update_status_label()
-		return true
-	var reason := str(result.get("reason", "blocked"))
-	if reason == "insufficient_funds":
-		_last_status_note = "Need %d more" % int(result.get("needed", 0))
-	elif reason == "already_purchased":
-		_last_status_note = "O2 tank already upgraded"
-	else:
-		_last_status_note = "Upgrade blocked"
-	_update_status_label()
-	return false
+	return _try_purchase_progression_upgrade(SessionProgression.OXYGEN_TANK_UPGRADE_ID)
 
 
 func _try_purchase_cargo_capacity_upgrade() -> bool:
-	if _world == null or _player == null or _session_progression == null:
-		return false
-	if not _world.is_inside_extraction(_player.global_position):
-		_last_status_note = "Upgrade at extraction"
-		_update_status_label()
-		return false
-	var result: Dictionary = _session_progression.purchase_cargo_capacity_upgrade()
-	if bool(result.get("purchased", false)):
-		_last_status_note = "Cargo +1 upgraded"
-		_update_status_label()
-		return true
-	var reason := str(result.get("reason", "blocked"))
-	if reason == "insufficient_funds":
-		_last_status_note = "Need %d more" % int(result.get("needed", 0))
-	elif reason == "already_purchased":
-		_last_status_note = "Cargo +1 already upgraded"
-	else:
-		_last_status_note = "Upgrade blocked"
-	_update_status_label()
-	return false
+	return _try_purchase_progression_upgrade(SessionProgression.CARGO_CAPACITY_UPGRADE_ID)
 
 
 func _try_purchase_light_upgrade() -> bool:
-	if _world == null or _player == null or _session_progression == null:
-		return false
-	if not _world.is_inside_extraction(_player.global_position):
-		_last_status_note = "Upgrade at extraction"
-		_update_status_label()
-		return false
-	var result: Dictionary = _session_progression.purchase_light_upgrade()
-	if bool(result.get("purchased", false)):
-		_apply_session_light_profile()
-		_last_status_note = "Light +range upgraded"
-		_update_status_label()
-		return true
-	var reason := str(result.get("reason", "blocked"))
-	if reason == "insufficient_funds":
-		_last_status_note = "Need %d more" % int(result.get("needed", 0))
-	elif reason == "already_purchased":
-		_last_status_note = "Light +range already upgraded"
-	else:
-		_last_status_note = "Upgrade blocked"
-	_update_status_label()
-	return false
+	return _try_purchase_progression_upgrade(SessionProgression.LIGHT_UPGRADE_ID)
 
 
 func _try_purchase_propulsion_upgrade() -> bool:
-	if _world == null or _player == null or _session_progression == null:
+	return _try_purchase_progression_upgrade(SessionProgression.PROPULSION_UPGRADE_ID)
+
+
+func _try_purchase_progression_upgrade(upgrade_id: String) -> bool:
+	if _progression_runtime == null:
 		return false
-	if not _world.is_inside_extraction(_player.global_position):
-		_last_status_note = "Upgrade at extraction"
-		_update_status_label()
-		return false
-	var result: Dictionary = _session_progression.purchase_propulsion_upgrade()
-	if bool(result.get("purchased", false)):
-		_last_status_note = "Fins upgraded"
-		_update_status_label()
-		return true
-	var reason := str(result.get("reason", "blocked"))
-	if reason == "insufficient_funds":
-		_last_status_note = "Need %d more" % int(result.get("needed", 0))
-	elif reason == "already_purchased":
-		_last_status_note = "Fins already upgraded"
-	else:
-		_last_status_note = "Upgrade blocked"
+	var result: Dictionary = _progression_runtime.try_purchase(upgrade_id, _world, _player)
+	if result.has("note"):
+		_last_status_note = str(result["note"])
 	_update_status_label()
-	return false
+	return bool(result.get("purchased", false))
 
 
 func _has_oxygen_tank_upgrade() -> bool:
-	return _session_progression != null and _session_progression.has_oxygen_tank_upgrade()
+	return _progression_runtime != null and _progression_runtime.has_oxygen_tank_upgrade()
 
 
 func _has_cargo_capacity_upgrade() -> bool:
-	return _session_progression != null and _session_progression.has_cargo_capacity_upgrade()
+	return _progression_runtime != null and _progression_runtime.has_cargo_capacity_upgrade()
 
 
 func _has_light_upgrade() -> bool:
-	return _session_progression != null and _session_progression.has_light_upgrade()
+	return _progression_runtime != null and _progression_runtime.has_light_upgrade()
 
 
 func _has_propulsion_upgrade() -> bool:
-	return _session_progression != null and _session_progression.has_propulsion_upgrade()
+	return _progression_runtime != null and _progression_runtime.has_propulsion_upgrade()
 
 
 func _has_upgrade_id(upgrade_id: String) -> bool:
-	match upgrade_id:
-		SessionProgression.OXYGEN_TANK_UPGRADE_ID:
-			return _has_oxygen_tank_upgrade()
-		SessionProgression.CARGO_CAPACITY_UPGRADE_ID:
-			return _has_cargo_capacity_upgrade()
-		SessionProgression.LIGHT_UPGRADE_ID:
-			return _has_light_upgrade()
-		SessionProgression.PROPULSION_UPGRADE_ID:
-			return _has_propulsion_upgrade()
-	return false
+	return _progression_runtime != null and _progression_runtime.has_upgrade_id(upgrade_id)
 
 
 func _apply_session_light_profile() -> void:
-	if _session_progression == null:
-		return
-	if _player != null and _player.has_method("apply_light_profile"):
-		_player.apply_light_profile(_session_progression.light_range_scale(), _session_progression.light_alpha())
-	if _world != null and _world.has_method("set_visibility_upgrade_state"):
-		_world.set_visibility_upgrade_state(SessionProgression.LIGHT_UPGRADE_ID, _session_progression.has_light_upgrade())
+	if _progression_runtime != null:
+		_progression_runtime.apply_light_profile(_world, _player)
 
 
 func _held_salvage_capacity() -> int:
-	if _session_progression == null:
-		return HELD_SALVAGE_CAPACITY
-	return HELD_SALVAGE_CAPACITY + _session_progression.cargo_capacity_bonus()
+	return _progression_runtime.held_salvage_capacity(HELD_SALVAGE_CAPACITY) if _progression_runtime != null else HELD_SALVAGE_CAPACITY
 
 
 func _oxygen_capacity_seconds() -> float:
-	if _session_progression == null:
-		return OXYGEN_MAX_SECONDS
-	return OXYGEN_MAX_SECONDS + _session_progression.oxygen_bonus_seconds()
+	return _progression_runtime.oxygen_capacity_seconds(OXYGEN_MAX_SECONDS) if _progression_runtime != null else OXYGEN_MAX_SECONDS
 
 
 func _progression_overlay_text() -> String:
-	var oxygen_text := "O2 tank +%ds" % int(SessionProgression.OXYGEN_TANK_UPGRADE_SECONDS)
-	if not _has_oxygen_tank_upgrade():
-		oxygen_text = "U: O2 +%ds (%d)" % [
-			int(SessionProgression.OXYGEN_TANK_UPGRADE_SECONDS),
-			SessionProgression.OXYGEN_TANK_UPGRADE_COST,
-		]
-	var cargo_text := "Cargo +%d" % int(SessionProgression.CARGO_CAPACITY_UPGRADE_BONUS)
-	if not _has_cargo_capacity_upgrade():
-		cargo_text = "C: Cargo +%d (%d)" % [
-			int(SessionProgression.CARGO_CAPACITY_UPGRADE_BONUS),
-			SessionProgression.CARGO_CAPACITY_UPGRADE_COST,
-		]
-	var light_text := "Light +range"
-	if not _has_light_upgrade():
-		light_text = "Light base"
-		if _world != null and _player != null and _world.is_inside_extraction(_player.global_position):
-			light_text = "L: Light +range (%d)" % SessionProgression.LIGHT_UPGRADE_COST
-	var fins_text := "Fins" if _has_propulsion_upgrade() else "Fins base"
-	if not _has_propulsion_upgrade() and _world != null and _player != null and _world.is_inside_extraction(_player.global_position):
-		fins_text = "P: Fins (%d)" % SessionProgression.PROPULSION_UPGRADE_COST
-	return "Wallet %d\n%s | %s\n%s | %s" % [
-		_session_wallet(),
-		oxygen_text,
-		cargo_text,
-		light_text,
-		fins_text,
-	]
+	return _progression_runtime.overlay_text(_world, _player) if _progression_runtime != null else ""
 
 
 func _progression_result_text() -> String:
-	var oxygen_text := "O2 tank +%ds" % int(SessionProgression.OXYGEN_TANK_UPGRADE_SECONDS) if _has_oxygen_tank_upgrade() else "O2 tank base"
-	var cargo_text := "Cargo +%d" % int(SessionProgression.CARGO_CAPACITY_UPGRADE_BONUS) if _has_cargo_capacity_upgrade() else "Cargo base"
-	var light_text := "Light +range" if _has_light_upgrade() else "Light base"
-	var fins_text := "Fins" if _has_propulsion_upgrade() else "Fins base"
-	return "Wallet %d | %s | %s | %s | %s" % [_session_wallet(), oxygen_text, cargo_text, light_text, fins_text]
+	return _progression_runtime.result_text() if _progression_runtime != null else ""
 
 
 func _update_result_panel() -> void:
