@@ -2,7 +2,7 @@
 
 Date: 2026-07-10
 
-Status: Expansion 04 is complete with a GO. Expansion 05 Practical Research Foundation is selected next, with its scoped issue batch pending the next drift cycle; Expansions 06-09 remain directional.
+Status: Expansion 04 is complete with a GO. Expansion 05 issues #748-#757 are the active committed batch; Expansions 06-09 remain directional.
 
 ## Decision
 
@@ -87,11 +87,11 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-No issue-level batch is active after Expansion 04's GO. Expansion 05 is selected next; the next drift cycle should create only its scoped batch before implementation.
+Expansion 04's issue-level batch #726-#735 is complete. Expansion 05 issues #748-#757 are the only active committed batch.
 
 ### Directional
 
-Expansion 05 has a selected goal, boundary, and exit question but no issue batch yet. Expansions 06-09 remain directional; create each batch only after the prior closeout confirms readiness.
+Expansions 06-09 remain directional; create each batch only after the prior closeout confirms readiness.
 
 ### Vision
 
@@ -162,7 +162,7 @@ Exit question: did the upgrade change the player's relationship with a place the
 
 ### Expansion 05: Practical Research Foundation
 
-Status: Selected next; issue batch pending the next drift cycle.
+Status: Active committed batch #748-#757.
 
 Goal: make scanner knowledge useful to planning, projects, resource discovery, and danger.
 

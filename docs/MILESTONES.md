@@ -8,6 +8,7 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - `docs/current/OCEANGAME_EXPANSION_04_PLAN.md`
 - `docs/current/OCEANGAME_EXPANSION_04_CLOSEOUT.md`
+- `docs/current/OCEANGAME_EXPANSION_05_PLAN.md`
 
 ## Current State
 
@@ -19,8 +20,8 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: no issue-level batch is active after the Expansion 04 GO.
-- Directional: Expansion 05 is selected next, with its scoped batch assigned to the next drift cycle; Expansions 06-09 retain goals and exit criteria only.
+- Committed: Expansion 05 issues #748-#757 are active in dependency order.
+- Directional: Expansions 06-09 retain goals and exit criteria only.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Open GitHub Milestones
@@ -37,11 +38,11 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Active Issue Batch
 
-None. Expansion 05 Practical Research Foundation is selected next; the next drift cycle should create its scoped batch before implementation.
+#748-#757 plan and implement one stabilizer-gated mineral survey, canonical boat finding commit, next-day researched coil habitat, deterministic journey smoke, focused visual review, Web verification, and closeout. Do not create the Expansion 06 batch before #757 records GO or HOLD.
 
 ## Roadmap Rules
 
-- Create only the Expansion 05 batch next. Do not create issue batches for Expansions 06-09 until the preceding closeout selects them.
+- Do not create issue batches for Expansions 06-09 until the preceding closeout selects the next milestone.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_slice_01` as the default boat hub unless a separate source-driven decision changes it.
 - Preserve source-authored maps, reachability, parity, focused captures, and public Web verification in every milestone.
