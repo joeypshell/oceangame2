@@ -161,6 +161,42 @@ func is_inside_extraction(
 	return false
 
 
+func is_inside_boat(position: Vector2, boat_entities: Array, tile_size: int) -> bool:
+	for boat in boat_entities:
+		if entity_rect_from_item(boat, tile_size).has_point(position):
+			return true
+	return false
+
+
+func is_at_open_surface(
+	position: Vector2,
+	map_tile_size: Vector2i,
+	solid_cells: Dictionary,
+	boat_entities: Array,
+	tile_size: int
+) -> bool:
+	if boat_entities.is_empty() or map_tile_size.x <= 0 or map_tile_size.y <= 0:
+		return false
+	var cell := position_to_cell(position, tile_size, map_tile_size)
+	return cell.y == 0 and not solid_cells.has(cell)
+
+
+func get_open_surface_centers(
+	map_tile_size: Vector2i,
+	solid_cells: Dictionary,
+	boat_entities: Array,
+	tile_size: int
+) -> Array:
+	var centers := []
+	if boat_entities.is_empty() or map_tile_size.x <= 0 or map_tile_size.y <= 0:
+		return centers
+	for x in range(map_tile_size.x):
+		var cell := Vector2i(x, 0)
+		if not solid_cells.has(cell):
+			centers.append(cell_center(cell, tile_size))
+	return centers
+
+
 func rect_center(item: Dictionary, tile_size: int) -> Vector2:
 	return Vector2(
 		(float(item["x"]) + float(item["w"]) * 0.5) * tile_size,

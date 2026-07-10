@@ -38,6 +38,7 @@ var camera_tests: Array = []
 
 var _built := false
 var _map_data := {}
+var _solid_cells := {}
 var _salvage_entities: Array = []
 var _hazard_entities: Array = []
 var _extraction_zones: Array = []
@@ -98,6 +99,7 @@ func load_greybox() -> void:
 		return
 
 	_map_data = map_data
+	_solid_cells = _solid_cells_from_terrain(map_data.get("terrain", []))
 	map_id = str(map_data.get("id", "unknown_map"))
 	map_version = _display_version(map_data.get("version", ""))
 	tile_size = int(map_data["units"]["tile_size_px"])
@@ -351,8 +353,7 @@ func get_hazard_near(position: Vector2, radius_px: float) -> String:
 
 
 func find_open_path(start_position: Vector2, target_position: Vector2) -> Array:
-	var solid_cells := _solid_cells_from_terrain(_map_data.get("terrain", []))
-	return _world_queries.find_open_path(start_position, target_position, map_tile_size, tile_size, solid_cells)
+	return _world_queries.find_open_path(start_position, target_position, map_tile_size, tile_size, _solid_cells)
 
 
 func get_extraction_center() -> Vector2:
@@ -536,6 +537,18 @@ func restore_salvage(salvage_ids: Array) -> void:
 
 func is_inside_extraction(position: Vector2) -> bool:
 	return _world_queries.is_inside_extraction(position, _extraction_zones, _boat_entities, tile_size)
+
+
+func is_inside_boat(position: Vector2) -> bool:
+	return _world_queries.is_inside_boat(position, _boat_entities, tile_size)
+
+
+func is_at_open_surface(position: Vector2) -> bool:
+	return _world_queries.is_at_open_surface(position, map_tile_size, _solid_cells, _boat_entities, tile_size)
+
+
+func get_open_surface_centers() -> Array:
+	return _world_queries.get_open_surface_centers(map_tile_size, _solid_cells, _boat_entities, tile_size)
 
 
 func get_runtime_parity_report() -> Dictionary:

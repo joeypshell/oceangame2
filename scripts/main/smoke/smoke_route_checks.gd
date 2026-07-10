@@ -257,8 +257,8 @@ func _smoke_safe_deep_route_choice_and_quit() -> void:
 		push_error("Safe/deep route comparison smoke expected safe route to stay comfortable, got feedback=%s status=%s." % [str(safe_result.get("oxygen_feedback", "")), str(safe_result.get("status", ""))])
 		get_tree().quit(1)
 		return
-	if not bool(deep_result.get("saw_low", false)) or not bool(deep_result.get("saw_critical", false)):
-		push_error("Safe/deep route comparison smoke expected deep route to show LOW and CRITICAL feedback, got feedback=%s status=%s." % [str(deep_result.get("oxygen_feedback", "")), str(deep_result.get("status", ""))])
+	if not bool(deep_result.get("saw_low", false)):
+		push_error("Safe/deep route comparison smoke expected deep route to show LOW feedback before open-surface recovery, got feedback=%s status=%s." % [str(deep_result.get("oxygen_feedback", "")), str(deep_result.get("status", ""))])
 		get_tree().quit(1)
 		return
 
