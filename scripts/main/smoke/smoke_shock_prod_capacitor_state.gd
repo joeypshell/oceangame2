@@ -54,7 +54,7 @@ func _test_capacitor_warning_interrupt(world) -> void:
 	_expect(bool(result.get("interrupted", false)) and result.get("reason") == "interrupted", "capacitor did not report warning interruption")
 	_expect(int(state.get("health", 0)) == 2 and state.get("phase") == "recovery", "warning interrupt changed damage or missed recovery")
 	_expect(is_equal_approx(float(state.get("phase_seconds", 0.0)), 1.25), "warning interrupt did not use source recovery timing")
-	_expect(str(result.get("note", "")).begins_with("Lunge interrupted"), "interrupt feedback was not compact/readable")
+	_expect(str(result.get("note", "")).begins_with("Shock prod capacitor hit") and str(result.get("note", "")).find("recovery") != -1, "interrupt feedback omitted damage or recovery effect")
 	var cooldown: Dictionary = weapon.try_attack(hostiles, world, fixture["player"], 1.0, true, true)
 	_expect(cooldown.get("reason") == "cooldown" and int(hostiles.state_for(HOSTILE_ID).get("health", 0)) == 2, "capacitor bypassed base cooldown")
 	_expect(weapon.overlay_text(true, true).find("capacitor") != -1 and bool(weapon.report(true, true).get("capacitor_unlocked", false)), "capacitor readiness/report was missing")

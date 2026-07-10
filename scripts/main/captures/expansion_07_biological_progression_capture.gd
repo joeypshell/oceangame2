@@ -118,7 +118,7 @@ func _capture_capacitor_interrupt(capture_dir: String, encounter: Dictionary) ->
 	if (
 		_hostile_phase() != "recovery"
 		or int(_hostile_state().get("health", 0)) != 2
-		or not _status_contains("Lunge interrupted - eel health 2/3")
+		or not _status_contains("Shock prod capacitor hit: eel health 2/3 (-1), recovery")
 		or not _status_contains("Shock prod +capacitor")
 	):
 		_fail("capacitor interrupt/recovery feedback was not readable")

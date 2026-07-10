@@ -1255,6 +1255,10 @@ func _unhandled_input(event: InputEvent) -> void:
 			var key_event := event as InputEventKey
 			ExpeditionDayDebrief.handle_debrief_key(self, key_event.keycode)
 		return
+	if _sortie_state.failed:
+		if event is InputEventKey and event.pressed and not event.echo and (event as InputEventKey).keycode == KEY_R:
+			_reset_run()
+		return
 	if event.is_action_pressed("combat_attack"):
 		_try_combat_attack()
 		return
@@ -1318,6 +1322,7 @@ func _reset_run() -> void:
 	_last_status_note = "Reset"
 	_player.modulate = Color.WHITE
 	_player.position = _world.spawn_position
+	_player.set_physics_process(true)
 	if _player.has_method("reset_motion"):
 		_player.reset_motion()
 	if _player.has_method("snap_camera"):
@@ -1420,6 +1425,13 @@ func _update_hostile_encounter(delta: float) -> bool:
 		return false
 	var damage: Dictionary = _apply_combat_damage(int(event.get("damage", 1)), str(event.get("id", "hostile")))
 	if bool(damage.get("changed", false)):
+		if not bool(damage.get("defeated", false)) and _player.has_method("apply_knockback"):
+			_player.apply_knockback(
+				_player.global_position - (event.get("position", _player.global_position) as Vector2),
+				float(event.get("knockback_force", 0.0)),
+				float(event.get("disruption_seconds", 0.0))
+			)
+			_last_status_note += " | knocked back"
 		_combat_feedback_seconds = COMBAT_FEEDBACK_SECONDS
 		return true
 	return false
@@ -1427,6 +1439,11 @@ func _update_hostile_encounter(delta: float) -> bool:
 
 func _try_combat_attack() -> bool:
 	if _shock_prod == null or _hostiles == null or _world == null or _player == null or _run_complete or _sortie_state.failed:
+		return false
+	if not _material_project.has_shock_prod():
+		_last_status_note = _material_project.shock_prod_guidance()
+		_combat_feedback_seconds = COMBAT_FEEDBACK_SECONDS
+		_update_status_label()
 		return false
 	var facing_sign: float = float(_player.get_facing_sign()) if _player.has_method("get_facing_sign") else 1.0
 	var result: Dictionary = _shock_prod.try_attack(
@@ -1495,7 +1512,7 @@ func _apply_combat_damage(amount: int, source_id: String) -> Dictionary:
 	if bool(result.get("defeated", false)):
 		_handle_combat_defeat(source_id)
 	else:
-		_last_status_note = "Eel hit - health -%d" % amount
+		_last_status_note = "Eel hit: health %d/%d (-%d)" % [int(result.get("current_health", 0)), int(result.get("max_health", 0)), amount]
 	_update_status_label()
 	return result
 
@@ -1517,6 +1534,7 @@ func _handle_combat_defeat(_source_id: String) -> void:
 	_sortie_state.mark_failed("combat_defeat")
 	_expedition_day_state.record_failure("combat_defeat")
 	_player.global_position = _world.spawn_position
+	_player.set_physics_process(false)
 	if _player.has_method("reset_motion"):
 		_player.reset_motion()
 	if _player.has_method("snap_camera"):
@@ -1808,7 +1826,7 @@ func _failure_retry_prompt() -> String:
 func _combat_overlay_text() -> String:
 	var weapon_text := "Shock prod locked"
 	if _shock_prod != null and _material_project != null:
-		weapon_text = _shock_prod.overlay_text(_material_project.has_shock_prod(), _material_project.has_shock_prod_capacitor())
+		weapon_text = _material_project.shock_prod_guidance() if not _material_project.has_shock_prod() else _shock_prod.overlay_text(true, _material_project.has_shock_prod_capacitor())
 	return "%s | %s" % [_player_health.overlay_text(), weapon_text]
 
 

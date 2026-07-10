@@ -55,34 +55,21 @@ func debrief_lines() -> Array[String]:
 	var current_status := _status_for(project)
 	if current_status == "unavailable":
 		return []
+	var lines: Array[String] = []
 	if current_status == "completed":
-		return [_completed_text(project)]
-	if current_status == "prerequisite_required":
-		return ["%s: %s required" % [_project_prefix(project), _prerequisite_label(project)]]
-	if current_status == "knowledge_required":
-		return ["%s: anomaly knowledge required" % _project_prefix(project)]
-	if current_status == "inconsistent_profile":
-		return ["%s: profile repair required" % _project_prefix(project)]
-	if current_status == "ready":
-		return ["P: Build %s" % _project_action_label(project)]
-	var required: Dictionary = project.get("required_materials", {})
-	if str(project.get("id", "")) == ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID:
-		return ["%s: Coil %d/%d | Gel %d/%d | Electro %d/%d" % [
-			_project_prefix(project),
-			_profile.material_quantity(ExpansionProfileState.COIL_MATERIAL_ID),
-			int(required.get(ExpansionProfileState.COIL_MATERIAL_ID, 0)),
-			_profile.material_quantity(ExpansionProfileState.INSULATING_GEL_MATERIAL_ID),
-			int(required.get(ExpansionProfileState.INSULATING_GEL_MATERIAL_ID, 0)),
-			_profile.material_quantity(ExpansionProfileState.EEL_ELECTROCYTE_MATERIAL_ID),
-			int(required.get(ExpansionProfileState.EEL_ELECTROCYTE_MATERIAL_ID, 0)),
-		]]
-	return ["%s: Ti %d/%d | Coil %d/%d" % [
-		_project_prefix(project),
-		_profile.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID),
-		int(required.get(ExpansionProfileState.TITANIUM_MATERIAL_ID, 0)),
-		_profile.material_quantity(ExpansionProfileState.COIL_MATERIAL_ID),
-		int(required.get(ExpansionProfileState.COIL_MATERIAL_ID, 0)),
-	]]
+		lines.append(_completed_text(project))
+	elif current_status == "prerequisite_required":
+		lines.append("%s: %s required" % [_project_prefix(project), _prerequisite_label(project)])
+	elif current_status == "knowledge_required":
+		lines.append("%s: anomaly knowledge required" % _project_prefix(project))
+	elif current_status == "inconsistent_profile":
+		lines.append("%s: profile repair required" % _project_prefix(project))
+	elif current_status == "ready":
+		lines.append("P: Build %s" % _project_action_label(project))
+	else:
+		lines.append("%s: %s" % [_project_prefix(project), _material_progress_text(project)])
+	lines.append_array(_project_effect_lines(project))
+	return lines
 
 
 func has_cutter() -> bool:
@@ -99,6 +86,27 @@ func has_shock_prod() -> bool:
 
 func has_shock_prod_capacitor() -> bool:
 	return _profile != null and _profile.has_capability(ExpansionProfileState.SHOCK_PROD_CAPACITOR_CAPABILITY_ID)
+
+
+func shock_prod_guidance() -> String:
+	if has_shock_prod():
+		return "Shock prod ready"
+	var project := _next_incomplete_project_through(ExpansionProfileState.SHOCK_PROD_PROJECT_ID)
+	if project.is_empty():
+		return "Shock prod locked: project unavailable"
+	var project_status := _status_for(project)
+	var project_label := _project_prefix(project)
+	if project_status == "knowledge_required":
+		return "Shock prod locked: survey lower-right anomaly first"
+	if project_status == "prerequisite_required":
+		return "Shock prod locked: build %s first at night" % _prerequisite_label(project)
+	if project_status == "ready":
+		return "Shock prod locked: %s ready | end day at boat, then press P" % project_label
+	if project_status == "incomplete":
+		return "Shock prod locked: next %s | %s | bank at boat, then P at night" % [project_label, _material_progress_text(project)]
+	if project_status == "inconsistent_profile":
+		return "Shock prod locked: profile repair required"
+	return "Shock prod locked: complete %s at night" % project_label
 
 
 func project_definition() -> Dictionary:
@@ -154,6 +162,18 @@ func _project_ids() -> Array[String]:
 	return ids
 
 
+func _next_incomplete_project_through(target_project_id: String) -> Dictionary:
+	if _profile == null:
+		return {}
+	for project in _projects:
+		var project_id := str(project.get("id", ""))
+		if not _profile.has_completed_project(project_id):
+			return project
+		if project_id == target_project_id:
+			break
+	return {}
+
+
 func _status_for(project: Dictionary) -> String:
 	if _profile == null or project.is_empty():
 		return "unavailable"
@@ -187,7 +207,7 @@ func _note_for_reason(project: Dictionary, reason: String) -> String:
 	if reason == "missing_discovery":
 		return "%s needs anomaly knowledge" % _project_prefix(project)
 	if reason == "insufficient_materials":
-		return "%s needs banked materials" % _project_prefix(project)
+		return "%s: %s" % [_project_prefix(project), _material_progress_text(project)]
 	if reason == "storage_error":
 		return "%s save failed - materials restored" % _project_prefix(project)
 	if reason == "inconsistent_profile":
@@ -211,6 +231,34 @@ func _completed_text(project: Dictionary) -> String:
 	if not source_label.is_empty():
 		return source_label
 	return "Current stabilizer built" if str(project.get("id", "")) == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID else "Salvage cutter built"
+
+
+func _material_progress_text(project: Dictionary) -> String:
+	var required: Dictionary = project.get("required_materials", {})
+	if str(project.get("id", "")) == ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID:
+		return "Coil %d/%d | Gel %d/%d | Electro %d/%d" % [
+			_profile.material_quantity(ExpansionProfileState.COIL_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.COIL_MATERIAL_ID, 0)),
+			_profile.material_quantity(ExpansionProfileState.INSULATING_GEL_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.INSULATING_GEL_MATERIAL_ID, 0)),
+			_profile.material_quantity(ExpansionProfileState.EEL_ELECTROCYTE_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.EEL_ELECTROCYTE_MATERIAL_ID, 0)),
+		]
+	return "Ti %d/%d | Coil %d/%d" % [
+		_profile.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID),
+		int(required.get(ExpansionProfileState.TITANIUM_MATERIAL_ID, 0)),
+		_profile.material_quantity(ExpansionProfileState.COIL_MATERIAL_ID),
+		int(required.get(ExpansionProfileState.COIL_MATERIAL_ID, 0)),
+	]
+
+
+func _project_effect_lines(project: Dictionary) -> Array[String]:
+	match str(project.get("id", "")):
+		ExpansionProfileState.SHOCK_PROD_PROJECT_ID:
+			return ["Use: Space at short range | 1 health damage per hit"]
+		ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID:
+			return ["Effect: hit during WARNING/LUNGE to force RECOVERY | damage stays 1"]
+	return []
 
 
 func _prerequisite_label(project: Dictionary) -> String:

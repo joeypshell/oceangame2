@@ -32,7 +32,9 @@ func try_attack(hostiles, world, player_position: Vector2, facing_sign: float, u
 		var victory := _result(true, "defeated", "Territory clear for today")
 		victory.merge(hit, true)
 		return victory
-	var note := "Lunge interrupted - eel health %d/3" % int(hit.get("health", 0)) if bool(hit.get("interrupted", false)) else "Shock prod hit - eel health %d/3" % int(hit.get("health", 0))
+	var note := "Shock prod hit: eel health %d/3 (-1)" % int(hit.get("health", 0))
+	if bool(hit.get("interrupted", false)):
+		note = "Shock prod capacitor hit: eel health %d/3 (-1), recovery %.1fs" % [int(hit.get("health", 0)), float(hit.get("recovery_seconds", 0.0))]
 	var result := _result(bool(hit.get("changed", false)), str(hit.get("reason", "hit")), note)
 	result.merge(hit, true)
 	return result
@@ -42,8 +44,8 @@ func overlay_text(unlocked: bool, capacitor_unlocked := false) -> String:
 	if not unlocked:
 		return "Shock prod locked"
 	if cooldown_seconds > 0.0:
-		return "Shock prod +capacitor %.1fs" % cooldown_seconds if capacitor_unlocked else "Shock prod %.1fs" % cooldown_seconds
-	return "Shock prod +capacitor ready" if capacitor_unlocked else "Shock prod ready"
+		return "Shock prod +capacitor %.1fs | interrupts warning/lunge" % cooldown_seconds if capacitor_unlocked else "Shock prod %.1fs" % cooldown_seconds
+	return "Shock prod +capacitor ready | hit warning/lunge to force recovery" if capacitor_unlocked else "Shock prod ready"
 
 
 func report(unlocked: bool, capacitor_unlocked := false) -> Dictionary:

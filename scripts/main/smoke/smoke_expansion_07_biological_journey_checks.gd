@@ -259,6 +259,8 @@ func _build_and_reload_capacitor(profile) -> bool:
 	_press_key(KEY_P)
 	if not _require(profile.has_completed_project(PROJECT_ID) and profile.has_capability(CAPABILITY_ID), "debrief did not complete capacitor transaction"):
 		return false
+	if not _require(_main._result_label.text.find("Shock-prod capacitor built") != -1 and _main._result_label.text.find("force RECOVERY") != -1 and _main._result_label.text.find("damage stays 1") != -1, "debrief did not explain the capacitor build effect"):
+		return false
 	if not _require(profile.material_inventory().is_empty(), "capacitor transaction did not spend exact recipe"):
 		return false
 	var repeat: Dictionary = _main._material_project.try_build(ExpeditionDayState.PHASE_DEBRIEF)
@@ -280,7 +282,8 @@ func _exercise_capacitor_interrupt() -> Dictionary:
 	if not _require(
 		state.get("phase") == "recovery"
 		and int(state.get("health", 0)) == 2
-		and _last_status_note.begins_with("Lunge interrupted"),
+		and _last_status_note.begins_with("Shock prod capacitor hit")
+		and _last_status_note.find("recovery") != -1,
 		"capacitor did not interrupt warning with unchanged one-hit damage"
 	):
 		return {}

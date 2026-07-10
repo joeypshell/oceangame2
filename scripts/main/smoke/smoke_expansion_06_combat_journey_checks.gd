@@ -41,7 +41,7 @@ func _smoke_expansion_06_combat_foundation_and_quit() -> void:
 	_player.swim_in_direction(Vector2.RIGHT, 0.0)
 	if not _require(not _main._try_combat_attack(), "locked weapon attack changed runtime state"):
 		return
-	if not _require(_hostile_state().get("health") == 3 and _last_status_note == "Shock prod required to fight", "locked weapon feedback or hostile health drifted"):
+	if not _require(_hostile_state().get("health") == 3 and _last_status_note == "Shock prod locked: survey lower-right anomaly first", "locked weapon feedback did not expose the first actionable prerequisite"):
 		return
 
 	var unarmed: Dictionary = _exercise_unarmed_encounter(encounter)
@@ -62,6 +62,8 @@ func _smoke_expansion_06_combat_foundation_and_quit() -> void:
 		return
 	_press_key(KEY_P)
 	if not _require(profile.has_completed_project(PROJECT_ID) and profile.has_capability(CAPABILITY_ID), "debrief did not complete the shock prod transaction"):
+		return
+	if not _require(_main._result_label.text.find("Shock prod built") != -1 and _main._result_label.text.find("Space at short range") != -1 and _main._result_label.text.find("1 health damage") != -1, "debrief did not explain what P built or how the shock prod works"):
 		return
 	if not _require(profile.material_inventory().is_empty(), "shock prod transaction did not spend the exact recipe"):
 		return
@@ -90,7 +92,7 @@ func _smoke_expansion_06_combat_foundation_and_quit() -> void:
 	var final_health: Dictionary = _main._player_health.report()
 	var final_oxygen: float = _oxygen_seconds
 	_cleanup_profile()
-	print("Expansion 06 combat-foundation smoke passed: encounter=%s capability=%s territory=%s warning=%.2f lunge=%.2f recovery=%.2f unarmed_retreat=true contact_health=%d cooldown_blocked=true oxygen=%.1f->%.1f daylight_advanced=true project=%s recipe=Ti2+Coil1 non_enemy_materials=true reload=%s armed_hits=3 hostile=%s cargo_held=%d banked_score=%d rewards=none combat_cleanup=true reset_health=%d day=%d final_oxygen=%.1f profile=durable." % [
+	print("Expansion 06 combat-foundation smoke passed: encounter=%s capability=%s territory=%s warning=%.2f lunge=%.2f recovery=%.2f unarmed_retreat=true contact_health=%d knockback=325 disruption=0.45 cooldown_blocked=true oxygen=%.1f->%.1f daylight_advanced=true project=%s guidance=actionable debrief_effect=explicit recipe=Ti2+Coil1 non_enemy_materials=true reload=%s armed_hits=3 hostile=%s cargo_held=%d banked_score=%d rewards=none defeat_input_locked=true retry_restored=true combat_cleanup=true reset_health=%d day=%d final_oxygen=%.1f profile=durable." % [
 		HOSTILE_ID,
 		CAPABILITY_ID,
 		str(encounter.get("territory_rect", Rect2())),
@@ -174,8 +176,14 @@ func _exercise_unarmed_encounter(encounter: Dictionary) -> Dictionary:
 	_player.global_position = contact_position
 	_process(0.0)
 	_process(float(encounter.get("warning_seconds", 0.75)) + 0.01)
+	_player.global_position = contact_position + Vector2(-8, 0)
 	_process(0.22)
 	if not _require(_main._player_health.current_health == 2, "source lunge contact did not apply one health damage"):
+		return {}
+	var away_direction: Vector2 = _player.global_position - (_hostile_state().get("position", _player.global_position) as Vector2)
+	if not _require(_player.velocity.length() > _player.swim_speed and _player.velocity.normalized().dot(away_direction.normalized()) > 0.99 and is_equal_approx(_player.movement_disruption_seconds(), 0.45), "source lunge contact did not knock the player away and disrupt steering"):
+		return {}
+	if not _require(_last_status_note.find("health 2/3 (-1)") != -1 and _last_status_note.find("knocked back") != -1, "contact feedback did not explain health loss and knockback"):
 		return {}
 	var oxygen_after_contact: float = _oxygen_seconds
 	var blocked: Dictionary = _main._apply_combat_damage(1, HOSTILE_ID)
@@ -189,6 +197,9 @@ func _exercise_unarmed_encounter(encounter: Dictionary) -> Dictionary:
 func _seed_prerequisites_and_recipe(profile) -> bool:
 	if not _require(bool(profile.complete_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID, false).get("changed", false)), "could not seed project discovery"):
 		return false
+	var first_project_guidance: String = _main._material_project.shock_prod_guidance()
+	if not _require(first_project_guidance.find("next Cutter project") != -1 and first_project_guidance.find("Ti 0/2") != -1 and first_project_guidance.find("bank at boat, then P at night") != -1, "locked guidance did not expose the current project, exact materials, and debrief action"):
+		return false
 	for project_id in [ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID]:
 		if not _require(bool(profile.deposit_materials(RECIPE, false).get("changed", false)), "could not seed non-enemy recipe for %s" % project_id):
 			return false
@@ -196,6 +207,8 @@ func _seed_prerequisites_and_recipe(profile) -> bool:
 		if not _require(bool(completed.get("changed", false)), "could not seed prerequisite %s: %s" % [project_id, str(completed)]):
 			return false
 	if not _require(bool(profile.deposit_materials(RECIPE, false).get("changed", false)), "could not seed shock prod recipe"):
+		return false
+	if not _require(_main._material_project.shock_prod_guidance().find("Shock prod project ready") != -1 and _main._material_project.shock_prod_guidance().find("press P") != -1, "ready project guidance omitted the exact next build action"):
 		return false
 	if not _require(profile.save_profile(), "could not persist pre-build profile fixture"):
 		return false
@@ -287,6 +300,7 @@ func _exercise_defeat_and_restoration(profile) -> bool:
 	var profile_before: Dictionary = profile.report()
 	var approach: Vector2 = _encounter_source().get("home_center", Vector2.ZERO) + Vector2(0, -96)
 	_player.global_position = approach
+	_player.set_physics_process(true)
 	_process(0.0)
 	if not _require(_hostile_phase() == "warning", "combat defeat fixture did not freeze a warning state"):
 		return false
@@ -298,6 +312,10 @@ func _exercise_defeat_and_restoration(profile) -> bool:
 			_main._player_health.update(1.01)
 	if not _require(_main._sortie_state.failure_reason == "combat_defeat" and _main._player_health.current_health == 0 and _hostile_phase() == "warning", "combat defeat reason, health, or frozen hostile drifted"):
 		return false
+	var hostile_health_after_defeat: int = int(_hostile_state().get("health", 0))
+	_press_attack()
+	if not _require(not _player.is_physics_processing() and int(_hostile_state().get("health", 0)) == hostile_health_after_defeat, "combat defeat did not lock movement and combat input until retry"):
+		return false
 	if not _require(_held_salvage == 0 and _main._material_runtime.held_count() == 0 and not _world.is_salvage_collected(held_salvage_id), "combat defeat did not restore unbanked salvage/material cargo"):
 		return false
 	if not _require(not _world.get_material_candidate_near(material["center"], SALVAGE_COLLECTION_RADIUS).is_empty(), "combat defeat deleted the held material source"):
@@ -307,7 +325,9 @@ func _exercise_defeat_and_restoration(profile) -> bool:
 	if not _require(profile.has_capability(CAPABILITY_ID) and profile.report().get("completed_projects") == profile_before.get("completed_projects"), "combat defeat changed durable profile state"):
 		return false
 
-	_reset_run()
+	_press_key(KEY_R)
+	if not _require(_player.is_physics_processing(), "R did not restore player movement processing"):
+		return false
 	_prepare_current_map()
 	if not _require(not _run_failed and _main._player_health.current_health == 3 and _hostile_phase() == "home", "combat retry did not restore health and hostile home state"):
 		return false
