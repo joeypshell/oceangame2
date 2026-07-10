@@ -354,7 +354,7 @@ func _smoke_pass_24_relay_follow_through_and_quit() -> void:
 		return
 
 	_main._run_complete = true
-	_main._run_failed = false
+	_main._sortie_state.failed = false
 	_main._update_result_panel()
 	var completed_result_text := _result_text()
 	if _relay_result_text() != PASS_24_RESULT_LABEL or completed_result_text.find(PASS_24_RESULT_LABEL) == -1:
@@ -366,7 +366,7 @@ func _smoke_pass_24_relay_follow_through_and_quit() -> void:
 		return
 
 	_main._run_complete = false
-	_main._run_failed = true
+	_main._sortie_state.failed = true
 	_main._update_result_panel()
 	if not _relay_result_text().is_empty() or _result_text().find(PASS_24_RESULT_LABEL) != -1:
 		push_error("Pass 24 relay smoke failed state leaked result: helper=%s result=%s." % [

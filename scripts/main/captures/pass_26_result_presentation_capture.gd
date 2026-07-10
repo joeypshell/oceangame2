@@ -45,7 +45,7 @@ func capture_and_quit(capture_dir: String) -> void:
 		_main._player.reset_motion()
 	_main._process(0.0)
 	_main._run_complete = true
-	_main._run_failed = false
+	_main._sortie_state.failed = false
 	_main._update_status_label()
 	_main._update_result_panel()
 	_main.set_process(false)

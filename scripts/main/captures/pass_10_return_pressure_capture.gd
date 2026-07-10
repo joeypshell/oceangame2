@@ -32,7 +32,7 @@ func capture_and_quit(capture_dir: String) -> void:
 	_main._hazard_interactions_enabled = false
 	_collect_for_capture(lower_loop)
 	_collect_for_capture(deep_cache)
-	if _main._held_salvage < _main.HELD_SALVAGE_CAPACITY:
+	if _main._sortie_state.held_salvage < _main.HELD_SALVAGE_CAPACITY:
 		push_error("Pass 10 return-pressure capture did not fill cargo before target review.")
 		_main.get_tree().quit(1)
 		return

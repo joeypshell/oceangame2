@@ -81,7 +81,7 @@ func _smoke_pass_25_final_dive_objective_and_quit() -> void:
 		return
 
 	_main._run_complete = true
-	_main._run_failed = false
+	_main._sortie_state.failed = false
 	_main._update_result_panel()
 	if _final_dive_result_text() != SEED_RESULT_LABEL or _result_text().find(SEED_RESULT_LABEL) == -1 or _result_text().find(SEED_CUE_LABEL) == -1:
 		_fail("missing complete result: helper=%s result=%s" % [_final_dive_result_text(), _result_text()])
@@ -92,7 +92,7 @@ func _smoke_pass_25_final_dive_objective_and_quit() -> void:
 	var completed_oxygen := _oxygen_seconds
 
 	_main._run_complete = false
-	_main._run_failed = true
+	_main._sortie_state.failed = true
 	_main._update_result_panel()
 	if not _final_dive_result_text().is_empty() or _result_text().find(SEED_RESULT_LABEL) != -1 or _result_text().find(SEED_CUE_LABEL) != -1:
 		_fail("failed state leaked result: helper=%s result=%s" % [_final_dive_result_text(), _result_text()])

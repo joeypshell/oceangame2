@@ -34,7 +34,7 @@ func capture_and_quit(capture_dir: String) -> void:
 	_main._update_status_label()
 	_main.set_process(false)
 
-	if not _main._world.is_salvage_collected(TARGET_ID) or not _main._held_salvage_ids.has(TARGET_ID):
+	if not _main._world.is_salvage_collected(TARGET_ID) or not _main._sortie_state.held_salvage_ids.has(TARGET_ID):
 		push_error("Pass 09 southwest-pocket capture expected %s to be held after collection." % TARGET_ID)
 		_main.get_tree().quit(1)
 		return

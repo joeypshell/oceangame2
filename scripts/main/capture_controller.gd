@@ -174,7 +174,7 @@ func capture_feedback_overlay_and_quit(capture_dir: String) -> void:
 	if _main._player.has_method("reset_motion"):
 		_main._player.reset_motion()
 	_main._process(0.0)
-	_main._oxygen_seconds = 12.0
+	_main._sortie_state.oxygen_seconds = 12.0
 	_main._update_status_label()
 
 	var camera := Camera2D.new()
