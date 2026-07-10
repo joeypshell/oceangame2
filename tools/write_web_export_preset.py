@@ -1,10 +1,36 @@
+import json
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
 PRESET_PATH = ROOT / "export_presets.cfg"
 
-PRESET = """[preset.0]
+MOBILE_VIEWPORT_HEAD = """<style id="oceangame-mobile-viewport">
+html {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+
+body {
+	position: fixed;
+	inset: 0;
+	width: 100vw;
+	height: 100vh;
+	height: 100dvh;
+}
+
+#canvas {
+	position: fixed !important;
+	top: 0 !important;
+	left: 0 !important;
+	width: 100vw !important;
+	height: 100vh !important;
+	height: 100dvh !important;
+}
+</style>"""
+
+PRESET_TEMPLATE = """[preset.0]
 
 name="Web"
 platform="Web"
@@ -32,7 +58,7 @@ vram_texture_compression/for_desktop=true
 vram_texture_compression/for_mobile=false
 html/export_icon=true
 html/custom_html_shell=""
-html/head_include=""
+html/head_include={head_include}
 html/canvas_resize_policy=2
 html/focus_canvas_on_start=true
 html/experimental_virtual_keyboard=false
@@ -48,7 +74,8 @@ progressive_web_app/icon_512x512=""
 
 
 def main() -> None:
-    PRESET_PATH.write_text(PRESET, encoding="utf-8", newline="\n")
+    preset = PRESET_TEMPLATE.format(head_include=json.dumps(MOBILE_VIEWPORT_HEAD))
+    PRESET_PATH.write_text(preset, encoding="utf-8", newline="\n")
     print(f"Wrote {PRESET_PATH.relative_to(ROOT)}")
 
 
