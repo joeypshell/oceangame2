@@ -6,6 +6,7 @@ const SURVEY_SCANNER_CAPABILITY_ID := "survey_scanner_1"
 const SALVAGE_CUTTER_CAPABILITY_ID := "salvage_cutter"
 const ANOMALY_DISCOVERY_ID := "lower_right_anomaly_discovery"
 const SALVAGE_CUTTER_PROJECT_ID := "salvage_cutter_project"
+const SALVAGE_CUTTER_TARGET_ID := "salvage_sealed_wreck_cache"
 const TITANIUM_MATERIAL_ID := "titanium_scrap"
 const COIL_MATERIAL_ID := "conductive_coil"
 const DEFAULT_STORAGE_PATH := "user://oceangame2_profile.json"
@@ -86,6 +87,8 @@ func unlock_capability(capability_id: String, persist := true) -> Dictionary:
 		return {"changed": false, "reason": "unsupported_capability", "capability_id": capability_id}
 	if has_capability(capability_id):
 		return {"changed": false, "reason": "already_unlocked", "capability_id": capability_id}
+	if capability_id == SALVAGE_CUTTER_CAPABILITY_ID:
+		return {"changed": false, "reason": "project_transaction_required", "capability_id": capability_id}
 	_unlocked_capabilities[capability_id] = true
 	if persist and not save_profile():
 		_unlocked_capabilities.erase(capability_id)
@@ -116,6 +119,59 @@ func deposit_materials(quantities: Dictionary, persist := true) -> Dictionary:
 		_material_inventory = snapshot
 		return {"changed": false, "reason": "storage_error"}
 	return {"changed": true, "reason": "deposited", "deposited": quantities.duplicate(true), "inventory": material_inventory()}
+
+
+func complete_material_project(project_definition: Dictionary, persist := true) -> Dictionary:
+	var failures := _validate_material_project_definition(project_definition)
+	if not failures.is_empty():
+		return {"changed": false, "reason": "invalid_project", "failures": failures}
+	var project_id := str(project_definition["id"])
+	var capability_id := str(project_definition["unlocks_capability_id"])
+	var project_complete := has_completed_project(project_id)
+	var capability_unlocked := has_capability(capability_id)
+	if project_complete or capability_unlocked:
+		if project_complete and capability_unlocked:
+			return {"changed": false, "reason": "already_completed", "project_id": project_id, "capability_id": capability_id}
+		return {"changed": false, "reason": "inconsistent_profile", "project_id": project_id, "capability_id": capability_id}
+	if not has_completed_discovery(str(project_definition["required_discovery_id"])):
+		return {"changed": false, "reason": "missing_discovery", "project_id": project_id}
+
+	var required: Dictionary = project_definition["required_materials"]
+	var missing := {}
+	for material_key in required:
+		var material_id := str(material_key)
+		var required_quantity := int(required[material_key])
+		var available := material_quantity(material_id)
+		if available < required_quantity:
+			missing[material_id] = required_quantity - available
+	if not missing.is_empty():
+		return {"changed": false, "reason": "insufficient_materials", "missing": missing}
+
+	var material_snapshot := _material_inventory.duplicate(true)
+	var project_snapshot := _completed_projects.duplicate(true)
+	var capability_snapshot := _unlocked_capabilities.duplicate(true)
+	for material_key in required:
+		var material_id := str(material_key)
+		var remaining := material_quantity(material_id) - int(required[material_key])
+		if remaining > 0:
+			_material_inventory[material_id] = remaining
+		else:
+			_material_inventory.erase(material_id)
+	_completed_projects[project_id] = true
+	_unlocked_capabilities[capability_id] = true
+	if persist and not save_profile():
+		_material_inventory = material_snapshot
+		_completed_projects = project_snapshot
+		_unlocked_capabilities = capability_snapshot
+		return {"changed": false, "reason": "storage_error", "project_id": project_id}
+	return {
+		"changed": true,
+		"reason": "completed",
+		"project_id": project_id,
+		"capability_id": capability_id,
+		"consumed": required.duplicate(true),
+		"inventory": material_inventory(),
+	}
 
 
 func has_capability(capability_id: String) -> bool:
@@ -202,6 +258,7 @@ func _validate_version(payload: Dictionary, allowed_keys: Dictionary, capabiliti
 	if include_materials:
 		failures.append_array(_validate_material_inventory(payload.get("material_inventory")))
 		failures.append_array(_validate_id_array(payload.get("completed_projects"), SUPPORTED_PROJECT_IDS, "completed_projects"))
+		failures.append_array(_validate_project_capability_pair(payload))
 	return failures
 
 
@@ -242,6 +299,44 @@ func _validate_material_delta(value: Dictionary) -> Array[String]:
 		elif typeof(value[material_id]) != TYPE_INT or int(value[material_id]) <= 0:
 			failures.append("material deposit %s must be a positive integer" % material_id)
 	return failures
+
+
+func _validate_material_project_definition(project_definition: Dictionary) -> Array[String]:
+	var failures: Array[String] = []
+	if str(project_definition.get("id", "")) != SALVAGE_CUTTER_PROJECT_ID:
+		failures.append("unsupported project id")
+	if str(project_definition.get("required_discovery_id", "")) != ANOMALY_DISCOVERY_ID:
+		failures.append("unsupported project discovery")
+	if str(project_definition.get("unlocks_capability_id", "")) != SALVAGE_CUTTER_CAPABILITY_ID:
+		failures.append("unsupported project capability")
+	if str(project_definition.get("target_id", "")) != SALVAGE_CUTTER_TARGET_ID:
+		failures.append("unsupported project target")
+	if str(project_definition.get("build_phase", "")) != "night_debrief":
+		failures.append("unsupported project build phase")
+	var required = project_definition.get("required_materials")
+	if typeof(required) != TYPE_DICTIONARY:
+		failures.append("project required_materials must be an object")
+		return failures
+	var expected := {TITANIUM_MATERIAL_ID: 2, COIL_MATERIAL_ID: 1}
+	if required.size() != expected.size():
+		failures.append("project recipe has unsupported materials")
+	for material_id in expected:
+		var quantity = required.get(material_id)
+		if not _is_nonnegative_integer_value(quantity) or int(quantity) != int(expected[material_id]):
+			failures.append("project recipe %s must equal %d" % [material_id, expected[material_id]])
+	return failures
+
+
+func _validate_project_capability_pair(payload: Dictionary) -> Array[String]:
+	var capabilities = payload.get("unlocked_capabilities")
+	var projects = payload.get("completed_projects")
+	if typeof(capabilities) != TYPE_ARRAY or typeof(projects) != TYPE_ARRAY:
+		return []
+	var has_cutter: bool = capabilities.has(SALVAGE_CUTTER_CAPABILITY_ID)
+	var has_project: bool = projects.has(SALVAGE_CUTTER_PROJECT_ID)
+	if has_cutter != has_project:
+		return ["salvage cutter capability and project must be completed together"]
+	return []
 
 
 func _load_ids(values: Array, destination: Dictionary) -> void:

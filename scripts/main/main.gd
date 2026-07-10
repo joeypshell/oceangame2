@@ -35,6 +35,7 @@ const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd"
 const ExpeditionDayPresentation := preload("res://scripts/main/expedition_day_presentation.gd")
 const ExpeditionDayDebrief := preload("res://scripts/main/expedition_day_debrief.gd")
 const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
+const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
 const SortieState := preload("res://scripts/main/sortie_state.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
 const WorldConnectorController := preload("res://scripts/main/world_connector_controller.gd")
@@ -159,6 +160,7 @@ var _destination_payoff_feedback
 var _final_dive_objective_seed
 var _moving_hazards
 var _material_runtime
+var _material_project
 var _next_dive_objective_prompt
 var _oxygen_rest_feedback
 var _pre_pickup_route_cue_feedback
@@ -648,6 +650,7 @@ func _ready() -> void:
 	)
 	_anomaly_survey = AnomalySurveyRuntime.new(_progression_runtime, not automated_review)
 	_material_runtime = MaterialRuntimeController.new(_anomaly_survey.profile_state())
+	_material_project = MaterialProjectRuntime.new(_anomaly_survey.profile_state())
 	_cargo_collection = CargoCollectionController.new(self)
 	_map_selector_enabled = (not automated_review) and _review_map_selector_allowed(user_args, engine_args)
 
@@ -940,6 +943,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_anomaly_survey.on_map_loaded(world)
 	_expedition_day_state.on_map_loaded(str(world.map_id))
 	_material_runtime.on_map_loaded(world, _expedition_day_state)
+	_material_project.on_map_loaded(world)
 	_sortie_state.begin_map_leg(str(world.map_id), entry_id, _oxygen_capacity_seconds(), preserve_sortie)
 	player.position = world.get_entry_position(entry_id) if not entry_id.is_empty() and world.has_method("get_entry_position") else world.spawn_position
 	add_child(player)
@@ -1140,8 +1144,8 @@ func _unhandled_input(event: InputEvent) -> void:
 
 	var key_event := event as InputEventKey
 	if _expedition_day_state.phase == ExpeditionDayState.PHASE_DEBRIEF:
-		if key_event.pressed and not key_event.echo and key_event.keycode == KEY_N:
-			ExpeditionDayDebrief.handle_day_key(self)
+		if key_event.pressed and not key_event.echo:
+			ExpeditionDayDebrief.handle_debrief_key(self, key_event.keycode)
 		return
 	if key_event.pressed and not key_event.echo and key_event.keycode == KEY_R:
 		_reset_run()
