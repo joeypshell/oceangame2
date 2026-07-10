@@ -75,6 +75,7 @@ const SmokeExpansion03JourneyChecks := preload("res://scripts/main/smoke/smoke_e
 const SmokeExpansion04JourneyChecks := preload("res://scripts/main/smoke/smoke_expansion_04_journey_checks.gd")
 const SmokeExpansion05JourneyChecks := preload("res://scripts/main/smoke/smoke_expansion_05_journey_checks.gd")
 const SmokeExpansion06CombatJourneyChecks := preload("res://scripts/main/smoke/smoke_expansion_06_combat_journey_checks.gd")
+const SmokeExpansion07BiologicalJourneyChecks := preload("res://scripts/main/smoke/smoke_expansion_07_biological_journey_checks.gd")
 const SmokeReleaseJourneyChecks := preload("res://scripts/main/smoke/smoke_release_journey_checks.gd")
 const UpgradeChestCapture := preload("res://scripts/main/captures/upgrade_chest_capture.gd")
 const DEFAULT_MAP_PATH := "res://maps/production_slice_01.greybox.json"
@@ -405,6 +406,7 @@ func _ready() -> void:
 	var smoke_expansion_04_current_pocket := _has_arg(user_args, engine_args, "--smoke-expansion-04-current-pocket")
 	var smoke_expansion_05_practical_research := _has_arg(user_args, engine_args, "--smoke-expansion-05-practical-research")
 	var smoke_expansion_06_combat_foundation := _has_arg(user_args, engine_args, "--smoke-expansion-06-combat-foundation")
+	var smoke_expansion_07_biological_progression := _has_arg(user_args, engine_args, "--smoke-expansion-07-biological-progression")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
 	var parity_output_path := _arg_value(user_args, engine_args, "--parity-output")
 
@@ -585,6 +587,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_expansion_06_combat_foundation:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_expansion_07_biological_progression:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif not requested_map_path.is_empty():
 		selected_map_path = requested_map_path
 
@@ -699,6 +703,7 @@ func _ready() -> void:
 		or smoke_expansion_04_current_pocket
 		or smoke_expansion_05_practical_research
 		or smoke_expansion_06_combat_foundation
+		or smoke_expansion_07_biological_progression
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
 		or _has_arg(user_args, engine_args, "--capture-camera-tests")
 	)
@@ -830,6 +835,9 @@ func _ready() -> void:
 		return
 	if smoke_expansion_06_combat_foundation:
 		SmokeExpansion06CombatJourneyChecks.new(self)._smoke_expansion_06_combat_foundation_and_quit()
+		return
+	if smoke_expansion_07_biological_progression:
+		SmokeExpansion07BiologicalJourneyChecks.new(self)._smoke_expansion_07_biological_progression_and_quit()
 		return
 	if smoke_oxygen_pressure:
 		_smoke_interaction_checks._smoke_oxygen_pressure_and_quit()
