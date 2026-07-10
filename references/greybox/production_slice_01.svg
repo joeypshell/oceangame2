@@ -325,6 +325,13 @@
 <circle cx="1840.0" cy="2128.0" r="19" fill="#ff4b5f" stroke="#64121d" stroke-width="5"/>
 <line x1="1828.0" y1="2116.0" x2="1852.0" y2="2140.0" stroke="#ffffff" stroke-width="5"/>
 <line x1="1852.0" y1="2116.0" x2="1828.0" y2="2140.0" stroke="#ffffff" stroke-width="5"/>
+<circle cx="1424.0" cy="656.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
+<circle cx="1552.0" cy="1008.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
+<circle cx="880.0" cy="1872.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
+<circle cx="1296.0" cy="2128.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
+<circle cx="1776.0" cy="2192.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
+<circle cx="1968.0" cy="2352.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
+<rect x="1951.0" y="1279.0" width="34" height="34" fill="#ffad42" stroke="#6e4210" stroke-width="5"/>
 <rect x="576" y="2304" width="64" height="64" rx="8" fill="#d68cff" stroke="#5b236b" stroke-width="5"/>
 <text x="584.0" y="2294.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">lower_loop_upgrade_chest</text>
 <polyline points="1744.0,2192.0 2064.0,2192.0" fill="none" stroke="#ff96b0" stroke-width="5" stroke-dasharray="12 8"/>
@@ -332,5 +339,5 @@
 <text x="1762.0" y="2174.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">deep_route_jellyfish_patrol</text>
 <rect x="0" y="0" width="2304" height="2688" fill="url(#grid)"/>
 <text x="24.0" y="42.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="30" paint-order="stroke" stroke="#10384a" stroke-width="4">production_slice_01 - greybox source preview</text>
-<text x="24.0" y="2664.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">cyan=open | gray=solid | tan=extraction | orange=boat | green=start | yellow=salvage | red=hazard | pink=moving | purple=container</text>
+<text x="24.0" y="2664.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">cyan=open | gray=solid | tan=extraction | orange=boat/tool | green=start | yellow=salvage | teal=material/survey | red=hazard | pink=moving | purple=container</text>
 </svg>

@@ -12,7 +12,7 @@ State: `docs/current/OCEANGAME_EXPANSION_03_STATE_CONTRACT.md`
 
 Expansion 03 adds three source concepts to a greybox map:
 
-1. typed material candidate salvage entities at authored coordinates
+1. typed material candidate point entities at authored coordinates
 2. ordered candidate pools selected deterministically by day
 3. one material project linked to one cutter-gated salvage payoff
 
@@ -20,16 +20,16 @@ The source never stores selected, depleted, held, banked, completed, unlocked, s
 
 ## Material Candidate Entity
 
-Material slots remain `salvage` point entities so existing map bounds, terrain, reachability, rendering, and parity checks apply.
+Material slots use dedicated `material_candidate` point entities so source validation applies while the legacy salvage runtime remains unchanged until the typed material owner activates them.
 
 ```json
 {
   "id": "material_titanium_entry",
-  "type": "salvage",
+  "type": "material_candidate",
   "x": 20,
   "y": 24,
   "kind": "wreck_fragment",
-  "interaction": "instant",
+  "interaction": "material_collect",
   "material_id": "titanium_scrap",
   "material_quantity": 1,
   "candidate_pool_id": "titanium_scrap_pool"
@@ -42,7 +42,7 @@ Rules:
 - `material_quantity` is exactly `1` in this pass.
 - `candidate_pool_id` must reference one top-level pool whose `material_id` matches.
 - The candidate id must appear exactly once in that pool's ordered `candidate_ids`.
-- Candidate interaction is omitted/default instant or explicitly `instant`.
+- Candidate interaction is exactly `material_collect`; legacy instant-salvage code must not collect it before the typed runtime handles it.
 - Candidate entities must be in bounds, non-solid, and reachable from the authored entry.
 - Material candidates add no source score, wallet, profile, or selection state.
 
@@ -99,7 +99,7 @@ The project id must be unique, the target must exist, and the selected pool yiel
 ```json
 {
   "id": "salvage_sealed_wreck_cache",
-  "type": "salvage",
+  "type": "tool_target",
   "x": 48,
   "y": 36,
   "kind": "crate",
@@ -114,7 +114,7 @@ The project id must be unique, the target must exist, and the selected pool yiel
 
 Rules:
 
-- `cutter_salvage` is supported only on salvage entities.
+- `cutter_salvage` is supported only on dedicated `tool_target` point entities so legacy route/salvage logic cannot collect it before the cutter owner is active.
 - `interaction_seconds` is positive and `interaction_label` follows existing salvage label rules.
 - `required_tool_id` is exactly `salvage_cutter`.
 - `tool_project_id` references the sole project, and that project references this target.

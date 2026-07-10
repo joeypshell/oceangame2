@@ -19,6 +19,8 @@ COLORS = {
     "background": "#237fad",
     "spawn": "#29d66f",
     "salvage": "#ffd34a",
+    "material": "#5ce1c8",
+    "tool_target": "#ffad42",
     "hazard": "#ff4b5f",
     "moving_hazard": "#ff96b0",
     "survey": "#69f0dc",
@@ -141,6 +143,10 @@ def render_svg(map_data: dict) -> str:
             ]
             point_text = " ".join(f"{x:.1f},{y:.1f}" for x, y in points)
             parts.append(f'<polygon points="{point_text}" fill="{COLORS["salvage"]}" stroke="#7f5b00" stroke-width="5"/>')
+        elif entity_type == "material_candidate":
+            parts.append(f'<circle cx="{cx}" cy="{cy}" r="15" fill="{COLORS["material"]}" stroke="#07584f" stroke-width="5"/>')
+        elif entity_type == "tool_target":
+            parts.append(f'<rect x="{cx - 17}" y="{cy - 17}" width="34" height="34" fill="{COLORS["tool_target"]}" stroke="#6e4210" stroke-width="5"/>')
         elif entity_type == "hazard":
             parts.append(f'<circle cx="{cx}" cy="{cy}" r="19" fill="{COLORS["hazard"]}" stroke="#64121d" stroke-width="5"/>')
             parts.append(f'<line x1="{cx - 12}" y1="{cy - 12}" x2="{cx + 12}" y2="{cy + 12}" stroke="#ffffff" stroke-width="5"/>')
@@ -185,7 +191,7 @@ def render_svg(map_data: dict) -> str:
         [
             f'<rect x="0" y="0" width="{width_px}" height="{height_px}" fill="url(#grid)"/>',
             text(24, 42, f'{map_data["id"]} - greybox source preview', 30),
-            text(24, height_px - 24, "cyan=open | gray=solid | tan=extraction | orange=boat | green=start | yellow=salvage | red=hazard | pink=moving | purple=container | teal=survey", 24),
+            text(24, height_px - 24, "cyan=open | gray=solid | tan=extraction | orange=boat/tool | green=start | yellow=salvage | teal=material/survey | red=hazard | pink=moving | purple=container", 24),
             "</svg>",
             "",
         ]
