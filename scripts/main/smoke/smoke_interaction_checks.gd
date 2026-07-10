@@ -234,6 +234,7 @@ func _smoke_timed_salvage_and_quit() -> void:
 
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
+	_combat_interactions_enabled = false
 	_player.global_position = target_center
 	_process(0.0)
 	if _world.is_salvage_collected(target_id) or _held_salvage_ids.has(target_id):

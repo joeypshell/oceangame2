@@ -134,6 +134,12 @@ def godot_gates(godot: str) -> list[Gate]:
             fail_on_godot_error=True,
         ),
         Gate(
+            "smoke: combat runtime state",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_combat_runtime_state.gd"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
             "smoke: cutter salvage state",
             [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_cutter_salvage_state.gd"],
             godot_backed=True,
