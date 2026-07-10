@@ -61,6 +61,7 @@ func _smoke_pass_13_route_commitment_and_quit() -> void:
 		_fail("Pass 13 safe-route target completed objective unexpectedly: status=%s banked_ids=%s." % [_status_text(), _banked_salvage_ids])
 		return
 	_player.global_position = safe_target["center"]
+	_process(0.0)
 	_oxygen_seconds = 0.1
 	_process(0.2)
 	if not _run_failed or _result_label == null or _result_label.text.find(EXPECTED_RESULT_INCOMPLETE) == -1:
@@ -137,6 +138,7 @@ func _smoke_pass_13_route_commitment_and_quit() -> void:
 	_reset_run()
 	var rest_center := _marker_center(rest_marker)
 	_player.global_position = rest_center
+	_process(0.0)
 	_oxygen_seconds = 20.0
 	_process(1.0)
 	if _status_text().find("Rest pocket +oxygen") == -1 or _status_text().find("Objective") != -1 or _banked_salvage != 0 or _held_salvage != 0:
@@ -312,6 +314,7 @@ func _smoke_pass_15_objective_follow_through_and_quit() -> void:
 	if not _status_has_step_cue():
 		_fail("Pass 15 step cue missing after reset before oxygen failure: %s." % _status_text())
 		return
+	_process(0.0)
 	_oxygen_seconds = 0.1
 	_process(0.2)
 	if not _run_failed or _status_has_step_cue() or _result_text().find(EXPECTED_RESULT_INCOMPLETE) == -1:
