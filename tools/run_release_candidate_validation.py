@@ -86,6 +86,7 @@ def godot_gates(godot: str) -> list[Gate]:
         ("smoke: route outcome result", ["--quit-after", "1", "--smoke-route-outcome-result"]),
         ("smoke: primary dive completion", ["--smoke-primary-dive-completion"]),
         ("smoke: release journey", ["--quit-after", "1", "--smoke-release-journey"]),
+        ("smoke: anomaly survey journey", ["--smoke-anomaly-survey-journey"]),
         ("smoke: pass 18 progression", ["--quit-after", "1", "--smoke-pass-18-progression"]),
         ("smoke: pass 19 cargo upgrade", ["--quit-after", "1", "--smoke-pass-19-cargo-upgrade"]),
         ("smoke: pass 20 light upgrade", ["--quit-after", "1", "--smoke-pass-20-light-upgrade"]),
