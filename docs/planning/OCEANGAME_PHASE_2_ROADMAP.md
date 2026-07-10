@@ -2,7 +2,7 @@
 
 Date: 2026-07-09
 
-Status: Expansion 02 is committed. Expansions 03-09 are directional and should not receive issue batches until the preceding closeout selects them.
+Status: Expansion 02 is complete with a GO. Expansion 03 is selected for the next issue batch; Expansions 04-09 remain directional until the preceding closeout selects them.
 
 ## Decision
 
@@ -87,11 +87,11 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Only OceanGame Expansion 02 has an issue-level implementation batch. Its ten issues are #685-#694.
+OceanGame Expansion 02's issue-level batch #685-#694 is complete. Expansion 03 is the only selected next batch and should be planned before implementation.
 
 ### Directional
 
-Expansions 03-09 have GitHub milestones, goals, boundaries, and exit criteria. Create their issue batches only after the prior closeout confirms the next dependency is ready.
+Expansions 04-09 have GitHub milestones, goals, boundaries, and exit criteria. Create their issue batches only after the prior closeout confirms the next dependency is ready.
 
 ### Vision
 
