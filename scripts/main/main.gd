@@ -13,6 +13,7 @@ const DestinationPayoffFeedback := preload("res://scripts/main/destination_payof
 const ExpeditionDayCapture := preload("res://scripts/main/captures/expedition_day_capture.gd")
 const Expansion03MaterialProjectCapture := preload("res://scripts/main/captures/expansion_03_material_project_capture.gd")
 const Expansion04CurrentPocketCapture := preload("res://scripts/main/captures/expansion_04_current_pocket_capture.gd")
+const Expansion05PracticalResearchCapture := preload("res://scripts/main/captures/expansion_05_practical_research_capture.gd")
 const FinalDiveObjectiveSeed := preload("res://scripts/main/final_dive_objective_seed.gd")
 const MovingHazardCapture := preload("res://scripts/main/captures/moving_hazard_capture.gd")
 const MovingHazardController := preload("res://scripts/main/moving_hazard_controller.gd")
@@ -121,6 +122,7 @@ const ANOMALY_SURVEY_CAPTURE_DIR := "res://visual_captures/anomaly_survey"
 const EXPEDITION_DAY_CAPTURE_DIR := "res://visual_captures/expedition_day"
 const EXPANSION_03_MATERIAL_PROJECT_CAPTURE_DIR := "res://visual_captures/expansion_03_material_project"
 const EXPANSION_04_CURRENT_POCKET_CAPTURE_DIR := "res://visual_captures/expansion_04_current_pocket"
+const EXPANSION_05_PRACTICAL_RESEARCH_CAPTURE_DIR := "res://visual_captures/expansion_05_practical_research"
 const DARKNESS_LIGHT_CAPTURE_DIR := "res://visual_captures/darkness_light_gate"
 const CURRENT_GATE_CAPTURE_DIR := "res://visual_captures/current_gate"
 const MOVING_HAZARD_CAPTURE_DIR := "res://visual_captures/moving_hazard"
@@ -324,6 +326,7 @@ func _ready() -> void:
 	var capture_expedition_day := _has_arg(user_args, engine_args, "--capture-expedition-day")
 	var capture_expansion_03_material_project := _has_arg(user_args, engine_args, "--capture-expansion-03-material-project")
 	var capture_expansion_04_current_pocket := _has_arg(user_args, engine_args, "--capture-expansion-04-current-pocket")
+	var capture_expansion_05_practical_research := _has_arg(user_args, engine_args, "--capture-expansion-05-practical-research")
 	var capture_darkness_light_gate := _has_arg(user_args, engine_args, "--capture-darkness-light-gate")
 	var capture_current_gate := _has_arg(user_args, engine_args, "--capture-current-gate")
 	var capture_moving_hazard := _has_arg(user_args, engine_args, "--capture-moving-hazard")
@@ -471,6 +474,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_primary_dive_completion:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif capture_expansion_05_practical_research:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_route:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_02_route:
@@ -610,6 +615,7 @@ func _ready() -> void:
 		or capture_expedition_day
 		or capture_expansion_03_material_project
 		or capture_expansion_04_current_pocket
+		or capture_expansion_05_practical_research
 		or capture_darkness_light_gate
 		or capture_current_gate
 		or capture_moving_hazard
@@ -941,6 +947,9 @@ func _ready() -> void:
 	elif capture_expansion_04_current_pocket:
 		var capture := Expansion04CurrentPocketCapture.new(self)
 		await capture.capture_and_quit(EXPANSION_04_CURRENT_POCKET_CAPTURE_DIR)
+	elif capture_expansion_05_practical_research:
+		var capture := Expansion05PracticalResearchCapture.new(self)
+		await capture.capture_and_quit(EXPANSION_05_PRACTICAL_RESEARCH_CAPTURE_DIR)
 	elif capture_darkness_light_gate:
 		_capture_controller.capture_darkness_light_gate_and_quit(DARKNESS_LIGHT_CAPTURE_DIR)
 	elif capture_current_gate:
