@@ -37,6 +37,7 @@ func _smoke_pass_12_oxygen_rest_pressure_and_quit() -> void:
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
 	_player.global_position = rest_center
+	_process(0.0)
 
 	var oxygen_before_rest := 20.0
 	_oxygen_seconds = oxygen_before_rest

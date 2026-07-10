@@ -32,6 +32,7 @@ func _smoke_feedback_cues_and_quit() -> void:
 		return
 
 	_player.global_position = salvage["center"]
+	_process(0.0)
 	_oxygen_seconds = _main.OXYGEN_LOW_WARNING_SECONDS + 1.0
 	_process(2.0)
 	_oxygen_seconds = _main.OXYGEN_CRITICAL_WARNING_SECONDS + 1.0
