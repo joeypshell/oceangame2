@@ -20,7 +20,7 @@ Expansion 02 added a visible daylight budget, source-derived open-surface oxygen
 
 Expansion 03 added deterministic authored material candidates, typed cargo and canonical-boat commitment, one exact-once night cutter project, a durable capability, and one remembered sealed-wreck return/payoff.
 
-The selected next direction is Expansion 04: prove one source-authored place planned around a diver capability. Its issue batch belongs to the next drift cycle. Later milestones cover practical research, enemies/weapons, biological resources, daily conditions, and authored regions.
+The active target is Expansion 04 issues #726-#735: prove one optional source-authored upper-right current pocket opened by a durable current-stabilizer project. Later milestones cover practical research, enemies/weapons, biological resources, daily conditions, and authored regions.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -46,6 +46,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Finished foundation roadmap: `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`
 - Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - Completed Expansion 03 contracts: `docs/current/OCEANGAME_EXPANSION_03_PLAN.md`, `docs/current/OCEANGAME_EXPANSION_03_STATE_CONTRACT.md`, `docs/current/OCEANGAME_EXPANSION_03_SOURCE_CONTRACT.md`
+- Active Expansion 04 plan: `docs/current/OCEANGAME_EXPANSION_04_PLAN.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
@@ -174,7 +175,7 @@ Current issue state as of 2026-07-10:
 - Closed: #662-#671 completed Expansion 01 with a GO.
 - Closed: #685-#694 completed Expansion 02 with a GO.
 - Closed: #706-#715 completed Expansion 03 with a GO.
-- Selected next: Expansion 04 directionally; its scoped issue batch belongs to the next drift cycle.
+- Active milestone: Expansion 04 issues #726-#735; work them in plan, ownership, schema, source, runtime, smoke, visual, Web, and closeout order.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
@@ -311,7 +312,7 @@ Current issue state as of 2026-07-10:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_03_CLOSEOUT.md` as the latest completed decision. Expansions 01-03 are complete with GO decisions. Expansion 04 is selected directionally, but its scoped issue batch must be planned in the next drift cycle before implementation.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star, `docs/current/OCEANGAME_EXPANSION_03_CLOSEOUT.md` as the latest completed decision, and `docs/current/OCEANGAME_EXPANSION_04_PLAN.md` as the active contract. Expansions 01-03 are complete with GO decisions; #726-#735 are the only active Expansion 04 batch.
 
 Accepted constraints for next work:
 
