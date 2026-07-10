@@ -93,6 +93,7 @@ def godot_gates(godot: str) -> list[Gate]:
         ("smoke: expedition day", ["--smoke-expedition-day"]),
         ("smoke: expansion 03 material project", ["--quit-after", "1", "--smoke-expansion-03-material-project"]),
         ("smoke: expansion 04 current pocket", ["--quit-after", "1", "--smoke-expansion-04-current-pocket"]),
+        ("smoke: expansion 05 practical research", ["--quit-after", "1", "--smoke-expansion-05-practical-research"]),
         ("smoke: pass 18 progression", ["--quit-after", "1", "--smoke-pass-18-progression"]),
         ("smoke: pass 19 cargo upgrade", ["--quit-after", "1", "--smoke-pass-19-cargo-upgrade"]),
         ("smoke: pass 20 light upgrade", ["--quit-after", "1", "--smoke-pass-20-light-upgrade"]),
@@ -145,6 +146,18 @@ def godot_gates(godot: str) -> list[Gate]:
         Gate(
             "smoke: current pocket feedback state",
             [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_current_pocket_feedback_state.gd"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
+            "smoke: practical research state",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_practical_research_state.gd"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
+            "smoke: practical research material state",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_practical_research_material_state.gd"],
             godot_backed=True,
             fail_on_godot_error=True,
         ),
