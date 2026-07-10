@@ -63,6 +63,7 @@ const SmokeNextDiveObjectiveChecks := preload("res://scripts/main/smoke/smoke_ne
 const SmokePlayerFacingTransitionChecks := preload("res://scripts/main/smoke/smoke_player_facing_transition_checks.gd")
 const SmokeDarknessLightChecks := preload("res://scripts/main/smoke/smoke_darkness_light_checks.gd")
 const SmokeExpeditionDayChecks := preload("res://scripts/main/smoke/smoke_expedition_day_checks.gd")
+const SmokeExpansion03JourneyChecks := preload("res://scripts/main/smoke/smoke_expansion_03_journey_checks.gd")
 const SmokeReleaseJourneyChecks := preload("res://scripts/main/smoke/smoke_release_journey_checks.gd")
 const UpgradeChestCapture := preload("res://scripts/main/captures/upgrade_chest_capture.gd")
 const DEFAULT_MAP_PATH := "res://maps/production_slice_01.greybox.json"
@@ -371,6 +372,7 @@ func _ready() -> void:
 	var smoke_release_journey := _has_arg(user_args, engine_args, "--smoke-release-journey")
 	var smoke_anomaly_survey_journey := _has_arg(user_args, engine_args, "--smoke-anomaly-survey-journey")
 	var smoke_expedition_day := _has_arg(user_args, engine_args, "--smoke-expedition-day")
+	var smoke_expansion_03_material_project := _has_arg(user_args, engine_args, "--smoke-expansion-03-material-project")
 	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
 	var parity_output_path := _arg_value(user_args, engine_args, "--parity-output")
 
@@ -541,6 +543,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_expedition_day:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif smoke_expansion_03_material_project:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif not requested_map_path.is_empty():
 		selected_map_path = requested_map_path
 
@@ -647,6 +651,7 @@ func _ready() -> void:
 		or smoke_release_journey
 		or smoke_anomaly_survey_journey
 		or smoke_expedition_day
+		or smoke_expansion_03_material_project
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
 		or _has_arg(user_args, engine_args, "--capture-camera-tests")
 	)
@@ -766,6 +771,9 @@ func _ready() -> void:
 		return
 	if smoke_expedition_day:
 		_smoke_expedition_day_checks._smoke_expedition_day_and_quit()
+		return
+	if smoke_expansion_03_material_project:
+		SmokeExpansion03JourneyChecks.new(self)._smoke_expansion_03_material_project_and_quit()
 		return
 	if smoke_oxygen_pressure:
 		_smoke_interaction_checks._smoke_oxygen_pressure_and_quit()

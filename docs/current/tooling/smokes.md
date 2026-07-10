@@ -17,6 +17,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --script res://scripts/main/smoke/smoke_daylight_presentation.gd
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --script res://scripts/main/smoke/smoke_night_debrief.gd
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expedition-day
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-03-material-project
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-loop
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-02-route
@@ -62,6 +63,8 @@ The standalone daylight-presentation smoke verifies the fixed-width day/time/div
 The standalone night-debrief smoke verifies voluntary and forced night resolution, day-summary totals, unbanked-state cleanup, next-day reset at the canonical boat, profile reload persistence, and the absence of unimplemented survival taxes or planning controls.
 
 The integrated expedition-day smoke verifies shared daylight across open-surface recovery, boat offload, connector travel, and repeated sorties, then covers voluntary debrief, forced nightfall cleanup, next-day reset, and durable profile reload. CI and release validation run it as `--smoke-expedition-day`.
+
+The integrated Expansion 03 smoke verifies deterministic recipe selection, connector-preserved material cargo, cargo pressure, canonical-boat commitment, knowledge/project gating, exact-once cutter completion, profile reload, next-day rotation, locked/unlocked sealed-wreck interaction, failure restoration, and final payoff banking. CI and release validation run it as `--smoke-expansion-03-material-project`.
 
 The salvage-loop smoke check loads the default production slice, collects all authored salvage through the same runtime methods used in play, returns to extraction, confirms completion, resets, and exits.
 
