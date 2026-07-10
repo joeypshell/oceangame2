@@ -176,6 +176,10 @@ func has_completed_discovery() -> bool:
 	return _profile.has_completed_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID)
 
 
+func profile_state():
+	return _profile
+
+
 func report() -> Dictionary:
 	return {
 		"lead_available": _lead_available,

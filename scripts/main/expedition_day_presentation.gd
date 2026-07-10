@@ -45,7 +45,7 @@ static func try_request_voluntary_end(main) -> Dictionary:
 		result = _request_result(false, "boat_required", "End day at boat")
 	elif main._sortie_state.failed:
 		result = _request_result(false, "sortie_failed", "Recover before ending day")
-	elif main._sortie_state.held_salvage > 0:
+	elif main._held_cargo_count() > 0:
 		result = _request_result(false, "cargo_held", "Offload cargo first")
 	elif main._anomaly_survey.has_pending_discovery():
 		result = _request_result(false, "discovery_pending", "Commit discovery first")
@@ -65,7 +65,7 @@ static func _location_context(main) -> String:
 	if main._world.is_inside_boat(position):
 		if main._sortie_state.failed:
 			return "Boat: Recover"
-		if main._sortie_state.held_salvage > 0:
+		if main._held_cargo_count() > 0:
 			return "Boat: Offload"
 		if main._anomaly_survey.has_pending_discovery():
 			return "Boat: Commit"

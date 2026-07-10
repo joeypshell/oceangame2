@@ -5,6 +5,7 @@ const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime.gd")
 const AnomalySurveyCapture := preload("res://scripts/main/captures/anomaly_survey_capture.gd")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
+const CargoCollectionController := preload("res://scripts/main/cargo_collection_controller.gd")
 const CurrentGateCapture := preload("res://scripts/main/captures/current_gate_capture.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
 const DestinationPayoffFeedback := preload("res://scripts/main/destination_payoff_feedback.gd")
@@ -33,7 +34,7 @@ const SessionProgression := preload("res://scripts/main/session_progression.gd")
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpeditionDayPresentation := preload("res://scripts/main/expedition_day_presentation.gd")
 const ExpeditionDayDebrief := preload("res://scripts/main/expedition_day_debrief.gd")
-const OffloadController := preload("res://scripts/main/offload_controller.gd")
+const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
 const SortieState := preload("res://scripts/main/sortie_state.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
 const WorldConnectorController := preload("res://scripts/main/world_connector_controller.gd")
@@ -152,10 +153,12 @@ var _world
 var _player
 var _anomaly_survey
 var _capture_controller
+var _cargo_collection
 var _current_gate
 var _destination_payoff_feedback
 var _final_dive_objective_seed
 var _moving_hazards
+var _material_runtime
 var _next_dive_objective_prompt
 var _oxygen_rest_feedback
 var _pre_pickup_route_cue_feedback
@@ -644,6 +647,8 @@ func _ready() -> void:
 		or _has_arg(user_args, engine_args, "--capture-camera-tests")
 	)
 	_anomaly_survey = AnomalySurveyRuntime.new(_progression_runtime, not automated_review)
+	_material_runtime = MaterialRuntimeController.new(_anomaly_survey.profile_state())
+	_cargo_collection = CargoCollectionController.new(self)
 	_map_selector_enabled = (not automated_review) and _review_map_selector_allowed(user_args, engine_args)
 
 	if check_map_parity:
@@ -926,12 +931,15 @@ func _create_world(map_path: String, show_debug_overlay: bool) -> Node:
 	return world
 
 func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := "", status_note := "", preserve_sortie := false) -> void:
+	if not preserve_sortie and _world != null and _material_runtime != null:
+		_material_runtime.restore_unbanked(_world, _expedition_day_state, "map_reload")
 	_clear_loaded_review_nodes()
 	var world := _create_world(map_path, show_debug_overlay)
 	var player := PLAYER_SCENE.instantiate()
 	_player = player
 	_anomaly_survey.on_map_loaded(world)
 	_expedition_day_state.on_map_loaded(str(world.map_id))
+	_material_runtime.on_map_loaded(world, _expedition_day_state)
 	_sortie_state.begin_map_leg(str(world.map_id), entry_id, _oxygen_capacity_seconds(), preserve_sortie)
 	player.position = world.get_entry_position(entry_id) if not entry_id.is_empty() and world.has_method("get_entry_position") else world.spawn_position
 	add_child(player)
@@ -1045,47 +1053,7 @@ func _process(delta: float) -> void:
 		_expedition_day_state.record_discovery(str(survey_result.get("discovery_id", "")))
 	_update_hazard_warning(delta)
 
-	if _sortie_state.held_salvage < _held_salvage_capacity():
-		var nearby_salvage: Dictionary = _world.get_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
-		var nearby_interaction := str(nearby_salvage.get("interaction", "instant"))
-		if not nearby_salvage.is_empty() and nearby_interaction == "timed_salvage":
-			_pry_salvage.update({}, delta)
-			var timed_result: Dictionary = _timed_salvage.update(nearby_salvage, delta)
-			if str(timed_result.get("state", "")) == "complete":
-				var timed_salvage_id := str(timed_result.get("id", ""))
-				if _world.collect_salvage_by_id(timed_salvage_id):
-					var completed_note := _timed_salvage_completion_feedback(timed_salvage_id, str(timed_result.get("label", "")))
-					_collect_salvage_into_cargo(timed_salvage_id, completed_note)
-			elif timed_result.has("note"):
-				_last_status_note = str(timed_result["note"])
-		elif not nearby_salvage.is_empty() and nearby_interaction == "pry_salvage":
-			_timed_salvage.update({}, delta)
-			var pry_result: Dictionary = _pry_salvage.update(nearby_salvage, delta)
-			if str(pry_result.get("state", "")) == "complete":
-				var pry_salvage_id := str(pry_result.get("id", ""))
-				if _world.collect_salvage_by_id(pry_salvage_id):
-					var completed_note := _pry_salvage_completion_feedback(pry_salvage_id, str(pry_result.get("label", "")))
-					_collect_salvage_into_cargo(pry_salvage_id, completed_note)
-			elif pry_result.has("note"):
-				_last_status_note = str(pry_result["note"])
-		else:
-			var timed_cancel: Dictionary = _timed_salvage.update({}, delta)
-			if str(timed_cancel.get("state", "")) == "canceled":
-				_last_status_note = str(timed_cancel.get("note", "Salvage interrupted"))
-			var pry_cancel: Dictionary = _pry_salvage.update({}, delta)
-			if str(pry_cancel.get("state", "")) == "canceled":
-				_last_status_note = str(pry_cancel.get("note", "Pry interrupted"))
-			var collected_salvage: String = _world.collect_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
-			if not collected_salvage.is_empty():
-				_collect_salvage_into_cargo(collected_salvage)
-	else:
-		var blocked_salvage: Dictionary = _world.get_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
-		_timed_salvage.reset()
-		_pry_salvage.update({}, delta)
-		if not blocked_salvage.is_empty():
-			_last_status_note = _return_pressure_feedback.cargo_full_prompt(blocked_salvage)
-
-	OffloadController.try_offload(self)
+	_cargo_collection.update(delta)
 
 	_update_status_label()
 
@@ -1201,6 +1169,7 @@ func _reset_run() -> void:
 
 	_world.reset_salvage()
 	_anomaly_survey.clear_unbanked("reset", _world)
+	_material_runtime.restore_unbanked(_world, _expedition_day_state, "reset")
 	_oxygen_rest_feedback.reset()
 	_current_gate.reset()
 	_pry_salvage.reset()
@@ -1335,6 +1304,7 @@ func _handle_oxygen_depleted() -> void:
 	_moving_hazards.reset(_world)
 	_pry_salvage.reset()
 	_timed_salvage.reset()
+	_material_runtime.restore_unbanked(_world, _expedition_day_state, "oxygen_failure")
 	if not _sortie_state.held_salvage_ids.is_empty():
 		_world.restore_salvage(_sortie_state.clear_held())
 	_last_status_note = "Oxygen depleted - press R"
@@ -1361,6 +1331,7 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 	_pry_salvage.reset()
 	_timed_salvage.reset()
 	_anomaly_survey.clear_unbanked("hazard", _world)
+	var material_drop: Dictionary = _material_runtime.restore_unbanked(_world, _expedition_day_state, "hazard")
 	var oxygen_depleted := _apply_hazard_oxygen_penalty()
 	if oxygen_depleted:
 		_handle_oxygen_depleted()
@@ -1368,6 +1339,8 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 
 	if not _sortie_state.held_salvage_ids.is_empty():
 		_world.restore_salvage(_sortie_state.clear_held())
+		_last_status_note = "Hazard hit: dropped held, oxygen -%ds" % int(HAZARD_OXYGEN_PENALTY_SECONDS)
+	elif int(material_drop.get("restored_count", 0)) > 0:
 		_last_status_note = "Hazard hit: dropped held, oxygen -%ds" % int(HAZARD_OXYGEN_PENALTY_SECONDS)
 	else:
 		_last_status_note = "Hazard hit: oxygen -%ds" % int(HAZARD_OXYGEN_PENALTY_SECONDS)
@@ -1545,7 +1518,7 @@ func _update_status_label() -> void:
 	elif _sortie_state.failed:
 		prompt = "Oxygen depleted - press R"
 		objective_step_cue_blocked = true
-	elif _sortie_state.held_salvage >= _held_salvage_capacity():
+	elif _held_cargo_count() >= _held_salvage_capacity():
 		prompt = _cargo_full_prompt()
 		objective_step_cue_blocked = true
 	elif not _hazard_warning_id.is_empty():
@@ -1575,7 +1548,7 @@ func _update_status_label() -> void:
 	elif not _last_status_note.is_empty():
 		prompt = _last_status_note
 		objective_step_cue_blocked = _is_collection_status_note(_last_status_note)
-	elif _sortie_state.held_salvage > 0:
+	elif _held_cargo_count() > 0:
 		prompt = "Return to extraction"
 	if not oxygen_feedback.is_empty():
 		objective_step_cue_blocked = true
@@ -1587,12 +1560,13 @@ func _update_status_label() -> void:
 		oxygen_text = "Oxygen %ds %s" % [oxygen_seconds, oxygen_feedback]
 	var progression_text := _progression_overlay_text()
 	var anomaly_text: String = _anomaly_survey.overlay_text(_world, _player)
+	var material_text: String = _material_runtime.overlay_text()
 
 	_status_label.text = "Score %d\nSalvage banked %d/%d\nHeld %d/%d (%d pts)\n%s\n%s" % [
 		_banked_score,
 		_banked_salvage,
 		_total_salvage,
-		_sortie_state.held_salvage,
+		_held_cargo_count(),
 		_held_salvage_capacity(),
 		_sortie_state.held_salvage_score,
 		oxygen_text,
@@ -1602,6 +1576,8 @@ func _update_status_label() -> void:
 		_status_label.text += "\n%s" % objective_text
 	if not anomaly_text.is_empty():
 		_status_label.text += "\n%s" % anomaly_text
+	if not material_text.is_empty():
+		_status_label.text += "\n%s" % material_text
 	if not prompt.is_empty():
 		_status_label.text += "\n%s" % prompt
 	_status_label.text = ExpeditionDayPresentation.decorate_status(self, _status_label.text)
@@ -1609,6 +1585,8 @@ func _update_status_label() -> void:
 
 
 func _cargo_full_prompt() -> String:
+	if _world != null and _player != null and not _world.get_material_candidate_near(_player.global_position, SALVAGE_COLLECTION_RADIUS).is_empty():
+		return "Cargo full - bank materials at boat"
 	if _return_pressure_feedback == null or _world == null or _player == null:
 		return ReturnPressureFeedback.DEFAULT_CARGO_FULL_PROMPT
 	var nearby_salvage: Dictionary = _world.get_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
@@ -1943,6 +1921,10 @@ func _apply_session_light_profile() -> void:
 
 func _held_salvage_capacity() -> int:
 	return _progression_runtime.held_salvage_capacity(HELD_SALVAGE_CAPACITY) if _progression_runtime != null else HELD_SALVAGE_CAPACITY
+
+
+func _held_cargo_count() -> int:
+	return _sortie_state.held_salvage + (_material_runtime.held_count() if _material_runtime != null else 0)
 
 
 func _oxygen_capacity_seconds() -> float:
