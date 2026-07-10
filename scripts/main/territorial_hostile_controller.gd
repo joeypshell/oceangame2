@@ -7,6 +7,8 @@ const PHASE_RECOVERY := "recovery"
 const PHASE_RETURNING := "returning"
 const PHASE_DEFEATED := "defeated"
 const RETURN_SPEED_FACTOR := 0.75
+const CONTACT_KNOCKBACK_FORCE := 325.0
+const CONTACT_DISRUPTION_SECONDS := 0.45
 
 var _states := {}
 var _defeated_ids := {}
@@ -81,7 +83,7 @@ func apply_weapon_hit(world, hostile_id: String, damage: int, interrupt_requeste
 		state["phase_seconds"] = float(state.get("recovery_seconds", 1.25))
 		state["contact_consumed"] = true
 		interrupted = true
-		_current_prompt = "Lunge interrupted"
+		_current_prompt = "Capacitor interrupt - recovery opening"
 	_states[hostile_id] = state
 	_sync_visual(world, state)
 	return {
@@ -92,6 +94,7 @@ func apply_weapon_hit(world, hostile_id: String, damage: int, interrupt_requeste
 		"defeated": defeated,
 		"interrupted": interrupted,
 		"pre_hit_phase": pre_hit_phase,
+		"recovery_seconds": float(state.get("recovery_seconds", 0.0)) if interrupted else 0.0,
 	}
 
 
@@ -145,9 +148,7 @@ func _update_state(state: Dictionary, player_position: Vector2, delta: float) ->
 	match str(state.get("phase", PHASE_HOME)):
 		PHASE_HOME:
 			if _player_threatens(state, player_position):
-				state["phase"] = PHASE_WARNING
-				state["phase_seconds"] = float(state.get("warning_seconds", 0.75))
-				return _event(state, "warning")
+				return _begin_warning(state)
 		PHASE_WARNING:
 			if not _player_threatens(state, player_position):
 				state["phase"] = PHASE_RETURNING
@@ -174,8 +175,12 @@ func _update_state(state: Dictionary, player_position: Vector2, delta: float) ->
 		PHASE_RECOVERY:
 			state["phase_seconds"] = maxf(0.0, float(state.get("phase_seconds", 0.0)) - delta)
 			if float(state["phase_seconds"]) <= 0.0:
+				if _player_threatens(state, player_position):
+					return _begin_warning(state)
 				state["phase"] = PHASE_RETURNING
 		PHASE_RETURNING:
+			if _player_threatens(state, player_position):
+				return _begin_warning(state)
 			state["position"] = (state.get("position", Vector2.ZERO) as Vector2).move_toward(
 				state.get("home_center", Vector2.ZERO),
 				float(state.get("lunge_speed_px_per_second", 1.0)) * RETURN_SPEED_FACTOR * delta
@@ -193,6 +198,8 @@ func _contact_event(state: Dictionary, player_position: Vector2) -> Dictionary:
 	state["contact_consumed"] = true
 	var result := _event(state, "contact")
 	result["damage"] = int(state.get("contact_damage", 1))
+	result["knockback_force"] = CONTACT_KNOCKBACK_FORCE
+	result["disruption_seconds"] = CONTACT_DISRUPTION_SECONDS
 	return result
 
 
@@ -205,22 +212,35 @@ func _player_threatens(state: Dictionary, player_position: Vector2) -> bool:
 func _prompt_for_state(state: Dictionary, player_position: Vector2) -> String:
 	var phase := str(state.get("phase", PHASE_HOME))
 	if phase == PHASE_WARNING:
-		return str(state.get("warning_label", "Territorial eel - watch the lunge"))
+		return "WARNING %.1fs - %s" % [float(state.get("phase_seconds", 0.0)), str(state.get("warning_label", "Territorial eel - watch the lunge"))]
 	if phase == PHASE_LUNGE:
-		return str(state.get("retreat_label", "Eel territory - retreat or evade"))
+		return "LUNGE - %s" % str(state.get("retreat_label", "Eel territory - retreat or evade"))
 	if phase == PHASE_RECOVERY and (state.get("territory_rect", Rect2()) as Rect2).has_point(player_position):
-		return "Eel recovering - opening"
+		return "RECOVERY %.1fs - attack opening" % float(state.get("phase_seconds", 0.0))
+	if phase == PHASE_RETURNING and (state.get("territory_rect", Rect2()) as Rect2).has_point(player_position):
+		return "Eel returning - keep clear"
 	return ""
 
 
 func _prompt_for_event(event: Dictionary, state: Dictionary, player_position: Vector2) -> String:
 	if str(event.get("kind", "")) == "retreat":
-		return str(state.get("retreat_label", "Eel territory - retreat or evade"))
+		return "Eel returning - outside attack space"
 	return _prompt_for_state(state, player_position)
 
 
 func _event(state: Dictionary, kind: String) -> Dictionary:
-	return {"kind": kind, "id": str(state.get("id", "hostile")), "phase": str(state.get("phase", PHASE_HOME))}
+	return {
+		"kind": kind,
+		"id": str(state.get("id", "hostile")),
+		"phase": str(state.get("phase", PHASE_HOME)),
+		"position": state.get("position", Vector2.ZERO),
+	}
+
+
+func _begin_warning(state: Dictionary) -> Dictionary:
+	state["phase"] = PHASE_WARNING
+	state["phase_seconds"] = float(state.get("warning_seconds", 0.75))
+	return _event(state, "warning")
 
 
 func _sync_visual(world, state: Dictionary) -> void:

@@ -70,7 +70,7 @@ func capture_and_quit(capture_dir: String) -> void:
 		if expected_health > 1:
 			_main._shock_prod.update(ShockProdController.ATTACK_COOLDOWN_SECONDS)
 	_main._update_status_label()
-	if _hostile_phase() != "warning" or not _status_contains("Shock prod hit - eel health 1/3") or not _status_contains("Health 3/3"):
+	if _hostile_phase() != "warning" or not _status_contains("Shock prod hit: eel health 1/3 (-1)") or not _status_contains("Health 3/3"):
 		_fail("armed damage state was not readable")
 		return
 	if not await _capture_pair(capture_dir, "armed_damage", camera_position):

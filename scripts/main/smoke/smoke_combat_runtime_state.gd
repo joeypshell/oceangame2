@@ -1,6 +1,7 @@
 extends SceneTree
 
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
+const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const TerritorialHostileController := preload("res://scripts/main/territorial_hostile_controller.gd")
 const ShockProdController := preload("res://scripts/main/shock_prod_controller.gd")
 const MAP_PATH := "res://maps/production_slice_01.greybox.json"
@@ -23,6 +24,7 @@ func _run() -> void:
 	_test_world_boundary(world)
 	_test_warning_retreat_and_contact(world)
 	_test_weapon_and_day_state(world)
+	await _test_player_knockback_collision()
 
 	world.queue_free()
 	if not _failures.is_empty():
@@ -30,7 +32,7 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: combat runtime state source=deep_cache_territorial_eel warning=true unarmed_retreat=true contact_damage=1 weapon_locked=true hits=3 defeated=true rewards=none connector_persisted=true new_day_restored=true.")
+	print("PASS: combat runtime state source=deep_cache_territorial_eel warning=true unarmed_retreat=true territorial_reacquire=true contact_damage=1 knockback=325 disruption=0.45 collision_safe=true repeated_damage=false weapon_locked=true hits=3 defeated=true rewards=none connector_persisted=true new_day_restored=true.")
 	quit(0)
 
 
@@ -66,13 +68,13 @@ func _test_warning_retreat_and_contact(world) -> void:
 	var warning: Dictionary = hostiles.update(world, approach, 0.0)
 	_expect(str(warning.get("kind", "")) == "warning", "approach did not start the warning phase")
 	_expect(str(hostiles.state_for(HOSTILE_ID).get("phase", "")) == "warning", "warning phase was not retained")
-	_expect(hostiles.prompt().find("watch the lunge") != -1, "warning prompt omitted the source label")
+	_expect(hostiles.prompt().find("WARNING") != -1 and hostiles.prompt().find("watch the lunge") != -1, "warning prompt omitted phase or source label")
 
 	var lower_evade_lane := Vector2(60.5, 78.5) * 32.0
 	var retreat: Dictionary = hostiles.update(world, lower_evade_lane, 0.1)
 	_expect(str(retreat.get("kind", "")) == "retreat", "leaving the threat envelope did not cancel the warning")
 	_expect(not retreat.has("damage"), "unarmed retreat produced combat damage")
-	_expect(hostiles.prompt().find("retreat or evade") != -1, "unarmed retreat omitted compact feedback")
+	_expect(hostiles.prompt().find("outside attack space") != -1, "unarmed retreat omitted attack-space feedback")
 
 	hostiles.reset_for_failure(world)
 	home = hostiles.state_for(HOSTILE_ID).get("home_center", Vector2.ZERO)
@@ -82,8 +84,16 @@ func _test_warning_retreat_and_contact(world) -> void:
 	var contact: Dictionary = hostiles.update(world, contact_position, 0.25)
 	_expect(str(contact.get("kind", "")) == "contact", "completed lunge did not emit contact")
 	_expect(int(contact.get("damage", 0)) == 1, "contact did not request exactly one health damage")
+	_expect(is_equal_approx(float(contact.get("knockback_force", 0.0)), 325.0), "contact omitted tuned knockback force")
+	_expect(is_equal_approx(float(contact.get("disruption_seconds", 0.0)), 0.45), "contact omitted steering disruption")
 	var repeated_contact: Dictionary = hostiles.update(world, contact_position, 0.01)
 	_expect(not repeated_contact.has("damage"), "one lunge emitted repeated contact damage")
+	hostiles.update(world, contact_position, 0.5)
+	var reacquired: Dictionary = hostiles.update(world, contact_position, 1.26)
+	_expect(str(reacquired.get("kind", "")) == "warning" and str(hostiles.state_for(HOSTILE_ID).get("phase", "")) == "warning", "eel did not reacquire a player who remained inside attack space")
+	var outside_territory := Vector2(58.0, 70.0) * 32.0
+	var bounded: Dictionary = hostiles.update(world, outside_territory, 0.1)
+	_expect(str(bounded.get("kind", "")) == "retreat" and str(hostiles.state_for(HOSTILE_ID).get("phase", "")) == "returning", "eel pursued outside its authored attack space")
 
 
 func _test_weapon_and_day_state(world) -> void:
@@ -126,6 +136,31 @@ func _test_weapon_and_day_state(world) -> void:
 	_expect(int(refreshed.get("health", 0)) == 3 and refreshed.get("position", Vector2.ZERO) == refreshed.get("home_center", Vector2.ONE), "active connector reload did not restart the encounter at full health/home")
 	hostiles.reset_for_failure(world)
 	_expect(int(hostiles.state_for(HOSTILE_ID).get("health", 0)) == 3, "failure reset did not restore the encounter")
+
+
+func _test_player_knockback_collision() -> void:
+	var wall := StaticBody2D.new()
+	var wall_shape := CollisionShape2D.new()
+	var rectangle := RectangleShape2D.new()
+	rectangle.size = Vector2(20, 120)
+	wall_shape.shape = rectangle
+	wall.add_child(wall_shape)
+	wall.position = Vector2(120, 100)
+	get_root().add_child(wall)
+
+	var player := PLAYER_SCENE.instantiate() as CharacterBody2D
+	get_root().add_child(player)
+	player.set_physics_process(false)
+	player.position = Vector2(70, 100)
+	await physics_frame
+	player.apply_knockback(Vector2.RIGHT, 325.0, 0.45)
+	player._physics_process(0.2)
+	_expect(player.position.x <= 97.1, "knockback moved the player through collision")
+	_expect(player.movement_disruption_seconds() > 0.0, "knockback disruption ended before the collision frame")
+	player._physics_process(0.3)
+	_expect(is_zero_approx(player.movement_disruption_seconds()), "knockback disruption did not expire")
+	player.queue_free()
+	wall.queue_free()
 
 
 func _contains_reward_key(result: Dictionary) -> bool:

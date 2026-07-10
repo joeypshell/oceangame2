@@ -17,6 +17,7 @@ var _facing_sign := 1.0
 var _light_range_scale := BASE_LIGHT_RANGE_SCALE
 var _light_alpha := BASE_LIGHT_ALPHA
 var _swim_frame_time := 0.0
+var _movement_disruption_seconds := 0.0
 
 
 func _ready() -> void:
@@ -25,6 +26,11 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if _movement_disruption_seconds > 0.0:
+		_movement_disruption_seconds = maxf(0.0, _movement_disruption_seconds - maxf(0.0, delta))
+		move_and_slide()
+		_update_swim_animation(velocity.normalized(), delta)
+		return
 	swim_in_direction(_input_direction(), delta)
 
 
@@ -58,7 +64,20 @@ func set_camera_limits(world_rect: Rect2) -> void:
 
 func reset_motion() -> void:
 	velocity = Vector2.ZERO
+	_movement_disruption_seconds = 0.0
 	_update_swim_animation(Vector2.ZERO, 0.0)
+
+
+func apply_knockback(direction: Vector2, force: float, disruption_seconds: float) -> void:
+	var away_direction := direction.normalized()
+	if away_direction == Vector2.ZERO:
+		away_direction = Vector2.UP
+	velocity = away_direction * maxf(0.0, force)
+	_movement_disruption_seconds = maxf(0.0, disruption_seconds)
+
+
+func movement_disruption_seconds() -> float:
+	return _movement_disruption_seconds
 
 
 func snap_camera() -> void:
