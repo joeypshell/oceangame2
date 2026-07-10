@@ -30,7 +30,7 @@ func _run() -> void:
 	world.load_greybox()
 	var runtime := MaterialProjectRuntime.new(profile)
 	var source_report: Dictionary = runtime.on_map_loaded(world)
-	_expect(source_report.get("project_count") == 2, "source catalog did not load two ordered projects")
+	_expect(source_report.get("project_ids") == [ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID, ExpansionProfileState.SHOCK_PROD_PROJECT_ID], "source catalog did not load three ordered projects")
 	_expect(source_report.get("project_id") == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID, "catalog did not select stabilizer after cutter")
 	_expect(runtime.status() == "ready", "migrated cutter profile and exact recipe did not ready stabilizer")
 	_expect(runtime.debrief_lines() == ["P: Build current stabilizer"], "stabilizer ready text drifted")
@@ -68,8 +68,9 @@ func _run() -> void:
 	_expect(reloaded.has_completed_project(ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID), "reload lost stabilizer project")
 	_expect(reloaded.has_capability(ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID), "reload lost stabilizer capability")
 	var next_runtime := MaterialProjectRuntime.new(reloaded)
-	next_runtime.on_map_loaded(world)
-	_expect(next_runtime.status() == "completed", "next-day catalog did not retain completed stabilizer")
+	var next_report: Dictionary = next_runtime.on_map_loaded(world)
+	_expect(next_runtime.status_for(ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID) == "completed", "next-day catalog did not retain completed stabilizer")
+	_expect(next_report.get("project_id") == ExpansionProfileState.SHOCK_PROD_PROJECT_ID and next_runtime.status() == "incomplete", "next-day catalog did not advance to the unbuilt shock prod")
 
 	world.queue_free()
 	_cleanup_profile()
@@ -78,7 +79,7 @@ func _run() -> void:
 			push_error("Current stabilizer project smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Current stabilizer project state smoke passed: schema=v2_to_v3 projects=cutter>stabilizer prerequisite=true recipe=2_titanium+1_coil night_only=true exact_once=true rollback_path=preserved profile_reload=true.")
+	print("Current stabilizer project state smoke passed: schema=v2_to_v3 projects=cutter>stabilizer>shock_prod prerequisite=true recipe=2_titanium+1_coil night_only=true exact_once=true rollback_path=preserved profile_reload=true.")
 	quit(0)
 
 
