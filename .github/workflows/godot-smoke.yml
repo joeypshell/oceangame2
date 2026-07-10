@@ -107,6 +107,22 @@ jobs:
             exit 1
           fi
 
+      - name: Run mobile test controls smoke check
+        run: |
+          set +e
+          godot --headless --path . --script res://scripts/main/smoke/smoke_mobile_test_controls.gd 2>&1 | tee godot-mobile-test-controls.log
+          godot_status=${PIPESTATUS[0]}
+          set -e
+
+          if [ "${godot_status}" -ne 0 ]; then
+            exit "${godot_status}"
+          fi
+
+          if grep -E "SCRIPT ERROR|ERROR:" godot-mobile-test-controls.log; then
+            echo "Godot reported errors during mobile test controls smoke check."
+            exit 1
+          fi
+
       - name: Run salvage loop smoke check
         run: |
           set +e
