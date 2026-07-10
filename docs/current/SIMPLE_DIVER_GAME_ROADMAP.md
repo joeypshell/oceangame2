@@ -173,14 +173,14 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 ## Current Next Direction
 
-Simple Diver Game 08 is a GO release candidate, and Simple Diver Game 09 expansion planning is complete.
+Simple Diver Game 08 is a GO release candidate, Simple Diver Game 09 planning is complete, and OceanGame Expansion 01 closed with a GO.
 
-Issues #643-#652 selected one bounded post-RC outcome: OceanGame Expansion 01 `Anomaly Survey Foundation`. Issues #662-#671 implement two no-behavior owner extractions, one scanner/profile discovery path, source-authored slice-04/slice-02 travel, one slice-02 survey target, deterministic smoke, focused visual review, public Web verification, and closeout.
+Expansion 01 proved one scanner/profile discovery path, source-authored `production_slice_01 <-> production_slice_04 <-> production_slice_02` travel, one timed anomaly survey, failure cleanup, exact-once boat commit, deterministic smoke, focused visual review, and public Web deployment.
 
-Do not add territorial fauna until that foundation closes. Do not jump to procedural generation, full inventory/loadout systems, broad save/economy work, combat AI, broad audio/art replacement, more destinations, or full-map productionization.
+The recommended next step is a bounded territorial-eel Phase B milestone. Start with a plan and contract for one source-authored `idle -> warning -> fixed lunge -> return -> cooldown` encounter on the anomaly approach. Preserve the completed anomaly journey as the regression floor and do not add combat, health, loot, spawning, pursuit/pathfinding, ecosystem simulation, more destinations, or broad systems.
 
 ## Deferred Work
 
 - #52 and #53 remain optional slice-03 polish unless slice-03 becomes part of Milestone 05.
-- The territorial eel is the accepted Phase B fauna candidate, deferred until Expansion 01 closeout.
+- The territorial eel is the accepted Phase B fauna candidate and is eligible for the next scoped milestone after Expansion 01 GO.
 - Full-map productionization, broad economy, inventory/crafting, combat/ecosystem AI, procedural generation, and save-heavy sandbox systems remain deferred.

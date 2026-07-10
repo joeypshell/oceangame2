@@ -27,19 +27,21 @@ The project has already proven:
 
 ## Current GitHub Milestones
 
-Simple Diver Game 01 through 09 are complete. The active implementation milestone is:
+Simple Diver Game 01 through 09 are complete. OceanGame Expansion 01 issues #662-#671 completed the anomaly-survey foundation and close with a documented GO.
 
-1. OceanGame Expansion 01: Anomaly Survey Foundation
-
-Milestone 09 issues #643-#652 selected the bounded anomaly-survey foundation. Expansion 01 issues #662-#671 implement it in dependency order.
+No later implementation milestone is selected yet. The recommended next milestone shape is `OceanGame Expansion 02: Territorial Eel Encounter`, scoped to one source-authored warning/lunge/return/cooldown encounter on the proven anomaly route.
 
 ## Current Next Direction
 
 Simple Diver Game 08 release-candidate hardening is complete. Issues #622-#631 completed the release-candidate plan, validation matrix, one-command validation runner, release journey smoke, capture review index, local run verification, public Web export handoff, baseline/capture audit, documentation refresh, and go/no-go closeout.
 
-Milestone 09 closed with a GO for OceanGame Expansion 01. The active outcome is one scanner-backed anomaly survey across `production_slice_01 <-> production_slice_04 <-> production_slice_02`, with one returned discovery and no territorial fauna until Phase B. Keep #52/#53 deferred and do not expand into procedural generation, full inventory/loadouts, save-heavy progression, broad economy, combat/AI, broad art/audio replacement, or full-map productionization.
+OceanGame Expansion 01 closed with a GO after proving one scanner-backed anomaly survey across `production_slice_01 <-> production_slice_04 <-> production_slice_02`, one returned durable discovery, deterministic failure cleanup, focused visual review, and public Web deployment.
+
+The next recommended direction is the previously accepted Phase B territorial eel contract. Keep it to one authored encounter and preserve the anomaly journey as the regression floor. Keep #52/#53 deferred and do not expand into procedural generation, full inventory/loadouts, save-heavy progression, broad economy, combat/ecosystem AI, broad art/audio replacement, or full-map productionization.
 
 ## Recently Completed Prototype Passes
+
+- #662-#671 completed OceanGame Expansion 01 anomaly-survey planning, owner extractions, schema/state/source/runtime, deterministic journey smoke, focused visual review, public Web verification, and closeout.
 
 - #129-#148 completed Controlled Gameplay Pass 04.
 - #150-#159 completed Controlled Gameplay Pass 05 and main-file guard work.
