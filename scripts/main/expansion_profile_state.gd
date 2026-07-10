@@ -1,12 +1,16 @@
 extends RefCounted
 
-const SCHEMA_VERSION := 2
+const SCHEMA_VERSION := 3
+const MATERIAL_SCHEMA_VERSION := 2
 const LEGACY_SCHEMA_VERSION := 1
 const SURVEY_SCANNER_CAPABILITY_ID := "survey_scanner_1"
 const SALVAGE_CUTTER_CAPABILITY_ID := "salvage_cutter"
 const ANOMALY_DISCOVERY_ID := "lower_right_anomaly_discovery"
 const SALVAGE_CUTTER_PROJECT_ID := "salvage_cutter_project"
 const SALVAGE_CUTTER_TARGET_ID := "salvage_sealed_wreck_cache"
+const CURRENT_STABILIZER_CAPABILITY_ID := "current_stabilizer"
+const CURRENT_STABILIZER_PROJECT_ID := "current_stabilizer_project"
+const CURRENT_STABILIZER_GATE_ID := "upper_right_current_pocket_gate"
 const TITANIUM_MATERIAL_ID := "titanium_scrap"
 const COIL_MATERIAL_ID := "conductive_coil"
 const DEFAULT_STORAGE_PATH := "user://oceangame2_profile.json"
@@ -19,10 +23,30 @@ const PROFILE_KEYS := {
 	"completed_projects": true,
 }
 const LEGACY_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true}
-const SUPPORTED_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true}
+const MATERIAL_SCHEMA_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true}
+const SUPPORTED_CAPABILITY_IDS := {
+    SURVEY_SCANNER_CAPABILITY_ID: true,
+    SALVAGE_CUTTER_CAPABILITY_ID: true,
+    CURRENT_STABILIZER_CAPABILITY_ID: true,
+}
 const SUPPORTED_DISCOVERY_IDS := {ANOMALY_DISCOVERY_ID: true}
 const SUPPORTED_MATERIAL_IDS := {TITANIUM_MATERIAL_ID: true, COIL_MATERIAL_ID: true}
-const SUPPORTED_PROJECT_IDS := {SALVAGE_CUTTER_PROJECT_ID: true}
+const MATERIAL_SCHEMA_PROJECT_IDS := {SALVAGE_CUTTER_PROJECT_ID: true}
+const SUPPORTED_PROJECT_IDS := {SALVAGE_CUTTER_PROJECT_ID: true, CURRENT_STABILIZER_PROJECT_ID: true}
+const PROJECT_RULES := {
+    SALVAGE_CUTTER_PROJECT_ID: {
+        "capability_id": SALVAGE_CUTTER_CAPABILITY_ID,
+        "required_project_id": "",
+        "target_field": "target_id",
+        "target_id": SALVAGE_CUTTER_TARGET_ID,
+    },
+    CURRENT_STABILIZER_PROJECT_ID: {
+        "capability_id": CURRENT_STABILIZER_CAPABILITY_ID,
+        "required_project_id": SALVAGE_CUTTER_PROJECT_ID,
+        "target_field": "target_gate_id",
+        "target_id": CURRENT_STABILIZER_GATE_ID,
+    },
+}
 
 var _storage_path: String
 var _persistence_enabled: bool
@@ -64,12 +88,17 @@ func load_profile() -> Dictionary:
 		return _last_storage_report.duplicate(true)
 	_load_ids(payload["completed_discoveries"], _completed_discoveries)
 	_load_ids(payload["unlocked_capabilities"], _unlocked_capabilities)
-	var migrated: bool = int(payload.get("schema_version", 0)) == LEGACY_SCHEMA_VERSION
-	if not migrated:
+	var loaded_version := int(payload.get("schema_version", 0))
+	if loaded_version >= MATERIAL_SCHEMA_VERSION:
 		for material_id in payload["material_inventory"]:
 			_material_inventory[str(material_id)] = int(payload["material_inventory"][material_id])
 		_load_ids(payload["completed_projects"], _completed_projects)
-	_last_storage_report = _report("migrated_v1" if migrated else "loaded")
+	var status := "loaded"
+	if loaded_version == LEGACY_SCHEMA_VERSION:
+		status = "migrated_v1"
+	elif loaded_version == MATERIAL_SCHEMA_VERSION:
+		status = "migrated_v2"
+	_last_storage_report = _report(status)
 	return _last_storage_report.duplicate(true)
 
 
@@ -87,7 +116,7 @@ func unlock_capability(capability_id: String, persist := true) -> Dictionary:
 		return {"changed": false, "reason": "unsupported_capability", "capability_id": capability_id}
 	if has_capability(capability_id):
 		return {"changed": false, "reason": "already_unlocked", "capability_id": capability_id}
-	if capability_id == SALVAGE_CUTTER_CAPABILITY_ID:
+	if capability_id in [SALVAGE_CUTTER_CAPABILITY_ID, CURRENT_STABILIZER_CAPABILITY_ID]:
 		return {"changed": false, "reason": "project_transaction_required", "capability_id": capability_id}
 	_unlocked_capabilities[capability_id] = true
 	if persist and not save_profile():
@@ -135,6 +164,14 @@ func complete_material_project(project_definition: Dictionary, persist := true) 
 		return {"changed": false, "reason": "inconsistent_profile", "project_id": project_id, "capability_id": capability_id}
 	if not has_completed_discovery(str(project_definition["required_discovery_id"])):
 		return {"changed": false, "reason": "missing_discovery", "project_id": project_id}
+	var required_project_id := str(project_definition.get("required_project_id", ""))
+	if not required_project_id.is_empty() and not has_completed_project(required_project_id):
+		return {
+			"changed": false,
+			"reason": "missing_project",
+			"project_id": project_id,
+			"required_project_id": required_project_id,
+		}
 
 	var required: Dictionary = project_definition["required_materials"]
 	var missing := {}
@@ -239,13 +276,27 @@ func _sorted_materials() -> Dictionary:
 func _validate_payload(payload: Dictionary) -> Array[String]:
 	var schema = payload.get("schema_version")
 	if schema == LEGACY_SCHEMA_VERSION:
-		return _validate_version(payload, LEGACY_PROFILE_KEYS, LEGACY_CAPABILITY_IDS, false)
+		return _validate_version(payload, LEGACY_PROFILE_KEYS, LEGACY_CAPABILITY_IDS, {}, false)
+	if schema == MATERIAL_SCHEMA_VERSION:
+		return _validate_version(
+			payload,
+			PROFILE_KEYS,
+			MATERIAL_SCHEMA_CAPABILITY_IDS,
+			MATERIAL_SCHEMA_PROJECT_IDS,
+			true
+		)
 	if schema == SCHEMA_VERSION:
-		return _validate_version(payload, PROFILE_KEYS, SUPPORTED_CAPABILITY_IDS, true)
+		return _validate_version(payload, PROFILE_KEYS, SUPPORTED_CAPABILITY_IDS, SUPPORTED_PROJECT_IDS, true)
 	return ["unsupported schema_version"]
 
 
-func _validate_version(payload: Dictionary, allowed_keys: Dictionary, capabilities: Dictionary, include_materials: bool) -> Array[String]:
+func _validate_version(
+	payload: Dictionary,
+	allowed_keys: Dictionary,
+	capabilities: Dictionary,
+	projects: Dictionary,
+	include_materials: bool
+) -> Array[String]:
 	var failures: Array[String] = []
 	for required_key in allowed_keys:
 		if not payload.has(required_key):
@@ -257,7 +308,7 @@ func _validate_version(payload: Dictionary, allowed_keys: Dictionary, capabiliti
 	failures.append_array(_validate_id_array(payload.get("unlocked_capabilities"), capabilities, "unlocked_capabilities"))
 	if include_materials:
 		failures.append_array(_validate_material_inventory(payload.get("material_inventory")))
-		failures.append_array(_validate_id_array(payload.get("completed_projects"), SUPPORTED_PROJECT_IDS, "completed_projects"))
+		failures.append_array(_validate_id_array(payload.get("completed_projects"), projects, "completed_projects"))
 		failures.append_array(_validate_project_capability_pair(payload))
 	return failures
 
@@ -303,13 +354,18 @@ func _validate_material_delta(value: Dictionary) -> Array[String]:
 
 func _validate_material_project_definition(project_definition: Dictionary) -> Array[String]:
 	var failures: Array[String] = []
-	if str(project_definition.get("id", "")) != SALVAGE_CUTTER_PROJECT_ID:
+	var project_id := str(project_definition.get("id", ""))
+	var rules: Dictionary = PROJECT_RULES.get(project_id, {})
+	if rules.is_empty():
 		failures.append("unsupported project id")
+		return failures
 	if str(project_definition.get("required_discovery_id", "")) != ANOMALY_DISCOVERY_ID:
 		failures.append("unsupported project discovery")
-	if str(project_definition.get("unlocks_capability_id", "")) != SALVAGE_CUTTER_CAPABILITY_ID:
+	if str(project_definition.get("unlocks_capability_id", "")) != str(rules["capability_id"]):
 		failures.append("unsupported project capability")
-	if str(project_definition.get("target_id", "")) != SALVAGE_CUTTER_TARGET_ID:
+	if str(project_definition.get("required_project_id", "")) != str(rules["required_project_id"]):
+		failures.append("unsupported project prerequisite")
+	if str(project_definition.get(str(rules["target_field"]), "")) != str(rules["target_id"]):
 		failures.append("unsupported project target")
 	if str(project_definition.get("build_phase", "")) != "night_debrief":
 		failures.append("unsupported project build phase")
@@ -332,11 +388,15 @@ func _validate_project_capability_pair(payload: Dictionary) -> Array[String]:
 	var projects = payload.get("completed_projects")
 	if typeof(capabilities) != TYPE_ARRAY or typeof(projects) != TYPE_ARRAY:
 		return []
-	var has_cutter: bool = capabilities.has(SALVAGE_CUTTER_CAPABILITY_ID)
-	var has_project: bool = projects.has(SALVAGE_CUTTER_PROJECT_ID)
-	if has_cutter != has_project:
-		return ["salvage cutter capability and project must be completed together"]
-	return []
+	var failures: Array[String] = []
+	for project_id in PROJECT_RULES:
+		var capability_id := str(PROJECT_RULES[project_id]["capability_id"])
+		if capabilities.has(capability_id) != projects.has(project_id):
+			failures.append("%s capability and project must be completed together" % capability_id)
+	var has_stabilizer: bool = projects.has(CURRENT_STABILIZER_PROJECT_ID)
+	if has_stabilizer and not projects.has(SALVAGE_CUTTER_PROJECT_ID):
+		failures.append("current stabilizer project requires completed salvage cutter project")
+	return failures
 
 
 func _load_ids(values: Array, destination: Dictionary) -> void:
