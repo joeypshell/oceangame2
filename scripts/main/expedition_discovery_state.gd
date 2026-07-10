@@ -1,6 +1,9 @@
 extends RefCounted
 
 const ANOMALY_DISCOVERY_ID := "lower_right_anomaly_discovery"
+const MINERAL_TRACE_RESEARCH_ID := "upper_right_mineral_trace_research"
+const SUPPORTED_DISCOVERY_IDS := {ANOMALY_DISCOVERY_ID: true, MINERAL_TRACE_RESEARCH_ID: true}
+const METADATA_FIELDS := ["target_type", "finding_label"]
 
 var _pending := {}
 var _last_event := "idle"
@@ -11,9 +14,10 @@ func create_pending(
 	source_map_id: String,
 	target_id: String,
 	commit_map_id: String,
-	commit_entry_id: String
+	commit_entry_id: String,
+	metadata := {}
 ) -> Dictionary:
-	if discovery_id != ANOMALY_DISCOVERY_ID:
+	if not SUPPORTED_DISCOVERY_IDS.has(discovery_id):
 		return _result("unsupported_discovery")
 	if source_map_id.is_empty() or target_id.is_empty() or commit_map_id.is_empty() or commit_entry_id.is_empty():
 		return _result("invalid_source")
@@ -27,6 +31,7 @@ func create_pending(
 		"target_id": target_id,
 		"commit_map_id": commit_map_id,
 		"commit_entry_id": commit_entry_id,
+		"metadata": _sanitize_metadata(metadata),
 	}
 	_last_event = "pending_created"
 	return _result("pending_created")
@@ -53,13 +58,14 @@ func commit_at(map_id: String, entry_id: String, profile_state) -> Dictionary:
 		return _result("profile_unavailable")
 
 	var discovery_id := str(_pending["discovery_id"])
+	var metadata: Dictionary = _pending.get("metadata", {}).duplicate(true)
 	var completion: Dictionary = profile_state.complete_discovery(discovery_id, true)
 	var reason := str(completion.get("reason", "storage_error"))
 	if reason == "storage_error" or reason == "unsupported_discovery":
 		return _result(reason)
 	_pending = {}
 	_last_event = "committed" if bool(completion.get("changed", false)) else "already_committed"
-	return _result(_last_event, {"committed_discovery_id": discovery_id})
+	return _result(_last_event, {"committed_discovery_id": discovery_id, "metadata": metadata})
 
 
 func has_pending() -> bool:
@@ -68,6 +74,10 @@ func has_pending() -> bool:
 
 func pending_discovery_id() -> String:
 	return str(_pending.get("discovery_id", ""))
+
+
+func pending_metadata() -> Dictionary:
+	return _pending.get("metadata", {}).duplicate(true)
 
 
 func report() -> Dictionary:
@@ -83,3 +93,14 @@ func _result(status: String, extra := {}) -> Dictionary:
 	for key in extra:
 		value[key] = extra[key]
 	return value
+
+
+func _sanitize_metadata(value) -> Dictionary:
+	var result := {}
+	if typeof(value) != TYPE_DICTIONARY:
+		return result
+	for field in METADATA_FIELDS:
+		var text := str(value.get(field, "")).strip_edges()
+		if not text.is_empty():
+			result[field] = text
+	return result
