@@ -185,6 +185,14 @@ Capture the Expansion 04 current-pocket review states:
 
 This writes locked-current, stabilizer-ready debrief, unlocked-crossing, payoff-held, and payoff-banked states at 1280x720 and 1920x1080 under `visual_captures/expansion_04_current_pocket/`. The command verifies output dimensions and does not accept or replace production-slice baselines.
 
+Capture the Expansion 05 practical-research review states:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 30 --capture-expansion-05-practical-research
+```
+
+This writes the incomplete mineral clue, 50% survey progress, boat-committed finding, and following-day deep-cache habitat lead at 1280x720 and 1920x1080 under `visual_captures/expansion_05_practical_research/`. The command verifies output dimensions and does not accept or replace production-slice baselines.
+
 Capture the focused Pass 18 progression upgrade view:
 
 ```powershell
