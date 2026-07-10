@@ -114,7 +114,7 @@ Additional current map sources:
   - Uses `scripts/main/world_connector_controller.gd` for source-authored prompted world-slice connectors.
   - Uses `scripts/main/final_dive_objective_seed.gd` for the compact source-authored final-dive/capstone cue.
   - Uses `scripts/main/audio_cue_player.gd` for cue lookup/playback, cooldown/dedupe, graceful missing-asset handling, and future smoke event logs.
-  - Remains temporary file-length debt at 2,175 lines in the current audit; expansion work must use or extract focused owners instead of growing this orchestration shell.
+  - Remains temporary file-length debt at 2,040 lines in the current audit; expansion work must use or extract focused owners instead of growing this orchestration shell.
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.
@@ -122,7 +122,7 @@ Additional current map sources:
   - Keeps visuals, runtime queries, and collision tied to source topology.
   - Exposes `camera_tests` from the source map for repeatable visual captures.
   - Exposes runtime terrain/collision parity data and authored salvage/extraction positions.
-  - Remains temporary file-length debt at 1,088 lines in the current audit. Focused renderer helpers remain under the 500-line target, but further world growth needs another bounded ownership split.
+  - Is a documented cohesive-owner exception at 984 lines in the current audit. It already delegates focused renderer, query, and survey domains; retain its single map/node-state ownership unless a stable extraction reduces coupling without obscuring Godot lifecycle ordering.
 
 - `scripts/world/greybox_asset_lookup.gd`
   - Provides texture path, loading, and fallback helpers for world renderers.
