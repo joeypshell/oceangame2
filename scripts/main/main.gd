@@ -1688,11 +1688,6 @@ func _update_status_label() -> void:
 	elif _is_combat_status_note(_last_status_note):
 		prompt = _last_status_note
 		objective_step_cue_blocked = true
-	elif _hostiles != null and not _hostiles.prompt().is_empty():
-		prompt = _hostiles.prompt()
-		if _is_collection_status_note(_last_status_note):
-			prompt += "\n%s" % _last_status_note
-		objective_step_cue_blocked = true
 	elif _held_cargo_count() >= _held_salvage_capacity():
 		prompt = _cargo_full_prompt()
 		objective_step_cue_blocked = true
@@ -1725,6 +1720,13 @@ func _update_status_label() -> void:
 		objective_step_cue_blocked = _is_collection_status_note(_last_status_note)
 	elif _held_cargo_count() > 0:
 		prompt = "Return to extraction"
+	var hostile_prompt: String = str(_hostiles.prompt()) if _hostiles != null else ""
+	if not hostile_prompt.is_empty() and not _run_complete and not _sortie_state.failed and not _last_status_note.begins_with("Eel hit"):
+		if prompt.is_empty():
+			prompt = hostile_prompt
+		elif prompt.find(hostile_prompt) == -1:
+			prompt = "%s\n%s" % [hostile_prompt, prompt]
+		objective_step_cue_blocked = true
 	if not oxygen_feedback.is_empty():
 		objective_step_cue_blocked = true
 	var objective_text := _route_commitment_overlay_text(not objective_step_cue_blocked)
