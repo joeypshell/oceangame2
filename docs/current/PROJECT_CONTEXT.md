@@ -22,7 +22,7 @@ Expansion 03 added deterministic authored material candidates, typed cargo and c
 
 Expansion 04 added one visible source-authored current pocket, an exact durable stabilizer project/capability, unchanged remembered geography, and a valuable cargo-and-boat payoff. The pass closed with GO.
 
-Expansion 05 added one stabilizer-gated mineral survey, an exact boat-committed finding, and a source-derived next-day deep-cache coil habitat lead without increasing yield or adding exact-route handholding. The pass closed with GO. Expansion 06 Combat Foundation is selected for the next planning cycle; biological resources, daily conditions, and authored regions remain later milestones.
+Expansion 05 added one stabilizer-gated mineral survey, an exact boat-committed finding, and a source-derived next-day deep-cache coil habitat lead without increasing yield or adding exact-route handholding. The pass closed with GO. Expansion 06 Combat Foundation is active through issues #768-#777; biological resources, daily conditions, and authored regions remain later milestones.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -178,7 +178,7 @@ Current issue state as of 2026-07-10:
 - Closed: #706-#715 completed Expansion 03 with a GO.
 - Closed: #726-#735 completed Expansion 04 with a GO; #739 resolved a narrow validator blocker found during authoring.
 - Closed: #748-#757 completed Expansion 05 with a GO.
-- Next batch: none active; the next drift cycle owns a scoped Expansion 06 Combat Foundation batch.
+- Active: #768-#777 are the scoped Expansion 06 Combat Foundation batch.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
@@ -315,7 +315,7 @@ Current issue state as of 2026-07-10:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_05_CLOSEOUT.md` as the latest completed decision. Expansions 01-05 are complete with GO decisions. No non-deferred implementation batch is active until the next drift cycle plans Expansion 06.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star, `docs/current/OCEANGAME_EXPANSION_05_CLOSEOUT.md` as the latest completed decision, and `docs/current/OCEANGAME_EXPANSION_06_PLAN.md` as the active bounded contract. Expansions 01-05 are complete with GO decisions; #768-#777 are the only active expansion batch.
 
 Accepted constraints for next work:
 
