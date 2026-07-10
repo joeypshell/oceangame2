@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation beginning a controlled OceanGame Phase 2 expansion.
 
-The compact diver, anomaly-survey, and expedition-day foundations are complete. The selected next target is one seeded material-to-tool project that gives another day a concrete capability payoff; capability-gated remembered places, practical research, enemies, weapons, and biological resources follow in named milestones. The controlled source/validation/visual workflow remains authoritative while that game grows.
+The compact diver, anomaly-survey, expedition-day, and first material-to-tool foundations are complete. The selected next direction is one capability-gated remembered place; practical research, enemies, weapons, and biological resources follow in named milestones. The controlled source/validation/visual workflow remains authoritative while that game grows.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 02 GO closeout and the active Expansion 03 plan/issues #706-#715. Later Phase 2 milestones remain directional until the preceding closeout selects them.
+Current handoff starts with the Expansion 03 GO closeout. Expansion 04 is selected directionally, but its issue batch belongs to the next drift cycle; later Phase 2 milestones remain directional until the preceding closeout selects them.
 
 Core sources and operating docs:
 
@@ -57,6 +57,9 @@ Current release and expansion handoff:
 - [OceanGame Expansion 03 Plan](docs/current/OCEANGAME_EXPANSION_03_PLAN.md)
 - [Expansion 03 State Contract](docs/current/OCEANGAME_EXPANSION_03_STATE_CONTRACT.md)
 - [Expansion 03 Source Contract](docs/current/OCEANGAME_EXPANSION_03_SOURCE_CONTRACT.md)
+- [Expansion 03 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_03_VISUAL_BASELINE_DECISION.md)
+- [Expansion 03 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_03_WEB_PREVIEW_VERIFICATION.md)
+- [Expansion 03 Closeout](docs/current/OCEANGAME_EXPANSION_03_CLOSEOUT.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -190,4 +193,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can cross connected slices, use a profile-backed scanner, make multiple oxygen sorties under daylight, distinguish open surface from boat return, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01 and 02 meet that condition. Expansion 03 now asks whether seeded materials and one tool project create a specific reason to begin another day.
+The current foundation succeeds when one authored expedition can cross connected slices, use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials into a durable tool, revisit a remembered target, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-03 meet that condition. Expansion 04 now asks whether one diver capability meaningfully changes access to a place the player remembers.
