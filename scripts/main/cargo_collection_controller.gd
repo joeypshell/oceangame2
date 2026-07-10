@@ -10,6 +10,34 @@ func _init(main) -> void:
 
 
 func update(delta: float) -> void:
+	var biological_result: Dictionary = _main._biological_resources.update(
+		_main._world,
+		_main._hostiles,
+		_main._material_runtime,
+		_main._player.global_position,
+		_main.SALVAGE_COLLECTION_RADIUS,
+		delta,
+		_main._sortie_state.held_salvage,
+		_main._held_salvage_capacity()
+	)
+	if biological_result.has("note") and not str(biological_result.get("note", "")).is_empty():
+		_main._last_status_note = str(biological_result["note"])
+	if bool(biological_result.get("handled", false)):
+		_main._cutter_salvage.reset()
+		_main._timed_salvage.reset()
+		_main._pry_salvage.reset()
+	else:
+		_update_non_biological_collection(delta)
+	OffloadController.try_offload(_main)
+	var material_commit: Dictionary = _main._material_runtime.try_commit_at_boat(
+		_main._world,
+		_main._player.global_position
+	)
+	if material_commit.has("note"):
+		_main._last_status_note = str(material_commit["note"])
+
+
+func _update_non_biological_collection(delta: float) -> void:
 	var material_result: Dictionary = _main._material_runtime.update_collection(
 		_main._world,
 		_main._player.global_position,
@@ -22,16 +50,8 @@ func update(delta: float) -> void:
 		_main._last_status_note = str(material_result["note"])
 	if bool(material_result.get("changed", false)) or bool(material_result.get("blocked", false)):
 		_main._cutter_salvage.reset()
-	else:
-		if not _update_tool_target(delta):
-			_update_salvage(delta)
-	OffloadController.try_offload(_main)
-	var material_commit: Dictionary = _main._material_runtime.try_commit_at_boat(
-		_main._world,
-		_main._player.global_position
-	)
-	if material_commit.has("note"):
-		_main._last_status_note = str(material_commit["note"])
+	elif not _update_tool_target(delta):
+		_update_salvage(delta)
 
 
 func _update_tool_target(delta: float) -> bool:
