@@ -81,7 +81,7 @@ func _smoke_release_journey_and_quit() -> void:
 	var destination_oxygen := _oxygen_seconds
 
 	_main._run_complete = true
-	_main._run_failed = false
+	_main._sortie_state.failed = false
 	_main._update_result_panel()
 	var final_result := _result_text()
 	if final_result.find(FINAL_RESULT_LABEL) == -1 or final_result.find(FINAL_CUE_LABEL) == -1:

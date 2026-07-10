@@ -1,7 +1,9 @@
 extends SceneTree
 
 const ExpeditionDiscoveryState := preload("res://scripts/main/expedition_discovery_state.gd")
+const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+const SortieState := preload("res://scripts/main/sortie_state.gd")
 const TEST_PATH := "user://oceangame2_expansion_state_test.json"
 
 var _failures: Array[String] = []
@@ -85,6 +87,33 @@ func _run() -> void:
 	expedition.clear_pending("reset")
 	_expect(not expedition.has_pending(), "reset retained pending discovery")
 
+	var sortie := SortieState.new(90.0)
+	sortie.begin_map_leg("production_slice_01", "surface_boat_entry", 90.0)
+	sortie.collect_salvage("salvage_safe_route", 100)
+	_expect(sortie.held_salvage == 1 and sortie.held_salvage_score == 100, "sortie did not own held cargo")
+	_expect(not sortie.apply_oxygen_penalty(12.0), "nonlethal oxygen penalty failed the sortie")
+	_expect(is_equal_approx(sortie.oxygen_seconds, 78.0), "sortie did not own current oxygen")
+	var dropped_ids := sortie.clear_held()
+	_expect(dropped_ids == ["salvage_safe_route"] and sortie.held_salvage == 0, "sortie cargo cleanup mismatch")
+	sortie.mark_failed("oxygen_failure")
+	_expect(sortie.failed and sortie.failure_reason == "oxygen_failure", "sortie did not own local failure")
+
+	var day := ExpeditionDayState.new(300.0)
+	day.on_map_loaded("production_slice_01")
+	day.record_sortie_started()
+	day.record_bank(2, 250)
+	day.record_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID)
+	day.daylight_remaining_seconds = 225.0
+	day.on_map_transition("production_slice_04")
+	var transition_report := day.report()
+	_expect(transition_report.get("daylight_remaining_seconds") == 225.0, "connector transition reset daylight")
+	_expect(transition_report.get("banked_score") == 250, "connector transition reset day bank totals")
+	_expect(transition_report.get("sortie_count") == 1, "connector transition reset sortie count")
+	day.end_day("voluntary")
+	_expect(day.phase == ExpeditionDayState.PHASE_DEBRIEF, "day owner did not retain end-day state")
+	day.begin_next_day()
+	_expect(day.day_number == 2 and day.banked_score == 0, "next-day reset retained day-local totals")
+
 	var final_report := final_reload.report()
 	_cleanup_files()
 	if not _failures.is_empty():
@@ -92,7 +121,7 @@ func _run() -> void:
 			push_error("Expansion state owner smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Expansion state owner smoke passed: schema=%d capability=%s discovery=%s pending_cleanup=hazard,oxygen_failure,reset cross_map=true exact_once=true report=%s." % [
+	print("Expansion state owner smoke passed: schema=%d capability=%s discovery=%s pending_cleanup=hazard,oxygen_failure,reset cross_map=true sortie_owner=true day_owner=true exact_once=true report=%s." % [
 		ExpansionProfileState.SCHEMA_VERSION,
 		ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID,
 		ExpansionProfileState.ANOMALY_DISCOVERY_ID,

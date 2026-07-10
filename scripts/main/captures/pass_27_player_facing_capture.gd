@@ -30,8 +30,8 @@ func capture_and_quit(capture_dir: String) -> void:
 
 	_main._hazard_interactions_enabled = false
 	_main._run_complete = false
-	_main._run_failed = false
-	_main._oxygen_seconds = _main._oxygen_capacity_seconds()
+	_main._sortie_state.failed = false
+	_main._sortie_state.oxygen_seconds = _main._oxygen_capacity_seconds()
 	_main._last_status_note = "Facing review"
 
 	var review_position: Vector2 = REVIEW_CENTER_TILES * float(_main._world.tile_size)

@@ -29,6 +29,8 @@ const ReturnPressureFeedback := preload("res://scripts/main/return_pressure_feed
 const ResultPresentationBuilder := preload("res://scripts/main/result_presentation_builder.gd")
 const RouteCommitmentFeedback := preload("res://scripts/main/route_commitment_feedback.gd")
 const SessionProgression := preload("res://scripts/main/session_progression.gd")
+const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
+const SortieState := preload("res://scripts/main/sortie_state.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
 const WorldConnectorController := preload("res://scripts/main/world_connector_controller.gd")
 const AudioCuePlayer := preload("res://scripts/main/audio_cue_player.gd")
@@ -159,6 +161,8 @@ var _relay_follow_through_feedback
 var _return_pressure_feedback
 var _route_commitment_feedback
 var _session_progression
+var _sortie_state
+var _expedition_day_state
 var _timed_salvage
 var _world_connector
 var _audio_cues
@@ -191,12 +195,9 @@ var _result_label: Label
 var _map_selector: OptionButton
 var _map_selector_enabled := false
 var _debug_overlay_enabled := false
-var _held_salvage := 0
 var _banked_salvage := 0
 var _total_salvage := 0
-var _held_salvage_ids: Array[String] = []
 var _banked_salvage_ids: Array[String] = []
-var _held_salvage_score := 0
 var _banked_score := 0
 var _completion_oxygen_bonus := 0
 var _session_best_scores_by_map := {}
@@ -208,11 +209,9 @@ var _hazard_interactions_enabled := true
 var _hazard_warning_id := ""
 var _hazard_warning_cue_id := ""
 var _hazard_warning_cue_cooldown_seconds := 0.0
-var _oxygen_seconds := OXYGEN_MAX_SECONDS
 var _oxygen_low_cue_emitted := false
 var _oxygen_critical_cue_emitted := false
 var _run_complete := false
-var _run_failed := false
 var _last_status_note := ""
 
 
@@ -232,6 +231,8 @@ func _ready() -> void:
 	_return_pressure_feedback = ReturnPressureFeedback.new()
 	_route_commitment_feedback = RouteCommitmentFeedback.new()
 	_session_progression = SessionProgression.new()
+	_sortie_state = SortieState.new(OXYGEN_MAX_SECONDS)
+	_expedition_day_state = ExpeditionDayState.new()
 	_progression_runtime = ProgressionRuntimeController.new(_session_progression)
 	_timed_salvage = TimedSalvageController.new()
 	_world_connector = WorldConnectorController.new()
@@ -910,6 +911,8 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	var player := PLAYER_SCENE.instantiate()
 	_player = player
 	_anomaly_survey.on_map_loaded(world)
+	_expedition_day_state.on_map_loaded(str(world.map_id))
+	_sortie_state.begin_map_leg(str(world.map_id), entry_id, _oxygen_capacity_seconds())
 	player.position = world.get_entry_position(entry_id) if not entry_id.is_empty() and world.has_method("get_entry_position") else world.spawn_position
 	add_child(player)
 	_apply_session_light_profile()
@@ -919,12 +922,9 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	if player.has_method("snap_camera"):
 		player.snap_camera()
 
-	_held_salvage = 0
 	_banked_salvage = 0
 	_total_salvage = world.get_total_salvage_count()
-	_held_salvage_ids = []
 	_banked_salvage_ids = []
-	_held_salvage_score = 0
 	_banked_score = 0
 	_completion_oxygen_bonus = 0
 	_current_gate.reset()
@@ -945,10 +945,8 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_hazard_interactions_enabled = true
 	_hazard_warning_id = ""
 	_reset_hazard_feedback_cues()
-	_oxygen_seconds = _oxygen_capacity_seconds()
 	_reset_oxygen_feedback_cues()
 	_run_complete = false
-	_run_failed = false
 	_last_status_note = status_note
 	_create_review_overlay(world)
 	_update_status_label()
@@ -992,7 +990,7 @@ func _process(delta: float) -> void:
 	if _world == null or _player == null:
 		return
 	_update_hazard_feedback(delta)
-	if _run_complete or _run_failed:
+	if _run_complete or _sortie_state.failed:
 		_update_status_label()
 		return
 
@@ -1016,7 +1014,7 @@ func _process(delta: float) -> void:
 		_last_status_note = str(survey_result["note"])
 	_update_hazard_warning(delta)
 
-	if _held_salvage < _held_salvage_capacity():
+	if _sortie_state.held_salvage < _held_salvage_capacity():
 		var nearby_salvage: Dictionary = _world.get_available_salvage_near(_player.global_position, SALVAGE_COLLECTION_RADIUS)
 		var nearby_interaction := str(nearby_salvage.get("interaction", "instant"))
 		if not nearby_salvage.is_empty() and nearby_interaction == "timed_salvage":
@@ -1056,20 +1054,19 @@ func _process(delta: float) -> void:
 		if not blocked_salvage.is_empty():
 			_last_status_note = _return_pressure_feedback.cargo_full_prompt(blocked_salvage)
 
-	if _held_salvage > 0 and _world.is_inside_extraction(_player.global_position):
-		var banked_cue_key := "%d:%s" % [_banked_salvage + _held_salvage, str(_held_salvage_ids)]
-		_banked_salvage += _held_salvage
-		_banked_score += _held_salvage_score
-		_record_session_payout(_held_salvage_score)
-		_record_banked_route_outcomes(_held_salvage_ids)
-		_banked_salvage_ids.append_array(_held_salvage_ids)
-		var relay_follow_through_note: String = _relay_follow_through_feedback.banked_feedback(_held_salvage_ids)
-		var final_dive_note: String = _final_dive_objective_seed.banked_feedback(_held_salvage_ids)
+	if _sortie_state.held_salvage > 0 and _world.is_inside_extraction(_player.global_position):
+		var banked_cue_key := "%d:%s" % [_banked_salvage + _sortie_state.held_salvage, str(_sortie_state.held_salvage_ids)]
+		_banked_salvage += _sortie_state.held_salvage
+		_banked_score += _sortie_state.held_salvage_score
+		_record_session_payout(_sortie_state.held_salvage_score)
+		_record_banked_route_outcomes(_sortie_state.held_salvage_ids)
+		_banked_salvage_ids.append_array(_sortie_state.held_salvage_ids)
+		var relay_follow_through_note: String = _relay_follow_through_feedback.banked_feedback(_sortie_state.held_salvage_ids)
+		var final_dive_note: String = _final_dive_objective_seed.banked_feedback(_sortie_state.held_salvage_ids)
 		if not final_dive_note.is_empty():
 			_anomaly_survey.activate_lead()
-		_held_salvage = 0
-		_held_salvage_ids = []
-		_held_salvage_score = 0
+		_expedition_day_state.record_bank(_sortie_state.held_salvage, _sortie_state.held_salvage_score)
+		_sortie_state.clear_held()
 		if _should_complete_run_after_banking():
 			_run_complete = true
 			_completion_oxygen_bonus = _calculate_oxygen_completion_bonus()
@@ -1091,11 +1088,11 @@ func _complete_route_outcome_review_state() -> bool:
 	for salvage in _salvage_centers_for_full_collection():
 		_player.global_position = salvage["center"]
 		_collect_salvage_for_review_state(salvage)
-		if _held_salvage >= _held_salvage_capacity():
+		if _sortie_state.held_salvage >= _held_salvage_capacity():
 			_player.global_position = _world.get_extraction_center()
 			_process(0.0)
 
-	if _held_salvage > 0:
+	if _sortie_state.held_salvage > 0:
 		_player.global_position = _world.get_extraction_center()
 		_process(0.0)
 
@@ -1135,9 +1132,7 @@ func _collect_salvage_for_review_state(salvage: Dictionary) -> void:
 func _collect_salvage_into_cargo(salvage_id: String, status_note := "") -> void:
 	var collected_score: int = _world.get_salvage_score(salvage_id)
 	var collected_tier: String = _world.get_salvage_tier(salvage_id)
-	_held_salvage += 1
-	_held_salvage_ids.append(salvage_id)
-	_held_salvage_score += collected_score
+	_sortie_state.collect_salvage(salvage_id, collected_score)
 	_last_status_note = status_note if not status_note.is_empty() else _salvage_collection_feedback_for_id(salvage_id, collected_tier, collected_score)
 	_play_feedback_cue("salvage_pickup", salvage_id)
 
@@ -1201,10 +1196,8 @@ func _reset_run() -> void:
 	_timed_salvage.reset()
 	_relay_follow_through_feedback.reset(_world)
 	_final_dive_objective_seed.reset(_world)
-	_held_salvage = 0
-	_held_salvage_ids = []
+	_sortie_state.begin_map_leg(str(_world.map_id), "", _oxygen_capacity_seconds())
 	_banked_salvage_ids = []
-	_held_salvage_score = 0
 	_banked_salvage = 0
 	_banked_score = 0
 	_completion_oxygen_bonus = 0
@@ -1214,10 +1207,8 @@ func _reset_run() -> void:
 	_hazard_interactions_enabled = true
 	_hazard_warning_id = ""
 	_reset_hazard_feedback_cues()
-	_oxygen_seconds = _oxygen_capacity_seconds()
 	_reset_oxygen_feedback_cues()
 	_run_complete = false
-	_run_failed = false
 	_last_status_note = "Reset"
 	_player.modulate = Color.WHITE
 	_player.position = _world.spawn_position
@@ -1229,7 +1220,7 @@ func _reset_run() -> void:
 
 
 func _try_world_connector_transition() -> bool:
-	if _world_connector == null or _world == null or _player == null or _run_complete or _run_failed:
+	if _world_connector == null or _world == null or _player == null or _run_complete or _sortie_state.failed:
 		return false
 
 	var connector: Dictionary = _world_connector.connector_at(_world, _player.global_position)
@@ -1247,32 +1238,34 @@ func _try_world_connector_transition() -> bool:
 		_update_status_label()
 		return false
 
+	var destination_map_id := str(connector.get("destination_map_id", "")).strip_edges()
 	var destination_entry_id := str(connector.get("destination_entry_id", "")).strip_edges()
 	var arrival_note: String = _world_connector.arrival_note(connector)
-	_anomaly_survey.on_map_transition(str(connector.get("destination_map_id", "")))
+	_anomaly_survey.on_map_transition(destination_map_id)
+	_expedition_day_state.on_map_transition(destination_map_id)
 	_load_playable_map(destination_map_path, _debug_overlay_enabled, destination_entry_id, arrival_note)
 	return true
 
 
 func _update_oxygen(delta: float) -> bool:
-	var previous_oxygen := _oxygen_seconds
+	var previous_oxygen: float = _sortie_state.oxygen_seconds
 	if _world.is_inside_extraction(_player.global_position):
 		_oxygen_rest_feedback.reset()
-		_oxygen_seconds = minf(_oxygen_capacity_seconds(), _oxygen_seconds + OXYGEN_REFILL_SECONDS_PER_SECOND * delta)
+		_sortie_state.oxygen_seconds = minf(_oxygen_capacity_seconds(), _sortie_state.oxygen_seconds + OXYGEN_REFILL_SECONDS_PER_SECOND * delta)
 		_update_oxygen_feedback_cues(previous_oxygen)
 		return false
 
-	var rest_result: Dictionary = _oxygen_rest_feedback.update(_world, _player.global_position, _oxygen_seconds, delta)
+	var rest_result: Dictionary = _oxygen_rest_feedback.update(_world, _player.global_position, _sortie_state.oxygen_seconds, delta)
 	if bool(rest_result.get("inside", false)):
-		_oxygen_seconds = float(rest_result.get("oxygen_seconds", _oxygen_seconds))
-		if _oxygen_seconds > 0.0:
+		_sortie_state.oxygen_seconds = float(rest_result.get("oxygen_seconds", _sortie_state.oxygen_seconds))
+		if _sortie_state.oxygen_seconds > 0.0:
 			_update_oxygen_feedback_cues(previous_oxygen)
 			return false
 		_handle_oxygen_depleted()
 		return true
 
-	_oxygen_seconds = maxf(0.0, _oxygen_seconds - delta)
-	if _oxygen_seconds > 0.0:
+	_sortie_state.oxygen_seconds = maxf(0.0, _sortie_state.oxygen_seconds - delta)
+	if _sortie_state.oxygen_seconds > 0.0:
 		_update_oxygen_feedback_cues(previous_oxygen)
 		return false
 
@@ -1281,17 +1274,17 @@ func _update_oxygen(delta: float) -> bool:
 
 
 func _update_oxygen_feedback_cues(previous_oxygen: float) -> void:
-	if _run_complete or _run_failed:
+	if _run_complete or _sortie_state.failed:
 		return
-	if _oxygen_seconds > OXYGEN_LOW_WARNING_SECONDS:
+	if _sortie_state.oxygen_seconds > OXYGEN_LOW_WARNING_SECONDS:
 		_reset_oxygen_feedback_cues()
 		return
-	if _oxygen_seconds > OXYGEN_CRITICAL_WARNING_SECONDS:
+	if _sortie_state.oxygen_seconds > OXYGEN_CRITICAL_WARNING_SECONDS:
 		_oxygen_critical_cue_emitted = false
-	if not _oxygen_low_cue_emitted and previous_oxygen > OXYGEN_LOW_WARNING_SECONDS and _oxygen_seconds <= OXYGEN_LOW_WARNING_SECONDS:
+	if not _oxygen_low_cue_emitted and previous_oxygen > OXYGEN_LOW_WARNING_SECONDS and _sortie_state.oxygen_seconds <= OXYGEN_LOW_WARNING_SECONDS:
 		_oxygen_low_cue_emitted = true
 		_play_feedback_cue("oxygen_low", "oxygen_low")
-	if not _oxygen_critical_cue_emitted and previous_oxygen > OXYGEN_CRITICAL_WARNING_SECONDS and _oxygen_seconds <= OXYGEN_CRITICAL_WARNING_SECONDS:
+	if not _oxygen_critical_cue_emitted and previous_oxygen > OXYGEN_CRITICAL_WARNING_SECONDS and _sortie_state.oxygen_seconds <= OXYGEN_CRITICAL_WARNING_SECONDS:
 		_oxygen_critical_cue_emitted = true
 		_play_feedback_cue("oxygen_critical", "oxygen_critical")
 
@@ -1322,7 +1315,7 @@ func _current_gate_block_prompt(gate: Dictionary) -> String:
 
 
 func _handle_oxygen_depleted() -> void:
-	if _run_failed:
+	if _sortie_state.failed:
 		return
 	_anomaly_survey.clear_unbanked("oxygen_failure", _world)
 	_play_feedback_cue("oxygen_failure", "oxygen_failure")
@@ -1331,18 +1324,15 @@ func _handle_oxygen_depleted() -> void:
 	_moving_hazards.reset(_world)
 	_pry_salvage.reset()
 	_timed_salvage.reset()
-	if not _held_salvage_ids.is_empty():
-		_world.restore_salvage(_held_salvage_ids)
-		_held_salvage_ids = []
-		_held_salvage = 0
-		_held_salvage_score = 0
+	if not _sortie_state.held_salvage_ids.is_empty():
+		_world.restore_salvage(_sortie_state.clear_held())
 		_last_status_note = "Oxygen depleted - press R"
 	else:
 		_last_status_note = "Oxygen depleted - press R"
 
-	_oxygen_seconds = _oxygen_capacity_seconds()
+	_sortie_state.oxygen_seconds = _oxygen_capacity_seconds()
 	_reset_oxygen_feedback_cues()
-	_run_failed = true
+	_sortie_state.mark_failed("oxygen_failure")
 	_hazard_cooldown_seconds = HAZARD_COOLDOWN_SECONDS
 	_player.global_position = _world.spawn_position
 	if _player.has_method("reset_motion"):
@@ -1366,11 +1356,8 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 		_handle_oxygen_depleted()
 		return
 
-	if not _held_salvage_ids.is_empty():
-		_world.restore_salvage(_held_salvage_ids)
-		_held_salvage_ids = []
-		_held_salvage = 0
-		_held_salvage_score = 0
+	if not _sortie_state.held_salvage_ids.is_empty():
+		_world.restore_salvage(_sortie_state.clear_held())
 		_last_status_note = "Hazard hit: dropped held, oxygen -%ds" % int(HAZARD_OXYGEN_PENALTY_SECONDS)
 	else:
 		_last_status_note = "Hazard hit: oxygen -%ds" % int(HAZARD_OXYGEN_PENALTY_SECONDS)
@@ -1385,8 +1372,7 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 
 
 func _apply_hazard_oxygen_penalty() -> bool:
-	_oxygen_seconds = maxf(0.0, _oxygen_seconds - HAZARD_OXYGEN_PENALTY_SECONDS)
-	return _oxygen_seconds <= 0.0
+	return _sortie_state.apply_oxygen_penalty(HAZARD_OXYGEN_PENALTY_SECONDS)
 
 
 func _update_hazard_warning(delta: float) -> void:
@@ -1546,10 +1532,10 @@ func _update_status_label() -> void:
 	if _run_complete:
 		prompt = "Run complete - press R"
 		objective_step_cue_blocked = true
-	elif _run_failed:
+	elif _sortie_state.failed:
 		prompt = "Oxygen depleted - press R"
 		objective_step_cue_blocked = true
-	elif _held_salvage >= _held_salvage_capacity():
+	elif _sortie_state.held_salvage >= _held_salvage_capacity():
 		prompt = _cargo_full_prompt()
 		objective_step_cue_blocked = true
 	elif not _hazard_warning_id.is_empty():
@@ -1579,13 +1565,13 @@ func _update_status_label() -> void:
 	elif not _last_status_note.is_empty():
 		prompt = _last_status_note
 		objective_step_cue_blocked = _is_collection_status_note(_last_status_note)
-	elif _held_salvage > 0:
+	elif _sortie_state.held_salvage > 0:
 		prompt = "Return to extraction"
 	if not oxygen_feedback.is_empty():
 		objective_step_cue_blocked = true
 	var objective_text := _route_commitment_overlay_text(not objective_step_cue_blocked)
 
-	var oxygen_seconds := int(ceil(_oxygen_seconds))
+	var oxygen_seconds := int(ceil(_sortie_state.oxygen_seconds))
 	var oxygen_text := "Oxygen %ds" % oxygen_seconds
 	if not oxygen_feedback.is_empty():
 		oxygen_text = "Oxygen %ds %s" % [oxygen_seconds, oxygen_feedback]
@@ -1596,9 +1582,9 @@ func _update_status_label() -> void:
 		_banked_score,
 		_banked_salvage,
 		_total_salvage,
-		_held_salvage,
+		_sortie_state.held_salvage,
 		_held_salvage_capacity(),
-		_held_salvage_score,
+		_sortie_state.held_salvage_score,
 		oxygen_text,
 		progression_text,
 	]
@@ -1637,7 +1623,7 @@ func _current_gate_prompt() -> String:
 
 
 func _world_connector_prompt() -> String:
-	if _world_connector == null or _world == null or _player == null or _run_complete or _run_failed:
+	if _world_connector == null or _world == null or _player == null or _run_complete or _sortie_state.failed:
 		return ""
 	return _world_connector.prompt_for(_world, _player.global_position)
 
@@ -1646,17 +1632,17 @@ func _route_commitment_overlay_text(show_step_cue := true) -> String:
 	if _route_commitment_feedback == null:
 		return ""
 	var show_start_cue := false
-	if _world != null and _player != null and not _run_complete and not _run_failed:
+	if _world != null and _player != null and not _run_complete and not _sortie_state.failed:
 		show_start_cue = _world.is_inside_extraction(_player.global_position)
-	var progress_text: String = _route_commitment_feedback.overlay_text(_held_salvage_ids, _banked_salvage_ids, show_start_cue)
+	var progress_text: String = _route_commitment_feedback.overlay_text(_sortie_state.held_salvage_ids, _banked_salvage_ids, show_start_cue)
 	if not progress_text.is_empty():
 		return progress_text
-	if _world == null or _player == null or _run_complete or _run_failed:
+	if _world == null or _player == null or _run_complete or _sortie_state.failed:
 		return ""
 	return _route_commitment_feedback.objective_step_cue_text(
 		_world,
 		_player.global_position,
-		_held_salvage_ids,
+		_sortie_state.held_salvage_ids,
 		_banked_salvage_ids,
 		show_step_cue
 	)
@@ -1673,20 +1659,20 @@ func _next_dive_objective_result_text() -> String:
 		return ""
 	return _next_dive_objective_prompt.result_text(
 		_run_complete,
-		_run_failed,
+		_sortie_state.failed,
 		_primary_dive_objective,
 		_banked_salvage_ids
 	)
 
 
 func _relay_follow_through_result_text() -> String:
-	if _relay_follow_through_feedback == null or not _run_complete or _run_failed:
+	if _relay_follow_through_feedback == null or not _run_complete or _sortie_state.failed:
 		return ""
 	return _relay_follow_through_feedback.result_text(_banked_salvage_ids)
 
 
 func _final_dive_objective_result_text() -> String:
-	if _final_dive_objective_seed == null or not _run_complete or _run_failed:
+	if _final_dive_objective_seed == null or not _run_complete or _sortie_state.failed:
 		return ""
 	return _final_dive_objective_seed.result_text(_banked_salvage_ids)
 
@@ -1700,11 +1686,11 @@ func _hazard_warning_prompt() -> String:
 
 
 func _oxygen_feedback_label() -> String:
-	if _run_complete or _run_failed:
+	if _run_complete or _sortie_state.failed:
 		return ""
-	if _oxygen_seconds <= OXYGEN_CRITICAL_WARNING_SECONDS:
+	if _sortie_state.oxygen_seconds <= OXYGEN_CRITICAL_WARNING_SECONDS:
 		return "CRITICAL"
-	if _oxygen_seconds <= OXYGEN_LOW_WARNING_SECONDS:
+	if _sortie_state.oxygen_seconds <= OXYGEN_LOW_WARNING_SECONDS:
 		return "LOW"
 	return ""
 
@@ -1763,7 +1749,7 @@ func _current_expedition_score() -> int:
 
 
 func _calculate_oxygen_completion_bonus() -> int:
-	return int(ceil(_oxygen_seconds)) * OXYGEN_BONUS_POINTS_PER_SECOND
+	return int(ceil(_sortie_state.oxygen_seconds)) * OXYGEN_BONUS_POINTS_PER_SECOND
 
 
 func _refresh_salvage_route_metadata(world) -> void:
@@ -1963,17 +1949,17 @@ func _progression_result_text() -> String:
 func _update_result_panel() -> void:
 	if _result_panel == null or _result_label == null:
 		return
-	_result_panel.visible = _run_complete or _run_failed
-	if not _run_complete and not _run_failed:
+	_result_panel.visible = _run_complete or _sortie_state.failed
+	if not _run_complete and not _sortie_state.failed:
 		_result_label.text = ""
 		return
 
-	var oxygen_text := "Oxygen %ds" % int(ceil(_oxygen_seconds))
-	if _run_failed:
+	var oxygen_text := "Oxygen %ds" % int(ceil(_sortie_state.oxygen_seconds))
+	if _sortie_state.failed:
 		oxygen_text = "Oxygen depleted"
 	_result_label.text = ResultPresentationBuilder.build_text({
 		"run_complete": _run_complete,
-		"run_failed": _run_failed,
+		"run_failed": _sortie_state.failed,
 		"score": _current_expedition_score(),
 		"salvage_score": _banked_score,
 		"oxygen_bonus": _completion_oxygen_bonus,

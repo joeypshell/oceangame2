@@ -34,9 +34,9 @@ var _total_salvage: int:
 
 var _held_salvage: int:
 	get:
-		return _main._held_salvage
+		return _main._sortie_state.held_salvage
 	set(value):
-		_main._held_salvage = value
+		_main._sortie_state.held_salvage = value
 
 var _banked_salvage: int:
 	get:
@@ -46,9 +46,9 @@ var _banked_salvage: int:
 
 var _held_salvage_ids: Array[String]:
 	get:
-		return _main._held_salvage_ids
+		return _main._sortie_state.held_salvage_ids
 	set(value):
-		_main._held_salvage_ids = value
+		_main._sortie_state.held_salvage_ids = value
 
 var _banked_salvage_ids: Array[String]:
 	get:
@@ -58,9 +58,9 @@ var _banked_salvage_ids: Array[String]:
 
 var _held_salvage_score: int:
 	get:
-		return _main._held_salvage_score
+		return _main._sortie_state.held_salvage_score
 	set(value):
-		_main._held_salvage_score = value
+		_main._sortie_state.held_salvage_score = value
 
 var _banked_score: int:
 	get:
@@ -96,9 +96,9 @@ var _hazard_warning_id: String:
 
 var _oxygen_seconds: float:
 	get:
-		return _main._oxygen_seconds
+		return _main._sortie_state.oxygen_seconds
 	set(value):
-		_main._oxygen_seconds = value
+		_main._sortie_state.oxygen_seconds = value
 
 var _run_complete: bool:
 	get:
@@ -106,7 +106,7 @@ var _run_complete: bool:
 
 var _run_failed: bool:
 	get:
-		return _main._run_failed
+		return _main._sortie_state.failed
 
 var _last_status_note: String:
 	get:

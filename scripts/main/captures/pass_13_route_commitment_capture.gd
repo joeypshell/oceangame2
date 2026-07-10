@@ -42,7 +42,7 @@ func capture_and_quit(capture_dir: String) -> void:
 
 	var deep_center: Vector2 = deep_cache["center"]
 	_main._hazard_interactions_enabled = false
-	_main._oxygen_seconds = REVIEW_OXYGEN_SECONDS
+	_main._sortie_state.oxygen_seconds = REVIEW_OXYGEN_SECONDS
 	_main._player.global_position = deep_center
 	if _main._player.has_method("reset_motion"):
 		_main._player.reset_motion()

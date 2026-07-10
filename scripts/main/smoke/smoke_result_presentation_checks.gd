@@ -54,7 +54,7 @@ func _smoke_pass_26_result_presentation_and_quit() -> void:
 	_process(0.0)
 
 	_main._run_complete = true
-	_main._run_failed = false
+	_main._sortie_state.failed = false
 	_main._update_result_panel()
 	_assert_line_order(
 		_result_text(),
@@ -76,7 +76,7 @@ func _smoke_pass_26_result_presentation_and_quit() -> void:
 	)
 
 	_main._run_complete = false
-	_main._run_failed = true
+	_main._sortie_state.failed = true
 	_main._update_result_panel()
 	var failure_text := _result_text()
 	if failure_text.find(FINAL_RESULT_LABEL) != -1 or failure_text.find(FINAL_CUE_LABEL) != -1 or failure_text.find(RELAY_RESULT_LABEL) != -1:

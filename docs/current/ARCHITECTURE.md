@@ -4,7 +4,7 @@
 
 The current project is a Godot 4.7 side-view ocean salvage prototype for proving the source-driven map, terrain, validation, capture, and gameplay workflow that will support a finished small diver game.
 
-The product roadmap is `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`. Controlled gameplay and visual passes are implementation/validation lanes inside that roadmap, not the whole product direction.
+The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`; the committed implementation contract is `docs/current/OCEANGAME_EXPANSION_02_PLAN.md`. Earlier controlled gameplay and visual passes remain implementation evidence, not the whole product direction.
 
 ## Source Of Truth
 
@@ -111,10 +111,14 @@ Additional current map sources:
   - Uses `scripts/main/result_presentation_builder.gd` for compact completed/failed expedition result text ordering.
   - Uses `scripts/main/primary_dive_objective.gd` for maps that opt into source-authored primary objective completion.
   - Uses `scripts/main/session_progression.gd` for the session-only wallet and oxygen, cargo, light, and propulsion upgrades.
+  - Delegates oxygen, held cargo, current connected-map leg, and local failure storage to `scripts/main/sortie_state.gd`.
+  - Keeps interaction progress in the focused timed, pry, and survey controllers as sortie-local subowners.
+  - Delegates daylight, sortie count, day-bank totals, committed-during-day discovery ids, connector-preserved day context, and end-day state to `scripts/main/expedition_day_state.gd`.
+  - Keeps durable capabilities and committed discoveries in `scripts/main/expansion_profile_state.gd`; session wallet, arbitrary world state, cargo, oxygen, daylight, and in-progress interactions are not profile-persistent.
   - Uses `scripts/main/world_connector_controller.gd` for source-authored prompted world-slice connectors.
   - Uses `scripts/main/final_dive_objective_seed.gd` for the compact source-authored final-dive/capstone cue.
   - Uses `scripts/main/audio_cue_player.gd` for cue lookup/playback, cooldown/dedupe, graceful missing-asset handling, and future smoke event logs.
-  - Remains temporary file-length debt at 2,040 lines in the current audit; expansion work must use or extract focused owners instead of growing this orchestration shell.
+  - Remains temporary file-length debt at over 2,000 lines; expansion work must use or extract focused owners instead of growing this orchestration shell.
 
 - `scripts/world/greybox_world.gd`
   - Loads JSON.

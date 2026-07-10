@@ -37,7 +37,7 @@ func capture_and_quit(capture_dir: String) -> void:
 		_main.get_tree().quit(1)
 		return
 
-	_main._oxygen_seconds = _main._oxygen_capacity_seconds()
+	_main._sortie_state.oxygen_seconds = _main._oxygen_capacity_seconds()
 	_main._update_status_label()
 	_main.set_process(false)
 
@@ -83,13 +83,13 @@ func _bank_until_upgrade_affordable() -> PackedStringArray:
 		_main._collect_salvage_for_review_state(salvage)
 		if _main._world.is_salvage_collected(salvage_id) and not banked_ids.has(salvage_id):
 			banked_ids.append(salvage_id)
-		if _main._held_salvage >= _main.HELD_SALVAGE_CAPACITY:
+		if _main._sortie_state.held_salvage >= _main.HELD_SALVAGE_CAPACITY:
 			_main._player.global_position = _main._world.get_extraction_center()
 			if _main._player.has_method("reset_motion"):
 				_main._player.reset_motion()
 			_main._process(0.0)
 
-	if _main._held_salvage > 0 and _main._session_wallet() < _oxygen_upgrade_cost():
+	if _main._sortie_state.held_salvage > 0 and _main._session_wallet() < _oxygen_upgrade_cost():
 		_main._player.global_position = _main._world.get_extraction_center()
 		if _main._player.has_method("reset_motion"):
 			_main._player.reset_motion()
