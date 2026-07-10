@@ -23,12 +23,12 @@ def expansion_06_hostile_encounters() -> list[dict]:
             "contact_damage": 1,
             "required_weapon_capability_id": "shock_prod",
             "warning_label": "Territorial eel - watch the lunge",
-            "retreat_label": "Eel territory - retreat or evade",
+            "retreat_label": "Eel guarding cache - return with shock prod",
             "defeated_label": "Territory clear for today",
             "route_context": "deep_cache_pressure",
             "intent": (
-                "One optional fight-or-evade encounter around the deep-right cache; the lower room edge "
-                "remains a source-validated unarmed route in unchanged topology."
+                "One territorial encounter hard-guarding the deep-right cache; unarmed players may retreat "
+                "through unchanged topology but cannot collect the payoff."
             ),
         }
     ]

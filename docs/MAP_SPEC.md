@@ -129,6 +129,10 @@ Playable salvage may also include optional interaction metadata. If omitted, run
 - `interaction_seconds`: required for `timed_salvage` and `pry_salvage`; must be a positive number of seconds.
 - `pry_stages`: required for `pry_salvage`; must be a positive integer count of completed pry stages required before collection.
 - `interaction_label`: optional compact label for overlay/capture text. Use lower_snake_case or short display-safe text.
+- `required_capability_id`: optional durable capability required before interaction may begin.
+- `guarded_by_hostile_id`: optional hostile that must be defeated for the current day before collection; requires `required_capability_id` matching that hostile's weapon counter.
+- `locked_label`: required compact feedback while the capability is missing.
+- `guard_active_label`: required compact feedback while the capability is owned but the guard remains active.
 
 Interaction metadata is intentionally narrow: an interacted pickup remains a normal salvage entity for placement, reachability, cargo, score, banking, route metadata, hazard reset, oxygen failure, and primary-objective rules. The only source-authored difference is that runtime may require the player to complete the authored interaction before the pickup enters held cargo. Interaction metadata is supported on salvage entities only.
 
@@ -144,7 +148,11 @@ A `timed_salvage` pickup uses `interaction_seconds` as one continuous in-range d
   "tier": "valuable",
   "interaction": "timed_salvage",
   "interaction_seconds": 2.5,
-  "interaction_label": "deep cache"
+  "interaction_label": "deep cache",
+  "required_capability_id": "shock_prod",
+  "guarded_by_hostile_id": "deep_cache_territorial_eel",
+  "locked_label": "Shock prod required - return after building it",
+  "guard_active_label": "Shock prod ready - defeat eel to claim cache"
 }
 ```
 
@@ -222,18 +230,10 @@ Recommended Pass 13 metadata:
 {
   "id": "deep_cache_route_objective",
   "route_context": "deep_cache_commitment",
-  "label": "Deep cache route",
-  "required_banked_targets": [
-    "salvage_lower_loop",
-    "salvage_deep_right_cache"
-  ],
-  "supporting_marker_ids": [
-    "lower_loop_route",
-    "lower_loop_to_deep_cache_pressure",
-    "lower_loop_oxygen_rest_pocket",
-    "return_pressure_to_boat"
-  ],
-  "intent": "Pass 13 route commitment objective requiring the player to bank the lower-loop payoff and timed deep-right cache in one committed route chain."
+  "label": "Relay trail",
+  "required_banked_targets": ["salvage_lower_loop", "salvage_southwest_return_cache"],
+  "supporting_marker_ids": ["lower_loop_route", "deep_cache_first_step_cue", "southwest_return_pocket_extension", "southwest_pocket_pre_pickup_cue", "lower_loop_oxygen_rest_pocket", "return_pressure_to_boat"],
+  "intent": "Opening objective banks two non-eel lower-loop payoffs before the shock-prod-gated deep-right cache."
 }
 ```
 
@@ -458,7 +458,7 @@ Validation expectations:
 - Current gate metadata is supported only on marker zones. Current rectangles must be in bounds, non-solid, reachable, use a supported direction, positive strength, and a lower_snake_case required upgrade id.
 - Progression containers should follow `docs/current/LOCKED_CACHE_PROGRESSION_CONTRACT.md` and must not author terrain, collision, runtime opened state, save state, oxygen values, cargo limits, or UI layout.
 - Moving hazards should follow `docs/current/MOVING_HAZARD_DODGE_CONTRACT.md` and must not author combat, AI state, health, loot, save state, oxygen penalty values, or collision changes.
-- Hostile encounters must follow the Expansion 06 source contract: one in-bounds/reachable home and territory, a fully open/reachable lower-edge evade lane, positive finite timing/radius/speed, exact health/damage, a linked `shock_prod` capability/project, and no runtime/reward fields.
+- Hostile encounters must follow the Expansion 06 source contract: one reachable territory, exact health/damage, a linked `shock_prod` project, and one guarded salvage target that is excluded from pre-weapon objectives and requires both the weapon capability and current-day guard defeat.
 - Biological sources must follow the Expansion 07 source contract: the exact passive/hostile roles, one guaranteed daily unit each, legal passive placement, an existing base-weapon hostile link, explicit timed collection, an ordered non-circular capacitor project, and no automatic loot or runtime fields.
 - Entity coordinates must be inside map bounds, non-solid, and reachable from the player entry cell.
 - Maps must define exactly one `spawn` or `boat_spawn`.

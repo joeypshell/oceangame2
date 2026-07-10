@@ -4,6 +4,8 @@ Date: 2026-07-10
 
 Issues: #768-#777
 
+Player-review correction: #811
+
 Milestone: OceanGame Expansion 06 `Combat Foundation`
 
 Contracts: `docs/current/OCEANGAME_EXPANSION_06_STATE_CONTRACT.md`, `docs/current/OCEANGAME_EXPANSION_06_SOURCE_CONTRACT.md`
@@ -15,21 +17,22 @@ Expansion 06 will prove one bounded fight-or-evade encounter inside existing `pr
 ```text
 remember the lower-loop-to-deep-cache route
 -> recognize a territorial eel warning before entering the deep-cache room
--> evade along the room edge or retreat without needing a weapon
+-> learn that the guarded cache cannot be claimed without the shock prod
+-> retreat without needing to defeat the eel
 -> gather existing titanium and conductive coil outside combat
 -> build one shock prod during the night debrief
 -> return through remembered geography
--> fight at close range or continue to evade
--> reach the existing deep-cache payoffs under health, oxygen, and daylight pressure
+-> defeat the eel at close range
+-> claim the released deep-cache payoff under health, oxygen, and daylight pressure
 ```
 
-Combat is an expedition cost and route choice, not a replacement for salvage, research, or exploration. Defeating the eel makes the territory safer for the rest of the current day but grants no score, cargo, materials, wallet value, discovery, or required progression.
+Combat is an expedition cost and route choice, not a replacement for salvage, research, or exploration. Defeating the eel makes the territory safer for the rest of the current day and releases the separately authored cache; defeat itself grants no score, cargo, materials, wallet value, or discovery.
 
 ## Target Experience
 
-Before entering, the player should understand: "Something territorial controls this lane. I can read its warning and slip around it."
+Before entering, the player should understand: "Something territorial guards that cache. I need the shock prod before I can claim it."
 
-After building the weapon, the player should understand: "I can spend time and health to clear this territory for today, but fighting is optional."
+After building the weapon, the player should understand: "I can spend time and health to clear this territory for today, then claim the cache."
 
 The encounter reuses the existing deep-cache room because it already has valuable timed salvage, a researched conductive-coil habitat, and approach pressure. The existing jellyfish remains a separate dodge hazard before the room. Terrain, collision, hazard placement, salvage/material placement, and the lower-edge evade corridor remain unchanged.
 
@@ -42,7 +45,7 @@ The encounter reuses the existing deep-cache room because it already has valuabl
 | New hostile | `deep_cache_territorial_eel` | One `territorial_lunge` actor with a source-authored home point inside the territory. |
 | New weapon capability | `shock_prod` | Durable profile capability; short-range attack only, with no ammo or durability. |
 | New project | `shock_prod_project` | Night-debrief project requiring `current_stabilizer_project`, two titanium scrap, and one conductive coil. |
-| Existing payoffs | `salvage_deep_right_cache`, `material_coil_deep_cache` | Remain salvage/material rewards; enemy defeat does not replace them. |
+| Guarded payoff | `salvage_deep_right_cache` | Requires durable `shock_prod` ownership and current-day eel defeat before normal timed collection. |
 
 Compact source/presentation labels:
 
@@ -50,7 +53,7 @@ Compact source/presentation labels:
 - unarmed input note: `Shock prod required to fight`
 - weapon ready: `Shock prod ready`
 - damage: `Eel hit - health -1`
-- retreat: `Eel territory - retreat or evade`
+- retreat: `Eel guarding cache - return with shock prod`
 - victory: `Territory clear for today`
 - defeat: `Injured - surfaced, press R`
 
@@ -62,7 +65,7 @@ Compact source/presentation labels:
 - A lunge contact deals 1 health damage. The player receives 1.0 second of combat invulnerability after a hit.
 - The shock prod uses the `combat_attack` action, with Space as the keyboard default. It reaches 72 pixels in the diver's facing direction and has a 0.65-second cooldown.
 - Attacks outside range, during cooldown, or without the capability do not damage the eel.
-- The lower edge of the room remains outside the direct home-to-cache line, so a patient unarmed player can read the cycle and cross without taking damage.
+- The lower edge remains traversable so an unarmed player can retreat, but source/runtime gating prevents collecting the cache until the weapon is built and the eel is defeated.
 - Oxygen and daylight continue normally during warnings, attacks, recovery, retreat, and combat.
 - No health pickups, armor, status effects, ammo, durability, targeting reticle, damage numbers, or broad combat HUD are added.
 
@@ -84,10 +87,10 @@ Exact timing may change only if deterministic smoke or dual-viewport review show
 
 - Hostile source owns id, supported behavior, home point, territory rectangle, warning radius/timing, lunge speed/duration, recovery time, contact radius, health, damage, labels, capability reference, and review intent.
 - Project source owns id, capability id, existing project prerequisite, non-enemy material recipe, night build phase, and compact labels.
-- Validators prove unique ids, legal open-water placement, reachable territory/payoffs, a viable evade path, positive bounded values, supported links, and non-circular pre-combat prerequisites.
+- Validators prove unique ids, legal open-water placement, reachable territory/payoffs, a viable retreat path, exact guard/capability links, and exclusion of the guarded cache from pre-weapon objectives.
 - Source must reject mutable state, loot/drop tables, score, cargo, current health, current position, runtime phase, procedural spawn weights, and broad enemy/weapon definitions.
 - New records live in a focused slice-01 expansion module because the primary generator is already at the 500-line guard.
-- Terrain rectangles, collision, spawn, extraction, connectors, current gates, salvage, materials, surveys, camera tests, and route objectives remain unchanged.
+- Terrain rectangles, collision, spawn, extraction, connectors, current gates, materials, surveys, and camera tests remain unchanged; #811 retargets the opening objective to non-eel payoffs and adds guard metadata to the existing deep-right cache.
 
 ## Runtime And UI Boundaries
 

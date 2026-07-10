@@ -190,6 +190,8 @@ def validate_survey_target_schema(map_path: Path, map_data: dict[str, Any]) -> l
             fields = SURVEY_SPECIFIC_FIELDS & set(item)
             if collection_name == "zones" and item.get("type") == "marker" and item.get("current_gate") is True:
                 fields.discard("required_capability_id")
+            if collection_name == "entities" and item.get("type") == "salvage" and isinstance(item.get("guarded_by_hostile_id"), str):
+                fields.discard("required_capability_id")
             if item.get("interaction") == "survey":
                 fields.add("interaction")
             if fields:

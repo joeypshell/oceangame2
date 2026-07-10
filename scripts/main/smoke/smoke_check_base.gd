@@ -1,5 +1,6 @@
 extends RefCounted
 
+const ReviewProgressionFixture := preload("res://scripts/main/review_progression_fixture.gd")
 const SMOKE_TIMED_SALVAGE_MARGIN_SECONDS := 0.1
 
 var _main
@@ -198,6 +199,8 @@ func _process(delta: float) -> void:
 
 
 func _collect_salvage_for_smoke(salvage: Dictionary) -> bool:
+	if not _prepare_guarded_salvage_access(salvage):
+		return false
 	var salvage_id := str(salvage.get("id", "salvage"))
 	_process(0.0)
 	if _world.is_salvage_collected(salvage_id):
@@ -215,6 +218,14 @@ func _collect_salvage_for_smoke(salvage: Dictionary) -> bool:
 	if str(salvage.get("interaction", "instant")) != "instant":
 		return false
 	return _world.is_salvage_collected(salvage_id)
+
+
+func _prepare_guarded_salvage_access(salvage: Dictionary) -> bool:
+	var result: Dictionary = ReviewProgressionFixture.prepare_guarded_salvage(_main, salvage)
+	if not bool(result.get("ready", false)):
+		push_error("Could not prepare guarded salvage fixture: %s" % str(result))
+		return false
+	return true
 
 
 func _reset_run() -> void:

@@ -1,6 +1,6 @@
 extends RefCounted
 
-const EXPECTED_RESULT_COMPLETE := "Objective: Deep cache complete"
+const EXPECTED_RESULT_COMPLETE := "Objective: Relay trail complete"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 const CAMERA_OFFSET := Vector2(180, 180)
 

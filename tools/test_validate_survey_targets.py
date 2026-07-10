@@ -81,6 +81,17 @@ class SurveyTargetValidationTests(unittest.TestCase):
         failures = validate_survey_target_schema(SOURCE_MAP, map_data)
         self.assertTrue(any("zones[0] survey metadata (discovery_id)" in failure for failure in failures), failures)
 
+    def test_allows_required_capability_on_explicitly_guarded_salvage(self) -> None:
+        map_data = valid_map()
+        map_data["entities"] = [{
+            "id": "guarded_cache",
+            "type": "salvage",
+            "required_capability_id": "shock_prod",
+            "guarded_by_hostile_id": "territorial_eel",
+        }]
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertFalse(any("entities[0] survey metadata" in failure for failure in failures), failures)
+
     def test_rejects_invalid_interaction_and_runtime_state(self) -> None:
         map_data = valid_map()
         target = map_data["survey_targets"][0]

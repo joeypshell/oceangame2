@@ -95,7 +95,7 @@ Capture the focused Pass 11 pre-pickup route-cue view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-11-pre-pickup-route-cue
 ```
 
-This loads the default production slice, places the player in `southwest_pocket_pre_pickup_cue` before collecting `salvage_southwest_return_cache`, frames the compact `Optional pocket ahead` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_11_pre_pickup_route_cue/production_slice_01_pre_pickup_route_cue.png`.
+This loads the default production slice, places the player in `southwest_pocket_pre_pickup_cue` before collecting `salvage_southwest_return_cache`, frames the compact `Relay trail cache ahead` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_11_pre_pickup_route_cue/production_slice_01_pre_pickup_route_cue.png`.
 
 Capture the focused Pass 15 objective-follow-through view:
 

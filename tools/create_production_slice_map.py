@@ -7,6 +7,7 @@ import json
 from collections import deque
 from pathlib import Path
 from production_slice_01_expansions import biological_resource_sources, expansion_entities, expansion_survey_targets, expansion_zones, hostile_encounters, material_candidate_pools, material_projects
+
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_MAP_PATH = ROOT / "maps" / "full_cave_sketch_01.greybox.json"
 OUTPUT_MAP_PATH = ROOT / "maps" / "production_slice_01.greybox.json"
@@ -51,15 +52,13 @@ TARGETED_FILL_OPEN_CELLS = {
     (1, 80),
     (59, 80),
 }
-PASS_13_ROUTE_OBJECTIVES = [{"id": "deep_cache_route_objective", "route_context": "deep_cache_commitment", "label": "Deep cache route", "required_banked_targets": ["salvage_lower_loop", "salvage_deep_right_cache"], "supporting_marker_ids": ["lower_loop_route", "deep_cache_first_step_cue", "lower_loop_to_deep_cache_pressure", "lower_loop_oxygen_rest_pocket", "return_pressure_to_boat"], "intent": "Pass 13 route commitment objective requiring the player to bank the lower-loop payoff and timed deep-right cache in one committed route chain."}]
-
+PASS_13_ROUTE_OBJECTIVES = [{"id": "deep_cache_route_objective", "route_context": "deep_cache_commitment", "label": "Relay trail", "required_banked_targets": ["salvage_lower_loop", "salvage_southwest_return_cache"], "supporting_marker_ids": ["lower_loop_route", "deep_cache_first_step_cue", "southwest_return_pocket_extension", "southwest_pocket_pre_pickup_cue", "lower_loop_oxygen_rest_pocket", "return_pressure_to_boat"], "intent": "Opening objective banks two non-eel lower-loop payoffs and points toward the lower-left relay before the shock-prod-gated deep-right cache."}]
 def rect_cells(item: dict) -> set[tuple[int, int]]:
     return {
         (x, y)
         for y in range(int(item["y"]), int(item["y"]) + int(item["h"]))
         for x in range(int(item["x"]), int(item["x"]) + int(item["w"]))
     }
-
 def crop_solid_cells(source_map: dict) -> set[tuple[int, int]]:
     bounds_x = SLICE_BOUNDS["x"]
     bounds_y = SLICE_BOUNDS["y"]
@@ -78,8 +77,6 @@ def crop_solid_cells(source_map: dict) -> set[tuple[int, int]]:
             cells.add((source_x - bounds_x, source_y - bounds_y))
 
     return cells
-
-
 def seal_slice_edges(cells: set[tuple[int, int]]) -> None:
     width = SLICE_BOUNDS["w"]
     height = SLICE_BOUNDS["h"]
@@ -88,8 +85,6 @@ def seal_slice_edges(cells: set[tuple[int, int]]) -> None:
         cells.add((width - 1, y))
     for x in range(width):
         cells.add((x, height - 1))
-
-
 def reachable_open_cells(solid: set[tuple[int, int]], entry: tuple[int, int]) -> set[tuple[int, int]]:
     width = SLICE_BOUNDS["w"]
     height = SLICE_BOUNDS["h"]
@@ -276,7 +271,7 @@ def build_map_data(source_map: dict) -> dict:
             },
             {"id": "lower_left_loop_connector", "type": "marker", "x": 2, "y": 74, "w": 4, "h": 4, "world_connector": True, "connector_label": "Lower-left loop", "destination_map_id": "production_slice_04", "destination_map_path": "res://maps/production_slice_04.greybox.json", "destination_entry_id": "relay_sub_entry", "connector_direction": "forward", "intent": "Pass 21 connector from the default boat hub toward the lower-left loop reference slice."},
             *expansion_zones(),
-            {"id": "deep_cache_first_step_cue", "type": "marker", "x": 28, "y": 58, "w": 4, "h": 3, "objective_step_cue": True, "objective_id": "deep_cache_route_objective", "target_id": "salvage_lower_loop", "route_context": "deep_cache_commitment", "objective_step_label": "Lower loop", "intent": "Pass 15 objective follow-through cue for the first required deep-cache route target."},
+            {"id": "deep_cache_first_step_cue", "type": "marker", "x": 28, "y": 58, "w": 4, "h": 3, "objective_step_cue": True, "objective_id": "deep_cache_route_objective", "target_id": "salvage_lower_loop", "route_context": "deep_cache_commitment", "objective_step_label": "Lower loop", "intent": "Opening relay-trail objective cue for its first required target."},
             {
                 "id": "return_pressure_to_boat",
                 "type": "marker",
@@ -311,11 +306,10 @@ def build_map_data(source_map: dict) -> dict:
                 "h": 9,
                 "route_cue_id": "southwest_pocket_pre_pickup_cue",
                 "cue_target_id": "salvage_southwest_return_cache",
-                "cue_text": "Optional pocket ahead",
+                "cue_text": "Relay trail cache ahead",
                 "cue_condition": "target_uncollected",
                 "intent": (
-                    "Pass 11 pre-pickup route-readability cue before the "
-                    "southwest pocket payoff is collected."
+                    "Pre-pickup route cue for the required non-eel relay-trail payoff."
                 ),
             },
             {
@@ -338,7 +332,7 @@ def build_map_data(source_map: dict) -> dict:
         "biological_resource_sources": biological_resource_sources(),
         "route_objectives": PASS_13_ROUTE_OBJECTIVES,
         "primary_route_objective_id": "deep_cache_route_objective",
-        "next_dive_objective_prompts": [{"id": "deep_cache_next_dive_prompt", "trigger": "primary_objective_complete", "objective_id": "deep_cache_route_objective", "target_id": "lower_left_loop_connector", "label": "Next dive: Investigate lower-left relay", "route_context": "lower_left_loop", "intent": "Pass 23 result prompt pointing the next dive toward the lower-left relay after Deep cache completion."}],
+        "next_dive_objective_prompts": [{"id": "deep_cache_next_dive_prompt", "trigger": "primary_objective_complete", "objective_id": "deep_cache_route_objective", "target_id": "lower_left_loop_connector", "label": "Next dive: Investigate lower-left relay", "route_context": "lower_left_loop", "intent": "Result prompt pointing the next dive toward the lower-left relay after the relay-trail objective."}],
         "survey_targets": expansion_survey_targets(),
         "material_candidate_pools": material_candidate_pools(),
         "material_projects": material_projects(),
@@ -399,7 +393,11 @@ def build_map_data(source_map: dict) -> dict:
                 "interaction": "timed_salvage",
                 "interaction_seconds": 2.5,
                 "interaction_label": "deep cache",
-                "intent": "Second route-choice payoff on the lower-right optional branch under cargo, oxygen, and timed-salvage pressure.",
+                "required_capability_id": "shock_prod",
+                "guarded_by_hostile_id": "deep_cache_territorial_eel",
+                "locked_label": "Shock prod required - return after building it",
+                "guard_active_label": "Shock prod ready - defeat eel to claim cache",
+                "intent": "Later deep-right payoff collectable only after the shock prod is built and the guarding eel is defeated for the day.",
             },
             {
                 "id": "salvage_southwest_return_cache",
@@ -412,8 +410,8 @@ def build_map_data(source_map: dict) -> dict:
                 "validation_route": "southwest_pocket_decision",
                 "route_order": 0,
                 "intent": (
-                    "Pass 09 valuable payoff cue for the southwest return pocket detour; "
-                    "keeps the pickup instant while making the optional route decision matter."
+                    "Non-eel valuable payoff completing the opening relay trail; keeps instant collection "
+                    "and combines with the lower-loop payoff plus upgrade chest to fund propulsion fins."
                 ),
             },
             {

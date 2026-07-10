@@ -15,7 +15,10 @@ const PAYOFF_TARGET_ID := "slice_04_destination_cache"
 const SURVEY_TARGET_ID := "lower_right_anomaly_survey"
 const RESOURCE_TARGET_ID := "upper_right_mineral_trace_survey"
 const DISCOVERY_ID := ExpansionProfileState.ANOMALY_DISCOVERY_ID
-const PROPULSION_SEED_WALLET := 1000
+const OPENING_TARGET_IDS := ["salvage_lower_loop", "salvage_southwest_return_cache"]
+const GUARDED_CACHE_ID := "salvage_deep_right_cache"
+const OPENING_CHEST_ID := "lower_loop_upgrade_chest"
+const PROPULSION_ROUTE_WALLET := 1000
 
 
 func _smoke_anomaly_survey_journey_and_quit() -> void:
@@ -32,10 +35,7 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 		return
 	if not _require(_survey_target_by_id(SURVEY_TARGET_ID).is_empty(), "origin map unexpectedly owns anomaly survey source"):
 		return
-	_main._session_progression.grant_wallet_reward(PROPULSION_SEED_WALLET)
-	if not _require(_main._try_purchase_propulsion_upgrade(), "could not purchase required propulsion upgrade"):
-		return
-	if not _require(_session_wallet() == 0, "propulsion setup left wallet=%d" % _session_wallet()):
+	if not _prepare_non_eel_propulsion_route():
 		return
 
 	if not _transition(ORIGIN_CONNECTOR_ID, RELAY_MAP_ID):
@@ -226,6 +226,41 @@ func _transition(connector_id: String, expected_map_id: String) -> bool:
 func _prepare_current_map() -> void:
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
+	_combat_interactions_enabled = false
+
+
+func _prepare_non_eel_propulsion_route() -> bool:
+	for target_id in OPENING_TARGET_IDS:
+		var target := _salvage_by_id(target_id)
+		if not _require(not target.is_empty(), "missing opening target %s" % target_id):
+			return false
+		_player.global_position = target["center"]
+		if not _require(_collect_salvage_for_smoke(target), "could not collect opening target %s" % target_id):
+			return false
+	var chest := _container_by_id(OPENING_CHEST_ID)
+	if not _require(not chest.is_empty(), "missing opening chest %s" % OPENING_CHEST_ID):
+		return false
+	_player.global_position = chest["center"]
+	_process(0.0)
+	if not _require(_session_wallet() == 400 and _main._progression_containers.is_opened(OPENING_CHEST_ID), "opening chest did not provide the guaranteed 400 wallet"):
+		return false
+	_player.global_position = _world.get_extraction_center()
+	_process(0.0)
+	if not _require(
+		_run_complete
+		and _session_wallet() == PROPULSION_ROUTE_WALLET
+		and OPENING_TARGET_IDS.all(func(target_id): return _banked_salvage_ids.has(target_id))
+		and not _world.is_salvage_collected(GUARDED_CACHE_ID),
+		"non-eel relay trail did not complete/fund propulsion independently"
+	):
+		return false
+	_reset_run()
+	_prepare_current_map()
+	if not _require(_session_wallet() == PROPULSION_ROUTE_WALLET and _main._progression_containers.is_opened(OPENING_CHEST_ID), "retry lost opening funding"):
+		return false
+	if not _require(_main._try_purchase_propulsion_upgrade(), "could not purchase propulsion from non-eel funding"):
+		return false
+	return _require(_session_wallet() == 0, "propulsion purchase left wallet=%d" % _session_wallet())
 
 
 func _connector_by_id(connector_id: String) -> Dictionary:
@@ -239,6 +274,13 @@ func _salvage_by_id(salvage_id: String) -> Dictionary:
 	for salvage in _world.get_salvage_centers():
 		if str(salvage.get("id", "")) == salvage_id:
 			return salvage
+	return {}
+
+
+func _container_by_id(container_id: String) -> Dictionary:
+	for container in _world.get_progression_containers():
+		if str(container.get("id", "")) == container_id:
+			return container
 	return {}
 
 

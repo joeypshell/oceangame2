@@ -84,6 +84,8 @@ The compact diver game and first anomaly-survey expansion have GO closeouts. Pha
 - expand scanner knowledge into practical resource, environment, and creature research
 - add health, enemies, weapons, and later biological materials used by equipment progression
 - broaden daily conditions and regions only after the deterministic authored loops work
+- place hard-guarded payoffs only after their required counter is obtainable; the first eel cache requires both the durable shock prod and current-day eel defeat
+- validate map travel, objectives, rewards, gates, discoveries, materials, projects, and capabilities as one cross-map dependency graph
 
 Night does not consume Food, Water, or Power; Emergency Week is not part of the new direction. Stable authored geography remains important, and no shortcut or fast-travel network is planned. Maps, collision, connectors, gates, habitats, resource candidates, and encounter candidates stay source-authored and validated.
 

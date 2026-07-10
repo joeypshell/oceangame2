@@ -3,7 +3,7 @@ extends RefCounted
 const CUE_MARKER_ID := "southwest_pocket_pre_pickup_cue"
 const POCKET_SEGMENT_ID := "southwest_return_pocket_extension"
 const TARGET_ID := "salvage_southwest_return_cache"
-const EXPECTED_FEEDBACK := "Optional pocket ahead"
+const EXPECTED_FEEDBACK := "Relay trail cache ahead"
 const CAPTURE_ZOOM := Vector2(0.84, 0.84)
 
 var _main

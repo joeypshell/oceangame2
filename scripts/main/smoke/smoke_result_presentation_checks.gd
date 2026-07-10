@@ -19,7 +19,7 @@ func _smoke_pass_26_result_presentation_and_quit() -> void:
 		_result_text(),
 		PackedStringArray([
 			"Expedition complete",
-			"Objective: Deep cache complete",
+			"Objective: Relay trail complete",
 			"Next dive: Investigate lower-left relay",
 			"Route: Deep route",
 			"Score ",

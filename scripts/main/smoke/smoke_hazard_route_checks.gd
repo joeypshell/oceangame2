@@ -97,6 +97,7 @@ func _smoke_pass_07_hazard_route_pressure_and_quit() -> void:
 		return
 
 	_reset_run()
+	_prepare_guarded_salvage_access(deep_cache)
 	var interaction_seconds := float(deep_cache.get("interaction_seconds", 0.0))
 	var partial_seconds := interaction_seconds * 0.4
 	var resumed_seconds := interaction_seconds * 0.25
@@ -115,6 +116,7 @@ func _smoke_pass_07_hazard_route_pressure_and_quit() -> void:
 		get_tree().quit(1)
 		return
 
+	_prepare_guarded_salvage_access(deep_cache)
 	_player.global_position = deep_cache["center"]
 	_process(resumed_seconds)
 	if not _status_has_salvage_progress(25):

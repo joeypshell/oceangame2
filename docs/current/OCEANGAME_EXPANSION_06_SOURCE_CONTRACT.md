@@ -4,6 +4,8 @@ Date: 2026-07-10
 
 Issues: #769-#777
 
+Player-review correction: #811
+
 Plan: `docs/current/OCEANGAME_EXPANSION_06_PLAN.md`
 
 ## Decision
@@ -32,14 +34,16 @@ The only supported Expansion 06 shape is:
   "contact_damage": 1,
   "required_weapon_capability_id": "shock_prod",
   "warning_label": "Territorial eel - watch the lunge",
-  "retreat_label": "Eel territory - retreat or evade",
+  "retreat_label": "Eel guarding cache - return with shock prod",
   "defeated_label": "Territory clear for today",
   "route_context": "deep_cache_pressure",
-  "intent": "One optional fight-or-evade encounter in unchanged deep-cache geometry."
+  "intent": "One territorial encounter hard-guarding the deep-right cache in unchanged geometry."
 }
 ```
 
-The exact home/territory coordinates shown here are the selected source target. Authoring may move them within the same existing deep-cache room only if validation proves the shown cells are solid or the lower-edge evade lane is not viable. Such a correction must not change terrain, hazards, salvage, materials, or route topology.
+The exact home/territory coordinates shown here remain selected. #811 changes only the cache's progression metadata and opening objective membership; it does not move terrain, hazards, salvage, materials, or route topology.
+
+The existing `salvage_deep_right_cache` additionally owns `required_capability_id: shock_prod`, `guarded_by_hostile_id: deep_cache_territorial_eel`, and compact missing-capability/active-guard labels. The guard link means collection remains blocked until the capability exists and the linked hostile is defeated for the current day.
 
 ## Hostile Validation
 
@@ -51,8 +55,9 @@ The exact home/territory coordinates shown here are the selected source target. 
 - `territory` uses integer `x`, `y`, `w`, `h`; width/height are positive.
 - All timing/radius/speed values are finite and positive. `health` is exactly 3 and `contact_damage` exactly 1 for this bounded pass.
 - Labels are compact display-safe strings. `route_context` must match the selected deep-cache pressure route.
-- The encounter, existing cache, and survey remain physically reachable after the current gate requirement.
-- A source-derived path through the territory to the existing payoffs must remain viable without intersecting the contact envelope at the hostile home point; runtime smoke proves timing-based evade behavior.
+- The encounter, cache, and survey remain physically reachable; physical reachability does not bypass the cache's gameplay gate.
+- The guarded cache must be inside the territory, require the hostile's weapon counter, and remain absent from every pre-weapon route objective.
+- A source-derived lower-edge route remains viable for retreat without making the guarded payoff collectable.
 
 Reject fields such as `current_health`, `current_position`, `phase`, `phase_timer`, `defeated`, `spawn_chance`, `seed`, `loot`, `drops`, `reward`, `score`, `cargo`, `wallet`, `discovery_id`, `runtime_state`, or arbitrary attack lists.
 

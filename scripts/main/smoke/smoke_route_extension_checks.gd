@@ -10,7 +10,7 @@ const PASS_10_ROUTE_ID := "return_pressure_decision"
 const PASS_10_ROUTE_CHOICE_ID := "return_branch_bank_prompt"
 const PASS_10_FEEDBACK := "Cargo full - bank at boat"
 const PASS_11_CUE_MARKER_ID := "southwest_pocket_pre_pickup_cue"
-const PASS_11_CUE_TEXT := "Optional pocket ahead"
+const PASS_11_CUE_TEXT := "Relay trail cache ahead"
 const LOWER_LOOP_SALVAGE_ID := "salvage_lower_loop"
 const DEEP_CACHE_SALVAGE_ID := "salvage_deep_right_cache"
 

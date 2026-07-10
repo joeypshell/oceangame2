@@ -1,12 +1,11 @@
 extends RefCounted
 
 const LOWER_LOOP_ID := "salvage_lower_loop"
-const DEEP_CACHE_ID := "salvage_deep_right_cache"
-const PRESSURE_SEGMENT_ID := "lower_loop_to_deep_cache_pressure"
-const EXPECTED_OBJECTIVE := "Objective: Deep cache 1/2"
-const EXPECTED_PROGRESS := "Salvaging"
+const RELAY_CACHE_ID := "salvage_southwest_return_cache"
+const CUE_MARKER_ID := "southwest_pocket_pre_pickup_cue"
+const EXPECTED_OBJECTIVE := "Objective: Relay trail 1/2"
+const EXPECTED_CUE := "Relay trail cache ahead"
 const CAPTURE_ZOOM := Vector2(0.78, 0.78)
-const PROGRESS_RATIO := 0.52
 const REVIEW_OXYGEN_SECONDS := 34.0
 
 var _main
@@ -18,48 +17,36 @@ func _init(main_node) -> void:
 
 func capture_and_quit(capture_dir: String) -> void:
 	if _main._world == null or _main._player == null:
-		push_error("Pass 13 route commitment capture requires a loaded playable map.")
-		_main.get_tree().quit(1)
+		_fail("Pass 13 route commitment capture requires a loaded playable map.")
 		return
 
 	var lower_loop := _salvage_by_id(LOWER_LOOP_ID)
-	var deep_cache := _salvage_by_id(DEEP_CACHE_ID)
-	var pressure_segment: Dictionary = _main._world.get_marker_zone(PRESSURE_SEGMENT_ID)
-	if lower_loop.is_empty() or deep_cache.is_empty() or pressure_segment.is_empty():
-		push_error("Pass 13 route commitment capture requires lower-loop target, deep-cache target, and pressure segment source data.")
-		_main.get_tree().quit(1)
+	var relay_cache := _salvage_by_id(RELAY_CACHE_ID)
+	var cue_marker: Dictionary = _main._world.get_marker_zone(CUE_MARKER_ID)
+	if lower_loop.is_empty() or relay_cache.is_empty() or cue_marker.is_empty():
+		_fail("Pass 13 capture requires both relay-trail targets and the southwest cue marker.")
 		return
-	if str(deep_cache.get("interaction", "instant")) != "timed_salvage":
-		push_error("Pass 13 route commitment capture expects %s to remain timed_salvage." % DEEP_CACHE_ID)
-		_main.get_tree().quit(1)
-		return
-
 	if not _main._world.collect_salvage_by_id(LOWER_LOOP_ID):
-		push_error("Pass 13 route commitment capture could not collect %s for review state." % LOWER_LOOP_ID)
-		_main.get_tree().quit(1)
+		_fail("Pass 13 capture could not collect %s for review state." % LOWER_LOOP_ID)
 		return
 	_main._collect_salvage_into_cargo(LOWER_LOOP_ID)
 
-	var deep_center: Vector2 = deep_cache["center"]
+	var cue_center := _zone_center(cue_marker)
 	_main._hazard_interactions_enabled = false
 	_main._sortie_state.oxygen_seconds = REVIEW_OXYGEN_SECONDS
-	_main._player.global_position = deep_center
+	_main._player.global_position = cue_center
 	if _main._player.has_method("reset_motion"):
 		_main._player.reset_motion()
-
-	var interaction_seconds := maxf(0.01, float(deep_cache.get("interaction_seconds", 0.0)))
-	_main._process(interaction_seconds * PROGRESS_RATIO)
+	_main._process(0.0)
 	_main._update_status_label()
 	_main.set_process(false)
 
 	var status_text: String = _main._status_label.text if _main._status_label != null else ""
-	if status_text.find(EXPECTED_OBJECTIVE) == -1 or status_text.find(EXPECTED_PROGRESS) == -1:
-		push_error("Pass 13 route commitment capture expected objective and timed progress text before saving: %s" % status_text)
-		_main.get_tree().quit(1)
+	if status_text.find(EXPECTED_OBJECTIVE) == -1 or status_text.find(EXPECTED_CUE) == -1:
+		_fail("Pass 13 capture expected relay objective and cache cue before saving: %s" % status_text)
 		return
-	if _main._world.is_salvage_collected(DEEP_CACHE_ID):
-		push_error("Pass 13 route commitment capture collected %s before review frame." % DEEP_CACHE_ID)
-		_main.get_tree().quit(1)
+	if _main._world.is_salvage_collected(RELAY_CACHE_ID):
+		_fail("Pass 13 capture collected %s before the review frame." % RELAY_CACHE_ID)
 		return
 
 	var camera := Camera2D.new()
@@ -72,7 +59,7 @@ func capture_and_quit(capture_dir: String) -> void:
 	camera.limit_bottom = int(_main._world.map_pixel_size.y)
 	_main.add_child(camera)
 	camera.make_current()
-	camera.position = (_zone_center(pressure_segment) + lower_loop["center"] + deep_center) / 3.0 + Vector2(16, -16)
+	camera.position = (cue_center + lower_loop["center"] + relay_cache["center"]) / 3.0 + Vector2(16, -16)
 
 	await _main.get_tree().process_frame
 	await _main.get_tree().process_frame
@@ -105,3 +92,8 @@ func _safe_filename(value: String) -> String:
 	for character in [" ", "\\", "/", ":", "*", "?", "\"", "<", ">", "|"]:
 		output = output.replace(character, "_")
 	return output
+
+
+func _fail(message: String) -> void:
+	push_error(message)
+	_main.get_tree().quit(1)
