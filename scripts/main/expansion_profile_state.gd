@@ -12,6 +12,9 @@ const SALVAGE_CUTTER_TARGET_ID := "salvage_sealed_wreck_cache"
 const CURRENT_STABILIZER_CAPABILITY_ID := "current_stabilizer"
 const CURRENT_STABILIZER_PROJECT_ID := "current_stabilizer_project"
 const CURRENT_STABILIZER_GATE_ID := "upper_right_current_pocket_gate"
+const SHOCK_PROD_CAPABILITY_ID := "shock_prod"
+const SHOCK_PROD_PROJECT_ID := "shock_prod_project"
+const SHOCK_PROD_TARGET_ID := "deep_cache_territorial_eel"
 const TITANIUM_MATERIAL_ID := "titanium_scrap"
 const COIL_MATERIAL_ID := "conductive_coil"
 const DEFAULT_STORAGE_PATH := "user://oceangame2_profile.json"
@@ -29,11 +32,12 @@ const SUPPORTED_CAPABILITY_IDS := {
     SURVEY_SCANNER_CAPABILITY_ID: true,
     SALVAGE_CUTTER_CAPABILITY_ID: true,
     CURRENT_STABILIZER_CAPABILITY_ID: true,
+    SHOCK_PROD_CAPABILITY_ID: true,
 }
 const SUPPORTED_DISCOVERY_IDS := {ANOMALY_DISCOVERY_ID: true, MINERAL_TRACE_RESEARCH_ID: true}
 const SUPPORTED_MATERIAL_IDS := {TITANIUM_MATERIAL_ID: true, COIL_MATERIAL_ID: true}
 const MATERIAL_SCHEMA_PROJECT_IDS := {SALVAGE_CUTTER_PROJECT_ID: true}
-const SUPPORTED_PROJECT_IDS := {SALVAGE_CUTTER_PROJECT_ID: true, CURRENT_STABILIZER_PROJECT_ID: true}
+const SUPPORTED_PROJECT_IDS := {SALVAGE_CUTTER_PROJECT_ID: true, CURRENT_STABILIZER_PROJECT_ID: true, SHOCK_PROD_PROJECT_ID: true}
 const PROJECT_RULES := {
     SALVAGE_CUTTER_PROJECT_ID: {
         "capability_id": SALVAGE_CUTTER_CAPABILITY_ID,
@@ -46,6 +50,12 @@ const PROJECT_RULES := {
         "required_project_id": SALVAGE_CUTTER_PROJECT_ID,
         "target_field": "target_gate_id",
         "target_id": CURRENT_STABILIZER_GATE_ID,
+    },
+    SHOCK_PROD_PROJECT_ID: {
+        "capability_id": SHOCK_PROD_CAPABILITY_ID,
+        "required_project_id": CURRENT_STABILIZER_PROJECT_ID,
+        "target_field": "target_hostile_id",
+        "target_id": SHOCK_PROD_TARGET_ID,
     },
 }
 
@@ -117,7 +127,7 @@ func unlock_capability(capability_id: String, persist := true) -> Dictionary:
 		return {"changed": false, "reason": "unsupported_capability", "capability_id": capability_id}
 	if has_capability(capability_id):
 		return {"changed": false, "reason": "already_unlocked", "capability_id": capability_id}
-	if capability_id in [SALVAGE_CUTTER_CAPABILITY_ID, CURRENT_STABILIZER_CAPABILITY_ID]:
+	if capability_id in [SALVAGE_CUTTER_CAPABILITY_ID, CURRENT_STABILIZER_CAPABILITY_ID, SHOCK_PROD_CAPABILITY_ID]:
 		return {"changed": false, "reason": "project_transaction_required", "capability_id": capability_id}
 	_unlocked_capabilities[capability_id] = true
 	if persist and not save_profile():
@@ -366,7 +376,11 @@ func _validate_material_project_definition(project_definition: Dictionary) -> Ar
 		failures.append("unsupported project capability")
 	if str(project_definition.get("required_project_id", "")) != str(rules["required_project_id"]):
 		failures.append("unsupported project prerequisite")
-	if str(project_definition.get(str(rules["target_field"]), "")) != str(rules["target_id"]):
+	var authored_target_fields := []
+	for target_field in ["target_id", "target_gate_id", "target_hostile_id"]:
+		if project_definition.has(target_field):
+			authored_target_fields.append(target_field)
+	if authored_target_fields.size() != 1 or str(project_definition.get(str(rules["target_field"]), "")) != str(rules["target_id"]):
 		failures.append("unsupported project target")
 	if str(project_definition.get("build_phase", "")) != "night_debrief":
 		failures.append("unsupported project build phase")
@@ -391,12 +405,13 @@ func _validate_project_capability_pair(payload: Dictionary) -> Array[String]:
 		return []
 	var failures: Array[String] = []
 	for project_id in PROJECT_RULES:
-		var capability_id := str(PROJECT_RULES[project_id]["capability_id"])
+		var rules: Dictionary = PROJECT_RULES[project_id]
+		var capability_id := str(rules["capability_id"])
 		if capabilities.has(capability_id) != projects.has(project_id):
 			failures.append("%s capability and project must be completed together" % capability_id)
-	var has_stabilizer: bool = projects.has(CURRENT_STABILIZER_PROJECT_ID)
-	if has_stabilizer and not projects.has(SALVAGE_CUTTER_PROJECT_ID):
-		failures.append("current stabilizer project requires completed salvage cutter project")
+		var required_project_id := str(rules["required_project_id"])
+		if projects.has(project_id) and not required_project_id.is_empty() and not projects.has(required_project_id):
+			failures.append("%s requires completed %s" % [project_id, required_project_id])
 	return failures
 
 

@@ -61,6 +61,7 @@ def base_gates() -> list[Gate]:
         Gate("repo hygiene: whitespace", ["git", "diff", "--check"]),
         Gate("assets: manifest paths", python_command("tools/check_asset_manifest.py")),
         Gate("maps: current gate validator tests", python_command("tools/test_validate_current_gates.py")),
+        Gate("maps: hostile encounter validator tests", python_command("tools/test_validate_hostile_encounters.py")),
         Gate("maps: material source validator tests", python_command("tools/test_validate_material_sources.py")),
         Gate("maps: survey target validator tests", python_command("tools/test_validate_survey_targets.py")),
         Gate("captures: production slice inventory", python_command("tools/check_production_slice_captures.py")),

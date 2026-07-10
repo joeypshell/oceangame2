@@ -14,16 +14,18 @@ from validate_research_sources import validate_research_source_schema
 
 
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
+DISPLAY_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,47}$")
 SUPPORTED_MATERIALS = {"titanium_scrap", "conductive_coil"}
-SUPPORTED_PROJECTS = {"salvage_cutter_project", "current_stabilizer_project"}
+SUPPORTED_PROJECTS = {"salvage_cutter_project", "current_stabilizer_project", "shock_prod_project"}
 SUPPORTED_DISCOVERIES = {"lower_right_anomaly_discovery"}
-SUPPORTED_CAPABILITIES = {"salvage_cutter", "current_stabilizer"}
+SUPPORTED_CAPABILITIES = {"salvage_cutter", "current_stabilizer", "shock_prod"}
 SUPPORTED_STRATEGIES = {"day_rotation_v1"}
 SUPPORTED_BUILD_PHASES = {"night_debrief"}
 MINIMUM_CANDIDATES = {"titanium_scrap": 4, "conductive_coil": 2}
 EXPECTED_RECIPES = {
     "salvage_cutter_project": {"titanium_scrap": 2, "conductive_coil": 1},
     "current_stabilizer_project": {"titanium_scrap": 2, "conductive_coil": 1},
+    "shock_prod_project": {"titanium_scrap": 2, "conductive_coil": 1},
 }
 PROJECT_RULES = {
     "salvage_cutter_project": {
@@ -36,9 +38,18 @@ PROJECT_RULES = {
         "required_project_id": "salvage_cutter_project",
         "target_field": "target_gate_id",
     },
+    "shock_prod_project": {
+        "capability_id": "shock_prod",
+        "required_project_id": "current_stabilizer_project",
+        "target_field": "target_hostile_id",
+    },
 }
 MATERIAL_FIELDS = {"material_id", "material_quantity", "candidate_pool_id"}
 TOOL_FIELDS = {"required_tool_id", "tool_project_id"}
+PROJECT_FIELDS = {
+    "id", "required_project_id", "required_discovery_id", "required_materials", "unlocks_capability_id",
+    "target_id", "target_gate_id", "target_hostile_id", "build_phase", "project_label", "completion_label",
+}
 RUNTIME_FIELDS = {
     "active",
     "banked",
@@ -83,7 +94,7 @@ def _items(map_data: dict[str, Any], collection: str) -> list[dict[str, Any]]:
 def _reserved_ids(map_data: dict[str, Any]) -> set[str]:
     return {
         item["id"]
-        for collection in ("entities", "zones", "progression_containers", "moving_hazards", "survey_targets")
+        for collection in ("entities", "zones", "progression_containers", "moving_hazards", "hostile_encounters", "survey_targets")
         for item in _items(map_data, collection)
         if isinstance(item.get("id"), str)
     }
@@ -227,12 +238,18 @@ def _validate_projects(
     reserved = _reserved_ids(map_data) | set(pools)
     referenced_targets: set[str] = set()
     referenced_gates: set[str] = set()
+    referenced_hostiles: set[str] = set()
     projects: dict[str, dict[str, Any]] = {}
     project_order: list[str] = []
     current_gates = {
         str(zone.get("id")): zone
         for zone in _items(map_data, "zones")
         if zone.get("current_gate") is True and isinstance(zone.get("id"), str)
+    }
+    hostile_encounters = {
+        str(hostile.get("id")): hostile
+        for hostile in _items(map_data, "hostile_encounters")
+        if isinstance(hostile.get("id"), str)
     }
     for index, project in enumerate(raw_projects):
         if not isinstance(project, dict):
@@ -256,6 +273,9 @@ def _validate_projects(
             continue
         label = str(project.get("id", f"material_projects[{index}]"))
         project_id = project.get("id")
+        unknown_fields = set(project) - PROJECT_FIELDS - RUNTIME_FIELDS
+        if unknown_fields:
+            failures.append(f"{label} has unsupported project fields: {', '.join(sorted(unknown_fields))}.")
         if project_id not in SUPPORTED_PROJECTS:
             failures.append(f"{label} id must be one of: {', '.join(sorted(SUPPORTED_PROJECTS))}.")
         if project.get("required_discovery_id") not in SUPPORTED_DISCOVERIES:
@@ -266,6 +286,13 @@ def _validate_projects(
             )
         if project.get("build_phase") not in SUPPORTED_BUILD_PHASES:
             failures.append(f"{label} build_phase must be one of: {', '.join(sorted(SUPPORTED_BUILD_PHASES))}.")
+        for label_field in ("project_label", "completion_label"):
+            if project_id == "shock_prod_project" and label_field not in project:
+                failures.append(f"{label} requires {label_field}.")
+            elif label_field in project:
+                value = project[label_field]
+                if not isinstance(value, str) or not DISPLAY_LABEL_PATTERN.match(value):
+                    failures.append(f"{label} {label_field} must be short display-safe text.")
 
         rules = PROJECT_RULES.get(str(project_id))
         if rules is not None:
@@ -294,9 +321,9 @@ def _validate_projects(
                         f"{label} requires {required} {material_id}, but daily pool selection guarantees "
                         f"only {selected_yields.get(material_id, 0)}."
                     )
-        target_fields = [field for field in ("target_id", "target_gate_id") if field in project]
+        target_fields = [field for field in ("target_id", "target_gate_id", "target_hostile_id") if field in project]
         if len(target_fields) != 1:
-            failures.append(f"{label} must define exactly one of target_gate_id or target_id.")
+            failures.append(f"{label} must define exactly one supported project target field.")
         else:
             target_field = target_fields[0]
             target_id = project[target_field]
@@ -317,6 +344,13 @@ def _validate_projects(
                     failures.append(f"{label} target_gate_id {target_id!r} does not reference a current gate.")
                 elif gate.get("required_capability_id") != project.get("unlocks_capability_id"):
                     failures.append(f"{label} target gate does not link back to the project capability.")
+            elif target_field == "target_hostile_id" and isinstance(target_id, str):
+                referenced_hostiles.add(target_id)
+                hostile = hostile_encounters.get(target_id)
+                if hostile is None:
+                    failures.append(f"{label} target_hostile_id {target_id!r} does not reference a hostile encounter.")
+                elif hostile.get("required_weapon_capability_id") != project.get("unlocks_capability_id"):
+                    failures.append(f"{label} target hostile does not link back to the project capability.")
         runtime_fields = RUNTIME_FIELDS & set(project)
         if runtime_fields:
             failures.append(f"{label} must not author runtime/profile state fields: {', '.join(sorted(runtime_fields))}.")
@@ -327,6 +361,8 @@ def _validate_projects(
     }
     for gate_id in sorted(durable_gates - referenced_gates):
         failures.append(f"Durable current gate {gate_id!r} is not referenced by a material project.")
+    for hostile_id in sorted(set(hostile_encounters) - referenced_hostiles):
+        failures.append(f"Hostile encounter {hostile_id!r} is not referenced by a material project.")
     return failures
 
 

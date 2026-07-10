@@ -55,20 +55,19 @@ func debrief_lines() -> Array[String]:
 	var current_status := _status_for(project)
 	if current_status == "unavailable":
 		return []
-	var project_id := str(project.get("id", ""))
 	if current_status == "completed":
-		return [_completed_text(project_id)]
+		return [_completed_text(project)]
 	if current_status == "prerequisite_required":
-		return ["%s: cutter required" % _project_prefix(project_id)]
+		return ["%s: %s required" % [_project_prefix(project), _prerequisite_label(project)]]
 	if current_status == "knowledge_required":
-		return ["%s: anomaly knowledge required" % _project_prefix(project_id)]
+		return ["%s: anomaly knowledge required" % _project_prefix(project)]
 	if current_status == "inconsistent_profile":
-		return ["%s: profile repair required" % _project_prefix(project_id)]
+		return ["%s: profile repair required" % _project_prefix(project)]
 	if current_status == "ready":
-		return ["P: Build %s" % _project_action_label(project_id)]
+		return ["P: Build %s" % _project_action_label(project)]
 	var required: Dictionary = project.get("required_materials", {})
 	return ["%s: Ti %d/%d | Coil %d/%d" % [
-		_project_prefix(project_id),
+		_project_prefix(project),
 		_profile.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID),
 		int(required.get(ExpansionProfileState.TITANIUM_MATERIAL_ID, 0)),
 		_profile.material_quantity(ExpansionProfileState.COIL_MATERIAL_ID),
@@ -82,6 +81,10 @@ func has_cutter() -> bool:
 
 func has_current_stabilizer() -> bool:
 	return _profile != null and _profile.has_capability(ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID)
+
+
+func has_shock_prod() -> bool:
+	return _profile != null and _profile.has_capability(ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID)
 
 
 func project_definition() -> Dictionary:
@@ -109,6 +112,7 @@ func report() -> Dictionary:
 		"project_completed": _profile.has_completed_project(project_id) if _profile != null and not project_id.is_empty() else false,
 		"cutter_unlocked": has_cutter(),
 		"current_stabilizer_unlocked": has_current_stabilizer(),
+		"shock_prod_unlocked": has_shock_prod(),
 	}
 
 
@@ -159,34 +163,47 @@ func _status_for(project: Dictionary) -> String:
 
 
 func _note_for_reason(project: Dictionary, reason: String) -> String:
-	var project_id := str(project.get("id", ""))
 	if reason == "completed":
-		return _completed_text(project_id)
+		return _completed_text(project)
 	if reason == "already_completed":
-		return "%s already built" % _project_action_label(project_id).capitalize()
+		return "%s already built" % _project_action_label(project).capitalize()
 	if reason == "missing_project":
-		return "%s needs the salvage cutter project" % _project_prefix(project_id)
+		return "%s needs the %s" % [_project_prefix(project), _prerequisite_project_label(project)]
 	if reason == "missing_discovery":
-		return "%s needs anomaly knowledge" % _project_prefix(project_id)
+		return "%s needs anomaly knowledge" % _project_prefix(project)
 	if reason == "insufficient_materials":
-		return "%s needs banked materials" % _project_prefix(project_id)
+		return "%s needs banked materials" % _project_prefix(project)
 	if reason == "storage_error":
-		return "%s save failed - materials restored" % _project_prefix(project_id)
+		return "%s save failed - materials restored" % _project_prefix(project)
 	if reason == "inconsistent_profile":
-		return "%s profile state is inconsistent" % _project_prefix(project_id)
-	return "%s unavailable" % _project_prefix(project_id)
+		return "%s profile state is inconsistent" % _project_prefix(project)
+	return "%s unavailable" % _project_prefix(project)
 
 
-func _project_prefix(project_id: String) -> String:
-	return "Stabilizer project" if project_id == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID else "Cutter project"
+func _project_prefix(project: Dictionary) -> String:
+	var source_label := str(project.get("project_label", "")).strip_edges()
+	if not source_label.is_empty():
+		return source_label
+	return "Stabilizer project" if str(project.get("id", "")) == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID else "Cutter project"
 
 
-func _project_action_label(project_id: String) -> String:
-	return "current stabilizer" if project_id == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID else "salvage cutter"
+func _project_action_label(project: Dictionary) -> String:
+	return str(project.get("unlocks_capability_id", "project")).replace("_", " ")
 
 
-func _completed_text(project_id: String) -> String:
-	return "Current stabilizer built" if project_id == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID else "Salvage cutter built"
+func _completed_text(project: Dictionary) -> String:
+	var source_label := str(project.get("completion_label", "")).strip_edges()
+	if not source_label.is_empty():
+		return source_label
+	return "Current stabilizer built" if str(project.get("id", "")) == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID else "Salvage cutter built"
+
+
+func _prerequisite_label(project: Dictionary) -> String:
+	return "cutter" if str(project.get("id", "")) == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID else "current stabilizer"
+
+
+func _prerequisite_project_label(project: Dictionary) -> String:
+	return "salvage cutter project" if str(project.get("id", "")) == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID else "current stabilizer project"
 
 
 func _result(changed: bool, reason: String, note: String) -> Dictionary:
