@@ -82,7 +82,7 @@ func _run() -> void:
 			push_error("Material project state smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Material project state smoke passed: project=%s recipe=2_titanium+1_coil knowledge_gate=true debrief_only=true exact_once=true cutter_persistent=true migration=v1_to_v2 inconsistent_pair_rejected=true." % ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID)
+	print("Material project state smoke passed: project=%s recipe=2_titanium+1_coil knowledge_gate=true debrief_only=true exact_once=true cutter_persistent=true migration=v1_to_v3 inconsistent_pair_rejected=true." % ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID)
 	quit(0)
 
 

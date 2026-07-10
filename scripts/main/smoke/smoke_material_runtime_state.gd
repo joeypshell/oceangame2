@@ -73,7 +73,7 @@ func _run() -> void:
 			push_error("Material runtime state smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Material runtime state smoke passed: day1=%s day2=%s held_capacity=2 failure_restored=2 relay_commit=false boat_commit=true profile_material=%s migration=v1_to_v2." % [
+	print("Material runtime state smoke passed: day1=%s day2=%s held_capacity=2 failure_restored=2 relay_commit=false boat_commit=true profile_material=%s migration=v1_to_v3." % [
 		str(day_one_ids),
 		str(day_two_ids),
 		first_material,
@@ -105,7 +105,7 @@ func _test_profile_migration() -> void:
 	_expect(bool(deposit.get("changed", false)), "migrated profile could not deposit material")
 	var reloaded := ExpansionProfileState.new(TEST_PATH)
 	report = reloaded.load_profile()
-	_expect(report.get("status") == "loaded" and report.get("schema_version") == 2, "migrated profile did not persist as v2: %s" % str(report))
+	_expect(report.get("status") == "loaded" and report.get("schema_version") == 3, "migrated profile did not persist as v3: %s" % str(report))
 	_expect(reloaded.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID) == 1, "v2 reload lost material: %s" % str(report))
 
 
