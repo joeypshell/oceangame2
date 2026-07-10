@@ -11,9 +11,16 @@ from typing import Any
 
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 DISPLAY_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,31}$")
-SUPPORTED_TARGET_TYPES = {"anomaly"}
+COMPACT_TEXT_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'|:.-]{0,63}$")
+COORDINATE_PATTERN = re.compile(r"(?:\b[xy]\s*=?\s*\d+\b|\b\d+\s*,\s*\d+\b)", re.IGNORECASE)
+SUPPORTED_TARGET_TYPES = {"anomaly", "resource"}
 SUPPORTED_CAPABILITIES = {"survey_scanner_1"}
 SUPPORTED_INTERACTIONS = {"survey"}
+TARGET_DISCOVERIES = {
+    "anomaly": "lower_right_anomaly_discovery",
+    "resource": "upper_right_mineral_trace_research",
+}
+RESOURCE_FIELDS = {"clue_label", "finding_label", "research_material_pool_id"}
 SURVEY_SPECIFIC_FIELDS = {
     "target_type",
     "required_capability_id",
@@ -21,6 +28,7 @@ SURVEY_SPECIFIC_FIELDS = {
     "commit_map_id",
     "commit_map_path",
     "commit_entry_id",
+    *RESOURCE_FIELDS,
 }
 RUNTIME_STATE_FIELDS = {
     "active",
@@ -81,6 +89,17 @@ def _validate_id(value: Any, item_label: str, field: str) -> list[str]:
     if not ID_PATTERN.match(value):
         return [f"{item_label} {field} {value!r} must use lower_snake_case."]
     return []
+
+
+def _validate_compact_text(value: Any, item_label: str, field: str) -> list[str]:
+    if not isinstance(value, str) or not value:
+        return [f"{item_label} {field} must be a non-empty string."]
+    failures: list[str] = []
+    if "\n" in value or "\r" in value or not COMPACT_TEXT_PATTERN.match(value):
+        failures.append(f"{item_label} {field} must be compact single-line display-safe text.")
+    if COORDINATE_PATTERN.search(value):
+        failures.append(f"{item_label} {field} must not contain coordinates.")
+    return failures
 
 
 def _validate_rect(target: dict[str, Any], item_label: str, width: int, height: int) -> list[str]:
@@ -157,7 +176,14 @@ def validate_survey_target_schema(map_path: Path, map_data: dict[str, Any]) -> l
     if not isinstance(targets, list):
         return ["survey_targets must be a list when present."]
 
-    for collection_name in ("entities", "zones", "progression_containers", "moving_hazards"):
+    for collection_name in (
+        "entities",
+        "zones",
+        "progression_containers",
+        "moving_hazards",
+        "material_candidate_pools",
+        "material_projects",
+    ):
         for index, item in enumerate(map_data.get(collection_name, [])):
             if not isinstance(item, dict):
                 continue
@@ -200,7 +226,8 @@ def validate_survey_target_schema(map_path: Path, map_data: dict[str, Any]) -> l
             seen_target_ids.add(target_id)
         failures.extend(_validate_rect(target, item_label, width, height))
 
-        if target.get("target_type") not in SUPPORTED_TARGET_TYPES:
+        target_type = target.get("target_type")
+        if target_type not in SUPPORTED_TARGET_TYPES:
             failures.append(f"{item_label} target_type must be one of: {', '.join(sorted(SUPPORTED_TARGET_TYPES))}.")
         if target.get("required_capability_id") not in SUPPORTED_CAPABILITIES:
             failures.append(
@@ -223,6 +250,23 @@ def validate_survey_target_schema(map_path: Path, map_data: dict[str, Any]) -> l
             if discovery_id in seen_discovery_ids:
                 failures.append(f"Duplicate survey discovery id {discovery_id!r}.")
             seen_discovery_ids.add(discovery_id)
+        expected_discovery = TARGET_DISCOVERIES.get(str(target_type))
+        if expected_discovery is not None and discovery_id != expected_discovery:
+            failures.append(f"{item_label} {target_type} discovery_id must be {expected_discovery!r}.")
+        if target_type == "resource":
+            for field in sorted(RESOURCE_FIELDS):
+                if field not in target:
+                    failures.append(f"{item_label} resource survey target is missing required field {field}.")
+            failures.extend(_validate_compact_text(target.get("clue_label"), item_label, "clue_label"))
+            failures.extend(_validate_compact_text(target.get("finding_label"), item_label, "finding_label"))
+            failures.extend(_validate_id(target.get("research_material_pool_id"), item_label, "research_material_pool_id"))
+        else:
+            unexpected_resource_fields = RESOURCE_FIELDS & set(target)
+            if unexpected_resource_fields:
+                failures.append(
+                    f"{item_label} resource metadata ({', '.join(sorted(unexpected_resource_fields))}) "
+                    "is only supported on resource survey targets."
+                )
         failures.extend(_validate_id(target.get("route_context"), item_label, "route_context"))
         failures.extend(_validate_commit_reference(map_path, target, item_label))
 
