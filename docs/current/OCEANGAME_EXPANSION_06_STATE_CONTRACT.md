@@ -109,4 +109,3 @@ Existing result presentation may name `Combat defeat`; no combat score or reward
 - oxygen and existing hazard failure reasons/behavior remain unchanged
 - hostile day defeat persistence and all specified restoration paths
 - locked weapon, exact project transaction, duplicate-build rejection, reload, and invalid pair rejection
-
