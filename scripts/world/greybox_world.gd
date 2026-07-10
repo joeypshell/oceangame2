@@ -548,6 +548,7 @@ func _current_gate_runtime_info(zone: Dictionary) -> Dictionary:
 		"current_direction": str(zone.get("current_direction", "")),
 		"current_strength": float(zone.get("current_strength", 1.0)),
 		"required_upgrade_id": str(zone.get("required_upgrade_id", "")),
+		"required_capability_id": str(zone.get("required_capability_id", "")),
 		"route_context": str(zone.get("route_context", "")),
 	}
 

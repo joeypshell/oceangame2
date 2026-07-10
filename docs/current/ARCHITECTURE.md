@@ -105,7 +105,7 @@ Additional current map sources:
   - Uses `scripts/main/return_pressure_feedback.gd` for the narrow source-tagged cargo-full banking prompt.
   - Uses `scripts/main/pre_pickup_route_cue_feedback.gd` for the narrow source-tagged pre-pickup route cue prompt.
   - Uses `scripts/main/oxygen_rest_pocket_feedback.gd` for the narrow source-tagged oxygen-rest prompt and cap text.
-  - Uses `scripts/main/current_gate_controller.gd` for the narrow source-authored current pushback gate.
+  - Uses `scripts/main/current_gate_controller.gd` for narrow source-authored current pushback gates, resolving session upgrades and durable profile capabilities through separate read-only callbacks.
   - Uses `scripts/main/moving_hazard_controller.gd` for the first deterministic source-authored moving hazard patrol.
   - Uses `scripts/main/progression_container_controller.gd` for the narrow source-authored upgrade-chest reward state.
   - Uses `scripts/main/route_commitment_feedback.gd` for the narrow source-authored route objective overlay, start cue, objective step cue, and result text.
@@ -204,6 +204,7 @@ Art placement must not create, remove, or move collision.
 - Pass 25 adds `lower_left_final_dive_signal`, one source-authored final-dive objective seed in `production_slice_04`; banking `slice_04_destination_cache` now shows `Final dive signal discovered`, successful result text can include `Final dive signal found`, and `--smoke-pass-25-final-dive-objective` protects hidden-before-trigger, failure, and reset behavior.
 - Pass 26 moves result-panel text assembly into `result_presentation_builder.gd`, orders completed-run objective/payoff text before route and score bookkeeping, adds the compact `Final dive signal locked` result cue, and protects ordering/failure/reset behavior with `--smoke-pass-26-result-presentation`.
 - The progression-gate lane adds `lower_left_loop_current`, a source-authored soft-push current gate overlapping the lower-left connector. It blocks connector use and pushes the diver right until the session-only `propulsion_fins` upgrade is purchased, while oxygen continues draining. It is protected by `--smoke-current-gate`.
+- Expansion 04 adds `upper_right_current_pocket_gate`, which pushes left until the durable `current_stabilizer` profile capability is present. Focused state coverage keeps its capability owner independent from the legacy session gate and verifies reset/reload durability.
 - The progression-reward lane adds `lower_loop_upgrade_chest`, a source-authored `upgrade_chest` that grants a one-time session wallet reward on an optional lower-loop detour without entering cargo or adding inventory UI. It is protected by `--smoke-upgrade-chest`.
 - The route-pressure lane adds `deep_route_jellyfish_patrol`, one source-authored deterministic `linear_patrol` moving hazard on the lower-loop-to-deep-cache route. Contact reuses existing hazard reset/oxygen semantics, and the scope remains dodge pressure, not combat or broad enemy AI. It is protected by `--smoke-moving-hazard`.
 - The default slice has one source-authored `timed_salvage` target, `salvage_deep_right_cache`, that renders a small in-world affordance and requires 2.5 seconds of in-range progress before entering held cargo.

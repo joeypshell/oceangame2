@@ -20,7 +20,7 @@ func blocking_gate() -> Dictionary:
 	return _blocking_gate
 
 
-func update(world, player, has_upgrade: Callable, delta: float) -> Dictionary:
+func update(world, player, has_upgrade: Callable, has_capability: Callable, delta: float) -> Dictionary:
 	reset()
 	if world == null or player == null or not world.has_method("get_current_gate_at"):
 		return {}
@@ -29,8 +29,8 @@ func update(world, player, has_upgrade: Callable, delta: float) -> Dictionary:
 	if gate.is_empty():
 		return {}
 
-	var upgrade_id := str(gate.get("required_upgrade_id", "")).strip_edges()
-	if upgrade_id.is_empty() or has_upgrade.call(upgrade_id):
+	var requirement := _requirement(gate)
+	if requirement.is_empty() or _has_requirement(requirement, has_upgrade, has_capability):
 		return {"inside": true, "blocked": false, "id": str(gate.get("id", "current_gate"))}
 
 	_blocking_gate = gate
@@ -39,28 +39,38 @@ func update(world, player, has_upgrade: Callable, delta: float) -> Dictionary:
 	if push_vector != Vector2.ZERO and delta > 0.0:
 		player.global_position += push_vector * BASE_PUSH_SPEED * strength * delta
 
-	_current_prompt = "%s - need %s" % [_display_label(gate), _upgrade_label(upgrade_id)]
-	return {
+	_current_prompt = block_prompt(gate)
+	var result := {
 		"inside": true,
 		"blocked": true,
 		"id": str(gate.get("id", "current_gate")),
 		"direction": str(gate.get("current_direction", "")),
 		"strength": strength,
-		"required_upgrade_id": upgrade_id,
+		"requirement_kind": str(requirement["kind"]),
+		"requirement_id": str(requirement["id"]),
 		"prompt": _current_prompt,
 	}
+	result[str(requirement["field"])] = str(requirement["id"])
+	return result
 
 
-func gate_blocks_position(world, position: Vector2, has_upgrade: Callable) -> Dictionary:
+func gate_blocks_position(world, position: Vector2, has_upgrade: Callable, has_capability: Callable) -> Dictionary:
 	if world == null or not world.has_method("get_current_gate_at"):
 		return {}
 	var gate: Dictionary = world.get_current_gate_at(position)
 	if gate.is_empty():
 		return {}
-	var upgrade_id := str(gate.get("required_upgrade_id", "")).strip_edges()
-	if upgrade_id.is_empty() or has_upgrade.call(upgrade_id):
+	var requirement := _requirement(gate)
+	if requirement.is_empty() or _has_requirement(requirement, has_upgrade, has_capability):
 		return {}
 	return gate
+
+
+func block_prompt(gate: Dictionary) -> String:
+	var requirement := _requirement(gate)
+	if requirement.is_empty():
+		return ""
+	return "%s - need %s" % [_display_label(gate), _requirement_label(str(requirement["id"]))]
 
 
 func _direction_vector(direction: String) -> Vector2:
@@ -83,5 +93,21 @@ func _display_label(gate: Dictionary) -> String:
 	return label.replace("_", " ")
 
 
-func _upgrade_label(upgrade_id: String) -> String:
-	return upgrade_id.replace("_", " ")
+func _requirement(gate: Dictionary) -> Dictionary:
+	var upgrade_id := str(gate.get("required_upgrade_id", "")).strip_edges()
+	if not upgrade_id.is_empty():
+		return {"kind": "upgrade", "field": "required_upgrade_id", "id": upgrade_id}
+	var capability_id := str(gate.get("required_capability_id", "")).strip_edges()
+	if not capability_id.is_empty():
+		return {"kind": "capability", "field": "required_capability_id", "id": capability_id}
+	return {}
+
+
+func _has_requirement(requirement: Dictionary, has_upgrade: Callable, has_capability: Callable) -> bool:
+	if str(requirement["kind"]) == "upgrade":
+		return has_upgrade.is_valid() and bool(has_upgrade.call(str(requirement["id"])))
+	return has_capability.is_valid() and bool(has_capability.call(str(requirement["id"])))
+
+
+func _requirement_label(requirement_id: String) -> String:
+	return requirement_id.replace("_", " ")
