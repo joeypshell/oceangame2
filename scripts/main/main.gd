@@ -30,6 +30,7 @@ const ResultPresentationBuilder := preload("res://scripts/main/result_presentati
 const RouteCommitmentFeedback := preload("res://scripts/main/route_commitment_feedback.gd")
 const SessionProgression := preload("res://scripts/main/session_progression.gd")
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
+const ExpeditionDayPresentation := preload("res://scripts/main/expedition_day_presentation.gd")
 const SortieState := preload("res://scripts/main/sortie_state.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
 const WorldConnectorController := preload("res://scripts/main/world_connector_controller.gd")
@@ -1187,6 +1188,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		_update_status_label()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_E:
 		_try_world_connector_transition()
+	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_N:
+		ExpeditionDayPresentation.try_request_voluntary_end(self)
 
 
 func _reset_run() -> void:
@@ -1431,7 +1434,7 @@ func _create_review_overlay(world: Node) -> void:
 	var panel := PanelContainer.new()
 	panel.name = "ReviewPanel"
 	panel.position = Vector2(12, 12)
-	panel.custom_minimum_size = Vector2(260, 0)
+	panel.custom_minimum_size = Vector2(300, 0)
 
 	var panel_style := StyleBoxFlat.new()
 	panel_style.bg_color = Color(0.02, 0.07, 0.10, 0.70)
@@ -1521,7 +1524,7 @@ func _update_status_label() -> void:
 		return
 
 	if _total_salvage <= 0:
-		_status_label.text = "Score 0\nSalvage banked 0/0\nHeld 0/%d\nOxygen --" % _held_salvage_capacity()
+		_status_label.text = ExpeditionDayPresentation.decorate_status(self, "Score 0\nSalvage banked 0/0\nHeld 0/%d\nOxygen --" % _held_salvage_capacity())
 		_update_result_panel()
 		return
 
@@ -1597,6 +1600,7 @@ func _update_status_label() -> void:
 		_status_label.text += "\n%s" % anomaly_text
 	if not prompt.is_empty():
 		_status_label.text += "\n%s" % prompt
+	_status_label.text = ExpeditionDayPresentation.decorate_status(self, _status_label.text)
 	_update_result_panel()
 
 
