@@ -48,11 +48,19 @@ Keep guidance practical and compact. Add rules only when they prevent repeated m
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
+Do not implement issue work directly on `main`. Use a focused `codex/<issue>-<slug>` branch, open a PR, wait for applicable checks, and consider the issue resolved only after merge. Comment with the merge commit and verification result.
+
+If the primary checkout is dirty or stale, leave it untouched and use one clean dedicated resolver worktree based on `origin/main`. Reuse that worktree across a sequential issue batch instead of creating one worktree per issue, and clean only the branches/worktrees created by the current run.
+
+Freeze each resolver run to one explicit issue-number set or committed milestone. Do not sweep the general open queue, refill immediately after closeout, or pre-batch later directional milestones.
+
 Maintain a rolling backlog of about 10 open actionable issues. When the queue drops well below that target, expand the roadmap or planning docs first, then create scoped issues from that plan. Do not pad the queue with vague epics, duplicate work, or intentionally deferred ideas.
+
+Evaluate that backlog target at audit/planning boundaries. A resolver may finish with no active batch after closing one milestone; the next audit selects and batches the next direction.
 
 When a planning conversation identifies concrete next steps, create GitHub issues for them before or alongside implementation. Each issue should be independently actionable by a future agent. Prefer several small issues over one broad issue when the work spans map data, Godot implementation, art generation, validation, and documentation.
 
-If an issue is implemented immediately, still record the issue and close it with the commit hash and verification result. If work is deferred, leave the issue open with dependencies and acceptance criteria.
+If an issue is implemented immediately, still record the issue and close it after its PR merges, with the merge commit and verification result. If work is deferred, leave the issue open with dependencies and acceptance criteria.
 
 Issues should include:
 
@@ -65,12 +73,14 @@ Issues should include:
 
 Record durable decisions, blockers, commit hashes, and verification results in issue comments.
 
+Before a gameplay milestone receives a final player-experience GO/HOLD, provide a short local playtest path tied to its exit question. Automated validation may support a technical GO, but it does not prove fun, pacing, or replay motivation without user review unless the user explicitly requests an autonomous technical closeout.
+
 Detailed workflow: `docs/GITHUB_ISSUE_WORKFLOW.md`
 
 ## Parallel Agent Workflow
 
 - Do not run multiple Codex agents in the same checkout.
-- Use one Git worktree and one feature branch per active agent.
+- Use one dedicated Git worktree per active agent and reuse it across sequential issues; create a fresh feature branch for each claimed issue.
 - Tie each branch to one GitHub issue and claim it with a comment naming the branch and worktree path.
 - Avoid overlapping edits to `scripts/main/main.gd`, `docs/current/PROJECT_CONTEXT.md`, `tools/create_production_slice_map.py`, generated map JSON, and visual baselines unless explicitly coordinated.
 - Detailed workflow: `docs/current/PARALLEL_CODEX_WORKFLOW.md`

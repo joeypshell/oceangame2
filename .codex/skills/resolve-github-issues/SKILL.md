@@ -1,61 +1,110 @@
 ---
 name: resolve-github-issues
-description: Autonomously resolve selected open GitHub issues in the current repository, one issue at a time, until the requested issue set is complete or all remaining selected issues are invalid, duplicate, already fixed, intentionally deferred, or blocked. Use when the user asks Codex to drain, close, resolve, work through, or complete open GitHub issues, especially from a prompt that says to list open issues, select the next issue, implement fixes, validate, self-review, commit, push, and close each issue without stopping for confirmation.
+description: "Resolve an explicit GitHub issue set or one documented active milestone, one issue at a time, using a clean reusable worktree and a fresh feature branch per issue. Implement, validate, self-review, push, open a PR, wait for applicable CI, merge, comment with the merge SHA, and clean only the current branch before continuing. Use when the user asks Codex to drain or complete selected issues. Never push directly to main, sweep unrelated open issues, or close an issue merely because code was pushed."
 ---
 
 # Resolve GitHub Issues
 
 ## Overview
 
-Run an autonomous issue-resolution loop for the current repository. Keep each issue as a distinct unit of understanding, implementation, validation, commit, push, and close-out. Respect the user's requested scope: all issues, a named epic, a label, a numbered issue list, or the next small project-priority issues.
+Resolve one frozen issue-number set as distinct units of understanding, implementation, validation, PR review, merge, and cleanup. Respect the user's explicit issue list first; otherwise use only one documented active milestone. Never turn the general open queue into implicit scope.
 
 ## Initial Setup
 
-1. Inspect repository instructions before making changes. Read `AGENTS.md` and any project-specific development or GitHub issue workflow docs it names.
-2. Confirm the working tree state with `git status --short --branch`. Preserve unrelated user changes.
-3. Confirm GitHub access with `gh auth status` when the repo uses GitHub Issues.
-4. List open issues with `gh issue list --state open --limit 100` or the repository's preferred issue workflow.
-5. Select the next issue using the user's requested scope first, then project priority if documented; otherwise use the issue list order. Do not select epic/meta issues, intentionally deferred issues, or later-roadmap issues unless the user explicitly includes them.
+1. Read `AGENTS.md`, `docs/GITHUB_ISSUE_WORKFLOW.md`, and relevant current docs from a clean current base.
+2. Inspect `git status --short --branch`, `git worktree list`, and `HEAD` versus `origin/main` before editing.
+3. Fetch `origin` with pruning. Never modify a dirty or stale primary checkout.
+4. Create or reuse one clean dedicated resolver worktree based on `origin/main`; reuse it across the sequential issue set instead of creating one worktree per issue.
+5. Confirm GitHub access and read the full selected issue set, comments, labels, milestones, dependencies, linked PRs, and current state.
+6. Freeze the ordered issue numbers. Exclude unrelated, deferred, future-milestone, meta, duplicate, or already-resolved issues.
+7. Record whether a gameplay closeout requires user review and whether the user supplied an `autonomous technical closeout` override.
+
+If no explicit or clearly documented scope exists, stop and run the drift/planning workflow instead of guessing from issue-list order.
 
 ## Per-Issue Loop
 
-For each selected issue:
+For each still-open issue in the frozen set:
 
-1. Read the full issue, comments, labels, linked PRs, linked issues, handoffs, and relevant repository files.
-2. Restate the issue in your own words before editing.
-3. Identify expected behavior, current behavior, likely cause, and acceptance criteria. If the issue is a docs or workflow task, translate these into requested output, current gap, relevant owner files, and completion criteria.
-4. Implement the smallest correct fix or requested change. Avoid broad unrelated refactors.
-5. Add or update tests when appropriate for the risk and project conventions.
-6. Run relevant verification: tests, type checks, linting, builds, targeted scripts, or documentation validation. Record any blocker exactly.
-7. Self-review before closing:
-   - Re-read the original issue and comments.
-   - Confirm every requested item was addressed.
-   - Confirm the interpretation matches the issue intent.
-   - Confirm changes are scoped to the issue.
-   - Confirm tests or validation cover the fix where practical.
-   - Confirm there are no obvious regressions, dead code, debug output, formatting issues, or unrelated changes.
-   - Summarize exactly what changed and why.
-8. Commit a small coherent change for the issue, referencing the issue number when practical.
-9. Push the commit before closing the issue unless the project explicitly uses a different close-out policy.
-10. Close the issue only after validation, self-review, commit, and push are complete.
+### 1. Refresh And Claim
 
-After finishing one issue, immediately refresh the open issue list and continue with the next selected issue without asking for confirmation. Stop when the requested scope is complete, even if unrelated open issues remain.
+- Fetch `origin/main` and verify the resolver worktree is clean.
+- Create `codex/<issue-number>-<short-slug>` from current `origin/main`. Never implement on `main`.
+- Check issue comments for another active claim.
+- Add a claim comment with agent identity, branch, worktree, and expected files. If another claim overlaps, skip it and report the conflict rather than editing the same surface.
+
+### 2. Understand And Implement
+
+- Read the full issue, comments, linked docs, nearby code, and relevant source-of-truth files.
+- Restate expected behavior, current gap, ownership boundaries, acceptance criteria, and verification before editing.
+- Implement the smallest complete change. Do not absorb follow-up work into the issue.
+- Preserve unrelated dirty/generated files and commit matching Godot `.uid` source sidecars only when they belong to newly added or moved source.
+
+### 3. Validate Proportionally
+
+- Documentation/planning: file-length audit when present and `git diff --check`.
+- Schema/map/source: targeted validator tests, generator repeatability, reachability/parity, and affected previews.
+- Runtime: focused state/journey smoke plus regressions for touched owners.
+- Integrated milestone: full release-candidate suite once at the integration boundary or when the issue explicitly requires it.
+- Visual/Web: regenerate only affected captures, inspect both target viewports, compare before acceptance, clean generated sidecars, and verify exact deployed SHA.
+- Treat `SCRIPT ERROR` and `ERROR:` as failures even when the process exits zero.
+- Record commands not run and why.
+
+### 4. Self-Review
+
+- Re-read every acceptance criterion and issue comment.
+- Inspect the full diff and staged set.
+- Confirm ownership/source boundaries, scope, tests, generated-file hygiene, and file-length policy.
+- Remove debug output and unintended artifacts.
+- Do not accept a visual baseline without explicit issue authorization and reviewed comparisons.
+
+### 5. Publish Through A PR
+
+- Stage only intended files and commit a coherent change referencing the issue.
+- Push the feature branch; never push directly to `main`.
+- Open a PR targeting `main` with `Closes #<issue>` and a validation summary.
+- Wait for all applicable required checks. A docs-only path with no configured checks may merge after local validation and a clean mergeability check.
+- If CI fails, inspect logs, fix the same branch, rerun relevant local checks, and wait for green CI. Do not bypass or close the issue.
+- Merge only after the PR is mergeable and required checks pass.
+
+### 6. Close And Clean The Current Issue
+
+- Verify the PR merged and the issue closed. Close manually only when GitHub did not honor the closing keyword and all criteria are met.
+- Comment on the issue with PR, merge SHA, verification, and any intentionally deferred follow-up.
+- Fetch with pruning, move the resolver worktree to current `origin/main` in a detached clean state, and delete only the local branch created for this issue after confirming merge.
+- Confirm the remote branch was deleted or pruned.
+- Never mass-delete pre-existing branches or worktrees as incidental cleanup.
+
+After cleanup, refresh only the remaining frozen issue numbers and continue in dependency order. Do not add newly discovered or unrelated open issues to the run.
+
+## Player-Experience Gate
+
+Before resolving a gameplay milestone's closeout issue:
+
+- Confirm implementation, integrated smoke, visual review, and Web verification issues are merged.
+- Provide the user a short local run path and checklist tied to the milestone exit question.
+- Leave the closeout issue open until the user reports GO/HOLD.
+- If the user explicitly requests `autonomous technical closeout`, continue but call the result a **technical GO** and do not claim automation proved fun, pacing, clarity to a human, or replay motivation.
+
+Pure tooling, documentation, and internal refactor issue sets skip this gate unless requested.
 
 ## Skipping Or Blocking
 
-Do not skip selected issues except when they are invalid, duplicates, already fixed, intentionally deferred by the roadmap/user, or blocked by missing information or unavailable external state. When skipping or blocking:
+Skip a frozen issue only when it is invalid, duplicate, already fixed, intentionally deferred, actively claimed with overlapping files, or blocked by missing information/external state.
 
-- Leave the issue open unless it is a duplicate, invalid, or already fixed according to repository policy.
-- Add a GitHub comment explaining the reason, evidence, and what would unblock it.
-- Continue to the next open issue.
-
-Ask the user for clarification only when inspection cannot produce a safe reasonable interpretation.
+- Leave it open unless repository policy supports closing it as duplicate/invalid/already fixed.
+- Add a comment with evidence and the exact unblock condition.
+- Continue only when later frozen issues do not depend on it.
+- Do not silently reinterpret a blocked milestone into different work.
 
 ## Close-Out
 
-Stop when the requested issue scope is complete. If the user explicitly requested all open issues, stop only when `gh issue list --state open` shows no open issues or every remaining open issue has been documented as blocked, intentionally deferred, or intentionally left open. Final response should report:
+Stop when the frozen scope is merged, deferred, blocked, or awaiting player review. Do not create or begin the next batch.
 
-- issues resolved, skipped, or blocked
-- commits and push status
-- verification run
-- remaining open issues, if any
+Report:
+
+- frozen issue set and milestone
+- issues resolved, skipped, blocked, or awaiting review
+- PRs and merge SHAs
+- local and CI validation
+- resolver worktree state and current-run cleanup
+- remaining open/deferred issues

@@ -1,122 +1,135 @@
 ---
 name: repo-drift-evaluation
-description: Fully evaluate this repository for drift from project direction, stale or missing documentation, GitHub issue/backlog mismatch, validation gaps, source-of-truth discipline, and alignment with AGENTS.md, then create the recommended scoped GitHub issue batch when the backlog is below target unless the user asks for evaluation-only. Use when asked to audit, evaluate, assess direction, find drift, review project state, identify documentation updates, plan or create the next issue batch, or check whether the repo still matches its agent operating guide.
+description: "Audit the current repository for drift from project direction, stale documentation, backlog mismatch, validation gaps, source-of-truth violations, and AGENTS.md misalignment, then create or select one scoped milestone batch when the actionable queue is below target unless the user requests evaluation-only. Use for direction audits, backlog planning, documentation freshness checks, or as the planning stage of drift-batch-resolve. Return an explicit frozen issue-number set and never implement or close issues during the audit."
 ---
 
 # Repo Drift Evaluation
 
 ## Purpose
 
-Run an evidence-based project audit, then create a scoped GitHub issue batch when the audit shows the active actionable backlog is below the repo target or current docs point to untracked concrete work.
+Run an evidence-based audit from a current clean repository view. Select one bounded milestone and create its actionable issue batch when justified. Do not edit project files, implement fixes, accept baselines, change maps, or close issues during the audit.
 
-Still default to no code/data changes: do not edit files, close issues, accept baselines, or change source maps unless the user explicitly asks. If the user says evaluation-only, no issue creation, report-only, or similar, do not create issues; only recommend the batch.
+If the user requests evaluation-only, report-only, no issue creation, or similar, recommend the batch without creating it.
+
+## Bootstrap Before Reading Current Docs
+
+1. Inspect `git status --short --branch` and `git worktree list`.
+2. Fetch `origin` with pruning when available.
+3. Compare `HEAD` with `origin/main` and report ahead/behind state.
+4. Never clean, reset, switch, or edit a dirty primary checkout.
+5. When the primary checkout is dirty or stale, read and audit from one clean dedicated worktree based on `origin/main`.
+6. If remote freshness cannot be checked, state that limitation before using local docs as current truth.
+
+This ordering is mandatory: stale checkout docs must not drive new GitHub issues.
 
 ## Required Reading
 
-Read these first when present:
+Read from the current clean base when present:
 
 - `AGENTS.md`
-- `docs/current/PROJECT_CONTEXT.md`
 - `README.md`
 - `docs/MILESTONES.md`
+- `docs/current/PROJECT_CONTEXT.md`
 - `docs/current/ARCHITECTURE.md`
-- latest relevant pass plan, closeout, visual baseline decision, and Web verification docs under `docs/current/`
-- `docs/current/TOOLING.md` or split docs under `docs/current/tooling/`
+- the latest relevant plan, closeout, visual decision, and Web verification
+- `docs/current/TOOLING.md` or the split tooling docs
 - `docs/GITHUB_ISSUE_WORKFLOW.md`
 
-Then inspect live repo state:
+Then inspect live state:
 
-- `git status --short --branch`
-- `git log --oneline -10`
-- `gh issue list --state open --limit 100 --json number,title,labels,url`
-- recent closed issues if the current docs mention issue ranges
-- recent GitHub Actions runs when Web preview, smoke coverage, or deployment status matters
+- recent commits on `origin/main`
+- open issues with numbers, titles, labels, milestones, and URLs
+- relevant recently closed issues and PRs
+- open/closed milestones
+- recent Actions runs when smoke or deployment status matters
 
 ## Audit Workflow
 
-1. **Establish current state.**
-   - Identify branch, local dirty files, untracked files, recent commits, open issues, and recently closed work.
-   - Separate user/unrelated dirty changes from audit evidence.
+### 1. Establish Evidence
 
-2. **Check AGENTS.md alignment.**
-   - Verify GitHub issue workflow health, including whether actionable work is represented as issues and whether intentionally deferred issues are clearly marked in docs.
-   - Check source-of-truth discipline for map/terrain work: source data or renderer first, generated previews second, screenshots only for confirmation.
-   - Check visual workflow discipline: no broad scene regeneration to fix one issue, baselines accepted only after comparison, no generated `.import` or cache files committed.
-   - Check scope discipline: small implementation passes, no broad economy/upgrades/enemies/procedural/full-map expansion unless current docs select that goal.
+- Identify the canonical commit, protected dirty files, active worktree, recent merged work, open actionable issues, deferred issues, and milestone state.
+- Treat GitHub plus current `origin/main` docs as authoritative over old chat memory or a stale checkout.
+- Distinguish facts from inference and name unavailable evidence.
 
-3. **Find documentation drift.**
-   - Compare README, MILESTONES, PROJECT_CONTEXT, ARCHITECTURE, closeouts, tooling docs, and issue state.
-   - Flag stale "current next issue," stale active issue ranges, missing closeout/Web/baseline docs, old commands, and docs that exceed the file-length policy.
-   - Prefer concise update recommendations; if a doc is already oversized, recommend split/archive rather than expansion.
+### 2. Check AGENTS.md Alignment
 
-4. **Evaluate roadmap direction.**
-   - Apply the project north-star filter from `AGENTS.md`: curiosity, pressure, payoff, remembered-place progress, meaningful route choice, or reason to try another expedition.
-   - Identify whether the next documented direction advances the goal or drifts into tooling-only churn, map-scale expansion, broad art replacement, or vague epics.
-   - Keep `#52/#53` style deferred items deferred unless the selected goal explicitly returns to that topic.
+- Confirm meaningful work is represented by independently actionable issues.
+- Verify feature-branch/PR/CI/merge discipline and that no issue is considered resolved merely because a branch was pushed.
+- Verify map/terrain changes use source or renderer first, then generation, validation, and final screenshots.
+- Verify visual changes are scoped, compared before baseline acceptance, and free of generated cache files.
+- Verify work stays inside the selected roadmap boundary and the north-star filter: curiosity, pressure, payoff, remembered-place progress, meaningful route choice, or another-expedition motivation.
 
-5. **Check validation coverage.**
-   - Prefer safe, fast checks:
-     - `python tools/check_file_lengths.py` when present
-     - `git diff --check`
-     - map validators or parity checks only when map/source drift is under review
-     - `gh run list` for CI/Web deployment status
-   - Do not run long Godot capture/smoke suites unless the user asks or the audit depends on them.
-   - Report commands not run and why.
+### 3. Find Documentation Drift
 
-6. **Assess issue/backlog health.**
-   - Count open actionable issues.
-   - Distinguish active next work from deferred optional work.
-   - Recommend a small issue batch only when the queue is below the project target or the docs point to untracked concrete work.
-   - Create the recommended issue batch during the run unless the user explicitly requested evaluation-only/no issue creation or GitHub access is unavailable.
-   - Keep intentionally deferred issues such as #52/#53 out of the active batch unless the current selected goal explicitly returns to that topic.
+- Compare README, MILESTONES, PROJECT_CONTEXT, ARCHITECTURE, roadmap, closeouts, tooling, and live GitHub state.
+- Flag stale current issue ranges, wrong next direction, missing closeout/Web/visual evidence, obsolete commands, and oversized docs.
+- Prefer concise current-state corrections; split/archive rather than growing an already oversized document.
 
-7. **Create the issue batch when needed.**
-   - Run a duplicate check against open and recently closed issues before creating anything.
-   - Prefer about 10 open actionable issues when the queue is well below target.
-   - Use small independently actionable issues; do not pad with vague epics.
-   - Each issue body must include: summary, acceptance criteria, relevant docs/code areas, dependencies/blockers, implementation notes, and verification steps.
-   - Order issues by dependency. Planning/source-rule issues should precede source/runtime/smoke/capture/visual/Web/closeout issues.
-   - Create issues with `gh issue create` or the repo's preferred GitHub workflow.
-   - Return created issue numbers and URLs, dependency order, and any recommended issue intentionally not created with the reason.
+### 4. Evaluate Direction
+
+- Select at most one milestone for actionable work.
+- A full batch requires a documented goal, boundaries/non-goals, ownership/source expectations, and an exit question or criteria.
+- If those are missing, create or recommend only the planning decision issue and return `planning_gate: true`; do not invent implementation details.
+- Keep future named milestones directional until the selected milestone closes.
+
+### 5. Check Validation Coverage
+
+Prefer fast read-only checks:
+
+- `python tools/check_file_lengths.py` when present
+- `git diff --check`
+- targeted validators/parity only when that source surface is under audit
+- GitHub Actions status for smoke/Web state
+
+Do not run long Godot capture or release suites unless the audit depends on them. Report skipped commands and why.
+
+### 6. Assess Backlog Health
+
+- Count active actionable issues separately from deferred, blocked, meta, and future-milestone issues.
+- Reuse an existing coherent milestone batch before creating more work.
+- Treat 6-10 meaningful issues as the normal batch range, not a quota. Fewer are valid when they fully cover the milestone.
+- Never pad with vague planning, duplicate validation, or ceremonial closeout work.
+- Do not immediately refill a batch that another resolver is actively draining.
+
+### 7. Create One Batch When Needed
+
+- Run duplicate checks against open issues and relevant recent closures.
+- Create issues only for the selected milestone or planning gate.
+- Assign the selected milestone when one exists.
+- Each issue must include summary, acceptance criteria, relevant docs/code areas, dependencies/blockers, implementation notes, and verification.
+- Prefer dependency order: plan/contract, source/schema, authoring, focused runtime, integration, smoke, capture/visual review, Web verification, player review, closeout. Include only stages the milestone actually needs.
+- Do not hardcode deferred issue numbers as the general mechanism; use labels, issue comments, and current docs. Existing documented exceptions may still be named in the report.
+
+## Required Handoff
+
+Return these fields clearly enough for a resolver to freeze scope:
+
+- `selected_milestone`: number/title or `none`
+- `planning_gate`: `true` or `false`
+- `selected_issue_ids`: ordered explicit numbers
+- `created_issue_ids`: ordered explicit numbers
+- `dependency_order`: concise ordered list
+- `deferred_issue_ids`: explicit numbers and rationale
+- `player_review_required`: `true` for gameplay/experience milestones, otherwise `false`
+
+The audit must not resolve, close, or implement any returned issue.
 
 ## Output Format
 
-Return a concise but complete report:
+Report:
 
-```markdown
-**Verdict**
-One paragraph on whether the repo is aligned, drifting, or blocked.
-
-**Evidence Read**
-Key files, issue ranges, commits, and commands inspected.
-
-**AGENTS.md Alignment**
-- Rule/status/evidence/fix for the important project rules.
-
-**Drift Findings**
-- Ordered by impact. Include file paths, issue numbers, or command evidence.
-
-**Documentation Updates Needed**
-- Concrete docs to update, split, archive, or leave alone.
-
-**Issue And Backlog Recommendations**
-- Active next issues created or, in evaluation-only mode, issues to create; intentionally deferred issues; and what not to do yet.
-
-**Created Issues**
-- Issue numbers, titles, URLs, dependency order, and any issue intentionally not created.
-
-**Validation**
-- Commands run and results; commands skipped and why.
-
-**Next Recommended Action**
-One specific next action, scoped enough for a GitHub issue.
-```
+1. **Verdict** - aligned, drifting, or blocked.
+2. **Canonical State** - commit/worktree freshness and protected dirty files.
+3. **Key Findings** - ordered by impact with file/issue evidence.
+4. **Direction And Backlog** - selected milestone, meaningful-change rationale, and what remains directional.
+5. **Created Or Selected Batch** - the required handoff fields and issue URLs.
+6. **Validation** - commands and results, plus intentional omissions.
+7. **Next Action** - one specific action without implementing it.
 
 ## Guardrails
 
-- Be explicit about uncertainty and distinguish evidence from inference.
-- Do not treat old chat memory as source of truth when repo docs or GitHub state disagree.
-- Do not silently fix drift during an evaluation unless the user requested edits.
-- Do not skip issue creation when the backlog is below target unless the user requested evaluation-only, GitHub access is unavailable, or every candidate would be duplicate/vague/deferred.
-- Do not pad recommendations with vague epics.
-- If recommending follow-up issues, include acceptance criteria and verification steps.
+- Do not silently fix drift during an audit.
+- Do not create a second batch when one coherent selected batch already exists.
+- Do not create implementation issues from an undocumented direction.
+- Do not use old chat memory as current truth when GitHub or `origin/main` disagrees.
+- If GitHub writes are unavailable, return complete issue drafts and mark them uncreated.

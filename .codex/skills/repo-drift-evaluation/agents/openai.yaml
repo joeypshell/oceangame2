@@ -1,4 +1,4 @@
 interface:
   display_name: "Repo Drift Evaluation"
-  short_description: "Audit drift and create issue batches"
-  default_prompt: "Use $repo-drift-evaluation to evaluate this repository for drift, direction, documentation freshness, AGENTS.md alignment, and create the next scoped GitHub issue batch when the actionable backlog is below target."
+  short_description: "Audit and batch one current milestone"
+  default_prompt: "Use $repo-drift-evaluation to audit current origin/main for direction, documentation, backlog, validation, and AGENTS.md drift, then select or create one bounded milestone issue batch and return its explicit issue numbers without implementing them."

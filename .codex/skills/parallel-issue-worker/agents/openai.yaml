@@ -1,4 +1,4 @@
 interface:
   display_name: "Parallel Issue Worker"
-  short_description: "Claim one GitHub issue safely in parallel"
-  default_prompt: "Use $parallel-issue-worker to claim one safe GitHub issue in a dedicated worktree, finish it, and then recheck the queue without monopolizing the batch."
+  short_description: "Claim one issue in a reusable agent worktree"
+  default_prompt: "Use $parallel-issue-worker only when parallel work is explicitly active: reuse this agent's dedicated clean worktree, claim one non-overlapping issue, create a fresh issue branch from origin/main, merge it through PR and applicable CI, clean that branch, and do not seed future milestones to keep agents busy."

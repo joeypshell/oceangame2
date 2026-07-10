@@ -1,4 +1,4 @@
 interface:
   display_name: "Drift Batch Resolve"
-  short_description: "Audit drift, create issues, resolve queue"
-  default_prompt: "Use $drift-batch-resolve to audit repo drift, ensure a scoped GitHub issue batch exists, and then resolve the active non-deferred issues."
+  short_description: "Run one bounded milestone through PRs"
+  default_prompt: "Use $drift-batch-resolve to audit current origin/main, select or create one bounded milestone batch, resolve only that frozen issue set through PRs and applicable CI in one clean resolver worktree, and stop at player review or closeout without starting another milestone."

@@ -4,6 +4,8 @@ Date: 2026-07-08
 
 Use this workflow when multiple Codex agents work on `oceangame2` at the same time.
 
+Parallel work is optional and is not the default resolver mode. Prefer the single-agent bounded milestone workflow unless the user explicitly resumes multiple agents and enough independent work already exists.
+
 ## Purpose
 
 Use separate Git worktrees and feature branches for parallel work.
@@ -12,18 +14,18 @@ Do not run two agents in the same checkout. This repo has generated assets, Godo
 
 ## Core Rule
 
-One agent gets one Git worktree, one feature branch, and one GitHub issue at a time. Agents should not permanently own a fixed issue batch. After finishing or blocking one issue, refresh the queue before claiming the next issue.
+One active agent gets one dedicated Git worktree that it reuses across sequential issues. Each claimed issue gets a fresh feature branch. Agents should not permanently own a fixed issue batch.
 
 ## Queue-Health Guard
 
-Before any agent claims work, count active unclaimed issues in the selected milestone.
+Before any agent claims work, count independent unclaimed issues in the selected committed milestone.
 
-- If active unclaimed issues are fewer than active agents, seed the next scoped issue batch before claiming more serial closeout work.
-- If the active milestone has only review, Web verification, or closeout issues left, create the next milestone batch before one agent monopolizes the dependency chain.
-- If only overlapping or high-risk issues remain, report that directly instead of waiting silently.
-- Keep `#52` and `#53` deferred unless slice-03 presentation is the selected goal.
+- Do not create the next milestone's batch merely to keep every agent busy.
+- If independent work is fewer than active agents, let excess agents stop or report that the remaining dependency chain is serial.
+- If only overlapping or high-risk issues remain, sequence them instead of forcing parallel work.
+- Keep deferred issues deferred unless their topic becomes the selected goal.
 
-This guard exists because review, Web verification, and closeout tasks often depend on prior implementation landing. When one agent takes that serial tail, the other agent can starve unless the next independent batch is already available.
+Agent utilization is secondary to source ownership, merge safety, and milestone coherence.
 
 ## Coordinator Responsibilities
 
@@ -33,26 +35,26 @@ The primary or coordinator agent should:
 - leave unrelated dirty files alone
 - review open issues, comments, PRs, and milestones
 - create or select one scoped GitHub issue per agent
-- assign each agent a unique branch and worktree
+- assign each agent one persistent worktree and one current issue branch
 - comment on the issue with the branch, worktree path, expected files, and scope
 - avoid assigning overlapping files unless the dependency is explicit
 - merge or rebase branches one at a time after `main` changes
 
 ## Worktree Setup
 
-From the main checkout:
+Create one sibling worktree per active agent, based on current `origin/main`:
 
 ```powershell
-git fetch origin
-git worktree add -b codex/<issue>-<short-slug> C:\Users\pirat\OneDrive\Documents\oceangame2-<issue>-<short-slug> origin/main
+git fetch origin --prune
+git worktree add C:\Users\pirat\OneDrive\Documents\oceangame2-agent-a origin/main
 ```
 
-Use one sibling folder per active agent. Example:
+Reuse that worktree for each issue assigned to that agent. Example:
 
 ```text
 C:\Users\pirat\OneDrive\Documents\oceangame2
-C:\Users\pirat\OneDrive\Documents\oceangame2-278-pass14-plan
-C:\Users\pirat\OneDrive\Documents\oceangame2-287-parallel-issue-worker-skill
+C:\Users\pirat\OneDrive\Documents\oceangame2-agent-a
+C:\Users\pirat\OneDrive\Documents\oceangame2-agent-b
 ```
 
 Each Codex session should open only its assigned worktree folder.
@@ -66,13 +68,20 @@ codex/278-pass14-plan
 codex/287-parallel-issue-worker-skill
 ```
 
+Before starting each issue in the assigned clean worktree:
+
+```powershell
+git fetch origin --prune
+git switch -c codex/<issue>-<short-slug> origin/main
+```
+
 Each issue claim comment should include:
 
 ```markdown
 Claimed by <agent role>.
 
 Branch: `codex/<issue>-<short-slug>`
-Worktree: `C:\Users\pirat\OneDrive\Documents\oceangame2-<issue>-<short-slug>`
+Worktree: `C:\Users\pirat\OneDrive\Documents\oceangame2-agent-<name>`
 Expected files:
 - `<path>`
 
@@ -120,6 +129,16 @@ git rebase origin/main
 ```
 
 If a rebase touches the same source-of-truth file as another active branch, stop and coordinate before resolving conflicts.
+
+The agent whose branch merged should return its worktree to a reusable clean state and delete only that merged branch:
+
+```powershell
+git fetch origin --prune
+git switch --detach origin/main
+git branch -d codex/<issue>-<short-slug>
+```
+
+Do not remove another agent's worktree or mass-clean historical worktrees as part of issue resolution.
 
 ## Public Preview Rule
 
