@@ -173,14 +173,16 @@ Avoid pass targets that only add bookkeeping, labels, or isolated polish unless 
 
 ## Current Next Direction
 
-Simple Diver Game 08 is a GO release candidate, Simple Diver Game 09 planning is complete, and OceanGame Expansion 01 closed with a GO.
+Simple Diver Game 08 is a GO release candidate, Simple Diver Game 09 planning is complete, and OceanGame Expansion 01 closed with a GO. This roadmap is now finished history; active direction lives in `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`.
 
 Expansion 01 proved one scanner/profile discovery path, source-authored `production_slice_01 <-> production_slice_04 <-> production_slice_02` travel, one timed anomaly survey, failure cleanup, exact-once boat commit, deterministic smoke, focused visual review, and public Web deployment.
 
-The recommended next step is a bounded territorial-eel Phase B milestone. Start with a plan and contract for one source-authored `idle -> warning -> fixed lunge -> return -> cooldown` encounter on the anomaly approach. Preserve the completed anomaly journey as the regression floor and do not add combat, health, loot, spawning, pursuit/pathfinding, ecosystem simulation, more destinations, or broad systems.
+The selected next step is OceanGame Expansion 02: daylight, open-surface oxygen refill, boat-only banking, multiple sorties, and a compact night transition. The previously recommended noncombat territorial-eel pass remains useful behavioral reference, but it is no longer the immediate product target; enemies and weapons now enter through the later Combat Foundation milestone.
 
 ## Deferred Work
 
 - #52 and #53 remain optional slice-03 polish unless slice-03 becomes part of Milestone 05.
-- The territorial eel is the accepted Phase B fauna candidate and is eligible for the next scoped milestone after Expansion 01 GO.
-- Full-map productionization, broad economy, inventory/crafting, combat/ecosystem AI, procedural generation, and save-heavy sandbox systems remain deferred.
+- Emergency Week and Food/Water/Power overnight survival consumption are rejected.
+- Shortcut and fast-travel networks are rejected; remembered geography remains part of expedition pressure.
+- Full-map productionization, broad economy, inventory/crafting, ecosystem simulation, procedural generation, and save-heavy sandbox systems remain deferred.
+- Enemies, weapons, combat, and biological resources are planned Phase 2 work, but remain deferred until their named milestones.

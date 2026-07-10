@@ -7,10 +7,10 @@ Keep guidance practical and compact. Add rules only when they prevent repeated m
 ## Repository Shape
 
 - Source: Godot 4.x project using GDScript. Scenes should live in `scenes/`; scripts should live in `scripts/`.
-- Current purpose: visual-first salvage prototype proving a stable OceanGame-style art, map, and asset workflow.
+- Current purpose: expand the finished compact diver-game foundation toward the larger OceanGame while preserving its stable source-map, validation, visual, and deployment workflow.
 - Runtime/config, once the Godot project exists: `project.godot`, `icon.svg`, Godot scenes, and GDScript files.
 - GitHub Actions: `.github/workflows/godot-web-export.yml`.
-- Planning docs: `docs/`.
+- Planning docs: `docs/`; active product direction starts at `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`.
 - Project-local Codex skills: `.codex/skills/`.
 - Generated files not to commit: `.godot/`, `.import/`, `*.import`, `builds/`, `exports/`, local editor state, secrets, and platform export artifacts.
 - Godot 4.4+ `.uid` sidecars are source state, not cache. Commit them with their matching scripts/resources and move or delete them alongside those files.

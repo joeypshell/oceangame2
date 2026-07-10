@@ -16,7 +16,9 @@ This file is the compact handoff for new Codex or ChatGPT Project sessions. It c
 - tool-like salvage interactions and limited progression
 - one scanner-backed, source-authored discovery journey with exact return/commit state
 
-The recommended next target is a contract-first territorial-eel encounter on the proven anomaly route. It must remain one bounded warning/lunge/return/cooldown interaction, not a general combat or ecosystem system.
+The committed next target is OceanGame Expansion 02: a visible daylight budget, open-surface oxygen refill, boat-only banking, multiple sorties, and a compact night transition. Phase 2 then grows through materials/tools, capability-gated map returns, practical research, enemies/weapons, biological resources, daily conditions, and authored regions.
+
+Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
 Controlled gameplay/visual passes are now a validation lane inside the roadmap, not the whole roadmap. New work should serve curiosity, pressure, payoff, remembered-place progress, meaningful route choice, or a reason to try another expedition.
 
@@ -37,11 +39,14 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Current terrain atlas: `assets/terrain_tiles/cave_tileset_v2.png`
 - Web export workflow: `.github/workflows/godot-web-export.yml`
 - Current docs index: `README.md`
-- Current roadmap: `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`
+- Finished foundation roadmap: `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`
+- Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
+- Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Current expansion decision: `docs/current/OCEANGAME_EXPANSION_01_CLOSEOUT.md`
+- Completed expansion decision: `docs/current/OCEANGAME_EXPANSION_01_CLOSEOUT.md`
+- Committed expansion plan: `docs/current/OCEANGAME_EXPANSION_02_PLAN.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
 - Latest Web verification: `docs/current/OCEANGAME_EXPANSION_01_WEB_PREVIEW_VERIFICATION.md`
@@ -219,18 +224,9 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-09:
 
-- Closed: #662-#671 completed OceanGame Expansion 01 with a documented GO. The next issue batch should plan one bounded territorial-eel encounter; #52/#53 remain deferred slice-03 polish.
-- Closed: #562-#571 completed Pass 25 planning, final-dive contract, validation, source authoring, runtime feedback, smoke, focused capture, visual decision, public Web verification, and closeout.
-- Closed: #542-#551 completed Pass 24 planning, relay objective contract, validation, source authoring, runtime feedback, smoke, focused capture, visual decision, public Web verification, and closeout.
-- Closed: #522-#531 completed Pass 23 planning, next-dive prompt contract, validation, source authoring, runtime result text, smoke, focused capture, visual/Web verification, and closeout.
-- Closed: #502-#511 completed Pass 22 planning, destination payoff contract, validation, source target authoring, runtime feedback, smoke, capture, visual decision, Web verification, and closeout.
-- Closed: #420-#429 completed Pass 21 planning, connector contract, schema validation, source connector authoring, runtime transition, smoke, capture, visual decision, Web verification, and closeout.
-- Closed: #400-#409 completed Pass 20 light confidence progression, including planning, light contract, session light upgrade, compact overlay feedback, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
-- Closed: #380-#389 completed Pass 19 cargo capacity progression, including planning, cargo contract, session cargo upgrade, compact overlay feedback, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
-- Closed: #360-#369 completed Pass 18 session progression, including planning, progression contract, session wallet, one oxygen tank upgrade, compact overlay feedback, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
-- Closed: #340-#349 completed Pass 17 pry salvage, including planning, source contract, validation, source target authoring, staged runtime interaction, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
-- Closed: #320-#329 completed Pass 16 primary dive completion, including planning, source contract, validation, source authoring, runtime completion gate, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
-- Closed: #298-#307 completed Pass 15 objective follow-through, including planning, source/text contract, metadata validation, source marker authoring, compact runtime feedback, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
+- Open: #685-#694 are the committed OceanGame Expansion 02 expedition-day batch; later open milestones remain directional and intentionally have no issue batches.
+- Closed: #662-#671 completed OceanGame Expansion 01 with a documented GO; #52/#53 remain deferred slice-03 polish.
+- Completed pass history and issue ranges are indexed in `docs/MILESTONES.md`; use individual closeouts only for their regression surface.
 - Active tooling/skill queue: none selected.
 - Deferred optional slice-03 polish: #52 and #53 remain open.
 - Closed: #278-#286 completed Pass 14 start-of-run objective cue, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
@@ -468,9 +464,7 @@ Recent important commits:
 
 ## Recommended Next Work
 
-Use `docs/current/OCEANGAME_EXPANSION_01_CLOSEOUT.md` as the current north star. Expansion 01 issues #662-#671 are complete with a GO.
-
-The next issue batch should plan and implement one source-authored territorial-eel encounter on the anomaly approach, using the completed survey journey as its regression floor.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_02_PLAN.md` as the committed implementation plan. Expansion 01 issues #662-#671 are complete with a GO; Expansion 02 issues #685-#694 are active.
 
 Accepted constraints for next work:
 
@@ -479,8 +473,12 @@ Accepted constraints for next work:
 - Do not move the entire full sketch into production yet; grow route scale only when it supports the roadmap.
 - Keep map topology, collision, spawn, extraction, and camera tests source-driven.
 - Preserve the Expansion 01 scanner, slice-02 anomaly, returned discovery, and source-authored slice-04/slice-02 travel.
-- Keep Phase B to `idle -> warning -> fixed lunge -> return -> cooldown`; do not add combat, procedural generation, complex inventory, base building, save-heavy sandbox systems, or broad art replacement.
-- Do not add another destination or connector beyond the selected slice-04/slice-02 link.
+- Implement daylight, surface oxygen, boat banking, multiple sorties, and night transition before materials, capability gates, combat, or regional growth.
+- Night consumes no Food, Water, Power, or other survival tax.
+- Do not add another destination or connector in Expansion 02.
+- Keep future resource and encounter variation inside authored candidates; never reroll geography or required progression arbitrarily.
+- Do not add shortcut or fast-travel networks.
+- Enemies, weapons, and biological resources are selected future pillars, but wait for their named milestones.
 - Keep #52/#53 as optional post-baseline slice-03 improvement issues unless the selected goal shifts back to slice-03 presentation.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.

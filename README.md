@@ -1,8 +1,8 @@
 # oceangame2
 
-`oceangame2` is a compact side-view diver salvage game foundation beginning a controlled OceanGame expansion.
+`oceangame2` is a compact side-view diver salvage game foundation beginning a controlled OceanGame Phase 2 expansion.
 
-The purpose is not to rebuild the full OceanGame immediately. The current product target is a complete, compact diver game first: boat/base entry, authored cave routes, oxygen/cargo pressure, tool-like salvage interactions, limited progression, and a final small-game arc. The workflow must stay stable enough to scale later into the larger 2D Subnautica-like idea.
+The compact diver game and first anomaly-survey expansion are complete foundations. The current product target is the larger expedition-day loop: multiple oxygen sorties under daylight, boat banking, night preparation, materials and tools, capability-gated remembered places, practical research, and later enemies, weapons, and biological resources. The controlled source/validation/visual workflow remains authoritative while that game grows.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 01 GO closeout. The next recommended direction is one contract-first territorial-eel encounter; no later implementation milestone or issue batch is selected yet.
+Current handoff starts with the Expansion 01 GO closeout and the committed Expansion 02 expedition-day plan. Later Phase 2 milestones are directional until the preceding closeout selects them.
 
 Core sources and operating docs:
 
@@ -35,6 +35,8 @@ Core sources and operating docs:
 - [Visual Workflow](docs/VISUAL_WORKFLOW.md)
 - [Milestones](docs/MILESTONES.md)
 - [Finished Simple Diver Game Roadmap](docs/current/SIMPLE_DIVER_GAME_ROADMAP.md)
+- [OceanGame Phase 2 Roadmap](docs/planning/OCEANGAME_PHASE_2_ROADMAP.md)
+- [Capability And Resource Progression Framework](docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md)
 - [Current Architecture](docs/current/ARCHITECTURE.md)
 - [Tooling](docs/current/TOOLING.md)
 - [Production Slice Index](docs/current/PRODUCTION_SLICE_INDEX.md)
@@ -48,6 +50,7 @@ Current release and expansion handoff:
 - [Expansion 01 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_01_VISUAL_BASELINE_DECISION.md)
 - [Expansion 01 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_01_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 01 Closeout](docs/current/OCEANGAME_EXPANSION_01_CLOSEOUT.md)
+- [OceanGame Expansion 02 Plan](docs/current/OCEANGAME_EXPANSION_02_PLAN.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -181,4 +184,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can cross connected slices, use a profile-backed scanner to survey an anomaly under oxygen pressure, return and commit the discovery, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. OceanGame Expansion 01 meets that condition; the next recommended target is one bounded territorial-eel encounter.
+The current foundation succeeds when one authored expedition can cross connected slices, use a profile-backed scanner to survey an anomaly under oxygen pressure, return and commit the discovery, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. OceanGame Expansion 01 meets that condition. Expansion 02 now tests whether daylight, surface oxygen, boat banking, multiple sorties, and a compact night transition can organize the larger game loop before materials, tools, combat, or map-scale growth.
