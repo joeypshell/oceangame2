@@ -15,8 +15,12 @@ const CURRENT_STABILIZER_GATE_ID := "upper_right_current_pocket_gate"
 const SHOCK_PROD_CAPABILITY_ID := "shock_prod"
 const SHOCK_PROD_PROJECT_ID := "shock_prod_project"
 const SHOCK_PROD_TARGET_ID := "deep_cache_territorial_eel"
+const SHOCK_PROD_CAPACITOR_CAPABILITY_ID := "shock_prod_capacitor"
+const SHOCK_PROD_CAPACITOR_PROJECT_ID := "shock_prod_capacitor_project"
 const TITANIUM_MATERIAL_ID := "titanium_scrap"
 const COIL_MATERIAL_ID := "conductive_coil"
+const INSULATING_GEL_MATERIAL_ID := "insulating_gel"
+const EEL_ELECTROCYTE_MATERIAL_ID := "eel_electrocyte"
 const DEFAULT_STORAGE_PATH := "user://oceangame2_profile.json"
 const LEGACY_PROFILE_KEYS := {"schema_version": true, "completed_discoveries": true, "unlocked_capabilities": true}
 const PROFILE_KEYS := {
@@ -28,34 +32,41 @@ const PROFILE_KEYS := {
 }
 const LEGACY_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true}
 const MATERIAL_SCHEMA_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true}
-const SUPPORTED_CAPABILITY_IDS := {
-    SURVEY_SCANNER_CAPABILITY_ID: true,
-    SALVAGE_CUTTER_CAPABILITY_ID: true,
-    CURRENT_STABILIZER_CAPABILITY_ID: true,
-    SHOCK_PROD_CAPABILITY_ID: true,
-}
+const SUPPORTED_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true, CURRENT_STABILIZER_CAPABILITY_ID: true, SHOCK_PROD_CAPABILITY_ID: true, SHOCK_PROD_CAPACITOR_CAPABILITY_ID: true}
 const SUPPORTED_DISCOVERY_IDS := {ANOMALY_DISCOVERY_ID: true, MINERAL_TRACE_RESEARCH_ID: true}
-const SUPPORTED_MATERIAL_IDS := {TITANIUM_MATERIAL_ID: true, COIL_MATERIAL_ID: true}
+const SUPPORTED_MATERIAL_IDS := {TITANIUM_MATERIAL_ID: true, COIL_MATERIAL_ID: true, INSULATING_GEL_MATERIAL_ID: true, EEL_ELECTROCYTE_MATERIAL_ID: true}
 const MATERIAL_SCHEMA_PROJECT_IDS := {SALVAGE_CUTTER_PROJECT_ID: true}
-const SUPPORTED_PROJECT_IDS := {SALVAGE_CUTTER_PROJECT_ID: true, CURRENT_STABILIZER_PROJECT_ID: true, SHOCK_PROD_PROJECT_ID: true}
+const SUPPORTED_PROJECT_IDS := {SALVAGE_CUTTER_PROJECT_ID: true, CURRENT_STABILIZER_PROJECT_ID: true, SHOCK_PROD_PROJECT_ID: true, SHOCK_PROD_CAPACITOR_PROJECT_ID: true}
 const PROJECT_RULES := {
     SALVAGE_CUTTER_PROJECT_ID: {
         "capability_id": SALVAGE_CUTTER_CAPABILITY_ID,
         "required_project_id": "",
         "target_field": "target_id",
         "target_id": SALVAGE_CUTTER_TARGET_ID,
+        "required_materials": {TITANIUM_MATERIAL_ID: 2, COIL_MATERIAL_ID: 1},
     },
     CURRENT_STABILIZER_PROJECT_ID: {
         "capability_id": CURRENT_STABILIZER_CAPABILITY_ID,
         "required_project_id": SALVAGE_CUTTER_PROJECT_ID,
         "target_field": "target_gate_id",
         "target_id": CURRENT_STABILIZER_GATE_ID,
+        "required_materials": {TITANIUM_MATERIAL_ID: 2, COIL_MATERIAL_ID: 1},
     },
     SHOCK_PROD_PROJECT_ID: {
         "capability_id": SHOCK_PROD_CAPABILITY_ID,
         "required_project_id": CURRENT_STABILIZER_PROJECT_ID,
         "target_field": "target_hostile_id",
         "target_id": SHOCK_PROD_TARGET_ID,
+        "required_materials": {TITANIUM_MATERIAL_ID: 2, COIL_MATERIAL_ID: 1},
+        "capability_effect": "",
+    },
+    SHOCK_PROD_CAPACITOR_PROJECT_ID: {
+        "capability_id": SHOCK_PROD_CAPACITOR_CAPABILITY_ID,
+        "required_project_id": SHOCK_PROD_PROJECT_ID,
+        "target_field": "target_hostile_id",
+        "target_id": SHOCK_PROD_TARGET_ID,
+        "required_materials": {COIL_MATERIAL_ID: 1, INSULATING_GEL_MATERIAL_ID: 1, EEL_ELECTROCYTE_MATERIAL_ID: 1},
+        "capability_effect": "interrupt_warning_lunge",
     },
 }
 
@@ -127,7 +138,7 @@ func unlock_capability(capability_id: String, persist := true) -> Dictionary:
 		return {"changed": false, "reason": "unsupported_capability", "capability_id": capability_id}
 	if has_capability(capability_id):
 		return {"changed": false, "reason": "already_unlocked", "capability_id": capability_id}
-	if capability_id in [SALVAGE_CUTTER_CAPABILITY_ID, CURRENT_STABILIZER_CAPABILITY_ID, SHOCK_PROD_CAPABILITY_ID]:
+	if capability_id in [SALVAGE_CUTTER_CAPABILITY_ID, CURRENT_STABILIZER_CAPABILITY_ID, SHOCK_PROD_CAPABILITY_ID, SHOCK_PROD_CAPACITOR_CAPABILITY_ID]:
 		return {"changed": false, "reason": "project_transaction_required", "capability_id": capability_id}
 	_unlocked_capabilities[capability_id] = true
 	if persist and not save_profile():
@@ -384,11 +395,13 @@ func _validate_material_project_definition(project_definition: Dictionary) -> Ar
 		failures.append("unsupported project target")
 	if str(project_definition.get("build_phase", "")) != "night_debrief":
 		failures.append("unsupported project build phase")
+	if str(project_definition.get("capability_effect", "")) != str(rules.get("capability_effect", "")):
+		failures.append("unsupported project capability effect")
 	var required = project_definition.get("required_materials")
 	if typeof(required) != TYPE_DICTIONARY:
 		failures.append("project required_materials must be an object")
 		return failures
-	var expected := {TITANIUM_MATERIAL_ID: 2, COIL_MATERIAL_ID: 1}
+	var expected: Dictionary = rules["required_materials"]
 	if required.size() != expected.size():
 		failures.append("project recipe has unsupported materials")
 	for material_id in expected:

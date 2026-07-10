@@ -1,11 +1,9 @@
 # Map Spec
 
 ## Purpose
-
 The map must be a data source, not a screenshot to imitate. The game scene should render from authored map data so the in-game result can match the plan.
 
 ## First Map
-
 Working name: `cave_salvage_test_01`
 
 Current source:
@@ -433,6 +431,7 @@ Future darkness/light metadata is defined in `docs/current/DEPTH_DARKNESS_LIGHT_
 `hazard` entities are static point hazards and require `kind`. Current valid-style examples are `mine`, `jellyfish`, and `stress_marker`.
 Moving hazards are defined separately in `docs/current/MOVING_HAZARD_DODGE_CONTRACT.md` using top-level `moving_hazards`; production previews may use `kind` to choose first-pass prop art, but hazard behavior is still source-driven.
 Expansion 06 hostile encounters use the optional top-level `hostile_encounters` list defined in `docs/current/OCEANGAME_EXPANSION_06_SOURCE_CONTRACT.md`. The first contract supports only one source-authored `territorial_lunge` eel plus one linked non-enemy `shock_prod_project`; mutable AI/health state, drops, loot, and arbitrary attack lists are forbidden.
+Expansion 07 biological inputs use the optional top-level `biological_resource_sources` list defined in `docs/current/OCEANGAME_EXPANSION_07_SOURCE_CONTRACT.md`. The bounded contract supports one scanner-assisted passive sample and one explicit post-defeat eel harvest, both replenished on a fresh day, plus one ordered `shock_prod_capacitor_project`; automatic drops, random spawn weights, runtime state, and arbitrary recipes remain forbidden.
 Non-salvage surveys use top-level `survey_targets`: anomaly rules live in `docs/current/OCEANGAME_EXPANSION_01_SURVEY_SOURCE_CONTRACT.md`, while the Expansion 05 resource target and researched material-pool link live in `docs/current/OCEANGAME_EXPANSION_05_SOURCE_CONTRACT.md`. Survey metadata must not be placed on salvage entities or author runtime/profile state. Expansion 03 material candidates/projects follow `docs/current/OCEANGAME_EXPANSION_03_SOURCE_CONTRACT.md`; Expansion 04 ordered projects/durable currents follow `docs/current/OCEANGAME_EXPANSION_04_SOURCE_CONTRACT.md`.
 ```json
 {
@@ -460,6 +459,7 @@ Validation expectations:
 - Progression containers should follow `docs/current/LOCKED_CACHE_PROGRESSION_CONTRACT.md` and must not author terrain, collision, runtime opened state, save state, oxygen values, cargo limits, or UI layout.
 - Moving hazards should follow `docs/current/MOVING_HAZARD_DODGE_CONTRACT.md` and must not author combat, AI state, health, loot, save state, oxygen penalty values, or collision changes.
 - Hostile encounters must follow the Expansion 06 source contract: one in-bounds/reachable home and territory, a fully open/reachable lower-edge evade lane, positive finite timing/radius/speed, exact health/damage, a linked `shock_prod` capability/project, and no runtime/reward fields.
+- Biological sources must follow the Expansion 07 source contract: the exact passive/hostile roles, one guaranteed daily unit each, legal passive placement, an existing base-weapon hostile link, explicit timed collection, an ordered non-circular capacitor project, and no automatic loot or runtime fields.
 - Entity coordinates must be inside map bounds, non-solid, and reachable from the player entry cell.
 - Maps must define exactly one `spawn` or `boat_spawn`.
 - Playable salvage maps must define a base extraction zone or use `boat_spawn` extraction. Renderer stress-test maps may use `stress_marker` salvage without an extraction zone.
