@@ -113,7 +113,7 @@ Additional current map sources:
   - Uses `scripts/main/session_progression.gd` for the session-only wallet and oxygen, cargo, light, and propulsion upgrades.
   - Delegates oxygen, held cargo, current connected-map leg, and local failure storage to `scripts/main/sortie_state.gd`.
   - Keeps interaction progress in the focused timed, pry, and survey controllers as sortie-local subowners.
-  - Delegates daylight, sortie count, day-bank totals, committed-during-day discovery ids, connector-preserved day context, and end-day state to `scripts/main/expedition_day_state.gd`.
+  - Delegates the deterministic 300-second daylight countdown, exact-once nightfall transition, sortie count, day-bank totals, committed-during-day discovery ids, connector-preserved day context, and end-day state to `scripts/main/expedition_day_state.gd`.
   - Keeps durable capabilities and committed discoveries in `scripts/main/expansion_profile_state.gd`; session wallet, arbitrary world state, cargo, oxygen, daylight, and in-progress interactions are not profile-persistent.
   - Uses `scripts/main/world_connector_controller.gd` for source-authored prompted world-slice connectors.
   - Uses `scripts/main/final_dive_objective_seed.gd` for the compact source-authored final-dive/capstone cue.
