@@ -1,0 +1,131 @@
+#!/usr/bin/env python3
+"""Focused positive and negative tests for survey target validation."""
+
+from __future__ import annotations
+
+import copy
+import unittest
+from pathlib import Path
+
+from validate_survey_targets import validate_survey_target_reachability, validate_survey_target_schema
+
+
+ROOT = Path(__file__).resolve().parents[1]
+SOURCE_MAP = ROOT / "maps" / "production_slice_02.greybox.json"
+
+
+def valid_target() -> dict:
+    return {
+        "id": "lower_right_anomaly_survey",
+        "target_type": "anomaly",
+        "x": 1,
+        "y": 1,
+        "w": 2,
+        "h": 2,
+        "required_capability_id": "survey_scanner_1",
+        "interaction": "survey",
+        "interaction_seconds": 3.0,
+        "interaction_label": "Survey anomaly",
+        "discovery_id": "lower_right_anomaly_discovery",
+        "route_context": "lower_right_anomaly_route",
+        "commit_map_id": "production_slice_01",
+        "commit_map_path": "res://maps/production_slice_01.greybox.json",
+        "commit_entry_id": "surface_boat_entry",
+    }
+
+
+def valid_map() -> dict:
+    return {
+        "id": "survey_fixture",
+        "units": {"width_tiles": 8, "height_tiles": 8},
+        "entities": [],
+        "zones": [],
+        "survey_targets": [valid_target()],
+    }
+
+
+class SurveyTargetValidationTests(unittest.TestCase):
+    def test_valid_schema_and_reachability(self) -> None:
+        map_data = valid_map()
+        self.assertEqual(validate_survey_target_schema(SOURCE_MAP, map_data), [])
+        reachable = {(x, y) for y in range(8) for x in range(8)}
+        self.assertEqual(validate_survey_target_reachability(map_data["survey_targets"], set(), reachable), [])
+
+    def test_requires_dedicated_list_and_unique_ids(self) -> None:
+        map_data = valid_map()
+        map_data["entities"] = [{"id": "salvage", "required_capability_id": "survey_scanner_1"}]
+        duplicate = copy.deepcopy(map_data["survey_targets"][0])
+        map_data["survey_targets"].append(duplicate)
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertTrue(any("only supported in survey_targets" in failure for failure in failures))
+        self.assertTrue(any("Duplicate survey target id" in failure for failure in failures))
+        self.assertTrue(any("Duplicate survey discovery id" in failure for failure in failures))
+        self.assertEqual(
+            validate_survey_target_schema(SOURCE_MAP, {"units": {}, "survey_targets": {}}),
+            ["survey_targets must be a list when present."],
+        )
+
+    def test_rejects_invalid_interaction_and_runtime_state(self) -> None:
+        map_data = valid_map()
+        target = map_data["survey_targets"][0]
+        target.update(
+            {
+                "target_type": "salvage",
+                "required_capability_id": "unknown_scanner",
+                "interaction": "timed_salvage",
+                "interaction_seconds": 0,
+                "interaction_label": "bad\nlabel",
+                "discovery_id": "Bad Discovery",
+                "route_context": "Bad Route",
+                "pending": True,
+                "x": 7,
+            }
+        )
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        for expected in (
+            "target_type must be one of",
+            "required_capability_id must be one of",
+            "interaction must be one of",
+            "interaction_seconds must be a positive number",
+            "interaction_label must be lower_snake_case or short display-safe text",
+            "discovery_id 'Bad Discovery' must use lower_snake_case",
+            "route_context 'Bad Route' must use lower_snake_case",
+            "must not author runtime/profile state fields: pending",
+            "survey target rectangle extends outside map bounds",
+        ):
+            self.assertTrue(any(expected in failure for failure in failures), expected)
+
+        target["id"] = ["not", "hashable"]
+        target["discovery_id"] = {"not": "hashable"}
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertTrue(any("id must be a non-empty string" in failure for failure in failures))
+        self.assertTrue(any("discovery_id must be a non-empty string" in failure for failure in failures))
+
+    def test_validates_commit_map_and_boat_entry(self) -> None:
+        map_data = valid_map()
+        target = map_data["survey_targets"][0]
+        target["commit_map_id"] = "wrong_map"
+        target["commit_entry_id"] = "missing_entry"
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertTrue(any("does not match" in failure for failure in failures))
+        self.assertTrue(any("does not reference an entry" in failure for failure in failures))
+
+        target["commit_map_id"] = "production_slice_02"
+        target["commit_map_path"] = "res://maps/production_slice_02.greybox.json"
+        target["commit_entry_id"] = "relay_sub_entry"
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertTrue(any("must reference a boat_spawn" in failure for failure in failures))
+
+    def test_rejects_solid_and_unreachable_cells(self) -> None:
+        target = valid_target()
+        failures = validate_survey_target_reachability(
+            [target],
+            {(1, 1)},
+            {(1, 1), (1, 2)},
+        )
+        self.assertTrue(any("contains solid cells" in failure for failure in failures))
+        self.assertTrue(any("contains unreachable cells" in failure for failure in failures))
+
+
+if __name__ == "__main__":
+    unittest.main()

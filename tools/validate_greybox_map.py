@@ -23,6 +23,7 @@ from validate_route_objectives import (
     validate_route_objective_reachability,
     validate_route_objective_schema,
 )
+from validate_survey_targets import validate_survey_target_reachability, validate_survey_target_schema
 from validate_visibility_zones import validate_visibility_zone_reachability, validate_visibility_zone_schema
 from validate_world_connectors import validate_world_connector_reachability, validate_world_connector_schema
 
@@ -44,7 +45,6 @@ OXYGEN_REST_METADATA_FIELDS = {
     "route_context",
 }
 OXYGEN_REST_TRIGGER_FIELDS = OXYGEN_REST_METADATA_FIELDS - {"route_context"}
-
 def rect_cells(item: dict) -> set[tuple[int, int]]:
     cells: set[tuple[int, int]] = set()
     for y in range(int(item["y"]), int(item["y"]) + int(item["h"])):
@@ -370,7 +370,6 @@ def validate_boat_spawn(entity: dict, solid: set[tuple[int, int]], width: int, h
         failures.append(f"{entity['id']} boat extraction rectangle has no open cells.")
     return failures
 
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("map_json", type=Path)
@@ -401,6 +400,7 @@ def main() -> int:
     failures.extend(validate_next_dive_prompt_schema(map_data, entities, zones))
     failures.extend(validate_progression_container_schema(map_data))
     failures.extend(validate_relay_follow_through_objective_schema(map_data, entities))
+    failures.extend(validate_survey_target_schema(args.map_json, map_data))
     failures.extend(validate_visibility_zone_schema(map_data))
     failures.extend(validate_world_connector_schema(args.map_json, map_data))
     failures.extend(validate_route_objective_schema(map_data, entities, zones))
@@ -484,6 +484,7 @@ def main() -> int:
     failures.extend(validate_moving_hazard_reachability(map_data.get("moving_hazards", []), solid, reachable))
     failures.extend(validate_progression_container_reachability(map_data.get("progression_containers", []), solid, reachable))
     failures.extend(validate_relay_follow_through_objective_reachability(map_data, entities, solid, reachable))
+    failures.extend(validate_survey_target_reachability(map_data.get("survey_targets", []), solid, reachable))
     failures.extend(validate_visibility_zone_reachability(zones, solid, reachable))
     failures.extend(validate_world_connector_reachability(zones, solid, reachable))
 
@@ -494,7 +495,6 @@ def main() -> int:
 
     print(f"{map_data['id']} passed reachability validation from entry {spawn}.")
     return 0
-
 
 if __name__ == "__main__":
     raise SystemExit(main())
