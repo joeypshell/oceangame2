@@ -12,6 +12,7 @@ const TEST_PROFILE_PATH := "user://oceangame2_expansion_06_combat_smoke.json"
 const MAP_ID := "production_slice_01"
 const RELAY_MAP_ID := "production_slice_04"
 const HOSTILE_ID := ExpansionProfileState.SHOCK_PROD_TARGET_ID
+const GUARDED_CACHE_ID := "salvage_deep_right_cache"
 const PROJECT_ID := ExpansionProfileState.SHOCK_PROD_PROJECT_ID
 const CAPABILITY_ID := ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID
 const OUTBOUND_CONNECTOR_ID := "lower_left_loop_connector"
@@ -35,6 +36,8 @@ func _smoke_expansion_06_combat_foundation_and_quit() -> void:
 	var encounter: Dictionary = _encounter_source()
 	var project: Dictionary = _project_by_id(PROJECT_ID)
 	if not _verify_source_contract(encounter, project):
+		return
+	if not _verify_guarded_cache_blocked("Shock prod required"):
 		return
 	var home: Vector2 = encounter.get("home_center", Vector2.ZERO)
 	_player.global_position = home + Vector2(-60, 0)
@@ -81,6 +84,8 @@ func _smoke_expansion_06_combat_foundation_and_quit() -> void:
 	_update_status_label()
 	if not _require(_status_text().find("Shock prod ready") != -1, "armed next day omitted weapon readiness"):
 		return
+	if not _verify_guarded_cache_blocked("defeat eel"):
+		return
 
 	var fight: Dictionary = _exercise_armed_fight(reloaded)
 	if fight.is_empty():
@@ -92,7 +97,7 @@ func _smoke_expansion_06_combat_foundation_and_quit() -> void:
 	var final_health: Dictionary = _main._player_health.report()
 	var final_oxygen: float = _oxygen_seconds
 	_cleanup_profile()
-	print("Expansion 06 combat-foundation smoke passed: encounter=%s capability=%s territory=%s warning=%.2f lunge=%.2f recovery=%.2f unarmed_retreat=true contact_health=%d knockback=325 disruption=0.45 cooldown_blocked=true oxygen=%.1f->%.1f daylight_advanced=true project=%s guidance=actionable debrief_effect=explicit recipe=Ti2+Coil1 non_enemy_materials=true reload=%s armed_hits=3 hostile=%s cargo_held=%d banked_score=%d rewards=none defeat_input_locked=true retry_restored=true combat_cleanup=true reset_health=%d day=%d final_oxygen=%.1f profile=durable." % [
+	print("Expansion 06 combat-foundation smoke passed: encounter=%s capability=%s territory=%s warning=%.2f lunge=%.2f recovery=%.2f unarmed_retreat=true guarded_cache_locked=true armed_guard_requires_defeat=true contact_health=%d knockback=325 disruption=0.45 cooldown_blocked=true oxygen=%.1f->%.1f daylight_advanced=true project=%s guidance=actionable debrief_effect=explicit recipe=Ti2+Coil1 non_enemy_materials=true reload=%s armed_hits=3 hostile=%s guarded_cache_banked=true cargo_held=%d banked_score=%d rewards=salvage_only defeat_input_locked=true retry_restored=true combat_cleanup=true reset_health=%d day=%d final_oxygen=%.1f profile=durable." % [
 		HOSTILE_ID,
 		CAPABILITY_ID,
 		str(encounter.get("territory_rect", Rect2())),
@@ -135,7 +140,30 @@ func _verify_source_contract(encounter: Dictionary, project: Dictionary) -> bool
 		var material_id: String = str(candidate.get("material_id", ""))
 		if RECIPE.has(material_id) and str(candidate.get("type", "")) == "material_candidate":
 			source_materials[material_id] = true
-	return _require(source_materials.size() == RECIPE.size() and not project.has("drops") and not project.has("loot"), "project recipe depends on an enemy source or reward field")
+	var guarded_cache := _salvage_by_id(GUARDED_CACHE_ID)
+	return _require(
+		source_materials.size() == RECIPE.size()
+		and not project.has("drops")
+		and not project.has("loot")
+		and str(guarded_cache.get("required_capability_id", "")) == CAPABILITY_ID
+		and str(guarded_cache.get("guarded_by_hostile_id", "")) == HOSTILE_ID
+		and not _main._primary_dive_objective.is_required_target(GUARDED_CACHE_ID),
+		"project recipe, guarded cache link, or pre-weapon objective dependency drifted"
+	)
+
+
+func _verify_guarded_cache_blocked(expected_note: String) -> bool:
+	var guarded_cache := _salvage_by_id(GUARDED_CACHE_ID)
+	if not _require(not guarded_cache.is_empty(), "guarded cache source is missing"):
+		return false
+	_combat_interactions_enabled = false
+	_player.global_position = guarded_cache["center"]
+	_process(float(guarded_cache.get("interaction_seconds", 0.0)) + SMOKE_TIMED_SALVAGE_MARGIN_SECONDS)
+	var blocked: bool = not _world.is_salvage_collected(GUARDED_CACHE_ID) and not _held_salvage_ids.has(GUARDED_CACHE_ID)
+	var note_matches: bool = _last_status_note.to_lower().find(expected_note.to_lower()) != -1
+	_combat_interactions_enabled = true
+	_main._timed_salvage.reset()
+	return _require(blocked and note_matches, "guarded cache did not block with expected feedback %s: %s" % [expected_note, _last_status_note])
 
 
 func _exercise_unarmed_encounter(encounter: Dictionary) -> Dictionary:
@@ -250,11 +278,16 @@ func _exercise_armed_fight(profile) -> Dictionary:
 		return {}
 	if not _require(_oxygen_seconds < oxygen_before and _main._expedition_day_state.daylight_remaining_seconds < daylight_before, "armed fight paused oxygen or daylight"):
 		return {}
+	var guarded_cache := _salvage_by_id(GUARDED_CACHE_ID)
+	_player.global_position = guarded_cache["center"]
+	if not _require(_collect_salvage_for_smoke(guarded_cache) and _held_salvage_ids.has(GUARDED_CACHE_ID), "defeated eel did not release the guarded cache"):
+		return {}
+	var held_after_guard: int = _held_salvage
 
 	_player.global_position = _world.get_extraction_center()
 	_process(0.0)
 	var banked_after: int = _banked_score
-	if not _require(_held_salvage == 0 and banked_after > banked_before and _hostile_phase() == "defeated", "boat banking changed defeated state or normal cargo semantics"):
+	if not _require(_held_salvage == 0 and _banked_salvage_ids.has(GUARDED_CACHE_ID) and banked_after > banked_before and _hostile_phase() == "defeated", "guarded cache did not use normal banking or changed defeated state"):
 		return {}
 	_main._session_progression.grant_wallet_reward(1000)
 	if not _require(_main._try_purchase_propulsion_upgrade(), "connector fixture could not unlock propulsion"):
@@ -272,7 +305,7 @@ func _exercise_armed_fight(profile) -> Dictionary:
 	_prepare_current_map()
 	if not _require(_hostile_phase() == "home" and int(_hostile_state().get("health", 0)) == 3, "new day did not restore the hostile"):
 		return {}
-	return {"hostile_phase": "defeated", "held_after_fight": held_before.size(), "banked_score": banked_after}
+	return {"hostile_phase": "defeated", "held_after_fight": held_after_guard, "banked_score": banked_after}
 
 
 func _exercise_defeat_and_restoration(profile) -> bool:
@@ -414,6 +447,13 @@ func _instant_salvage_targets() -> Array:
 		if str(salvage.get("interaction", "instant")) == "instant":
 			values.append(salvage)
 	return values
+
+
+func _salvage_by_id(salvage_id: String) -> Dictionary:
+	for salvage in _world.get_salvage_centers():
+		if str(salvage.get("id", "")) == salvage_id:
+			return salvage
+	return {}
 
 
 func _first_active_material() -> Dictionary:

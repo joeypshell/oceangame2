@@ -3,19 +3,19 @@ extends "res://scripts/main/smoke/smoke_check_base.gd"
 const OBJECTIVE_ID := "deep_cache_route_objective"
 const ROUTE_CONTEXT := "deep_cache_commitment"
 const LOWER_LOOP_ID := "salvage_lower_loop"
-const DEEP_CACHE_ID := "salvage_deep_right_cache"
+const RELAY_CACHE_ID := "salvage_southwest_return_cache"
 const SAFE_TARGET_ID := "salvage_entry_shaft"
 const CARGO_BLOCK_TARGET_ID := "salvage_return_branch"
 const REST_MARKER_ID := "lower_loop_oxygen_rest_pocket"
 const STEP_CUE_MARKER_ID := "deep_cache_first_step_cue"
-const EXPECTED_ONE_HELD := "Objective: Deep cache 1/2"
-const EXPECTED_TWO_HELD := "Objective: Deep cache 2/2 - bank"
-const EXPECTED_ONE_BANKED := "Objective: Deep cache 1/2 banked"
-const EXPECTED_COMPLETE := "Objective complete: Deep cache"
-const EXPECTED_START_CUE := "Objective: Deep cache 0/2"
+const EXPECTED_ONE_HELD := "Objective: Relay trail 1/2"
+const EXPECTED_TWO_HELD := "Objective: Relay trail 2/2 - bank"
+const EXPECTED_ONE_BANKED := "Objective: Relay trail 1/2 banked"
+const EXPECTED_COMPLETE := "Objective complete: Relay trail"
+const EXPECTED_START_CUE := "Objective: Relay trail 0/2"
 const EXPECTED_STEP_CUE := "Objective route: Lower loop"
-const EXPECTED_RESULT_COMPLETE := "Objective: Deep cache complete"
-const EXPECTED_RESULT_INCOMPLETE := "Objective: Deep cache incomplete"
+const EXPECTED_RESULT_COMPLETE := "Objective: Relay trail complete"
+const EXPECTED_RESULT_INCOMPLETE := "Objective: Relay trail incomplete"
 
 
 func _smoke_pass_13_route_commitment_and_quit() -> void:
@@ -25,15 +25,15 @@ func _smoke_pass_13_route_commitment_and_quit() -> void:
 
 	var objective := _objective_by_id(OBJECTIVE_ID)
 	var lower_loop := _salvage_by_id(LOWER_LOOP_ID)
-	var deep_cache := _salvage_by_id(DEEP_CACHE_ID)
+	var relay_cache := _salvage_by_id(RELAY_CACHE_ID)
 	var safe_target := _salvage_by_id(SAFE_TARGET_ID)
 	var cargo_block_target := _salvage_by_id(CARGO_BLOCK_TARGET_ID)
 	var rest_marker: Dictionary = _world.get_marker_zone(REST_MARKER_ID)
-	if objective.is_empty() or lower_loop.is_empty() or deep_cache.is_empty() or safe_target.is_empty() or cargo_block_target.is_empty() or rest_marker.is_empty():
-		_fail("Pass 13 route commitment smoke missing source data: objective=%s lower=%s deep=%s safe=%s cargo=%s rest=%s." % [
+	if objective.is_empty() or lower_loop.is_empty() or relay_cache.is_empty() or safe_target.is_empty() or cargo_block_target.is_empty() or rest_marker.is_empty():
+		_fail("Pass 13 route commitment smoke missing source data: objective=%s lower=%s relay=%s safe=%s cargo=%s rest=%s." % [
 			str(not objective.is_empty()),
 			str(not lower_loop.is_empty()),
-			str(not deep_cache.is_empty()),
+			str(not relay_cache.is_empty()),
 			str(not safe_target.is_empty()),
 			str(not cargo_block_target.is_empty()),
 			str(not rest_marker.is_empty()),
@@ -41,12 +41,8 @@ func _smoke_pass_13_route_commitment_and_quit() -> void:
 		return
 
 	var required_targets: Array = objective.get("required_banked_targets", [])
-	var interaction_seconds := float(deep_cache.get("interaction_seconds", 0.0))
-	if str(objective.get("route_context", "")) != ROUTE_CONTEXT or not required_targets.has(LOWER_LOOP_ID) or not required_targets.has(DEEP_CACHE_ID):
+	if str(objective.get("route_context", "")) != ROUTE_CONTEXT or not required_targets.has(LOWER_LOOP_ID) or not required_targets.has(RELAY_CACHE_ID):
 		_fail("Pass 13 route objective metadata mismatch: %s." % str(objective))
-		return
-	if str(deep_cache.get("interaction", "instant")) != "timed_salvage" or interaction_seconds <= 0.0:
-		_fail("Pass 13 deep cache target must remain timed salvage: %s." % str(deep_cache))
 		return
 
 	_player.set_physics_process(false)
@@ -57,7 +53,7 @@ func _smoke_pass_13_route_commitment_and_quit() -> void:
 		return
 
 	_collect_and_bank_target(safe_target)
-	if _status_text().find("Objective complete") != -1 or _banked_salvage_ids.has(LOWER_LOOP_ID) or _banked_salvage_ids.has(DEEP_CACHE_ID):
+	if _status_text().find("Objective complete") != -1 or _banked_salvage_ids.has(LOWER_LOOP_ID) or _banked_salvage_ids.has(RELAY_CACHE_ID):
 		_fail("Pass 13 safe-route target completed objective unexpectedly: status=%s banked_ids=%s." % [_status_text(), _banked_salvage_ids])
 		return
 	_player.global_position = safe_target["center"]
@@ -75,13 +71,8 @@ func _smoke_pass_13_route_commitment_and_quit() -> void:
 		_fail("Pass 13 lower-loop held state missing '%s': held=%s status=%s." % [EXPECTED_ONE_HELD, _held_salvage_ids, _status_text()])
 		return
 
-	_player.global_position = deep_cache["center"]
-	_process(interaction_seconds * 0.4)
-	if _held_salvage_ids.has(DEEP_CACHE_ID) or _status_text().find("Salvaging") == -1 or _status_text().find(EXPECTED_ONE_HELD) == -1:
-		_fail("Pass 13 timed target collected too early or lost objective progress: held=%s status=%s." % [_held_salvage_ids, _status_text()])
-		return
-	_process(interaction_seconds + SMOKE_TIMED_SALVAGE_MARGIN_SECONDS)
-	if not _held_salvage_ids.has(DEEP_CACHE_ID) or _status_text().find(EXPECTED_TWO_HELD) == -1:
+	_collect_target(relay_cache)
+	if not _held_salvage_ids.has(RELAY_CACHE_ID) or _status_text().find(EXPECTED_TWO_HELD) == -1:
 		_fail("Pass 13 two-held state missing '%s': held=%s status=%s." % [EXPECTED_TWO_HELD, _held_salvage_ids, _status_text()])
 		return
 
@@ -96,7 +87,7 @@ func _smoke_pass_13_route_commitment_and_quit() -> void:
 
 	_player.global_position = _world.get_extraction_center()
 	_process(0.0)
-	if _held_salvage != 0 or not _banked_salvage_ids.has(LOWER_LOOP_ID) or not _banked_salvage_ids.has(DEEP_CACHE_ID):
+	if _held_salvage != 0 or not _banked_salvage_ids.has(LOWER_LOOP_ID) or not _banked_salvage_ids.has(RELAY_CACHE_ID):
 		_fail("Pass 13 required targets did not bank cleanly: held=%d banked_ids=%s." % [_held_salvage, _banked_salvage_ids])
 		return
 	if _status_text().find(EXPECTED_COMPLETE) == -1:
@@ -116,14 +107,14 @@ func _smoke_pass_13_route_commitment_and_quit() -> void:
 	if _status_text().find(EXPECTED_ONE_BANKED) == -1:
 		_fail("Pass 13 one-banked state missing '%s': %s." % [EXPECTED_ONE_BANKED, _status_text()])
 		return
-	_collect_target(deep_cache)
+	_collect_target(relay_cache)
 	_hazard_interactions_enabled = true
 	var hazard: Dictionary = _world.get_hazard_centers()[0]
 	_player.global_position = hazard["center"]
 	_hazard_cooldown_seconds = 0.0
 	_process(0.0)
-	if _held_salvage != 0 or _world.is_salvage_collected(DEEP_CACHE_ID) or _status_text().find(EXPECTED_ONE_BANKED) == -1:
-		_fail("Pass 13 hazard reset did not restore held target while preserving banked progress: held=%d deep_collected=%s status=%s." % [_held_salvage, str(_world.is_salvage_collected(DEEP_CACHE_ID)), _status_text()])
+	if _held_salvage != 0 or _world.is_salvage_collected(RELAY_CACHE_ID) or _status_text().find(EXPECTED_ONE_BANKED) == -1:
+		_fail("Pass 13 hazard reset did not restore held target while preserving banked progress: held=%d relay_collected=%s status=%s." % [_held_salvage, str(_world.is_salvage_collected(RELAY_CACHE_ID)), _status_text()])
 		return
 
 	_reset_run()
@@ -146,12 +137,10 @@ func _smoke_pass_13_route_commitment_and_quit() -> void:
 		return
 
 	_reset_run()
-	print("Pass 13 route commitment smoke passed: objective=%s route=%s targets=%s timed_target=%s seconds=%.1f completion_state=complete held=%d banked_score=%d oxygen=%.1f result=\"%s\" hazard_reset=true oxygen_failure=incomplete rest_pocket_stable=true." % [
+	print("Pass 13 route commitment smoke passed: objective=%s route=%s targets=%s guarded_target_excluded=true completion_state=complete held=%d banked_score=%d oxygen=%.1f result=\"%s\" hazard_reset=true oxygen_failure=incomplete rest_pocket_stable=true." % [
 		OBJECTIVE_ID,
 		ROUTE_CONTEXT,
-		",".join(PackedStringArray([LOWER_LOOP_ID, DEEP_CACHE_ID])),
-		DEEP_CACHE_ID,
-		interaction_seconds,
+		",".join(PackedStringArray([LOWER_LOOP_ID, RELAY_CACHE_ID])),
 		_held_salvage,
 		completed_banked_score,
 		completed_oxygen,
@@ -167,19 +156,19 @@ func _smoke_pass_14_objective_cue_and_quit() -> void:
 
 	var objective := _objective_by_id(OBJECTIVE_ID)
 	var lower_loop := _salvage_by_id(LOWER_LOOP_ID)
-	var deep_cache := _salvage_by_id(DEEP_CACHE_ID)
+	var relay_cache := _salvage_by_id(RELAY_CACHE_ID)
 	var safe_target := _salvage_by_id(SAFE_TARGET_ID)
-	if objective.is_empty() or lower_loop.is_empty() or deep_cache.is_empty() or safe_target.is_empty():
-		_fail("Pass 14 objective cue smoke missing source data: objective=%s lower=%s deep=%s safe=%s." % [
+	if objective.is_empty() or lower_loop.is_empty() or relay_cache.is_empty() or safe_target.is_empty():
+		_fail("Pass 14 objective cue smoke missing source data: objective=%s lower=%s relay=%s safe=%s." % [
 			str(not objective.is_empty()),
 			str(not lower_loop.is_empty()),
-			str(not deep_cache.is_empty()),
+			str(not relay_cache.is_empty()),
 			str(not safe_target.is_empty()),
 		])
 		return
 
 	var required_targets: Array = objective.get("required_banked_targets", [])
-	if str(objective.get("route_context", "")) != ROUTE_CONTEXT or not required_targets.has(LOWER_LOOP_ID) or not required_targets.has(DEEP_CACHE_ID):
+	if str(objective.get("route_context", "")) != ROUTE_CONTEXT or not required_targets.has(LOWER_LOOP_ID) or not required_targets.has(RELAY_CACHE_ID):
 		_fail("Pass 14 route objective metadata mismatch: %s." % str(objective))
 		return
 
@@ -198,7 +187,7 @@ func _smoke_pass_14_objective_cue_and_quit() -> void:
 		return
 
 	_collect_and_bank_target(safe_target)
-	if _status_text().find(EXPECTED_COMPLETE) != -1 or _banked_salvage_ids.has(LOWER_LOOP_ID) or _banked_salvage_ids.has(DEEP_CACHE_ID):
+	if _status_text().find(EXPECTED_COMPLETE) != -1 or _banked_salvage_ids.has(LOWER_LOOP_ID) or _banked_salvage_ids.has(RELAY_CACHE_ID):
 		_fail("Pass 14 safe-route banking completed deep objective unexpectedly: status=%s banked_ids=%s." % [_status_text(), _banked_salvage_ids])
 		return
 	if _status_text().find(EXPECTED_START_CUE) == -1:
@@ -218,7 +207,7 @@ func _smoke_pass_14_objective_cue_and_quit() -> void:
 		_fail("Pass 14 one-banked progress missing '%s': %s." % [EXPECTED_ONE_BANKED, _status_text()])
 		return
 
-	_collect_target(deep_cache)
+	_collect_target(relay_cache)
 	if _status_text().find(EXPECTED_TWO_HELD) == -1:
 		_fail("Pass 14 two-required-target progress missing '%s': %s." % [EXPECTED_TWO_HELD, _status_text()])
 		return
@@ -244,13 +233,13 @@ func _smoke_pass_15_objective_follow_through_and_quit() -> void:
 
 	var objective := _objective_by_id(OBJECTIVE_ID)
 	var lower_loop := _salvage_by_id(LOWER_LOOP_ID)
-	var deep_cache := _salvage_by_id(DEEP_CACHE_ID)
+	var relay_cache := _salvage_by_id(RELAY_CACHE_ID)
 	var marker: Dictionary = _world.get_marker_zone(STEP_CUE_MARKER_ID)
-	if objective.is_empty() or lower_loop.is_empty() or deep_cache.is_empty() or marker.is_empty():
-		_fail("Pass 15 smoke missing source data: objective=%s lower=%s deep=%s marker=%s." % [
+	if objective.is_empty() or lower_loop.is_empty() or relay_cache.is_empty() or marker.is_empty():
+		_fail("Pass 15 smoke missing source data: objective=%s lower=%s relay=%s marker=%s." % [
 			str(not objective.is_empty()),
 			str(not lower_loop.is_empty()),
-			str(not deep_cache.is_empty()),
+			str(not relay_cache.is_empty()),
 			str(not marker.is_empty()),
 		])
 		return
@@ -262,7 +251,7 @@ func _smoke_pass_15_objective_follow_through_and_quit() -> void:
 	if str(marker.get("route_context", "")) != ROUTE_CONTEXT or str(objective.get("route_context", "")) != ROUTE_CONTEXT:
 		_fail("Pass 15 route context mismatch: objective=%s marker=%s." % [str(objective), str(marker)])
 		return
-	if not required_targets.has(LOWER_LOOP_ID) or not required_targets.has(DEEP_CACHE_ID):
+	if not required_targets.has(LOWER_LOOP_ID) or not required_targets.has(RELAY_CACHE_ID):
 		_fail("Pass 15 objective required targets mismatch: %s." % str(objective))
 		return
 
@@ -299,7 +288,7 @@ func _smoke_pass_15_objective_follow_through_and_quit() -> void:
 		_fail("Pass 15 step cue did not hide after target banked: banked=%s status=%s." % [_banked_salvage_ids, _status_text()])
 		return
 
-	_collect_and_bank_target(deep_cache)
+	_collect_and_bank_target(relay_cache)
 	_player.global_position = marker_center
 	_update_status_label()
 	if _status_has_step_cue() or _status_text().find(EXPECTED_COMPLETE) == -1:

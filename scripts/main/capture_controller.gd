@@ -14,6 +14,7 @@ const Pass20LightUpgradeCapture := preload("res://scripts/main/captures/pass_20_
 const Pass21WorldConnectorCapture := preload("res://scripts/main/captures/pass_21_world_connector_capture.gd")
 const PrimaryDiveCompletionCapture := preload("res://scripts/main/captures/primary_dive_completion_capture.gd")
 const DarknessLightCapture := preload("res://scripts/main/captures/darkness_light_capture.gd")
+const ReviewProgressionFixture := preload("res://scripts/main/review_progression_fixture.gd")
 const SCREENSHOT_PATH := "res://visual_baselines/001_greybox_in_engine.png"
 const CAPTURE_ZOOM := Vector2(0.7, 0.7)
 const PLAYER_READABILITY_CAPTURE_ZOOM := Vector2(2.0, 2.0)
@@ -30,10 +31,8 @@ const HAZARD_PRESSURE_WARNING_OFFSET_TILES := Vector2.DOWN
 const HAZARD_PRESSURE_SETUP_SALVAGE_ID := "salvage_lower_loop"
 const HAZARD_PRESSURE_PAYOFF_SALVAGE_ID := "salvage_deep_right_cache"
 var _main
-
 func _init(main_node) -> void:
 	_main = main_node
-
 func capture_screenshot_and_quit() -> void:
 	await _main.get_tree().process_frame
 	await _main.get_tree().process_frame
@@ -44,8 +43,6 @@ func capture_screenshot_and_quit() -> void:
 	image.save_png(SCREENSHOT_PATH)
 	print("Saved screenshot: %s" % ProjectSettings.globalize_path(SCREENSHOT_PATH))
 	_main.get_tree().quit()
-
-
 func capture_camera_tests_and_quit(world: Node, capture_dir: String) -> void:
 	var camera_tests: Array = world.camera_tests
 	if camera_tests.is_empty():
@@ -241,8 +238,6 @@ func capture_route_outcome_result_and_quit(capture_dir: String) -> void:
 	image.save_png(output_path)
 	print("Saved route outcome result capture: %s" % ProjectSettings.globalize_path(output_path))
 	_main.get_tree().quit()
-
-
 func capture_timed_salvage_and_quit(capture_dir: String) -> void:
 	if _main._world == null or _main._player == null:
 		push_error("Timed salvage capture requires a loaded playable map.")
@@ -252,6 +247,11 @@ func capture_timed_salvage_and_quit(capture_dir: String) -> void:
 	var target := _timed_salvage_target()
 	if target.is_empty():
 		push_error("Timed salvage capture requires an authored timed_salvage target.")
+		_main.get_tree().quit(1)
+		return
+	var access: Dictionary = ReviewProgressionFixture.prepare_guarded_salvage(_main, target)
+	if not bool(access.get("ready", false)):
+		push_error("Timed salvage capture could not prepare guarded target: %s" % str(access))
 		_main.get_tree().quit(1)
 		return
 

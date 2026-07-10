@@ -1,7 +1,7 @@
 extends "res://scripts/main/smoke/smoke_check_base.gd"
 
-const EXPECTED_RESULT_COMPLETE := "Objective: Deep cache complete"
-const EXPECTED_RESULT_INCOMPLETE := "Objective: Deep cache incomplete"
+const EXPECTED_RESULT_COMPLETE := "Objective: Relay trail complete"
+const EXPECTED_RESULT_INCOMPLETE := "Objective: Relay trail incomplete"
 
 
 func _smoke_primary_dive_completion_and_quit() -> void:

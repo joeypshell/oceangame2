@@ -550,6 +550,10 @@ func _salvage_runtime_info(entity: Dictionary) -> Dictionary:
 		"interaction_seconds": float(entity.get("interaction_seconds", 0.0)),
 		"pry_stages": int(entity.get("pry_stages", 1)),
 		"interaction_label": str(entity.get("interaction_label", "")),
+		"required_capability_id": str(entity.get("required_capability_id", "")),
+		"guarded_by_hostile_id": str(entity.get("guarded_by_hostile_id", "")),
+		"locked_label": str(entity.get("locked_label", "")),
+		"guard_active_label": str(entity.get("guard_active_label", "")),
 	}
 
 

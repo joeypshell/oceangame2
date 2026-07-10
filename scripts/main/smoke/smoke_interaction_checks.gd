@@ -231,6 +231,9 @@ func _smoke_timed_salvage_and_quit() -> void:
 		push_error("Timed salvage smoke target %s is not an available timed_salvage interaction." % target_id)
 		get_tree().quit(1)
 		return
+	if not _prepare_guarded_salvage_access(target):
+		get_tree().quit(1)
+		return
 
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
@@ -249,10 +252,10 @@ func _smoke_timed_salvage_and_quit() -> void:
 		return
 	var oxygen_after_progress := _oxygen_seconds
 
-	_player.global_position = _world.get_extraction_center()
+	_player.global_position = target_center - Vector2(_main.SALVAGE_COLLECTION_RADIUS + 32.0, 0.0)
 	_process(0.0)
 	if _world.is_salvage_collected(target_id) or _status_text().find("Salvage interrupted") == -1:
-		push_error("Timed salvage smoke did not cancel progress when leaving range; status=%s." % _status_text())
+		push_error("Timed salvage smoke did not cancel progress when leaving range; note=%s status=%s." % [_last_status_note, _status_text()])
 		get_tree().quit(1)
 		return
 	var cancel_feedback := _last_status_note
@@ -286,6 +289,7 @@ func _smoke_timed_salvage_and_quit() -> void:
 		return
 
 	_reset_run()
+	_prepare_guarded_salvage_access(target)
 	var expected_fill_score := 0
 	for index in range(HELD_SALVAGE_CAPACITY):
 		var filler: Dictionary = instant_targets[index]
@@ -330,6 +334,7 @@ func _smoke_timed_salvage_and_quit() -> void:
 		return
 
 	_reset_run()
+	_prepare_guarded_salvage_access(target)
 	_player.global_position = target_center
 	_process(partial_seconds)
 	_oxygen_seconds = 0.1
@@ -339,6 +344,7 @@ func _smoke_timed_salvage_and_quit() -> void:
 		get_tree().quit(1)
 		return
 	_reset_run()
+	_prepare_guarded_salvage_access(target)
 	_player.global_position = target_center
 	_process(resumed_seconds)
 	if not _status_has_salvage_progress(resumed_percent):

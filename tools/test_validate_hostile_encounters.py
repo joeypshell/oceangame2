@@ -38,9 +38,26 @@ def valid_map() -> dict:
     return {
         "id": "combat_fixture",
         "units": {"width_tiles": 12, "height_tiles": 10},
-        "entities": [],
+        "entities": [
+            {"id": "salvage_lower_loop", "type": "salvage", "x": 1, "y": 8, "kind": "relic"},
+            {
+                "id": "salvage_deep_right_cache",
+                "type": "salvage",
+                "x": 6,
+                "y": 6,
+                "kind": "relic",
+                "interaction": "timed_salvage",
+                "required_capability_id": "shock_prod",
+                "guarded_by_hostile_id": "deep_cache_territorial_eel",
+                "locked_label": "Shock prod required - return after building it",
+                "guard_active_label": "Shock prod ready - defeat eel to claim cache",
+            },
+        ],
         "zones": [],
         "material_projects": [],
+        "route_objectives": [
+            {"id": "relay_trail", "required_banked_targets": ["salvage_lower_loop"]},
+        ],
         "hostile_encounters": [hostile()],
     }
 
@@ -93,6 +110,25 @@ class HostileEncounterValidationTests(unittest.TestCase):
         failures = validate_hostile_encounter_reachability(map_data["hostile_encounters"], solid, reachable - {(3, 7)})
         self.assertTrue(any("inside solid terrain" in failure for failure in failures), failures)
         self.assertTrue(any("evade lane" in failure for failure in failures), failures)
+
+    def test_rejects_missing_mismatched_or_pre_weapon_guarded_target(self) -> None:
+        missing = valid_map()
+        missing["entities"] = [missing["entities"][0]]
+        self.assertTrue(any("exactly one guarded" in failure for failure in validate_hostile_encounter_schema(missing)))
+
+        mismatched = valid_map()
+        target = mismatched["entities"][1]
+        target["required_capability_id"] = "salvage_cutter"
+        target["guarded_by_hostile_id"] = "other_eel"
+        target["x"] = 11
+        failures = validate_hostile_encounter_schema(mismatched)
+        for expected in ("required_capability_id", "guarded_by_hostile_id", "inside the guarding"):
+            self.assertTrue(any(expected in failure for failure in failures), (expected, failures))
+
+        circular = valid_map()
+        circular["route_objectives"][0]["required_banked_targets"].append("salvage_deep_right_cache")
+        failures = validate_hostile_encounter_schema(circular)
+        self.assertTrue(any("cannot be required by pre-weapon" in failure for failure in failures), failures)
 
 
 if __name__ == "__main__":

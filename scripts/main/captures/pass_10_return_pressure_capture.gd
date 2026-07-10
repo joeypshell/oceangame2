@@ -3,7 +3,7 @@ extends RefCounted
 const PASS_10_SEGMENT_ID := "return_pressure_to_boat"
 const PASS_10_TARGET_ID := "salvage_return_branch"
 const LOWER_LOOP_SALVAGE_ID := "salvage_lower_loop"
-const DEEP_CACHE_SALVAGE_ID := "salvage_deep_right_cache"
+const RELAY_CACHE_SALVAGE_ID := "salvage_southwest_return_cache"
 const EXPECTED_FEEDBACK := "Cargo full - bank at boat"
 const CAPTURE_ZOOM := Vector2(0.82, 0.82)
 
@@ -22,16 +22,16 @@ func capture_and_quit(capture_dir: String) -> void:
 
 	var segment: Dictionary = _main._world.get_marker_zone(PASS_10_SEGMENT_ID)
 	var lower_loop: Dictionary = _salvage_by_id(LOWER_LOOP_SALVAGE_ID)
-	var deep_cache: Dictionary = _salvage_by_id(DEEP_CACHE_SALVAGE_ID)
+	var relay_cache: Dictionary = _salvage_by_id(RELAY_CACHE_SALVAGE_ID)
 	var target: Dictionary = _salvage_by_id(PASS_10_TARGET_ID)
-	if segment.is_empty() or lower_loop.is_empty() or deep_cache.is_empty() or target.is_empty():
-		push_error("Pass 10 return-pressure capture requires segment, lower-loop, deep-cache, and target source data.")
+	if segment.is_empty() or lower_loop.is_empty() or relay_cache.is_empty() or target.is_empty():
+		push_error("Pass 10 return-pressure capture requires segment, two relay-trail fillers, and target source data.")
 		_main.get_tree().quit(1)
 		return
 
 	_main._hazard_interactions_enabled = false
 	_collect_for_capture(lower_loop)
-	_collect_for_capture(deep_cache)
+	_collect_for_capture(relay_cache)
 	if _main._sortie_state.held_salvage < _main.HELD_SALVAGE_CAPACITY:
 		push_error("Pass 10 return-pressure capture did not fill cargo before target review.")
 		_main.get_tree().quit(1)

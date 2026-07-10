@@ -92,7 +92,7 @@ The profile payload shape and schema version remain unchanged. Only supported ma
 - A passive source has integer `x`/`y`, no `hostile_id`, and requires `survey_scanner_1`.
 - A hostile harvest has exact `hostile_id`, no `x`/`y` or capability field, and links to the existing territorial eel.
 - Passive placement is in bounds, non-solid, reachable after the existing current-stabilizer gate, and does not overlap the cache, survey, hazard, hostile home, or another interaction center.
-- The hostile, its unarmed evade lane, and its existing payoffs remain reachable. The harvest link cannot make defeat mandatory for existing progression.
+- The hostile and lower-edge retreat lane remain physically reachable. The guarded deep-right cache requires the already-obtainable base shock prod plus current-day eel defeat, while the scanner/project prerequisites remain entirely outside that cache.
 - Both sources replenish on `new_day`; random spawn, quantity ranges, seed weights, and permanent depletion are unsupported.
 - The project follows `shock_prod_project`, uses the exact recipe, targets the linked eel, and cannot be completed before the base weapon exists.
 - Every mandatory input has a guaranteed source. One fresh day can provide one of each biological input.

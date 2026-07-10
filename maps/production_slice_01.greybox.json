@@ -2363,7 +2363,7 @@
       "target_id": "salvage_lower_loop",
       "route_context": "deep_cache_commitment",
       "objective_step_label": "Lower loop",
-      "intent": "Pass 15 objective follow-through cue for the first required deep-cache route target."
+      "intent": "Opening relay-trail objective cue for its first required target."
     },
     {
       "id": "return_pressure_to_boat",
@@ -2406,9 +2406,9 @@
       "h": 9,
       "route_cue_id": "southwest_pocket_pre_pickup_cue",
       "cue_target_id": "salvage_southwest_return_cache",
-      "cue_text": "Optional pocket ahead",
+      "cue_text": "Relay trail cache ahead",
       "cue_condition": "target_uncollected",
-      "intent": "Pass 11 pre-pickup route-readability cue before the southwest pocket payoff is collected."
+      "intent": "Pre-pickup route cue for the required non-eel relay-trail payoff."
     },
     {
       "id": "lower_loop_to_deep_cache_pressure",
@@ -2498,10 +2498,10 @@
       "contact_damage": 1,
       "required_weapon_capability_id": "shock_prod",
       "warning_label": "Territorial eel - watch the lunge",
-      "retreat_label": "Eel territory - retreat or evade",
+      "retreat_label": "Eel guarding cache - return with shock prod",
       "defeated_label": "Territory clear for today",
       "route_context": "deep_cache_pressure",
-      "intent": "One optional fight-or-evade encounter around the deep-right cache; the lower room edge remains a source-validated unarmed route in unchanged topology."
+      "intent": "One territorial encounter hard-guarding the deep-right cache; unarmed players may retreat through unchanged topology but cannot collect the payoff."
     }
   ],
   "biological_resource_sources": [
@@ -2544,19 +2544,20 @@
     {
       "id": "deep_cache_route_objective",
       "route_context": "deep_cache_commitment",
-      "label": "Deep cache route",
+      "label": "Relay trail",
       "required_banked_targets": [
         "salvage_lower_loop",
-        "salvage_deep_right_cache"
+        "salvage_southwest_return_cache"
       ],
       "supporting_marker_ids": [
         "lower_loop_route",
         "deep_cache_first_step_cue",
-        "lower_loop_to_deep_cache_pressure",
+        "southwest_return_pocket_extension",
+        "southwest_pocket_pre_pickup_cue",
         "lower_loop_oxygen_rest_pocket",
         "return_pressure_to_boat"
       ],
-      "intent": "Pass 13 route commitment objective requiring the player to bank the lower-loop payoff and timed deep-right cache in one committed route chain."
+      "intent": "Opening objective banks two non-eel lower-loop payoffs and points toward the lower-left relay before the shock-prod-gated deep-right cache."
     }
   ],
   "primary_route_objective_id": "deep_cache_route_objective",
@@ -2568,7 +2569,7 @@
       "target_id": "lower_left_loop_connector",
       "label": "Next dive: Investigate lower-left relay",
       "route_context": "lower_left_loop",
-      "intent": "Pass 23 result prompt pointing the next dive toward the lower-left relay after Deep cache completion."
+      "intent": "Result prompt pointing the next dive toward the lower-left relay after the relay-trail objective."
     }
   ],
   "survey_targets": [
@@ -2783,7 +2784,11 @@
       "interaction": "timed_salvage",
       "interaction_seconds": 2.5,
       "interaction_label": "deep cache",
-      "intent": "Second route-choice payoff on the lower-right optional branch under cargo, oxygen, and timed-salvage pressure."
+      "required_capability_id": "shock_prod",
+      "guarded_by_hostile_id": "deep_cache_territorial_eel",
+      "locked_label": "Shock prod required - return after building it",
+      "guard_active_label": "Shock prod ready - defeat eel to claim cache",
+      "intent": "Later deep-right payoff collectable only after the shock prod is built and the guarding eel is defeated for the day."
     },
     {
       "id": "salvage_southwest_return_cache",
@@ -2795,7 +2800,7 @@
       "route_choice_id": "southwest_pocket_detour",
       "validation_route": "southwest_pocket_decision",
       "route_order": 0,
-      "intent": "Pass 09 valuable payoff cue for the southwest return pocket detour; keeps the pickup instant while making the optional route decision matter."
+      "intent": "Non-eel valuable payoff completing the opening relay trail; keeps instant collection and combines with the lower-loop payoff plus upgrade chest to fund propulsion fins."
     },
     {
       "id": "salvage_return_branch",

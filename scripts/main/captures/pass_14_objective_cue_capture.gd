@@ -1,6 +1,6 @@
 extends RefCounted
 
-const EXPECTED_START_CUE := "Objective: Deep cache 0/2"
+const EXPECTED_START_CUE := "Objective: Relay trail 0/2"
 const CAPTURE_ZOOM := Vector2(1.05, 1.05)
 const CAMERA_OFFSET := Vector2(72, 48)
 
