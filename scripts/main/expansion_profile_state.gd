@@ -13,17 +13,22 @@ const SUPPORTED_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true}
 const SUPPORTED_DISCOVERY_IDS := {ANOMALY_DISCOVERY_ID: true}
 
 var _storage_path: String
+var _persistence_enabled: bool
 var _completed_discoveries := {}
 var _unlocked_capabilities := {}
 var _last_storage_report := {"status": "not_loaded"}
 
 
-func _init(storage_path := DEFAULT_STORAGE_PATH) -> void:
+func _init(storage_path := DEFAULT_STORAGE_PATH, persistence_enabled := true) -> void:
 	_storage_path = str(storage_path)
+	_persistence_enabled = persistence_enabled
 
 
 func load_profile() -> Dictionary:
 	_reset_memory()
+	if not _persistence_enabled:
+		_last_storage_report = _report("memory")
+		return _last_storage_report.duplicate(true)
 	_recover_interrupted_write()
 	if not FileAccess.file_exists(_storage_path):
 		_last_storage_report = _report("missing")
@@ -55,6 +60,9 @@ func load_profile() -> Dictionary:
 
 
 func save_profile() -> bool:
+	if not _persistence_enabled:
+		_last_storage_report = _report("saved_memory")
+		return true
 	var saved := _write_atomic(_profile_payload())
 	_last_storage_report = _report("saved" if saved else "write_error")
 	return saved

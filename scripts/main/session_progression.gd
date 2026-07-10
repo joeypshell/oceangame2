@@ -33,6 +33,20 @@ func grant_wallet_reward(amount: int) -> int:
 	return _wallet
 
 
+func spend_wallet(amount: int) -> Dictionary:
+	if amount <= 0:
+		return {"spent": false, "reason": "invalid_amount", "wallet": _wallet}
+	if _wallet < amount:
+		return {
+			"spent": false,
+			"reason": "insufficient_funds",
+			"wallet": _wallet,
+			"needed": amount - _wallet,
+		}
+	_wallet -= amount
+	return {"spent": true, "wallet": _wallet, "amount": amount}
+
+
 func purchase_oxygen_tank_upgrade() -> Dictionary:
 	if has_oxygen_tank_upgrade():
 		return {"purchased": false, "reason": "already_purchased", "wallet": _wallet}

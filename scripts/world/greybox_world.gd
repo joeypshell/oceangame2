@@ -18,6 +18,7 @@ const GreyboxExtractionRenderer := preload("res://scripts/world/greybox_extracti
 const GreyboxRouteMarkerRenderer := preload("res://scripts/world/greybox_route_marker_renderer.gd")
 const GreyboxVisibilityZoneRenderer := preload("res://scripts/world/greybox_visibility_zone_renderer.gd")
 const GreyboxWorldQueries := preload("res://scripts/world/greybox_world_queries.gd")
+const GreyboxSurveyTargets := preload("res://scripts/world/greybox_survey_targets.gd")
 
 const SALVAGE_TIER_SCORES := {
 	"common": 100,
@@ -69,6 +70,7 @@ var _extraction_renderer
 var _route_marker_renderer
 var _visibility_zone_renderer
 var _world_queries
+var _survey_target_runtime
 
 
 func _ready() -> void:
@@ -82,6 +84,7 @@ func _ready() -> void:
 	_route_marker_renderer = GreyboxRouteMarkerRenderer.new()
 	_visibility_zone_renderer = GreyboxVisibilityZoneRenderer.new()
 	_world_queries = GreyboxWorldQueries.new()
+	_survey_target_runtime = GreyboxSurveyTargets.new()
 	load_greybox()
 
 
@@ -135,6 +138,7 @@ func load_greybox() -> void:
 	_marker_root = Node2D.new()
 	_marker_root.name = "Markers"
 	add_child(_marker_root)
+	_survey_target_runtime.build(_marker_root, map_data.get("survey_targets", []), tile_size, show_debug_overlay)
 	_build_zones(map_data.get("zones", []))
 	_build_progression_containers(map_data.get("progression_containers", []))
 	_build_moving_hazards(map_data.get("moving_hazards", []))
@@ -200,6 +204,14 @@ func get_final_dive_objective_seeds() -> Array:
 			seeds.append(seed.duplicate(true))
 	return seeds
 
+func get_survey_targets() -> Array:
+	return _survey_target_runtime.get_targets()
+
+func get_survey_target_at(position: Vector2) -> Dictionary:
+	return _survey_target_runtime.target_at(position)
+
+func set_survey_target_state(target_id: String, state: String) -> void:
+	_survey_target_runtime.set_target_state(target_id, state)
 
 func get_salvage_score(salvage_id: String) -> int:
 	for entity in _salvage_entities:
@@ -948,10 +960,6 @@ func _moving_hazard_initial_center(hazard: Dictionary) -> Vector2:
 	return _world_queries.moving_hazard_initial_center(hazard, tile_size)
 
 
-func _rect_size(item: Dictionary) -> Vector2:
-	return _world_queries.rect_size(item, tile_size)
-
-
 func _add_rect_outline(item: Dictionary, outline_name: String, color: Color, width: float, z_index: int) -> Line2D:
 	return _debug_renderer_helper().add_rect_outline(_marker_root, _rect_from_item(item), outline_name, color, width, z_index)
 
@@ -970,14 +978,6 @@ func _entity_rect_from_item(item: Dictionary) -> Rect2:
 
 func _entity_center(item: Dictionary) -> Vector2:
 	return _world_queries.entity_center(item, tile_size)
-
-
-func _position_to_cell(position: Vector2) -> Vector2i:
-	return _world_queries.position_to_cell(position, tile_size, map_tile_size)
-
-
-func _cell_center(cell: Vector2i) -> Vector2:
-	return _world_queries.cell_center(cell, tile_size)
 
 
 func _boat_entry_center(item: Dictionary) -> Vector2:

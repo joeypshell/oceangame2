@@ -121,6 +121,29 @@ func unlock_playback() -> bool:
 	return true
 
 
+func unlock_from_event(event: InputEvent) -> void:
+	if event is InputEventKey:
+		var key_event := event as InputEventKey
+		if key_event.pressed and not key_event.echo:
+			unlock_playback()
+	elif event is InputEventMouseButton:
+		var mouse_event := event as InputEventMouseButton
+		if mouse_event.pressed:
+			unlock_playback()
+	elif event is InputEventScreenTouch:
+		var touch_event := event as InputEventScreenTouch
+		if touch_event.pressed:
+			unlock_playback()
+	elif event is InputEventJoypadButton:
+		var button_event := event as InputEventJoypadButton
+		if button_event.pressed:
+			unlock_playback()
+	elif event is InputEventJoypadMotion:
+		var motion_event := event as InputEventJoypadMotion
+		if absf(motion_event.axis_value) > 0.2:
+			unlock_playback()
+
+
 func has_cue(cue_id: String) -> bool:
 	if not CUE_PATHS.has(cue_id):
 		return false
