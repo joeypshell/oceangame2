@@ -7,6 +7,7 @@ import json
 from collections import deque
 from pathlib import Path
 from production_slice_01_expansions import biological_resource_sources, expansion_entities, expansion_survey_targets, expansion_zones, hostile_encounters, material_candidate_pools, material_projects
+from production_slice_01_player_gate_correction import behavioral_guarded_cache
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_MAP_PATH = ROOT / "maps" / "full_cave_sketch_01.greybox.json"
@@ -269,7 +270,7 @@ def build_map_data(source_map: dict) -> dict:
                 "h": 24,
                 "intent": "Lower optional loop for a longer salvage return test.",
             },
-            {"id": "lower_left_loop_connector", "type": "marker", "x": 2, "y": 74, "w": 4, "h": 4, "world_connector": True, "connector_label": "Lower-left loop", "destination_map_id": "production_slice_04", "destination_map_path": "res://maps/production_slice_04.greybox.json", "destination_entry_id": "relay_sub_entry", "connector_direction": "forward", "intent": "Pass 21 connector from the default boat hub toward the lower-left loop reference slice."},
+            {"id": "lower_left_loop_connector", "type": "marker", "x": 2, "y": 74, "w": 4, "h": 4, "world_connector": True, "connector_label": "Lower-left relay", "destination_map_id": "production_slice_04", "destination_map_path": "res://maps/production_slice_04.greybox.json", "destination_entry_id": "relay_sub_entry", "connector_direction": "forward", "intent": "Visible relay connector from the default boat hub toward the lower-left loop reference slice."},
             *expansion_zones(),
             {"id": "deep_cache_first_step_cue", "type": "marker", "x": 28, "y": 58, "w": 4, "h": 3, "objective_step_cue": True, "objective_id": "deep_cache_route_objective", "target_id": "salvage_lower_loop", "route_context": "deep_cache_commitment", "objective_step_label": "Lower loop", "intent": "Opening relay-trail objective cue for its first required target."},
             {
@@ -380,25 +381,7 @@ def build_map_data(source_map: dict) -> dict:
                 "intent": "Route-choice payoff target for the lower optional loop.",
             },
             {"id": "salvage_pry_locker", "type": "salvage", "x": 36, "y": 64, "kind": "crate", "tier": "valuable", "interaction": "pry_salvage", "interaction_seconds": 1.2, "pry_stages": 3, "interaction_label": "sealed cache", "route_choice_id": "lower_bend_pry_detour", "validation_route": "pry_salvage_detour", "route_order": 0, "intent": "Pass 17 optional pry target near the lower-bend hazard, adding a deliberate oxygen-time spend without changing topology."},
-            {
-                "id": "salvage_deep_right_cache",
-                "type": "salvage",
-                "x": 64,
-                "y": 75,
-                "kind": "relic",
-                "tier": "valuable",
-                "route_choice_id": "deep_right_cache_payoff",
-                "validation_route": "expanded_route_choice",
-                "route_order": 1,
-                "interaction": "timed_salvage",
-                "interaction_seconds": 2.5,
-                "interaction_label": "deep cache",
-                "required_capability_id": "shock_prod",
-                "guarded_by_hostile_id": "deep_cache_territorial_eel",
-                "locked_label": "Shock prod required - return after building it",
-                "guard_active_label": "Shock prod ready - defeat eel to claim cache",
-                "intent": "Later deep-right payoff collectable only after the shock prod is built and the guarding eel is defeated for the day.",
-            },
+            behavioral_guarded_cache(),
             {
                 "id": "salvage_southwest_return_cache",
                 "type": "salvage",
@@ -411,7 +394,7 @@ def build_map_data(source_map: dict) -> dict:
                 "route_order": 0,
                 "intent": (
                     "Non-eel valuable payoff completing the opening relay trail; keeps instant collection "
-                    "and combines with the lower-loop payoff plus upgrade chest to fund propulsion fins."
+                    "while the separate material route supplies the propulsion-fins recipe."
                 ),
             },
             {

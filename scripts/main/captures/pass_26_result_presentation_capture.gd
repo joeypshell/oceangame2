@@ -1,5 +1,6 @@
 extends RefCounted
 
+const ReviewProgressionFixture := preload("res://scripts/main/review_progression_fixture.gd")
 const CONNECTOR_ID := "lower_left_loop_connector"
 const TARGET_ID := "slice_04_destination_cache"
 const RELAY_RESULT_LABEL := "Lower-left relay investigated"
@@ -87,8 +88,11 @@ func _transition_to_final_dive_destination() -> bool:
 		_main.get_tree().quit(1)
 		return false
 
-	_main._session_progression.record_banked_salvage(1200)
-	_main._session_progression.purchase_propulsion_upgrade()
+	var fins: Dictionary = ReviewProgressionFixture.complete_capability(_main, "propulsion_fins")
+	if not bool(fins.get("ready", false)):
+		push_error("Pass 26 result presentation capture could not prepare recipe-built fins: %s." % str(fins))
+		_main.get_tree().quit(1)
+		return false
 	_main._hazard_interactions_enabled = false
 	_main._player.global_position = connector["center"]
 	if _main._player.has_method("reset_motion"):

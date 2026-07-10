@@ -26,22 +26,6 @@
       "constant_name": "LIGHT",
       "cost": 900,
       "mandatory": false
-    },
-    {
-      "id": "propulsion_fins",
-      "constant_name": "PROPULSION",
-      "cost": 1000,
-      "mandatory": true,
-      "purchase_map_id": "production_slice_01",
-      "purchase_entry_id": "surface_boat_entry",
-      "funding_source_ids": [
-        "salvage_lower_loop",
-        "salvage_southwest_return_cache",
-        "lower_loop_upgrade_chest"
-      ],
-      "unlocks_target_ids": [
-        "lower_left_loop_current"
-      ]
     }
   ],
   "durable_purchases": [

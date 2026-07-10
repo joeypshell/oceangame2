@@ -4,6 +4,7 @@ const MaterialCargoState := preload("res://scripts/main/material_cargo_state.gd"
 const PracticalResearchPresentation := preload("res://scripts/main/practical_research_presentation.gd")
 const CANONICAL_MAP_ID := "production_slice_01"
 const TITANIUM_ID := "titanium_scrap"
+const RUBBER_ID := "rubber_sheet"
 const COIL_ID := "conductive_coil"
 const INSULATING_GEL_ID := "insulating_gel"
 const EEL_ELECTROCYTE_ID := "eel_electrocyte"
@@ -137,15 +138,18 @@ func banked_quantity(material_id: String) -> int:
 func overlay_text() -> String:
 	var held := held_quantities()
 	var titanium_banked := banked_quantity(TITANIUM_ID)
+	var rubber_banked := banked_quantity(RUBBER_ID)
 	var coil_banked := banked_quantity(COIL_ID)
 	var gel_banked := banked_quantity(INSULATING_GEL_ID)
 	var electrocyte_banked := banked_quantity(EEL_ELECTROCYTE_ID)
-	var held_standard := int(held.get(TITANIUM_ID, 0)) + int(held.get(COIL_ID, 0))
+	var held_standard := int(held.get(TITANIUM_ID, 0)) + int(held.get(RUBBER_ID, 0)) + int(held.get(COIL_ID, 0))
 	var lines: Array[String] = []
-	if _current_map_has_materials or held_standard > 0 or titanium_banked > 0 or coil_banked > 0:
-		lines.append("Materials Ti %d (+%d) | Coil %d (+%d)" % [
+	if _current_map_has_materials or held_standard > 0 or titanium_banked > 0 or rubber_banked > 0 or coil_banked > 0:
+		lines.append("Materials Ti %d (+%d) | Rubber %d (+%d) | Coil %d (+%d)" % [
 			titanium_banked,
 			int(held.get(TITANIUM_ID, 0)),
+			rubber_banked,
+			int(held.get(RUBBER_ID, 0)),
 			coil_banked,
 			int(held.get(COIL_ID, 0)),
 		])

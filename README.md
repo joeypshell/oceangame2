@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver, anomaly-survey, expedition-day, material-to-tool, capability-gated-place, practical-research, and Combat Foundation passes are complete. Expansion 07 biological resources and weapon progression is the next directional planning candidate; broader ecology and regional growth follow in named milestones. The controlled source/validation/visual workflow remains authoritative while that game grows.
+The compact diver foundation and OceanGame Expansions 01-06 are complete with GO decisions. Expansion 07 biological resources and weapon progression is implemented and remains at player review #799 after the focused #815 eel/fins/relay correction; broader ecology and regional growth stay directional. The controlled source/validation/visual workflow remains authoritative while that game grows.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 06 GO closeout and its bounded plan/contracts. Expansion 07-09 remain directional; the next drift cycle owns the Expansion 07 plan and issue batch.
+Current handoff starts with the Expansion 07 plan/contracts, Web verification, and player-gate correction. #799 remains the GO/HOLD closeout; do not begin Expansion 08 before that decision.
 
 Core sources and operating docs:
 
@@ -79,6 +79,12 @@ Current release and expansion handoff:
 - [Expansion 06 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_06_VISUAL_BASELINE_DECISION.md)
 - [Expansion 06 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_06_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 06 Closeout](docs/current/OCEANGAME_EXPANSION_06_CLOSEOUT.md)
+- [OceanGame Expansion 07 Plan](docs/current/OCEANGAME_EXPANSION_07_PLAN.md)
+- [Expansion 07 State Contract](docs/current/OCEANGAME_EXPANSION_07_STATE_CONTRACT.md)
+- [Expansion 07 Source Contract](docs/current/OCEANGAME_EXPANSION_07_SOURCE_CONTRACT.md)
+- [Expansion 07 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_07_VISUAL_BASELINE_DECISION.md)
+- [Expansion 07 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_07_WEB_PREVIEW_VERIFICATION.md)
+- [Expansion 07 Player Gate Correction](docs/current/OCEANGAME_EXPANSION_07_PLAYER_GATE_CORRECTION.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -212,4 +218,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can cross connected slices, use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-06 meet that condition. Expansion 07 should next test whether biological resources can support one useful equipment step without turning wildlife into generic loot or introducing grind.
+The current foundation succeeds when one authored expedition can cross connected slices, use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-06 meet that condition; Expansion 07 has implemented its bounded biological-resource/equipment proof and now needs the #799 player GO/HOLD decision.

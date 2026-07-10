@@ -24,7 +24,9 @@ Expansion 04 added one visible source-authored current pocket, an exact durable 
 
 Expansion 05 added one stabilizer-gated mineral survey, an exact boat-committed finding, and a source-derived next-day deep-cache coil habitat lead without increasing yield or adding exact-route handholding. The pass closed with GO.
 
-Expansion 06 added separate player health, one source-authored territorial eel, a viable unarmed evade route, and one durable shock-prod project built from non-enemy materials. Defeating the eel clears its territory only for the current day and grants no cargo, score, material, or discovery reward. The pass closed with GO after integrated smoke, dual-viewport visual review, and exact-SHA Web verification. Expansion 07 biological resources and weapon progression is the next directional planning candidate; no implementation batch is active yet.
+Expansion 06 added separate player health, one source-authored territorial eel, a viable unarmed evade route, and one durable shock-prod project built from non-enemy materials. Defeating the eel clears its territory only for the current day and grants no automatic reward. The pass closed with GO.
+
+Expansion 07 added bounded passive/eel biological materials and one shock-prod capacitor step, then completed deterministic, visual, and initial Web verification. #815 corrects three reviewed journey rules in current source: the eel guards its cache behaviorally instead of through a collection lock, fins use a durable guaranteed Ti2+Rubber1 project instead of score, and the lower-left relay current is visibly source-derived. Player review #799 remains HOLD until the merged build is verified and rerun; Expansion 08 must not begin before that GO/HOLD decision.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -49,17 +51,17 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Current docs index: `README.md`
 - Finished foundation roadmap: `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`
 - Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
-- Completed Expansion 06 contracts: `docs/current/OCEANGAME_EXPANSION_06_PLAN.md`, `docs/current/OCEANGAME_EXPANSION_06_STATE_CONTRACT.md`, `docs/current/OCEANGAME_EXPANSION_06_SOURCE_CONTRACT.md`
+- Current Expansion 07 handoff: `docs/current/OCEANGAME_EXPANSION_07_PLAN.md`, `docs/current/OCEANGAME_EXPANSION_07_STATE_CONTRACT.md`, `docs/current/OCEANGAME_EXPANSION_07_SOURCE_CONTRACT.md`, `docs/current/OCEANGAME_EXPANSION_07_PLAYER_GATE_CORRECTION.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest expansion decision: `docs/current/OCEANGAME_EXPANSION_06_CLOSEOUT.md`
-- Completed expansion plan: `docs/current/OCEANGAME_EXPANSION_06_PLAN.md`
-- Latest visual decision: `docs/current/OCEANGAME_EXPANSION_06_VISUAL_BASELINE_DECISION.md`
+- Latest completed expansion decision: `docs/current/OCEANGAME_EXPANSION_06_CLOSEOUT.md`; Expansion 07 awaits #799 closeout.
+- Active expansion plan: `docs/current/OCEANGAME_EXPANSION_07_PLAN.md`
+- Latest visual decision: `docs/current/OCEANGAME_EXPANSION_07_VISUAL_BASELINE_DECISION.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: `docs/current/OCEANGAME_EXPANSION_06_WEB_PREVIEW_VERIFICATION.md`
+- Latest Web verification: `docs/current/OCEANGAME_EXPANSION_07_WEB_PREVIEW_VERIFICATION.md`; #815 requires a new exact-SHA deploy check.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -126,7 +128,7 @@ Current map-loading helper:
 
 ## Web Preview Status
 
-The public preview is verified at build `679c16e` and should show the cave terrain plus the compact expedition-day/material/project HUD, not the blue greybox fallback:
+The public preview was last verified for the pre-correction Expansion 07 runtime at build `2a958f4`. #815 must verify its merged SHA before returning to #799:
 
 ```text
 https://joeypshell.github.io/oceangame2/
@@ -158,11 +160,12 @@ Use `docs/current/TOOLING.md` and its focused pages for detailed commands. The c
 
 ```powershell
 python tools/run_release_candidate_validation.py --require-godot
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-04-current-pocket
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 60 --capture-expansion-04-current-pocket
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-current-gate
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-06-combat-foundation
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-current-gate
 python tools/manage_production_slice_baseline.py compare-all
 python tools/manage_production_slice_baseline.py check-clean --all-slices
-node tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha 679c16eccad0d87e7f47d50ce2a7737fbd9e050c
+node tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha <merged-sha>
 python tools/check_file_lengths.py
 git diff --check
 ```
@@ -181,7 +184,8 @@ Current issue state as of 2026-07-10:
 - Closed: #726-#735 completed Expansion 04 with a GO; #739 resolved a narrow validator blocker found during authoring.
 - Closed: #748-#757 completed Expansion 05 with a GO.
 - Closed: #768-#777 completed Expansion 06 with a GO.
-- Next: Expansion 07 remains directional until the next drift cycle locks its plan and creates a scoped batch.
+- Closed/current source: #790-#798 and #800-#815 implement and technically verify Expansion 07 plus its player-gate correction.
+- Open: #799 remains the player GO/HOLD closeout for Expansion 07.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
@@ -304,7 +308,7 @@ Current issue state as of 2026-07-10:
 - Salvage map data may include optional `tier` values. Missing tiers default conceptually to `common`; the current supported tiers are `common` and `valuable`. Runtime salvage score is tier-derived for now: `common` is worth 100 and `valuable` is worth 300, and pickup status feedback names the tier and score. Completed expeditions add a small runtime oxygen bonus of 1 point per remaining oxygen second; failed expeditions receive no oxygen bonus.
 - Held salvage capacity is 2 pickups by default and 3 after the session `Cargo +1` upgrade. Full cargo blocks additional collection without hiding or banking the blocked pickup, shows a compact return-to-extraction status prompt, and returning to extraction frees capacity.
 - Run completion shows a compact result panel that now orders objective/payoff text before route and score bookkeeping, then shows score, salvage score, oxygen bonus, current map session-best score, salvage banked, progression/wallet, oxygen, and retry prompt. Maps with `primary_route_objective_id` complete after the primary objective's required salvage is banked and returned to extraction; maps without it preserve all-salvage completion. Route-tagged production-slice completions summarize the strongest banked route as `Route: Deep route` or `Route: Safe route`; Pass 26 adds `Final dive signal locked` when the final-dive result is present, while failed/reset states suppress stale success text. Oxygen depletion shows the same result panel as a failed expedition with zero oxygen bonus and pauses the run until reset without overwriting session best. The panel stays hidden during normal exploration.
-- Combat is intentionally narrow: one 3-health territorial eel, one short-range shock prod, separate 3-point player health, and no enemy rewards. The guarded `salvage_deep_right_cache` cannot be collected until the durable shock prod is owned and that eel is defeated for the day. There is still no inventory screen, broad arsenal, armor, ammo, combat economy, or general enemy ecosystem.
+- Combat is intentionally narrow: one 3-health territorial eel, one short-range shock prod, separate 3-point player health, and no automatic enemy reward. The guarded cache accepts normal timed-salvage attempts; active eel contact and knockback interrupt progress until the encounter is controlled. There is still no inventory screen, broad arsenal, armor, ammo, combat economy, or general enemy ecosystem.
 - Background art is still rough and secondary to proving terrain readability.
 - Normal preview uses approved current-prototype sprite assets for salvage and hazard props, with procedural fallback if a sprite cannot be loaded.
 - `valuable` salvage renders with a small extra gold cue over the existing salvage prop; `common` or omitted tiers keep the existing prop appearance.
@@ -318,7 +322,7 @@ Current issue state as of 2026-07-10:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_06_CLOSEOUT.md` as the latest completed decision. Expansions 01-06 are complete with GO decisions. Expansion 07 is directional until the next drift cycle writes its bounded plan and creates the only active expansion batch.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_07_PLAYER_GATE_CORRECTION.md` as the current correction contract. Expansions 01-06 are complete with GO decisions; Expansion 07 remains at #799 player closeout after #815. Do not begin Expansion 08 yet.
 
 Accepted constraints for next work:
 

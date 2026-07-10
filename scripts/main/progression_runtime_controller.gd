@@ -66,8 +66,6 @@ func _purchase(upgrade_id: String) -> Dictionary:
 			return _progression.purchase_cargo_capacity_upgrade()
 		SessionProgression.LIGHT_UPGRADE_ID:
 			return _progression.purchase_light_upgrade()
-		SessionProgression.PROPULSION_UPGRADE_ID:
-			return _progression.purchase_propulsion_upgrade()
 	return {"purchased": false, "reason": "blocked"}
 
 
@@ -79,8 +77,6 @@ func _purchase_note(upgrade_id: String, purchased: bool) -> String:
 			return "Cargo +1 upgraded" if purchased else "Cargo +1 already upgraded"
 		SessionProgression.LIGHT_UPGRADE_ID:
 			return "Light +range upgraded" if purchased else "Light +range already upgraded"
-		SessionProgression.PROPULSION_UPGRADE_ID:
-			return "Fins upgraded" if purchased else "Fins already upgraded"
 	return "Upgrade blocked"
 
 
@@ -96,10 +92,6 @@ func has_light_upgrade() -> bool:
 	return _progression != null and _progression.has_light_upgrade()
 
 
-func has_propulsion_upgrade() -> bool:
-	return _progression != null and _progression.has_propulsion_upgrade()
-
-
 func has_upgrade_id(upgrade_id: String) -> bool:
 	match upgrade_id:
 		SessionProgression.OXYGEN_TANK_UPGRADE_ID:
@@ -108,8 +100,6 @@ func has_upgrade_id(upgrade_id: String) -> bool:
 			return has_cargo_capacity_upgrade()
 		SessionProgression.LIGHT_UPGRADE_ID:
 			return has_light_upgrade()
-		SessionProgression.PROPULSION_UPGRADE_ID:
-			return has_propulsion_upgrade()
 	return false
 
 
@@ -147,15 +137,11 @@ func overlay_text(world, player) -> String:
 	var light_text := "Light +range" if has_light_upgrade() else "Light base"
 	if not has_light_upgrade() and at_extraction:
 		light_text = "L: Light +range (%d)" % SessionProgression.LIGHT_UPGRADE_COST
-	var fins_text := "Fins" if has_propulsion_upgrade() else "Fins base"
-	if not has_propulsion_upgrade() and at_extraction:
-		fins_text = "P: Fins (%d)" % SessionProgression.PROPULSION_UPGRADE_COST
-	return "Wallet %d\n%s | %s\n%s | %s" % [
+	return "Wallet %d\n%s | %s\n%s" % [
 		wallet(),
 		oxygen_text,
 		cargo_text,
 		light_text,
-		fins_text,
 	]
 
 
@@ -163,8 +149,7 @@ func result_text() -> String:
 	var oxygen_text := "O2 tank +%ds" % int(SessionProgression.OXYGEN_TANK_UPGRADE_SECONDS) if has_oxygen_tank_upgrade() else "O2 tank base"
 	var cargo_text := "Cargo +%d" % int(SessionProgression.CARGO_CAPACITY_UPGRADE_BONUS) if has_cargo_capacity_upgrade() else "Cargo base"
 	var light_text := "Light +range" if has_light_upgrade() else "Light base"
-	var fins_text := "Fins" if has_propulsion_upgrade() else "Fins base"
-	return "Wallet %d | %s | %s | %s | %s" % [wallet(), oxygen_text, cargo_text, light_text, fins_text]
+	return "Wallet %d | %s | %s | %s" % [wallet(), oxygen_text, cargo_text, light_text]
 
 
 func is_status_note(status_note: String) -> bool:
@@ -175,8 +160,6 @@ func is_status_note(status_note: String) -> bool:
 		or status_note == "Cargo +1 already upgraded"
 		or status_note == "Light +range upgraded"
 		or status_note == "Light +range already upgraded"
-		or status_note == "Fins upgraded"
-		or status_note == "Fins already upgraded"
 		or status_note.begins_with("Upgrade chest +")
 		or status_note == "Upgrade at extraction"
 		or status_note == "Upgrade blocked"

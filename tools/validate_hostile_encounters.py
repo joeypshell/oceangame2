@@ -16,12 +16,8 @@ HOSTILE_BEHAVIOR = "territorial_lunge"
 WEAPON_CAPABILITY_ID = "shock_prod"
 ROUTE_CONTEXT = "deep_cache_pressure"
 GUARDED_TARGET_ID = "salvage_deep_right_cache"
-GUARDED_TARGET_FIELDS = {
-    "required_capability_id",
-    "guarded_by_hostile_id",
-    "locked_label",
-    "guard_active_label",
-}
+GUARDED_TARGET_FIELDS = {"guarded_by_hostile_id"}
+FORBIDDEN_TARGET_LOCK_FIELDS = {"required_capability_id", "locked_label", "guard_active_label"}
 ALLOWED_FIELDS = {
     "id",
     "kind",
@@ -157,17 +153,17 @@ def _validate_guarded_target(map_data: dict[str, Any], hostile: dict[str, Any]) 
     target = guarded[0]
     label = str(target.get("id", "guarded salvage"))
     failures: list[str] = []
-    missing = GUARDED_TARGET_FIELDS - set(target)
-    if missing:
-        failures.append(f"{label} is missing guarded-target fields: {', '.join(sorted(missing))}.")
     if target.get("id") != GUARDED_TARGET_ID or target.get("type") != "salvage":
         failures.append(f"Guarded target must be salvage entity {GUARDED_TARGET_ID!r}.")
-    if target.get("required_capability_id") != WEAPON_CAPABILITY_ID:
-        failures.append(f"{label} required_capability_id must be {WEAPON_CAPABILITY_ID!r}.")
     if target.get("guarded_by_hostile_id") != HOSTILE_ID:
         failures.append(f"{label} guarded_by_hostile_id must be {HOSTILE_ID!r}.")
-    for field in ("locked_label", "guard_active_label"):
-        failures.extend(_validate_label(target.get(field), label, field))
+    forbidden = FORBIDDEN_TARGET_LOCK_FIELDS & set(target)
+    if forbidden:
+        failures.append(
+            f"{label} must not author hard collection-lock fields: {', '.join(sorted(forbidden))}."
+        )
+    if target.get("interaction") != "timed_salvage":
+        failures.append(f"{label} must remain an attemptable timed_salvage interaction.")
 
     territory = hostile.get("territory")
     if isinstance(territory, dict) and all(_is_int(territory.get(field)) for field in ("x", "y", "w", "h")):

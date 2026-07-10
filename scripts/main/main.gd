@@ -1275,7 +1275,7 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_L:
 		_try_purchase_light_upgrade()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_P:
-		_try_purchase_propulsion_upgrade()
+		_show_propulsion_project_guidance()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_Q:
 		var scanner_result: Dictionary = _anomaly_survey.try_unlock_scanner(_world, _player)
 		_last_status_note = str(scanner_result.get("note", _last_status_note))
@@ -1425,6 +1425,7 @@ func _update_hostile_encounter(delta: float) -> bool:
 		return false
 	var damage: Dictionary = _apply_combat_damage(int(event.get("damage", 1)), str(event.get("id", "hostile")))
 	if bool(damage.get("changed", false)):
+		_timed_salvage.reset()
 		if not bool(damage.get("defeated", false)) and _player.has_method("apply_knockback"):
 			_player.apply_knockback(
 				_player.global_position - (event.get("position", _player.global_position) as Vector2),
@@ -1980,7 +1981,11 @@ func _status_note_contains_feedback(status_note: String, feedback) -> bool:
 
 
 func _is_progression_status_note(status_note: String) -> bool:
-	return _progression_runtime != null and _progression_runtime.is_status_note(status_note)
+	return (
+		(_progression_runtime != null and _progression_runtime.is_status_note(status_note))
+		or status_note.begins_with("Fins project")
+		or status_note.begins_with("Fins ready")
+	)
 
 
 func _is_combat_status_note(status_note: String) -> bool:
@@ -2153,8 +2158,10 @@ func _try_purchase_light_upgrade() -> bool:
 	return _try_purchase_progression_upgrade(SessionProgression.LIGHT_UPGRADE_ID)
 
 
-func _try_purchase_propulsion_upgrade() -> bool:
-	return _try_purchase_progression_upgrade(SessionProgression.PROPULSION_UPGRADE_ID)
+func _show_propulsion_project_guidance() -> void:
+	if _material_project != null:
+		_last_status_note = _material_project.propulsion_fins_guidance()
+	_update_status_label()
 
 
 func _try_purchase_progression_upgrade(upgrade_id: String) -> bool:
@@ -2180,7 +2187,7 @@ func _has_light_upgrade() -> bool:
 
 
 func _has_propulsion_upgrade() -> bool:
-	return _progression_runtime != null and _progression_runtime.has_propulsion_upgrade()
+	return _material_project != null and _material_project.has_propulsion_fins()
 
 
 func _has_upgrade_id(upgrade_id: String) -> bool:
@@ -2205,7 +2212,12 @@ func _oxygen_capacity_seconds() -> float:
 
 
 func _progression_overlay_text() -> String:
-	return _progression_runtime.overlay_text(_world, _player) if _progression_runtime != null else ""
+	var lines: Array[String] = []
+	if _progression_runtime != null:
+		lines.append(_progression_runtime.overlay_text(_world, _player))
+	if _material_project != null:
+		lines.append(_material_project.propulsion_fins_guidance())
+	return "\n".join(lines)
 
 
 func _progression_result_text() -> String:

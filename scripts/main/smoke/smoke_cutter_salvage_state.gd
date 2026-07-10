@@ -6,6 +6,7 @@ const CutterSalvageController := preload("res://scripts/main/cutter_salvage_cont
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
 const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
+const ReviewProgressionFixture := preload("res://scripts/main/review_progression_fixture.gd")
 
 var _failures: Array[String] = []
 
@@ -47,12 +48,17 @@ func _run() -> void:
 	_expect(main._sortie_state.oxygen_seconds < oxygen_before, "oxygen paused at locked cutter target")
 	_expect(main._expedition_day_state.daylight_remaining_seconds < daylight_before, "daylight paused at locked cutter target")
 
+	var fins: Dictionary = ReviewProgressionFixture.complete_capability(main, ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID)
+	_expect(bool(fins.get("ready", false)), "could not prepare recipe-built fins before the cutter project")
+	main._material_project.on_map_loaded(main._world)
 	profile.complete_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID, false)
 	profile.deposit_materials({
 		ExpansionProfileState.TITANIUM_MATERIAL_ID: 2,
 		ExpansionProfileState.COIL_MATERIAL_ID: 1,
 	}, false)
-	var built: Dictionary = profile.complete_material_project(main._material_project.project_definition(), false)
+	var cutter_project: Dictionary = main._material_project.project_definition()
+	_expect(cutter_project.get("id") == ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, "project catalog did not advance from fins to cutter")
+	var built: Dictionary = profile.complete_material_project(cutter_project, false)
 	_expect(bool(built.get("changed", false)) and main._cutter_salvage.has_cutter(), "project did not unlock cutter for target")
 
 	main._sortie_state.collect_salvage("capacity_fixture_a", 0)

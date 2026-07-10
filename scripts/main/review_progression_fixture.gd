@@ -9,7 +9,7 @@ static func prepare_guarded_salvage(main, salvage: Dictionary) -> Dictionary:
 	if profile == null:
 		return {"ready": false, "reason": "missing_profile"}
 	if not required_capability.is_empty() and not profile.has_capability(required_capability):
-		var project_result := _complete_capability_chain(main, profile, required_capability)
+		var project_result := complete_capability(main, required_capability)
 		if not bool(project_result.get("ready", false)):
 			return project_result
 		if main._material_project != null:
@@ -28,7 +28,10 @@ static func prepare_guarded_salvage(main, salvage: Dictionary) -> Dictionary:
 	return {"ready": true, "capability_id": required_capability, "guard_id": guard_id}
 
 
-static func _complete_capability_chain(main, profile, capability_id: String) -> Dictionary:
+static func complete_capability(main, capability_id: String) -> Dictionary:
+	var profile = main._anomaly_survey.profile_state() if main != null and main._anomaly_survey != null else null
+	if profile == null:
+		return {"ready": false, "reason": "missing_profile", "capability_id": capability_id}
 	var projects: Array = main._world.get_material_projects()
 	var target_project := _project_unlocking(projects, capability_id)
 	if target_project.is_empty():

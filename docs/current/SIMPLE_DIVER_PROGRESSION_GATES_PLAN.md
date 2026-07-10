@@ -24,7 +24,7 @@ Do not use gates as a reason to produce the whole full-sketch map. Each gate mus
 | Gate type | Opens with | Prototype status | First useful target |
 |---|---|---|---|
 | Darkness / light | Existing `Light +range` session upgrade | Prototype-ready as readability pressure, not a hard lock | A darker branch near the connector or lower-loop return where better light makes route choice safer |
-| Current / propulsion | `propulsion_fins` session upgrade | First source/runtime prototype implemented by #443/#444 | `lower_left_loop_current` overlapping the slice 01 connector to slice 04 |
+| Current / propulsion | durable recipe-built `propulsion_fins` | First source/runtime prototype corrected by #815 | `lower_left_loop_current` overlapping the slice 01 connector to slice 04 |
 | Locked chest / key | Key flag, opened cache flag, or reward state | Contract defined by #445 | One small `upgrade_chest` in slice 01 that rewards a simple upgrade/currency beat |
 | Tool interaction | Existing timed/pry salvage patterns or one future tool flag | Partly ready; keep to one interaction family at a time | A sealed cache or obstruction that reuses source-authored marker/salvage interaction semantics |
 | Dodge hazard / enemy | Learned route timing, route cue, or future upgrade | Design-only for now; treat as moving hazard, not combat | One deterministic patrol/dodge beat after planning #449, if it improves the core dive loop |
@@ -57,7 +57,7 @@ The next implementation should choose exactly one of these:
 2. Treasure/cache contract, then one upgrade chest or locked cache reward with flag-like runtime state.
 3. Darkness/light contract, then one visual readability gate tied to the existing light upgrade.
 
-The first current gate is now `lower_left_loop_current`: it soft-pushes the diver away from the lower-left connector until `propulsion_fins` is purchased. The first upgrade chest is `lower_loop_upgrade_chest`, a one-time wallet reward on an optional lower-loop detour. The moving-hazard contract is now `docs/current/MOVING_HAZARD_DODGE_CONTRACT.md`; keep #450 to one deterministic patrol before adding keys, locked caches, more current zones, or additional hazards.
+The first current gate is now `lower_left_loop_current`: it soft-pushes the diver away from the visible lower-left relay until durable `propulsion_fins` is built from its Ti2+Rubber1 recipe. The first upgrade chest remains a one-time optional wallet reward, not fins funding. The moving-hazard contract is `docs/current/MOVING_HAZARD_DODGE_CONTRACT.md`.
 
 ## Deferred
 

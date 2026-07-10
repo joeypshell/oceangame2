@@ -113,8 +113,8 @@ func _prepare_final_dive_destination() -> void:
 	if connector.is_empty():
 		_fail("did not find connector %s" % CONNECTOR_ID)
 		return
-	_main._session_progression.record_banked_salvage(1200)
-	_main._session_progression.purchase_propulsion_upgrade()
+	if not _prepare_propulsion_fins():
+		return
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
 	_player.global_position = connector["center"]

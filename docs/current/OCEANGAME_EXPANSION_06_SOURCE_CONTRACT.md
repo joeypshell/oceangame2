@@ -43,7 +43,7 @@ The only supported Expansion 06 shape is:
 
 The exact home/territory coordinates shown here remain selected. #811 changes only the cache's progression metadata and opening objective membership; it does not move terrain, hazards, salvage, materials, or route topology.
 
-The existing `salvage_deep_right_cache` additionally owns `required_capability_id: shock_prod`, `guarded_by_hostile_id: deep_cache_territorial_eel`, and compact missing-capability/active-guard labels. The guard link means collection remains blocked until the capability exists and the linked hostile is defeated for the current day.
+#815 supersedes the original hard-lock decision. `salvage_deep_right_cache` owns only `guarded_by_hostile_id: deep_cache_territorial_eel` alongside normal timed-salvage metadata. It must not own `required_capability_id`, `locked_label`, or `guard_active_label`; eel contact and knockback behavior interrupt the attempt instead of cargo code rejecting it.
 
 ## Hostile Validation
 
@@ -56,7 +56,7 @@ The existing `salvage_deep_right_cache` additionally owns `required_capability_i
 - All timing/radius/speed values are finite and positive. `health` is exactly 3 and `contact_damage` exactly 1 for this bounded pass.
 - Labels are compact display-safe strings. `route_context` must match the selected deep-cache pressure route.
 - The encounter, cache, and survey remain physically reachable; physical reachability does not bypass the cache's gameplay gate.
-- The guarded cache must be inside the territory, require the hostile's weapon counter, and remain absent from every pre-weapon route objective.
+- The guarded cache must be timed salvage inside the territory, carry the behavioral guard link, omit hard collection-lock fields, and remain absent from every pre-weapon route objective.
 - A source-derived lower-edge route remains viable for retreat without making the guarded payoff collectable.
 
 Reject fields such as `current_health`, `current_position`, `phase`, `phase_timer`, `defeated`, `spawn_chance`, `seed`, `loot`, `drops`, `reward`, `score`, `cargo`, `wallet`, `discovery_id`, `runtime_state`, or arbitrary attack lists.

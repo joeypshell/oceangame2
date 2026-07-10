@@ -779,8 +779,7 @@ func _build_zones(zones: Array) -> void:
 				_world_connector_zones.append(zone)
 			if bool(zone.get("current_gate", false)):
 				_current_gate_zones.append(zone)
-				if not str(zone.get("required_capability_id", "")).is_empty():
-					GreyboxCurrentGateRenderer.new().add_current_affordance(_marker_root, zone, tile_size)
+				GreyboxCurrentGateRenderer.new().add_current_affordance(_marker_root, zone, tile_size)
 			if bool(zone.get("visibility_zone", false)):
 				_visibility_zones.append(zone)
 				var visibility_node: Polygon2D = _visibility_zone_renderer_helper().add_visibility_zone(_marker_root, zone, tile_size, show_debug_overlay, _debug_renderer_helper())

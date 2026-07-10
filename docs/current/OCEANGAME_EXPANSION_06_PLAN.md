@@ -17,7 +17,7 @@ Expansion 06 will prove one bounded fight-or-evade encounter inside existing `pr
 ```text
 remember the lower-loop-to-deep-cache route
 -> recognize a territorial eel warning before entering the deep-cache room
--> learn that the guarded cache cannot be claimed without the shock prod
+-> learn through interrupted attempts that the active eel prevents a clean cache salvage
 -> retreat without needing to defeat the eel
 -> gather existing titanium and conductive coil outside combat
 -> build one shock prod during the night debrief
@@ -87,7 +87,7 @@ Exact timing may change only if deterministic smoke or dual-viewport review show
 
 - Hostile source owns id, supported behavior, home point, territory rectangle, warning radius/timing, lunge speed/duration, recovery time, contact radius, health, damage, labels, capability reference, and review intent.
 - Project source owns id, capability id, existing project prerequisite, non-enemy material recipe, night build phase, and compact labels.
-- Validators prove unique ids, legal open-water placement, reachable territory/payoffs, a viable retreat path, exact guard/capability links, and exclusion of the guarded cache from pre-weapon objectives.
+- Validators prove unique ids, legal open-water placement, reachable territory/payoffs, a viable retreat path, the behavioral guard link without hard lock fields, and exclusion of the guarded cache from pre-weapon objectives.
 - Source must reject mutable state, loot/drop tables, score, cargo, current health, current position, runtime phase, procedural spawn weights, and broad enemy/weapon definitions.
 - New records live in a focused slice-01 expansion module because the primary generator is already at the 500-line guard.
 - Terrain rectangles, collision, spawn, extraction, connectors, current gates, materials, surveys, and camera tests remain unchanged; #811 retargets the opening objective to non-eel payoffs and adds guard metadata to the existing deep-right cache.

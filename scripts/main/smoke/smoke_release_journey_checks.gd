@@ -48,8 +48,8 @@ func _smoke_release_journey_and_quit() -> void:
 	var origin_oxygen := _oxygen_seconds
 
 	_reset_run()
-	_main._session_progression.record_banked_salvage(1200)
-	_main._session_progression.purchase_propulsion_upgrade()
+	if not _prepare_propulsion_fins():
+		return
 	var connector := _connector_by_id(CONNECTOR_ID)
 	if connector.is_empty():
 		_fail("missing connector %s" % CONNECTOR_ID)

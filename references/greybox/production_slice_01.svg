@@ -334,6 +334,8 @@
 <circle cx="1744.0" cy="2288.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
 <circle cx="1936.0" cy="2320.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
 <rect x="1951.0" y="1279.0" width="34" height="34" fill="#ffad42" stroke="#6e4210" stroke-width="5"/>
+<circle cx="1392.0" cy="720.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
+<circle cx="528.0" cy="2224.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
 <polygon points="2224.0,1279.0 2241.0,1296.0 2224.0,1313.0 2207.0,1296.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
 <rect x="576" y="2304" width="64" height="64" rx="8" fill="#d68cff" stroke="#5b236b" stroke-width="5"/>
 <text x="584.0" y="2294.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">lower_loop_upgrade_chest</text>

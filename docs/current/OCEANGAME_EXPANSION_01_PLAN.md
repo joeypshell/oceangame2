@@ -31,7 +31,7 @@ This pass proves curiosity, remembered-route progress, preparation, time/oxygen 
 
 Lock `survey_scanner_1` to a cost of `300` wallet.
 
-The release journey can fund the required `propulsion_fins` with the two 300-point primary-objective valuables plus the 400-wallet lower-loop upgrade chest. The slice-04 destination cache then pays 300 after the final-dive signal path, making the scanner affordable on the next boat return without grinding or balance changes.
+#815 supersedes the original score-funded fins route: `propulsion_fins` now uses guaranteed pre-eel titanium/rubber ingredients and spends no wallet. The slice-04 destination cache still pays the 300 needed for the scanner on the next boat return without grinding.
 
 Rules:
 

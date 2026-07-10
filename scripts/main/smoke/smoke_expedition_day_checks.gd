@@ -49,7 +49,8 @@ func _smoke_expedition_day_and_quit() -> void:
 		return
 
 	_main._session_progression.record_banked_salvage(1200)
-	_main._session_progression.purchase_propulsion_upgrade()
+	if not _prepare_propulsion_fins():
+		return
 	if not _transition(OUTBOUND_CONNECTOR_ID, "production_slice_04"):
 		return
 	if not _require(_main._expedition_day_state.sortie_count == 2, "connector departure did not start second sortie"):

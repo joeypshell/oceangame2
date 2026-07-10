@@ -1,8 +1,9 @@
 extends "res://scripts/main/smoke/smoke_check_base.gd"
 
+const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const CURRENT_GATE_ID := "lower_left_loop_current"
 const CONNECTOR_ID := "lower_left_loop_connector"
-const EXPECTED_PROMPT := "Strong current - need propulsion fins"
+const EXPECTED_PROMPT := "Lower-left relay current - need propulsion fins"
 
 
 func _smoke_current_gate_and_quit() -> void:
@@ -19,6 +20,10 @@ func _smoke_current_gate_and_quit() -> void:
 	var connector := _connector_by_id(CONNECTOR_ID)
 	if gate.is_empty() or connector.is_empty():
 		push_error("Current-gate smoke requires gate %s and connector %s." % [CURRENT_GATE_ID, CONNECTOR_ID])
+		get_tree().quit(1)
+		return
+	if _world.find_child("%sCurrentAffordance" % CURRENT_GATE_ID, true, false) == null:
+		push_error("Current-gate smoke found no normal-world affordance for %s." % CURRENT_GATE_ID)
 		get_tree().quit(1)
 		return
 
@@ -59,10 +64,21 @@ func _smoke_current_gate_and_quit() -> void:
 		get_tree().quit(1)
 		return
 
-	_player.global_position = _world.get_extraction_center()
-	_main._session_progression.record_banked_salvage(_main.SessionProgression.PROPULSION_UPGRADE_COST)
-	if not _main._try_purchase_propulsion_upgrade() or not _main._has_propulsion_upgrade():
-		push_error("Current-gate smoke could not purchase propulsion upgrade: wallet=%d status=%s." % [_session_wallet(), _status_text()])
+	var profile = _main._anomaly_survey.profile_state()
+	var wallet_before: int = _session_wallet()
+	var deposit: Dictionary = profile.deposit_materials({
+		ExpansionProfileState.TITANIUM_MATERIAL_ID: 2,
+		ExpansionProfileState.RUBBER_MATERIAL_ID: 1,
+	}, false)
+	var project := _project_by_id(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID)
+	var build: Dictionary = profile.complete_material_project(project, false)
+	_main._material_project.on_map_loaded(_world)
+	if not bool(deposit.get("changed", false)) or not bool(build.get("changed", false)) or not _main._has_propulsion_upgrade():
+		push_error("Current-gate smoke could not build recipe-backed propulsion fins: %s %s." % [str(deposit), str(build)])
+		get_tree().quit(1)
+		return
+	if _session_wallet() != wallet_before or not profile.material_inventory().is_empty():
+		push_error("Current-gate smoke fins recipe changed wallet or did not consume exact ingredients.")
 		get_tree().quit(1)
 		return
 
@@ -80,11 +96,11 @@ func _smoke_current_gate_and_quit() -> void:
 		get_tree().quit(1)
 		return
 
-	print("Current-gate smoke passed: gate=%s direction=%s strength=%.2f upgrade=%s pushed_delta=%.2f oxygen_before=%.1f oxygen_after=%.1f transition_after_upgrade=true." % [
+	print("Current-gate smoke passed: gate=%s direction=%s strength=%.2f capability=%s recipe=ti2+rubber1 wallet_unchanged=true affordance=true pushed_delta=%.2f oxygen_before=%.1f oxygen_after=%.1f transition_after_upgrade=true." % [
 		CURRENT_GATE_ID,
 		str(gate.get("current_direction", "")),
 		float(gate.get("current_strength", 0.0)),
-		str(gate.get("required_upgrade_id", "")),
+		str(gate.get("required_capability_id", "")),
 		pushed_delta,
 		oxygen_before,
 		oxygen_after_block,
@@ -103,6 +119,13 @@ func _connector_by_id(connector_id: String) -> Dictionary:
 	for connector in _world.get_world_connectors():
 		if str(connector.get("id", "")) == connector_id:
 			return connector
+	return {}
+
+
+func _project_by_id(project_id: String) -> Dictionary:
+	for project in _world.get_material_projects():
+		if str(project.get("id", "")) == project_id:
+			return project
 	return {}
 
 

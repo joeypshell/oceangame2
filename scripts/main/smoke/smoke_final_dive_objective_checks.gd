@@ -27,8 +27,8 @@ func _smoke_pass_25_final_dive_objective_and_quit() -> void:
 
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
-	_main._session_progression.record_banked_salvage(1200)
-	_main._session_progression.purchase_propulsion_upgrade()
+	if not _prepare_propulsion_fins():
+		return
 	_player.global_position = connector["center"]
 	if not _main._try_world_connector_transition():
 		_fail("did not trigger connector transition")

@@ -31,6 +31,30 @@ func _run() -> void:
 	world.load_greybox()
 	var runtime := MaterialProjectRuntime.new(profile)
 	var source_report: Dictionary = runtime.on_map_loaded(world)
+	_expect(source_report.get("project_id") == ExpansionProfileState.PROPULSION_FINS_PROJECT_ID and source_report.get("project_count") == 5, "fins were not the first source project")
+	_expect(runtime.status() == "incomplete", "fresh fins project was not material-gated")
+	_expect(runtime.debrief_lines() == ["Propulsion fins project: Ti 0/2 | Rubber 0/1", "Access: lower-left relay current"], "fins recipe or access text drifted")
+	var direct_fins: Dictionary = profile.unlock_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID, false)
+	_expect(direct_fins.get("reason") == "project_transaction_required", "fins unlocked outside project transaction")
+	var missing_fins_materials: Dictionary = runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
+	_expect(missing_fins_materials.get("reason") == "insufficient_materials", "missing fins materials did not block project")
+	profile.deposit_materials({
+		ExpansionProfileState.TITANIUM_MATERIAL_ID: 2,
+		ExpansionProfileState.RUBBER_MATERIAL_ID: 1,
+	}, true)
+	_expect(runtime.status() == "ready" and runtime.debrief_lines()[0] == "P: Build propulsion fins", "complete fins recipe did not become ready")
+	var fins_wrong_phase: Dictionary = runtime.try_build(ExpeditionDayState.PHASE_ACTIVE)
+	_expect(fins_wrong_phase.get("reason") == "wrong_phase", "fins built outside night debrief")
+	var fins_completed: Dictionary = runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
+	_expect(bool(fins_completed.get("changed", false)) and fins_completed.get("reason") == "completed", "ready fins project did not complete")
+	_expect(profile.material_inventory().is_empty(), "fins did not consume the exact Ti2 + Rubber1 recipe")
+	_expect(profile.has_completed_project(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID), "completed fins project was not recorded")
+	_expect(profile.has_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID), "fins capability was not unlocked")
+	_expect(runtime.debrief_lines() == ["Propulsion fins built", "Access: lower-left relay current"], "completed fins debrief text drifted")
+	var fins_repeated: Dictionary = runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
+	_expect(fins_repeated.get("reason") == "already_completed" and profile.material_inventory().is_empty(), "repeat fins build was not idempotent")
+
+	source_report = runtime.on_map_loaded(world)
 	_expect(source_report.get("project_id") == ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, "source project was not loaded")
 	_expect(runtime.status() == "knowledge_required", "fresh project did not require anomaly knowledge")
 	_expect(runtime.debrief_lines() == ["Cutter project: anomaly knowledge required"], "knowledge gate text drifted")
@@ -71,6 +95,8 @@ func _run() -> void:
 	var reloaded := ExpansionProfileState.new(TEST_PATH)
 	var reload_report: Dictionary = reloaded.load_profile()
 	_expect(reload_report.get("status") == "loaded", "completed project profile did not reload")
+	_expect(reloaded.has_completed_project(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID), "profile reload lost fins project")
+	_expect(reloaded.has_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID), "profile reload lost fins")
 	_expect(reloaded.has_completed_project(ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID), "profile reload lost completed project")
 	_expect(reloaded.has_capability(ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID), "profile reload lost cutter")
 	_expect(reloaded.has_completed_project(ExpansionProfileState.SHOCK_PROD_PROJECT_ID), "profile reload lost shock prod project")
@@ -79,6 +105,7 @@ func _run() -> void:
 	_expect(reloaded.has_capability(ExpansionProfileState.SHOCK_PROD_CAPACITOR_CAPABILITY_ID), "profile reload lost capacitor")
 	var day := ExpeditionDayState.new()
 	day.begin_next_day()
+	_expect(reloaded.has_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID), "next day lost durable fins")
 	_expect(reloaded.has_capability(ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID), "next day lost durable cutter")
 
 	world.queue_free()
@@ -88,7 +115,7 @@ func _run() -> void:
 			push_error("Material project state smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Material project state smoke passed: project=%s recipe=2_titanium+1_coil knowledge_gate=true debrief_only=true exact_once=true cutter_persistent=true shock_prod_non_enemy=true shock_prod_persistent=true capacitor_recipe=coil1+gel1+electrocyte1 capacitor_persistent=true migration=v1_to_v3 inconsistent_pair_rejected=true." % ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID)
+	print("Material project state smoke passed: fins=Ti2+Rubber1 no_knowledge_gate=true wallet_independent=true fins_persistent=true project=%s recipe=2_titanium+1_coil knowledge_gate=true debrief_only=true exact_once=true cutter_persistent=true shock_prod_non_enemy=true shock_prod_persistent=true capacitor_recipe=coil1+gel1+electrocyte1 capacitor_persistent=true migration=v1_to_v3 inconsistent_pair_rejected=true." % ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID)
 	quit(0)
 
 
@@ -142,6 +169,13 @@ func _test_capacitor_project(profile, world) -> void:
 
 
 func _test_inconsistent_profiles() -> void:
+	for payload in [
+		_profile_payload_v3([], [ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID]),
+		_profile_payload_v3([ExpansionProfileState.PROPULSION_FINS_PROJECT_ID], []),
+	]:
+		_write_profile(payload)
+		var fins_profile := ExpansionProfileState.new(TEST_PATH)
+		_expect(fins_profile.load_profile().get("status") == "invalid_schema", "inconsistent fins/project pair was accepted")
 	for payload in [
 		_profile_payload([], [ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID]),
 		_profile_payload([ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID], []),

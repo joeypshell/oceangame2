@@ -2,7 +2,7 @@
 
 Date: 2026-07-10
 
-Status: Expansion 06 Combat Foundation is complete with a GO. Expansion 07 is the next directional planning candidate; Expansions 08-09 remain directional only.
+Status: Expansion 06 is complete with GO. Expansion 07 is implemented and at player closeout #799 after correction #815; Expansions 08-09 remain directional only.
 
 ## Decision
 
@@ -87,11 +87,11 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 06's issue-level batch #768-#777 is complete. No implementation batch is active; the next drift cycle should make Expansion 07 committed only after its bounded plan is approved.
+Expansion 07's bounded implementation/review batch and focused #815 correction are complete in current source. Only merged-build verification and player closeout #799 remain; do not commit Expansion 08 work before that player gate returns GO.
 
 ### Directional
 
-Expansion 07 is the next directional milestone. Expansions 08-09 remain directional; create each batch only after the prior closeout confirms readiness.
+Expansions 08-09 remain directional; create each batch only after the prior player closeout confirms readiness.
 
 ### Vision
 

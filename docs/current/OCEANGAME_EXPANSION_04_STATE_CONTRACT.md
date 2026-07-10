@@ -12,7 +12,7 @@ Expansion 04 extends the existing profile/project/current owners; it does not ad
 
 - `current_stabilizer_project` is the second source-ordered night project.
 - `current_stabilizer` is a durable profile capability unlocked only by that project transaction.
-- `propulsion_fins` remains a session-only wallet upgrade and continues to own only the legacy lower-left connector gate.
+- #815 migrates `propulsion_fins` to a durable recipe-built profile capability while preserving its ownership of only the lower-left connector gate.
 - The upper-right current pocket is source state plus derived runtime presentation. It has no mutable open/closed save flag.
 - The authored payoff uses existing salvage, sortie, cargo, failure, offload, and score owners.
 
@@ -61,8 +61,9 @@ The source map owns ordered project definitions. `material_project_runtime.gd` o
 
 Project order is:
 
-1. `salvage_cutter_project`
-2. `current_stabilizer_project`
+1. `propulsion_fins_project`
+2. `salvage_cutter_project`
+3. `current_stabilizer_project`
 
 The active project is the first source-ordered incomplete project. A later project cannot bypass an incomplete `required_project_id`.
 
@@ -100,7 +101,7 @@ Repeated completion returns `already_completed` and consumes nothing. Direct `un
 
 The source gate owns exactly one requirement field:
 
-- legacy gate: `required_upgrade_id: propulsion_fins`
+- lower-left relay gate: `required_capability_id: propulsion_fins`
 - Expansion 04 gate: `required_capability_id: current_stabilizer`
 
 `current_gate_controller.gd` owns requirement extraction, blocked/unblocked state, pushback, and prompt text. It receives separate read-only callbacks for session upgrades and durable capabilities; it does not own either state.
@@ -117,7 +118,7 @@ The world owner exposes gate source data and derived pixel bounds. A focused ren
 | Completed cutter project/capability | profile | yes | yes | preserved | yes |
 | Completed stabilizer project/capability | profile | yes | yes | preserved | yes |
 | Project catalog/readiness | material-project runtime | reload from source/profile | recompute | recompute | recompute |
-| Session `propulsion_fins` | session progression | current session | current session only | existing behavior | no |
+| Completed fins project/capability | profile | yes | yes | preserved | yes |
 | Current push/prompt | current-gate controller | reset per map | recompute | clear | recompute |
 | Current affordance | world renderer | source-derived | source-derived | unchanged | source-derived |
 | Held payoff | sortie/cargo | existing connector rules | cleared/committed by day rules | restore to world | no |
