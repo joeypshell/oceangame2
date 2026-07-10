@@ -1624,6 +1624,10 @@ func _cargo_full_prompt() -> String:
 
 
 func _pre_pickup_route_cue_prompt() -> String:
+	if _destination_payoff_feedback != null and _world != null and _player != null:
+		var payoff_prompt: String = _destination_payoff_feedback.return_prompt(_world, _player.global_position, Callable(_anomaly_survey.profile_state(), "has_capability"), _sortie_state.held_salvage_ids, _banked_salvage_ids)
+		if not payoff_prompt.is_empty():
+			return payoff_prompt
 	if _pre_pickup_route_cue_feedback == null or _world == null or _player == null:
 		return ""
 	return _pre_pickup_route_cue_feedback.current_prompt(_world, _player.global_position)
@@ -1791,9 +1795,9 @@ func _refresh_destination_payoff_feedback(world) -> void:
 	if _destination_payoff_feedback == null:
 		return
 	if world == null or not world.has_method("get_salvage_centers"):
-		_destination_payoff_feedback.reset([])
+		_destination_payoff_feedback.reset([], [])
 		return
-	_destination_payoff_feedback.reset(world.get_salvage_centers())
+	_destination_payoff_feedback.reset(world.get_salvage_centers(), world.get_current_gates())
 
 
 func _refresh_route_commitment_feedback(world) -> void:
