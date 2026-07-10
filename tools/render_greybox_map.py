@@ -23,6 +23,7 @@ COLORS = {
     "tool_target": "#ffad42",
     "hazard": "#ff4b5f",
     "moving_hazard": "#ff96b0",
+    "hostile": "#ff745e",
     "survey": "#69f0dc",
     "marker": "#ffffff",
     "container": "#d68cff",
@@ -187,11 +188,24 @@ def render_svg(map_data: dict) -> str:
         parts.append(f'<circle cx="{x}" cy="{y}" r="15" fill="{COLORS["moving_hazard"]}" stroke="#721d35" stroke-width="5"/>')
         parts.append(text(x + 18, y - 18, hazard["id"], 22))
 
+    for hostile in map_data.get("hostile_encounters", []):
+        territory = hostile["territory"]
+        tx, ty, tw, th = tile_rect(territory, tile_size)
+        cx = (hostile["x"] + 0.5) * tile_size
+        cy = (hostile["y"] + 0.5) * tile_size
+        parts.append(
+            f'<rect x="{tx}" y="{ty}" width="{tw}" height="{th}" fill="{COLORS["hostile"]}" '
+            'fill-opacity="0.09" stroke="#8f281c" stroke-width="5" stroke-dasharray="14 8"/>'
+        )
+        parts.append(f'<ellipse cx="{cx}" cy="{cy}" rx="28" ry="14" fill="{COLORS["hostile"]}" stroke="#64180f" stroke-width="5"/>')
+        parts.append(text(cx + 34, cy - 18, hostile["id"], 22))
+
     parts.extend(
         [
             f'<rect x="0" y="0" width="{width_px}" height="{height_px}" fill="url(#grid)"/>',
             text(24, 42, f'{map_data["id"]} - greybox source preview', 30),
-            text(24, height_px - 24, "cyan=open | gray=solid | tan=extraction | orange=boat/tool | green=start | yellow=salvage | teal=material/survey | red=hazard | pink=moving | purple=container", 24),
+            text(24, height_px - 42, "cyan=open | gray=solid | tan=extraction | orange=boat/tool | green=start | yellow=salvage | teal=material/survey", 22),
+            text(24, height_px - 16, "red=hazard | pink=moving | coral=hostile | purple=container", 22),
             "</svg>",
             "",
         ]
