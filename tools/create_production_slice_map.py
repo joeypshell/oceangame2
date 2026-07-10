@@ -6,8 +6,7 @@ from __future__ import annotations
 import json
 from collections import deque
 from pathlib import Path
-from production_slice_01_expansions import expansion_entities, expansion_survey_targets, expansion_zones, hostile_encounters, material_candidate_pools, material_projects
-
+from production_slice_01_expansions import biological_resource_sources, expansion_entities, expansion_survey_targets, expansion_zones, hostile_encounters, material_candidate_pools, material_projects
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_MAP_PATH = ROOT / "maps" / "full_cave_sketch_01.greybox.json"
 OUTPUT_MAP_PATH = ROOT / "maps" / "production_slice_01.greybox.json"
@@ -336,6 +335,7 @@ def build_map_data(source_map: dict) -> dict:
         "progression_containers": [{"id": "lower_loop_upgrade_chest", "container_type": "upgrade_chest", "x": 18, "y": 72, "w": 2, "h": 2, "display_label": "Upgrade chest", "interaction": "instant", "reward_type": "wallet", "reward_id": "upgrade_wallet_bonus", "reward_amount": 400, "route_context": "lower_loop_reward", "intent": "First small progression chest rewarding the lower-loop detour without adding inventory UI."}],
         "moving_hazards": [{"id": "deep_route_jellyfish_patrol", "kind": "jellyfish", "x": 54, "y": 68, "movement": "linear_patrol", "path": [{"x": 54, "y": 68}, {"x": 64, "y": 68}], "speed_tiles_per_second": 1.0, "route_context": "deep_cache_pressure", "display_label": "Jellyfish patrol", "intent": "First deterministic moving hazard on the lower-loop to deep-cache route."}],
         "hostile_encounters": hostile_encounters(),
+        "biological_resource_sources": biological_resource_sources(),
         "route_objectives": PASS_13_ROUTE_OBJECTIVES,
         "primary_route_objective_id": "deep_cache_route_objective",
         "next_dive_objective_prompts": [{"id": "deep_cache_next_dive_prompt", "trigger": "primary_objective_complete", "objective_id": "deep_cache_route_objective", "target_id": "lower_left_loop_connector", "label": "Next dive: Investigate lower-left relay", "route_context": "lower_left_loop", "intent": "Pass 23 result prompt pointing the next dive toward the lower-left relay after Deep cache completion."}],

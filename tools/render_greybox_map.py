@@ -24,6 +24,7 @@ COLORS = {
     "hazard": "#ff4b5f",
     "moving_hazard": "#ff96b0",
     "hostile": "#ff745e",
+    "biological": "#b8f36b",
     "survey": "#69f0dc",
     "marker": "#ffffff",
     "container": "#d68cff",
@@ -171,6 +172,20 @@ def render_svg(map_data: dict) -> str:
         parts.append(f'<circle cx="{cx}" cy="{cy}" r="14" fill="none" stroke="{COLORS["survey"]}" stroke-width="6"/>')
         parts.append(text(x + 8, y - 10, target["id"], 22))
 
+    hostiles_by_id = {hostile["id"]: hostile for hostile in map_data.get("hostile_encounters", [])}
+    for source in map_data.get("biological_resource_sources", []):
+        if source.get("source_role") == "passive_sample":
+            cx, cy = entity_center(source, tile_size)
+            parts.append(f'<circle cx="{cx}" cy="{cy}" r="17" fill="{COLORS["biological"]}" stroke="#3f6619" stroke-width="5"/>')
+            parts.append(f'<circle cx="{cx - 12}" cy="{cy + 8}" r="8" fill="{COLORS["biological"]}" stroke="#3f6619" stroke-width="4"/>')
+        else:
+            hostile = hostiles_by_id.get(source.get("hostile_id"))
+            if hostile is None:
+                continue
+            cx, cy = entity_center(hostile, tile_size)
+            parts.append(f'<circle cx="{cx}" cy="{cy}" r="38" fill="none" stroke="{COLORS["biological"]}" stroke-width="5" stroke-dasharray="9 7"/>')
+        parts.append(text(cx + 24, cy + 34, source["id"], 20))
+
     for hazard in map_data.get("moving_hazards", []):
         path = hazard.get("path", [])
         if len(path) >= 2:
@@ -205,7 +220,7 @@ def render_svg(map_data: dict) -> str:
             f'<rect x="0" y="0" width="{width_px}" height="{height_px}" fill="url(#grid)"/>',
             text(24, 42, f'{map_data["id"]} - greybox source preview', 30),
             text(24, height_px - 42, "cyan=open | gray=solid | tan=extraction | orange=boat/tool | green=start | yellow=salvage | teal=material/survey", 22),
-            text(24, height_px - 16, "red=hazard | pink=moving | coral=hostile | purple=container", 22),
+            text(24, height_px - 16, "red=hazard | pink=moving | coral=hostile | lime=biological | purple=container", 22),
             "</svg>",
             "",
         ]

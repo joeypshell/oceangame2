@@ -340,6 +340,11 @@
 <rect x="2208" y="1312" width="64" height="64" rx="8" fill="#69f0dc" fill-opacity="0.28" stroke="#07584f" stroke-width="6"/>
 <circle cx="2240.0" cy="1344.0" r="14" fill="none" stroke="#69f0dc" stroke-width="6"/>
 <text x="2216.0" y="1302.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">upper_right_mineral_trace_survey</text>
+<circle cx="2192.0" cy="1328.0" r="17" fill="#b8f36b" stroke="#3f6619" stroke-width="5"/>
+<circle cx="2180.0" cy="1336.0" r="8" fill="#b8f36b" stroke="#3f6619" stroke-width="4"/>
+<text x="2216.0" y="1362.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="20" paint-order="stroke" stroke="#10384a" stroke-width="4">upper_right_glow_anemone_sample</text>
+<circle cx="2128.0" cy="2384.0" r="38" fill="none" stroke="#b8f36b" stroke-width="5" stroke-dasharray="9 7"/>
+<text x="2152.0" y="2418.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="20" paint-order="stroke" stroke="#10384a" stroke-width="4">deep_cache_eel_electrocyte_harvest</text>
 <polyline points="1744.0,2192.0 2064.0,2192.0" fill="none" stroke="#ff96b0" stroke-width="5" stroke-dasharray="12 8"/>
 <circle cx="1744.0" cy="2192.0" r="15" fill="#ff96b0" stroke="#721d35" stroke-width="5"/>
 <text x="1762.0" y="2174.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">deep_route_jellyfish_patrol</text>
@@ -349,5 +354,5 @@
 <rect x="0" y="0" width="2304" height="2688" fill="url(#grid)"/>
 <text x="24.0" y="42.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="30" paint-order="stroke" stroke="#10384a" stroke-width="4">production_slice_01 - greybox source preview</text>
 <text x="24.0" y="2646.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">cyan=open | gray=solid | tan=extraction | orange=boat/tool | green=start | yellow=salvage | teal=material/survey</text>
-<text x="24.0" y="2672.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">red=hazard | pink=moving | coral=hostile | purple=container</text>
+<text x="24.0" y="2672.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">red=hazard | pink=moving | coral=hostile | lime=biological | purple=container</text>
 </svg>

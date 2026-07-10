@@ -17,8 +17,8 @@ Add one optional top-level `biological_resource_sources` list. These records des
   "id": "upper_right_glow_anemone_sample",
   "source_role": "passive_sample",
   "organism_kind": "glow_anemone",
-  "x": 71,
-  "y": 42,
+  "x": 68,
+  "y": 41,
   "required_capability_id": "survey_scanner_1",
   "interaction": "timed_sample",
   "interaction_seconds": 1.5,
@@ -33,7 +33,7 @@ Add one optional top-level `biological_resource_sources` list. These records des
 }
 ```
 
-The authoring issue may move `(71, 42)` within the existing upper-right pocket only if source validation proves it solid, unreachable, overlapping, or unreadable. The final validated coordinate becomes canonical without changing terrain or the gate.
+The planned `(71, 42)` point proved solid, and the next eastward point was out of slice bounds. `(68, 41)` is the canonical nearest in-bounds, open, reachable, non-overlapping point east of the same upper-right gate; terrain and the gate remain unchanged.
 
 ## Hostile Harvest Source
 
