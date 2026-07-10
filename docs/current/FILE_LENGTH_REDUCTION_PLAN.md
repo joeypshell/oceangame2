@@ -4,23 +4,25 @@ Date: 2026-07-07
 
 Planning-only note. Do not move code or change gameplay behavior in this pass.
 
+The 500-line direction is a default target and growth guard for agent readability, not a runtime or architectural requirement. Do not split a cohesive owner merely to reach the number when that would fragment mutable state, increase coupling, obscure Godot lifecycle ordering, or create pass-through wrappers.
+
 ## 1. Current Confirmed Oversized Files
 
-The 2026-07-09 audit reports two remaining temporary human-authored exceptions:
+The 2026-07-09 audit reports two oversized human-authored files with different policy status:
 
-- `scripts/main/main.gd`: 2175 lines, gameplay/application orchestration shell.
-- `scripts/world/greybox_world.gd`: 1088 lines, world/source coordinator.
+- `scripts/main/main.gd`: 2040 lines, actionable temporary debt in the gameplay/application orchestration shell.
+- `scripts/world/greybox_world.gd`: 984 lines, a documented cohesive-owner exception for map and top-level node state.
 
 `docs/current/TOOLING.md` is now a compact index with focused child docs, and `docs/current/PROJECT_CONTEXT.md` is under 500 lines. Neither remains allowlist debt.
 
 Near-limit files also need growth guards: `capture_controller.gd` is 500 lines, several smoke helpers are 491-497 lines, and expansion checks must use new domain files.
 - `maps/full_cave_sketch_01.greybox.json`: 3035 lines, generated/source map data.
-- `maps/production_slice_01.greybox.json`: 2433 lines, generated/source map data.
+- `maps/production_slice_01.greybox.json`: 2703 lines, generated/source map data.
 - `maps/production_slice_03.greybox.json`: 2218 lines, generated/source map data.
-- `maps/production_slice_02.greybox.json`: 2087 lines, generated/source map data.
+- `maps/production_slice_02.greybox.json`: 2124 lines, generated/source map data.
 - `maps/cave_salvage_organic_01.greybox.json`: 1748 lines, generated/source map data.
 - `maps/cave_tileset_test_01.greybox.json`: 1700 lines, generated/source map data.
-- `maps/production_slice_04.greybox.json`: 1642 lines, generated/source map data.
+- `maps/production_slice_04.greybox.json`: 1713 lines, generated/source map data.
 
 ## 2. Temporary Exceptions For Generated Data Files
 
@@ -44,22 +46,17 @@ Recommended extraction boundaries:
 
 Keep the first split narrow: extract mode resolution without changing runtime semantics. Then extract one domain at a time with smoke coverage after each move.
 
-Status: capture and smoke responsibilities have focused helpers, but `main.gd` remains oversized. The next expansion gate is a no-behavior extraction of progression transaction/presentation wrappers before scanner/profile growth; see `SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`.
+Status: capture, smoke, progression, profile, expedition, and survey responsibilities now have focused helpers, but `main.gd` remains oversized. Continue extracting only when selected work exposes a complete ownership boundary; new territorial-fauna behavior belongs in a focused controller rather than this shell.
 
-## 4. Proposed Split Of `scripts/world/greybox_world.gd`
+## 4. Cohesive-Owner Policy For `scripts/world/greybox_world.gd`
 
 Goal: keep `greybox_world.gd` as world coordination. It should load validated map data, own top-level node roots, expose stable runtime query methods, and delegate rendering/query details.
 
-Recommended extraction boundaries:
+Already extracted responsibilities include terrain, collision, debug, background, prop, extraction, route-marker, visibility, asset lookup, world-query, and survey-target helpers.
 
-- Terrain rendering: move cave terrain TileMapLayer creation, cave TileSet construction, solid-cell expansion, atlas mask selection, terrain variants, and source-grid TileSet helpers.
-- Entity/prop rendering: move background art, zones, boat/relay visuals, salvage/hazard props, debug markers, and local polygon/shape helpers.
-- World query/path/reachability helpers: move open-path search, position/cell conversion, collision/runtime parity cell extraction, extraction checks, hazard lookup, and salvage center reporting where practical.
-- Texture loading/asset lookup: move PNG loading, packaged texture fallback, prop texture cache, and asset lookup helpers if this reduces coupling after prop rendering is extracted.
+Further extraction is optional and must improve ownership. Good candidates own a complete responsibility with explicit inputs/outputs; bad candidates require back-references into world arrays, duplicate node state, or turn public methods into chains of pass-through wrappers.
 
-Preserve the public method names used by `main.gd` until call sites are intentionally updated. Do not change JSON map semantics, collision derivation, spawn/extraction behavior, or parity reports during these splits.
-
-Status: terrain, collision, debug, background, prop, extraction, route-marker, visibility, and asset lookup helpers have been extracted. The next expansion gate is a no-behavior world query/path helper extraction before survey/fauna queries.
+Preserve the public method names used by `main.gd`, one clear owner for mutable map/node state, JSON semantics, collision derivation, spawn/extraction behavior, and parity reports. Remaining above 500 lines is acceptable while those constraints make the coordinator safer and easier to reason about than another split.
 
 ## 5. Completed Split Of `docs/current/TOOLING.md`
 
@@ -78,10 +75,10 @@ Suggested files:
 
 ## 6. Recommended Remaining Order
 
-1. Extract progression transaction/presentation wrappers from `scripts/main/main.gd` before scanner/profile integration.
-2. Extract world query/path/reachability helpers from `scripts/world/greybox_world.gd` before survey/fauna query growth.
-3. Continue domain-driven extractions only when a selected feature needs the ownership boundary.
-4. Remove each temporary allowlist entry after its owner file is under 500 lines.
+1. Continue responsibility-driven extraction from `scripts/main/main.gd` when selected work benefits from a clearer owner.
+2. Keep `scripts/world/greybox_world.gd` as a growth-guarded cohesive-owner exception unless a stable boundary demonstrably reduces coupling.
+3. Keep new domain files under 500 lines unless they independently justify the same documented exception.
+4. Remove temporary-debt entries when decomposition improves ownership; re-evaluate cohesive-owner exceptions during architecture audits rather than treating their line count alone as debt.
 
 ## 7. Verification Commands After Each Split
 

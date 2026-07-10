@@ -39,7 +39,7 @@ Audit agent-friendly file lengths:
 python tools/check_file_lengths.py
 ```
 
-This fails on new non-allowlisted source/docs/config files over 500 lines, while separating temporary human-authored debt from generated map data. Keep new tooling docs small enough that the audit no longer needs a temporary `docs/current/TOOLING.md` exception.
+This treats 500 lines as the default target and growth guard for human-authored files. It fails on new non-allowlisted source/docs/config files over that target and reports actionable temporary debt, documented cohesive-owner exceptions, and generated map data separately. A cohesive-owner exception must state why retaining one owner is safer; do not split Godot state or lifecycle code solely to satisfy the number. Keep new tooling docs small enough that the audit does not need an exception.
 
 Run the Simple Diver Game release-candidate validation gates:
 

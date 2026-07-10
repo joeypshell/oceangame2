@@ -27,6 +27,14 @@ Keep guidance practical and compact. Add rules only when they prevent repeated m
 - Do not revert unrelated user changes.
 - Do not commit generated files, local caches, secrets, or build output.
 
+## Agent-Friendly File Lengths
+
+- Treat 500 lines as the default target and growth guard for human-authored source, docs, and config. New files should stay at or below it unless a documented exception is justified.
+- The target is not a Godot runtime or architectural requirement. Do not split a file solely to satisfy the number when that would increase coupling, fragment mutable-state ownership, obscure node/signal lifecycle, or create pass-through wrappers.
+- Extract only at cohesive responsibility boundaries. Keep one clear owner for mutable state, preserve public APIs and lifecycle ordering, and run the relevant behavior/parity checks after a split.
+- Oversized files may remain documented cohesive-owner exceptions when that is safer than further decomposition. Avoid unnecessary growth and re-evaluate the exception when responsibilities genuinely separate.
+- The file-length audit must report actionable temporary debt, cohesive-owner exceptions, and generated/data exceptions separately.
+
 ## Visual Workflow
 
 - Treat visuals as a controlled production pipeline, not one-off scene generation.

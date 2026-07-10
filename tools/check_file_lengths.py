@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Audit source/docs/config files for agent-friendly length."""
+"""Audit source/docs/config files for agent-friendly length targets."""
 
 from __future__ import annotations
 
@@ -27,6 +27,7 @@ TARGET_EXTENSIONS = {
 
 CATEGORY_GENERATED = "generated/data"
 CATEGORY_TEMPORARY_DEBT = "temporary human-authored debt"
+CATEGORY_COHESIVE_OWNER = "documented cohesive owner exception"
 
 IGNORED_PREFIXES = (
     ".godot/",
@@ -59,8 +60,8 @@ ALLOWLIST: tuple[AllowlistEntry, ...] = (
     ),
     AllowlistEntry(
         "scripts/world/greybox_world.gd",
-        CATEGORY_TEMPORARY_DEBT,
-        "known large terrain renderer; follow-up refactor target",
+        CATEGORY_COHESIVE_OWNER,
+        "cohesive world-state coordinator; split only at stable ownership boundaries",
     ),
     AllowlistEntry(
         "docs/current/PROJECT_CONTEXT.md",
@@ -133,10 +134,11 @@ def candidate_paths() -> list[str]:
 
 def find_oversized(
     max_lines: int,
-) -> tuple[int, list[FileLength], list[FileLength], list[FileLength]]:
+) -> tuple[int, list[FileLength], list[FileLength], list[FileLength], list[FileLength]]:
     checked = 0
     failures: list[FileLength] = []
     temporary_debt: list[FileLength] = []
+    cohesive_owners: list[FileLength] = []
     generated_large: list[FileLength] = []
 
     for path in candidate_paths():
@@ -161,6 +163,8 @@ def find_oversized(
         )
         if allow and allow.category == CATEGORY_TEMPORARY_DEBT:
             temporary_debt.append(entry)
+        elif allow and allow.category == CATEGORY_COHESIVE_OWNER:
+            cohesive_owners.append(entry)
         elif allow and allow.category == CATEGORY_GENERATED:
             generated_large.append(entry)
         elif allow:
@@ -170,8 +174,9 @@ def find_oversized(
 
     failures.sort(key=lambda item: (-item.lines, item.path))
     temporary_debt.sort(key=lambda item: (-item.lines, item.path))
+    cohesive_owners.sort(key=lambda item: (-item.lines, item.path))
     generated_large.sort(key=lambda item: (-item.lines, item.path))
-    return checked, failures, temporary_debt, generated_large
+    return checked, failures, temporary_debt, cohesive_owners, generated_large
 
 
 def print_section(title: str, entries: list[FileLength], empty: str) -> None:
@@ -195,7 +200,9 @@ def main() -> int:
     args = parser.parse_args()
 
     try:
-        checked, failures, temporary_debt, generated_large = find_oversized(args.max_lines)
+        checked, failures, temporary_debt, cohesive_owners, generated_large = find_oversized(
+            args.max_lines
+        )
     except RuntimeError as exc:
         print(str(exc), file=sys.stderr)
         return 2
@@ -212,6 +219,12 @@ def main() -> int:
     print_section(
         "Temporary human-authored allowlist debt:",
         temporary_debt,
+        "none",
+    )
+    print()
+    print_section(
+        "Documented cohesive-owner exceptions:",
+        cohesive_owners,
         "none",
     )
     print()
