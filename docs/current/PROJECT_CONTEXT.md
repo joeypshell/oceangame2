@@ -6,7 +6,7 @@ This file is the compact handoff for new Codex or ChatGPT Project sessions. It c
 
 ## Current Goal
 
-`oceangame2` has a GO release candidate for its compact side-view diver salvage game and is beginning one bounded 2D Subnautica-like expansion. The current target is an anomaly-survey foundation that preserves:
+`oceangame2` has a GO release candidate and a completed first bounded 2D Subnautica-like expansion. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -14,7 +14,9 @@ This file is the compact handoff for new Codex or ChatGPT Project sessions. It c
 - fixing one visual issue without resetting unrelated visuals
 - expedition pressure through oxygen, cargo, hazards, routes, and objectives
 - tool-like salvage interactions and limited progression
-- one scanner-backed, source-authored discovery journey before broader OceanGame systems
+- one scanner-backed, source-authored discovery journey with exact return/commit state
+
+The recommended next target is a contract-first territorial-eel encounter on the proven anomaly route. It must remain one bounded warning/lunge/return/cooldown interaction, not a general combat or ecosystem system.
 
 Controlled gameplay/visual passes are now a validation lane inside the roadmap, not the whole roadmap. New work should serve curiosity, pressure, payoff, remembered-place progress, meaningful route choice, or a reason to try another expedition.
 
@@ -39,10 +41,10 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Current expansion decision: `docs/current/SIMPLE_DIVER_GAME_09_EXPANSION_CLOSEOUT.md`
+- Current expansion decision: `docs/current/OCEANGAME_EXPANSION_01_CLOSEOUT.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: `docs/current/SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md`
+- Latest Web verification: `docs/current/OCEANGAME_EXPANSION_01_WEB_PREVIEW_VERIFICATION.md`
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -109,7 +111,7 @@ Current map-loading helper:
 
 ## Web Preview Status
 
-The public preview should show the cave terrain, not the blue greybox fallback:
+The public preview is verified at build `3d6a922` and should show the cave terrain, not the blue greybox fallback:
 
 ```text
 https://joeypshell.github.io/oceangame2/
@@ -217,7 +219,7 @@ Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work.
 
 Current issue state as of 2026-07-09:
 
-- Active roadmap queue: #662-#671 implement OceanGame Expansion 01 anomaly-survey foundation. #52/#53 remain deferred slice-03 polish.
+- Closed: #662-#671 completed OceanGame Expansion 01 with a documented GO. The next issue batch should plan one bounded territorial-eel encounter; #52/#53 remain deferred slice-03 polish.
 - Closed: #562-#571 completed Pass 25 planning, final-dive contract, validation, source authoring, runtime feedback, smoke, focused capture, visual decision, public Web verification, and closeout.
 - Closed: #542-#551 completed Pass 24 planning, relay objective contract, validation, source authoring, runtime feedback, smoke, focused capture, visual decision, public Web verification, and closeout.
 - Closed: #522-#531 completed Pass 23 planning, next-dive prompt contract, validation, source authoring, runtime result text, smoke, focused capture, visual/Web verification, and closeout.
@@ -229,7 +231,7 @@ Current issue state as of 2026-07-09:
 - Closed: #340-#349 completed Pass 17 pry salvage, including planning, source contract, validation, source target authoring, staged runtime interaction, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
 - Closed: #320-#329 completed Pass 16 primary dive completion, including planning, source contract, validation, source authoring, runtime completion gate, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
 - Closed: #298-#307 completed Pass 15 objective follow-through, including planning, source/text contract, metadata validation, source marker authoring, compact runtime feedback, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
-- Active tooling/skill queue: none; #210 documented repo drift, #211 committed Pass 10 UID sidecars, #212 updated drift issue batching, and #223 added drift-batch-resolve.
+- Active tooling/skill queue: none selected.
 - Deferred optional slice-03 polish: #52 and #53 remain open.
 - Closed: #278-#286 completed Pass 14 start-of-run objective cue, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
 - Closed: #236-#245 completed Pass 13 route commitment objective, deterministic smoke, focused capture, visual review with no baseline acceptance needed, public Web verification, and closeout.
@@ -466,9 +468,9 @@ Recent important commits:
 
 ## Recommended Next Work
 
-Use `docs/current/SIMPLE_DIVER_GAME_09_EXPANSION_CLOSEOUT.md` as the current north star for the first bounded OceanGame expansion.
+Use `docs/current/OCEANGAME_EXPANSION_01_CLOSEOUT.md` as the current north star. Expansion 01 issues #662-#671 are complete with a GO.
 
-Simple Diver Game 08 has a GO closeout, and Simple Diver Game 09 planning selected OceanGame Expansion 01. Issues #662-#671 implement owner extractions, survey schema/state/source/runtime, deterministic smoke, focused visual review, Web verification, and closeout.
+The next issue batch should plan and implement one source-authored territorial-eel encounter on the anomaly approach, using the completed survey journey as its regression floor.
 
 Accepted constraints for next work:
 
@@ -476,8 +478,8 @@ Accepted constraints for next work:
 - Preserve `maps/full_cave_sketch_01.greybox.json` as a topology draft and planning source.
 - Do not move the entire full sketch into production yet; grow route scale only when it supports the roadmap.
 - Keep map topology, collision, spawn, extraction, and camera tests source-driven.
-- Keep Expansion 01 scoped to one scanner, one slice-02 anomaly, one returned discovery, and source-authored slice-04/slice-02 travel.
-- Defer territorial fauna until the survey foundation closes; do not add combat, procedural generation, complex inventory, base building, save-heavy sandbox systems, or broad art replacement.
+- Preserve the Expansion 01 scanner, slice-02 anomaly, returned discovery, and source-authored slice-04/slice-02 travel.
+- Keep Phase B to `idle -> warning -> fixed lunge -> return -> cooldown`; do not add combat, procedural generation, complex inventory, base building, save-heavy sandbox systems, or broad art replacement.
 - Do not add another destination or connector beyond the selected slice-04/slice-02 link.
 - Keep #52/#53 as optional post-baseline slice-03 improvement issues unless the selected goal shifts back to slice-03 presentation.
 
