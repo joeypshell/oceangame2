@@ -19,15 +19,6 @@ body {
 	height: 100vh;
 	height: 100dvh;
 }
-
-#canvas {
-	position: fixed !important;
-	top: 0 !important;
-	left: 0 !important;
-	width: 100vw !important;
-	height: 100vh !important;
-	height: 100dvh !important;
-}
 </style>"""
 
 PRESET_TEMPLATE = """[preset.0]
