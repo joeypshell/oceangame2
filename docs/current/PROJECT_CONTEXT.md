@@ -302,7 +302,7 @@ Current issue state as of 2026-07-10:
 - The first scoped expedition pressure is a simple oxygen timer: oxygen drains away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held/unbanked salvage to the map.
 - Current oxygen pressure timing keeps a 90-second tank, starts `LOW` feedback at 40 seconds, and escalates to `CRITICAL` at 15 seconds. The safe/deep route comparison smoke keeps the short safe route comfortable while verifying the deeper route shows `LOW` and `CRITICAL` before returning.
 - `lower_loop_oxygen_rest_pocket` provides the Pass 12 limited oxygen-rest beat: compact `Rest pocket +oxygen` feedback, slow recovery up to a 45-second cap, and deterministic `--smoke-pass-12-oxygen-rest-pressure` coverage.
-- The stable `deep_cache_route_objective` id now presents as `Relay trail`: bank `salvage_lower_loop` and `salvage_southwest_return_cache` to complete the opening objective and fund propulsion fins without entering the eel encounter. Its compact start cue is `Objective: Relay trail 0/2`; historical pass docs retain the former deep-cache wording as snapshots.
+- The stable `deep_cache_route_objective` id now presents as `Relay trail`: bank `salvage_lower_loop` and `salvage_southwest_return_cache` to complete the opening objective without entering the eel encounter. Propulsion fins instead require the recovered lower-loop blueprint plus Ti2/Rubber1; historical pass docs retain former wording as snapshots.
 - `salvage_pry_locker` provides the Pass 17 staged pry salvage beat: 3 in-range stages at 1.2 seconds each, partial-stage cancel on leaving range, completed-stage persistence during normal exploration, cargo-full blocking without deletion, and deterministic `--smoke-pry-salvage` coverage.
 - Pass 18-20 session progression gives banked salvage a spendable session wallet use, one `O2 tank +15` purchase, one `Cargo +1` purchase, and one `Light +range` purchase at extraction. `--smoke-pass-18-progression`, `--smoke-pass-19-cargo-upgrade`, and `--smoke-pass-20-light-upgrade` cover payout, purchase spend, upgraded oxygen/cargo/light state, reset persistence, and failure restore semantics.
 - Salvage map data may include optional `tier` values. Missing tiers default conceptually to `common`; the current supported tiers are `common` and `valuable`. Runtime salvage score is tier-derived for now: `common` is worth 100 and `valuable` is worth 300, and pickup status feedback names the tier and score. Completed expeditions add a small runtime oxygen bonus of 1 point per remaining oxygen second; failed expeditions receive no oxygen bonus.
@@ -322,7 +322,7 @@ Current issue state as of 2026-07-10:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_07_PLAYER_GATE_CORRECTION.md` as the current correction contract. Expansions 01-06 are complete with GO decisions; Expansion 07 remains at #799 player closeout after #815. Do not begin Expansion 08 yet.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_07_PLAYER_GATE_CORRECTION.md` as the current correction contract. Expansions 01-06 are complete with GO decisions; #825 restores the blueprint-led fins-to-scanner journey, then Expansion 07 returns to #799 player closeout. Do not begin Expansion 08 yet.
 
 Accepted constraints for next work:
 

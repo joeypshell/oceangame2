@@ -232,6 +232,13 @@ func _prepare_current_map() -> void:
 
 func _prepare_non_eel_propulsion_route(profile) -> bool:
 	var wallet_before := _session_wallet()
+	var chest := _progression_container_by_id("lower_loop_upgrade_chest")
+	if not _require(not chest.is_empty(), "origin map did not provide the fins blueprint chest"):
+		return false
+	_player.global_position = chest["center"]
+	_process(0.0)
+	if not _require(profile.has_completed_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID), "fins blueprint chest did not persist recovered knowledge"):
+		return false
 	var recipe := _selected_propulsion_recipe()
 	if not _require(recipe.size() == 3, "active map did not provide two titanium and one rubber before the eel cache"):
 		return false
@@ -255,7 +262,7 @@ func _prepare_non_eel_propulsion_route(profile) -> bool:
 	):
 		return false
 	var project := _project_by_id(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID)
-	if not _require(not project.is_empty() and str(project.get("required_discovery_id", "")).is_empty(), "fins project is missing or gained an unintended research lock"):
+	if not _require(not project.is_empty() and str(project.get("required_discovery_id", "")) == ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID, "fins project is missing its recovered blueprint lock"):
 		return false
 	if not _main._expedition_day_state.request_end_day("voluntary"):
 		return _require(false, "could not enter debrief to build fins")
@@ -326,6 +333,13 @@ func _connector_by_id(connector_id: String) -> Dictionary:
 	for connector in _world.get_world_connectors():
 		if str(connector.get("id", "")) == connector_id:
 			return connector
+	return {}
+
+
+func _progression_container_by_id(container_id: String) -> Dictionary:
+	for container in _world.get_progression_containers():
+		if str(container.get("id", "")) == container_id:
+			return container
 	return {}
 
 

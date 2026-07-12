@@ -11,7 +11,7 @@ ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 DISPLAY_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,31}$")
 CONTAINER_TYPES = {"upgrade_chest", "key_chest", "locked_salvage_cache"}
 INTERACTIONS = {"instant", "timed_salvage", "pry_salvage"}
-REWARD_TYPES = {"wallet", "upgrade_flag", "key_flag", "salvage_unlock"}
+REWARD_TYPES = {"blueprint", "wallet", "upgrade_flag", "key_flag", "salvage_unlock"}
 
 
 def _rect_cells(item: dict[str, Any]) -> set[tuple[int, int]]:
@@ -100,6 +100,16 @@ def validate_progression_container_schema(map_data: dict[str, Any]) -> list[str]
             amount = container.get("reward_amount")
             if not _is_int_value(amount) or int(amount) <= 0:
                 failures.append(f"{item_label} wallet reward_amount must be a positive integer.")
+        elif reward_type == "blueprint":
+            project_matches = [
+                project
+                for project in map_data.get("material_projects", [])
+                if isinstance(project, dict) and project.get("required_discovery_id") == container.get("reward_id")
+            ]
+            if len(project_matches) != 1:
+                failures.append(f"{item_label} blueprint reward_id must unlock exactly one material project.")
+            if "reward_amount" in container:
+                failures.append(f"{item_label} blueprint reward must not define reward_amount.")
         if "required_key_id" in container:
             failures.extend(_validate_id(container["required_key_id"], item_label, "required_key_id"))
         if "lock_id" in container:

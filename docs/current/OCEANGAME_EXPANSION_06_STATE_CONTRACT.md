@@ -84,13 +84,13 @@ Rules:
 
 ## Presentation Priority
 
-The existing fixed overlay gains one compact line:
+The fixed overlay always keeps health visible:
 
 ```text
-Health 3/3 | Shock prod locked
+Health 3/3
 ```
 
-When unlocked, the suffix becomes `Shock prod ready` or a short cooldown state. Prompt priority is:
+When unlocked, a shock-prod ready/cooldown suffix appears. Before then, weapon guidance is contextual to an unarmed attack or nearby eel and follows the current blueprint/project stage rather than occupying the global health line. Prompt priority is:
 
 1. combat defeat
 2. accepted combat damage

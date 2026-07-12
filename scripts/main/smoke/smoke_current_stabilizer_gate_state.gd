@@ -106,6 +106,7 @@ func _run() -> void:
 
 
 func _build_projects(world, profile) -> void:
+	profile.complete_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID, false)
 	profile.complete_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID, false)
 	profile.deposit_materials({
 		ExpansionProfileState.TITANIUM_MATERIAL_ID: 6,
