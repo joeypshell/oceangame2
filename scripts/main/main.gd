@@ -1284,7 +1284,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		_last_status_note = str(scanner_result.get("note", _last_status_note))
 		_update_status_label()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_E:
-		_try_world_connector_transition()
+		if not _try_progression_container_interaction():
+			_try_world_connector_transition()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_N:
 		ExpeditionDayDebrief.handle_day_key(self)
 
@@ -1742,6 +1743,7 @@ func _update_status_label() -> void:
 	var oxygen_feedback := _oxygen_feedback_label()
 	var oxygen_rest_prompt := _oxygen_rest_prompt()
 	var current_gate_prompt := _current_gate_prompt()
+	var progression_container_prompt := _progression_container_prompt()
 	var pre_pickup_route_cue := _pre_pickup_route_cue_prompt()
 	var world_connector_prompt := _world_connector_prompt()
 	if _run_complete:
@@ -1761,6 +1763,9 @@ func _update_status_label() -> void:
 		objective_step_cue_blocked = true
 	elif not current_gate_prompt.is_empty():
 		prompt = current_gate_prompt
+		objective_step_cue_blocked = true
+	elif not progression_container_prompt.is_empty():
+		prompt = progression_container_prompt
 		objective_step_cue_blocked = true
 	elif not world_connector_prompt.is_empty():
 		var keep_connector_note := (
@@ -1878,6 +1883,12 @@ func _current_gate_prompt() -> String:
 	if _current_gate == null:
 		return ""
 	return _current_gate.current_prompt()
+
+
+func _progression_container_prompt() -> String:
+	if _progression_containers == null or _world == null or _player == null:
+		return ""
+	return _progression_containers.prompt_at(_world, _player.global_position)
 
 
 func _world_connector_prompt() -> String:
@@ -2162,6 +2173,23 @@ func _update_progression_containers() -> void:
 		_last_status_note = str(result["note"])
 
 
+func _try_progression_container_interaction() -> bool:
+	if _progression_containers == null or _world == null or _player == null:
+		return false
+	var result: Dictionary = _progression_containers.try_open(
+		_world,
+		_player.global_position,
+		Callable(self, "_grant_wallet_reward"),
+		Callable(_anomaly_survey.profile_state(), "complete_discovery"),
+		true
+	)
+	if str(result.get("state", "")) != "opened":
+		return false
+	_last_status_note = str(result.get("note", "Container opened"))
+	_update_status_label()
+	return true
+
+
 func _try_purchase_oxygen_tank_upgrade() -> bool:
 	return _try_purchase_progression_upgrade(SessionProgression.OXYGEN_TANK_UPGRADE_ID)
 
@@ -2176,7 +2204,7 @@ func _try_purchase_light_upgrade() -> bool:
 
 func _show_propulsion_project_guidance() -> void:
 	if _material_project != null:
-		_last_status_note = _material_project.propulsion_fins_guidance(_current_map_id(), _scanner_lead_available())
+		_last_status_note = _material_project.active_day_build_feedback(_current_map_id(), _scanner_lead_available())
 	_update_status_label()
 
 

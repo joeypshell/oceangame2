@@ -121,9 +121,9 @@ The release-journey smoke loads `production_slice_01`, collects and banks the re
 
 The Pass 18 progression smoke loads `production_slice_01`, confirms held and failed unbanked salvage do not create wallet payout, confirms banked salvage creates spendable wallet, confirms insufficient-funds purchase is blocked, buys the single oxygen tank upgrade, verifies wallet spend and upgraded capacity, then confirms reset/refill preserve the session upgrade.
 
-The current-gate smoke loads `production_slice_01`, verifies the source-authored `lower_left_loop_current` soft-push marker and visible affordance before `propulsion_fins`, confirms oxygen continues draining, builds durable fins from exactly Ti2+Rubber1 without spending wallet, then confirms the same location presents and uses the relay connector.
+The current-gate smoke loads `production_slice_01`, verifies the source-authored amber `lower_left_loop_current` soft-push marker and visible relay affordance before `propulsion_fins`, confirms oxygen continues draining, builds durable fins from exactly Ti2+Rubber1 without spending wallet, then confirms the same location presents and uses the relay connector.
 
-The upgrade-chest smoke is now the blueprint-fins journey check. From a fresh profile it traverses validated path-query cells with controller directions, recovers `propulsion_fins_blueprint`, distinguishes held/banked recipe counts, builds at night, reaches the visible relay, presses `E`, banks the destination payoff, and verifies scanner-next guidance without premature shock-prod text.
+The upgrade-chest smoke is the blueprint-fins journey check. From a fresh profile it proves proximity cannot auto-recover the plan, uses `E`, verifies active-day BUILD mutates nothing, distinguishes the cyan east stabilizer barrier from the amber fins relay, tracks held/banked ingredients, builds at night, reaches the relay through controller movement, enters with `E`, banks the payoff, and verifies scanner-next guidance without premature shock-prod text.
 
 The moving-hazard smoke loads `production_slice_01`, verifies `deep_route_jellyfish_patrol` moves deterministically, shows the compact warning prompt, applies existing hazard oxygen/reset/restoration semantics on contact, and preserves nearby route behavior.
 

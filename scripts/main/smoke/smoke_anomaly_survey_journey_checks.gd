@@ -237,6 +237,10 @@ func _prepare_non_eel_propulsion_route(profile) -> bool:
 		return false
 	_player.global_position = chest["center"]
 	_process(0.0)
+	if not _require(not profile.has_completed_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID), "fins blueprint recovered without explicit interaction"):
+		return false
+	_press_key(KEY_E)
+	_process(0.0)
 	if not _require(profile.has_completed_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID), "fins blueprint chest did not persist recovered knowledge"):
 		return false
 	var recipe := _selected_propulsion_recipe()

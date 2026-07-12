@@ -10,11 +10,13 @@ from typing import Any
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 DISPLAY_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,31}$")
 CURRENT_DIRECTIONS = {"left", "right", "up", "down"}
+CURRENT_AFFORDANCE_ROLES = {"barrier", "relay"}
 CURRENT_GATE_FIELDS = {
     "current_gate",
     "current_direction",
     "current_strength",
     "current_gate_label",
+    "current_affordance_role",
     "required_upgrade_id",
     "required_capability_id",
     "route_context",
@@ -123,6 +125,11 @@ def validate_current_gate_schema(map_data: dict[str, Any]) -> list[str]:
 
         if "current_gate_label" in zone:
             failures.extend(_validate_label(zone["current_gate_label"], item_label, "current_gate_label"))
+        if "current_affordance_role" in zone and zone["current_affordance_role"] not in CURRENT_AFFORDANCE_ROLES:
+            failures.append(
+                f"{item_label} current_affordance_role must be one of: "
+                f"{', '.join(sorted(CURRENT_AFFORDANCE_ROLES))}."
+            )
         if "route_context" in zone:
             failures.extend(_validate_id(zone["route_context"], item_label, "route_context"))
 

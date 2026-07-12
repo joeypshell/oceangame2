@@ -73,7 +73,7 @@ Before unlock:
 - a restrained source-derived cue shows current direction and boundary
 - entering the gate pushes left strongly enough to defeat normal rightward swimming
 - oxygen and daylight continue
-- compact feedback reads `Ripping current - need current stabilizer`
+- compact feedback reads `Ripping current - need current stabilizer | propulsion fins do not work here`
 - terrain, collision, payoff visibility, and unrelated interactions remain unchanged
 
 After unlock:

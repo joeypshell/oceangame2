@@ -252,10 +252,10 @@ This loads the default production slice, moves the player to `lower_left_loop_co
 Capture the focused blueprint-fins tracker and relay views:
 
 ```powershell
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-upgrade-chest
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --capture-upgrade-chest
 ```
 
-This loads the default production slice, recovers the fins plan through `lower_loop_upgrade_chest`, and writes desktop plus 844x390 mobile-viewport canvas captures for a partial banked/held recipe tracker and the post-fins `E: Enter Lower-left relay` prompt under `visual_captures/upgrade_chest/`. It does not accept or replace baselines.
+This loads the default production slice and writes desktop plus 844x390 mobile-viewport canvas captures for the explicit blueprint prompt/cue, partial banked/held recipe tracker, post-fins amber relay and `E` prompt, and cyan east stabilizer barrier under `visual_captures/upgrade_chest/`. It does not accept or replace baselines. Do not add `--quit-after 10`; the four-state capture exits on completion and a short frame cap can stop it mid-run.
 
 Capture the focused moving-hazard dodge view:
 

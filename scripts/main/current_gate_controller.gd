@@ -2,14 +2,19 @@ extends RefCounted
 
 const BASE_PUSH_SPEED := 160.0
 const DEFAULT_LABEL := "Strong current"
+const PROMPT_HOLD_SECONDS := 1.5
+const PROPULSION_FINS_ID := "propulsion_fins"
+const CURRENT_STABILIZER_ID := "current_stabilizer"
 
 var _current_prompt := ""
 var _blocking_gate := {}
+var _prompt_hold_seconds := 0.0
 
 
 func reset() -> void:
 	_current_prompt = ""
 	_blocking_gate = {}
+	_prompt_hold_seconds = 0.0
 
 
 func current_prompt() -> String:
@@ -21,7 +26,10 @@ func blocking_gate() -> Dictionary:
 
 
 func update(world, player, has_upgrade: Callable, has_capability: Callable, delta: float) -> Dictionary:
-	reset()
+	_blocking_gate = {}
+	_prompt_hold_seconds = maxf(0.0, _prompt_hold_seconds - maxf(0.0, delta))
+	if _prompt_hold_seconds <= 0.0:
+		_current_prompt = ""
 	if world == null or player == null or not world.has_method("get_current_gate_at"):
 		return {}
 
@@ -31,6 +39,8 @@ func update(world, player, has_upgrade: Callable, has_capability: Callable, delt
 
 	var requirement := _requirement(gate)
 	if requirement.is_empty() or _has_requirement(requirement, has_upgrade, has_capability):
+		_current_prompt = ""
+		_prompt_hold_seconds = 0.0
 		return {"inside": true, "blocked": false, "id": str(gate.get("id", "current_gate"))}
 
 	_blocking_gate = gate
@@ -40,6 +50,7 @@ func update(world, player, has_upgrade: Callable, has_capability: Callable, delt
 		player.global_position += push_vector * BASE_PUSH_SPEED * strength * delta
 
 	_current_prompt = block_prompt(gate)
+	_prompt_hold_seconds = PROMPT_HOLD_SECONDS
 	var result := {
 		"inside": true,
 		"blocked": true,
@@ -70,7 +81,12 @@ func block_prompt(gate: Dictionary) -> String:
 	var requirement := _requirement(gate)
 	if requirement.is_empty():
 		return ""
-	return "%s - need %s" % [_display_label(gate), _requirement_label(str(requirement["id"]))]
+	var requirement_id := str(requirement["id"])
+	if requirement_id == CURRENT_STABILIZER_ID:
+		return "%s - need current stabilizer | propulsion fins do not work here" % _display_label(gate)
+	if requirement_id == PROPULSION_FINS_ID:
+		return "%s - need propulsion fins | far lower-left relay" % _display_label(gate)
+	return "%s - need %s" % [_display_label(gate), _requirement_label(requirement_id)]
 
 
 func _direction_vector(direction: String) -> Vector2:

@@ -11,7 +11,9 @@ const RELAY_CONNECTOR_ID := "lower_left_loop_connector"
 const RETURN_CONNECTOR_ID := "return_to_boat_hub_connector"
 const PAYOFF_ID := "slice_04_destination_cache"
 const BLUEPRINT_NOTICE := "Blueprint recovered: Propulsion fins"
+const BLUEPRINT_PROMPT := "E: Recover propulsion fins blueprint"
 const RELAY_PROMPT := "E: Enter Lower-left relay"
+const EAST_FINS_REJECTION := "propulsion fins do not work here"
 const PLAYER_SWIM_SPEED := 200.0
 
 var _movement_frames := 0
@@ -37,6 +39,17 @@ func _smoke_upgrade_chest_and_quit() -> void:
 	if not _move_to(chest["center"], "fins blueprint chest"):
 		return
 	_process(0.0)
+	if not _require(not profile.has_completed_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID), "blueprint auto-recovered from proximity"):
+		return
+	if not _require(not _main._progression_containers.is_opened(CHEST_ID), "blueprint chest auto-opened from proximity"):
+		return
+	if not _require(_status_text().find(BLUEPRINT_PROMPT) != -1, "blueprint chest did not present explicit E prompt: %s" % _status_text()):
+		return
+	var chest_node: Node = _world.find_child(CHEST_ID, true, false)
+	if not _require(chest_node != null and str(chest_node.get_meta("cue_kind", "")) == "blueprint", "blueprint chest has no source-derived blueprint cue"):
+		return
+	_press_key(KEY_E)
+	_process(0.0)
 	if not _require(profile.has_completed_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID), "blueprint did not enter durable profile knowledge"):
 		return
 	if not _require(_main._progression_containers.is_opened(CHEST_ID), "blueprint chest did not enter opened state"):
@@ -55,6 +68,14 @@ func _smoke_upgrade_chest_and_quit() -> void:
 	if not _require(_tracker_text().find("Ready") != -1, "tracker did not show recipe ready: %s" % _tracker_text()):
 		return
 	var wallet_before_build := _session_wallet()
+	var materials_before_day_build: Dictionary = profile.material_inventory()
+	_press_key(KEY_P)
+	if not _require(not profile.has_completed_project(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID) and not profile.has_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID), "P completed fins during active day"):
+		return
+	if not _require(profile.material_inventory() == materials_before_day_build and _session_wallet() == wallet_before_build, "active-day P changed materials or wallet"):
+		return
+	if not _require(_main._last_status_note.find("Nothing builds during day") != -1, "active-day P did not state that nothing built: %s" % _main._last_status_note):
+		return
 
 	_press_key(KEY_N)
 	_process(0.0)
@@ -69,9 +90,13 @@ func _smoke_upgrade_chest_and_quit() -> void:
 		return
 	if not _require(_session_wallet() == wallet_before_build, "fins build changed wallet %d -> %d" % [wallet_before_build, _session_wallet()]):
 		return
+	if not _require(_main._last_status_note.find("Fins installed - relay unlocked") != -1, "night build did not confirm fins installation: %s" % _main._last_status_note):
+		return
 	_press_key(KEY_N)
 	_prepare_current_map()
 	if not _require(_main._expedition_day_state.phase == ExpeditionDayState.PHASE_ACTIVE, "N did not begin the post-build day"):
+		return
+	if not _verify_east_gate_rejects_fins():
 		return
 
 	var connector := _connector_by_id(RELAY_CONNECTOR_ID)
@@ -129,10 +154,10 @@ func _smoke_upgrade_chest_and_quit() -> void:
 	if not _require(_main._anomaly_survey.has_scanner() and _session_wallet() == wallet_before_payoff, "Q did not spend exactly the guaranteed relay payoff"):
 		return
 
-	print("Blueprint fins journey smoke passed: blueprint=%s recipe=ti2+rubber1 tracker=banked_vs_held controller_frames=%d relay_prompt=%s payoff=%s scanner_next=true shock_prod_suppressed=true." % [
+	print("Blueprint fins journey smoke passed: blueprint=%s explicit_e=true proximity_auto_open=false daytime_build=false recipe=ti2+rubber1 tracker=banked_vs_held east_fins_rejected=true relay_prompt=%s controller_frames=%d payoff=%s scanner_next=true shock_prod_suppressed=true." % [
 		ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID,
-		_movement_frames,
 		RELAY_PROMPT,
+		_movement_frames,
 		PAYOFF_ID,
 	])
 	get_tree().quit()
@@ -224,11 +249,32 @@ func _verify_distinct_current_sources() -> bool:
 		return false
 	if not _require(_world.get_world_connector_at(east_gate["center"]).is_empty(), "east stabilizer current incorrectly advertises a world connector"):
 		return false
-	return _require(
-		_world.find_child("%sCurrentAffordance" % RELAY_GATE_ID, true, false) != null
-		and _world.find_child("%sCurrentAffordance" % EAST_GATE_ID, true, false) != null,
-		"one of the distinct current affordances is missing"
-	)
+	var relay_affordance := _world.find_child("%sCurrentAffordance" % RELAY_GATE_ID, true, false)
+	var east_affordance := _world.find_child("%sCurrentAffordance" % EAST_GATE_ID, true, false)
+	if not _require(relay_affordance != null and east_affordance != null, "one of the distinct current affordances is missing"):
+		return false
+	if not _require(str(relay_affordance.get_meta("current_affordance_role", "")) == "relay" and str(east_affordance.get_meta("current_affordance_role", "")) == "barrier", "current affordance roles are not source-derived"):
+		return false
+	if not _require(relay_affordance.find_child("RelayBeacon", true, false) != null and east_affordance.find_child("RelayBeacon", true, false) == null, "relay beacon does not distinguish the fins current"):
+		return false
+	var relay_flow := relay_affordance.find_child("CurrentArrow0Shaft", true, false) as Line2D
+	var east_flow := east_affordance.find_child("CurrentArrow0Shaft", true, false) as Line2D
+	return _require(relay_flow != null and east_flow != null and relay_flow.default_color != east_flow.default_color, "relay and barrier current colors are indistinguishable")
+
+
+func _verify_east_gate_rejects_fins() -> bool:
+	var east_gate := _gate_by_id(EAST_GATE_ID)
+	if not _move_to(east_gate["center"], "east stabilizer current"):
+		return false
+	_player.global_position = east_gate["center"]
+	_process(0.0)
+	var gate_at_player: Dictionary = _world.get_current_gate_at(_player.global_position)
+	if not _require(_status_text().find(EAST_FINS_REJECTION) != -1, "east current did not explain that fins are invalid at %s gate=%s: %s" % [str(_player.global_position), str(gate_at_player.get("id", "none")), _status_text()]):
+		return false
+	var map_before := str(_world.map_id)
+	_press_key(KEY_E)
+	_process(0.0)
+	return _require(str(_world.map_id) == map_before and _world.get_world_connector_at(_player.global_position).is_empty(), "E at east stabilizer current triggered a connector")
 
 
 func _verify_tracker(first_fragment: String, second_fragment: String) -> bool:
