@@ -61,7 +61,7 @@ func debrief_lines() -> Array[String]:
 	elif current_status == "prerequisite_required":
 		lines.append("%s: %s required" % [_project_prefix(project), _prerequisite_label(project)])
 	elif current_status == "knowledge_required":
-		lines.append("%s: anomaly knowledge required" % _project_prefix(project))
+		lines.append("%s: %s required" % [_project_prefix(project), _knowledge_label(project)])
 	elif current_status == "inconsistent_profile":
 		lines.append("%s: profile repair required" % _project_prefix(project))
 	elif current_status == "ready":
@@ -80,6 +80,10 @@ func has_propulsion_fins() -> bool:
 	return _profile != null and _profile.has_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID)
 
 
+func has_propulsion_blueprint() -> bool:
+	return _profile != null and _profile.has_completed_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID)
+
+
 func has_current_stabilizer() -> bool:
 	return _profile != null and _profile.has_capability(ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID)
 
@@ -92,11 +96,15 @@ func has_shock_prod_capacitor() -> bool:
 	return _profile != null and _profile.has_capability(ExpansionProfileState.SHOCK_PROD_CAPACITOR_CAPABILITY_ID)
 
 
-func propulsion_fins_guidance() -> String:
+func propulsion_fins_guidance(map_id := "", scanner_lead_available := false) -> String:
 	if has_propulsion_fins():
+		if scanner_lead_available or str(map_id) != "production_slice_01":
+			return ""
 		return "Fins ready | Enter lower-left relay current"
 	var project := _project_by_id(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID)
 	var project_status := _status_for(project)
+	if project_status == "knowledge_required":
+		return "Find fins blueprint | Lower-loop chest"
 	if project_status == "ready":
 		return "Fins project ready | end day at boat, then P at night"
 	if project_status == "incomplete":
@@ -115,6 +123,8 @@ func shock_prod_guidance() -> String:
 	var project_status := _status_for(project)
 	var project_label := _project_prefix(project)
 	if project_status == "knowledge_required":
+		if str(project.get("required_discovery_id", "")) == ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID:
+			return "Shock prod locked: recover propulsion fins blueprint first"
 		return "Shock prod locked: survey lower-right anomaly first"
 	if project_status == "prerequisite_required":
 		return "Shock prod locked: build %s first at night" % _prerequisite_label(project)
@@ -147,10 +157,13 @@ func report() -> Dictionary:
 		"required_discovery_id": str(project.get("required_discovery_id", "")),
 		"required_project_id": str(project.get("required_project_id", "")),
 		"required_materials": project.get("required_materials", {}).duplicate(true),
+		"propulsion_required_materials": _project_by_id(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID).get("required_materials", {}).duplicate(true),
 		"titanium_banked": _profile.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID) if _profile != null else 0,
 		"rubber_banked": _profile.material_quantity(ExpansionProfileState.RUBBER_MATERIAL_ID) if _profile != null else 0,
 		"coil_banked": _profile.material_quantity(ExpansionProfileState.COIL_MATERIAL_ID) if _profile != null else 0,
 		"project_completed": _profile.has_completed_project(project_id) if _profile != null and not project_id.is_empty() else false,
+		"propulsion_blueprint_recovered": has_propulsion_blueprint(),
+		"propulsion_status": status_for(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID),
 		"propulsion_fins_unlocked": has_propulsion_fins(),
 		"cutter_unlocked": has_cutter(),
 		"current_stabilizer_unlocked": has_current_stabilizer(),
@@ -226,7 +239,7 @@ func _note_for_reason(project: Dictionary, reason: String) -> String:
 	if reason == "missing_project":
 		return "%s needs the %s" % [_project_prefix(project), _prerequisite_project_label(project)]
 	if reason == "missing_discovery":
-		return "%s needs anomaly knowledge" % _project_prefix(project)
+		return "%s needs %s" % [_project_prefix(project), _knowledge_label(project)]
 	if reason == "insufficient_materials":
 		return "%s: %s" % [_project_prefix(project), _material_progress_text(project)]
 	if reason == "storage_error":
@@ -245,6 +258,12 @@ func _project_prefix(project: Dictionary) -> String:
 
 func _project_action_label(project: Dictionary) -> String:
 	return str(project.get("unlocks_capability_id", "project")).replace("_", " ")
+
+
+func _knowledge_label(project: Dictionary) -> String:
+	if str(project.get("required_discovery_id", "")) == ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID:
+		return "recovered blueprint"
+	return "anomaly knowledge"
 
 
 func _completed_text(project: Dictionary) -> String:

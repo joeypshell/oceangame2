@@ -22,7 +22,7 @@ The six PNGs under `visual_captures/expansion_06_combat_foundation/` were local 
 - The eel silhouette, warning direction, diver, and territory marker remain distinct at both viewports.
 - `Territorial eel - watch the lunge` establishes the warning; `Eel territory - retreat or evade` keeps noncombat passage explicit during the lunge.
 - `Health 3/3` and `Oxygen 90s` occupy separate overlay lines, so combat damage and expedition pressure are not conflated.
-- `Shock prod locked` communicates the unarmed state. The armed frame shows cooldown state plus `Shock prod hit - eel health 1/3`, making damage and the not-yet-defeated enemy state explicit.
+- The original review frame used `Shock prod locked` for the unarmed state. #825 later removed that premature global line; unarmed attacks or nearby eel context now provide stage-correct weapon guidance, while the armed frame retains cooldown/hit feedback.
 - The armed hit uses the same room framing as the unarmed states, so the weapon changes the response to a remembered place rather than replacing exploration context.
 
 No overlap, clipping, blank render region, or focused visual defect blocks Expansion 06. Enemy defeat and day-local restoration remain deterministic runtime/smoke outcomes; the approved focused visual contract uses the armed-damage frame allowed by #775 rather than a separate victory frame.

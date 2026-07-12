@@ -4,6 +4,26 @@
 from __future__ import annotations
 
 
+PROPULSION_BLUEPRINT_ID = "propulsion_fins_blueprint"
+
+
+def propulsion_blueprint_container() -> dict:
+    return {
+        "id": "lower_loop_upgrade_chest",
+        "container_type": "upgrade_chest",
+        "x": 18,
+        "y": 72,
+        "w": 2,
+        "h": 2,
+        "display_label": "Fins blueprint chest",
+        "interaction": "instant",
+        "reward_type": "blueprint",
+        "reward_id": PROPULSION_BLUEPRINT_ID,
+        "route_context": "lower_loop_reward",
+        "intent": "Guaranteed pre-gate recovered plan that reveals the propulsion-fins recipe.",
+    }
+
+
 def propulsion_material_pool() -> dict:
     return {
         "id": "rubber_sheet_pool",
@@ -20,6 +40,7 @@ def propulsion_material_pool() -> dict:
 def propulsion_project() -> dict:
     return {
         "id": "propulsion_fins_project",
+        "required_discovery_id": PROPULSION_BLUEPRINT_ID,
         "required_materials": {
             "titanium_scrap": 2,
             "rubber_sheet": 1,

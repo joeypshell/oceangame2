@@ -48,10 +48,9 @@ func _smoke_expansion_06_combat_foundation_and_quit() -> void:
 		return
 	if not _require(
 		_hostile_state().get("health") == 3
-		and _last_status_note.find("next Propulsion fins project") != -1
-		and _last_status_note.find("Ti 0/2") != -1
-		and _last_status_note.find("Rubber 0/1") != -1,
-		"locked weapon feedback did not expose the first actionable recipe: %s" % _last_status_note
+		and _last_status_note.find("recover propulsion fins blueprint first") != -1
+		and _last_status_note.find("Ti 0/2") == -1,
+		"locked weapon feedback did not expose the blueprint-first action: %s" % _last_status_note
 	):
 		return
 

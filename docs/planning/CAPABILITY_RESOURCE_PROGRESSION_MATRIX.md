@@ -74,7 +74,7 @@ Creature materials should express function. Examples remain provisional: luminou
 - Duplicate scans and already-completed knowledge should have a useful, bounded outcome rather than becoming dead interactions.
 - No project should be only a wallet payment once typed materials exist.
 - Equipment capabilities use explicit ingredient recipes. Score may gate access to blueprint research later, but never substitutes for required materials.
-- #815 uses one known `propulsion_fins` recipe built during debrief; it does not settle whether future blueprints require overnight research or whether known recipes eventually build immediately.
+- #825 gates the `propulsion_fins` recipe behind the guaranteed recovered `propulsion_fins_blueprint`; it does not settle whether future plans require overnight research or whether every known recipe builds during debrief.
 - Existing direct-score oxygen, cargo, light, and scanner paths are migration debt, not the target progression model.
 - `python tools/audit_progression_graph.py` is the executable cross-map safeguard. Production map metadata owns authored relationships; `config/progression_contract.json` owns only runtime purchase/scoring relationships that maps cannot own.
 

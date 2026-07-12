@@ -80,6 +80,7 @@ jobs:
 
       - name: Validate greybox maps
         run: |
+          python tools/test_validate_progression_containers.py
           python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
           python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
           python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json

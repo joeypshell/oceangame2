@@ -32,7 +32,7 @@ EXPECTED_RECIPES = {
 PROJECT_RULES = {
     "propulsion_fins_project": {
         "capability_id": "propulsion_fins",
-        "required_discovery_id": None,
+        "required_discovery_id": "propulsion_fins_blueprint",
         "required_project_id": None,
         "target_field": "target_gate_id",
     },

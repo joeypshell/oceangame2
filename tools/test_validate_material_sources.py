@@ -141,6 +141,7 @@ def with_propulsion_project(map_data: dict) -> dict:
         0,
         {
             "id": "propulsion_fins_project",
+            "required_discovery_id": "propulsion_fins_blueprint",
             "required_materials": {"titanium_scrap": 2, "rubber_sheet": 1},
             "unlocks_capability_id": "propulsion_fins",
             "target_gate_id": "lower_left_loop_current",
@@ -209,8 +210,14 @@ class MaterialSourceValidationTests(unittest.TestCase):
     def test_accepts_ordered_stabilizer_project_and_durable_gate(self) -> None:
         self.assertEqual(validate_material_source_schema(with_stabilizer_project(valid_map())), [])
 
-    def test_accepts_known_recipe_propulsion_project_without_score_or_discovery(self) -> None:
+    def test_accepts_blueprint_gated_propulsion_project_without_score(self) -> None:
         self.assertEqual(validate_material_source_schema(with_propulsion_project(valid_map())), [])
+
+    def test_rejects_propulsion_project_without_blueprint_requirement(self) -> None:
+        map_data = with_propulsion_project(valid_map())
+        map_data["material_projects"][0].pop("required_discovery_id")
+        failures = validate_material_source_schema(map_data)
+        self.assertTrue(any("required_discovery_id must be 'propulsion_fins_blueprint'" in failure for failure in failures))
 
     def test_accepts_non_enemy_shock_prod_recipe_and_hostile_link(self) -> None:
         self.assertEqual(validate_material_source_schema(with_shock_prod_project(valid_map())), [])

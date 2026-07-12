@@ -14,10 +14,15 @@ from production_slice_01_expansion_06 import expansion_06_hostile_encounters, ex
 from production_slice_01_expansion_07 import expansion_07_biological_resource_sources, expansion_07_projects
 from production_slice_01_player_gate_correction import (
     lower_left_current_gate,
+    propulsion_blueprint_container,
     propulsion_material_entities,
     propulsion_material_pool,
     propulsion_project,
 )
+
+
+def progression_containers() -> list[dict]:
+    return [propulsion_blueprint_container()]
 
 
 def material_candidate_pools() -> list[dict]:

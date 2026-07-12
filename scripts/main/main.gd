@@ -33,6 +33,7 @@ const PrePickupRouteCueFeedback := preload("res://scripts/main/pre_pickup_route_
 const NextDiveObjectivePrompt := preload("res://scripts/main/next_dive_objective_prompt.gd")
 const PrimaryDiveObjective := preload("res://scripts/main/primary_dive_objective.gd")
 const ProgressionContainerController := preload("res://scripts/main/progression_container_controller.gd")
+const ProgressionProjectTracker := preload("res://scripts/main/progression_project_tracker.gd")
 const ProgressionRuntimeController := preload("res://scripts/main/progression_runtime_controller.gd")
 const PrySalvageController := preload("res://scripts/main/pry_salvage_controller.gd")
 const RelayFollowThroughFeedback := preload("res://scripts/main/relay_follow_through_feedback.gd")
@@ -191,6 +192,7 @@ var _oxygen_rest_feedback
 var _pre_pickup_route_cue_feedback
 var _primary_dive_objective
 var _progression_containers
+var _progression_project_tracker
 var _progression_runtime
 var _pry_salvage
 var _relay_follow_through_feedback
@@ -1066,7 +1068,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_moving_hazards.reset(world)
 	_pry_salvage.reset()
 	_timed_salvage.reset()
-	_progression_containers.apply_opened_to_world(world)
+	_progression_containers.apply_opened_to_world(world, Callable(_anomaly_survey.profile_state(), "has_completed_discovery"))
 	_primary_dive_objective.reset(world)
 	_next_dive_objective_prompt.reset(world)
 	_relay_follow_through_feedback.reset(world)
@@ -1101,6 +1103,7 @@ func _clear_loaded_review_nodes() -> void:
 	_result_panel = null
 	_result_label = null
 	_map_selector = null
+	_progression_project_tracker = null
 
 func _on_review_map_selected(index: int) -> void:
 	if _map_selector == null or index < 0:
@@ -1688,6 +1691,9 @@ func _create_review_overlay(world: Node) -> void:
 	_status_label.add_theme_font_size_override("font_size", 14)
 	stack.add_child(_status_label)
 
+	_progression_project_tracker = ProgressionProjectTracker.new()
+	canvas.add_child(_progression_project_tracker)
+
 	_create_result_panel(canvas)
 
 
@@ -1724,6 +1730,7 @@ func _create_result_panel(canvas: CanvasLayer) -> void:
 func _update_status_label() -> void:
 	if _status_label == null:
 		return
+	_update_progression_project_tracker()
 
 	if _total_salvage <= 0:
 		_status_label.text = ExpeditionDayPresentation.decorate_status(self, "Score 0\nSalvage banked 0/0\nHeld 0/%d\n%s\nOxygen --" % [_held_salvage_capacity(), _combat_overlay_text()])
@@ -1746,9 +1753,6 @@ func _update_status_label() -> void:
 	elif _is_combat_status_note(_last_status_note):
 		prompt = _last_status_note
 		objective_step_cue_blocked = true
-	elif _held_cargo_count() >= _held_salvage_capacity():
-		prompt = _cargo_full_prompt()
-		objective_step_cue_blocked = true
 	elif not _hazard_warning_id.is_empty():
 		prompt = _hazard_warning_prompt()
 		objective_step_cue_blocked = true
@@ -1757,6 +1761,17 @@ func _update_status_label() -> void:
 		objective_step_cue_blocked = true
 	elif not current_gate_prompt.is_empty():
 		prompt = current_gate_prompt
+		objective_step_cue_blocked = true
+	elif not world_connector_prompt.is_empty():
+		var keep_connector_note := (
+			_last_status_note.begins_with("Arrived:")
+			or _is_relay_follow_through_status_note(_last_status_note)
+			or _is_final_dive_status_note(_last_status_note)
+		)
+		prompt = "%s\n%s" % [_last_status_note, world_connector_prompt] if keep_connector_note else world_connector_prompt
+		objective_step_cue_blocked = true
+	elif _held_cargo_count() >= _held_salvage_capacity():
+		prompt = _cargo_full_prompt()
 		objective_step_cue_blocked = true
 	elif _is_relay_follow_through_status_note(_last_status_note) or _is_final_dive_status_note(_last_status_note):
 		prompt = _last_status_note
@@ -1767,12 +1782,8 @@ func _update_status_label() -> void:
 	elif not pre_pickup_route_cue.is_empty():
 		prompt = pre_pickup_route_cue
 		objective_step_cue_blocked = true
-	elif _last_status_note.begins_with("Arrived:") and not world_connector_prompt.is_empty():
-		prompt = "%s\n%s" % [_last_status_note, world_connector_prompt]
 	elif _last_status_note.begins_with("Arrived:"):
 		prompt = _last_status_note
-	elif not world_connector_prompt.is_empty():
-		prompt = world_connector_prompt
 	elif not _last_status_note.is_empty():
 		prompt = _last_status_note
 		objective_step_cue_blocked = _is_collection_status_note(_last_status_note)
@@ -1825,10 +1836,9 @@ func _failure_retry_prompt() -> String:
 
 
 func _combat_overlay_text() -> String:
-	var weapon_text := "Shock prod locked"
-	if _shock_prod != null and _material_project != null:
-		weapon_text = _material_project.shock_prod_guidance() if not _material_project.has_shock_prod() else _shock_prod.overlay_text(true, _material_project.has_shock_prod_capacitor())
-	return "%s | %s" % [_player_health.overlay_text(), weapon_text]
+	if _shock_prod != null and _material_project != null and _material_project.has_shock_prod():
+		return "%s | %s" % [_player_health.overlay_text(), _shock_prod.overlay_text(true, _material_project.has_shock_prod_capacitor())]
+	return _player_health.overlay_text()
 
 
 func _at_canonical_boat() -> bool:
@@ -1983,6 +1993,7 @@ func _status_note_contains_feedback(status_note: String, feedback) -> bool:
 func _is_progression_status_note(status_note: String) -> bool:
 	return (
 		(_progression_runtime != null and _progression_runtime.is_status_note(status_note))
+		or status_note.begins_with("Blueprint recovered")
 		or status_note.begins_with("Fins project")
 		or status_note.begins_with("Fins ready")
 	)
@@ -2141,7 +2152,12 @@ func _grant_wallet_reward(amount: int) -> int:
 func _update_progression_containers() -> void:
 	if _progression_containers == null or _world == null or _player == null:
 		return
-	var result: Dictionary = _progression_containers.try_open(_world, _player.global_position, Callable(self, "_grant_wallet_reward"))
+	var result: Dictionary = _progression_containers.try_open(
+		_world,
+		_player.global_position,
+		Callable(self, "_grant_wallet_reward"),
+		Callable(_anomaly_survey.profile_state(), "complete_discovery")
+	)
 	if str(result.get("state", "")) == "opened" and result.has("note"):
 		_last_status_note = str(result["note"])
 
@@ -2160,7 +2176,7 @@ func _try_purchase_light_upgrade() -> bool:
 
 func _show_propulsion_project_guidance() -> void:
 	if _material_project != null:
-		_last_status_note = _material_project.propulsion_fins_guidance()
+		_last_status_note = _material_project.propulsion_fins_guidance(_current_map_id(), _scanner_lead_available())
 	_update_status_label()
 
 
@@ -2216,8 +2232,29 @@ func _progression_overlay_text() -> String:
 	if _progression_runtime != null:
 		lines.append(_progression_runtime.overlay_text(_world, _player))
 	if _material_project != null:
-		lines.append(_material_project.propulsion_fins_guidance())
+		var fins_guidance: String = _material_project.propulsion_fins_guidance(_current_map_id(), _scanner_lead_available())
+		if not fins_guidance.is_empty():
+			lines.append(fins_guidance)
 	return "\n".join(lines)
+
+
+func _update_progression_project_tracker() -> void:
+	if _progression_project_tracker == null or _material_project == null or _material_runtime == null:
+		return
+	_progression_project_tracker.refresh(
+		_material_project.report(),
+		_material_runtime.held_quantities(),
+		_current_map_id(),
+		_expedition_day_state != null and _expedition_day_state.phase == ExpeditionDayState.PHASE_DEBRIEF
+	)
+
+
+func _current_map_id() -> String:
+	return str(_world.map_id) if _world != null else ""
+
+
+func _scanner_lead_available() -> bool:
+	return _anomaly_survey != null and bool(_anomaly_survey.report().get("lead_available", false))
 
 
 func _progression_result_text() -> String:

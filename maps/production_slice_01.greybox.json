@@ -2443,13 +2443,12 @@
       "y": 72,
       "w": 2,
       "h": 2,
-      "display_label": "Upgrade chest",
+      "display_label": "Fins blueprint chest",
       "interaction": "instant",
-      "reward_type": "wallet",
-      "reward_id": "upgrade_wallet_bonus",
-      "reward_amount": 400,
+      "reward_type": "blueprint",
+      "reward_id": "propulsion_fins_blueprint",
       "route_context": "lower_loop_reward",
-      "intent": "First small progression chest rewarding the lower-loop detour without adding inventory UI."
+      "intent": "Guaranteed pre-gate recovered plan that reveals the propulsion-fins recipe."
     }
   ],
   "moving_hazards": [
@@ -2637,6 +2636,7 @@
   "material_projects": [
     {
       "id": "propulsion_fins_project",
+      "required_discovery_id": "propulsion_fins_blueprint",
       "required_materials": {
         "titanium_scrap": 2,
         "rubber_sheet": 1

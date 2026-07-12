@@ -3,7 +3,7 @@ extends RefCounted
 const RULES := {
 	"propulsion_fins_project": {
 		"capability_id": "propulsion_fins",
-		"required_discovery_id": "",
+		"required_discovery_id": "propulsion_fins_blueprint",
 		"required_project_id": "",
 		"target_field": "target_gate_id",
 		"target_id": "lower_left_loop_current",

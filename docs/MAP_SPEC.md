@@ -418,9 +418,7 @@ Recommended metadata:
 
 ## Progression Containers
 
-Future chest/cache progression metadata is defined in `docs/current/LOCKED_CACHE_PROGRESSION_CONTRACT.md`. Use a top-level `progression_containers` list for upgrade chests, key chests, and locked salvage caches so they stay separate from terrain collision, marker-only route rectangles, and normal salvage entities.
-
-The first implementation target is one `upgrade_chest` in `production_slice_01` that grants a small session wallet/reward beat without adding inventory UI, persistent keys, loot tables, or save-heavy state.
+Chest/cache metadata is defined in `docs/current/LOCKED_CACHE_PROGRESSION_CONTRACT.md`. Use top-level `progression_containers`; a `blueprint` reward must link to exactly one material project's `required_discovery_id`, omit `reward_amount`, and reuse durable discovery state rather than adding inventory.
 
 Future darkness/light metadata is defined in `docs/current/DEPTH_DARKNESS_LIGHT_GATE_CONTRACT.md`. First-pass visibility zones should be visual-only marker zones, not terrain, collision, oxygen, pickup, or objective gates.
 `hazard` entities are static point hazards and require `kind`. Current valid-style examples are `mine`, `jellyfish`, and `stress_marker`.

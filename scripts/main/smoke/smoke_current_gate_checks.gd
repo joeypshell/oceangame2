@@ -66,6 +66,7 @@ func _smoke_current_gate_and_quit() -> void:
 
 	var profile = _main._anomaly_survey.profile_state()
 	var wallet_before: int = _session_wallet()
+	var blueprint: Dictionary = profile.complete_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID, false)
 	var deposit: Dictionary = profile.deposit_materials({
 		ExpansionProfileState.TITANIUM_MATERIAL_ID: 2,
 		ExpansionProfileState.RUBBER_MATERIAL_ID: 1,
@@ -73,8 +74,8 @@ func _smoke_current_gate_and_quit() -> void:
 	var project := _project_by_id(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID)
 	var build: Dictionary = profile.complete_material_project(project, false)
 	_main._material_project.on_map_loaded(_world)
-	if not bool(deposit.get("changed", false)) or not bool(build.get("changed", false)) or not _main._has_propulsion_upgrade():
-		push_error("Current-gate smoke could not build recipe-backed propulsion fins: %s %s." % [str(deposit), str(build)])
+	if not bool(blueprint.get("changed", false)) or not bool(deposit.get("changed", false)) or not bool(build.get("changed", false)) or not _main._has_propulsion_upgrade():
+		push_error("Current-gate smoke could not build blueprint-gated propulsion fins: %s %s %s." % [str(blueprint), str(deposit), str(build)])
 		get_tree().quit(1)
 		return
 	if _session_wallet() != wallet_before or not profile.material_inventory().is_empty():

@@ -8,25 +8,13 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterable
 
+from progression_graph_contract import CANONICAL_CHAIN_IDS
+
 
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCTION_MAP_PATHS = tuple(sorted((ROOT / "maps").glob("production_slice_*.greybox.json")))
 ENTRY_TYPES = {"boat_spawn", "spawn"}
 WALLET_ENTITY_TYPES = {"salvage", "tool_target"}
-CANONICAL_CHAIN_IDS = (
-    "propulsion_fins",
-    "slice_04_destination_cache",
-    "lower_left_final_dive_signal",
-    "survey_scanner_1",
-    "lower_right_anomaly_discovery",
-    "salvage_cutter_project",
-    "current_stabilizer_project",
-    "shock_prod_project",
-    "shock_prod",
-    "salvage_deep_right_cache",
-    "eel_electrocyte",
-    "shock_prod_capacitor_project",
-)
 
 
 @dataclass
@@ -171,6 +159,9 @@ class ProgressionGraphBuilder:
                     attrs["wallet_reward"] = int(item.get("reward_amount", 0))
                 self.graph.add_node(Node(key, _item_label(item), kind, map_id, str(item.get("route_context", "")), attrs=attrs), raw_id)
                 self.items_by_map.setdefault(map_id, []).append((key, item))
+                if kind == "container" and item.get("reward_type") == "blueprint":
+                    discovery_id = str(item.get("reward_id", ""))
+                    self.graph.add_node(Node(f"discovery:{discovery_id}", _display(discovery_id), "discovery", map_id), discovery_id)
                 if kind == "hostile":
                     defeat_key = f"defeat:{map_id}/{raw_id}"
                     self.graph.add_node(Node(defeat_key, f"Defeat {_display(raw_id)}", "defeat", map_id, str(item.get("route_context", ""))), f"defeat_{raw_id}")
@@ -229,6 +220,8 @@ class ProgressionGraphBuilder:
             self.graph.add_edge(key, map_key, "requires", hard=True)
             if node.kind == "connector":
                 self._connector_edges(key, item, map_id)
+            elif node.kind == "container":
+                self._container_edges(key, item)
             elif node.kind in {"gate", "pressure"}:
                 self._gate_edges(key, item)
             elif node.kind == "objective":
@@ -263,6 +256,13 @@ class ProgressionGraphBuilder:
                 requirement = _requirement_id(gate)
                 if requirement:
                     self.graph.add_edge(key, self.graph.resolve(requirement), "requires", hard=True, note=f"via {gate.get('id')}")
+
+    def _container_edges(self, key: str, item: dict[str, Any]) -> None:
+        if item.get("reward_type") != "blueprint":
+            return
+        discovery_key = self.graph.resolve(str(item.get("reward_id", "")))
+        self.graph.add_edge(discovery_key, key, "requires", hard=True, note="recovered plan")
+        self.graph.add_edge(key, discovery_key, "unlocks")
 
     def _gate_edges(self, key: str, item: dict[str, Any]) -> None:
         requirement = _requirement_id(item)
