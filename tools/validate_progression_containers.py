@@ -10,7 +10,7 @@ from typing import Any
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 DISPLAY_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,31}$")
 CONTAINER_TYPES = {"upgrade_chest", "key_chest", "locked_salvage_cache"}
-INTERACTIONS = {"instant", "timed_salvage", "pry_salvage"}
+INTERACTIONS = {"instant", "interact", "timed_salvage", "pry_salvage"}
 REWARD_TYPES = {"blueprint", "wallet", "upgrade_flag", "key_flag", "salvage_unlock"}
 
 

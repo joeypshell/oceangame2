@@ -54,7 +54,7 @@ func _run() -> void:
 	_expect(profile.material_inventory().is_empty(), "fins did not consume the exact Ti2 + Rubber1 recipe")
 	_expect(profile.has_completed_project(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID), "completed fins project was not recorded")
 	_expect(profile.has_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID), "fins capability was not unlocked")
-	_expect(runtime.debrief_lines() == ["Propulsion fins built", "Access: lower-left relay current"], "completed fins debrief text drifted")
+	_expect(runtime.debrief_lines() == ["Fins installed - relay unlocked", "Access: lower-left relay current"], "completed fins debrief text drifted")
 	var fins_repeated: Dictionary = runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
 	_expect(fins_repeated.get("reason") == "already_completed" and profile.material_inventory().is_empty(), "repeat fins build was not idempotent")
 

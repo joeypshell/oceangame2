@@ -2,9 +2,9 @@
 
 Date: 2026-07-12
 
-Issues: #815, #825
+Issues: #815, #825, #827
 
-Status: blueprint-led journey correction implemented; #799 remains the player GO/HOLD gate.
+Status: explicit blueprint/current-role correction implemented; #799 remains the player GO/HOLD gate.
 
 ## Decision
 
@@ -14,6 +14,7 @@ Correct the reviewed journey without adding a new region, economy, crafting UI, 
 2. `propulsion_fins` requires a recovered plan and ingredients; neither knowledge nor equipment is bought with score.
 3. The lower-left relay current has a source-derived normal-world affordance.
 4. The fins build uses the existing night debrief; future projects may come from recovered plans, scans, or analyzed samples, while universal research timing remains undecided.
+5. Blueprint recovery is a deliberate `E`/ACT interaction, and the two authored currents advertise different roles before the player tries an invalid action.
 
 ## Behavioral Eel Guard
 
@@ -27,13 +28,13 @@ The deep cache remains normal `timed_salvage` with a 2.5-second continuous inter
 
 ## Fins Recipe And Sources
 
-The reachable pre-gate `lower_loop_upgrade_chest` grants durable discovery `propulsion_fins_blueprint`. The chest no longer grants wallet, does not require the scanner or fins, and restores its opened visual from profile knowledge after reload. The recipe appears only after recovery and requires exactly:
+The reachable pre-gate `lower_loop_upgrade_chest` grants durable discovery `propulsion_fins_blueprint`. Proximity alone does not open it: a floating cyan plan cue and `E: Recover propulsion fins blueprint` prompt lead to an explicit keyboard/mobile ACT transaction. The chest grants no wallet, requires neither scanner nor fins, and restores its opened visual from profile knowledge after reload. The recipe appears only after recovery and requires exactly:
 
 ```text
 2 titanium_scrap + 1 rubber_sheet
 ```
 
-The project requires that blueprint, builds only in `night_debrief`, consumes materials atomically, spends no wallet, and unlocks durable profile capability `propulsion_fins`. The downstream `slice_04_destination_cache` still grants the guaranteed 300 wallet needed for the scanner.
+The project requires that blueprint, builds only in `night_debrief`, consumes materials atomically, spends no wallet, and unlocks durable profile capability `propulsion_fins`. Pressing BUILD during the active day reports `Fins project unchanged` and cannot mutate materials, wallet, project, or capability state. The successful night transaction reports `Fins installed - relay unlocked`. The downstream `slice_04_destination_cache` still grants the guaranteed 300 wallet needed for the scanner.
 
 Guaranteed pre-eel source pools in `production_slice_01`:
 
@@ -46,9 +47,9 @@ All candidates must remain reachable from the boat without collecting the eel ca
 
 ## Relay Readability
 
-`lower_left_loop_current` uses `required_capability_id: propulsion_fins` and overlaps the existing `lower_left_loop_connector`. Its label is `Lower-left relay current`; the connector label is `Lower-left relay`.
+`lower_left_loop_current` uses `required_capability_id: propulsion_fins`, `current_affordance_role: relay`, and overlaps the existing `lower_left_loop_connector`. Its label is `Lower-left relay current`; the connector label is `Lower-left relay`. The east `upper_right_current_pocket_gate` uses `current_affordance_role: barrier` and still requires `current_stabilizer`.
 
-The world renderer derives current arrows for every authored current gate, regardless of whether its requirement owner is a session upgrade or durable profile capability. Before fins, the current pushes right and feedback names the fins requirement. After fins, the same visible location presents `E: Enter Lower-left relay`; this actionable prompt takes precedence over cargo-return advice at the connector. The east `upper_right_current_pocket_gate` remains a distinct left-pushing, swim-through `current_stabilizer` gate.
+The world renderer derives current arrows for every authored current gate. Relay metadata produces amber arrows and a beacon; barrier metadata keeps cyan arrows. Before fins, the far lower-left current pushes right and feedback names both fins and the relay location. After fins, the same visible location presents `E: Enter Lower-left relay`; this actionable prompt takes precedence over cargo-return advice at the connector. The east gate remains a distinct left-pushing, swim-through stabilizer barrier, holds its rejection message briefly after pushback, explicitly says propulsion fins do not work there, and never offers an `E` transition.
 
 After blueprint recovery, a compact project tracker shows titanium and rubber with distinct swatches, banked/required counts, held counts, and a banked-ready state. It hides after fins are built. Global health feedback no longer advertises the shock-prod chain before the scanner/anomaly stage; unarmed attacks and nearby eel context may still explain the weapon requirement.
 
@@ -62,8 +63,8 @@ This pass does not decide whether future blueprints consume an overnight researc
 
 - Source regeneration, map validation, parity, and progression audit prove placement and non-circularity.
 - Material state checks prove exact spend, direct-unlock rejection, idempotence, and profile/day persistence.
-- `--smoke-upgrade-chest` starts fresh, traverses every path-query waypoint through controller directions, recovers the blueprint, banks the guaranteed recipe, builds at night, reaches the visible relay, enters with `E`, banks the payoff, and verifies scanner-next guidance without premature shock-prod text.
+- `--smoke-upgrade-chest` starts fresh, proves proximity does not recover the blueprint, uses `E`, proves active-day BUILD mutates nothing, distinguishes the east barrier from the amber relay, banks the guaranteed recipe, builds at night, reaches the visible relay through controller movement, enters with `E`, banks the payoff, and verifies scanner-next guidance without premature shock-prod text.
 - Current-gate and anomaly journeys preserve blocked-state, destination, scanner, and discovery behavior.
-- `--capture-upgrade-chest` writes focused desktop and 844x390 mobile-viewport canvas reviews for the tracker and post-fins relay prompt without accepting baselines.
+- `--capture-upgrade-chest` writes focused desktop and 844x390 mobile-viewport canvas reviews for the explicit blueprint prompt, tracker, post-fins amber relay, and east stabilizer barrier without accepting baselines.
 - Combat coverage proves an unarmed attempt starts, active eel behavior interrupts it, and armed completion/banking succeeds.
 - #799 repeats the player journey after the merged Web build and remains the only GO/HOLD closeout.

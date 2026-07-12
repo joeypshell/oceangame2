@@ -18,6 +18,7 @@ def expansion_04_zones() -> list[dict]:
             "current_strength": 2.2,
             "required_capability_id": "current_stabilizer",
             "current_gate_label": "Ripping current",
+            "current_affordance_role": "barrier",
             "route_context": "upper_right_current_pocket",
             "intent": (
                 "Expansion 04 optional current boundary across the east pocket of the existing upper-right wreck room."

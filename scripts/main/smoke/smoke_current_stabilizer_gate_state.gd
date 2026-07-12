@@ -45,7 +45,12 @@ func _run() -> void:
 	_expect(bool(blocked.get("blocked", false)), "durable gate allowed passage before capability")
 	_expect(str(blocked.get("requirement_kind", "")) == "capability", "durable gate did not resolve capability owner")
 	_expect(player.global_position.x < durable_x_before - 1.0, "durable gate did not apply authored left pushback")
-	_expect(controller.current_prompt() == "Ripping current - need current stabilizer", "durable gate prompt drifted")
+	_expect(controller.current_prompt() == "Ripping current - need current stabilizer | propulsion fins do not work here", "durable gate prompt drifted")
+	player.global_position = world.spawn_position
+	controller.update(world, player, Callable(self, "_has_no_upgrade"), Callable(profile, "has_capability"), 0.5)
+	_expect(not controller.current_prompt().is_empty(), "current rejection disappeared immediately after pushback")
+	controller.update(world, player, Callable(self, "_has_no_upgrade"), Callable(profile, "has_capability"), 1.1)
+	_expect(controller.current_prompt().is_empty(), "current rejection did not clear after its readability hold")
 	player.global_position = legacy_gate["center"]
 	var propulsion_blocked: Dictionary = controller.update(
 		world,
@@ -101,7 +106,7 @@ func _run() -> void:
 			push_error("Current stabilizer gate state smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Current stabilizer gate state smoke passed: propulsion=profile_recipe current_stabilizer=profile_project blocked_push=left reset_persistent=true reload_persistent=true.")
+	print("Current stabilizer gate state smoke passed: propulsion=profile_recipe current_stabilizer=profile_project blocked_push=left prompt_hold=true reset_persistent=true reload_persistent=true.")
 	quit(0)
 
 

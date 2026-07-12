@@ -18,6 +18,7 @@ const GreyboxExtractionRenderer := preload("res://scripts/world/greybox_extracti
 const GreyboxRouteMarkerRenderer := preload("res://scripts/world/greybox_route_marker_renderer.gd")
 const GreyboxVisibilityZoneRenderer := preload("res://scripts/world/greybox_visibility_zone_renderer.gd")
 const GreyboxCurrentGateRenderer := preload("res://scripts/world/greybox_current_gate_renderer.gd")
+const GreyboxProgressionContainerRenderer := preload("res://scripts/world/greybox_progression_container_renderer.gd")
 const GreyboxWorldQueries := preload("res://scripts/world/greybox_world_queries.gd")
 const GreyboxSurveyTargets := preload("res://scripts/world/greybox_survey_targets.gd")
 const GreyboxMaterialCandidates := preload("res://scripts/world/greybox_material_candidates.gd")
@@ -74,6 +75,7 @@ var _prop_renderer
 var _extraction_renderer
 var _route_marker_renderer
 var _visibility_zone_renderer
+var _progression_container_renderer
 var _world_queries
 var _survey_target_runtime
 var _material_candidate_runtime
@@ -92,6 +94,7 @@ func _ready() -> void:
 	_extraction_renderer = GreyboxExtractionRenderer.new()
 	_route_marker_renderer = GreyboxRouteMarkerRenderer.new()
 	_visibility_zone_renderer = GreyboxVisibilityZoneRenderer.new()
+	_progression_container_renderer = GreyboxProgressionContainerRenderer.new()
 	_world_queries = GreyboxWorldQueries.new()
 	_survey_target_runtime = GreyboxSurveyTargets.new()
 	_material_candidate_runtime = GreyboxMaterialCandidates.new()
@@ -590,6 +593,7 @@ func _current_gate_runtime_info(zone: Dictionary) -> Dictionary:
 		"current_strength": float(zone.get("current_strength", 1.0)),
 		"required_upgrade_id": str(zone.get("required_upgrade_id", "")),
 		"required_capability_id": str(zone.get("required_capability_id", "")),
+		"current_affordance_role": str(zone.get("current_affordance_role", "barrier")),
 		"route_context": str(zone.get("route_context", "")),
 	}
 
@@ -793,7 +797,7 @@ func _build_progression_containers(containers: Array) -> void:
 		_progression_containers.append(container)
 		var container_id := str(container.get("id", "ProgressionContainer"))
 		var rect := _rect_from_item(container)
-		var container_node := _add_chest_marker(container_id, rect)
+		var container_node: Node2D = _progression_container_renderer.add_container(_marker_root, container, tile_size)
 		_container_nodes_by_id[container_id] = container_node
 		if show_debug_overlay:
 			_add_rect_outline(container, "%sDebugOutline" % container_id, Color(0.84, 0.55, 1.0, 0.65), 3.0, 23)
@@ -1008,28 +1012,6 @@ func _add_diamond(marker_name: String, center: Vector2, color: Color, radius: fl
 	])
 	_marker_root.add_child(poly)
 	return poly
-
-
-func _add_chest_marker(marker_name: String, rect: Rect2) -> Node2D:
-	var root := Node2D.new()
-	root.name = marker_name
-	root.position = rect.position + rect.size * 0.5
-	root.z_index = 16
-	_marker_root.add_child(root)
-
-	var body_size := Vector2(maxf(20.0, rect.size.x * 0.7), maxf(14.0, rect.size.y * 0.46))
-	var body := _add_local_polygon(root, "ChestBody", _rect_points(body_size), Color(0.57, 0.23, 0.80, 0.92))
-	body.position.y = body_size.y * 0.18
-	body.z_index = 1
-
-	var lid_size := Vector2(body_size.x * 0.88, maxf(8.0, body_size.y * 0.5))
-	var lid := _add_local_polygon(root, "ChestLid", _rect_points(lid_size), Color(0.82, 0.55, 1.0, 0.95))
-	lid.position.y = -body_size.y * 0.36
-	lid.z_index = 2
-
-	var latch := _add_local_polygon(root, "ChestLatch", _diamond_points(minf(7.0, body_size.y * 0.34)), Color(1.0, 0.86, 0.28, 0.98))
-	latch.z_index = 3
-	return root
 
 
 func _add_moving_hazard_path_marker(marker_name: String, path: Array) -> void:

@@ -1,6 +1,7 @@
 extends RefCounted
 
 const DEFAULT_LABEL := "Upgrade chest"
+const EXPLICIT_INTERACTION := "interact"
 
 var _opened_ids: Dictionary = {}
 
@@ -30,7 +31,20 @@ func apply_opened_to_world(world, has_discovery: Callable) -> void:
 		world.set_progression_container_opened(container_id, true)
 
 
-func try_open(world, player_position: Vector2, grant_wallet: Callable, grant_discovery: Callable) -> Dictionary:
+func prompt_at(world, player_position: Vector2) -> String:
+	if world == null or not world.has_method("get_progression_container_at"):
+		return ""
+	var container: Dictionary = world.get_progression_container_at(player_position)
+	if container.is_empty() or is_opened(str(container.get("id", "progression_container"))):
+		return ""
+	if str(container.get("interaction", "instant")) != EXPLICIT_INTERACTION:
+		return ""
+	if str(container.get("reward_type", "")) == "blueprint":
+		return "E: Recover %s" % str(container.get("reward_id", "blueprint")).replace("_", " ")
+	return "E: Open %s" % _display_label(container)
+
+
+func try_open(world, player_position: Vector2, grant_wallet: Callable, grant_discovery: Callable, explicit_interaction := false) -> Dictionary:
 	if world == null or not world.has_method("get_progression_container_at"):
 		return {}
 
@@ -41,6 +55,8 @@ func try_open(world, player_position: Vector2, grant_wallet: Callable, grant_dis
 	var container_id := str(container.get("id", "progression_container"))
 	if is_opened(container_id):
 		return {"state": "already_opened", "id": container_id}
+	if str(container.get("interaction", "instant")) == EXPLICIT_INTERACTION and not explicit_interaction:
+		return {"state": "nearby", "id": container_id}
 
 	var container_type := str(container.get("container_type", ""))
 	var reward_type := str(container.get("reward_type", ""))

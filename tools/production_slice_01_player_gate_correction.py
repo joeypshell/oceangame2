@@ -16,7 +16,7 @@ def propulsion_blueprint_container() -> dict:
         "w": 2,
         "h": 2,
         "display_label": "Fins blueprint chest",
-        "interaction": "instant",
+        "interaction": "interact",
         "reward_type": "blueprint",
         "reward_id": PROPULSION_BLUEPRINT_ID,
         "route_context": "lower_loop_reward",
@@ -49,7 +49,7 @@ def propulsion_project() -> dict:
         "target_gate_id": "lower_left_loop_current",
         "build_phase": "night_debrief",
         "project_label": "Propulsion fins project",
-        "completion_label": "Propulsion fins built",
+        "completion_label": "Fins installed - relay unlocked",
     }
 
 
@@ -83,6 +83,7 @@ def lower_left_current_gate() -> dict:
         "current_strength": 2.2,
         "required_capability_id": "propulsion_fins",
         "current_gate_label": "Lower-left relay current",
+        "current_affordance_role": "relay",
         "route_context": "lower_left_loop",
         "intent": "Visible relay current blocked until recipe-built propulsion fins are owned.",
     }

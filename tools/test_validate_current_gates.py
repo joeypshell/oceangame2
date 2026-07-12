@@ -22,6 +22,7 @@ def gate(requirement_field: str = "required_upgrade_id") -> dict:
         "current_strength": 2.2,
         requirement_field: "propulsion_fins" if requirement_field == "required_upgrade_id" else "current_stabilizer",
         "current_gate_label": "Ripping current",
+        "current_affordance_role": "barrier",
         "route_context": "test_route",
     }
 
@@ -63,6 +64,12 @@ class CurrentGateValidationTests(unittest.TestCase):
         failures = validate_current_gate_reachability([zone], {(2, 2)}, cells - {(3, 3)})
         self.assertTrue(any("contains solid cells" in failure for failure in failures))
         self.assertTrue(any("contains unreachable cells" in failure for failure in failures))
+
+    def test_rejects_unknown_affordance_role(self) -> None:
+        map_data = map_with_gate("required_capability_id")
+        map_data["zones"][0]["current_affordance_role"] = "secret_shortcut"
+        failures = validate_current_gate_schema(map_data)
+        self.assertTrue(any("current_affordance_role must be one of" in failure for failure in failures), failures)
 
     def test_fixture_mutation_is_isolated(self) -> None:
         original = map_with_gate("required_capability_id")

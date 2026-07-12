@@ -22,7 +22,7 @@ def valid_map() -> dict:
                 "id": "lower_loop_upgrade_chest",
                 "display_label": "Fins blueprint chest",
                 "container_type": "upgrade_chest",
-                "interaction": "instant",
+                "interaction": "interact",
                 "reward_type": "blueprint",
                 "reward_id": "propulsion_fins_blueprint",
                 "route_context": "lower_loop_reward",
@@ -53,6 +53,12 @@ class ProgressionContainerValidationTests(unittest.TestCase):
         map_data["progression_containers"][0]["reward_amount"] = 400
         failures = validate_progression_container_schema(map_data)
         self.assertIn("lower_loop_upgrade_chest blueprint reward must not define reward_amount.", failures)
+
+    def test_rejects_unsupported_interaction(self) -> None:
+        map_data = valid_map()
+        map_data["progression_containers"][0]["interaction"] = "proximity_secret"
+        failures = validate_progression_container_schema(map_data)
+        self.assertTrue(any("interaction must be one of" in failure for failure in failures), failures)
 
 
 if __name__ == "__main__":

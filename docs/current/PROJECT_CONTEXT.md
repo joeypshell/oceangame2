@@ -26,7 +26,7 @@ Expansion 05 added one stabilizer-gated mineral survey, an exact boat-committed 
 
 Expansion 06 added separate player health, one source-authored territorial eel, a viable unarmed evade route, and one durable shock-prod project built from non-enemy materials. Defeating the eel clears its territory only for the current day and grants no automatic reward. The pass closed with GO.
 
-Expansion 07 added bounded passive/eel biological materials and one shock-prod capacitor step, then completed deterministic, visual, and initial Web verification. #815 corrects three reviewed journey rules in current source: the eel guards its cache behaviorally instead of through a collection lock, fins use a durable guaranteed Ti2+Rubber1 project instead of score, and the lower-left relay current is visibly source-derived. Player review #799 remains HOLD until the merged build is verified and rerun; Expansion 08 must not begin before that GO/HOLD decision.
+Expansion 07 added bounded passive/eel biological materials and one shock-prod capacitor step, then completed deterministic, visual, and initial Web verification. #815 corrected behavioral eel guarding, recipe-built fins, and the visible relay; #825 added a blueprint-led recipe tracker; #827 makes blueprint recovery an explicit `E`/ACT action, makes daytime BUILD non-mutating and explicit, and distinguishes the amber far-left fins relay from the cyan east stabilizer barrier. Player review #799 remains HOLD until the merged build is verified and rerun; Expansion 08 must not begin before that GO/HOLD decision.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -61,7 +61,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Latest visual decision: `docs/current/OCEANGAME_EXPANSION_07_VISUAL_BASELINE_DECISION.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: `docs/current/OCEANGAME_EXPANSION_07_WEB_PREVIEW_VERIFICATION.md`; #815 requires a new exact-SHA deploy check.
+- Latest Web verification: `docs/current/OCEANGAME_EXPANSION_07_WEB_PREVIEW_VERIFICATION.md`; the #825 build was verified at `e6c9cf7`, and #827 requires a new exact-SHA deploy check.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -128,7 +128,7 @@ Current map-loading helper:
 
 ## Web Preview Status
 
-The public preview was last verified for the pre-correction Expansion 07 runtime at build `2a958f4`. #815 must verify its merged SHA before returning to #799:
+The public preview was last verified for the blueprint-led correction at build `e6c9cf7`. #827 must verify its merged SHA before returning to #799:
 
 ```text
 https://joeypshell.github.io/oceangame2/
@@ -184,7 +184,8 @@ Current issue state as of 2026-07-10:
 - Closed: #726-#735 completed Expansion 04 with a GO; #739 resolved a narrow validator blocker found during authoring.
 - Closed: #748-#757 completed Expansion 05 with a GO.
 - Closed: #768-#777 completed Expansion 06 with a GO.
-- Closed/current source: #790-#798 and #800-#815 implement and technically verify Expansion 07 plus its player-gate correction.
+- Closed/current source: #790-#798 and #800-#826 implement and technically verify Expansion 07 plus its prior player-gate corrections.
+- Current correction: #827 makes the fins blueprint and the two current roles unmistakable in normal play.
 - Open: #799 remains the player GO/HOLD closeout for Expansion 07.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -322,7 +323,7 @@ Current issue state as of 2026-07-10:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_07_PLAYER_GATE_CORRECTION.md` as the current correction contract. Expansions 01-06 are complete with GO decisions; #825 restores the blueprint-led fins-to-scanner journey, then Expansion 07 returns to #799 player closeout. Do not begin Expansion 08 yet.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_07_PLAYER_GATE_CORRECTION.md` as the current correction contract. Expansions 01-06 are complete with GO decisions; #827 makes blueprint acquisition and the actual fins relay explicit, then Expansion 07 returns to #799 player closeout. Do not begin Expansion 08 yet.
 
 Accepted constraints for next work:
 

@@ -100,7 +100,7 @@ func propulsion_fins_guidance(map_id := "", scanner_lead_available := false) -> 
 	if has_propulsion_fins():
 		if scanner_lead_available or str(map_id) != "production_slice_01":
 			return ""
-		return "Fins ready | Enter lower-left relay current"
+		return "Fins ready | Installed | Far lower-left/west-edge relay | E at amber arrows"
 	var project := _project_by_id(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID)
 	var project_status := _status_for(project)
 	if project_status == "knowledge_required":
@@ -112,6 +112,23 @@ func propulsion_fins_guidance(map_id := "", scanner_lead_available := false) -> 
 	if project_status == "inconsistent_profile":
 		return "Fins project | profile repair required"
 	return "Fins project unavailable"
+
+
+func active_day_build_feedback(map_id := "", scanner_lead_available := false) -> String:
+	if has_propulsion_fins():
+		var guidance := propulsion_fins_guidance(map_id, scanner_lead_available)
+		return guidance if not guidance.is_empty() else "Fins ready | Already installed"
+	var project := _project_by_id(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID)
+	var project_status := _status_for(project)
+	if project_status == "knowledge_required":
+		return "Fins project unchanged | Recover blueprint with E at lower-loop chest"
+	if project_status == "ready":
+		return "Fins project unchanged | Nothing builds during day | Return to boat, N for night, then P"
+	if project_status == "incomplete":
+		return "Fins project unchanged | %s | Bank materials, then N/P at night" % _material_progress_text(project)
+	if project_status == "inconsistent_profile":
+		return "Fins project unchanged | Profile repair required"
+	return "Fins project unchanged | Build projects only during night debrief"
 
 
 func shock_prod_guidance() -> String:
