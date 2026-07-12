@@ -1763,7 +1763,12 @@ func _update_status_label() -> void:
 		prompt = current_gate_prompt
 		objective_step_cue_blocked = true
 	elif not world_connector_prompt.is_empty():
-		prompt = "%s\n%s" % [_last_status_note, world_connector_prompt] if _last_status_note.begins_with("Arrived:") else world_connector_prompt
+		var keep_connector_note := (
+			_last_status_note.begins_with("Arrived:")
+			or _is_relay_follow_through_status_note(_last_status_note)
+			or _is_final_dive_status_note(_last_status_note)
+		)
+		prompt = "%s\n%s" % [_last_status_note, world_connector_prompt] if keep_connector_note else world_connector_prompt
 		objective_step_cue_blocked = true
 	elif _held_cargo_count() >= _held_salvage_capacity():
 		prompt = _cargo_full_prompt()
