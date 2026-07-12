@@ -144,7 +144,6 @@ func _prepare_capture() -> bool:
 		return false
 	for project_id in [
 		ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID,
-		ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID,
 		ExpansionProfileState.SHOCK_PROD_PROJECT_ID,
 	]:
 		if not bool(profile.deposit_materials(STANDARD_RECIPE, false).get("changed", false)):

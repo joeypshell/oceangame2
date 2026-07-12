@@ -388,9 +388,9 @@ class ProgressionGraphBuilder:
             purchase_entry = str(item.get("purchase_entry_id", self.contract["canonical_start"]["entry_id"]))
             self.graph.add_edge(key, f"map:{purchase_map}", "requires", hard=True, note="purchase location")
             self.graph.add_edge(key, self.graph.resolve(purchase_entry, purchase_map), "requires", hard=True, note="purchase entry")
-            signal_id = str(item.get("required_signal_id", ""))
-            if signal_id:
-                self.graph.add_edge(key, self.graph.resolve(signal_id), "requires", hard=True, note="purchase lead")
+            lead_source_id = str(item.get("required_lead_source_id", ""))
+            if lead_source_id:
+                self.graph.add_edge(key, self.graph.resolve(lead_source_id), "requires", hard=True, note="purchase lead")
             configured = _list(item.get("funding_source_ids"))
             funding_keys = [self.graph.resolve(str(raw_id)) for raw_id in configured] if configured else [source.key for source in reward_nodes]
             node.attrs["funding_keys"] = funding_keys
@@ -414,7 +414,7 @@ class ProgressionGraphBuilder:
             primary = str(map_data.get("primary_route_objective_id", ""))
             if primary:
                 self._mark(self.graph.resolve(primary, map_id))
-            for collection in ("next_dive_objective_prompts", "relay_follow_through_objectives", "final_dive_objective_seeds", "material_projects"):
+            for collection in ("next_dive_objective_prompts",):
                 for item in _items(map_data, collection):
                     self._mark(self.graph.resolve(str(item.get("id", "")), map_id))
         changed = True

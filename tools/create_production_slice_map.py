@@ -43,6 +43,7 @@ PASS_08_ROUTE_EXTENSION_REMOVE_SOLID_CELLS = {
     (26, 76),
     (26, 77),
 }
+ISSUE_829_CURRENT_POCKET_REMOVE_SOLID_CELLS = {(x, y) for y in range(43, 47) for x in range(67, 71)}
 TARGETED_FILL_OPEN_CELLS = {
     (1, 22),
     (1, 23),
@@ -132,6 +133,12 @@ def apply_targeted_topology_cleanup(solid: set[tuple[int, int]]) -> dict:
             solid.remove(cell)
             pass_08_route_extension.append(cell)
 
+    current_pocket_extension: list[tuple[int, int]] = []
+    for cell in sorted(ISSUE_829_CURRENT_POCKET_REMOVE_SOLID_CELLS):
+        if cell in solid:
+            solid.remove(cell)
+            current_pocket_extension.append(cell)
+
     for cell in sorted(TARGETED_FILL_OPEN_CELLS):
         if cell not in solid:
             solid.add(cell)
@@ -141,6 +148,7 @@ def apply_targeted_topology_cleanup(solid: set[tuple[int, int]]) -> dict:
         "removed_solid_tips": removed_solid_tips,
         "filled_open_notches": filled_open_notches,
         "pass_08_route_extension": pass_08_route_extension,
+        "issue_829_current_pocket_extension": current_pocket_extension,
     }
 
 
@@ -205,12 +213,16 @@ def build_map_data(source_map: dict) -> dict:
                 "pass_08_route_extension_opened_cells": [
                     {"x": x, "y": y} for x, y in targeted_cleanup["pass_08_route_extension"]
                 ],
+                "issue_829_current_pocket_opened_cells": [
+                    {"x": x, "y": y} for x, y in targeted_cleanup["issue_829_current_pocket_extension"]
+                ],
                 "notes": [
                     "The top edge remains open around the source's water-surface shaft for boat entry.",
                     "Left, right, and bottom crop edges are sealed so the player cannot leave the focused slice.",
                     "Unreachable open pockets from the high-fidelity sketch conversion are filled as solid terrain.",
                     "Targeted cleanup removes isolated one-cell solid tips and fills one-cell open notches visible in the production-slice source/render review.",
                     "Pass 08 opens a tiny alcove in the southwest return pocket without changing the main lower-loop or deep-cache route.",
+                    "Issue 829 opens a compact east-current chamber so its cache, surveys, and biological sample do not overlap.",
                     "The original full sketch map is left untouched for comparison.",
                 ],
             },
@@ -270,7 +282,7 @@ def build_map_data(source_map: dict) -> dict:
                 "h": 24,
                 "intent": "Lower optional loop for a longer salvage return test.",
             },
-            {"id": "lower_left_loop_connector", "type": "marker", "x": 2, "y": 74, "w": 4, "h": 4, "world_connector": True, "connector_label": "Lower-left relay", "destination_map_id": "production_slice_04", "destination_map_path": "res://maps/production_slice_04.greybox.json", "destination_entry_id": "relay_sub_entry", "connector_direction": "forward", "intent": "Visible relay connector from the default boat hub toward the lower-left loop reference slice."},
+            {"id": "lower_left_loop_connector", "type": "marker", "x": 2, "y": 74, "w": 4, "h": 4, "world_connector": True, "connector_label": "Lower-left relay", "destination_map_id": "production_slice_04", "destination_map_path": "res://maps/production_slice_04.greybox.json", "destination_entry_id": "relay_sub_entry", "connector_direction": "forward", "intent": "Optional advanced-current entrance; not part of the fins, scanner, or weapon progression chain."},
             *expansion_zones(),
             {"id": "deep_cache_first_step_cue", "type": "marker", "x": 28, "y": 58, "w": 4, "h": 3, "objective_step_cue": True, "objective_id": "deep_cache_route_objective", "target_id": "salvage_lower_loop", "route_context": "deep_cache_commitment", "objective_step_label": "Lower loop", "intent": "Opening relay-trail objective cue for its first required target."},
             {
@@ -333,7 +345,7 @@ def build_map_data(source_map: dict) -> dict:
         "biological_resource_sources": biological_resource_sources(),
         "route_objectives": PASS_13_ROUTE_OBJECTIVES,
         "primary_route_objective_id": "deep_cache_route_objective",
-        "next_dive_objective_prompts": [{"id": "deep_cache_next_dive_prompt", "trigger": "primary_objective_complete", "objective_id": "deep_cache_route_objective", "target_id": "lower_left_loop_connector", "label": "Next dive: Investigate lower-left relay", "route_context": "lower_left_loop", "intent": "Result prompt pointing the next dive toward the lower-left relay after the relay-trail objective."}],
+        "next_dive_objective_prompts": [{"id": "deep_cache_next_dive_prompt", "trigger": "primary_objective_complete", "objective_id": "deep_cache_route_objective", "target_id": "upper_right_current_pocket_gate", "label": "Next dive: Investigate east current", "route_context": "upper_right_current_pocket", "intent": "Result prompt pointing the next dive toward the standard current crossed passively with propulsion fins."}],
         "survey_targets": expansion_survey_targets(),
         "material_candidate_pools": material_candidate_pools(),
         "material_projects": material_projects(),

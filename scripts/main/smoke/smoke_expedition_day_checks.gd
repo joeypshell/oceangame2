@@ -49,7 +49,7 @@ func _smoke_expedition_day_and_quit() -> void:
 		return
 
 	_main._session_progression.record_banked_salvage(1200)
-	if not _prepare_propulsion_fins():
+	if not _prepare_propulsion_fins() or not _prepare_profile_capability(ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID):
 		return
 	if not _transition(OUTBOUND_CONNECTOR_ID, "production_slice_04"):
 		return

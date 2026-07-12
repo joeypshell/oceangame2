@@ -62,7 +62,10 @@ func return_prompt(world, position: Vector2, has_capability: Callable, held_ids:
 			continue
 		if held_ids.has(target_id) or banked_ids.has(target_id) or world.is_salvage_collected(target_id):
 			continue
-		return "Stabilizer ready | Return: %s" % str(payoff.get("label", DEFAULT_PAYOFF_LABEL)).to_lower()
+		return "%s ready | Return: %s" % [
+			_capability_label(capability_id),
+			str(payoff.get("label", DEFAULT_PAYOFF_LABEL)).to_lower(),
+		]
 	return ""
 
 
@@ -83,3 +86,9 @@ func _display_label(salvage: Dictionary, route_context := "") -> String:
 	if label.is_empty():
 		return DEFAULT_PAYOFF_LABEL
 	return label.substr(0, 1).to_upper() + label.substr(1)
+
+
+func _capability_label(capability_id: String) -> String:
+	if capability_id == "propulsion_fins":
+		return "Fins"
+	return capability_id.replace("_", " ").capitalize()

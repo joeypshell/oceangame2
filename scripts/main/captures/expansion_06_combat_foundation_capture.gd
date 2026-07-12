@@ -99,7 +99,6 @@ func _unlock_shock_prod() -> bool:
 		return false
 	for project_id in [
 		ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID,
-		ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID,
 		ExpansionProfileState.SHOCK_PROD_PROJECT_ID,
 	]:
 		var deposit: Dictionary = profile.deposit_materials(RECIPE, false)

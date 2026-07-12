@@ -75,7 +75,7 @@ def validate_contract(payload: Any) -> list[str]:
                 failures.append(f"{label}.cost must be a positive integer")
             if not isinstance(item.get("mandatory"), bool):
                 failures.append(f"{label}.mandatory must be boolean")
-            for field in ("purchase_map_id", "purchase_entry_id", "required_signal_id"):
+            for field in ("purchase_map_id", "purchase_entry_id", "required_lead_source_id"):
                 if field in item:
                     _require_id(item.get(field), f"{label}.{field}", failures)
             for field in ("funding_source_ids", "unlocks_target_ids"):
@@ -105,6 +105,7 @@ def render_gdscript(contract: dict[str, Any]) -> str:
         lines.append(f"const {prefix}_COST := {item['cost']}")
         lines.append(f'const {prefix}_PURCHASE_MAP_ID := "{item["purchase_map_id"]}"')
         lines.append(f'const {prefix}_PURCHASE_ENTRY_ID := "{item["purchase_entry_id"]}"')
+        lines.append(f'const {prefix}_LEAD_SOURCE_ID := "{item["required_lead_source_id"]}"')
     return "\n".join(lines) + "\n"
 
 

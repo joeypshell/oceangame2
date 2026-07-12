@@ -100,7 +100,7 @@ func propulsion_fins_guidance(map_id := "", scanner_lead_available := false) -> 
 	if has_propulsion_fins():
 		if scanner_lead_available or str(map_id) != "production_slice_01":
 			return ""
-		return "Fins ready | Installed | Far lower-left/west-edge relay | E at amber arrows"
+		return "Fins ready | East current passable | Swim through"
 	var project := _project_by_id(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID)
 	var project_status := _status_for(project)
 	if project_status == "knowledge_required":
@@ -319,7 +319,7 @@ func _material_progress_text(project: Dictionary) -> String:
 func _project_effect_lines(project: Dictionary) -> Array[String]:
 	match str(project.get("id", "")):
 		ExpansionProfileState.PROPULSION_FINS_PROJECT_ID:
-			return ["Access: lower-left relay current"]
+			return ["Access: east current pocket | Swim through"]
 		ExpansionProfileState.SHOCK_PROD_PROJECT_ID:
 			return ["Use: Space at short range | 1 health damage per hit"]
 		ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID:
@@ -330,13 +330,13 @@ func _project_effect_lines(project: Dictionary) -> Array[String]:
 func _prerequisite_label(project: Dictionary) -> String:
 	if str(project.get("id", "")) == ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID:
 		return "shock prod"
-	return "cutter" if str(project.get("id", "")) == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID else "current stabilizer"
+	return "cutter"
 
 
 func _prerequisite_project_label(project: Dictionary) -> String:
 	if str(project.get("id", "")) == ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID:
 		return "shock prod project"
-	return "salvage cutter project" if str(project.get("id", "")) == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID else "current stabilizer project"
+	return "salvage cutter project"
 
 
 func _result(changed: bool, reason: String, note: String) -> Dictionary:

@@ -7,7 +7,7 @@ const CAPTURE_SIZES := [
 	{"suffix": "1280x720", "size": Vector2i(1280, 720)},
 	{"suffix": "1920x1080", "size": Vector2i(1920, 1080)},
 ]
-const GATE_ID := ExpansionProfileState.CURRENT_STABILIZER_GATE_ID
+const GATE_ID := ExpansionProfileState.PROPULSION_FINS_GATE_ID
 const PAYOFF_ID := "salvage_current_pocket_cache"
 const POCKET_CAMERA_ZOOM := Vector2(1.25, 1.25)
 const DEBRIEF_CAMERA_ZOOM := Vector2(0.9, 0.9)
@@ -35,33 +35,26 @@ func capture_and_quit(capture_dir: String) -> void:
 	_main._player.global_position = gate["center"]
 	_main._process(0.0)
 	_main._update_status_label()
-	if not _status_contains("Ripping current - need current stabilizer") or _main._world.is_salvage_collected(PAYOFF_ID):
+	if not _status_contains("Strong east current - need propulsion fins") or _main._world.is_salvage_collected(PAYOFF_ID):
 		_fail("locked current state was not readable")
 		return
 	if not await _capture_pair(capture_dir, "current_locked", gate["center"] + POCKET_CAMERA_OFFSET, POCKET_CAMERA_ZOOM):
 		return
 
 	var profile = _main._anomaly_survey.profile_state()
-	profile.complete_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID, false)
+	profile.complete_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID, false)
 	profile.deposit_materials({
-		ExpansionProfileState.TITANIUM_MATERIAL_ID: 4,
-		ExpansionProfileState.COIL_MATERIAL_ID: 2,
+		ExpansionProfileState.TITANIUM_MATERIAL_ID: 2,
+		ExpansionProfileState.RUBBER_MATERIAL_ID: 1,
 	}, false)
-	var cutter_build: Dictionary = profile.complete_material_project(
-		_project_by_id(ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID),
-		false
-	)
-	if not bool(cutter_build.get("changed", false)):
-		_fail("capture setup could not build cutter")
-		return
 	_main._material_project.on_map_loaded(_main._world)
 	_main._player.global_position = _main._world.get_extraction_center()
 	_main._expedition_day_state.request_end_day("voluntary")
 	_main._process(0.0)
 	_main._update_status_label()
 	var debrief_text: String = _main._result_label.text if _main._result_label != null else ""
-	if debrief_text.find("P: Build current stabilizer") == -1 or debrief_text.find("N: Start day 2") == -1:
-		_fail("stabilizer-ready debrief omitted P/N actions")
+	if debrief_text.find("P: Build propulsion fins") == -1 or debrief_text.find("N: Start day 2") == -1:
+		_fail("fins-ready debrief omitted P/N actions")
 		return
 	if not await _capture_pair(
 		capture_dir,
@@ -72,8 +65,8 @@ func capture_and_quit(capture_dir: String) -> void:
 		return
 
 	var build: Dictionary = ExpeditionDayDebrief.handle_debrief_key(_main, KEY_P)
-	if not bool(build.get("changed", false)) or not profile.has_capability(ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID):
-		_fail("project-ready setup could not build stabilizer")
+	if not bool(build.get("changed", false)) or not profile.has_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID):
+		_fail("project-ready setup could not build fins")
 		return
 	var next_day: Dictionary = ExpeditionDayDebrief.handle_debrief_key(_main, KEY_N)
 	if not bool(next_day.get("changed", false)):
@@ -89,7 +82,7 @@ func capture_and_quit(capture_dir: String) -> void:
 		Callable(profile, "has_capability")
 	)
 	if not gate_block.is_empty():
-		_fail("stabilizer did not unlock capture crossing")
+		_fail("fins did not unlock capture crossing")
 		return
 	_main._last_status_note = ""
 	_main._player.global_position = gate["center"] + Vector2(50, 0)

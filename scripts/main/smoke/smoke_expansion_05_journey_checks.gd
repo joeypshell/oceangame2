@@ -12,7 +12,7 @@ const MAP_ID := "production_slice_01"
 const RELAY_MAP_ID := "production_slice_04"
 const TARGET_ID := "upper_right_mineral_trace_survey"
 const DISCOVERY_ID := ExpansionProfileState.MINERAL_TRACE_RESEARCH_ID
-const GATE_ID := ExpansionProfileState.CURRENT_STABILIZER_GATE_ID
+const GATE_ID := ExpansionProfileState.PROPULSION_FINS_GATE_ID
 const OUTBOUND_CONNECTOR_ID := "lower_left_loop_connector"
 const RETURN_CONNECTOR_ID := "return_to_boat_hub_connector"
 const COIL_POOL_ID := "conductive_coil_pool"
@@ -57,12 +57,12 @@ func _smoke_expansion_05_practical_research_and_quit() -> void:
 	var blocked_push: float = _player.global_position.x - blocked_x_before
 	if not _require(blocked_push < -1.0 and _oxygen_seconds < blocked_oxygen_before, "locked current gate did not block while time advanced"):
 		return
-	if not _seed_current_stabilizer(profile):
+	if not _require(_prepare_propulsion_fins(), "could not seed recipe-built fins"):
 		return
 	_player.global_position = gate["center"]
 	var unlocked_x_before: float = _player.global_position.x
 	_process(0.25)
-	if not _require(absf(_player.global_position.x - unlocked_x_before) < 0.01 and _main._current_gate.blocking_gate().is_empty(), "stabilizer did not unlock target route"):
+	if not _require(absf(_player.global_position.x - unlocked_x_before) < 0.01 and _main._current_gate.blocking_gate().is_empty(), "fins did not unlock target route"):
 		return
 
 	var before_ids := _active_material_ids()
@@ -83,7 +83,7 @@ func _smoke_expansion_05_practical_research_and_quit() -> void:
 		return
 
 	_player.global_position = _world.get_extraction_center()
-	if not _require(_prepare_propulsion_fins(), "connector fixture could not unlock propulsion"):
+	if not _seed_current_stabilizer(profile):
 		return
 	if not _transition(OUTBOUND_CONNECTOR_ID, RELAY_MAP_ID):
 		return
@@ -176,7 +176,7 @@ func _smoke_expansion_05_practical_research_and_quit() -> void:
 	var final_day: int = _main._expedition_day_state.day_number
 	var final_profile: Dictionary = profile.report()
 	_cleanup_profile()
-	print("Expansion 05 practical-research smoke passed: target=%s discovery=%s gate=%s scanner=true blocked_push=%.1f connectors=%s>%s day=2 before=%s same_day=%s normal_day3=%s researched_day3=%s pool=%s pending=false committed=true oxygen=%.1f->%.1f cargo=0 banked=Ti2+Rubber1+Coil1 lead=\"%s\" next_day=%d reload=%s profile=%s." % [
+	print("Expansion 05 practical-research smoke passed: target=%s discovery=%s gate=%s fins_passive=true scanner=true blocked_push=%.1f optional_connectors=%s>%s day=2 before=%s same_day=%s normal_day3=%s researched_day3=%s pool=%s pending=false committed=true oxygen=%.1f->%.1f cargo=0 banked=Ti2+Rubber1+Coil1 lead=\"%s\" next_day=%d reload=%s profile=%s." % [
 		TARGET_ID,
 		DISCOVERY_ID,
 		GATE_ID,

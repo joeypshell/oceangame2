@@ -75,6 +75,7 @@ Creature materials should express function. Examples remain provisional: luminou
 - No project should be only a wallet payment once typed materials exist.
 - Equipment capabilities use explicit ingredient recipes. Score may gate access to blueprint research later, but never substitutes for required materials.
 - #825 gates the `propulsion_fins` recipe behind the guaranteed recovered `propulsion_fins_blueprint`; it does not settle whether future plans require overnight research or whether every known recipe builds during debrief.
+- #829 makes fins a passive same-map current capability, moves scanner funding/lead and the anomaly into the east pocket, and keeps `current_stabilizer` as a later optional advanced-current tier rather than a weapon prerequisite.
 - Existing direct-score oxygen, cargo, light, and scanner paths are migration debt, not the target progression model.
 - `python tools/audit_progression_graph.py` is the executable cross-map safeguard. Production map metadata owns authored relationships; `config/progression_contract.json` owns only runtime purchase/scoring relationships that maps cannot own.
 
@@ -82,7 +83,7 @@ Creature materials should express function. Examples remain provisional: luminou
 
 | Milestone | Promise or pressure | Capability/project | Knowledge source | Input shape | Guarantee | Payoff |
 | --- | --- | --- | --- | --- | --- | --- |
-| Landed | Slice-02 anomaly lead | `survey_scanner_1` | Final-dive signal | Existing wallet gate | Existing journey | Durable anomaly discovery |
+| Landed | Visible east current pocket | `propulsion_fins` then `survey_scanner_1` | Recovered fins plan and same-pocket cache lead | Ti2/Rubber1, then 300 cache wallet | Same-map guaranteed journey | Durable anomaly discovery |
 | Expansion 03 | Readable sealed salvage/wreck interaction | First active tool, likely cutter-class | Wreck scan or recovered plan | Titanium/basic material plus ordinary special component | Shallow authored candidates | New component/material and next gate clue |
 | Expansion 04 | Remembered current, darkness, pressure, or sealed route | First durable capability gate | Practical environment survey | Base materials plus themed non-hostile component | Pre-gate reachable sources | Authored area and meaningful reward |
 | Expansion 05 | Unknown resource habitat or environmental behavior | Research/project knowledge | Scanner and sample analysis | Knowledge-first; no broad material expansion | Authored scannables | Better preparation and project unlock |

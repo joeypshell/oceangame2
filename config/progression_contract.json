@@ -36,9 +36,9 @@
       "mandatory": true,
       "purchase_map_id": "production_slice_01",
       "purchase_entry_id": "surface_boat_entry",
-      "required_signal_id": "lower_left_final_dive_signal",
+      "required_lead_source_id": "salvage_current_pocket_cache",
       "funding_source_ids": [
-        "slice_04_destination_cache"
+        "salvage_current_pocket_cache"
       ],
       "unlocks_target_ids": [
         "lower_right_anomaly_survey",

@@ -119,7 +119,7 @@ Capture the focused Pass 23 next-dive objective result view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-23-next-dive-objective
 ```
 
-This loads the default production slice, completes the primary objective through the normal runtime path, frames the result panel with `Next dive: Investigate lower-left relay`, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_23_next_dive_objective/production_slice_01_pass_23_next_dive_objective.png`.
+This loads the default production slice, completes the primary objective through the normal runtime path, frames the result panel with the current `Next dive: Investigate east current` prompt, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_23_next_dive_objective/production_slice_01_pass_23_next_dive_objective.png`. The flag and output path retain their historical Pass 23 names for compatibility.
 
 Capture the focused Pass 24 relay follow-through feedback view:
 
@@ -319,7 +319,7 @@ Capture the focused current-gate review state:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-current-gate
 ```
 
-This writes `visual_captures/current_gate/production_slice_01_current_gate.png` showing the lower-left connector area with the `Strong current - need propulsion fins` prompt. It is a review capture, not baseline acceptance.
+This writes `visual_captures/current_gate/production_slice_01_east_current_before_fins.png` and `visual_captures/current_gate/production_slice_01_east_current_after_fins.png`. The pair frames the same standard east current before pushback is overcome and after fins make it passively swimmable; it is review evidence, not baseline acceptance.
 
 Capture the second production slice:
 

@@ -38,7 +38,7 @@ def expansion_06_projects() -> list[dict]:
     return [
         {
             "id": "shock_prod_project",
-            "required_project_id": "current_stabilizer_project",
+            "required_project_id": "salvage_cutter_project",
             "required_discovery_id": "lower_right_anomaly_discovery",
             "required_materials": {
                 "titanium_scrap": 2,

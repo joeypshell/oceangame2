@@ -1,6 +1,6 @@
 extends RefCounted
 
-const EXPECTED_LABEL := "Next dive: Investigate lower-left relay"
+const EXPECTED_LABEL := "Next dive: Investigate east current"
 const EXPECTED_RESULT_COMPLETE := "Objective: Relay trail complete"
 const CAPTURE_ZOOM := Vector2(0.72, 0.72)
 const CAMERA_OFFSET := Vector2(170, 170)

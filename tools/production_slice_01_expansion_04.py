@@ -16,12 +16,12 @@ def expansion_04_zones() -> list[dict]:
             "current_gate": True,
             "current_direction": "left",
             "current_strength": 2.2,
-            "required_capability_id": "current_stabilizer",
-            "current_gate_label": "Ripping current",
+            "required_capability_id": "propulsion_fins",
+            "current_gate_label": "Strong east current",
             "current_affordance_role": "barrier",
             "route_context": "upper_right_current_pocket",
             "intent": (
-                "Expansion 04 optional current boundary across the east pocket of the existing upper-right wreck room."
+                "First standard current boundary; recipe-built propulsion fins allow normal swim-through traversal."
             ),
         }
     ]
@@ -38,7 +38,7 @@ def expansion_04_projects() -> list[dict]:
                 "conductive_coil": 1,
             },
             "unlocks_capability_id": "current_stabilizer",
-            "target_gate_id": "upper_right_current_pocket_gate",
+            "target_gate_id": "lower_left_loop_current",
             "build_phase": "night_debrief",
         }
     ]
@@ -53,10 +53,10 @@ def expansion_04_entities() -> list[dict]:
             "y": 40,
             "kind": "relic",
             "tier": "valuable",
-            "validation_route": "current_stabilizer_payoff",
+            "validation_route": "propulsion_fins_payoff",
             "route_context": "upper_right_current_pocket",
             "intent": (
-                "Expansion 04 visible valuable payoff behind the durable current-stabilizer gate."
+                "Visible valuable scanner-funding payoff behind the first propulsion-fins current gate."
             ),
         }
     ]

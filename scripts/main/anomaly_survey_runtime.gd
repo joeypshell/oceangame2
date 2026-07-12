@@ -41,6 +41,12 @@ func activate_lead() -> Dictionary:
 	return {"changed": changed, "reason": "lead_available"}
 
 
+func activate_lead_from_banked_ids(banked_ids: Array[String]) -> Dictionary:
+	if not banked_ids.has(ProgressionContract.SCANNER_LEAD_SOURCE_ID):
+		return {"changed": false, "reason": "lead_source_missing"}
+	return activate_lead()
+
+
 func try_unlock_scanner(world, player) -> Dictionary:
 	if _profile.has_capability(SCANNER_CAPABILITY_ID):
 		return _note_result(false, "already_unlocked", "Scanner already unlocked")

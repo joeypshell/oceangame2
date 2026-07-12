@@ -46,10 +46,10 @@ def propulsion_project() -> dict:
             "rubber_sheet": 1,
         },
         "unlocks_capability_id": "propulsion_fins",
-        "target_gate_id": "lower_left_loop_current",
+        "target_gate_id": "upper_right_current_pocket_gate",
         "build_phase": "night_debrief",
         "project_label": "Propulsion fins project",
-        "completion_label": "Fins installed - relay unlocked",
+        "completion_label": "Fins installed - east current passable",
     }
 
 
@@ -80,12 +80,12 @@ def lower_left_current_gate() -> dict:
         "h": 4,
         "current_gate": True,
         "current_direction": "right",
-        "current_strength": 2.2,
-        "required_capability_id": "propulsion_fins",
-        "current_gate_label": "Lower-left relay current",
+        "current_strength": 3.2,
+        "required_capability_id": "current_stabilizer",
+        "current_gate_label": "Ripping relay current",
         "current_affordance_role": "relay",
         "route_context": "lower_left_loop",
-        "intent": "Visible relay current blocked until recipe-built propulsion fins are owned.",
+        "intent": "Optional advanced current guarding the separate lower-left relay entrance.",
     }
 
 
