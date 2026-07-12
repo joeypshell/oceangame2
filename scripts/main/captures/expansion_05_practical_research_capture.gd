@@ -114,20 +114,19 @@ func _prepare_capture() -> bool:
 	if not bool(profile.unlock_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID, false).get("changed", false)):
 		_fail("capture setup could not unlock scanner")
 		return false
-	if not bool(profile.complete_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID, false).get("changed", false)):
-		_fail("capture setup could not seed legacy discovery")
+	if not bool(profile.complete_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID, false).get("changed", false)):
+		_fail("capture setup could not seed fins blueprint")
 		return false
 	if not bool(profile.deposit_materials({
-		ExpansionProfileState.TITANIUM_MATERIAL_ID: 4,
-		ExpansionProfileState.COIL_MATERIAL_ID: 2,
+		ExpansionProfileState.TITANIUM_MATERIAL_ID: 2,
+		ExpansionProfileState.RUBBER_MATERIAL_ID: 1,
 	}, false).get("changed", false)):
-		_fail("capture setup could not seed project materials")
+		_fail("capture setup could not seed fins materials")
 		return false
-	for project_id in [ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID]:
-		var build: Dictionary = profile.complete_material_project(_project_by_id(project_id), false)
-		if not bool(build.get("changed", false)):
-			_fail("capture setup could not build %s: %s" % [project_id, str(build)])
-			return false
+	var build: Dictionary = profile.complete_material_project(_project_by_id(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID), false)
+	if not bool(build.get("changed", false)):
+		_fail("capture setup could not build fins: %s" % str(build))
+		return false
 	_main._anomaly_survey.on_map_loaded(_main._world)
 	_main._material_project.on_map_loaded(_main._world)
 	_main._cutter_salvage.on_map_loaded(_main._world)

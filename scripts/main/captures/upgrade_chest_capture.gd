@@ -5,6 +5,7 @@ const ExpansionProfileState := preload("res://scripts/main/expansion_profile_sta
 const CHEST_ID := "lower_loop_upgrade_chest"
 const CONNECTOR_ID := "lower_left_loop_connector"
 const EAST_GATE_ID := "upper_right_current_pocket_gate"
+const ADVANCED_GATE_ID := "lower_left_loop_current"
 const CAPTURE_SIZES := [
 	{"suffix": "1280x720", "window_size": Vector2i(1280, 720), "canvas_size": Vector2i(1280, 720)},
 	{"suffix": "mobile_844x390", "window_size": Vector2i(844, 390), "canvas_size": Vector2i(693, 390)},
@@ -30,8 +31,9 @@ func capture_and_quit(capture_dir: String) -> void:
 	var chest := _container_by_id(CHEST_ID)
 	var connector := _connector_by_id(CONNECTOR_ID)
 	var east_gate := _gate_by_id(EAST_GATE_ID)
-	if chest.is_empty() or connector.is_empty() or east_gate.is_empty():
-		_fail("missing blueprint chest, lower-left connector, or east current")
+	var advanced_gate := _gate_by_id(ADVANCED_GATE_ID)
+	if chest.is_empty() or connector.is_empty() or east_gate.is_empty() or advanced_gate.is_empty():
+		_fail("missing blueprint chest, current gates, or optional connector")
 		return
 	if not _prepare_blueprint_prompt_state(chest):
 		return
@@ -41,13 +43,13 @@ func capture_and_quit(capture_dir: String) -> void:
 		return
 	if not await _capture_pair(capture_dir, "fins_project_tracker", chest["center"] + TRACKER_CAMERA_OFFSET, TRACKER_CAMERA_ZOOM):
 		return
-	if not _prepare_relay_state(connector):
+	if not _prepare_fins_current_state(east_gate):
 		return
-	if not await _capture_pair(capture_dir, "post_fins_relay_prompt", connector["center"] + RELAY_CAMERA_OFFSET, RELAY_CAMERA_ZOOM):
+	if not await _capture_pair(capture_dir, "post_fins_current_passable", east_gate["center"] + EAST_CAMERA_OFFSET, RELAY_CAMERA_ZOOM):
 		return
-	if not _prepare_east_barrier_state(east_gate):
+	if not _prepare_advanced_barrier_state(advanced_gate):
 		return
-	if not await _capture_pair(capture_dir, "east_stabilizer_barrier", east_gate["center"] + EAST_CAMERA_OFFSET, RELAY_CAMERA_ZOOM):
+	if not await _capture_pair(capture_dir, "advanced_relay_current", advanced_gate["center"] + RELAY_CAMERA_OFFSET, RELAY_CAMERA_ZOOM):
 		return
 	print("Saved blueprint-fins journey review captures under: %s" % ProjectSettings.globalize_path(capture_dir))
 	_main.get_tree().quit(0)
@@ -113,7 +115,7 @@ func _prepare_blueprint_prompt_state(chest: Dictionary) -> bool:
 	return true
 
 
-func _prepare_relay_state(connector: Dictionary) -> bool:
+func _prepare_fins_current_state(gate: Dictionary) -> bool:
 	var profile = _main._anomaly_survey.profile_state()
 	_main._material_runtime.discard_unbanked("capture_transition")
 	var deposit: Dictionary = profile.deposit_materials({
@@ -126,26 +128,27 @@ func _prepare_relay_state(connector: Dictionary) -> bool:
 	var project := _project_by_id(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID)
 	var build: Dictionary = profile.complete_material_project(project, false)
 	if not bool(build.get("changed", false)):
-		_fail("could not build fins for relay state: %s" % str(build))
+		_fail("could not build fins for current state: %s" % str(build))
 		return false
 	_main._material_project.on_map_loaded(_main._world)
-	_main._player.global_position = connector["center"]
+	_main._current_gate.reset()
+	_main._player.global_position = gate["center"] + Vector2(40, 0)
 	_main._last_status_note = ""
 	_main._update_status_label()
 	var status: String = _main._status_label.text if _main._status_label != null else ""
-	if status.find("E: Enter Lower-left relay") == -1 or status.find("Shock prod locked") != -1:
-		_fail("post-fins relay prompt was not readable: %s" % status)
+	if status.find("Fins ready | East current passable | Swim through") == -1 or not _main._world.get_world_connector_at(gate["center"]).is_empty():
+		_fail("post-fins passive current state was not readable: %s" % status)
 		return false
 	return true
 
 
-func _prepare_east_barrier_state(gate: Dictionary) -> bool:
+func _prepare_advanced_barrier_state(gate: Dictionary) -> bool:
 	_main._player.global_position = gate["center"]
 	_main._last_status_note = ""
 	_main._process(0.0)
 	var status: String = _main._status_label.text if _main._status_label != null else ""
-	if status.find("propulsion fins do not work here") == -1:
-		_fail("east current did not distinguish its stabilizer requirement: %s" % status)
+	if status.find("need current stabilizer | advanced current") == -1 or _main._world.get_world_connector_at(gate["center"]).is_empty():
+		_fail("optional advanced relay current was not readable: %s" % status)
 		return false
 	return true
 

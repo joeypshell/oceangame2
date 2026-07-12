@@ -110,6 +110,7 @@ func _test_focused_state() -> void:
 
 func _seed_pending_survey(main) -> void:
 	main._anomaly_survey.profile_state().unlock_capability("survey_scanner_1", false)
+	main._anomaly_survey.activate_lead()
 	var target: Dictionary = main._world.get_survey_targets()[0]
 	main._player.global_position = target.get("center", Vector2.ZERO)
 	main._anomaly_survey.update(main._world, main._player, float(target.get("interaction_seconds", 1.0)) + 0.1)

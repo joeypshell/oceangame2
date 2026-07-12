@@ -31,7 +31,13 @@ def material_candidate_pools() -> list[dict]:
 
 
 def material_projects() -> list[dict]:
-    return [propulsion_project(), *expansion_03_projects(), *expansion_04_projects(), *expansion_06_projects(), *expansion_07_projects()]
+    return [
+        propulsion_project(),
+        *expansion_03_projects(),
+        *expansion_06_projects(),
+        *expansion_07_projects(),
+        *expansion_04_projects(),
+    ]
 
 
 def biological_resource_sources() -> list[dict]:

@@ -9,9 +9,6 @@ const MaterialRuntimeController := preload("res://scripts/main/material_runtime_
 
 const TEST_PROFILE_PATH := "user://oceangame2_expansion_03_journey_smoke.json"
 const ORIGIN_MAP_ID := "production_slice_01"
-const RELAY_MAP_ID := "production_slice_04"
-const ORIGIN_CONNECTOR_ID := "lower_left_loop_connector"
-const RETURN_CONNECTOR_ID := "return_to_boat_hub_connector"
 const TARGET_ID := ExpansionProfileState.SALVAGE_CUTTER_TARGET_ID
 
 
@@ -52,17 +49,13 @@ func _smoke_expansion_03_material_project_and_quit() -> void:
 	var titanium: Array = recipe["titanium"]
 	var coils: Array = recipe["coil"]
 	_player.global_position = _world.get_extraction_center()
-	if not _require(_prepare_propulsion_fins(), "could not unlock connector for material preservation probe"):
+	if not _require(_prepare_propulsion_fins(), "could not seed the preceding fins project"):
 		return
 	if not _collect_material(titanium[0], 1):
 		return
-	if not _transition(ORIGIN_CONNECTOR_ID, RELAY_MAP_ID):
-		return
-	if not _require(_main._material_runtime.held_count() == 1, "connector cleared held material"):
-		return
-	if not _transition(RETURN_CONNECTOR_ID, ORIGIN_MAP_ID):
-		return
-	if not _require(_main._material_runtime.held_count() == 1, "return connector cleared held material"):
+	_player.global_position += Vector2(96, 0)
+	_process(0.1)
+	if not _require(_main._material_runtime.held_count() == 1, "same-map movement cleared held material"):
 		return
 
 	if not _collect_material(coils[0], 2):
@@ -216,24 +209,6 @@ func _collect_material(candidate: Dictionary, expected_held: int) -> bool:
 	_player.global_position = candidate.get("center", Vector2.ZERO)
 	_process(0.0)
 	return _require(_main._material_runtime.held_count() == expected_held, "material %s did not enter held cargo" % str(candidate.get("id", "")))
-
-
-func _transition(connector_id: String, expected_map_id: String) -> bool:
-	var connector := _connector_by_id(connector_id)
-	if not _require(not connector.is_empty(), "missing connector %s on %s" % [connector_id, _world.map_id]):
-		return false
-	_player.global_position = connector["center"]
-	if not _require(_main._try_world_connector_transition(), "connector %s did not transition" % connector_id):
-		return false
-	_prepare_current_map()
-	return _require(_world.map_id == expected_map_id, "connector %s loaded %s expected %s" % [connector_id, _world.map_id, expected_map_id])
-
-
-func _connector_by_id(connector_id: String) -> Dictionary:
-	for connector in _world.get_world_connectors():
-		if str(connector.get("id", "")) == connector_id:
-			return connector
-	return {}
 
 
 func _tool_target() -> Dictionary:

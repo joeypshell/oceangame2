@@ -20,7 +20,7 @@ func _smoke_pass_26_result_presentation_and_quit() -> void:
 		PackedStringArray([
 			"Expedition complete",
 			"Objective: Relay trail complete",
-			"Next dive: Investigate lower-left relay",
+			"Next dive: Investigate east current",
 			"Route: Deep route",
 			"Score ",
 			"Salvage score ",
@@ -113,7 +113,7 @@ func _prepare_final_dive_destination() -> void:
 	if connector.is_empty():
 		_fail("did not find connector %s" % CONNECTOR_ID)
 		return
-	if not _prepare_propulsion_fins():
+	if not _prepare_profile_capability("current_stabilizer"):
 		return
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false

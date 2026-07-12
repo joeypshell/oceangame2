@@ -41,7 +41,7 @@ func _smoke_pass_21_world_connector_and_quit() -> void:
 	_main._session_progression.purchase_oxygen_tank_upgrade()
 	_main._session_progression.purchase_cargo_capacity_upgrade()
 	_main._session_progression.purchase_light_upgrade()
-	if not _prepare_propulsion_fins():
+	if not _prepare_propulsion_fins() or not _prepare_profile_capability("current_stabilizer"):
 		return
 	var wallet_before := _session_wallet()
 
@@ -157,7 +157,7 @@ func _smoke_pass_22_destination_payoff_and_quit() -> void:
 
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
-	if not _prepare_propulsion_fins():
+	if not _prepare_propulsion_fins() or not _prepare_profile_capability("current_stabilizer"):
 		return
 	_player.global_position = connector["center"]
 	_update_status_label()
@@ -267,7 +267,7 @@ func _smoke_pass_24_relay_follow_through_and_quit() -> void:
 
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
-	if not _prepare_propulsion_fins():
+	if not _prepare_propulsion_fins() or not _prepare_profile_capability("current_stabilizer"):
 		return
 	_player.global_position = connector["center"]
 	_update_status_label()

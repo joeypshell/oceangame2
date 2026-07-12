@@ -67,6 +67,8 @@ knowledge + base materials + special component = changed capability
 ### Stable Geography And Controlled Variation
 
 - Geography, collision, landmarks, gates, habitats, and important promises remain source-authored and learnable.
+- The main explorable world is contiguous authored geography by default. Separate loaded maps are exceptions for explicit interiors or exceptional destinations, not the normal capability-gate chain.
+- Standard currents are passive traversal gates: blocked by flow before the capability, crossed through normal swimming after it. `E`/ACT is reserved for explicit entrances and interactions.
 - Daily seeds may select among authored resource, wildlife, patrol, visibility, current, and rare-signal candidates.
 - Required progression cannot depend on arbitrary coordinates or an unlucky seed.
 - Validators must prove guaranteed prerequisites, legal placement, reachability, and non-circular dependencies.
@@ -87,7 +89,7 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 07's bounded implementation/review batch and focused #815 correction are complete in current source. Only merged-build verification and player closeout #799 remain; do not commit Expansion 08 work before that player gate returns GO.
+Expansion 07's bounded implementation and corrections through #829 are complete in current source. The passive east-current journey must be deployed and reviewed through #799; do not commit Expansion 08 work before that player gate returns GO.
 
 ### Directional
 

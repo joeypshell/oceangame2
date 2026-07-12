@@ -1,8 +1,8 @@
 extends "res://scripts/main/smoke/smoke_check_base.gd"
 
 const EXPECTED_PROMPT_ID := "deep_cache_next_dive_prompt"
-const EXPECTED_LABEL := "Next dive: Investigate lower-left relay"
-const EXPECTED_TARGET_ID := "lower_left_loop_connector"
+const EXPECTED_LABEL := "Next dive: Investigate east current"
+const EXPECTED_TARGET_ID := "upper_right_current_pocket_gate"
 const EXPECTED_TRIGGER := "primary_objective_complete"
 
 

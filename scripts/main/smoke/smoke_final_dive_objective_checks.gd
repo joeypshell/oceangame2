@@ -27,7 +27,7 @@ func _smoke_pass_25_final_dive_objective_and_quit() -> void:
 
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
-	if not _prepare_propulsion_fins():
+	if not _prepare_profile_capability("current_stabilizer"):
 		return
 	_player.global_position = connector["center"]
 	if not _main._try_world_connector_transition():

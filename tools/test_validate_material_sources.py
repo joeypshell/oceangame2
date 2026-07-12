@@ -82,7 +82,7 @@ def valid_map() -> dict:
 def with_stabilizer_project(map_data: dict) -> dict:
     map_data["zones"].append(
         {
-            "id": "upper_right_current_pocket_gate",
+            "id": "lower_left_loop_current",
             "type": "marker",
             "x": 9,
             "y": 3,
@@ -101,7 +101,7 @@ def with_stabilizer_project(map_data: dict) -> dict:
             "required_discovery_id": "lower_right_anomaly_discovery",
             "required_materials": {"titanium_scrap": 2, "conductive_coil": 1},
             "unlocks_capability_id": "current_stabilizer",
-            "target_gate_id": "upper_right_current_pocket_gate",
+            "target_gate_id": "lower_left_loop_current",
             "build_phase": "night_debrief",
         }
     )
@@ -125,7 +125,7 @@ def with_propulsion_project(map_data: dict) -> dict:
     )
     map_data["zones"].append(
         {
-            "id": "lower_left_loop_current",
+            "id": "upper_right_current_pocket_gate",
             "type": "marker",
             "x": 9,
             "y": 3,
@@ -144,7 +144,7 @@ def with_propulsion_project(map_data: dict) -> dict:
             "required_discovery_id": "propulsion_fins_blueprint",
             "required_materials": {"titanium_scrap": 2, "rubber_sheet": 1},
             "unlocks_capability_id": "propulsion_fins",
-            "target_gate_id": "lower_left_loop_current",
+            "target_gate_id": "upper_right_current_pocket_gate",
             "build_phase": "night_debrief",
             "project_label": "Propulsion fins project",
             "completion_label": "Propulsion fins built",
@@ -164,7 +164,7 @@ def with_shock_prod_project(map_data: dict) -> dict:
     map_data["material_projects"].append(
         {
             "id": "shock_prod_project",
-            "required_project_id": "current_stabilizer_project",
+            "required_project_id": "salvage_cutter_project",
             "required_discovery_id": "lower_right_anomaly_discovery",
             "required_materials": {"titanium_scrap": 2, "conductive_coil": 1},
             "unlocks_capability_id": "shock_prod",

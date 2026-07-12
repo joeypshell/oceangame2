@@ -15,3 +15,4 @@ const SCANNER_CAPABILITY_ID := "survey_scanner_1"
 const SCANNER_COST := 300
 const SCANNER_PURCHASE_MAP_ID := "production_slice_01"
 const SCANNER_PURCHASE_ENTRY_ID := "surface_boat_entry"
+const SCANNER_LEAD_SOURCE_ID := "salvage_current_pocket_cache"

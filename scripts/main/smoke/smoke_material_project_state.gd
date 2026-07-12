@@ -33,7 +33,7 @@ func _run() -> void:
 	var source_report: Dictionary = runtime.on_map_loaded(world)
 	_expect(source_report.get("project_id") == ExpansionProfileState.PROPULSION_FINS_PROJECT_ID and source_report.get("project_count") == 5, "fins were not the first source project")
 	_expect(runtime.status() == "knowledge_required", "fresh fins project did not require its recovered blueprint")
-	_expect(runtime.debrief_lines() == ["Propulsion fins project: recovered blueprint required", "Access: lower-left relay current"], "fins blueprint or access text drifted")
+	_expect(runtime.debrief_lines() == ["Propulsion fins project: recovered blueprint required", "Access: east current pocket | Swim through"], "fins blueprint or access text drifted")
 	var direct_fins: Dictionary = profile.unlock_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID, false)
 	_expect(direct_fins.get("reason") == "project_transaction_required", "fins unlocked outside project transaction")
 	var missing_fins_blueprint: Dictionary = runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
@@ -54,7 +54,7 @@ func _run() -> void:
 	_expect(profile.material_inventory().is_empty(), "fins did not consume the exact Ti2 + Rubber1 recipe")
 	_expect(profile.has_completed_project(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID), "completed fins project was not recorded")
 	_expect(profile.has_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID), "fins capability was not unlocked")
-	_expect(runtime.debrief_lines() == ["Fins installed - relay unlocked", "Access: lower-left relay current"], "completed fins debrief text drifted")
+	_expect(runtime.debrief_lines() == ["Fins installed - east current passable", "Access: east current pocket | Swim through"], "completed fins debrief text drifted")
 	var fins_repeated: Dictionary = runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
 	_expect(fins_repeated.get("reason") == "already_completed" and profile.material_inventory().is_empty(), "repeat fins build was not idempotent")
 
@@ -125,25 +125,22 @@ func _run() -> void:
 
 
 func _test_shock_prod_project(profile, world) -> void:
-	var stabilizer_runtime := MaterialProjectRuntime.new(profile)
-	stabilizer_runtime.on_map_loaded(world)
-	_expect(stabilizer_runtime.project_definition().get("id") == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID, "stabilizer was not the next ordered project")
-	profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 2, ExpansionProfileState.COIL_MATERIAL_ID: 1}, true)
-	var stabilizer_result: Dictionary = stabilizer_runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
-	_expect(bool(stabilizer_result.get("changed", false)), "stabilizer prerequisite project did not complete")
+	var shock_runtime := MaterialProjectRuntime.new(profile)
+	shock_runtime.on_map_loaded(world)
+	_expect(shock_runtime.project_definition().get("id") == ExpansionProfileState.SHOCK_PROD_PROJECT_ID, "shock prod was not next after cutter")
 	var direct_unlock: Dictionary = profile.unlock_capability(ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID, false)
 	_expect(direct_unlock.get("reason") == "project_transaction_required", "shock prod unlocked outside project transaction")
 	profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 2, ExpansionProfileState.COIL_MATERIAL_ID: 1}, true)
 	var shock_definition := {
 		"id": ExpansionProfileState.SHOCK_PROD_PROJECT_ID,
-		"required_project_id": ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID,
+		"required_project_id": ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID,
 		"required_discovery_id": ExpansionProfileState.ANOMALY_DISCOVERY_ID,
 		"required_materials": {ExpansionProfileState.TITANIUM_MATERIAL_ID: 2, ExpansionProfileState.COIL_MATERIAL_ID: 1},
 		"unlocks_capability_id": ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID,
 		"target_hostile_id": ExpansionProfileState.SHOCK_PROD_TARGET_ID,
 		"build_phase": "night_debrief",
 	}
-	var shock_result: Dictionary = profile.complete_material_project(shock_definition, true)
+	var shock_result: Dictionary = shock_runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
 	_expect(bool(shock_result.get("changed", false)), "non-enemy shock prod project did not complete")
 	_expect(profile.has_capability(ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID), "shock prod capability was not unlocked")
 	_expect(profile.material_inventory().is_empty(), "shock prod recipe did not consume exact materials")

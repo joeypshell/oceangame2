@@ -51,7 +51,7 @@ PROJECT_RULES = {
     "shock_prod_project": {
         "capability_id": "shock_prod",
         "required_discovery_id": "lower_right_anomaly_discovery",
-        "required_project_id": "current_stabilizer_project",
+        "required_project_id": "salvage_cutter_project",
         "target_field": "target_hostile_id",
         "hostile_required_capability_id": "shock_prod",
     },

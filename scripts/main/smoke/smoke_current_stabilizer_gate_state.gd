@@ -5,8 +5,8 @@ const CurrentGateController := preload("res://scripts/main/current_gate_controll
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const TEST_PATH := "user://oceangame2_current_stabilizer_gate_test.json"
 const SLICE_01 := "res://maps/production_slice_01.greybox.json"
-const LEGACY_GATE_ID := "lower_left_loop_current"
-const DURABLE_GATE_ID := "upper_right_current_pocket_gate"
+const STANDARD_GATE_ID := "upper_right_current_pocket_gate"
+const ADVANCED_GATE_ID := "lower_left_loop_current"
 
 var _failures: Array[String] = []
 
@@ -21,19 +21,19 @@ func _run() -> void:
 	world.map_path = SLICE_01
 	get_root().add_child(world)
 	world.load_greybox()
-	var legacy_gate := _gate_by_id(world, LEGACY_GATE_ID)
-	var durable_gate := _gate_by_id(world, DURABLE_GATE_ID)
-	_expect(not legacy_gate.is_empty(), "propulsion capability gate missing")
-	_expect(not durable_gate.is_empty(), "durable capability gate missing")
-	_expect(str(legacy_gate.get("required_capability_id", "")) == ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID, "propulsion gate requirement drifted")
-	_expect(str(durable_gate.get("required_capability_id", "")) == ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID, "durable gate requirement drifted")
+	var standard_gate := _gate_by_id(world, STANDARD_GATE_ID)
+	var advanced_gate := _gate_by_id(world, ADVANCED_GATE_ID)
+	_expect(not standard_gate.is_empty(), "standard propulsion gate missing")
+	_expect(not advanced_gate.is_empty(), "advanced current gate missing")
+	_expect(str(standard_gate.get("required_capability_id", "")) == ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID, "standard gate requirement drifted")
+	_expect(str(advanced_gate.get("required_capability_id", "")) == ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID, "advanced gate requirement drifted")
 
 	var profile := ExpansionProfileState.new(TEST_PATH)
 	profile.load_profile()
 	var controller := CurrentGateController.new()
 	var player := Node2D.new()
 	get_root().add_child(player)
-	player.global_position = durable_gate["center"]
+	player.global_position = advanced_gate["center"]
 	var durable_x_before: float = player.global_position.x
 	var blocked: Dictionary = controller.update(
 		world,
@@ -44,14 +44,14 @@ func _run() -> void:
 	)
 	_expect(bool(blocked.get("blocked", false)), "durable gate allowed passage before capability")
 	_expect(str(blocked.get("requirement_kind", "")) == "capability", "durable gate did not resolve capability owner")
-	_expect(player.global_position.x < durable_x_before - 1.0, "durable gate did not apply authored left pushback")
-	_expect(controller.current_prompt() == "Ripping current - need current stabilizer | propulsion fins do not work here", "durable gate prompt drifted")
+	_expect(player.global_position.x > durable_x_before + 1.0, "advanced gate did not apply authored right pushback")
+	_expect(controller.current_prompt() == "Ripping relay current - need current stabilizer | advanced current", "advanced gate prompt drifted")
 	player.global_position = world.spawn_position
 	controller.update(world, player, Callable(self, "_has_no_upgrade"), Callable(profile, "has_capability"), 0.5)
 	_expect(not controller.current_prompt().is_empty(), "current rejection disappeared immediately after pushback")
 	controller.update(world, player, Callable(self, "_has_no_upgrade"), Callable(profile, "has_capability"), 1.1)
 	_expect(controller.current_prompt().is_empty(), "current rejection did not clear after its readability hold")
-	player.global_position = legacy_gate["center"]
+	player.global_position = standard_gate["center"]
 	var propulsion_blocked: Dictionary = controller.update(
 		world,
 		player,
@@ -63,7 +63,7 @@ func _run() -> void:
 
 	_build_projects(world, profile)
 	controller.reset()
-	player.global_position = durable_gate["center"]
+	player.global_position = advanced_gate["center"]
 	var unlocked: Dictionary = controller.update(
 		world,
 		player,
@@ -72,10 +72,10 @@ func _run() -> void:
 		0.25
 	)
 	_expect(bool(unlocked.get("inside", false)) and not bool(unlocked.get("blocked", true)), "durable gate stayed blocked after stabilizer")
-	_expect(player.global_position == durable_gate["center"], "unlocked durable gate still moved player")
+	_expect(player.global_position == advanced_gate["center"], "unlocked advanced gate still moved player")
 	_expect(profile.has_capability(ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID), "controller reset removed durable capability")
 
-	player.global_position = legacy_gate["center"]
+	player.global_position = standard_gate["center"]
 	var propulsion_unlocked: Dictionary = controller.update(
 		world,
 		player,
@@ -88,7 +88,7 @@ func _run() -> void:
 	var reloaded := ExpansionProfileState.new(TEST_PATH)
 	var reload_report: Dictionary = reloaded.load_profile()
 	_expect(reload_report.get("status") == "loaded", "stabilizer profile did not reload")
-	player.global_position = durable_gate["center"]
+	player.global_position = advanced_gate["center"]
 	var after_reload: Dictionary = CurrentGateController.new().update(
 		world,
 		player,
@@ -106,7 +106,7 @@ func _run() -> void:
 			push_error("Current stabilizer gate state smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Current stabilizer gate state smoke passed: propulsion=profile_recipe current_stabilizer=profile_project blocked_push=left prompt_hold=true reset_persistent=true reload_persistent=true.")
+	print("Current stabilizer gate state smoke passed: standard_gate=propulsion_fins advanced_gate=current_stabilizer blocked_push=authored passive_after_unlock=true prompt_hold=true reset_persistent=true reload_persistent=true.")
 	quit(0)
 
 

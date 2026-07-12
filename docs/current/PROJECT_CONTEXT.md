@@ -323,7 +323,7 @@ Current issue state as of 2026-07-10:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_07_PLAYER_GATE_CORRECTION.md` as the current correction contract. Expansions 01-06 are complete with GO decisions; #827 makes blueprint acquisition and the actual fins relay explicit, then Expansion 07 returns to #799 player closeout. Do not begin Expansion 08 yet.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_07_PLAYER_GATE_CORRECTION.md` as the current correction contract. Expansions 01-06 are complete with GO decisions; #829 replaces the mistaken fins relay with passive east-current traversal and same-map scanner progression, then Expansion 07 returns to #799 player closeout. Do not begin Expansion 08 yet.
 
 Accepted constraints for next work:
 
@@ -331,8 +331,9 @@ Accepted constraints for next work:
 - Preserve `maps/full_cave_sketch_01.greybox.json` as a topology draft and planning source.
 - Do not move the entire full sketch into production yet; grow route scale only when it supports the roadmap.
 - Keep map topology, collision, spawn, extraction, and camera tests source-driven.
-- Preserve the Expansion 01 scanner, slice-02 anomaly, returned discovery, and source-authored slice-04/slice-02 travel.
-- Preserve daylight, surface oxygen, repeated sorties, boat return, night transition, seeded material ownership, canonical-boat commitment, and the durable cutter/stabilizer loops.
+- Preserve the scanner, same-map east-pocket anomaly, returned discovery, and optional source-authored connector travel.
+- Preserve daylight, surface oxygen, repeated sorties, boat return, night transition, seeded material ownership, canonical-boat commitment, the mandatory fins/cutter/weapon chain, and optional advanced stabilizer.
+- Keep standard capability gates inside contiguous authored geography and traversable through movement; reserve `E` connectors for explicit exceptional entrances/interiors.
 - Preserve the completed mineral research, fresh-day selection, and broad habitat-lead behavior as the practical-knowledge regression surface.
 - Preserve separate health, the source-authored eel territory, viable unarmed evasion, non-circular shock-prod project, day-local defeat, and no-reward combat semantics.
 - Night consumes no Food, Water, Power, or other survival tax.

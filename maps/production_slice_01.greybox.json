@@ -144,18 +144,85 @@
           "y": 77
         }
       ],
+      "issue_829_current_pocket_opened_cells": [
+        {
+          "x": 67,
+          "y": 43
+        },
+        {
+          "x": 67,
+          "y": 44
+        },
+        {
+          "x": 67,
+          "y": 45
+        },
+        {
+          "x": 67,
+          "y": 46
+        },
+        {
+          "x": 68,
+          "y": 43
+        },
+        {
+          "x": 68,
+          "y": 44
+        },
+        {
+          "x": 68,
+          "y": 45
+        },
+        {
+          "x": 68,
+          "y": 46
+        },
+        {
+          "x": 69,
+          "y": 43
+        },
+        {
+          "x": 69,
+          "y": 44
+        },
+        {
+          "x": 69,
+          "y": 45
+        },
+        {
+          "x": 69,
+          "y": 46
+        },
+        {
+          "x": 70,
+          "y": 43
+        },
+        {
+          "x": 70,
+          "y": 44
+        },
+        {
+          "x": 70,
+          "y": 45
+        },
+        {
+          "x": 70,
+          "y": 46
+        }
+      ],
       "notes": [
         "The top edge remains open around the source's water-surface shaft for boat entry.",
         "Left, right, and bottom crop edges are sealed so the player cannot leave the focused slice.",
         "Unreachable open pockets from the high-fidelity sketch conversion are filled as solid terrain.",
         "Targeted cleanup removes isolated one-cell solid tips and fills one-cell open notches visible in the production-slice source/render review.",
         "Pass 08 opens a tiny alcove in the southwest return pocket without changing the main lower-loop or deep-cache route.",
+        "Issue 829 opens a compact east-current chamber so its cache, surveys, and biological sample do not overlap.",
         "The original full sketch map is left untouched for comparison."
       ]
     },
     "stats": {
       "cropped_solid_cells_before_cleanup": 3228,
-      "solid_cells_after_cleanup": 3333
+      "solid_cells_after_cleanup": 3317
     }
   },
   "units": {
@@ -1269,11 +1336,19 @@
       "h": 1
     },
     {
-      "id": "solid_y43_x40_71",
+      "id": "solid_y43_x40_66",
       "type": "solid",
       "x": 40,
       "y": 43,
-      "w": 32,
+      "w": 27,
+      "h": 1
+    },
+    {
+      "id": "solid_y43_x71_71",
+      "type": "solid",
+      "x": 71,
+      "y": 43,
+      "w": 1,
       "h": 1
     },
     {
@@ -1293,11 +1368,19 @@
       "h": 1
     },
     {
-      "id": "solid_y44_x40_71",
+      "id": "solid_y44_x40_66",
       "type": "solid",
       "x": 40,
       "y": 44,
-      "w": 32,
+      "w": 27,
+      "h": 1
+    },
+    {
+      "id": "solid_y44_x71_71",
+      "type": "solid",
+      "x": 71,
+      "y": 44,
+      "w": 1,
       "h": 1
     },
     {
@@ -1309,11 +1392,19 @@
       "h": 1
     },
     {
-      "id": "solid_y45_x39_71",
+      "id": "solid_y45_x39_66",
       "type": "solid",
       "x": 39,
       "y": 45,
-      "w": 33,
+      "w": 28,
+      "h": 1
+    },
+    {
+      "id": "solid_y45_x71_71",
+      "type": "solid",
+      "x": 71,
+      "y": 45,
+      "w": 1,
       "h": 1
     },
     {
@@ -1325,11 +1416,19 @@
       "h": 1
     },
     {
-      "id": "solid_y46_x38_71",
+      "id": "solid_y46_x38_66",
       "type": "solid",
       "x": 38,
       "y": 46,
-      "w": 34,
+      "w": 29,
+      "h": 1
+    },
+    {
+      "id": "solid_y46_x71_71",
+      "type": "solid",
+      "x": 71,
+      "y": 46,
+      "w": 1,
       "h": 1
     },
     {
@@ -2319,7 +2418,7 @@
       "destination_map_path": "res://maps/production_slice_04.greybox.json",
       "destination_entry_id": "relay_sub_entry",
       "connector_direction": "forward",
-      "intent": "Visible relay connector from the default boat hub toward the lower-left loop reference slice."
+      "intent": "Optional advanced-current entrance; not part of the fins, scanner, or weapon progression chain."
     },
     {
       "id": "lower_left_loop_current",
@@ -2330,12 +2429,12 @@
       "h": 4,
       "current_gate": true,
       "current_direction": "right",
-      "current_strength": 2.2,
-      "required_capability_id": "propulsion_fins",
-      "current_gate_label": "Lower-left relay current",
+      "current_strength": 3.2,
+      "required_capability_id": "current_stabilizer",
+      "current_gate_label": "Ripping relay current",
       "current_affordance_role": "relay",
       "route_context": "lower_left_loop",
-      "intent": "Visible relay current blocked until recipe-built propulsion fins are owned."
+      "intent": "Optional advanced current guarding the separate lower-left relay entrance."
     },
     {
       "id": "upper_right_current_pocket_gate",
@@ -2347,11 +2446,11 @@
       "current_gate": true,
       "current_direction": "left",
       "current_strength": 2.2,
-      "required_capability_id": "current_stabilizer",
-      "current_gate_label": "Ripping current",
+      "required_capability_id": "propulsion_fins",
+      "current_gate_label": "Strong east current",
       "current_affordance_role": "barrier",
       "route_context": "upper_right_current_pocket",
-      "intent": "Expansion 04 optional current boundary across the east pocket of the existing upper-right wreck room."
+      "intent": "First standard current boundary; recipe-built propulsion fins allow normal swim-through traversal."
     },
     {
       "id": "deep_cache_first_step_cue",
@@ -2511,7 +2610,7 @@
       "source_role": "passive_sample",
       "organism_kind": "glow_anemone",
       "x": 68,
-      "y": 41,
+      "y": 46,
       "required_capability_id": "survey_scanner_1",
       "interaction": "timed_sample",
       "interaction_seconds": 1.5,
@@ -2567,18 +2666,36 @@
       "id": "deep_cache_next_dive_prompt",
       "trigger": "primary_objective_complete",
       "objective_id": "deep_cache_route_objective",
-      "target_id": "lower_left_loop_connector",
-      "label": "Next dive: Investigate lower-left relay",
-      "route_context": "lower_left_loop",
-      "intent": "Result prompt pointing the next dive toward the lower-left relay after the relay-trail objective."
+      "target_id": "upper_right_current_pocket_gate",
+      "label": "Next dive: Investigate east current",
+      "route_context": "upper_right_current_pocket",
+      "intent": "Result prompt pointing the next dive toward the standard current crossed passively with propulsion fins."
     }
   ],
   "survey_targets": [
     {
+      "id": "lower_right_anomaly_survey",
+      "target_type": "anomaly",
+      "x": 67,
+      "y": 43,
+      "w": 2,
+      "h": 2,
+      "required_capability_id": "survey_scanner_1",
+      "interaction": "survey",
+      "interaction_seconds": 3.0,
+      "interaction_label": "Survey anomaly",
+      "discovery_id": "lower_right_anomaly_discovery",
+      "route_context": "upper_right_current_pocket",
+      "commit_map_id": "production_slice_01",
+      "commit_map_path": "res://maps/production_slice_01.greybox.json",
+      "commit_entry_id": "surface_boat_entry",
+      "intent": "Main anomaly survey moved into the contiguous east current pocket for the scanner journey."
+    },
+    {
       "id": "upper_right_mineral_trace_survey",
       "target_type": "resource",
       "x": 69,
-      "y": 41,
+      "y": 43,
       "w": 2,
       "h": 2,
       "required_capability_id": "survey_scanner_1",
@@ -2644,10 +2761,10 @@
         "rubber_sheet": 1
       },
       "unlocks_capability_id": "propulsion_fins",
-      "target_gate_id": "lower_left_loop_current",
+      "target_gate_id": "upper_right_current_pocket_gate",
       "build_phase": "night_debrief",
       "project_label": "Propulsion fins project",
-      "completion_label": "Fins installed - relay unlocked"
+      "completion_label": "Fins installed - east current passable"
     },
     {
       "id": "salvage_cutter_project",
@@ -2661,20 +2778,8 @@
       "build_phase": "night_debrief"
     },
     {
-      "id": "current_stabilizer_project",
-      "required_project_id": "salvage_cutter_project",
-      "required_discovery_id": "lower_right_anomaly_discovery",
-      "required_materials": {
-        "titanium_scrap": 2,
-        "conductive_coil": 1
-      },
-      "unlocks_capability_id": "current_stabilizer",
-      "target_gate_id": "upper_right_current_pocket_gate",
-      "build_phase": "night_debrief"
-    },
-    {
       "id": "shock_prod_project",
-      "required_project_id": "current_stabilizer_project",
+      "required_project_id": "salvage_cutter_project",
       "required_discovery_id": "lower_right_anomaly_discovery",
       "required_materials": {
         "titanium_scrap": 2,
@@ -2701,6 +2806,18 @@
       "build_phase": "night_debrief",
       "project_label": "Shock-prod capacitor project",
       "completion_label": "Shock-prod capacitor built"
+    },
+    {
+      "id": "current_stabilizer_project",
+      "required_project_id": "salvage_cutter_project",
+      "required_discovery_id": "lower_right_anomaly_discovery",
+      "required_materials": {
+        "titanium_scrap": 2,
+        "conductive_coil": 1
+      },
+      "unlocks_capability_id": "current_stabilizer",
+      "target_gate_id": "lower_left_loop_current",
+      "build_phase": "night_debrief"
     }
   ],
   "background": [
@@ -2979,9 +3096,9 @@
       "y": 40,
       "kind": "relic",
       "tier": "valuable",
-      "validation_route": "current_stabilizer_payoff",
+      "validation_route": "propulsion_fins_payoff",
       "route_context": "upper_right_current_pocket",
-      "intent": "Expansion 04 visible valuable payoff behind the durable current-stabilizer gate."
+      "intent": "Visible valuable scanner-funding payoff behind the first propulsion-fins current gate."
     }
   ],
   "camera_tests": [

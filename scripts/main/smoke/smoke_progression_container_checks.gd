@@ -5,15 +5,12 @@ const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd"
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 
 const CHEST_ID := "lower_loop_upgrade_chest"
-const RELAY_GATE_ID := "lower_left_loop_current"
-const EAST_GATE_ID := "upper_right_current_pocket_gate"
+const FINS_GATE_ID := "upper_right_current_pocket_gate"
+const ADVANCED_GATE_ID := "lower_left_loop_current"
 const RELAY_CONNECTOR_ID := "lower_left_loop_connector"
-const RETURN_CONNECTOR_ID := "return_to_boat_hub_connector"
-const PAYOFF_ID := "slice_04_destination_cache"
+const PAYOFF_ID := "salvage_current_pocket_cache"
 const BLUEPRINT_NOTICE := "Blueprint recovered: Propulsion fins"
 const BLUEPRINT_PROMPT := "E: Recover propulsion fins blueprint"
-const RELAY_PROMPT := "E: Enter Lower-left relay"
-const EAST_FINS_REJECTION := "propulsion fins do not work here"
 const PLAYER_SWIM_SPEED := 200.0
 
 var _movement_frames := 0
@@ -90,60 +87,38 @@ func _smoke_upgrade_chest_and_quit() -> void:
 		return
 	if not _require(_session_wallet() == wallet_before_build, "fins build changed wallet %d -> %d" % [wallet_before_build, _session_wallet()]):
 		return
-	if not _require(_main._last_status_note.find("Fins installed - relay unlocked") != -1, "night build did not confirm fins installation: %s" % _main._last_status_note):
+	if not _require(_main._last_status_note.find("Fins installed - east current passable") != -1, "night build did not confirm fins installation: %s" % _main._last_status_note):
 		return
 	_press_key(KEY_N)
 	_prepare_current_map()
 	if not _require(_main._expedition_day_state.phase == ExpeditionDayState.PHASE_ACTIVE, "N did not begin the post-build day"):
 		return
-	if not _verify_east_gate_rejects_fins():
+	if not _verify_fins_gate_passive():
 		return
-
-	var connector := _connector_by_id(RELAY_CONNECTOR_ID)
-	if not _require(not connector.is_empty(), "missing relay connector %s" % RELAY_CONNECTOR_ID):
-		return
-	var relay_start_frames := _movement_frames
-	if not _move_to(connector["center"], "visible lower-left relay"):
-		return
+	_player.global_position = _world.get_extraction_center()
 	_process(0.0)
-	if not _require(_movement_frames > relay_start_frames, "relay proof did not use controller movement"):
-		return
-	if not _require(str(_world.get_world_connector_at(_player.global_position).get("id", "")) == RELAY_CONNECTOR_ID, "rendered relay route ended outside actionable connector bounds"):
-		return
-	if not _require(_status_text().find(RELAY_PROMPT) != -1, "post-fins relay did not show E prompt: %s" % _status_text()):
-		return
-	_press_key(KEY_E)
-	_prepare_current_map()
-	if not _require(_world.map_id == "production_slice_04", "E at relay loaded %s" % _world.map_id):
-		return
 	var wallet_before_payoff := _session_wallet()
 
 	var payoff := _salvage_by_id(PAYOFF_ID)
-	if not _require(not payoff.is_empty(), "missing relay payoff %s" % PAYOFF_ID):
+	if not _require(not payoff.is_empty(), "missing same-map fins payoff %s" % PAYOFF_ID):
 		return
-	if not _move_to(payoff["center"], "relay payoff"):
+	_player.global_position = payoff["center"]
+	if not _require(_world.map_id == "production_slice_01", "fins journey changed maps before its payoff"):
 		return
-	if not _require(_collect_salvage_for_smoke(payoff), "relay payoff did not collect"):
+	if not _require(_collect_salvage_for_smoke(payoff), "same-map fins payoff did not collect: held=%d capacity=%d collected=%s status=%s" % [
+		_main._held_cargo_count(),
+		_main._held_salvage_capacity(),
+		str(_world.is_salvage_collected(PAYOFF_ID)),
+		_status_text(),
+	]):
 		return
-	if not _move_to(_world.get_extraction_center(), "relay extraction"):
-		return
+	_player.global_position = _world.get_extraction_center()
 	_process(0.0)
-	if not _require(bool(_main._anomaly_survey.report().get("lead_available", false)), "banked relay payoff did not activate scanner lead"):
+	if not _require(bool(_main._anomaly_survey.report().get("lead_available", false)), "banked current-pocket payoff did not activate scanner lead"):
 		return
-	if not _require(_session_wallet() == wallet_before_payoff + AnomalySurveyRuntime.SCANNER_COST, "relay payoff delta=%d expected=%d" % [_session_wallet() - wallet_before_payoff, AnomalySurveyRuntime.SCANNER_COST]):
+	if not _require(_session_wallet() == wallet_before_payoff + AnomalySurveyRuntime.SCANNER_COST, "current-pocket payoff delta=%d expected=%d" % [_session_wallet() - wallet_before_payoff, AnomalySurveyRuntime.SCANNER_COST]):
 		return
-
-	var return_connector := _connector_by_id(RETURN_CONNECTOR_ID)
-	if not _require(not return_connector.is_empty(), "missing relay return connector"):
-		return
-	if not _move_to(return_connector["center"], "relay return"):
-		return
-	_process(0.0)
-	if not _require(_status_text().find("E: Enter") != -1, "relay return did not show E prompt"):
-		return
-	_press_key(KEY_E)
-	_prepare_current_map()
-	if not _require(_world.map_id == "production_slice_01" and _world.is_inside_boat(_player.global_position), "relay return did not arrive at canonical boat"):
+	if not _require(_world.map_id == "production_slice_01" and _world.is_inside_boat(_player.global_position), "payoff return did not remain at canonical boat"):
 		return
 	var scanner_status := _status_text()
 	if not _require(scanner_status.find("Q: Scanner (%d)" % AnomalySurveyRuntime.SCANNER_COST) != -1, "scanner was not the next action: %s" % scanner_status):
@@ -151,12 +126,11 @@ func _smoke_upgrade_chest_and_quit() -> void:
 	if not _require(scanner_status.find("Shock prod locked") == -1, "scanner-next HUD still advertised shock prod: %s" % scanner_status):
 		return
 	_press_key(KEY_Q)
-	if not _require(_main._anomaly_survey.has_scanner() and _session_wallet() == wallet_before_payoff, "Q did not spend exactly the guaranteed relay payoff"):
+	if not _require(_main._anomaly_survey.has_scanner() and _session_wallet() == wallet_before_payoff, "Q did not spend exactly the guaranteed current-pocket payoff"):
 		return
 
-	print("Blueprint fins journey smoke passed: blueprint=%s explicit_e=true proximity_auto_open=false daytime_build=false recipe=ti2+rubber1 tracker=banked_vs_held east_fins_rejected=true relay_prompt=%s controller_frames=%d payoff=%s scanner_next=true shock_prod_suppressed=true." % [
+	print("Blueprint fins journey smoke passed: blueprint=%s explicit_e=true proximity_auto_open=false daytime_build=false recipe=ti2+rubber1 tracker=banked_vs_held passive_current=true e_required=false same_map=true controller_frames=%d payoff=%s scanner_next=true shock_prod_suppressed=true." % [
 		ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID,
-		RELAY_PROMPT,
 		_movement_frames,
 		PAYOFF_ID,
 	])
@@ -238,43 +212,49 @@ func _move_to(target: Vector2, label: String) -> bool:
 
 
 func _verify_distinct_current_sources() -> bool:
-	var relay_gate := _gate_by_id(RELAY_GATE_ID)
-	var east_gate := _gate_by_id(EAST_GATE_ID)
+	var fins_gate := _gate_by_id(FINS_GATE_ID)
+	var advanced_gate := _gate_by_id(ADVANCED_GATE_ID)
 	var connector := _connector_by_id(RELAY_CONNECTOR_ID)
-	if not _require(not relay_gate.is_empty() and not east_gate.is_empty() and not connector.is_empty(), "current/connector source metadata is incomplete"):
+	if not _require(not fins_gate.is_empty() and not advanced_gate.is_empty() and not connector.is_empty(), "current/connector source metadata is incomplete"):
 		return false
-	if not _require(relay_gate["rect"] == connector["rect"], "relay current and connector bounds do not align"):
+	if not _require(advanced_gate["rect"] == connector["rect"], "advanced relay current and connector bounds do not align"):
 		return false
-	if not _require(not east_gate["rect"].intersects(connector["rect"]), "east stabilizer current overlaps fins connector"):
+	if not _require(not fins_gate["rect"].intersects(connector["rect"]), "standard fins current overlaps optional connector"):
 		return false
-	if not _require(_world.get_world_connector_at(east_gate["center"]).is_empty(), "east stabilizer current incorrectly advertises a world connector"):
+	if not _require(_world.get_world_connector_at(fins_gate["center"]).is_empty(), "standard fins current incorrectly advertises a world connector"):
 		return false
-	var relay_affordance := _world.find_child("%sCurrentAffordance" % RELAY_GATE_ID, true, false)
-	var east_affordance := _world.find_child("%sCurrentAffordance" % EAST_GATE_ID, true, false)
-	if not _require(relay_affordance != null and east_affordance != null, "one of the distinct current affordances is missing"):
+	if not _require(str(fins_gate.get("required_capability_id", "")) == ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID, "east current is not owned by fins"):
 		return false
-	if not _require(str(relay_affordance.get_meta("current_affordance_role", "")) == "relay" and str(east_affordance.get_meta("current_affordance_role", "")) == "barrier", "current affordance roles are not source-derived"):
+	if not _require(str(advanced_gate.get("required_capability_id", "")) == ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID, "optional relay is not the advanced current tier"):
 		return false
-	if not _require(relay_affordance.find_child("RelayBeacon", true, false) != null and east_affordance.find_child("RelayBeacon", true, false) == null, "relay beacon does not distinguish the fins current"):
+	var fins_affordance := _world.find_child("%sCurrentAffordance" % FINS_GATE_ID, true, false)
+	var advanced_affordance := _world.find_child("%sCurrentAffordance" % ADVANCED_GATE_ID, true, false)
+	if not _require(fins_affordance != null and advanced_affordance != null, "one of the distinct current affordances is missing"):
 		return false
-	var relay_flow := relay_affordance.find_child("CurrentArrow0Shaft", true, false) as Line2D
-	var east_flow := east_affordance.find_child("CurrentArrow0Shaft", true, false) as Line2D
-	return _require(relay_flow != null and east_flow != null and relay_flow.default_color != east_flow.default_color, "relay and barrier current colors are indistinguishable")
+	return _require(
+		str(fins_affordance.get_meta("current_affordance_role", "")) == "barrier"
+		and str(advanced_affordance.get_meta("current_affordance_role", "")) == "relay",
+		"standard and advanced current roles are not source-derived"
+	)
 
 
-func _verify_east_gate_rejects_fins() -> bool:
-	var east_gate := _gate_by_id(EAST_GATE_ID)
-	if not _move_to(east_gate["center"], "east stabilizer current"):
-		return false
-	_player.global_position = east_gate["center"]
-	_process(0.0)
-	var gate_at_player: Dictionary = _world.get_current_gate_at(_player.global_position)
-	if not _require(_status_text().find(EAST_FINS_REJECTION) != -1, "east current did not explain that fins are invalid at %s gate=%s: %s" % [str(_player.global_position), str(gate_at_player.get("id", "none")), _status_text()]):
-		return false
+func _verify_fins_gate_passive() -> bool:
+	var gate := _gate_by_id(FINS_GATE_ID)
+	var gate_rect: Rect2 = gate["rect"]
+	_player.global_position = Vector2(gate_rect.position.x + 8.0, gate_rect.get_center().y)
+	_player.reset_motion()
 	var map_before := str(_world.map_id)
 	_press_key(KEY_E)
 	_process(0.0)
-	return _require(str(_world.map_id) == map_before and _world.get_world_connector_at(_player.global_position).is_empty(), "E at east stabilizer current triggered a connector")
+	if not _require(str(_world.map_id) == map_before and _world.get_world_connector_at(_player.global_position).is_empty(), "E at standard fins current triggered a connector"):
+		return false
+	var swim_motion := Vector2(gate_rect.size.x + 1.0, 0.0)
+	if not _require(not _player.test_move(_player.global_transform, swim_motion), "player collision envelope cannot traverse the fins current"):
+		return false
+	_player.global_position += swim_motion
+	_movement_frames += 1
+	_process(1.0 / 60.0)
+	return _require(_player.global_position.x > gate_rect.end.x, "fins did not permit passive swim-through traversal")
 
 
 func _verify_tracker(first_fragment: String, second_fragment: String) -> bool:

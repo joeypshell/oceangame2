@@ -11,7 +11,7 @@ def expansion_07_biological_resource_sources() -> list[dict]:
             "source_role": "passive_sample",
             "organism_kind": "glow_anemone",
             "x": 68,
-            "y": 41,
+            "y": 46,
             "required_capability_id": "survey_scanner_1",
             "interaction": "timed_sample",
             "interaction_seconds": 1.5,

@@ -11,13 +11,10 @@ const Expansion06GuardChecks := preload("res://scripts/main/smoke/smoke_expansio
 
 const TEST_PROFILE_PATH := "user://oceangame2_expansion_06_combat_smoke.json"
 const MAP_ID := "production_slice_01"
-const RELAY_MAP_ID := "production_slice_04"
 const HOSTILE_ID := ExpansionProfileState.SHOCK_PROD_TARGET_ID
 const GUARDED_CACHE_ID := "salvage_deep_right_cache"
 const PROJECT_ID := ExpansionProfileState.SHOCK_PROD_PROJECT_ID
 const CAPABILITY_ID := ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID
-const OUTBOUND_CONNECTOR_ID := "lower_left_loop_connector"
-const RETURN_CONNECTOR_ID := "return_to_boat_hub_connector"
 const RECIPE := {
 	ExpansionProfileState.TITANIUM_MATERIAL_ID: 2,
 	ExpansionProfileState.COIL_MATERIAL_ID: 1,
@@ -190,7 +187,7 @@ func _seed_prerequisites_and_recipe(profile) -> bool:
 	var first_project_guidance: String = _main._material_project.shock_prod_guidance()
 	if not _require(first_project_guidance.find("next Cutter project") != -1 and first_project_guidance.find("Ti 0/2") != -1 and first_project_guidance.find("bank at boat, then P at night") != -1, "locked guidance did not expose the current project, exact materials, and debrief action"):
 		return false
-	for project_id in [ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID]:
+	for project_id in [ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID]:
 		if not _require(bool(profile.deposit_materials(RECIPE, false).get("changed", false)), "could not seed non-enemy recipe for %s" % project_id):
 			return false
 		var completed: Dictionary = profile.complete_material_project(_project_by_id(project_id), false)
@@ -251,14 +248,6 @@ func _exercise_armed_fight(profile) -> Dictionary:
 	var banked_after: int = _banked_score
 	if not _require(_held_salvage == 0 and _banked_salvage_ids.has(GUARDED_CACHE_ID) and banked_after > banked_before and _hostile_phase() == "defeated", "guarded cache did not use normal banking or changed defeated state"):
 		return {}
-	_main._session_progression.grant_wallet_reward(1000)
-	if not _require(_prepare_propulsion_fins(), "connector fixture could not unlock propulsion"):
-		return {}
-	if not _transition(OUTBOUND_CONNECTOR_ID, RELAY_MAP_ID) or not _transition(RETURN_CONNECTOR_ID, MAP_ID):
-		return {}
-	if not _require(_hostile_phase() == "defeated" and _main._player_health.current_health == 3, "connector round trip restored the defeated hostile or changed health"):
-		return {}
-
 	_player.global_position = _world.get_extraction_center()
 	if not _require(_main._expedition_day_state.request_end_day("voluntary"), "could not request post-fight day end"):
 		return {}
@@ -351,17 +340,6 @@ func _attach_profile(profile, current_world_loaded: bool) -> void:
 		_main._cutter_salvage.on_map_loaded(_world)
 
 
-func _transition(connector_id: String, expected_map_id: String) -> bool:
-	var connector: Dictionary = _connector_by_id(connector_id)
-	if not _require(not connector.is_empty(), "missing connector %s on %s" % [connector_id, _world.map_id]):
-		return false
-	_player.global_position = connector["center"]
-	if not _require(_main._try_world_connector_transition(), "connector %s did not transition" % connector_id):
-		return false
-	_prepare_current_map()
-	return _require(_world.map_id == expected_map_id, "connector %s loaded %s" % [connector_id, _world.map_id])
-
-
 func _defeat_hostile_direct() -> void:
 	for _hit in range(3):
 		_main._hostiles.apply_weapon_hit(_world, HOSTILE_ID, 1)
@@ -423,13 +401,6 @@ func _first_active_material() -> Dictionary:
 	for candidate in _world.get_material_candidates():
 		if active_ids.has(str(candidate.get("id", ""))):
 			return candidate
-	return {}
-
-
-func _connector_by_id(connector_id: String) -> Dictionary:
-	for connector in _world.get_world_connectors():
-		if str(connector.get("id", "")) == connector_id:
-			return connector
 	return {}
 
 

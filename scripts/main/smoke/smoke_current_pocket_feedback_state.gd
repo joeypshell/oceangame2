@@ -5,8 +5,8 @@ const DestinationPayoffFeedback := preload("res://scripts/main/destination_payof
 const MAP_PATH := "res://maps/production_slice_01.greybox.json"
 const GATE_ID := "upper_right_current_pocket_gate"
 const TARGET_ID := "salvage_current_pocket_cache"
-const PAYOFF_ROUTE := "current_stabilizer_payoff"
-const RETURN_PROMPT := "Stabilizer ready | Return: upper-right current pocket"
+const PAYOFF_ROUTE := "propulsion_fins_payoff"
+const RETURN_PROMPT := "Fins ready | Return: upper-right current pocket"
 
 var _failures: Array[String] = []
 
@@ -40,13 +40,13 @@ func _run() -> void:
 
 	var boat_position: Vector2 = world.get_entry_position("surface_boat_entry")
 	_expect(world.is_inside_boat(boat_position), "return cue fixture is not at the boat")
-	_expect(feedback.return_prompt(world, boat_position, Callable(self, "_has_no_capability"), [], []).is_empty(), "return cue appeared before stabilizer")
-	_expect(feedback.return_prompt(world, boat_position, Callable(self, "_has_stabilizer"), [], []) == RETURN_PROMPT, "stabilizer return cue drifted")
-	_expect(feedback.return_prompt(world, boat_position, Callable(self, "_has_stabilizer"), [TARGET_ID], []).is_empty(), "return cue ignored held payoff")
-	_expect(feedback.return_prompt(world, boat_position, Callable(self, "_has_stabilizer"), [], [TARGET_ID]).is_empty(), "return cue ignored banked payoff")
+	_expect(feedback.return_prompt(world, boat_position, Callable(self, "_has_no_capability"), [], []).is_empty(), "return cue appeared before fins")
+	_expect(feedback.return_prompt(world, boat_position, Callable(self, "_has_fins"), [], []) == RETURN_PROMPT, "fins return cue drifted")
+	_expect(feedback.return_prompt(world, boat_position, Callable(self, "_has_fins"), [TARGET_ID], []).is_empty(), "return cue ignored held payoff")
+	_expect(feedback.return_prompt(world, boat_position, Callable(self, "_has_fins"), [], [TARGET_ID]).is_empty(), "return cue ignored banked payoff")
 
 	_expect(world.collect_salvage_by_id(TARGET_ID), "payoff could not use normal salvage collection")
-	_expect(feedback.return_prompt(world, boat_position, Callable(self, "_has_stabilizer"), [], []).is_empty(), "return cue ignored collected payoff")
+	_expect(feedback.return_prompt(world, boat_position, Callable(self, "_has_fins"), [], []).is_empty(), "return cue ignored collected payoff")
 	world.restore_salvage([TARGET_ID])
 	_expect(not world.is_salvage_collected(TARGET_ID), "normal failure restoration did not restore payoff")
 	_expect(feedback.collection_feedback(TARGET_ID, 300) == "Upper-right current pocket +300", "payoff collection feedback drifted")
@@ -74,8 +74,8 @@ func _has_no_capability(_capability_id: String) -> bool:
 	return false
 
 
-func _has_stabilizer(capability_id: String) -> bool:
-	return capability_id == "current_stabilizer"
+func _has_fins(capability_id: String) -> bool:
+	return capability_id == "propulsion_fins"
 
 
 func _expect(condition: bool, message: String) -> void:
