@@ -177,6 +177,10 @@ var PRODUCTION_SLICE_MAP_PATH: String:
 	get:
 		return _main.PRODUCTION_SLICE_MAP_PATH
 
+var PRODUCTION_LEVEL_MAP_PATH: String:
+	get:
+		return _main.PRODUCTION_LEVEL_MAP_PATH
+
 var PRODUCTION_SLICE_02_MAP_PATH: String:
 	get:
 		return _main.PRODUCTION_SLICE_02_MAP_PATH

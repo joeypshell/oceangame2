@@ -1,6 +1,12 @@
 extends "res://scripts/main/smoke/smoke_check_base.gd"
 
 func _smoke_map_selector_and_quit() -> void:
+	_load_playable_map(PRODUCTION_LEVEL_MAP_PATH, false)
+	if _world.map_id != "production_level_01":
+		push_error("Map selector smoke expected production_level_01, loaded %s." % _world.map_id)
+		get_tree().quit(1)
+		return
+
 	_load_playable_map(PRODUCTION_SLICE_03_MAP_PATH, false)
 	if _world.map_id != "production_slice_03":
 		push_error("Map selector smoke expected production_slice_03, loaded %s." % _world.map_id)
@@ -13,10 +19,8 @@ func _smoke_map_selector_and_quit() -> void:
 		get_tree().quit(1)
 		return
 
-	print("Map selector smoke passed: switched to production_slice_03 and back to production_slice_01.")
+	print("Map selector smoke passed: switched through production_level_01 and production_slice_03, then back to production_slice_01.")
 	get_tree().quit()
-
-
 
 func _smoke_hazard_interaction_and_quit() -> void:
 	var salvage: Array = _world.get_salvage_centers()
@@ -122,8 +126,6 @@ func _smoke_hazard_interaction_and_quit() -> void:
 	])
 	get_tree().quit()
 
-
-
 func _hazard_warning_probe_position(hazard_center: Vector2) -> Vector2:
 	var warning_distance := HAZARD_CONTACT_RADIUS + 8.0
 	var directions: Array[Vector2] = [Vector2.RIGHT, Vector2.LEFT, Vector2.DOWN, Vector2.UP]
@@ -132,8 +134,6 @@ func _hazard_warning_probe_position(hazard_center: Vector2) -> Vector2:
 		if _world.get_hazard_near(candidate, HAZARD_CONTACT_RADIUS).is_empty() and not _world.get_nearest_hazard_within(candidate, HAZARD_WARNING_RADIUS).is_empty():
 			return candidate
 	return hazard_center + Vector2.RIGHT * warning_distance
-
-
 
 func _smoke_oxygen_pressure_and_quit() -> void:
 	if _world.map_id != "production_slice_01":

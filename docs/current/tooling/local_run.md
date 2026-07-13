@@ -44,6 +44,20 @@ Run the full-map sketch topology draft:
 .\tools\open_godot_project.ps1 -Run -FullSketchMap
 ```
 
+Run the generated contiguous full-level candidate without changing the default map:
+
+```powershell
+.\tools\open_godot_project.ps1 -Run -ProductionLevelMap
+```
+
+The matching raw Godot flag is `--production-level-map`. Measure candidate startup, terrain/collision construction, camera limits, and a short frame sample headlessly with:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --production-level-map --measure-map-runtime
+```
+
+The first candidate measurement is recorded in [OceanGame Expansion 09 Runtime Measurement](../OCEANGAME_EXPANSION_09_RUNTIME_MEASUREMENT.md).
+
 Run the first production slice:
 
 ```powershell

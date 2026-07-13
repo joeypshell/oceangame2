@@ -90,6 +90,15 @@ async function main() {
 		const wide = await inspectPreview(browser, targetUrl, wideViewport, "");
 		const freshReviewUrl = buildFreshReviewUrl(targetUrl);
 		const freshReview = await inspectPreview(browser, freshReviewUrl, primaryViewport, "");
+		const candidateReviewUrl = buildCandidateReviewUrl(targetUrl);
+		const candidateDesktop = await inspectPreview(browser, candidateReviewUrl, primaryViewport, "");
+		const candidateMobile = await inspectPreview(
+			browser,
+			candidateReviewUrl,
+			mobileViewport,
+			"",
+			{ deviceScaleFactor: 3, hasTouch: true, isMobile: true }
+		);
 		const mobile = await inspectPreview(
 			browser,
 			targetUrl,
@@ -101,17 +110,45 @@ async function main() {
 		const framingDiff = compareSignatures(primary.signature, wide.signature);
 
 		fs.mkdirSync(path.dirname(screenshotPath), { recursive: true });
-		const allMessages = primary.messages.concat(wide.messages, freshReview.messages, mobile.messages);
-		const allFailedRequests = primary.failedRequests.concat(wide.failedRequests, freshReview.failedRequests, mobile.failedRequests);
+		const allMessages = primary.messages.concat(
+			wide.messages,
+			freshReview.messages,
+			candidateDesktop.messages,
+			candidateMobile.messages,
+			mobile.messages
+		);
+		const allFailedRequests = primary.failedRequests.concat(
+			wide.failedRequests,
+			freshReview.failedRequests,
+			candidateDesktop.failedRequests,
+			candidateMobile.failedRequests,
+			mobile.failedRequests
+		);
 		const failingMessages = allMessages.filter((message) =>
 			failurePatterns.some((pattern) => pattern.test(message.text))
 		);
 		const freshReviewMarker = freshReview.messages.find((message) =>
 			message.text.includes("Fresh review profile active: persistence=false propulsion_fins=false.")
 		);
+		const defaultMapMarker = primary.messages.find((message) =>
+			message.text.includes("Web map active: map=production_slice_01 review=false.")
+		);
+		const freshReviewMapMarker = freshReview.messages.find((message) =>
+			message.text.includes("Web map active: map=production_slice_01 review=true.")
+		);
+		const candidateDesktopMarker = candidateDesktop.messages.find((message) =>
+			message.text.includes("Web map active: map=production_level_01 review=true.")
+		);
+		const candidateMobileMarker = candidateMobile.messages.find((message) =>
+			message.text.includes("Web map active: map=production_level_01 review=true.")
+		);
+		const candidateFreshMarker = candidateDesktop.messages.find((message) =>
+			message.text.includes("Fresh review profile active: persistence=false propulsion_fins=false.")
+		);
 
 		console.log(`Checked ${targetUrl}`);
 		console.log(`Fresh-profile review ${freshReviewUrl}`);
+		console.log(`Full-level candidate review ${candidateReviewUrl}`);
 		console.log(
 			`Canvas ${primary.canvasSize.width}x${primary.canvasSize.height} (${primary.canvasSize.clientWidth}x${primary.canvasSize.clientHeight} CSS)`
 		);
@@ -156,6 +193,18 @@ async function main() {
 		}
 		if (!freshReviewMarker) {
 			throw new Error("Fresh-profile review URL did not report isolated state with propulsion fins unowned.");
+		}
+		if (!defaultMapMarker || !freshReviewMapMarker) {
+			throw new Error("The Web root or map-unspecified review URL did not retain production_slice_01.");
+		}
+		if (!candidateDesktopMarker || !candidateMobileMarker || !candidateFreshMarker) {
+			throw new Error("The full-level review URL did not load production_level_01 with isolated state at desktop and mobile sizes.");
+		}
+		if (candidateDesktop.canvasSize.width <= 0 || candidateDesktop.canvasSize.height <= 0) {
+			throw new Error("Full-level candidate canvas did not initialize at the desktop review size.");
+		}
+		if (candidateMobile.canvasSize.width <= 0 || candidateMobile.canvasSize.height <= 0) {
+			throw new Error("Full-level candidate canvas did not initialize at the mobile review size.");
 		}
 		if (mobile.canvasSize.width <= 0 || mobile.canvasSize.height <= 0) {
 			throw new Error("Godot canvas did not initialize at the mobile framing check size.");
@@ -205,6 +254,13 @@ async function main() {
 function buildFreshReviewUrl(url) {
 	const reviewUrl = new URL(url);
 	reviewUrl.searchParams.set("review", expectedSha || "fresh");
+	return reviewUrl.toString();
+}
+
+function buildCandidateReviewUrl(url) {
+	const reviewUrl = new URL(url);
+	reviewUrl.searchParams.set("review", expectedSha || "fresh");
+	reviewUrl.searchParams.set("map", "production_level_01");
 	return reviewUrl.toString();
 }
 

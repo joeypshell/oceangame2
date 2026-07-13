@@ -207,6 +207,22 @@ jobs:
             exit 1
           fi
 
+      - name: Measure full-level candidate startup and camera bounds
+        run: |
+          set +e
+          godot --headless --path . --production-level-map --measure-map-runtime 2>&1 | tee godot-full-level-runtime.log
+          godot_status=${PIPESTATUS[0]}
+          set -e
+
+          if [ "${godot_status}" -ne 0 ]; then
+            exit "${godot_status}"
+          fi
+
+          if grep -E "SCRIPT ERROR|ERROR:" godot-full-level-runtime.log; then
+            echo "Godot reported errors during full-level runtime measurement."
+            exit 1
+          fi
+
       - name: Run hazard pressure smoke check
         run: |
           set +e
