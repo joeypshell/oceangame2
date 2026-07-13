@@ -305,6 +305,14 @@ Capture the full-map sketch topology draft:
 
 This reads `camera_tests` from `maps/full_cave_sketch_01.greybox.json` and writes PNGs to `visual_captures/full_cave_sketch/`.
 
+Capture the contiguous full-level candidate for Expansion 09 review:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 40 --capture-expansion-09-full-level
+```
+
+This writes the authored `production_level_*` overview, boat, opening-gameplay, upper-left, lower-left, lower-right, and return contexts at 1280x720 and mobile 844x390 review sizes under `visual_captures/expansion_09_full_level/`. It is candidate evidence only and does not change the default map or accepted baselines.
+
 Capture the first production slice:
 
 ```powershell
@@ -388,6 +396,7 @@ python tools/check_camera_captures.py maps/production_slice_03.greybox.json visu
 python tools/check_camera_captures.py maps/production_slice_03.greybox.json visual_captures/production_slice_03_debug
 python tools/check_camera_captures.py maps/production_slice_04.greybox.json visual_captures/production_slice_04
 python tools/check_camera_captures.py maps/production_slice_04.greybox.json visual_captures/production_slice_04_debug
+python tools/check_camera_captures.py maps/production_level_01.greybox.json visual_captures/expansion_09_full_level --camera-id-prefix production_level_ --suffix 1280x720 --suffix mobile_844x390
 ```
 
 The checker reads expected PNG names from the map JSON, ignores Godot `.import` sidecars, fails on missing/extra/invalid PNGs, and reports captures that look older than the source map. It does not regenerate visual files.

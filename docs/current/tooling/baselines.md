@@ -57,6 +57,15 @@ python tools/render_map_review.py maps/production_slice_01.greybox.json referenc
 
 This writes `references/greybox/production_slice_01_source_render_collision_review.png`, comparing authored JSON topology, expected collision rectangles from the JSON terrain source, and the Godot rendered overview capture. Run `python tools/check_map_parity.py maps/production_slice_01.greybox.json` alongside it to verify Godot runtime terrain/collision cells match the source.
 
+Generate the contiguous full-level candidate preview and source/render/collision review sheet:
+
+```bash
+python tools/render_greybox_map.py maps/production_level_01.greybox.json references/greybox/production_level_01.svg
+python tools/render_map_review.py maps/production_level_01.greybox.json references/greybox/production_level_01_source_render_collision_review.png --godot-capture visual_captures/expansion_09_full_level/production_level_overview_1280x720.png
+```
+
+These are candidate review artifacts. Do not accept or replace a default production-slice baseline until the Expansion 09 player gate returns GO.
+
 Generate the second production slice source/render/collision review sheet:
 
 ```bash

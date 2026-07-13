@@ -41,7 +41,9 @@ def load_map(path: Path) -> dict:
     return data
 
 
-def expected_capture_names(map_data: dict) -> tuple[list[str], list[str]]:
+def expected_capture_names(
+    map_data: dict, camera_id_prefix: str = "", suffixes: tuple[str, ...] = ()
+) -> tuple[list[str], list[str]]:
     camera_tests = map_data.get("camera_tests", [])
     if not isinstance(camera_tests, list):
         raise ValueError("camera_tests must be a list")
@@ -53,11 +55,16 @@ def expected_capture_names(map_data: dict) -> tuple[list[str], list[str]]:
         if not isinstance(camera_test, dict):
             raise ValueError(f"camera_tests[{index}] must be an object")
         view_id = safe_filename(str(camera_test.get("id", "camera_test")))
-        name = f"{view_id}.png"
-        if name in seen and name not in duplicate_names:
-            duplicate_names.append(name)
-        seen.add(name)
-        names.append(name)
+        if camera_id_prefix and not view_id.startswith(safe_filename(camera_id_prefix)):
+            continue
+        capture_suffixes = suffixes or ("",)
+        for suffix in capture_suffixes:
+            safe_suffix = safe_filename(suffix)
+            name = f"{view_id}_{safe_suffix}.png" if safe_suffix else f"{view_id}.png"
+            if name in seen and name not in duplicate_names:
+                duplicate_names.append(name)
+            seen.add(name)
+            names.append(name)
     return names, duplicate_names
 
 
@@ -69,9 +76,21 @@ def looks_like_png(path: Path) -> bool:
         return False
 
 
-def check_captures(map_path: Path, capture_dir: Path, fail_on_stale: bool) -> int:
+def check_captures(
+    map_path: Path,
+    capture_dir: Path,
+    fail_on_stale: bool,
+    camera_id_prefix: str = "",
+    suffixes: tuple[str, ...] = (),
+) -> int:
     map_data = load_map(map_path)
-    expected_names, duplicate_names = expected_capture_names(map_data)
+    expected_names, duplicate_names = expected_capture_names(
+        map_data, camera_id_prefix, suffixes
+    )
+    if not expected_names:
+        raise ValueError(
+            f"No camera_tests matched prefix {camera_id_prefix!r}: {rel(map_path)}"
+        )
     expected = set(expected_names)
 
     if not capture_dir.is_dir():
@@ -91,6 +110,10 @@ def check_captures(map_path: Path, capture_dir: Path, fail_on_stale: bool) -> in
     )
 
     print(f"Camera capture check: {rel(map_path)} -> {rel(capture_dir)}")
+    if camera_id_prefix:
+        print(f"Camera id prefix: {camera_id_prefix}")
+    if suffixes:
+        print(f"Capture suffixes: {', '.join(suffixes)}")
     print(f"Expected captures: {len(expected_names)}")
     for name in expected_names:
         status = "ok" if name in actual else "missing"
@@ -141,10 +164,27 @@ def main() -> int:
         action="store_true",
         help="Fail if captures are older than the map JSON. By default stale-looking files are warnings.",
     )
+    parser.add_argument(
+        "--camera-id-prefix",
+        default="",
+        help="Check only authored camera ids beginning with this prefix.",
+    )
+    parser.add_argument(
+        "--suffix",
+        action="append",
+        default=[],
+        help="Expected filename suffix before .png; repeat for multiple capture sizes.",
+    )
     args = parser.parse_args()
 
     try:
-        return check_captures(resolve_path(args.map_json), resolve_path(args.capture_dir), args.fail_on_stale)
+        return check_captures(
+            resolve_path(args.map_json),
+            resolve_path(args.capture_dir),
+            args.fail_on_stale,
+            args.camera_id_prefix,
+            tuple(args.suffix),
+        )
     except (FileNotFoundError, ValueError, json.JSONDecodeError) as exc:
         print(str(exc), file=sys.stderr)
         return 1
