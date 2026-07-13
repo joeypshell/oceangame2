@@ -2,7 +2,7 @@
 
 Date: 2026-07-13
 
-Status: Expansions 01-08 are complete. Expansion 09 is committed to a contiguous full-level foundation through the corrected #855 plan; no implementation batch exists yet.
+Status: Expansions 01-08 are complete. Expansion 09 is active as the frozen #857-#865 contiguous full-level implementation batch under the corrected #855 plan.
 
 ## Decision
 
@@ -90,11 +90,11 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 09 is committed to turn the complete full-sketch topology into one source-generated, continuously swimmable production candidate. The corrected plan is recorded through #855; implementation remains uncommitted until it is reviewed.
+Expansion 09 is committed to turn the complete full-sketch topology into one source-generated, continuously swimmable production candidate. The corrected #855 plan is now being resolved through the frozen #857-#865 batch; #864 is the player GO/HOLD gate.
 
 ### Directional
 
-The dependency-ordered full-level implementation batch remains directional. Create it only after the corrected plan is reviewed. Region content and exceptional interiors follow the map foundation instead of preceding it.
+Candidate promotion remains directional until #864 records explicit player GO. Region content and exceptional interiors follow the map foundation instead of preceding it, and #865 cannot promote the candidate on HOLD.
 
 ### Vision
 
@@ -231,7 +231,7 @@ Exit question: does the forecast create a reason to plan another day while the m
 
 ### Expansion 09: Contiguous Full-Level Foundation
 
-Status: Corrected through #855; implementation batch pending plan review.
+Status: Active frozen implementation batch #857-#865; source contract starts at #857 and default promotion remains gated by #864.
 
 Goal: promote the entire supplied cave topology into one coherent production level before adding teleport or connector-based world expansion.
 

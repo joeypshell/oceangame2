@@ -30,7 +30,7 @@ Expansion 07 added bounded passive/eel biological materials and one shock-prod c
 
 Expansion 08 added one odd/even-day southwest jellyfish bloom, a night-ahead forecast, one optional bonus coil trace, and one condition-bound migration patrol. Source validation, deterministic journey coverage, focused visual review, the integrated release suite, and exact-SHA Web verification passed at `f2dc68d`. The authorized technical GO does not claim automation proved fun, clarity, map learnability, or another-day motivation.
 
-Expansion 09 is now a contiguous full-level foundation. The corrected #855 plan promotes the complete `full_cave_sketch_01` topology into a separately generated production candidate, transforms the proven slice-01 gameplay overlay into full-map coordinates, and requires continuous swimming from the boat through the level and back. The earlier #852 teleport/relay-terminal direction is superseded. New connector travel, stabilizer entry requirements, and pressure progression are deferred until the full level works.
+Expansion 09 is now an active contiguous full-level foundation. The frozen #857-#865 batch promotes the complete `full_cave_sketch_01` topology into a separately generated production candidate, transforms the proven slice-01 gameplay overlay into full-map coordinates, and requires continuous swimming from the boat through the level and back. The earlier #852 teleport/relay-terminal direction is superseded. New connector travel, stabilizer entry requirements, and pressure progression are deferred until the full level works.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -63,6 +63,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
 - Latest completed expansion decision: `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md`
 - Current expansion plan: `docs/current/OCEANGAME_EXPANSION_09_PLAN.md`, corrected through #855
+- Active source contract: `docs/current/OCEANGAME_EXPANSION_09_SOURCE_CONTRACT.md`, locked by #857
 - Latest visual decision: `docs/current/OCEANGAME_EXPANSION_08_VISUAL_BASELINE_DECISION.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
@@ -191,7 +192,7 @@ Current issue state as of 2026-07-13:
 - Closed: #768-#777 completed Expansion 06 with a GO.
 - Closed: #790-#799 and corrective issues through #831 complete Expansion 07 with a technical GO.
 - Closed: #836 and #838-#843 completed Expansion 08 with a technical GO.
-- Closed planning correction: #852's connector-first regional plan is superseded by #855's contiguous full-level plan. No implementation batch is active until the corrected plan is reviewed.
+- Active milestone batch: #857-#865 implements and reviews #855's contiguous full-level plan. #864 is the player GO/HOLD gate; #865 remains blocked without GO.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
@@ -328,7 +329,7 @@ Current issue state as of 2026-07-13:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star, `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md` as the latest completed decision, and `docs/current/OCEANGAME_EXPANSION_09_PLAN.md` as the active planning gate. Review the contiguous full-level decision before creating its implementation batch.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star, `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md` as the latest completed decision, and the Expansion 09 plan plus source contract as the active implementation handoff. Resolve frozen issues #857-#865 in order, stopping at #864 for explicit player GO or HOLD before any default-map promotion.
 
 Accepted constraints for next work:
 
