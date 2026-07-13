@@ -145,10 +145,11 @@ jobs:
           run_score_smoke() {
             flag="$1"
             label="$2"
+            shift 2
             log_path="godot-${label}.log"
 
             set +e
-            godot --headless --path . --quit-after 1 "${flag}" 2>&1 | tee "${log_path}"
+            godot --headless --path . --quit-after 1 "${flag}" "$@" 2>&1 | tee "${log_path}"
             godot_status=${PIPESTATUS[0]}
             set -e
 
@@ -184,7 +185,7 @@ jobs:
           run_score_smoke --smoke-expansion-05-practical-research expansion-05-practical-research
           run_score_smoke --smoke-expansion-06-combat-foundation expansion-06-combat-foundation
           run_score_smoke --smoke-expansion-07-biological-progression expansion-07-biological-progression
-          run_score_smoke --smoke-current-gate current-gate
+          run_score_smoke --smoke-current-gate current-gate --fresh-review-profile
           run_score_smoke --smoke-upgrade-chest upgrade-chest
           run_score_smoke --smoke-moving-hazard moving-hazard
           run_score_smoke --smoke-darkness-light-gate darkness-light-gate

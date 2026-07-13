@@ -35,6 +35,7 @@ const PrimaryDiveObjective := preload("res://scripts/main/primary_dive_objective
 const ProgressionContainerController := preload("res://scripts/main/progression_container_controller.gd")
 const ProgressionProjectTracker := preload("res://scripts/main/progression_project_tracker.gd")
 const ProgressionRuntimeController := preload("res://scripts/main/progression_runtime_controller.gd")
+const ReviewProfileMode := preload("res://scripts/main/review_profile_mode.gd")
 const PrySalvageController := preload("res://scripts/main/pry_salvage_controller.gd")
 const RelayFollowThroughFeedback := preload("res://scripts/main/relay_follow_through_feedback.gd")
 const ReturnPressureFeedback := preload("res://scripts/main/return_pressure_feedback.gd")
@@ -234,6 +235,7 @@ var _result_panel: PanelContainer
 var _result_label: Label
 var _map_selector: OptionButton
 var _map_selector_enabled := false
+var _fresh_review_profile_enabled := false
 var _debug_overlay_enabled := false
 var _banked_salvage := 0
 var _total_salvage := 0
@@ -307,6 +309,7 @@ func _ready() -> void:
 	_smoke_release_journey_checks = SmokeReleaseJourneyChecks.new(self)
 	var user_args := OS.get_cmdline_user_args()
 	var engine_args := OS.get_cmdline_args()
+	_fresh_review_profile_enabled = ReviewProfileMode.requested(user_args, engine_args)
 	var capture_original_map := _has_arg(user_args, engine_args, "--capture-original-map")
 	var capture_tileset_test := _has_arg(user_args, engine_args, "--capture-tileset-test")
 	var capture_organic_map := _has_arg(user_args, engine_args, "--capture-organic-map")
@@ -715,13 +718,16 @@ func _ready() -> void:
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
 		or _has_arg(user_args, engine_args, "--capture-camera-tests")
 	)
-	_anomaly_survey = AnomalySurveyRuntime.new(_progression_runtime, not automated_review)
+	var profile_persistence_enabled := ReviewProfileMode.persistence_enabled(automated_review, _fresh_review_profile_enabled)
+	_anomaly_survey = AnomalySurveyRuntime.new(_progression_runtime, profile_persistence_enabled)
 	_material_runtime = MaterialRuntimeController.new(_anomaly_survey.profile_state())
 	_material_project = MaterialProjectRuntime.new(_anomaly_survey.profile_state())
 	_cutter_salvage = CutterSalvageController.new(_anomaly_survey.profile_state())
 	_biological_resources = BiologicalResourceController.new(_anomaly_survey.profile_state())
 	_cargo_collection = CargoCollectionController.new(self)
 	_map_selector_enabled = (not automated_review) and _review_map_selector_allowed(user_args, engine_args)
+	if _fresh_review_profile_enabled:
+		print(ReviewProfileMode.startup_report(_has_propulsion_upgrade()))
 
 	if check_map_parity:
 		var world := _create_world(selected_map_path, _debug_overlay_enabled)
@@ -807,7 +813,7 @@ func _ready() -> void:
 		_smoke_result_presentation_checks._smoke_pass_26_result_presentation_and_quit()
 		return
 	if smoke_current_gate:
-		_smoke_current_gate_checks._smoke_current_gate_and_quit()
+		await _smoke_current_gate_checks._smoke_current_gate_and_quit()
 		return
 	if smoke_moving_hazard:
 		_smoke_moving_hazard_checks._smoke_moving_hazard_and_quit()
@@ -1664,7 +1670,7 @@ func _create_review_overlay(world: Node) -> void:
 	_review_label = Label.new()
 	_review_label.add_theme_color_override("font_color", Color(0.84, 0.96, 1.0, 0.95))
 	_review_label.add_theme_font_size_override("font_size", 13)
-	_review_label.text = "Map %s\nBuild %s" % [world.get_map_label(), _build_label()]
+	_review_label.text = _review_header_text(world)
 	stack.add_child(_review_label)
 
 	if _map_selector_enabled:
@@ -1731,6 +1737,8 @@ func _create_result_panel(canvas: CanvasLayer) -> void:
 func _update_status_label() -> void:
 	if _status_label == null:
 		return
+	if _review_label != null:
+		_review_label.text = _review_header_text(_world)
 	_update_progression_project_tracker()
 
 	if _total_salvage <= 0:
@@ -1834,6 +1842,13 @@ func _update_status_label() -> void:
 		_status_label.text += "\n%s" % prompt
 	_status_label.text = ExpeditionDayPresentation.decorate_status(self, _status_label.text)
 	_update_result_panel()
+
+
+func _review_header_text(world) -> String:
+	var text := "Map %s\nBuild %s" % [world.get_map_label(), _build_label()]
+	if _fresh_review_profile_enabled:
+		text += "\n%s" % ReviewProfileMode.overlay_line(_has_propulsion_upgrade())
+	return text
 
 
 func _failure_retry_prompt() -> String:
