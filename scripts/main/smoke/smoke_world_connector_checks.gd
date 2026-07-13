@@ -247,6 +247,7 @@ func _smoke_pass_22_destination_payoff_and_quit() -> void:
 
 
 func _smoke_pass_24_relay_follow_through_and_quit() -> void:
+	_load_playable_map(PRODUCTION_SLICE_MAP_PATH, false)
 	if _world.map_id != "production_slice_01":
 		push_error("Pass 24 relay smoke loaded unexpected origin map: %s." % _world.map_id)
 		get_tree().quit(1)

@@ -13,6 +13,7 @@ const SEED_CUE_LABEL := "Final dive signal locked"
 
 
 func _smoke_pass_25_final_dive_objective_and_quit() -> void:
+	_load_playable_map(PRODUCTION_SLICE_MAP_PATH, false)
 	if _world.map_id != "production_slice_01":
 		_fail("loaded unexpected origin map: %s" % _world.map_id)
 		return
