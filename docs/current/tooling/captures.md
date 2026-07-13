@@ -209,6 +209,14 @@ Capture the Expansion 07 biological-progression review states:
 
 This writes 50% passive-sample, 50% post-defeat harvest, and capacitor interrupt/recovery states at 1280x720 and 1920x1080 under `visual_captures/expansion_07_biological_progression/`. The command uses in-memory setup, verifies dimensions and nonblank output, and does not accept or replace production-slice baselines.
 
+Capture the Expansion 08 night forecast and active southwest bloom:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 40 --capture-expansion-08-daily-condition
+```
+
+This writes both states at 1280x720 and 1920x1080 under `visual_captures/expansion_08_daily_condition/`. The command verifies deterministic condition state, dimensions, and nonblank output; it does not accept or replace production-slice baselines.
+
 Capture the focused Pass 18 progression upgrade view:
 
 ```powershell
