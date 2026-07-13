@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-08 are complete. Expansion 08 closed with an explicitly authorized technical GO after deterministic daily-condition source, runtime, journey, visual, and exact-SHA Web verification. The user subsequently supplied GO to advance. Expansion 09 regional growth is committed at the planning gate through #852; no implementation batch is active.
+The compact diver foundation and OceanGame Expansions 01-08 are complete. Expansion 08 closed with an explicitly authorized technical GO after deterministic daily-condition source, runtime, journey, visual, and exact-SHA Web verification. Expansion 09 is committed to a contiguous full-level foundation through the corrected #855 plan; its implementation batch waits for plan review.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 08 closeout and Expansion 09 planning issue #852. The completed condition proof preserves authored geography and guaranteed progression; the next plan must select only one bounded regional-growth proof.
+Current handoff starts with the Expansion 08 closeout and the corrected Expansion 09 plan. The next milestone promotes the complete full-sketch topology into one generated production candidate before any new teleport, connector, stabilizer, or pressure-gate work.
 
 Core sources and operating docs:
 
@@ -92,6 +92,7 @@ Current release and expansion handoff:
 - [Expansion 08 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_08_VISUAL_BASELINE_DECISION.md)
 - [Expansion 08 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_08_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 08 Closeout](docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md)
+- [OceanGame Expansion 09 Contiguous Full-Level Plan](docs/current/OCEANGAME_EXPANSION_09_PLAN.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -225,4 +226,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can cross connected slices, use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-08 meet that technical condition. The user supplied GO to advance; #852 must now plan one authored regional proof before any Expansion 09 implementation batch is created.
+The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-08 meet that technical condition. Expansion 09 next proves that the whole supplied cave topology can become one authoritative, continuously swimmable production level without connector travel.

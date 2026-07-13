@@ -15,6 +15,7 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_08_PLAN.md`
 - `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md`
+- `docs/current/OCEANGAME_EXPANSION_09_PLAN.md`
 
 ## Current State
 
@@ -26,13 +27,13 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: Expansion 09 planning issue #852 must select one bounded authored regional-growth proof; no implementation batch is active.
-- Directional: Expansion 09 implementation details remain uncommitted until the plan is reviewed.
+- Committed: Expansion 09 uses the corrected #855 plan to build one contiguous full-level candidate from the complete full-sketch topology. No implementation batch is active until that plan is reviewed.
+- Directional: Region content, new capability gates, and exceptional interior transitions follow only after the contiguous level is validated and playable.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Open GitHub Milestones
 
-1. [Expansion 09: Regional World Growth](https://github.com/joeypshell/oceangame2/milestone/35) - committed at planning only through #852; memorable authored regions through the JSON pipeline.
+1. [Expansion 09: Contiguous Full-Level Foundation](https://github.com/joeypshell/oceangame2/milestone/35) - corrected through #855; promote the full sketch through the JSON pipeline before adding connector-based expansion.
 
 ## Completed Expansion 04
 
@@ -56,12 +57,13 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Next Batch
 
-Resolve #852 as planning only. It may recommend a bounded 6-10 issue implementation batch, but those issues must wait for plan review. #52/#53 remain deferred optional slice-03 polish.
+Review the corrected Expansion 09 plan, then create only its dependency-ordered full-level implementation batch. #52/#53 remain deferred optional slice-03 polish.
 
 ## Roadmap Rules
 
-- Do not pre-batch Expansion 09 implementation merely because planning is committed; review #852's bounded regional decision first.
+- Do not pre-batch Expansion 09 implementation merely because planning is committed; review the corrected contiguous-level decision first.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
-- Keep `production_slice_01` as the default boat hub unless a separate source-driven decision changes it.
+- Keep `production_slice_01` as the default boat hub until the full-level candidate passes source, clearance, route, camera, visual, player, and Web review.
+- Do not use teleports, prompted connectors, map menus, or the current stabilizer to traverse the new full-level candidate.
 - Preserve source-authored maps, reachability, parity, focused captures, and public Web verification in every milestone.
 - Keep #52/#53 deferred optional slice-03 polish unless slice-03 presentation becomes the selected goal.

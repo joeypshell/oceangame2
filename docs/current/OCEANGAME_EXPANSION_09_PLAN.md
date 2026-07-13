@@ -2,220 +2,213 @@
 
 Date: 2026-07-13
 
-Planning issue: #852
+Corrective planning issue: #855
 
-Milestone: OceanGame Expansion 09 `Regional World Growth`
+Supersedes: #852 connector-first regional plan
 
-Status: planning decision awaiting review. No implementation issue is approved or created by this plan.
+Milestone: OceanGame Expansion 09 `Contiguous Full-Level Foundation`
+
+Status: Plan ready for review. Do not create the implementation batch until the direction is accepted.
 
 ## Decision
 
-Promote `production_slice_02` from a generic later-game reference slice into one bounded authored region: the **Drowned Relay Terminal**.
+Expansion 09 will put the complete supplied cave topology into one playable production-level candidate before adding teleport, connector-based world travel, the current stabilizer as an access requirement, or new pressure progression.
 
-Use the existing source bounds and terrain unchanged:
+The candidate will be a separately named generated map:
 
 ```text
-full-sketch bounds: x=88, y=78, w=66, h=72
-map source: maps/production_slice_02.greybox.json
-generator: tools/create_production_slice_02_map.py
-entry: relay_sub_entry at local (8, 34)
-relay refuge: local (4, 32, 9, 5)
-return: return_to_lower_left_relay_connector -> production_slice_04
+maps/production_level_01.greybox.json
 ```
 
-This is the smallest meaningful regional proof because the slice already has validated reachability, terrain/collision parity, accepted reference captures, a broad main chamber, and a distinct lower terminal. Expansion 09 can therefore test regional identity, staged access, cross-region return pressure, practical research, and repeat-visit value without drawing a new map or productionizing the full sketch.
+It will derive from `maps/full_cave_sketch_01.greybox.json`, preserve one continuous water space, and carry the proven `production_slice_01` gameplay into full-map coordinates through source-owned transformation. The player must be able to leave the top boat, swim through former slice boundaries, and return to the same boat without pressing `E`, changing maps, or teleporting.
 
-Do not select `production_slice_03` for this milestone. Its optional camera/topology work remains #52/#53 and is not a prerequisite for regional growth. Do not expand the whole full-sketch source.
+Keep `production_slice_01` as the default until the candidate passes source, clearance, route, camera, performance, visual, player, and Web review. The previous Drowned Relay Terminal, relay refuge, stabilizer entry, pressure survey, pressure lining, and connector journey are not part of this milestone.
+
+## Why This Is The Next Meaningful Change
+
+The current game has enough loop and progression systems to test a larger world, but its normal play space still feels like a focused slice. The player has explicitly selected map scale and continuous exploration as the next priority.
+
+This pass is meaningful only if it changes the player's sense of place:
+
+- the cave reads as one level rather than a set of destinations
+- distant areas are reached by swimming through remembered geography
+- the boat remains the physical start, bank, and return point
+- the production pipeline can own the full topology without manual scene repair
+- later capabilities can be planned against one real map
+
+This pass does not need another upgrade, enemy, resource chain, or interaction to prove that change.
+
+## Confirmed Source Facts
+
+The existing full-sketch conversion currently provides:
+
+- `158 x 161` tiles
+- one connected open-water component containing 10,530 cells
+- 14,908 solid cells represented by 364 collision rectangles
+- a top-water boat entry at source coordinate `(91, 0)` with width 8
+- 27 open boundary cells requiring intentional production treatment
+- 459 thin-corridor cells that make cell-only reachability insufficient
+
+The four production slices are cropped views of this source. Their offsets are useful provenance, but their sealed crop edges are artificial level boundaries. They must not be stitched together.
+
+`production_slice_01` uses source bounds `x=58, y=0, w=72, h=84`. Its local gameplay coordinates therefore transform to full-map coordinates by adding `(58, 0)`. This transform must be explicit and testable rather than repeated by hand.
 
 ## Target Experience
 
-The planned journey is:
+The first full-level review journey should:
 
-```text
-build the existing current stabilizer -> enter the lower-left relay route
--> reach the Drowned Relay Terminal -> orient around its broken signal mast
--> survey safe-side pressure damage and nonlethally sample one bell jelly
--> carry the finding and pressure membrane back to the canonical boat
--> build one pressure-lining project at night
--> return through remembered geography -> cross the lower-terminal pressure boundary
--> recover the terminal payoff and a deeper signal
--> return to the boat, with a researched terminal material opportunity for a later day
-```
+1. Start at the existing top-water boat.
+2. Play the proven slice-01 opening and progression surface in its original full-map location.
+3. Swim continuously into representative upper-left, lower-left, and lower-right cave areas.
+4. Show no connector prompt, transition overlay, map selector, or loading event during that journey.
+5. Keep the same map id, expedition day, oxygen, health, cargo, and player state throughout.
+6. Return through the cave to the same top boat and use normal banking/end-day behavior.
 
-The first visit must expose the lower terminal and explain why it is unsafe without allowing accidental progression through it. The safe orientation route must contain every new mandatory prerequisite. The second visit must make the same place traversable through normal swimming, not an `E` transition.
+The outer regions may be terrain-first in this milestone. They need enough source-authored route markers and camera tests to validate traversal and orientation, but they do not need new regional progression content yet.
 
-The milestone exit question is: **Does the Drowned Relay Terminal feel like a memorable place worth preparing for and revisiting, while the player still understands how to return to the boat?**
+## Source Of Truth Boundaries
 
-## Meaningful-Change Filter
+### Full Topology
 
-- Curiosity: the broken signal mast and visible lower terminal promise something below the safe chamber.
-- Pressure: oxygen, daylight, cargo, an avoidable jellyfish patrol, and a no-banking relay make the return matter.
-- Payoff: the pressure lining opens a previously visible route and secures one durable deeper signal.
-- Remembered-place progress: the player crosses the same terminal boundary after a night project changes their capability.
-- Route choice: the initial safe chamber, optional resource lane, and lower-terminal commitment have distinct risk.
-- Another-day motivation: committed terminal research exposes a useful authored material opportunity, while the deeper signal remains unresolved.
+- `references/source_maps/full_cave_sketch_01.png` remains the human reference image.
+- `tools/convert_full_cave_sketch_map.py` remains the reproducible image-to-draft converter.
+- `maps/full_cave_sketch_01.greybox.json` remains a generated topology draft, not the promoted runtime map.
+- Add a focused production generator, expected as `tools/create_production_level_01_map.py`, that reads the full draft and writes the candidate.
+- Production cleanup must be named source data or generator constants with rationale. Do not edit generated JSON or Godot collision by hand.
 
-If implementation cannot preserve at least four of these six effects, reduce or hold the milestone rather than shipping a decorated reference slice.
+### Existing Gameplay Overlay
 
-## Region Contract
+- Extract or expose the slice-01 authored gameplay definitions through a shared generator module without changing regenerated `production_slice_01` output.
+- The full-level generator applies the explicit `(58, 0)` transform to topology-bound entities, zones, routes, backgrounds, camera tests, and related coordinates.
+- Preserve stable gameplay ids where the same authored content is reused.
+- Exclude slice crop-bound zones, artificial seals, relay extraction stand-ins, world connectors, connector prompts, and connector destination metadata.
+- Exclude the optional advanced stabilizer route as an Expansion 09 entry requirement. Existing runtime/profile support may remain untouched for regression.
 
-| Role | Planned source identity | Locked intent |
-| --- | --- | --- |
-| Region | `drowned_relay_terminal` | Presentation identity for `production_slice_02`; not a second source map. |
-| Landmark | `drowned_signal_mast` | One source-authored main-chamber landmark visible from the entry approach. |
-| Safe route | existing `approach_route` plus safe side of `main_chamber_route` | Relay to landmark, survey, sample, and return without crossing the pressure boundary. |
-| Prior access | existing `current_stabilizer` | Makes the historical lower-left relay route a deliberate late-game approach, not a new prerequisite recipe. |
-| Environment survey | `terminal_pressure_survey` | Scanner-backed, safe-side knowledge committed only at the canonical boat. |
-| Biological input | `terminal_bell_jelly_membrane_sample` | One guaranteed, nonlethal, scanner-assisted `pressure_membrane`; replenishes on a fresh day. |
-| Project | `pressure_lining_project` | Requires committed pressure survey, Ti2, Rubber1, and Pressure Membrane1; builds only at night. |
-| Capability | `pressure_lining_1` | Passive suit capability; no inventory slot, activation key, or percentage-stat ladder. |
-| Gate | `lower_terminal_pressure_boundary` | Clear safe denial before lining; normal swim-through after lining; never collision or connector travel. |
-| Wildlife pressure | one authored jellyfish patrol | Avoidable timing pressure on a secondary lane; not combat, loot, or a mandatory blocker. |
-| Payoff | existing `salvage_terminal_relic` plus `lower_terminal_signal_survey` | Valuable cargo and one pending deeper-signal discovery behind the gate. |
-| Return reason | `terminal_coil_pool` | Optional researched coil opportunity selected only from authored candidates on later days. |
-| Mystery | `bottom_terminal_signal_discovery` | Durable lead toward later world growth; it does not create that destination in this milestone. |
+### Reference Fixtures
 
-Names are the planning contract for the source-contract issue. That issue may refine display labels, but it must not change the dependency shape or substitute score for ingredients.
+- `production_slice_01` through `production_slice_04` remain generated regression and provenance fixtures.
+- Do not change their topology merely to make the full level work.
+- Do not construct the full level by reading or merging their generated JSON.
+- #52/#53 remain deferred optional slice-03 presentation work.
 
-## Visual Identity
+## Production Topology Rules
 
-Keep the existing clear water, blue-gray terrain, sandy edge treatment, and gameplay camera. Give the region identity through a few source-authored layers rather than a global recolor:
+The generator must make the draft safe as one level without redesigning it wholesale:
 
-- a tall drowned-machinery silhouette and broken teal signal lights at the main-chamber mast
-- restrained dark metal, teal glass, and one warm relay beacon around the refuge, consistent with `docs/ART_BIBLE.md`
-- pale compression lines or particulate bands at the pressure boundary, visually distinct from red/magenta hazards and warm salvage
-- one pale teal bell-jelly silhouette that reads as sampleable wildlife rather than a hostile warning
-- denser machinery silhouettes and a repeated signal motif only in the lower terminal after the gate
+- seal unintended outer-boundary openings
+- preserve only the intentional top-water boat opening
+- remove artificial crop seams rather than reproducing them
+- preserve the supplied cave silhouette wherever player clearance and collision allow
+- record every targeted solid/open cleanup in source coordinates
+- keep all intended water in one direct boat-reachable and boat-returnable component
+- mark any intentionally decorative pocket explicitly instead of silently abandoning it
 
-Do not darken the entire map, hide routes behind atmosphere, bake landmarks into collision terrain, or replace accepted terrain/background modules wholesale. The landmark, pressure cue, wildlife, and terminal payoff should remain readable at gameplay zoom and in the focused review frames.
+If a corridor fails player-footprint clearance, make the smallest source-owned cleanup that restores the intended route. Do not use runtime teleports as a clearance workaround.
 
-## Entry, Return, And Connector Decision
+## Validation And Parity
 
-Keep the established `production_slice_04` to `production_slice_02` reciprocal connector for this proof only. The Drowned Relay Terminal is treated as a collapsed flooded facility reached through a relay passage, so it qualifies as the explicit interior/destination exception allowed by the roadmap.
+The candidate cannot be promoted on cell connectivity alone. Validation must prove:
 
-This decision does not make prompted connectors the default regional structure:
+- map schema and entity metadata are valid
+- source render and Godot collision remain in parity
+- unintended boundary exits are sealed
+- the boat entry and extraction footprint are valid
+- all intended open sectors are reachable with the actual player footprint
+- transformed gameplay entities remain in bounds, non-solid, reachable, and returnable
+- mandatory progression remains non-circular and seed-independent
+- representative full-level routes reach the upper-left, lower-left, and lower-right sectors and return directly to the boat
+- the route keeps one map id and invokes no connector transition
+- camera limits never expose blank space and can frame both local routes and the larger level
+- startup, terrain construction, collision creation, and Web rendering remain practical with no errors
 
-- add no new connector or shortcut network
-- keep ordinary future ocean geography contiguous
-- keep currents, darkness, oxygen, pressure, and tool gates as normal movement boundaries inside authored space
-- do not use `E` at the pressure boundary
-- do not promote reference slices into a menu or fast-travel map
+Add deterministic source coordinates or route markers for validation. Do not encode route proof as screenshot interpretation.
 
-The relay is a refuge, not a second boat. In the integrated journey it may refill oxygen, but it must not bank cargo, commit research, build projects, restore health, end the day, or complete the regional objective. Held salvage, typed materials, biological cargo, pending findings, oxygen, health, daylight, and same-day depletion must survive the outbound and return transitions. Failure restores unbanked regional state and returns the expedition to existing canonical failure handling.
+## Runtime Boundaries
 
-Standalone slice review may still spawn at the relay. Its route smoke must be updated to prove returnability without treating that local spawn as canonical progression commitment.
+- The runtime must load `production_level_01` through the normal JSON world path.
+- Add an explicit local/review selector while the map is a candidate.
+- Do not add a full-level-specific teleport controller, connector controller, map menu, or `E` transition.
+- Existing connector code and slice fixtures may remain for regression, but the full-level journey cannot depend on them.
+- Preserve current oxygen, daylight, cargo, banking, health, enemy, material, survey, profile, project, and day-reset semantics.
+- Keep `main.gd` as orchestration. Put only genuinely new map-selection or review support in focused existing owners.
+- Measure large-map startup and runtime behavior before inventing optimization work. Optimize only an observed bottleneck.
 
-## Progression And Seed Safety
+## Smoke Plan
 
-The mandatory chain is deliberately non-circular:
+Add one deterministic full-level journey smoke that reports and verifies:
 
-1. Existing guaranteed anomaly knowledge and Ti2/Coil1 can build `current_stabilizer`; no region material is needed to enter.
-2. `terminal_pressure_survey` and `pressure_membrane` are reachable on the safe side of the pressure boundary.
-3. Ti2 and Rubber1 retain their existing guaranteed pre-region candidate floors under every supported day.
-4. No enemy defeat, optional daily condition, terminal coil candidate, or behind-gate item is required for `pressure_lining_project`.
-5. `pressure_lining_1` alone releases the pressure boundary.
-6. The valuable terminal payoff and deeper signal are reachable and returnable after release.
+- candidate map id and dimensions
+- top boat start and extraction identity
+- transformed slice-01 gameplay ids and global positions
+- representative sector marker ids and reached coordinates
+- unchanged map id across all sector legs
+- zero connector transitions or connector prompts
+- oxygen, daylight, health, cargo, and day state continuity
+- direct return to the canonical boat
+- normal bank/commit behavior after return
 
-The bell-jelly sample is guaranteed once per fresh day and cannot be condition-bound. The terminal coil pool is optional and must never count toward a mandatory recipe floor. The jellyfish patrol must leave an executable approach, retreat, and return lane.
+Keep the current slice-01 journey, progression audit, map validation, and collision parity checks green. Run focused checks per issue and the integrated release suite after the full journey is assembled, not after every documentation or capture-only change.
 
-## Source-Of-Truth Boundaries
+## Visual And Camera Review
 
-- `maps/full_cave_sketch_01.greybox.json` remains the topology draft and planning source.
-- `tools/create_production_slice_02_map.py` owns the region landmark, relay-refuge semantics, gate, surveys, biological source, candidate pool, patrol, payoff metadata, camera tests, and generated map JSON.
-- `tools/create_production_slice_map.py` owns the canonical-boat project catalog entry if the project must be available during debrief. It must reference the slice-02 gate through explicit cross-map IDs rather than duplicate the gate.
-- `tools/create_production_slice_04_map.py` continues to own the existing forward connector. Change only its label/intent if the facility fiction requires clarification; do not change topology.
-- `docs/MAP_SPEC.md` and validator fixtures must define relay-refuge and pressure-gate rules before source authoring.
-- `config/progression_contract.json` must not duplicate map-owned project, gate, survey, material, or connector relationships.
-- Godot scenes, runtime nodes, captures, and accepted baselines never own topology or placement.
+Generate only candidate-specific artifacts until promotion:
 
-Terrain topology should remain unchanged. If source validation finds that a viable safe approach, pressure boundary, or return lane cannot fit the existing open water, stop and open a separate targeted topology decision instead of hand-tuning runtime geometry.
+- full-map SVG preview and source/render/collision review
+- full-level overview for topology inspection
+- top boat/opening frame
+- transformed slice-01 gameplay frame
+- upper-left, lower-left, and lower-right traversal frames
+- at least one return-to-boat frame
+- supported desktop and mobile gameplay views
 
-## Validation And Preview Boundaries
+Review for terrain continuity, accidental seams, repeated background noise, camera blank space, player scale, readable passages, and usable mobile controls. Keep accepted slice baselines unchanged unless promotion intentionally replaces a default-map baseline.
 
-Validation must prove:
+## Promotion Gate
 
-- all region IDs and cross-map references resolve uniquely
-- the relay refuge and both connectors are in bounds, non-solid, reachable, and reciprocal
-- the safe route, survey, sample, and gate approach are reachable before `pressure_lining_1`
-- the gate cannot be crossed before the capability and can be crossed after it
-- the lower-terminal payoff, survey, and return connector are capability-reachable after the project
-- every mandatory input is guaranteed under every supported seed/day and no dependency cycle exists
-- optional terminal candidates are excluded from mandatory floors
-- the patrol path is legal and leaves a viable retreat/return lane
-- generated terrain and runtime collision remain parity-clean
+`production_slice_01` stays the default while the full map is a candidate. Promotion requires:
 
-Extend the progression audit to show the cross-map path through `current_stabilizer`, the safe-side project prerequisites, `pressure_lining_1`, and the lower-terminal payoff. Geometric reachability alone is insufficient for this milestone.
+1. Generator determinism and clean regeneration.
+2. Schema, boundary, footprint, reachability, direct-return, progression, and parity validation.
+3. Deterministic continuous-journey smoke and existing regression coverage.
+4. Practical desktop and Web load/render behavior.
+5. Focused visual review with only explained differences.
+6. Player confirmation that the level feels continuous, navigable, and worth exploring.
 
-Regenerate only the affected slice-02 JSON, SVG, source/render/collision review, and focused captures. Debug preview must distinguish the landmark, refuge, pressure boundary, mandatory sample/survey, optional material candidates, patrol, and payoff without changing normal collision.
-
-## Runtime And UI Boundaries
-
-- `main.gd` remains orchestration and must not grow for regional logic.
-- Existing expedition-day, connector, cargo, material, biological, survey, profile, and project owners retain their domains.
-- Add one focused pressure-gate owner if existing current-gate behavior cannot express safe pressure denial without confusing current semantics.
-- Cross-map cargo/state preservation belongs with the existing sortie/connector and cargo owners, not map JSON or presentation code.
-- The relay refuge may reuse oxygen-refill presentation but must expose compact `Relay refuge - return to boat to bank` guidance.
-- Pressure feedback must be compact: boundary warning, project requirement, lining completion, and safe crossing. Do not add a map screen, inventory grid, loadout, research journal, or permanent regional HUD.
-- The signal mast, bell jelly, pressure boundary, and terminal payoff need readable individual visuals or existing fallbacks. Do not replace the terrain set, player, boat, all props, or all background art.
+Only after GO should a scoped issue change the default map, regenerate affected default captures, verify the exact public Web SHA, and close the milestone.
 
 ## Recommended Issue Batch
 
-Create this dependency-ordered batch only after the plan is reviewed:
+Create this batch only after the plan is reviewed:
 
-1. Lock the Expansion 09 region, relay-refuge, pressure-gate, project, and source validation contract.
-2. Extend cross-map progression and staged-reachability audits for the regional chain.
-3. Author the Drowned Relay Terminal landmark, safe route metadata, refuge, gate, survey, sample, patrol, optional pool, and payoff through generators.
-4. Preserve regional cargo and expedition state across connectors and enforce canonical-boat-only commitment.
-5. Implement the pressure survey, guaranteed membrane sample, profile material, and exact night project transaction.
-6. Implement passive pressure-boundary behavior, terminal payoff, deeper-signal finding, and researched return opportunity.
-7. Add one deterministic integrated regional journey smoke plus focused regressions and CI coverage.
-8. Add focused regional captures and review intentional visual differences against all accepted slice baselines.
-9. Verify the exact public Web build and run the player GO/HOLD closeout for the regional exit question.
+1. Lock the full-level source, coordinate-transform, boundary, and exclusion contract.
+2. Extract reusable slice-01 gameplay source definitions with zero regenerated slice diff.
+3. Generate `production_level_01` from the complete full-sketch topology and clean its outer boundary.
+4. Add player-footprint, full-sector reachability, direct-return, and full-level parity validation.
+5. Transform the slice-01 gameplay overlay and author representative full-level route/camera markers.
+6. Add candidate map selection, camera bounds, and measured large-map runtime checks.
+7. Add the deterministic no-connector full-level journey smoke and CI coverage.
+8. Generate focused full-level captures, review the candidate, and make only targeted source-owned topology corrections.
+9. On player GO, promote the full level, verify the exact public Web build, and record the Expansion 09 closeout.
 
-Do not create separate tickets merely to reach ten. Split an item only if implementation review identifies a real ownership or validation boundary.
-
-## Smoke And Review Plan
-
-The integrated journey smoke must report and verify:
-
-- prior `current_stabilizer` requirement and successful region entry
-- preserved oxygen, health, daylight, held cargo, and day state across both connectors
-- relay oxygen refuge without banking, research commit, project build, health refill, or end-day behavior
-- safe-route survey/sample reachability and leave-range cancellation
-- exact Pressure Membrane1, Ti2, Rubber1 recipe with no score substitution
-- failure restoration before banking and exact-once canonical boat commitment
-- night-only `pressure_lining_1` completion and durable profile reload
-- denial before lining and normal movement through the same boundary after lining
-- lower-terminal payoff, pending deeper signal, return, and canonical commitment
-- fresh-day researched terminal coil opportunity with mandatory progression unchanged
-- optional patrol approach/retreat viability and existing Expansion 01-08 journeys still green
-
-Run focused checks per issue. Run `python tools/run_release_candidate_validation.py` once after the integrated journey and smoke merge, then again only if later visual/Web work changes executable source.
-
-Visual review must include the relay/landmark orientation frame, blocked pressure boundary, post-lining lower terminal, and return-to-boat payoff at both supported viewports. Accept only the named regional additions. Reject unrelated terrain, collision, camera, player, boat, existing connector, route, eel, daily-condition, or HUD drift.
+Do not split these merely to fill a queue. Split only when implementation reveals a real ownership or validation boundary.
 
 ## Deferred Work
 
-- productionizing the full sketch or combining every slice into one map
-- ordinary-region connector chains, fast travel, map menus, or shortcuts
-- `production_slice_03` camera/topology polish (#52/#53)
-- issue #849 repository-health work
-- more pressure tiers, decompression simulation, equipment durability, vehicles, bases, or diving physics
-- broad crafting/economy, inventory, project tree, ecosystem simulation, creature catalog, or new combat arsenal
+- current-stabilizer access design and any advanced-current payoff
+- pressure surveys, pressure lining, decompression, or depth simulation
+- teleport, connector, map-menu, or exceptional-interior expansion
+- new region-specific resources, wildlife, enemies, weapons, research, mysteries, or progression chains
+- broad crafting, economy, inventory, vehicles, bases, or save expansion
+- #52/#53 slice-03 presentation polish
+- #849 repository-health work, which remains independent
 - final terrain, background, prop, creature, player, audio, or HUD replacement
-- implementing the bottom-terminal destination named by the deeper signal
 
 ## Exit Criteria
 
-Expansion 09 is technically ready for player review when:
+Expansion 09 is technically ready for final player review when one generated candidate contains the complete full-sketch topology, all intended sectors pass actual-player clearance and direct-return validation, current gameplay works at transformed coordinates, a deterministic journey swims through former slice boundaries without changing maps, camera and runtime behavior remain practical, candidate visuals are reviewed, and the public review build initializes cleanly.
 
-- the existing slice-02 terrain becomes a readable Drowned Relay Terminal without source/render/collision drift
-- the first visit clearly exposes the landmark, safe route, mandatory survey/sample, and pressure promise
-- every mandatory prerequisite is guaranteed, pre-gate, non-circular, and seed-independent
-- the relay preserves expedition pressure and cannot replace the canonical boat
-- the night project changes the remembered pressure boundary through passive normal traversal
-- the lower-terminal payoff and deeper lead can be carried back and committed at the boat
-- the researched optional material opportunity gives a concrete later-day return reason
-- staged reachability, integrated smoke, release validation, focused visual review, and exact-SHA Web verification pass
+The milestone closes only after the player answers:
 
-The milestone closes only after the user answers the exit question with GO or HOLD. Automation may establish technical readiness, but it must not claim the region is memorable, readable, or motivating to a player.
+> Does this now feel like one full level that can support future capability-gated exploration without needing teleports?
+
+Automation may prove source fidelity and technical traversal. It cannot claim that the larger level is readable, memorable, or enjoyable.

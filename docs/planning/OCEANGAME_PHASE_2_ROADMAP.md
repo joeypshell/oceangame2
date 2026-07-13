@@ -2,7 +2,7 @@
 
 Date: 2026-07-13
 
-Status: Expansions 01-08 are complete. Expansion 09 is committed at the planning gate through #852; no implementation batch exists yet.
+Status: Expansions 01-08 are complete. Expansion 09 is committed to a contiguous full-level foundation through the corrected #855 plan; no implementation batch exists yet.
 
 ## Decision
 
@@ -68,6 +68,7 @@ knowledge + base materials + special component = changed capability
 
 - Geography, collision, landmarks, gates, habitats, and important promises remain source-authored and learnable.
 - The main explorable world is contiguous authored geography by default. Separate loaded maps are exceptions for explicit interiors or exceptional destinations, not the normal capability-gate chain.
+- Expansion 09 must establish the complete full-sketch topology as one production level before adding any exceptional destination transition. The optional current stabilizer is not an entry requirement for that level.
 - Standard currents are passive traversal gates: blocked by flow before the capability, crossed through normal swimming after it. `E`/ACT is reserved for explicit entrances and interactions.
 - Daily seeds may select among authored resource, wildlife, patrol, visibility, current, and rare-signal candidates.
 - Required progression cannot depend on arbitrary coordinates or an unlucky seed.
@@ -89,11 +90,11 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 09 planning issue #852 is committed to select one bounded authored regional-growth proof. Implementation remains uncommitted until that plan is reviewed.
+Expansion 09 is committed to turn the complete full-sketch topology into one source-generated, continuously swimmable production candidate. The corrected plan is recorded through #855; implementation remains uncommitted until it is reviewed.
 
 ### Directional
 
-Expansion 09 implementation details remain directional. Create its batch only after #852 locks and reviews the bounded regional proof.
+The dependency-ordered full-level implementation batch remains directional. Create it only after the corrected plan is reviewed. Region content and exceptional interiors follow the map foundation instead of preceding it.
 
 ### Vision
 
@@ -228,26 +229,26 @@ Prove:
 
 Exit question: does the forecast create a reason to plan another day while the map remains learnable?
 
-### Expansion 09: Regional World Growth
+### Expansion 09: Contiguous Full-Level Foundation
 
-Status: Committed at planning only through #852; implementation batch pending plan review.
+Status: Corrected through #855; implementation batch pending plan review.
 
-Goal: expand into a coherent authored ocean made of memorable regions.
+Goal: promote the entire supplied cave topology into one coherent production level before adding teleport or connector-based world expansion.
 
-Each selected region needs:
+Prove:
 
-- a landmark and visual identity
-- an initial safe orientation route
-- a capability promise or gate
-- characteristic material opportunities
-- wildlife/enemy identity
-- one practical research thread
-- one mystery or deeper lead
-- a reason to return after first completion
+- a separately named full-level JSON generated from `full_cave_sketch_01`
+- one continuous water space from the top boat through representative upper-left, lower-left, and lower-right areas and back
+- source-owned transformation of the proven slice-01 gameplay overlay into full-map coordinates
+- no stitched crop JSON, imported crop-edge seals, teleport, prompted connector, map menu, or stabilizer entry gate
+- sealed unintended outer-boundary openings while preserving the authored top-water boat entry
+- player-footprint clearance, entity reachability, direct return, render/collision parity, camera bounds, and practical runtime performance
+- candidate-only local and Web review before replacing `production_slice_01` as the default
+- unchanged production slices 01-04 as regression and provenance fixtures
 
-Grow through JSON generators, validators, previews, parity, focused captures, and Web review. Do not productionize the whole sketch in one pass.
+After this foundation is accepted, later milestones may author regional identities, capability gates, wildlife, research, and exceptional interiors inside or beyond the contiguous world. The current stabilizer and new pressure progression remain deferred until then.
 
-Exit question: can several regions support a durable expedition campaign without losing map authority or readability?
+Exit question: can the player launch at the boat, swim through the full authored cave, understand where they are, and return without a teleport while map authority and runtime readability remain trustworthy?
 
 ## Original OceanGame Convergence
 
