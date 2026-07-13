@@ -1902,7 +1902,7 @@ func _combat_overlay_text() -> String:
 
 
 func _at_canonical_boat() -> bool:
-	return str(_world.map_id) == "production_slice_01" and _world.is_inside_boat(_player.global_position)
+	return _world != null and _player != null and _world.is_inside_boat(_player.global_position)
 
 
 func _cargo_full_prompt() -> String:

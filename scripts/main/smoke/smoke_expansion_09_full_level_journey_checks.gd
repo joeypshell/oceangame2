@@ -2,9 +2,11 @@ extends "res://scripts/main/smoke/smoke_check_base.gd"
 
 const FullLevelNavigation := preload("res://scripts/main/smoke/smoke_full_level_navigation.gd")
 const SessionProgression := preload("res://scripts/main/session_progression.gd")
+const ExpeditionDayPresentation := preload("res://scripts/main/expedition_day_presentation.gd")
 
 const MAP_ID := "production_level_01"
 const ENTRY_TARGET_ID := "salvage_entry_shaft"
+const MATERIAL_TARGET_ID := "material_rubber_entry"
 const BOAT_ENTRY_ID := "surface_boat_entry"
 const EXPECTED_SIZE_TILES := Vector2i(158, 161)
 const ANCHOR_IDS := [
@@ -60,6 +62,13 @@ func _smoke_expansion_09_full_level_journey_and_quit() -> void:
 	var profile_before := _profile_snapshot()
 	var initial_day: Dictionary = _main._expedition_day_state.report()
 	_starting_health = int(_main._player_health.report().get("current_health", 0))
+	_main._player_health.current_health = maxi(1, _starting_health - 1)
+	_process(0.0)
+	if not _require(
+		int(_main._player_health.current_health) == _starting_health,
+		"authored full-level boat did not restore player health"
+	):
+		return
 	if not _prepare_existing_tank_configuration():
 		return
 
@@ -86,17 +95,43 @@ func _smoke_expansion_09_full_level_journey_and_quit() -> void:
 	):
 		return
 
+	var material_target := _material_candidate_by_id(MATERIAL_TARGET_ID)
+	var active_material_ids: Array = _world.get_material_candidate_report().get("active_ids", [])
+	if not _require(
+		not material_target.is_empty() and active_material_ids.has(MATERIAL_TARGET_ID),
+		"deterministic full-level material target is missing or inactive"
+	):
+		return
+	var material_id := str(material_target.get("material_id", ""))
+	var material_quantity := int(material_target.get("material_quantity", 0))
+	var profile = _main._anomaly_survey.profile_state()
+	var material_before: int = int(profile.material_quantity(material_id))
+
 	for index in range(1, ANCHOR_IDS.size()):
 		var anchor_id: String = ANCHOR_IDS[index]
+		var destinations: Array = [anchors[anchor_id], boat_position]
+		_navigation = FullLevelNavigation.new()
+		if index == 1:
+			_navigation.build(_world, body_size, SALVAGE_COLLECTION_RADIUS, MATERIAL_TARGET_ID)
+			destinations = [material_target["center"], anchors[anchor_id], boat_position]
+		else:
+			_navigation.build(_world, body_size, SALVAGE_COLLECTION_RADIUS)
 		var report: Dictionary = await _run_sortie(
 			anchor_id,
-			[anchors[anchor_id], boat_position],
+			destinations,
 			index + 1
 		)
 		if report.is_empty():
 			return
 		route_reports.append(report)
 		_print_route_report(report)
+		if index == 1 and not _require(
+			_main._material_runtime.held_count() == 0
+			and profile.material_quantity(material_id) == material_before + material_quantity
+			and _main._expedition_day_state.material_depleted_ids(MAP_ID).has(MATERIAL_TARGET_ID),
+			"second return did not automatically commit full-level material cargo"
+		):
+			return
 
 	var day_report: Dictionary = _main._expedition_day_state.report()
 	var health_report: Dictionary = _main._player_health.report()
@@ -132,15 +167,29 @@ func _smoke_expansion_09_full_level_journey_and_quit() -> void:
 		"cargo or bank totals did not follow normal boat semantics"
 	):
 		return
-	if not _require(profile_after == profile_before, "durable profile changed during traversal coverage"):
+	var expected_profile_after: Dictionary = profile_before.duplicate(true)
+	var expected_inventory: Dictionary = (expected_profile_after.get("material_inventory", {}) as Dictionary).duplicate(true)
+	expected_inventory[material_id] = int(expected_inventory.get(material_id, 0)) + material_quantity
+	expected_profile_after["material_inventory"] = expected_inventory
+	if not _require(profile_after == expected_profile_after, "durable profile changed beyond the expected material deposit"):
+		return
+	var night_request: Dictionary = ExpeditionDayPresentation.try_request_voluntary_end(_main)
+	if not _require(
+		bool(night_request.get("requested", false))
+		and str(night_request.get("reason", "")) == "requested",
+		"night request remained blocked after automatic full-level offload: %s" % str(night_request)
+	):
 		return
 
-	print("Expansion 09 full-level journey smoke passed: map=%s dimensions=%dx%d sectors=%s routes=%s elapsed=%.1fs tank=%s capacity=%.1fs oxygen=%.1fs sorties=%d connectors=%d prompts=%d held=%d banked=%d score=%d profile=stable day=%d daylight=%.1fs health=%d/%d collision=active movement=continuous_no_teleport nav=%s." % [
+	print("Expansion 09 full-level journey smoke passed: map=%s dimensions=%dx%d sectors=%s routes=%s material=%s:%s+%d auto_offload=true night=requested elapsed=%.1fs tank=%s capacity=%.1fs oxygen=%.1fs sorties=%d connectors=%d prompts=%d held=%d banked=%d score=%d profile=expected_material_only day=%d daylight=%.1fs health=%d/%d boat_health_refill=true collision=active movement=continuous_no_teleport nav=%s." % [
 		_world.map_id,
 		_world.map_tile_size.x,
 		_world.map_tile_size.y,
 		",".join(PackedStringArray(ANCHOR_IDS)),
 		_route_summary(route_reports),
+		MATERIAL_TARGET_ID,
+		material_id,
+		material_quantity,
 		_simulation_seconds,
 		SessionProgression.OXYGEN_TANK_UPGRADE_ID,
 		_oxygen_capacity_seconds(),
@@ -334,6 +383,13 @@ func _salvage_by_id(salvage_id: String) -> Dictionary:
 	for salvage in _world.get_salvage_centers():
 		if str(salvage.get("id", "")) == salvage_id:
 			return salvage
+	return {}
+
+
+func _material_candidate_by_id(candidate_id: String) -> Dictionary:
+	for candidate in _world.get_material_candidates():
+		if str(candidate.get("id", "")) == candidate_id:
+			return candidate
 	return {}
 
 

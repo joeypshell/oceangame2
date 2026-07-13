@@ -12,7 +12,7 @@ var _map_pixel_size := Vector2.ZERO
 var _blocked_point_count := 0
 
 
-func build(world, player_body_size: Vector2, collection_radius: float) -> Dictionary:
+func build(world, player_body_size: Vector2, collection_radius: float, collectible_material_id := "") -> Dictionary:
 	_map_pixel_size = world.map_pixel_size
 	_grid_size = Vector2i(
 		int(floor(_map_pixel_size.x / NAV_STEP_PX)) + 1,
@@ -48,6 +48,8 @@ func build(world, player_body_size: Vector2, collection_radius: float) -> Dictio
 		var gate_rect: Rect2 = gate.get("rect", Rect2())
 		_block_expanded_rect(gate_rect, body_half + Vector2.ONE * INTERACTION_CLEARANCE_PX)
 	for candidate in world.get_material_candidates():
+		if str(candidate.get("id", "")) == collectible_material_id:
+			continue
 		_block_circle(
 			candidate.get("center", Vector2.ZERO),
 			collection_radius + INTERACTION_CLEARANCE_PX * 2.0

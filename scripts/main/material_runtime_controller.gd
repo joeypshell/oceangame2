@@ -2,7 +2,6 @@ extends RefCounted
 
 const MaterialCargoState := preload("res://scripts/main/material_cargo_state.gd")
 const PracticalResearchPresentation := preload("res://scripts/main/practical_research_presentation.gd")
-const CANONICAL_MAP_ID := "production_slice_01"
 const TITANIUM_ID := "titanium_scrap"
 const RUBBER_ID := "rubber_sheet"
 const COIL_ID := "conductive_coil"
@@ -80,7 +79,7 @@ func collect_biological_source(source: Dictionary, map_id: String, occupied_salv
 
 
 func try_commit_at_boat(world, position: Vector2) -> Dictionary:
-	if world == null or _profile == null or str(world.map_id) != CANONICAL_MAP_ID:
+	if world == null or _profile == null or not world.has_method("is_inside_boat"):
 		return {}
 	if not world.is_inside_boat(position) or held_count() <= 0:
 		return {}

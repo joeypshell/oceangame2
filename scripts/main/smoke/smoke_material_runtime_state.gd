@@ -7,6 +7,7 @@ const MaterialRuntimeController := preload("res://scripts/main/material_runtime_
 const TEST_PATH := "user://oceangame2_material_runtime_test.json"
 const SLICE_01 := "res://maps/production_slice_01.greybox.json"
 const SLICE_04 := "res://maps/production_slice_04.greybox.json"
+const FULL_LEVEL := "res://maps/production_level_01.greybox.json"
 
 var _failures: Array[String] = []
 
@@ -67,15 +68,36 @@ func _run() -> void:
 	_expect(_selected_material_count(world, day_two_ids, ExpansionProfileState.RUBBER_MATERIAL_ID) == 1, "day two rubber guarantee failed")
 	_expect(_selected_material_count(world, day_two_ids, ExpansionProfileState.COIL_MATERIAL_ID) == 1, "day two coil guarantee failed")
 
+	var full_level = _build_world(FULL_LEVEL)
+	runtime.on_map_loaded(full_level, day)
+	var full_level_ids: Array = full_level.get_material_candidate_report().get("active_ids", [])
+	var full_level_candidate := _candidate(full_level, str(full_level_ids[0]) if not full_level_ids.is_empty() else "")
+	var full_level_material_id := str(full_level_candidate.get("material_id", ""))
+	var full_level_material_before := profile.material_quantity(full_level_material_id)
+	_expect(full_level.is_inside_boat(full_level.get_extraction_center()), "full-level extraction center is not the authored boat")
+	_expect(bool(runtime.update_collection(full_level, full_level_candidate["center"], 48.0, day, 0, 2).get("changed", false)), "full-level material did not enter cargo")
+	var full_level_commit: Dictionary = runtime.try_commit_at_boat(full_level, full_level.get_extraction_center())
+	_expect(bool(full_level_commit.get("changed", false)) and runtime.held_count() == 0, "full-level boat did not commit material cargo")
+	_expect(profile.material_quantity(full_level_material_id) == full_level_material_before + 1, "full-level material deposit did not reach profile inventory")
+
+	var biological_source: Dictionary = full_level.get_biological_resource_sources()[0]
+	var biological_material_id := str(biological_source.get("material_id", ""))
+	var biological_before := profile.material_quantity(biological_material_id)
+	_expect(bool(runtime.collect_biological_source(biological_source, str(full_level.map_id), 0, 2).get("changed", false)), "full-level biological material did not enter shared cargo")
+	var biological_commit: Dictionary = runtime.try_commit_at_boat(full_level, full_level.get_extraction_center())
+	_expect(bool(biological_commit.get("changed", false)) and runtime.held_count() == 0, "full-level boat did not commit biological cargo")
+	_expect(profile.material_quantity(biological_material_id) == biological_before + 1, "full-level biological deposit did not reach profile inventory")
+
 	world.queue_free()
 	relay.queue_free()
+	full_level.queue_free()
 	_cleanup_profile()
 	if not _failures.is_empty():
 		for failure in _failures:
 			push_error("Material runtime state smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Material runtime state smoke passed: day1=%s day2=%s held_capacity=2 failure_restored=2 relay_commit=false boat_commit=true profile_material=%s migration=v1_to_v3." % [
+	print("Material runtime state smoke passed: day1=%s day2=%s held_capacity=2 failure_restored=2 relay_commit=false boat_commit=true full_level_material_commit=true full_level_biological_commit=true profile_material=%s migration=v1_to_v3." % [
 		str(day_one_ids),
 		str(day_two_ids),
 		first_material,
