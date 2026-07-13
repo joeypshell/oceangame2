@@ -207,6 +207,22 @@ jobs:
             exit 1
           fi
 
+      - name: Run Expansion 09 full-level journey smoke check
+        run: |
+          set +e
+          timeout 240s godot --headless --path . --smoke-expansion-09-full-level-journey 2>&1 | tee godot-expansion-09-full-level-journey.log
+          godot_status=${PIPESTATUS[0]}
+          set -e
+
+          if [ "${godot_status}" -ne 0 ]; then
+            exit "${godot_status}"
+          fi
+
+          if grep -E "SCRIPT ERROR|ERROR:" godot-expansion-09-full-level-journey.log; then
+            echo "Godot reported errors during Expansion 09 full-level journey smoke check."
+            exit 1
+          fi
+
       - name: Measure full-level candidate startup and camera bounds
         run: |
           set +e

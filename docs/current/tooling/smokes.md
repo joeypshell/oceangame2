@@ -22,6 +22,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-06-combat-foundation
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-07-biological-progression
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-expansion-08-daily-condition-journey
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-09-full-level-journey
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-loop
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-02-route
@@ -77,6 +78,8 @@ The integrated Expansion 06 smoke verifies source territory/timing, normal unarm
 The integrated Expansion 07 smoke verifies nonlethal timed sampling, explicit post-defeat harvesting, cargo-full and failure restoration, boat banking, exact-once capacitor construction/reload, and a one-damage warning interruption. CI and release validation run it as `--smoke-expansion-07-biological-progression`.
 
 The integrated Expansion 08 smoke verifies baseline day, night-ahead forecast, southwest bloom patrol and bonus coil activation, unchanged normal pools/patrol, cargo-full, banking, connector, hazard/oxygen restoration, day-three removal, and required progression. CI and release validation run it as `--smoke-expansion-08-daily-condition-journey`.
+
+The integrated Expansion 09 smoke uses active player collision to swim three direct boat-return sorties through the contiguous `production_level_01` candidate. It reaches the upper-left, lower-right, and lower-left sector anchors without position assignment, connector travel, collision disablement, or oxygen disablement; banks transformed salvage through the canonical boat; and reports route distance, oxygen, daylight, health, cargo, profile, day, and connector state. CI and release validation run it as `--smoke-expansion-09-full-level-journey`.
 
 The salvage-loop smoke check loads the default production slice, collects all authored salvage through the same runtime methods used in play, returns to extraction, confirms completion, resets, and exits.
 
