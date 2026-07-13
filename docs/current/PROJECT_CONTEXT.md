@@ -30,6 +30,8 @@ Expansion 07 added bounded passive/eel biological materials and one shock-prod c
 
 Expansion 08 added one odd/even-day southwest jellyfish bloom, a night-ahead forecast, one optional bonus coil trace, and one condition-bound migration patrol. Source validation, deterministic journey coverage, focused visual review, the integrated release suite, and exact-SHA Web verification passed at `f2dc68d`. The authorized technical GO does not claim automation proved fun, clarity, map learnability, or another-day motivation.
 
+Expansion 09 is now a contiguous full-level foundation. The corrected #855 plan promotes the complete `full_cave_sketch_01` topology into a separately generated production candidate, transforms the proven slice-01 gameplay overlay into full-map coordinates, and requires continuous swimming from the boat through the level and back. The earlier #852 teleport/relay-terminal direction is superseded. New connector travel, stabilizer entry requirements, and pressure progression are deferred until the full level works.
+
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
 Controlled gameplay/visual passes are now a validation lane inside the roadmap, not the whole roadmap. New work should serve curiosity, pressure, payoff, remembered-place progress, meaningful route choice, or a reason to try another expedition.
@@ -44,6 +46,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Original comparison map source: `maps/cave_salvage_test_01.greybox.json`
 - Organic tileset stress-test map: `maps/cave_tileset_test_01.greybox.json`
 - Full-map sketch topology draft: `maps/full_cave_sketch_01.greybox.json`
+- Planned full-level production candidate: `maps/production_level_01.greybox.json` (not implemented yet)
 - First production slice source: `maps/production_slice_01.greybox.json`
 - Second production slice source: `maps/production_slice_02.greybox.json`
 - Third production slice source: `maps/production_slice_03.greybox.json`
@@ -59,7 +62,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
 - Latest completed expansion decision: `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md`
-- Active expansion planning issue: #852 `Plan Expansion 09 around one authored regional growth proof`
+- Current expansion plan: `docs/current/OCEANGAME_EXPANSION_09_PLAN.md`, corrected through #855
 - Latest visual decision: `docs/current/OCEANGAME_EXPANSION_08_VISUAL_BASELINE_DECISION.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
@@ -188,7 +191,7 @@ Current issue state as of 2026-07-13:
 - Closed: #768-#777 completed Expansion 06 with a GO.
 - Closed: #790-#799 and corrective issues through #831 complete Expansion 07 with a technical GO.
 - Closed: #836 and #838-#843 completed Expansion 08 with a technical GO.
-- Active planning milestone: Expansion 09 through planning issue #852. No implementation batch is active until that plan is reviewed.
+- Closed planning correction: #852's connector-first regional plan is superseded by #855's contiguous full-level plan. No implementation batch is active until the corrected plan is reviewed.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
@@ -198,10 +201,10 @@ Current issue state as of 2026-07-13:
 - `production_slice_01` is the default preview map.
 - `cave_salvage_organic_01` is preserved as a first playable organic source-map comparison pass.
 - `cave_salvage_test_01` is preserved as the original rectangular comparison map.
-- `full_cave_sketch_01` is a topology-only draft conversion from a supplied full-map sketch; icons are intentionally ignored and the top-water `boat_spawn` is present for entry/extraction validation.
+- `full_cave_sketch_01` is a topology-only draft conversion from a supplied full-map sketch; icons are intentionally ignored and the top-water `boat_spawn` is present for entry/extraction validation. It is now the topology source for the planned `production_level_01` candidate, not a runtime production map itself.
 - `docs/current/PRODUCTION_SLICE_SELECTION_CRITERIA.md` defines reusable roles and checklist criteria for choosing future focused slices from the full sketch.
 - `docs/current/PRODUCTION_SLICE_INDEX.md` summarizes the current production slices, including role, source, launch command, route smoke, capture folders, source/render/collision review sheet, and accepted baseline status.
-- `docs/current/POST_SLICE_WORKFLOW_DECISION.md` records that the focused slice workflow is repeatable enough to move into controlled visual-revision work without productionizing the whole full sketch.
+- `docs/current/POST_SLICE_WORKFLOW_DECISION.md` records the earlier focused-slice decision. Expansion 09 supersedes only its old full-sketch deferral; the slice fixtures and their source-discipline lessons remain valid.
 - `docs/current/CONTROLLED_VISUAL_REVISION_01_PLAN.md` selects the first controlled visual-revision target: replace procedural salvage/hazard prop drawings with named committed sprite assets under #70.
 - `docs/current/CONTROLLED_VISUAL_REVISION_02_PLAN.md` selects the next controlled visual-revision target: replace the procedural player placeholder with a named committed `player_diver_01.png` sprite while preserving collision, movement, camera behavior, map data, and gameplay logic.
 - `docs/current/CONTROLLED_VISUAL_REVISION_03_PLAN.md` selects the next controlled visual-revision target: replace the procedural `boat_spawn` entry craft with a named committed `boat_spawn_01.png` sprite while preserving source-map boat entry/extraction semantics, player spawn, collision, movement, camera behavior, map data, and gameplay logic.
@@ -325,21 +328,21 @@ Current issue state as of 2026-07-13:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star, `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md` as the latest completed decision, and #852 as the active planning gate. Select one bounded authored regional proof before creating any Expansion 09 implementation issues.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star, `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md` as the latest completed decision, and `docs/current/OCEANGAME_EXPANSION_09_PLAN.md` as the active planning gate. Review the contiguous full-level decision before creating its implementation batch.
 
 Accepted constraints for next work:
 
-- Keep `production_slice_01` as the default preview map.
-- Preserve `maps/full_cave_sketch_01.greybox.json` as a topology draft and planning source.
-- Do not move the entire full sketch into production yet; grow route scale only when it supports the roadmap.
+- Keep `production_slice_01` as the default preview map until the full-level candidate passes its promotion gate.
+- Preserve `maps/full_cave_sketch_01.greybox.json` as the generated topology draft and source for a separately named `production_level_01` output.
+- Build the complete full-sketch topology as one contiguous level. Do not stitch crop JSONs together or import their artificial edge seals.
 - Keep map topology, collision, spawn, extraction, and camera tests source-driven.
-- Preserve the scanner, same-map east-pocket anomaly, returned discovery, and optional source-authored connector travel.
-- Preserve daylight, surface oxygen, repeated sorties, boat return, night transition, seeded material ownership, canonical-boat commitment, the mandatory fins/cutter/weapon chain, and optional advanced stabilizer.
+- Transform the proven slice-01 gameplay overlay through shared source data; do not copy generated JSON by hand.
+- Preserve the scanner, same-map east-pocket anomaly, returned discovery, daylight, surface oxygen, repeated sorties, boat return, night transition, seeded material ownership, canonical-boat commitment, and mandatory fins/cutter/weapon chain.
+- Omit prompted connectors, map transitions, and the optional advanced stabilizer gate from the full-level candidate. Existing slice behavior remains only as a protected reference surface.
 - Keep standard capability gates inside contiguous authored geography and traversable through movement; reserve `E` connectors for explicit exceptional entrances/interiors.
 - Preserve the completed mineral research, fresh-day selection, and broad habitat-lead behavior as the practical-knowledge regression surface.
 - Preserve separate health, the source-authored eel territory, viable unarmed evasion, non-circular shock-prod project, day-local defeat, and no-reward combat semantics.
 - Night consumes no Food, Water, Power, or other survival tax.
-- Do not expand the map broadly merely to host the first combat proof.
 - Keep future resource and encounter variation inside authored candidates; never reroll geography or required progression arbitrarily.
 - Do not add shortcut or fast-travel networks.
 - Preserve the completed biological-resource-to-equipment proof and the bounded optional daily-condition proof; do not turn either into a creature catalog, ecosystem simulation, grind, or arbitrary progression variation.
