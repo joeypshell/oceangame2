@@ -185,6 +185,7 @@ jobs:
           run_score_smoke --smoke-expansion-05-practical-research expansion-05-practical-research
           run_score_smoke --smoke-expansion-06-combat-foundation expansion-06-combat-foundation
           run_score_smoke --smoke-expansion-07-biological-progression expansion-07-biological-progression
+          run_score_smoke --smoke-expansion-08-daily-condition-journey expansion-08-daily-condition-journey
           run_score_smoke --smoke-current-gate current-gate --fresh-review-profile
           run_score_smoke --smoke-upgrade-chest upgrade-chest
           run_score_smoke --smoke-moving-hazard moving-hazard
