@@ -13,6 +13,7 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_06_PLAN.md`
 - `docs/current/OCEANGAME_EXPANSION_06_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md`
+- `docs/current/OCEANGAME_EXPANSION_08_PLAN.md`
 
 ## Current State
 
@@ -24,7 +25,7 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: plan one bounded Expansion 08 daily-condition and enemy-ecology proof before implementation issues are created.
+- Committed: implement the bounded Expansion 08 southwest jellyfish-bloom plan in source/validation/runtime order.
 - Directional: Expansion 09 retains goals and exit criteria only.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
@@ -51,7 +52,7 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Next Batch
 
-Create and resolve only the Expansion 08 planning issue first. Its plan must select one meaningful forecast/variation/ecology proof, lock non-goals, preserve guaranteed progression, and define the player exit question before implementation is batched. #52/#53 remain deferred optional slice-03 polish.
+Follow `OCEANGAME_EXPANSION_08_PLAN.md`: contract/validation, source authoring, runtime, deterministic journey smoke, focused technical visual review, and exact-SHA Web closeout. #52/#53 remain deferred optional slice-03 polish.
 
 ## Roadmap Rules
 

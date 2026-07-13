@@ -1,8 +1,8 @@
 # OceanGame Phase 2 Roadmap
 
-Date: 2026-07-10
+Date: 2026-07-13
 
-Status: Expansions 01-07 are complete. Expansion 07 closed with an explicitly authorized technical GO; Expansion 08 is the committed planning gate and Expansion 09 remains directional.
+Status: Expansions 01-07 are complete. Expansion 08 has selected one bounded southwest jellyfish-bloom plan; Expansion 09 remains directional.
 
 ## Decision
 
@@ -89,7 +89,7 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 08 planning is committed. Lock one bounded proof, source/runtime boundaries, deterministic validation, non-goals, and an exit question before creating its implementation batch.
+Expansion 08 is committed through `docs/current/OCEANGAME_EXPANSION_08_PLAN.md`: forecast one deterministic optional southwest jellyfish migration plus bonus coil opportunity without changing geography or required progression.
 
 ### Directional
 
@@ -214,7 +214,7 @@ Exit question: do creatures feel like part of the ocean's ecology and technology
 
 ### Expansion 08: Daily Conditions And Enemy Ecology
 
-Status: Selected planning gate; no implementation batch yet.
+Status: Committed bounded plan; implementation follows source/validation/runtime order.
 
 Goal: make tomorrow meaningfully different without erasing place memory.
 
