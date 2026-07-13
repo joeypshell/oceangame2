@@ -6,7 +6,7 @@ This file is the compact handoff for new Codex or ChatGPT Project sessions. It c
 
 ## Current Goal
 
-`oceangame2` has a GO release candidate and seven completed bounded Phase 2 expansions. OceanGame Expansion 01 proved:
+`oceangame2` has a GO release candidate and eight completed bounded Phase 2 expansions. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -26,7 +26,9 @@ Expansion 05 added one stabilizer-gated mineral survey, an exact boat-committed 
 
 Expansion 06 added separate player health, one source-authored territorial eel, a viable unarmed evade route, and one durable shock-prod project built from non-enemy materials. Defeating the eel clears its territory only for the current day and grants no automatic reward. The pass closed with GO.
 
-Expansion 07 added bounded passive/eel biological materials and one shock-prod capacitor step. Corrective review work established behavioral eel guarding, deliberate blueprint-plus-ingredient fins progression, passive same-map east-current traversal, scanner-before-weapon ordering, and isolated fresh-profile review. It closed at `73a3667` with an explicitly authorized technical GO; this confirms deterministic/source/visual/Web readiness, not human judgments about fun or clarity. Expansion 08 now selects one forecasted optional southwest jellyfish migration and bonus coil opportunity.
+Expansion 07 added bounded passive/eel biological materials and one shock-prod capacitor step. Corrective review work established behavioral eel guarding, deliberate blueprint-plus-ingredient fins progression, passive same-map east-current traversal, scanner-before-weapon ordering, and isolated fresh-profile review. It closed at `73a3667` with an explicitly authorized technical GO.
+
+Expansion 08 added one odd/even-day southwest jellyfish bloom, a night-ahead forecast, one optional bonus coil trace, and one condition-bound migration patrol. Source validation, deterministic journey coverage, focused visual review, the integrated release suite, and exact-SHA Web verification passed at `f2dc68d`. The authorized technical GO does not claim automation proved fun, clarity, map learnability, or another-day motivation.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -185,7 +187,8 @@ Current issue state as of 2026-07-13:
 - Closed: #748-#757 completed Expansion 05 with a GO.
 - Closed: #768-#777 completed Expansion 06 with a GO.
 - Closed: #790-#799 and corrective issues through #831 complete Expansion 07 with a technical GO.
-- Active milestone: Expansion 08 follows the bounded plan from source contract and validation through technical Web closeout.
+- Closed: #836 and #838-#843 completed Expansion 08 with a technical GO.
+- No implementation milestone is active; Expansion 09 remains directional until explicitly selected after player review and roadmap evaluation.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
@@ -322,7 +325,7 @@ Current issue state as of 2026-07-13:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star, `docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md` as the latest completed decision, and `docs/current/OCEANGAME_EXPANSION_08_PLAN.md` as the active contract. Implement its optional southwest condition in source/validation/runtime order without broadening the map or ecology.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md` as the latest completed decision. Review the deployed condition journey before selecting Expansion 09 or another bounded milestone; no implementation issue batch is currently active.
 
 Accepted constraints for next work:
 
@@ -339,7 +342,7 @@ Accepted constraints for next work:
 - Do not expand the map broadly merely to host the first combat proof.
 - Keep future resource and encounter variation inside authored candidates; never reroll geography or required progression arbitrarily.
 - Do not add shortcut or fast-travel networks.
-- Preserve the completed biological-resource-to-equipment proof; do not broaden Expansion 08 into a creature catalog, ecosystem simulation, grind, or map-scale expansion.
+- Preserve the completed biological-resource-to-equipment proof and the bounded optional daily-condition proof; do not turn either into a creature catalog, ecosystem simulation, grind, or arbitrary progression variation.
 - Keep #52/#53 as optional post-baseline slice-03 improvement issues unless the selected goal shifts back to slice-03 presentation.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.
