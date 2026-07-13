@@ -88,6 +88,8 @@ async function main() {
 	try {
 		const primary = await inspectPreview(browser, targetUrl, primaryViewport, screenshotPath);
 		const wide = await inspectPreview(browser, targetUrl, wideViewport, "");
+		const freshReviewUrl = buildFreshReviewUrl(targetUrl);
+		const freshReview = await inspectPreview(browser, freshReviewUrl, primaryViewport, "");
 		const mobile = await inspectPreview(
 			browser,
 			targetUrl,
@@ -99,13 +101,17 @@ async function main() {
 		const framingDiff = compareSignatures(primary.signature, wide.signature);
 
 		fs.mkdirSync(path.dirname(screenshotPath), { recursive: true });
-		const allMessages = primary.messages.concat(wide.messages, mobile.messages);
-		const allFailedRequests = primary.failedRequests.concat(wide.failedRequests, mobile.failedRequests);
+		const allMessages = primary.messages.concat(wide.messages, freshReview.messages, mobile.messages);
+		const allFailedRequests = primary.failedRequests.concat(wide.failedRequests, freshReview.failedRequests, mobile.failedRequests);
 		const failingMessages = allMessages.filter((message) =>
 			failurePatterns.some((pattern) => pattern.test(message.text))
 		);
+		const freshReviewMarker = freshReview.messages.find((message) =>
+			message.text.includes("Fresh review profile active: persistence=false propulsion_fins=false.")
+		);
 
 		console.log(`Checked ${targetUrl}`);
+		console.log(`Fresh-profile review ${freshReviewUrl}`);
 		console.log(
 			`Canvas ${primary.canvasSize.width}x${primary.canvasSize.height} (${primary.canvasSize.clientWidth}x${primary.canvasSize.clientHeight} CSS)`
 		);
@@ -144,6 +150,12 @@ async function main() {
 		}
 		if (wide.canvasSize.width <= 0 || wide.canvasSize.height <= 0) {
 			throw new Error("Godot canvas did not initialize at the wide framing check size.");
+		}
+		if (freshReview.canvasSize.width <= 0 || freshReview.canvasSize.height <= 0) {
+			throw new Error("Godot canvas did not initialize in fresh-profile review mode.");
+		}
+		if (!freshReviewMarker) {
+			throw new Error("Fresh-profile review URL did not report isolated state with propulsion fins unowned.");
 		}
 		if (mobile.canvasSize.width <= 0 || mobile.canvasSize.height <= 0) {
 			throw new Error("Godot canvas did not initialize at the mobile framing check size.");
@@ -188,6 +200,12 @@ async function main() {
 	} finally {
 		await browser.close();
 	}
+}
+
+function buildFreshReviewUrl(url) {
+	const reviewUrl = new URL(url);
+	reviewUrl.searchParams.set("review", expectedSha || "fresh");
+	return reviewUrl.toString();
 }
 
 async function inspectPreview(browser, url, viewport, outputPath, pageOptions = {}, verifyMobileTouches = false) {

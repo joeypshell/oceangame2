@@ -42,7 +42,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-oxygen-bonus-score
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-route-outcome-result
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-pass-18-progression
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-current-gate
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --fresh-review-profile --smoke-current-gate
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-upgrade-chest
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-moving-hazard
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-timed-salvage
@@ -121,7 +121,7 @@ The release-journey smoke loads `production_slice_01`, collects and banks the re
 
 The Pass 18 progression smoke loads `production_slice_01`, confirms held and failed unbanked salvage do not create wallet payout, confirms banked salvage creates spendable wallet, confirms insufficient-funds purchase is blocked, buys the single oxygen tank upgrade, verifies wallet spend and upgraded capacity, then confirms reset/refill preserve the session upgrade.
 
-The current-gate smoke loads `production_slice_01`, verifies the source-authored amber `lower_left_loop_current` soft-push marker and visible relay affordance before `propulsion_fins`, confirms oxygen continues draining, builds durable fins from exactly Ti2+Rubber1 without spending wallet, then confirms the same location presents and uses the relay connector.
+The current-gate smoke loads `production_slice_01` with isolated in-memory profile state, holds the real eastward swim input against `upper_right_current_pocket_gate`, proves a fresh diver cannot cross, builds fins from exactly Ti2+Rubber1 without spending wallet, then proves the same controller movement crosses passively without `E`.
 
 The upgrade-chest smoke is the blueprint-fins journey check. From a fresh profile it proves proximity cannot auto-recover the plan, uses `E`, verifies active-day BUILD mutates nothing, distinguishes the cyan east stabilizer barrier from the amber fins relay, tracks held/banked ingredients, builds at night, reaches the relay through controller movement, enters with `E`, banks the payoff, and verifies scanner-next guidance without premature shock-prod text.
 

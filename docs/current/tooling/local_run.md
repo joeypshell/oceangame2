@@ -100,6 +100,14 @@ Local/editor review runs show a small map selector in the review overlay. Use it
 
 When comparing local/editor and public Web preview screenshots, compare matching commits and map selections. `Build local` means the editor is running the current checkout or worktree; `Build <sha>` in the Web overlay is the deployed export commit from `build_info.json`. The public export intentionally hides the editor-only map selector unless `--review-map-selector` is explicitly enabled.
 
+Start an isolated local player-review run without reading or changing the normal durable profile:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --fresh-review-profile
+```
+
+The review overlay reports `Review profile fresh/isolated` and whether propulsion fins are currently owned.
+
 ## Mobile Testing Controls
 
 Touch-capable devices automatically show a testing-only overlay in normal play; rotate the phone to landscape before playing. The layout reserves a bottom interaction inset for phone gesture/home-indicator areas. The left stick swims; the command pad exposes oxygen, cargo, and light upgrades, scanner, project build/guidance, day transition, reset, connector interaction, and shock-prod attack. Capture/smoke automation keeps the overlay hidden.
