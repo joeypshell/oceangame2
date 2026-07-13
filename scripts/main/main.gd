@@ -17,6 +17,7 @@ const Expansion04CurrentPocketCapture := preload("res://scripts/main/captures/ex
 const Expansion05PracticalResearchCapture := preload("res://scripts/main/captures/expansion_05_practical_research_capture.gd")
 const Expansion06CombatFoundationCapture := preload("res://scripts/main/captures/expansion_06_combat_foundation_capture.gd")
 const Expansion07BiologicalProgressionCapture := preload("res://scripts/main/captures/expansion_07_biological_progression_capture.gd")
+const Expansion08DailyConditionCapture := preload("res://scripts/main/captures/expansion_08_daily_condition_capture.gd")
 const FinalDiveObjectiveSeed := preload("res://scripts/main/final_dive_objective_seed.gd")
 const MovingHazardCapture := preload("res://scripts/main/captures/moving_hazard_capture.gd")
 const MovingHazardController := preload("res://scripts/main/moving_hazard_controller.gd")
@@ -137,6 +138,7 @@ const EXPANSION_04_CURRENT_POCKET_CAPTURE_DIR := "res://visual_captures/expansio
 const EXPANSION_05_PRACTICAL_RESEARCH_CAPTURE_DIR := "res://visual_captures/expansion_05_practical_research"
 const EXPANSION_06_COMBAT_FOUNDATION_CAPTURE_DIR := "res://visual_captures/expansion_06_combat_foundation"
 const EXPANSION_07_BIOLOGICAL_PROGRESSION_CAPTURE_DIR := "res://visual_captures/expansion_07_biological_progression"
+const EXPANSION_08_DAILY_CONDITION_CAPTURE_DIR := "res://visual_captures/expansion_08_daily_condition"
 const DARKNESS_LIGHT_CAPTURE_DIR := "res://visual_captures/darkness_light_gate"
 const CURRENT_GATE_CAPTURE_DIR := "res://visual_captures/current_gate"
 const MOVING_HAZARD_CAPTURE_DIR := "res://visual_captures/moving_hazard"
@@ -358,6 +360,7 @@ func _ready() -> void:
 	var capture_expansion_05_practical_research := _has_arg(user_args, engine_args, "--capture-expansion-05-practical-research")
 	var capture_expansion_06_combat_foundation := _has_arg(user_args, engine_args, "--capture-expansion-06-combat-foundation")
 	var capture_expansion_07_biological_progression := _has_arg(user_args, engine_args, "--capture-expansion-07-biological-progression")
+	var capture_expansion_08_daily_condition := _has_arg(user_args, engine_args, "--capture-expansion-08-daily-condition")
 	var capture_darkness_light_gate := _has_arg(user_args, engine_args, "--capture-darkness-light-gate")
 	var capture_current_gate := _has_arg(user_args, engine_args, "--capture-current-gate")
 	var capture_moving_hazard := _has_arg(user_args, engine_args, "--capture-moving-hazard")
@@ -514,6 +517,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_expansion_07_biological_progression:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
+	elif capture_expansion_08_daily_condition:
+		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_route:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_02_route:
@@ -662,6 +667,7 @@ func _ready() -> void:
 		or capture_expansion_05_practical_research
 		or capture_expansion_06_combat_foundation
 		or capture_expansion_07_biological_progression
+		or capture_expansion_08_daily_condition
 		or capture_darkness_light_gate
 		or capture_current_gate
 		or capture_moving_hazard
@@ -1018,6 +1024,9 @@ func _ready() -> void:
 	elif capture_expansion_07_biological_progression:
 		var capture := Expansion07BiologicalProgressionCapture.new(self)
 		await capture.capture_and_quit(EXPANSION_07_BIOLOGICAL_PROGRESSION_CAPTURE_DIR)
+	elif capture_expansion_08_daily_condition:
+		var capture := Expansion08DailyConditionCapture.new(self)
+		await capture.capture_and_quit(EXPANSION_08_DAILY_CONDITION_CAPTURE_DIR)
 	elif capture_darkness_light_gate:
 		_capture_controller.capture_darkness_light_gate_and_quit(DARKNESS_LIGHT_CAPTURE_DIR)
 	elif capture_current_gate:
