@@ -26,13 +26,13 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: no implementation batch is active; select the next milestone after player review of the completed Expansion 08 journey.
-- Directional: Expansion 09 retains goals and exit criteria only and has no issue batch.
+- Committed: Expansion 09 planning issue #852 must select one bounded authored regional-growth proof; no implementation batch is active.
+- Directional: Expansion 09 implementation details remain uncommitted until the plan is reviewed.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Open GitHub Milestones
 
-1. [Expansion 09: Regional World Growth](https://github.com/joeypshell/oceangame2/milestone/35) - directional only; memorable authored regions through the JSON pipeline.
+1. [Expansion 09: Regional World Growth](https://github.com/joeypshell/oceangame2/milestone/35) - committed at planning only through #852; memorable authored regions through the JSON pipeline.
 
 ## Completed Expansion 04
 
@@ -56,11 +56,11 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Next Batch
 
-No issue batch is active. Use the Expansion 08 player-experience question to decide whether Expansion 09 should become committed; do not treat technical automation as proof of motivation or map learnability. #52/#53 remain deferred optional slice-03 polish.
+Resolve #852 as planning only. It may recommend a bounded 6-10 issue implementation batch, but those issues must wait for plan review. #52/#53 remain deferred optional slice-03 polish.
 
 ## Roadmap Rules
 
-- Do not pre-batch Expansion 09 merely because Expansion 08 closed technically; select it explicitly after player review and roadmap evaluation.
+- Do not pre-batch Expansion 09 implementation merely because planning is committed; review #852's bounded regional decision first.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_slice_01` as the default boat hub unless a separate source-driven decision changes it.
 - Preserve source-authored maps, reachability, parity, focused captures, and public Web verification in every milestone.
