@@ -6,6 +6,7 @@ const PASS_12_LABEL := "Rest pocket"
 
 
 func _smoke_pass_12_oxygen_rest_pressure_and_quit() -> void:
+	_load_playable_map(PRODUCTION_SLICE_MAP_PATH, false)
 	if _world.map_id != "production_slice_01":
 		push_error("Pass 12 oxygen/rest smoke loaded unexpected map: %s." % _world.map_id)
 		get_tree().quit(1)

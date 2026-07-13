@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Accept and compare production-slice visual baselines."""
+"""Accept and compare production-map visual baselines."""
 
 from __future__ import annotations
 
@@ -24,6 +24,27 @@ GENERATED_BASELINE_FILE_NAMES = {".DS_Store", "Thumbs.db", "desktop.ini"}
 GENERATED_BASELINE_FILE_SUFFIXES = {".import"}
 
 SLICE_CONFIGS = {
+    "production_level_01": {
+        "capture_dir": ROOT / "visual_captures" / "expansion_09_full_level",
+        "baseline_dir": ROOT / "visual_baselines" / "production_level_01_accepted",
+        "review_path": ROOT / "references" / "asset_reviews" / "production_level_01_visual_baseline_review.png",
+        "view_ids": [
+            "production_level_overview_1280x720",
+            "production_level_overview_mobile_844x390",
+            "production_level_boat_entry_1280x720",
+            "production_level_boat_entry_mobile_844x390",
+            "production_level_opening_gameplay_1280x720",
+            "production_level_opening_gameplay_mobile_844x390",
+            "production_level_upper_left_1280x720",
+            "production_level_upper_left_mobile_844x390",
+            "production_level_lower_left_1280x720",
+            "production_level_lower_left_mobile_844x390",
+            "production_level_lower_right_1280x720",
+            "production_level_lower_right_mobile_844x390",
+            "production_level_return_to_boat_1280x720",
+            "production_level_return_to_boat_mobile_844x390",
+        ],
+    },
     "production_slice_01": {
         "capture_dir": ROOT / "visual_captures" / "production_slice_01",
         "baseline_dir": ROOT / "visual_baselines" / "production_slice_01_accepted",
@@ -214,7 +235,7 @@ def accept_baseline(slice_id: str, capture_dir: Path, baseline_dir: Path, view_i
         "views": copied,
         "notes": [
             f"Accepted {slice_id} visual baseline.",
-            "Update this baseline only after the current production slice is intentionally accepted.",
+            "Update this baseline only after the current production map is intentionally accepted.",
             "For regressions or disputed changes, keep the baseline fixed and create a follow-up issue.",
         ],
     }
@@ -273,8 +294,11 @@ def render_comparison(
     label_font = load_font(14)
     small_font = load_font(12)
 
-    draw.text((margin, 16), "Production Slice Visual Baseline Review", fill=TEXT, font=title_font)
-    draw.text((margin, 42), f"Slice: {slice_id}", fill=MUTED, font=small_font)
+    is_full_level = slice_id == "production_level_01"
+    title = "Production Map Visual Baseline Review" if is_full_level else "Production Slice Visual Baseline Review"
+    subject_label = "Map" if is_full_level else "Slice"
+    draw.text((margin, 16), title, fill=TEXT, font=title_font)
+    draw.text((margin, 42), f"{subject_label}: {slice_id}", fill=MUTED, font=small_font)
     draw.text((margin, 60), f"Baseline: {rel(baseline_dir)}", fill=MUTED, font=small_font)
     draw.text((margin, 78), f"Current: {rel(capture_dir)}", fill=MUTED, font=small_font)
 

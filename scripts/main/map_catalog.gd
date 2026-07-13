@@ -1,6 +1,5 @@
 extends RefCounted
 
-const DEFAULT_MAP_PATH := "res://maps/production_slice_01.greybox.json"
 const ORIGINAL_MAP_PATH := "res://maps/cave_salvage_test_01.greybox.json"
 const TILESET_TEST_MAP_PATH := "res://maps/cave_tileset_test_01.greybox.json"
 const ORGANIC_MAP_PATH := "res://maps/cave_salvage_organic_01.greybox.json"
@@ -10,11 +9,19 @@ const PRODUCTION_SLICE_MAP_PATH := "res://maps/production_slice_01.greybox.json"
 const PRODUCTION_SLICE_02_MAP_PATH := "res://maps/production_slice_02.greybox.json"
 const PRODUCTION_SLICE_03_MAP_PATH := "res://maps/production_slice_03.greybox.json"
 const PRODUCTION_SLICE_04_MAP_PATH := "res://maps/production_slice_04.greybox.json"
+const DEFAULT_MAP_PATH := PRODUCTION_LEVEL_MAP_PATH
 const PRODUCTION_LEVEL_FLAG := "--production-level-map"
 const WEB_QUERY_SCRIPT := "window.location.search"
+const WEB_REVIEW_MAP_PATHS := {
+	"production_level_01": PRODUCTION_LEVEL_MAP_PATH,
+	"production_slice_01": PRODUCTION_SLICE_MAP_PATH,
+	"production_slice_02": PRODUCTION_SLICE_02_MAP_PATH,
+	"production_slice_03": PRODUCTION_SLICE_03_MAP_PATH,
+	"production_slice_04": PRODUCTION_SLICE_04_MAP_PATH,
+}
 
 const REVIEW_OPTIONS := [
-	{"label": "Full Level Candidate", "path": PRODUCTION_LEVEL_MAP_PATH},
+	{"label": "Full Level", "path": PRODUCTION_LEVEL_MAP_PATH},
 	{"label": "Production 01", "path": PRODUCTION_SLICE_MAP_PATH},
 	{"label": "Production 02", "path": PRODUCTION_SLICE_02_MAP_PATH},
 	{"label": "Production 03", "path": PRODUCTION_SLICE_03_MAP_PATH},
@@ -46,8 +53,8 @@ static func web_review_map_path_for_query(query: String) -> String:
 			review_requested = true
 		elif key == "map" and parts.size() == 2:
 			map_id = str(parts[1]).to_lower()
-	if review_requested and map_id == "production_level_01":
-		return PRODUCTION_LEVEL_MAP_PATH
+	if review_requested:
+		return str(WEB_REVIEW_MAP_PATHS.get(map_id, ""))
 	return ""
 
 

@@ -1,0 +1,44 @@
+{
+  "baseline_id": "production_level_01_accepted",
+  "slice_id": "production_level_01",
+  "accepted_at_utc": "2026-07-13T19:09:53+00:00",
+  "source_capture_dir": "visual_captures/expansion_09_full_level",
+  "accepted_from_commit": "a24591f",
+  "view_ids": [
+    "production_level_overview_1280x720",
+    "production_level_overview_mobile_844x390",
+    "production_level_boat_entry_1280x720",
+    "production_level_boat_entry_mobile_844x390",
+    "production_level_opening_gameplay_1280x720",
+    "production_level_opening_gameplay_mobile_844x390",
+    "production_level_upper_left_1280x720",
+    "production_level_upper_left_mobile_844x390",
+    "production_level_lower_left_1280x720",
+    "production_level_lower_left_mobile_844x390",
+    "production_level_lower_right_1280x720",
+    "production_level_lower_right_mobile_844x390",
+    "production_level_return_to_boat_1280x720",
+    "production_level_return_to_boat_mobile_844x390"
+  ],
+  "views": [
+    "visual_baselines/production_level_01_accepted/production_level_overview_1280x720.png",
+    "visual_baselines/production_level_01_accepted/production_level_overview_mobile_844x390.png",
+    "visual_baselines/production_level_01_accepted/production_level_boat_entry_1280x720.png",
+    "visual_baselines/production_level_01_accepted/production_level_boat_entry_mobile_844x390.png",
+    "visual_baselines/production_level_01_accepted/production_level_opening_gameplay_1280x720.png",
+    "visual_baselines/production_level_01_accepted/production_level_opening_gameplay_mobile_844x390.png",
+    "visual_baselines/production_level_01_accepted/production_level_upper_left_1280x720.png",
+    "visual_baselines/production_level_01_accepted/production_level_upper_left_mobile_844x390.png",
+    "visual_baselines/production_level_01_accepted/production_level_lower_left_1280x720.png",
+    "visual_baselines/production_level_01_accepted/production_level_lower_left_mobile_844x390.png",
+    "visual_baselines/production_level_01_accepted/production_level_lower_right_1280x720.png",
+    "visual_baselines/production_level_01_accepted/production_level_lower_right_mobile_844x390.png",
+    "visual_baselines/production_level_01_accepted/production_level_return_to_boat_1280x720.png",
+    "visual_baselines/production_level_01_accepted/production_level_return_to_boat_mobile_844x390.png"
+  ],
+  "notes": [
+    "Accepted production_level_01 visual baseline.",
+    "Update this baseline only after the current production map is intentionally accepted.",
+    "For regressions or disputed changes, keep the baseline fixed and create a follow-up issue."
+  ]
+}

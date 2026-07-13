@@ -19,6 +19,7 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 	var profile := ExpansionProfileState.new(TEST_PROFILE_PATH)
 	profile.load_profile()
 	_attach_profile(profile)
+	_main._load_playable_map(_main.PRODUCTION_SLICE_MAP_PATH, false)
 	_prepare_current_map()
 	if not _require(_world.map_id == MAP_ID, "loaded unexpected map %s" % _world.map_id):
 		return

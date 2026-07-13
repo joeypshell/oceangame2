@@ -90,11 +90,11 @@ async function main() {
 		const wide = await inspectPreview(browser, targetUrl, wideViewport, "");
 		const freshReviewUrl = buildFreshReviewUrl(targetUrl);
 		const freshReview = await inspectPreview(browser, freshReviewUrl, primaryViewport, "");
-		const candidateReviewUrl = buildCandidateReviewUrl(targetUrl);
-		const candidateDesktop = await inspectPreview(browser, candidateReviewUrl, primaryViewport, "");
-		const candidateMobile = await inspectPreview(
+		const referenceSliceUrl = buildReferenceSliceReviewUrl(targetUrl);
+		const referenceDesktop = await inspectPreview(browser, referenceSliceUrl, primaryViewport, "");
+		const referenceMobile = await inspectPreview(
 			browser,
-			candidateReviewUrl,
+			referenceSliceUrl,
 			mobileViewport,
 			"",
 			{ deviceScaleFactor: 3, hasTouch: true, isMobile: true }
@@ -113,15 +113,15 @@ async function main() {
 		const allMessages = primary.messages.concat(
 			wide.messages,
 			freshReview.messages,
-			candidateDesktop.messages,
-			candidateMobile.messages,
+			referenceDesktop.messages,
+			referenceMobile.messages,
 			mobile.messages
 		);
 		const allFailedRequests = primary.failedRequests.concat(
 			wide.failedRequests,
 			freshReview.failedRequests,
-			candidateDesktop.failedRequests,
-			candidateMobile.failedRequests,
+			referenceDesktop.failedRequests,
+			referenceMobile.failedRequests,
 			mobile.failedRequests
 		);
 		const failingMessages = allMessages.filter((message) =>
@@ -131,24 +131,24 @@ async function main() {
 			message.text.includes("Fresh review profile active: persistence=false propulsion_fins=false.")
 		);
 		const defaultMapMarker = primary.messages.find((message) =>
-			message.text.includes("Web map active: map=production_slice_01 review=false.")
+			message.text.includes("Web map active: map=production_level_01 review=false.")
 		);
 		const freshReviewMapMarker = freshReview.messages.find((message) =>
+			message.text.includes("Web map active: map=production_level_01 review=true.")
+		);
+		const referenceDesktopMarker = referenceDesktop.messages.find((message) =>
 			message.text.includes("Web map active: map=production_slice_01 review=true.")
 		);
-		const candidateDesktopMarker = candidateDesktop.messages.find((message) =>
-			message.text.includes("Web map active: map=production_level_01 review=true.")
+		const referenceMobileMarker = referenceMobile.messages.find((message) =>
+			message.text.includes("Web map active: map=production_slice_01 review=true.")
 		);
-		const candidateMobileMarker = candidateMobile.messages.find((message) =>
-			message.text.includes("Web map active: map=production_level_01 review=true.")
-		);
-		const candidateFreshMarker = candidateDesktop.messages.find((message) =>
+		const referenceFreshMarker = referenceDesktop.messages.find((message) =>
 			message.text.includes("Fresh review profile active: persistence=false propulsion_fins=false.")
 		);
 
 		console.log(`Checked ${targetUrl}`);
 		console.log(`Fresh-profile review ${freshReviewUrl}`);
-		console.log(`Full-level candidate review ${candidateReviewUrl}`);
+		console.log(`Reference slice review ${referenceSliceUrl}`);
 		console.log(
 			`Canvas ${primary.canvasSize.width}x${primary.canvasSize.height} (${primary.canvasSize.clientWidth}x${primary.canvasSize.clientHeight} CSS)`
 		);
@@ -195,16 +195,16 @@ async function main() {
 			throw new Error("Fresh-profile review URL did not report isolated state with propulsion fins unowned.");
 		}
 		if (!defaultMapMarker || !freshReviewMapMarker) {
-			throw new Error("The Web root or map-unspecified review URL did not retain production_slice_01.");
+			throw new Error("The Web root or map-unspecified review URL did not load production_level_01.");
 		}
-		if (!candidateDesktopMarker || !candidateMobileMarker || !candidateFreshMarker) {
-			throw new Error("The full-level review URL did not load production_level_01 with isolated state at desktop and mobile sizes.");
+		if (!referenceDesktopMarker || !referenceMobileMarker || !referenceFreshMarker) {
+			throw new Error("The reference-slice review URL did not load production_slice_01 with isolated state at desktop and mobile sizes.");
 		}
-		if (candidateDesktop.canvasSize.width <= 0 || candidateDesktop.canvasSize.height <= 0) {
-			throw new Error("Full-level candidate canvas did not initialize at the desktop review size.");
+		if (referenceDesktop.canvasSize.width <= 0 || referenceDesktop.canvasSize.height <= 0) {
+			throw new Error("Reference-slice canvas did not initialize at the desktop review size.");
 		}
-		if (candidateMobile.canvasSize.width <= 0 || candidateMobile.canvasSize.height <= 0) {
-			throw new Error("Full-level candidate canvas did not initialize at the mobile review size.");
+		if (referenceMobile.canvasSize.width <= 0 || referenceMobile.canvasSize.height <= 0) {
+			throw new Error("Reference-slice canvas did not initialize at the mobile review size.");
 		}
 		if (mobile.canvasSize.width <= 0 || mobile.canvasSize.height <= 0) {
 			throw new Error("Godot canvas did not initialize at the mobile framing check size.");
@@ -257,10 +257,10 @@ function buildFreshReviewUrl(url) {
 	return reviewUrl.toString();
 }
 
-function buildCandidateReviewUrl(url) {
+function buildReferenceSliceReviewUrl(url) {
 	const reviewUrl = new URL(url);
 	reviewUrl.searchParams.set("review", expectedSha || "fresh");
-	reviewUrl.searchParams.set("map", "production_level_01");
+	reviewUrl.searchParams.set("map", "production_slice_01");
 	return reviewUrl.toString();
 }
 

@@ -223,10 +223,10 @@ jobs:
             exit 1
           fi
 
-      - name: Measure full-level candidate startup and camera bounds
+      - name: Measure promoted full-level default startup and camera bounds
         run: |
           set +e
-          godot --headless --path . --production-level-map --measure-map-runtime 2>&1 | tee godot-full-level-runtime.log
+          godot --headless --path . --measure-map-runtime 2>&1 | tee godot-full-level-runtime.log
           godot_status=${PIPESTATUS[0]}
           set -e
 
