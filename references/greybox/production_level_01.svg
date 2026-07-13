@@ -11,6 +11,9 @@
 </pattern>
 </defs>
 <rect x="0" y="0" width="5056" height="5152" fill="url(#water)"/>
+<rect x="2816" y="192" width="576" height="704" rx="64" fill="#237fad" opacity="0.22"/>
+<rect x="2752" y="768" width="960" height="768" rx="64" fill="#237fad" opacity="0.22"/>
+<rect x="2304" y="1856" width="1408" height="576" rx="64" fill="#237fad" opacity="0.22"/>
 <rect x="0" y="0" width="5056" height="5152" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
 <text x="12.0" y="34.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">production_level_bounds</text>
 <rect x="1216" y="1568" width="32" height="32" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
@@ -19,6 +22,28 @@
 <text x="1420.0" y="3618.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">full_level_lower_left_anchor</text>
 <rect x="3872" y="3680" width="32" height="32" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
 <text x="3884.0" y="3714.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">full_level_lower_right_anchor</text>
+<rect x="2752" y="0" width="768" height="800" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="2764.0" y="34.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">entry_shaft_route</text>
+<rect x="2624" y="704" width="1184" height="704" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="2636.0" y="738.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">central_crossing_route</text>
+<rect x="2240" y="1760" width="1664" height="768" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="2252.0" y="1794.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">lower_loop_route</text>
+<rect x="3936" y="1280" width="64" height="64" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="3948.0" y="1314.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">upper_right_current_pocket_gate</text>
+<rect x="2752" y="1856" width="128" height="96" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="2764.0" y="1890.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">deep_cache_first_step_cue</text>
+<rect x="2240" y="1600" width="896" height="576" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="2252.0" y="1634.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">return_pressure_to_boat</text>
+<rect x="2720" y="1920" width="256" height="160" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="2732.0" y="1954.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">lower_loop_oxygen_rest_pocket</text>
+<rect x="1888" y="2144" width="864" height="512" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="1900.0" y="2178.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">southwest_return_pocket_extension</text>
+<rect x="2240" y="2080" width="512" height="288" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="2252.0" y="2114.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">southwest_pocket_pre_pickup_cue</text>
+<rect x="3584" y="2048" width="416" height="416" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="3596.0" y="2082.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">lower_loop_to_deep_cache_pressure</text>
+<rect x="3456" y="2176" width="512" height="352" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="3468.0" y="2210.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">deep_cache_dark_pocket</text>
 <rect x="3456" y="0" width="1056" height="256" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="0" y="0" width="2912" height="320" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="0" y="320" width="2880" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
@@ -129,16 +154,21 @@
 <rect x="4256" y="1344" width="160" height="64" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="800" y="1408" width="384" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="2016" y="1408" width="1024" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
-<rect x="3136" y="1376" width="1056" height="64" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="3136" y="1376" width="864" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="4128" y="1376" width="64" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="3136" y="1408" width="864" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="4128" y="1408" width="64" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="4256" y="1408" width="192" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="4480" y="1376" width="576" height="64" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="800" y="1440" width="320" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="1376" y="1440" width="160" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="1920" y="1440" width="1088" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
-<rect x="3104" y="1440" width="1088" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="3104" y="1440" width="896" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="4128" y="1440" width="64" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="0" y="1408" width="352" height="96" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="1792" y="1472" width="1216" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
-<rect x="3072" y="1472" width="1120" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="3072" y="1472" width="928" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="4128" y="1472" width="64" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="4256" y="1440" width="800" height="64" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="800" y="1472" width="352" height="64" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="1376" y="1472" width="256" height="64" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
@@ -208,15 +238,20 @@
 <rect x="2112" y="2304" width="256" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="896" y="2208" width="96" height="160" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="2144" y="2336" width="224" height="64" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
-<rect x="2592" y="2272" width="224" height="160" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="2592" y="2272" width="224" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="2592" y="2304" width="224" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="2592" y="2336" width="224" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="2592" y="2368" width="224" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="2720" y="2400" width="96" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="1440" y="2432" width="256" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="1440" y="2464" width="288" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="0" y="2272" width="544" height="256" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="640" y="2496" width="64" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="1440" y="2496" width="320" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
-<rect x="2592" y="2432" width="288" height="96" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="2720" y="2432" width="160" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="2720" y="2464" width="160" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
+<rect x="2592" y="2496" width="288" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="2976" y="2496" width="32" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
-<rect x="3776" y="2496" width="32" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="4544" y="2496" width="32" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="0" y="2528" width="768" height="64" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="896" y="2528" width="96" height="64" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
@@ -388,6 +423,59 @@
 <polygon points="2912.0,9.0 3168.0,9.0 3121.9,32.0 2958.1,32.0" fill="#f0a33a" stroke="#6e4210" stroke-width="5"/>
 <circle cx="2928.0" cy="16.0" r="16" fill="#f2d6a2" stroke="#704e22" stroke-width="5"/>
 <text x="2924.0" y="60.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">BOAT</text>
+<polygon points="3088.0,575.0 3105.0,592.0 3088.0,609.0 3071.0,592.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
+<polygon points="3344.0,959.0 3361.0,976.0 3344.0,993.0 3327.0,976.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
+<polygon points="3920.0,767.0 3937.0,784.0 3920.0,801.0 3903.0,784.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
+<polygon points="2832.0,2143.0 2849.0,2160.0 2832.0,2177.0 2815.0,2160.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
+<polygon points="3024.0,2047.0 3041.0,2064.0 3024.0,2081.0 3007.0,2064.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
+<polygon points="3920.0,2399.0 3937.0,2416.0 3920.0,2433.0 3903.0,2416.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
+<polygon points="2672.0,2431.0 2689.0,2448.0 2672.0,2465.0 2655.0,2448.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
+<polygon points="2416.0,1855.0 2433.0,1872.0 2416.0,1889.0 2399.0,1872.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
+<circle cx="2960.0" cy="656.0" r="19" fill="#ff4b5f" stroke="#64121d" stroke-width="5"/>
+<line x1="2948.0" y1="644.0" x2="2972.0" y2="668.0" stroke="#ffffff" stroke-width="5"/>
+<line x1="2972.0" y1="644.0" x2="2948.0" y2="668.0" stroke="#ffffff" stroke-width="5"/>
+<circle cx="3536.0" cy="1104.0" r="19" fill="#ff4b5f" stroke="#64121d" stroke-width="5"/>
+<line x1="3524.0" y1="1092.0" x2="3548.0" y2="1116.0" stroke="#ffffff" stroke-width="5"/>
+<line x1="3548.0" y1="1092.0" x2="3524.0" y2="1116.0" stroke="#ffffff" stroke-width="5"/>
+<circle cx="3024.0" cy="1968.0" r="19" fill="#ff4b5f" stroke="#64121d" stroke-width="5"/>
+<line x1="3012.0" y1="1956.0" x2="3036.0" y2="1980.0" stroke="#ffffff" stroke-width="5"/>
+<line x1="3036.0" y1="1956.0" x2="3012.0" y2="1980.0" stroke="#ffffff" stroke-width="5"/>
+<circle cx="3696.0" cy="2128.0" r="19" fill="#ff4b5f" stroke="#64121d" stroke-width="5"/>
+<line x1="3684.0" y1="2116.0" x2="3708.0" y2="2140.0" stroke="#ffffff" stroke-width="5"/>
+<line x1="3708.0" y1="2116.0" x2="3684.0" y2="2140.0" stroke="#ffffff" stroke-width="5"/>
+<circle cx="3216.0" cy="720.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
+<circle cx="3632.0" cy="976.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
+<circle cx="2608.0" cy="1904.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
+<circle cx="2352.0" cy="2224.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
+<circle cx="3600.0" cy="2288.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
+<circle cx="3792.0" cy="2320.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
+<rect x="3807.0" y="1279.0" width="34" height="34" fill="#ffad42" stroke="#6e4210" stroke-width="5"/>
+<circle cx="3248.0" cy="720.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
+<circle cx="2384.0" cy="2224.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
+<polygon points="4080.0,1279.0 4097.0,1296.0 4080.0,1313.0 4063.0,1296.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
+<circle cx="2128.0" cy="2576.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
+<rect x="2432" y="2304" width="64" height="64" rx="8" fill="#d68cff" stroke="#5b236b" stroke-width="5"/>
+<text x="2440.0" y="2294.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">lower_loop_upgrade_chest</text>
+<rect x="4000" y="1376" width="64" height="64" rx="8" fill="#69f0dc" fill-opacity="0.28" stroke="#07584f" stroke-width="6"/>
+<circle cx="4032.0" cy="1408.0" r="14" fill="none" stroke="#69f0dc" stroke-width="6"/>
+<text x="4008.0" y="1366.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">lower_right_anomaly_survey</text>
+<rect x="4064" y="1376" width="64" height="64" rx="8" fill="#69f0dc" fill-opacity="0.28" stroke="#07584f" stroke-width="6"/>
+<circle cx="4096.0" cy="1408.0" r="14" fill="none" stroke="#69f0dc" stroke-width="6"/>
+<text x="4072.0" y="1366.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">upper_right_mineral_trace_survey</text>
+<circle cx="4048.0" cy="1488.0" r="17" fill="#b8f36b" stroke="#3f6619" stroke-width="5"/>
+<circle cx="4036.0" cy="1496.0" r="8" fill="#b8f36b" stroke="#3f6619" stroke-width="4"/>
+<text x="4072.0" y="1522.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="20" paint-order="stroke" stroke="#10384a" stroke-width="4">upper_right_glow_anemone_sample</text>
+<circle cx="3984.0" cy="2384.0" r="38" fill="none" stroke="#b8f36b" stroke-width="5" stroke-dasharray="9 7"/>
+<text x="4008.0" y="2418.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="20" paint-order="stroke" stroke="#10384a" stroke-width="4">deep_cache_eel_electrocyte_harvest</text>
+<polyline points="3600.0,2192.0 3920.0,2192.0" fill="none" stroke="#ff96b0" stroke-width="5" stroke-dasharray="12 8"/>
+<circle cx="3600.0" cy="2192.0" r="15" fill="#ff96b0" stroke="#721d35" stroke-width="5"/>
+<text x="3618.0" y="2174.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">deep_route_jellyfish_patrol</text>
+<polyline points="2128.0,2512.0 2512.0,2512.0" fill="none" stroke="#ff96b0" stroke-width="5" stroke-dasharray="12 8"/>
+<circle cx="2128.0" cy="2512.0" r="15" fill="#ff96b0" stroke="#721d35" stroke-width="5"/>
+<text x="2146.0" y="2494.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">southwest_bloom_jellyfish_patrol</text>
+<rect x="3776" y="2272" width="320" height="256" fill="#ff745e" fill-opacity="0.09" stroke="#8f281c" stroke-width="5" stroke-dasharray="14 8"/>
+<ellipse cx="3984.0" cy="2384.0" rx="28" ry="14" fill="#ff745e" stroke="#64180f" stroke-width="5"/>
+<text x="4018.0" y="2366.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">deep_cache_territorial_eel</text>
 <rect x="0" y="0" width="5056" height="5152" fill="url(#grid)"/>
 <text x="24.0" y="42.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="30" paint-order="stroke" stroke="#10384a" stroke-width="4">production_level_01 - greybox source preview</text>
 <text x="24.0" y="5110.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">cyan=open | gray=solid | tan=extraction | orange=boat/tool | green=start | yellow=salvage | teal=material/survey</text>

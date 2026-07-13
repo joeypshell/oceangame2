@@ -1,7 +1,7 @@
 {
   "id": "production_level_01",
   "version": 1,
-  "purpose": "Contiguous full-level topology candidate generated from the complete full cave sketch. Gameplay transformation follows in a separate source-owned pass.",
+  "purpose": "Contiguous full-level topology candidate generated from the complete full cave sketch. The proven slice-01 gameplay overlay is transformed into global coordinates through a source-owned, inspectable pass.",
   "source": {
     "map": "maps/full_cave_sketch_01.greybox.json",
     "image": "references/source_maps/full_cave_sketch_01.png",
@@ -125,18 +125,1179 @@
           "y": 0
         }
       ],
+      "gameplay_clearance_openings": [
+        {
+          "id": "southwest_return_pocket",
+          "intent": "Preserve the proven southwest cache approach and Pass 08 migration lane.",
+          "slice_local": [
+            {
+              "x": 23,
+              "y": 75
+            },
+            {
+              "x": 23,
+              "y": 76
+            },
+            {
+              "x": 23,
+              "y": 77
+            },
+            {
+              "x": 24,
+              "y": 75
+            },
+            {
+              "x": 24,
+              "y": 76
+            },
+            {
+              "x": 24,
+              "y": 77
+            },
+            {
+              "x": 25,
+              "y": 75
+            },
+            {
+              "x": 25,
+              "y": 76
+            },
+            {
+              "x": 25,
+              "y": 77
+            },
+            {
+              "x": 26,
+              "y": 75
+            },
+            {
+              "x": 26,
+              "y": 76
+            },
+            {
+              "x": 26,
+              "y": 77
+            }
+          ],
+          "full_global": [
+            {
+              "x": 81,
+              "y": 75
+            },
+            {
+              "x": 81,
+              "y": 76
+            },
+            {
+              "x": 81,
+              "y": 77
+            },
+            {
+              "x": 82,
+              "y": 75
+            },
+            {
+              "x": 82,
+              "y": 76
+            },
+            {
+              "x": 82,
+              "y": 77
+            },
+            {
+              "x": 83,
+              "y": 75
+            },
+            {
+              "x": 83,
+              "y": 76
+            },
+            {
+              "x": 83,
+              "y": 77
+            },
+            {
+              "x": 84,
+              "y": 75
+            },
+            {
+              "x": 84,
+              "y": 76
+            },
+            {
+              "x": 84,
+              "y": 77
+            }
+          ]
+        },
+        {
+          "id": "east_current_pocket",
+          "intent": "Preserve non-overlapping current-pocket cache, survey, and biological targets.",
+          "slice_local": [
+            {
+              "x": 67,
+              "y": 43
+            },
+            {
+              "x": 67,
+              "y": 44
+            },
+            {
+              "x": 67,
+              "y": 45
+            },
+            {
+              "x": 67,
+              "y": 46
+            },
+            {
+              "x": 68,
+              "y": 43
+            },
+            {
+              "x": 68,
+              "y": 44
+            },
+            {
+              "x": 68,
+              "y": 45
+            },
+            {
+              "x": 68,
+              "y": 46
+            },
+            {
+              "x": 69,
+              "y": 43
+            },
+            {
+              "x": 69,
+              "y": 44
+            },
+            {
+              "x": 69,
+              "y": 45
+            },
+            {
+              "x": 69,
+              "y": 46
+            },
+            {
+              "x": 70,
+              "y": 43
+            },
+            {
+              "x": 70,
+              "y": 44
+            },
+            {
+              "x": 70,
+              "y": 45
+            },
+            {
+              "x": 70,
+              "y": 46
+            }
+          ],
+          "full_global": [
+            {
+              "x": 125,
+              "y": 43
+            },
+            {
+              "x": 125,
+              "y": 44
+            },
+            {
+              "x": 125,
+              "y": 45
+            },
+            {
+              "x": 125,
+              "y": 46
+            },
+            {
+              "x": 126,
+              "y": 43
+            },
+            {
+              "x": 126,
+              "y": 44
+            },
+            {
+              "x": 126,
+              "y": 45
+            },
+            {
+              "x": 126,
+              "y": 46
+            },
+            {
+              "x": 127,
+              "y": 43
+            },
+            {
+              "x": 127,
+              "y": 44
+            },
+            {
+              "x": 127,
+              "y": 45
+            },
+            {
+              "x": 127,
+              "y": 46
+            },
+            {
+              "x": 128,
+              "y": 43
+            },
+            {
+              "x": 128,
+              "y": 44
+            },
+            {
+              "x": 128,
+              "y": 45
+            },
+            {
+              "x": 128,
+              "y": 46
+            }
+          ]
+        },
+        {
+          "id": "deep_cache_evade_lane",
+          "intent": "Keep the eel territory lower-edge evade lane and visibility zone fully open.",
+          "slice_local": [
+            {
+              "x": 60,
+              "y": 78
+            }
+          ],
+          "full_global": [
+            {
+              "x": 118,
+              "y": 78
+            }
+          ]
+        }
+      ],
       "notes": [
         "The canonical surface_boat_entry opening at top x=91..98 remains open.",
         "Nine adjacent top cells and the separate ten-cell top-right opening are sealed in global source coordinates.",
         "No crop seal, stitched slice terrain, connector, teleport, pressure, or stabilizer-entry metadata is imported.",
+        "Twenty-nine named source-owned cells are opened only where reused gameplay requires its proven clearance.",
         "The full-sketch draft remains unchanged as conversion and provenance evidence."
       ]
     },
     "stats": {
       "draft_solid_cells": 14908,
-      "candidate_solid_cells": 14927,
+      "candidate_solid_cells": 14898,
       "draft_open_boundary_cells": 27,
-      "candidate_open_boundary_cells": 8
+      "candidate_open_boundary_cells": 8,
+      "gameplay_clearance_opened_cells": 29
+    },
+    "gameplay_overlay": {
+      "source_module": "tools/production_slice_01_gameplay_source.py",
+      "source_map_id": "production_slice_01",
+      "source_bounds": {
+        "x": 58,
+        "y": 0,
+        "w": 72,
+        "h": 84
+      },
+      "local_to_global_offset": {
+        "x": 58,
+        "y": 0
+      },
+      "candidate_map_id": "production_level_01",
+      "coordinate_rule": "full_global = slice_local + (58, 0)",
+      "reused_ids": {
+        "zones": [
+          "entry_shaft_route",
+          "central_crossing_route",
+          "lower_loop_route",
+          "upper_right_current_pocket_gate",
+          "deep_cache_first_step_cue",
+          "return_pressure_to_boat",
+          "lower_loop_oxygen_rest_pocket",
+          "southwest_return_pocket_extension",
+          "southwest_pocket_pre_pickup_cue",
+          "lower_loop_to_deep_cache_pressure",
+          "deep_cache_dark_pocket"
+        ],
+        "daily_conditions": [
+          "southwest_jellyfish_bloom"
+        ],
+        "progression_containers": [
+          "lower_loop_upgrade_chest"
+        ],
+        "moving_hazards": [
+          "deep_route_jellyfish_patrol",
+          "southwest_bloom_jellyfish_patrol"
+        ],
+        "hostile_encounters": [
+          "deep_cache_territorial_eel"
+        ],
+        "biological_resource_sources": [
+          "upper_right_glow_anemone_sample",
+          "deep_cache_eel_electrocyte_harvest"
+        ],
+        "route_objectives": [
+          "deep_cache_route_objective"
+        ],
+        "next_dive_objective_prompts": [
+          "deep_cache_next_dive_prompt"
+        ],
+        "survey_targets": [
+          "lower_right_anomaly_survey",
+          "upper_right_mineral_trace_survey"
+        ],
+        "material_candidate_pools": [
+          "titanium_scrap_pool",
+          "conductive_coil_pool",
+          "rubber_sheet_pool",
+          "southwest_bloom_coil_bonus_pool"
+        ],
+        "material_projects": [
+          "propulsion_fins_project",
+          "salvage_cutter_project",
+          "shock_prod_project",
+          "shock_prod_capacitor_project"
+        ],
+        "background": [
+          "distant_entry_wall",
+          "distant_crossing_mass",
+          "distant_lower_loop"
+        ],
+        "entities": [
+          "salvage_entry_shaft",
+          "salvage_center_crossing",
+          "salvage_right_branch",
+          "salvage_lower_loop",
+          "salvage_pry_locker",
+          "salvage_deep_right_cache",
+          "salvage_southwest_return_cache",
+          "salvage_return_branch",
+          "hazard_shaft_choke",
+          "hazard_crossing_choke",
+          "hazard_lower_bend",
+          "hazard_right_branch",
+          "material_titanium_entry",
+          "material_titanium_crossing",
+          "material_titanium_return",
+          "material_titanium_lower_loop",
+          "material_coil_deep_approach",
+          "material_coil_deep_cache",
+          "salvage_sealed_wreck_cache",
+          "material_rubber_entry",
+          "material_rubber_lower_loop",
+          "salvage_current_pocket_cache",
+          "material_coil_southwest_bloom"
+        ],
+        "camera_tests": [
+          "production_slice_overview",
+          "production_slice_entry_shaft",
+          "production_slice_first_route_choice",
+          "production_slice_central_crossing",
+          "production_slice_lower_loop",
+          "production_slice_return_to_boat"
+        ]
+      },
+      "excluded_ids": {
+        "zones": [
+          "lower_left_loop_connector",
+          "lower_left_loop_current",
+          "production_slice_bounds"
+        ],
+        "material_projects": [
+          "current_stabilizer_project"
+        ],
+        "entities": [
+          "surface_boat_entry"
+        ]
+      },
+      "excluded_non_gameplay_sections": [
+        "review_questions"
+      ],
+      "candidate_reference_overrides": [
+        {
+          "section": "survey_targets",
+          "fields": {
+            "commit_map_id": "production_level_01",
+            "commit_map_path": "res://maps/production_level_01.greybox.json",
+            "commit_entry_id": "surface_boat_entry"
+          },
+          "intent": "Commit transformed findings at the candidate's canonical boat."
+        }
+      ],
+      "candidate_presentation_overrides": [
+        {
+          "section": "zones",
+          "id": "deep_cache_first_step_cue",
+          "fields": {
+            "intent": "Opening lower-loop objective cue for its first required target."
+          },
+          "intent": "Remove superseded relay wording without changing mechanics."
+        },
+        {
+          "section": "zones",
+          "id": "southwest_pocket_pre_pickup_cue",
+          "fields": {
+            "cue_text": "Lower-loop cache ahead",
+            "intent": "Pre-pickup route cue for the required non-eel lower-loop payoff."
+          },
+          "intent": "Remove superseded relay wording without changing mechanics."
+        },
+        {
+          "section": "route_objectives",
+          "id": "deep_cache_route_objective",
+          "fields": {
+            "label": "Lower-loop trail",
+            "intent": "Opening objective banks two non-eel lower-loop payoffs before the shock-prod-gated deep-right cache."
+          },
+          "intent": "Remove superseded relay wording without changing mechanics."
+        },
+        {
+          "section": "entities",
+          "id": "salvage_southwest_return_cache",
+          "fields": {
+            "intent": "Non-eel valuable payoff completing the opening lower-loop trail; the separate material route supplies the propulsion-fins recipe."
+          },
+          "intent": "Remove superseded relay wording without changing mechanics."
+        },
+        {
+          "section": "entities",
+          "id": "material_rubber_lower_loop",
+          "fields": {
+            "intent": "Lower-loop rubber candidate on the non-eel western approach."
+          },
+          "intent": "Remove superseded relay wording without changing mechanics."
+        }
+      ],
+      "coordinate_records": [
+        {
+          "section": "zones",
+          "id": "entry_shaft_route",
+          "slice_local": {
+            "x": 28,
+            "y": 0,
+            "w": 24,
+            "h": 25
+          },
+          "full_global": {
+            "x": 86,
+            "y": 0,
+            "w": 24,
+            "h": 25
+          }
+        },
+        {
+          "section": "zones",
+          "id": "central_crossing_route",
+          "slice_local": {
+            "x": 24,
+            "y": 22,
+            "w": 37,
+            "h": 22
+          },
+          "full_global": {
+            "x": 82,
+            "y": 22,
+            "w": 37,
+            "h": 22
+          }
+        },
+        {
+          "section": "zones",
+          "id": "lower_loop_route",
+          "slice_local": {
+            "x": 12,
+            "y": 55,
+            "w": 52,
+            "h": 24
+          },
+          "full_global": {
+            "x": 70,
+            "y": 55,
+            "w": 52,
+            "h": 24
+          }
+        },
+        {
+          "section": "zones",
+          "id": "upper_right_current_pocket_gate",
+          "slice_local": {
+            "x": 65,
+            "y": 40,
+            "w": 2,
+            "h": 2
+          },
+          "full_global": {
+            "x": 123,
+            "y": 40,
+            "w": 2,
+            "h": 2
+          }
+        },
+        {
+          "section": "zones",
+          "id": "deep_cache_first_step_cue",
+          "slice_local": {
+            "x": 28,
+            "y": 58,
+            "w": 4,
+            "h": 3
+          },
+          "full_global": {
+            "x": 86,
+            "y": 58,
+            "w": 4,
+            "h": 3
+          }
+        },
+        {
+          "section": "zones",
+          "id": "return_pressure_to_boat",
+          "slice_local": {
+            "x": 12,
+            "y": 50,
+            "w": 28,
+            "h": 18
+          },
+          "full_global": {
+            "x": 70,
+            "y": 50,
+            "w": 28,
+            "h": 18
+          }
+        },
+        {
+          "section": "zones",
+          "id": "lower_loop_oxygen_rest_pocket",
+          "slice_local": {
+            "x": 27,
+            "y": 60,
+            "w": 8,
+            "h": 5
+          },
+          "full_global": {
+            "x": 85,
+            "y": 60,
+            "w": 8,
+            "h": 5
+          }
+        },
+        {
+          "section": "zones",
+          "id": "southwest_return_pocket_extension",
+          "slice_local": {
+            "x": 1,
+            "y": 67,
+            "w": 27,
+            "h": 16
+          },
+          "full_global": {
+            "x": 59,
+            "y": 67,
+            "w": 27,
+            "h": 16
+          }
+        },
+        {
+          "section": "zones",
+          "id": "southwest_pocket_pre_pickup_cue",
+          "slice_local": {
+            "x": 12,
+            "y": 65,
+            "w": 16,
+            "h": 9
+          },
+          "full_global": {
+            "x": 70,
+            "y": 65,
+            "w": 16,
+            "h": 9
+          }
+        },
+        {
+          "section": "zones",
+          "id": "lower_loop_to_deep_cache_pressure",
+          "slice_local": {
+            "x": 54,
+            "y": 64,
+            "w": 13,
+            "h": 13
+          },
+          "full_global": {
+            "x": 112,
+            "y": 64,
+            "w": 13,
+            "h": 13
+          }
+        },
+        {
+          "section": "zones",
+          "id": "deep_cache_dark_pocket",
+          "slice_local": {
+            "x": 50,
+            "y": 68,
+            "w": 16,
+            "h": 11
+          },
+          "full_global": {
+            "x": 108,
+            "y": 68,
+            "w": 16,
+            "h": 11
+          }
+        },
+        {
+          "section": "progression_containers",
+          "id": "lower_loop_upgrade_chest",
+          "slice_local": {
+            "x": 18,
+            "y": 72,
+            "w": 2,
+            "h": 2
+          },
+          "full_global": {
+            "x": 76,
+            "y": 72,
+            "w": 2,
+            "h": 2
+          }
+        },
+        {
+          "section": "moving_hazards",
+          "id": "deep_route_jellyfish_patrol",
+          "slice_local": {
+            "x": 54,
+            "y": 68,
+            "path": [
+              {
+                "x": 54,
+                "y": 68
+              },
+              {
+                "x": 64,
+                "y": 68
+              }
+            ]
+          },
+          "full_global": {
+            "x": 112,
+            "y": 68,
+            "path": [
+              {
+                "x": 112,
+                "y": 68
+              },
+              {
+                "x": 122,
+                "y": 68
+              }
+            ]
+          }
+        },
+        {
+          "section": "moving_hazards",
+          "id": "southwest_bloom_jellyfish_patrol",
+          "slice_local": {
+            "x": 8,
+            "y": 78,
+            "path": [
+              {
+                "x": 8,
+                "y": 78
+              },
+              {
+                "x": 20,
+                "y": 78
+              }
+            ]
+          },
+          "full_global": {
+            "x": 66,
+            "y": 78,
+            "path": [
+              {
+                "x": 66,
+                "y": 78
+              },
+              {
+                "x": 78,
+                "y": 78
+              }
+            ]
+          }
+        },
+        {
+          "section": "hostile_encounters",
+          "id": "deep_cache_territorial_eel",
+          "slice_local": {
+            "x": 66,
+            "y": 74,
+            "territory": {
+              "x": 60,
+              "y": 71,
+              "w": 10,
+              "h": 8
+            }
+          },
+          "full_global": {
+            "x": 124,
+            "y": 74,
+            "territory": {
+              "x": 118,
+              "y": 71,
+              "w": 10,
+              "h": 8
+            }
+          }
+        },
+        {
+          "section": "biological_resource_sources",
+          "id": "upper_right_glow_anemone_sample",
+          "slice_local": {
+            "x": 68,
+            "y": 46
+          },
+          "full_global": {
+            "x": 126,
+            "y": 46
+          }
+        },
+        {
+          "section": "survey_targets",
+          "id": "lower_right_anomaly_survey",
+          "slice_local": {
+            "x": 67,
+            "y": 43,
+            "w": 2,
+            "h": 2
+          },
+          "full_global": {
+            "x": 125,
+            "y": 43,
+            "w": 2,
+            "h": 2
+          }
+        },
+        {
+          "section": "survey_targets",
+          "id": "upper_right_mineral_trace_survey",
+          "slice_local": {
+            "x": 69,
+            "y": 43,
+            "w": 2,
+            "h": 2
+          },
+          "full_global": {
+            "x": 127,
+            "y": 43,
+            "w": 2,
+            "h": 2
+          }
+        },
+        {
+          "section": "background",
+          "id": "distant_entry_wall",
+          "slice_local": {
+            "x": 30,
+            "y": 6,
+            "w": 18,
+            "h": 22
+          },
+          "full_global": {
+            "x": 88,
+            "y": 6,
+            "w": 18,
+            "h": 22
+          }
+        },
+        {
+          "section": "background",
+          "id": "distant_crossing_mass",
+          "slice_local": {
+            "x": 28,
+            "y": 24,
+            "w": 30,
+            "h": 24
+          },
+          "full_global": {
+            "x": 86,
+            "y": 24,
+            "w": 30,
+            "h": 24
+          }
+        },
+        {
+          "section": "background",
+          "id": "distant_lower_loop",
+          "slice_local": {
+            "x": 14,
+            "y": 58,
+            "w": 44,
+            "h": 18
+          },
+          "full_global": {
+            "x": 72,
+            "y": 58,
+            "w": 44,
+            "h": 18
+          }
+        },
+        {
+          "section": "entities",
+          "id": "salvage_entry_shaft",
+          "slice_local": {
+            "x": 38,
+            "y": 18
+          },
+          "full_global": {
+            "x": 96,
+            "y": 18
+          }
+        },
+        {
+          "section": "entities",
+          "id": "salvage_center_crossing",
+          "slice_local": {
+            "x": 46,
+            "y": 30
+          },
+          "full_global": {
+            "x": 104,
+            "y": 30
+          }
+        },
+        {
+          "section": "entities",
+          "id": "salvage_right_branch",
+          "slice_local": {
+            "x": 64,
+            "y": 24
+          },
+          "full_global": {
+            "x": 122,
+            "y": 24
+          }
+        },
+        {
+          "section": "entities",
+          "id": "salvage_lower_loop",
+          "slice_local": {
+            "x": 30,
+            "y": 67
+          },
+          "full_global": {
+            "x": 88,
+            "y": 67
+          }
+        },
+        {
+          "section": "entities",
+          "id": "salvage_pry_locker",
+          "slice_local": {
+            "x": 36,
+            "y": 64
+          },
+          "full_global": {
+            "x": 94,
+            "y": 64
+          }
+        },
+        {
+          "section": "entities",
+          "id": "salvage_deep_right_cache",
+          "slice_local": {
+            "x": 64,
+            "y": 75
+          },
+          "full_global": {
+            "x": 122,
+            "y": 75
+          }
+        },
+        {
+          "section": "entities",
+          "id": "salvage_southwest_return_cache",
+          "slice_local": {
+            "x": 25,
+            "y": 76
+          },
+          "full_global": {
+            "x": 83,
+            "y": 76
+          }
+        },
+        {
+          "section": "entities",
+          "id": "salvage_return_branch",
+          "slice_local": {
+            "x": 17,
+            "y": 58
+          },
+          "full_global": {
+            "x": 75,
+            "y": 58
+          }
+        },
+        {
+          "section": "entities",
+          "id": "hazard_shaft_choke",
+          "slice_local": {
+            "x": 34,
+            "y": 20
+          },
+          "full_global": {
+            "x": 92,
+            "y": 20
+          }
+        },
+        {
+          "section": "entities",
+          "id": "hazard_crossing_choke",
+          "slice_local": {
+            "x": 52,
+            "y": 34
+          },
+          "full_global": {
+            "x": 110,
+            "y": 34
+          }
+        },
+        {
+          "section": "entities",
+          "id": "hazard_lower_bend",
+          "slice_local": {
+            "x": 36,
+            "y": 61
+          },
+          "full_global": {
+            "x": 94,
+            "y": 61
+          }
+        },
+        {
+          "section": "entities",
+          "id": "hazard_right_branch",
+          "slice_local": {
+            "x": 57,
+            "y": 66
+          },
+          "full_global": {
+            "x": 115,
+            "y": 66
+          }
+        },
+        {
+          "section": "entities",
+          "id": "material_titanium_entry",
+          "slice_local": {
+            "x": 42,
+            "y": 22
+          },
+          "full_global": {
+            "x": 100,
+            "y": 22
+          }
+        },
+        {
+          "section": "entities",
+          "id": "material_titanium_crossing",
+          "slice_local": {
+            "x": 55,
+            "y": 30
+          },
+          "full_global": {
+            "x": 113,
+            "y": 30
+          }
+        },
+        {
+          "section": "entities",
+          "id": "material_titanium_return",
+          "slice_local": {
+            "x": 23,
+            "y": 59
+          },
+          "full_global": {
+            "x": 81,
+            "y": 59
+          }
+        },
+        {
+          "section": "entities",
+          "id": "material_titanium_lower_loop",
+          "slice_local": {
+            "x": 15,
+            "y": 69
+          },
+          "full_global": {
+            "x": 73,
+            "y": 69
+          }
+        },
+        {
+          "section": "entities",
+          "id": "material_coil_deep_approach",
+          "slice_local": {
+            "x": 54,
+            "y": 71
+          },
+          "full_global": {
+            "x": 112,
+            "y": 71
+          }
+        },
+        {
+          "section": "entities",
+          "id": "material_coil_deep_cache",
+          "slice_local": {
+            "x": 60,
+            "y": 72
+          },
+          "full_global": {
+            "x": 118,
+            "y": 72
+          }
+        },
+        {
+          "section": "entities",
+          "id": "salvage_sealed_wreck_cache",
+          "slice_local": {
+            "x": 61,
+            "y": 40
+          },
+          "full_global": {
+            "x": 119,
+            "y": 40
+          }
+        },
+        {
+          "section": "entities",
+          "id": "material_rubber_entry",
+          "slice_local": {
+            "x": 43,
+            "y": 22
+          },
+          "full_global": {
+            "x": 101,
+            "y": 22
+          }
+        },
+        {
+          "section": "entities",
+          "id": "material_rubber_lower_loop",
+          "slice_local": {
+            "x": 16,
+            "y": 69
+          },
+          "full_global": {
+            "x": 74,
+            "y": 69
+          }
+        },
+        {
+          "section": "entities",
+          "id": "salvage_current_pocket_cache",
+          "slice_local": {
+            "x": 69,
+            "y": 40
+          },
+          "full_global": {
+            "x": 127,
+            "y": 40
+          }
+        },
+        {
+          "section": "entities",
+          "id": "material_coil_southwest_bloom",
+          "slice_local": {
+            "x": 8,
+            "y": 80
+          },
+          "full_global": {
+            "x": 66,
+            "y": 80
+          }
+        },
+        {
+          "section": "camera_tests",
+          "id": "production_slice_overview",
+          "slice_local": {
+            "center_x": 36,
+            "center_y": 42
+          },
+          "full_global": {
+            "center_x": 94,
+            "center_y": 42
+          }
+        },
+        {
+          "section": "camera_tests",
+          "id": "production_slice_entry_shaft",
+          "slice_local": {
+            "center_x": 39,
+            "center_y": 11
+          },
+          "full_global": {
+            "center_x": 97,
+            "center_y": 11
+          }
+        },
+        {
+          "section": "camera_tests",
+          "id": "production_slice_first_route_choice",
+          "slice_local": {
+            "center_x": 42,
+            "center_y": 25
+          },
+          "full_global": {
+            "center_x": 100,
+            "center_y": 25
+          }
+        },
+        {
+          "section": "camera_tests",
+          "id": "production_slice_central_crossing",
+          "slice_local": {
+            "center_x": 48,
+            "center_y": 43
+          },
+          "full_global": {
+            "center_x": 106,
+            "center_y": 43
+          }
+        },
+        {
+          "section": "camera_tests",
+          "id": "production_slice_lower_loop",
+          "slice_local": {
+            "center_x": 36,
+            "center_y": 66
+          },
+          "full_global": {
+            "center_x": 94,
+            "center_y": 66
+          }
+        },
+        {
+          "section": "camera_tests",
+          "id": "production_slice_return_to_boat",
+          "slice_local": {
+            "center_x": 36,
+            "center_y": 18
+          },
+          "full_global": {
+            "center_x": 94,
+            "center_y": 18
+          }
+        }
+      ]
     },
     "review_artifact": "references/greybox/production_level_01_source_render_collision_review.png"
   },
@@ -149,7 +1310,9 @@
     "water": "Open swimmable space from the complete full-sketch topology",
     "solid": "Collision terrain from the full sketch plus named boundary cleanup",
     "boat_spawn": "Canonical top-water boat entry and extraction marker",
-    "marker": "Non-gameplay validation or review annotation"
+    "marker": "Non-gameplay validation or review annotation",
+    "salvage": "Collectible objective reused from the proven opening region",
+    "hazard": "Avoidance pressure reused from the proven opening region"
   },
   "terrain": [
     {
@@ -1033,12 +2196,36 @@
       "h": 1
     },
     {
-      "id": "solid_y043_x098_130",
+      "id": "solid_y043_x098_130_gameplay_clearance_01",
       "type": "solid",
       "x": 98,
       "y": 43,
-      "w": 33,
-      "h": 2
+      "w": 27,
+      "h": 1
+    },
+    {
+      "id": "solid_y043_x098_130_gameplay_clearance_02",
+      "type": "solid",
+      "x": 129,
+      "y": 43,
+      "w": 2,
+      "h": 1
+    },
+    {
+      "id": "solid_y043_x098_130_gameplay_clearance_03",
+      "type": "solid",
+      "x": 98,
+      "y": 44,
+      "w": 27,
+      "h": 1
+    },
+    {
+      "id": "solid_y043_x098_130_gameplay_clearance_04",
+      "type": "solid",
+      "x": 129,
+      "y": 44,
+      "w": 2,
+      "h": 1
     },
     {
       "id": "solid_y044_x133_138",
@@ -1081,11 +2268,19 @@
       "h": 1
     },
     {
-      "id": "solid_y045_x097_130",
+      "id": "solid_y045_x097_130_gameplay_clearance_01",
       "type": "solid",
       "x": 97,
       "y": 45,
-      "w": 34,
+      "w": 28,
+      "h": 1
+    },
+    {
+      "id": "solid_y045_x097_130_gameplay_clearance_02",
+      "type": "solid",
+      "x": 129,
+      "y": 45,
+      "w": 2,
       "h": 1
     },
     {
@@ -1105,11 +2300,19 @@
       "h": 1
     },
     {
-      "id": "solid_y046_x096_130",
+      "id": "solid_y046_x096_130_gameplay_clearance_01",
       "type": "solid",
       "x": 96,
       "y": 46,
-      "w": 35,
+      "w": 29,
+      "h": 1
+    },
+    {
+      "id": "solid_y046_x096_130_gameplay_clearance_02",
+      "type": "solid",
+      "x": 129,
+      "y": 46,
+      "w": 2,
       "h": 1
     },
     {
@@ -1665,12 +2868,44 @@
       "h": 2
     },
     {
-      "id": "solid_y071_x081_087",
+      "id": "solid_y071_x081_087_gameplay_clearance_01",
       "type": "solid",
       "x": 81,
       "y": 71,
       "w": 7,
-      "h": 5
+      "h": 1
+    },
+    {
+      "id": "solid_y071_x081_087_gameplay_clearance_02",
+      "type": "solid",
+      "x": 81,
+      "y": 72,
+      "w": 7,
+      "h": 1
+    },
+    {
+      "id": "solid_y071_x081_087_gameplay_clearance_03",
+      "type": "solid",
+      "x": 81,
+      "y": 73,
+      "w": 7,
+      "h": 1
+    },
+    {
+      "id": "solid_y071_x081_087_gameplay_clearance_04",
+      "type": "solid",
+      "x": 81,
+      "y": 74,
+      "w": 7,
+      "h": 1
+    },
+    {
+      "id": "solid_y071_x081_087_gameplay_clearance_05",
+      "type": "solid",
+      "x": 85,
+      "y": 75,
+      "w": 3,
+      "h": 1
     },
     {
       "id": "solid_y076_x045_052",
@@ -1713,25 +2948,33 @@
       "h": 1
     },
     {
-      "id": "solid_y076_x081_089",
+      "id": "solid_y076_x081_089_gameplay_clearance_01",
+      "type": "solid",
+      "x": 85,
+      "y": 76,
+      "w": 5,
+      "h": 1
+    },
+    {
+      "id": "solid_y076_x081_089_gameplay_clearance_02",
+      "type": "solid",
+      "x": 85,
+      "y": 77,
+      "w": 5,
+      "h": 1
+    },
+    {
+      "id": "solid_y076_x081_089_gameplay_clearance_03",
       "type": "solid",
       "x": 81,
-      "y": 76,
+      "y": 78,
       "w": 9,
-      "h": 3
+      "h": 1
     },
     {
       "id": "solid_y078_x093_093",
       "type": "solid",
       "x": 93,
-      "y": 78,
-      "w": 1,
-      "h": 1
-    },
-    {
-      "id": "solid_y078_x118_118",
-      "type": "solid",
-      "x": 118,
       "y": 78,
       "w": 1,
       "h": 1
@@ -3123,9 +4366,475 @@
       "validation_anchor": true,
       "sector": "lower_right",
       "intent": "Representative lower-right traversal and return anchor."
+    },
+    {
+      "id": "entry_shaft_route",
+      "type": "marker",
+      "x": 86,
+      "y": 0,
+      "w": 24,
+      "h": 25,
+      "intent": "Top-water descent from boat entry into the first branch."
+    },
+    {
+      "id": "central_crossing_route",
+      "type": "marker",
+      "x": 82,
+      "y": 22,
+      "w": 37,
+      "h": 22,
+      "intent": "Primary branching hub with a return route toward the boat."
+    },
+    {
+      "id": "lower_loop_route",
+      "type": "marker",
+      "x": 70,
+      "y": 55,
+      "w": 52,
+      "h": 24,
+      "intent": "Lower optional loop for a longer salvage return test."
+    },
+    {
+      "id": "upper_right_current_pocket_gate",
+      "type": "marker",
+      "x": 123,
+      "y": 40,
+      "w": 2,
+      "h": 2,
+      "current_gate": true,
+      "current_direction": "left",
+      "current_strength": 2.2,
+      "required_capability_id": "propulsion_fins",
+      "current_gate_label": "Strong east current",
+      "current_affordance_role": "barrier",
+      "route_context": "upper_right_current_pocket",
+      "intent": "First standard current boundary; recipe-built propulsion fins allow normal swim-through traversal."
+    },
+    {
+      "id": "deep_cache_first_step_cue",
+      "type": "marker",
+      "x": 86,
+      "y": 58,
+      "w": 4,
+      "h": 3,
+      "objective_step_cue": true,
+      "objective_id": "deep_cache_route_objective",
+      "target_id": "salvage_lower_loop",
+      "route_context": "deep_cache_commitment",
+      "objective_step_label": "Lower loop",
+      "intent": "Opening lower-loop objective cue for its first required target."
+    },
+    {
+      "id": "return_pressure_to_boat",
+      "type": "marker",
+      "x": 70,
+      "y": 50,
+      "w": 28,
+      "h": 18,
+      "intent": "Pass 10 return-pressure segment around salvage_return_branch where full cargo should prompt banking at the boat."
+    },
+    {
+      "id": "lower_loop_oxygen_rest_pocket",
+      "type": "marker",
+      "x": 85,
+      "y": 60,
+      "w": 8,
+      "h": 5,
+      "route_context": "oxygen_rest_pressure",
+      "oxygen_rest": true,
+      "oxygen_rest_label": "Rest pocket",
+      "oxygen_rest_cap_seconds": 45,
+      "oxygen_rest_refill_per_second": 8,
+      "intent": "Pass 12 limited oxygen rest pocket in the lower-loop return corridor; supports a brief in-cave oxygen decision without changing extraction, cargo, salvage, hazards, or terrain topology."
+    },
+    {
+      "id": "southwest_return_pocket_extension",
+      "type": "marker",
+      "x": 59,
+      "y": 67,
+      "w": 27,
+      "h": 16,
+      "intent": "Pass 08/09 route segment marking the lower-left return pocket near salvage_return_branch for a small optional detour decision."
+    },
+    {
+      "id": "southwest_pocket_pre_pickup_cue",
+      "type": "marker",
+      "x": 70,
+      "y": 65,
+      "w": 16,
+      "h": 9,
+      "route_cue_id": "southwest_pocket_pre_pickup_cue",
+      "cue_target_id": "salvage_southwest_return_cache",
+      "cue_text": "Lower-loop cache ahead",
+      "cue_condition": "target_uncollected",
+      "intent": "Pre-pickup route cue for the required non-eel lower-loop payoff."
+    },
+    {
+      "id": "lower_loop_to_deep_cache_pressure",
+      "type": "marker",
+      "x": 112,
+      "y": 64,
+      "w": 13,
+      "h": 13,
+      "intent": "Pass 07 hazard/navigation pressure segment covering the hazard_right_branch warning corridor and approach to timed salvage_deep_right_cache."
+    },
+    {
+      "id": "deep_cache_dark_pocket",
+      "type": "marker",
+      "x": 108,
+      "y": 68,
+      "w": 16,
+      "h": 11,
+      "visibility_zone": true,
+      "visibility_level": "dark",
+      "visibility_label": "Dark pocket",
+      "route_context": "deep_cache_pressure",
+      "required_upgrade_id": "dive_light_1",
+      "visual_only": true,
+      "intent": "First visual-only darkness pressure zone around the lower-loop-to-deep-cache route."
     }
   ],
-  "background": [],
+  "daily_conditions": [
+    {
+      "id": "southwest_jellyfish_bloom",
+      "schedule": "even_days_v1",
+      "forecast_label": "Tomorrow: Southwest jellyfish bloom",
+      "active_label": "Southwest bloom: jellyfish + coil trace",
+      "route_context": "southwest_pocket_decision",
+      "intent": "Forecast one optional southwest risk-reward opportunity."
+    }
+  ],
+  "progression_containers": [
+    {
+      "id": "lower_loop_upgrade_chest",
+      "container_type": "upgrade_chest",
+      "x": 76,
+      "y": 72,
+      "w": 2,
+      "h": 2,
+      "display_label": "Fins blueprint chest",
+      "interaction": "interact",
+      "reward_type": "blueprint",
+      "reward_id": "propulsion_fins_blueprint",
+      "route_context": "lower_loop_reward",
+      "intent": "Guaranteed pre-gate recovered plan that reveals the propulsion-fins recipe."
+    }
+  ],
+  "moving_hazards": [
+    {
+      "id": "deep_route_jellyfish_patrol",
+      "kind": "jellyfish",
+      "x": 112,
+      "y": 68,
+      "movement": "linear_patrol",
+      "path": [
+        {
+          "x": 112,
+          "y": 68
+        },
+        {
+          "x": 122,
+          "y": 68
+        }
+      ],
+      "speed_tiles_per_second": 1.0,
+      "route_context": "deep_cache_pressure",
+      "display_label": "Jellyfish patrol",
+      "intent": "First deterministic moving hazard on the lower-loop to deep-cache route."
+    },
+    {
+      "id": "southwest_bloom_jellyfish_patrol",
+      "kind": "jellyfish",
+      "x": 66,
+      "y": 78,
+      "movement": "linear_patrol",
+      "path": [
+        {
+          "x": 66,
+          "y": 78
+        },
+        {
+          "x": 78,
+          "y": 78
+        }
+      ],
+      "speed_tiles_per_second": 1.0,
+      "route_context": "southwest_pocket_decision",
+      "display_label": "Bloom jellyfish patrol",
+      "daily_condition_id": "southwest_jellyfish_bloom",
+      "intent": "Optional even-day patrol paired with the southwest coil opportunity."
+    }
+  ],
+  "hostile_encounters": [
+    {
+      "id": "deep_cache_territorial_eel",
+      "kind": "territorial_eel",
+      "x": 124,
+      "y": 74,
+      "behavior": "territorial_lunge",
+      "territory": {
+        "x": 118,
+        "y": 71,
+        "w": 10,
+        "h": 8
+      },
+      "warning_radius_tiles": 4.0,
+      "warning_seconds": 0.75,
+      "lunge_speed_tiles_per_second": 6.0,
+      "lunge_seconds": 0.45,
+      "recovery_seconds": 1.25,
+      "contact_radius_tiles": 0.75,
+      "health": 3,
+      "contact_damage": 1,
+      "required_weapon_capability_id": "shock_prod",
+      "warning_label": "Territorial eel - watch the lunge",
+      "retreat_label": "Eel guarding cache - return with shock prod",
+      "defeated_label": "Territory clear for today",
+      "route_context": "deep_cache_pressure",
+      "intent": "One territorial encounter hard-guarding the deep-right cache; unarmed players may retreat through unchanged topology but cannot collect the payoff."
+    }
+  ],
+  "biological_resource_sources": [
+    {
+      "id": "upper_right_glow_anemone_sample",
+      "source_role": "passive_sample",
+      "organism_kind": "glow_anemone",
+      "x": 126,
+      "y": 46,
+      "required_capability_id": "survey_scanner_1",
+      "interaction": "timed_sample",
+      "interaction_seconds": 1.5,
+      "material_id": "insulating_gel",
+      "material_quantity": 1,
+      "replenishment": "new_day",
+      "display_label": "Glow anemone",
+      "interaction_label": "Sampling glow anemone",
+      "collected_label": "Insulating gel held",
+      "route_context": "upper_right_current_pocket",
+      "intent": "One nonlethal biological sample beyond the remembered current gate."
+    },
+    {
+      "id": "deep_cache_eel_electrocyte_harvest",
+      "source_role": "hostile_harvest",
+      "organism_kind": "territorial_eel",
+      "hostile_id": "deep_cache_territorial_eel",
+      "interaction": "post_defeat_harvest",
+      "interaction_seconds": 1.5,
+      "material_id": "eel_electrocyte",
+      "material_quantity": 1,
+      "replenishment": "new_day",
+      "display_label": "Eel electrocyte",
+      "interaction_label": "Harvesting electrocyte",
+      "collected_label": "Electrocyte held",
+      "route_context": "deep_cache_pressure",
+      "intent": "One explicit harvest from the existing eel after current-day defeat."
+    }
+  ],
+  "route_objectives": [
+    {
+      "id": "deep_cache_route_objective",
+      "route_context": "deep_cache_commitment",
+      "label": "Lower-loop trail",
+      "required_banked_targets": [
+        "salvage_lower_loop",
+        "salvage_southwest_return_cache"
+      ],
+      "supporting_marker_ids": [
+        "lower_loop_route",
+        "deep_cache_first_step_cue",
+        "southwest_return_pocket_extension",
+        "southwest_pocket_pre_pickup_cue",
+        "lower_loop_oxygen_rest_pocket",
+        "return_pressure_to_boat"
+      ],
+      "intent": "Opening objective banks two non-eel lower-loop payoffs before the shock-prod-gated deep-right cache."
+    }
+  ],
+  "primary_route_objective_id": "deep_cache_route_objective",
+  "next_dive_objective_prompts": [
+    {
+      "id": "deep_cache_next_dive_prompt",
+      "trigger": "primary_objective_complete",
+      "objective_id": "deep_cache_route_objective",
+      "target_id": "upper_right_current_pocket_gate",
+      "label": "Next dive: Investigate east current",
+      "route_context": "upper_right_current_pocket",
+      "intent": "Result prompt pointing the next dive toward the standard current crossed passively with propulsion fins."
+    }
+  ],
+  "survey_targets": [
+    {
+      "id": "lower_right_anomaly_survey",
+      "target_type": "anomaly",
+      "x": 125,
+      "y": 43,
+      "w": 2,
+      "h": 2,
+      "required_capability_id": "survey_scanner_1",
+      "interaction": "survey",
+      "interaction_seconds": 3.0,
+      "interaction_label": "Survey anomaly",
+      "discovery_id": "lower_right_anomaly_discovery",
+      "route_context": "upper_right_current_pocket",
+      "commit_map_id": "production_level_01",
+      "commit_map_path": "res://maps/production_level_01.greybox.json",
+      "commit_entry_id": "surface_boat_entry",
+      "intent": "Main anomaly survey moved into the contiguous east current pocket for the scanner journey."
+    },
+    {
+      "id": "upper_right_mineral_trace_survey",
+      "target_type": "resource",
+      "x": 127,
+      "y": 43,
+      "w": 2,
+      "h": 2,
+      "required_capability_id": "survey_scanner_1",
+      "interaction": "survey",
+      "interaction_seconds": 3.0,
+      "interaction_label": "Survey mineral trace",
+      "clue_label": "Mineral trace | Composition unknown",
+      "finding_label": "Research: coils favor deep-cache machinery",
+      "discovery_id": "upper_right_mineral_trace_research",
+      "research_material_pool_id": "conductive_coil_pool",
+      "route_context": "upper_right_current_pocket",
+      "commit_map_id": "production_level_01",
+      "commit_map_path": "res://maps/production_level_01.greybox.json",
+      "commit_entry_id": "surface_boat_entry",
+      "intent": "Expansion 05 mineral trace beyond the durable current gate; its committed finding favors the existing deep-cache coil habitat on a fresh day."
+    }
+  ],
+  "material_candidate_pools": [
+    {
+      "id": "titanium_scrap_pool",
+      "material_id": "titanium_scrap",
+      "selection_strategy": "day_rotation_v1",
+      "select_count": 2,
+      "candidate_ids": [
+        "material_titanium_entry",
+        "material_titanium_crossing",
+        "material_titanium_return",
+        "material_titanium_lower_loop"
+      ]
+    },
+    {
+      "id": "conductive_coil_pool",
+      "material_id": "conductive_coil",
+      "selection_strategy": "day_rotation_v1",
+      "select_count": 1,
+      "candidate_ids": [
+        "material_coil_deep_approach",
+        "material_coil_deep_cache"
+      ],
+      "research_discovery_id": "upper_right_mineral_trace_research",
+      "researched_candidate_ids": [
+        "material_coil_deep_cache"
+      ],
+      "research_lead_label": "Research lead | Coils near deep-cache machinery"
+    },
+    {
+      "id": "rubber_sheet_pool",
+      "material_id": "rubber_sheet",
+      "selection_strategy": "day_rotation_v1",
+      "select_count": 1,
+      "candidate_ids": [
+        "material_rubber_entry",
+        "material_rubber_lower_loop"
+      ]
+    },
+    {
+      "id": "southwest_bloom_coil_bonus_pool",
+      "material_id": "conductive_coil",
+      "selection_strategy": "day_rotation_v1",
+      "select_count": 1,
+      "candidate_ids": [
+        "material_coil_southwest_bloom"
+      ],
+      "pool_role": "optional_bonus",
+      "daily_condition_id": "southwest_jellyfish_bloom"
+    }
+  ],
+  "material_projects": [
+    {
+      "id": "propulsion_fins_project",
+      "required_discovery_id": "propulsion_fins_blueprint",
+      "required_materials": {
+        "titanium_scrap": 2,
+        "rubber_sheet": 1
+      },
+      "unlocks_capability_id": "propulsion_fins",
+      "target_gate_id": "upper_right_current_pocket_gate",
+      "build_phase": "night_debrief",
+      "project_label": "Propulsion fins project",
+      "completion_label": "Fins installed - east current passable"
+    },
+    {
+      "id": "salvage_cutter_project",
+      "required_discovery_id": "lower_right_anomaly_discovery",
+      "required_materials": {
+        "titanium_scrap": 2,
+        "conductive_coil": 1
+      },
+      "unlocks_capability_id": "salvage_cutter",
+      "target_id": "salvage_sealed_wreck_cache",
+      "build_phase": "night_debrief"
+    },
+    {
+      "id": "shock_prod_project",
+      "required_project_id": "salvage_cutter_project",
+      "required_discovery_id": "lower_right_anomaly_discovery",
+      "required_materials": {
+        "titanium_scrap": 2,
+        "conductive_coil": 1
+      },
+      "unlocks_capability_id": "shock_prod",
+      "target_hostile_id": "deep_cache_territorial_eel",
+      "build_phase": "night_debrief",
+      "project_label": "Shock prod project",
+      "completion_label": "Shock prod built"
+    },
+    {
+      "id": "shock_prod_capacitor_project",
+      "required_project_id": "shock_prod_project",
+      "required_discovery_id": "lower_right_anomaly_discovery",
+      "required_materials": {
+        "conductive_coil": 1,
+        "insulating_gel": 1,
+        "eel_electrocyte": 1
+      },
+      "unlocks_capability_id": "shock_prod_capacitor",
+      "target_hostile_id": "deep_cache_territorial_eel",
+      "capability_effect": "interrupt_warning_lunge",
+      "build_phase": "night_debrief",
+      "project_label": "Shock-prod capacitor project",
+      "completion_label": "Shock-prod capacitor built"
+    }
+  ],
+  "background": [
+    {
+      "id": "distant_entry_wall",
+      "type": "background",
+      "x": 88,
+      "y": 6,
+      "w": 18,
+      "h": 22
+    },
+    {
+      "id": "distant_crossing_mass",
+      "type": "background",
+      "x": 86,
+      "y": 24,
+      "w": 30,
+      "h": 24
+    },
+    {
+      "id": "distant_lower_loop",
+      "type": "background",
+      "x": 72,
+      "y": 58,
+      "w": 44,
+      "h": 18
+    }
+  ],
   "entities": [
     {
       "id": "surface_boat_entry",
@@ -3138,6 +4847,259 @@
       "entry_y": 0,
       "facing": "right",
       "intent": "Canonical top-water boat entry and extraction for the contiguous production candidate."
+    },
+    {
+      "id": "salvage_entry_shaft",
+      "type": "salvage",
+      "x": 96,
+      "y": 18,
+      "kind": "crate",
+      "route_choice_id": "safe_entry_pickup",
+      "validation_route": "safe_route_choice",
+      "route_order": 0,
+      "intent": "Safe route target near the entry shaft for short collect-return comparison."
+    },
+    {
+      "id": "salvage_center_crossing",
+      "type": "salvage",
+      "x": 104,
+      "y": 30,
+      "kind": "wreck_fragment"
+    },
+    {
+      "id": "salvage_right_branch",
+      "type": "salvage",
+      "x": 122,
+      "y": 24,
+      "kind": "crate"
+    },
+    {
+      "id": "salvage_lower_loop",
+      "type": "salvage",
+      "x": 88,
+      "y": 67,
+      "kind": "relic",
+      "tier": "valuable",
+      "route_choice_id": "lower_loop_payoff",
+      "validation_route": "expanded_route_choice",
+      "route_order": 0,
+      "intent": "Route-choice payoff target for the lower optional loop."
+    },
+    {
+      "id": "salvage_pry_locker",
+      "type": "salvage",
+      "x": 94,
+      "y": 64,
+      "kind": "crate",
+      "tier": "valuable",
+      "interaction": "pry_salvage",
+      "interaction_seconds": 1.2,
+      "pry_stages": 3,
+      "interaction_label": "sealed cache",
+      "route_choice_id": "lower_bend_pry_detour",
+      "validation_route": "pry_salvage_detour",
+      "route_order": 0,
+      "intent": "Pass 17 optional pry target near the lower-bend hazard, adding a deliberate oxygen-time spend without changing topology."
+    },
+    {
+      "id": "salvage_deep_right_cache",
+      "type": "salvage",
+      "x": 122,
+      "y": 75,
+      "kind": "relic",
+      "tier": "valuable",
+      "route_choice_id": "deep_right_cache_payoff",
+      "validation_route": "expanded_route_choice",
+      "route_order": 1,
+      "interaction": "timed_salvage",
+      "interaction_seconds": 2.5,
+      "interaction_label": "deep cache",
+      "guarded_by_hostile_id": "deep_cache_territorial_eel",
+      "intent": "Timed cache that may be attempted immediately; the active eel interrupts collection through combat behavior."
+    },
+    {
+      "id": "salvage_southwest_return_cache",
+      "type": "salvage",
+      "x": 83,
+      "y": 76,
+      "kind": "crate",
+      "tier": "valuable",
+      "route_choice_id": "southwest_pocket_detour",
+      "validation_route": "southwest_pocket_decision",
+      "route_order": 0,
+      "intent": "Non-eel valuable payoff completing the opening lower-loop trail; the separate material route supplies the propulsion-fins recipe."
+    },
+    {
+      "id": "salvage_return_branch",
+      "type": "salvage",
+      "x": 75,
+      "y": 58,
+      "kind": "crate",
+      "route_choice_id": "return_branch_bank_prompt",
+      "validation_route": "return_pressure_decision",
+      "route_order": 0,
+      "intent": "Pass 10 return-pressure pickup that should remain available while full cargo returns to the boat."
+    },
+    {
+      "id": "hazard_shaft_choke",
+      "type": "hazard",
+      "x": 92,
+      "y": 20,
+      "kind": "jellyfish"
+    },
+    {
+      "id": "hazard_crossing_choke",
+      "type": "hazard",
+      "x": 110,
+      "y": 34,
+      "kind": "mine"
+    },
+    {
+      "id": "hazard_lower_bend",
+      "type": "hazard",
+      "x": 94,
+      "y": 61,
+      "kind": "jellyfish"
+    },
+    {
+      "id": "hazard_right_branch",
+      "type": "hazard",
+      "x": 115,
+      "y": 66,
+      "kind": "mine"
+    },
+    {
+      "id": "material_titanium_entry",
+      "type": "material_candidate",
+      "x": 100,
+      "y": 22,
+      "kind": "wreck_fragment",
+      "interaction": "material_collect",
+      "material_id": "titanium_scrap",
+      "material_quantity": 1,
+      "candidate_pool_id": "titanium_scrap_pool",
+      "intent": "Entry-shaft titanium candidate in a small side pocket off the first descent."
+    },
+    {
+      "id": "material_titanium_crossing",
+      "type": "material_candidate",
+      "x": 113,
+      "y": 30,
+      "kind": "wreck_fragment",
+      "interaction": "material_collect",
+      "material_id": "titanium_scrap",
+      "material_quantity": 1,
+      "candidate_pool_id": "titanium_scrap_pool",
+      "intent": "Central-crossing titanium candidate in the right-side branch pocket."
+    },
+    {
+      "id": "material_titanium_return",
+      "type": "material_candidate",
+      "x": 81,
+      "y": 59,
+      "kind": "wreck_fragment",
+      "interaction": "material_collect",
+      "material_id": "titanium_scrap",
+      "material_quantity": 1,
+      "candidate_pool_id": "titanium_scrap_pool",
+      "intent": "Return-pressure titanium candidate near the southwest branch decision."
+    },
+    {
+      "id": "material_titanium_lower_loop",
+      "type": "material_candidate",
+      "x": 73,
+      "y": 69,
+      "kind": "wreck_fragment",
+      "interaction": "material_collect",
+      "material_id": "titanium_scrap",
+      "material_quantity": 1,
+      "candidate_pool_id": "titanium_scrap_pool",
+      "intent": "Lower-loop titanium candidate rewarding a western side-pocket detour."
+    },
+    {
+      "id": "material_coil_deep_approach",
+      "type": "material_candidate",
+      "x": 112,
+      "y": 71,
+      "kind": "crate",
+      "interaction": "material_collect",
+      "material_id": "conductive_coil",
+      "material_quantity": 1,
+      "candidate_pool_id": "conductive_coil_pool",
+      "intent": "Special component candidate in a side pocket off the moving-hazard deep approach."
+    },
+    {
+      "id": "material_coil_deep_cache",
+      "type": "material_candidate",
+      "x": 118,
+      "y": 72,
+      "kind": "crate",
+      "interaction": "material_collect",
+      "material_id": "conductive_coil",
+      "material_quantity": 1,
+      "candidate_pool_id": "conductive_coil_pool",
+      "intent": "Special component candidate in a deliberate deep-cache side detour."
+    },
+    {
+      "id": "salvage_sealed_wreck_cache",
+      "type": "tool_target",
+      "x": 119,
+      "y": 40,
+      "kind": "crate",
+      "tier": "valuable",
+      "interaction": "cutter_salvage",
+      "interaction_seconds": 2.0,
+      "interaction_label": "sealed wreck",
+      "required_tool_id": "salvage_cutter",
+      "tool_project_id": "salvage_cutter_project",
+      "intent": "Expansion 03 remembered upper-right alcove payoff, visible before the cutter exists and collectable only after the night project."
+    },
+    {
+      "id": "material_rubber_entry",
+      "type": "material_candidate",
+      "x": 101,
+      "y": 22,
+      "kind": "wreck_fragment",
+      "interaction": "material_collect",
+      "material_id": "rubber_sheet",
+      "material_quantity": 1,
+      "candidate_pool_id": "rubber_sheet_pool",
+      "intent": "Entry-shaft rubber candidate beside the first titanium route."
+    },
+    {
+      "id": "material_rubber_lower_loop",
+      "type": "material_candidate",
+      "x": 74,
+      "y": 69,
+      "kind": "wreck_fragment",
+      "interaction": "material_collect",
+      "material_id": "rubber_sheet",
+      "material_quantity": 1,
+      "candidate_pool_id": "rubber_sheet_pool",
+      "intent": "Lower-loop rubber candidate on the non-eel western approach."
+    },
+    {
+      "id": "salvage_current_pocket_cache",
+      "type": "salvage",
+      "x": 127,
+      "y": 40,
+      "kind": "relic",
+      "tier": "valuable",
+      "validation_route": "propulsion_fins_payoff",
+      "route_context": "upper_right_current_pocket",
+      "intent": "Visible valuable scanner-funding payoff behind the first propulsion-fins current gate."
+    },
+    {
+      "id": "material_coil_southwest_bloom",
+      "type": "material_candidate",
+      "x": 66,
+      "y": 80,
+      "kind": "crate",
+      "interaction": "material_collect",
+      "material_id": "conductive_coil",
+      "material_quantity": 1,
+      "candidate_pool_id": "southwest_bloom_coil_bonus_pool",
+      "intent": "Optional even-day coil trace below the southwest migration lane."
     }
   ],
   "camera_tests": [
@@ -3154,6 +5116,13 @@
       "center_y": 8,
       "zoom": 0.55,
       "intent": "Canonical boat and intentional top-water opening review."
+    },
+    {
+      "id": "production_level_opening_gameplay",
+      "center_x": 100,
+      "center_y": 25,
+      "zoom": 0.6,
+      "intent": "Transformed opening route, nearby salvage, and hazard review."
     },
     {
       "id": "production_level_upper_left",
@@ -3175,12 +5144,62 @@
       "center_y": 115,
       "zoom": 0.3,
       "intent": "Lower-right sector-anchor topology review."
+    },
+    {
+      "id": "production_level_return_to_boat",
+      "center_x": 94,
+      "center_y": 18,
+      "zoom": 0.46,
+      "intent": "Continuous return context from the opening route to the canonical boat."
+    },
+    {
+      "id": "production_slice_overview",
+      "center_x": 94,
+      "center_y": 42,
+      "zoom": 0.36,
+      "intent": "Broad production-slice context with reduced side border."
+    },
+    {
+      "id": "production_slice_entry_shaft",
+      "center_x": 97,
+      "center_y": 11,
+      "zoom": 0.66,
+      "intent": "Boat entry, surface opening, and first descent read."
+    },
+    {
+      "id": "production_slice_first_route_choice",
+      "center_x": 100,
+      "center_y": 25,
+      "zoom": 0.6,
+      "intent": "First route choice after the entry shaft, with nearby salvage and hazard."
+    },
+    {
+      "id": "production_slice_central_crossing",
+      "center_x": 106,
+      "center_y": 43,
+      "zoom": 0.58,
+      "intent": "Central branching, nearby salvage, and hazard pressure review."
+    },
+    {
+      "id": "production_slice_lower_loop",
+      "center_x": 94,
+      "center_y": 66,
+      "zoom": 0.58,
+      "intent": "Lower optional route and return-path readability review."
+    },
+    {
+      "id": "production_slice_return_to_boat",
+      "center_x": 94,
+      "center_y": 18,
+      "zoom": 0.46,
+      "intent": "Return path context from first branch back to boat extraction."
     }
   ],
   "review_questions": [
     "Does the candidate preserve the complete supplied cave silhouette?",
     "Is the canonical boat opening the only visible route out of the outer boundary?",
     "Do the upper-left, lower-left, and lower-right anchors sit in recognizable open sectors?",
-    "Do source, render, and collision evidence agree before gameplay is transformed?"
+    "Does transformed opening gameplay retain its source-local relationships without a crop seam?",
+    "Do source, render, and collision evidence agree after gameplay transformation?"
   ]
 }

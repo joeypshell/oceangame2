@@ -6,6 +6,11 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from production_level_01_gameplay_transform import (
+    LOCAL_TO_GLOBAL_OFFSET,
+    transform_gameplay_sections,
+)
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_MAP_PATH = ROOT / "maps" / "full_cave_sketch_01.greybox.json"
@@ -18,6 +23,28 @@ BOAT_OPENING_CELLS = tuple((x, 0) for x in range(91, 99))
 SEALED_BOUNDARY_CELLS = tuple(
     [(x, 0) for x in range(99, 108)] + [(x, 0) for x in range(141, 151)]
 )
+
+GAMEPLAY_CLEARANCE_OPEN_LOCAL_CELLS = {
+    "southwest_return_pocket": {
+        (x, y) for y in range(75, 78) for x in range(23, 27)
+    },
+    "east_current_pocket": {
+        (x, y) for y in range(43, 47) for x in range(67, 71)
+    },
+    "deep_cache_evade_lane": {(60, 78)},
+}
+
+GAMEPLAY_CLEARANCE_INTENTS = {
+    "southwest_return_pocket": (
+        "Preserve the proven southwest cache approach and Pass 08 migration lane."
+    ),
+    "east_current_pocket": (
+        "Preserve non-overlapping current-pocket cache, survey, and biological targets."
+    ),
+    "deep_cache_evade_lane": (
+        "Keep the eel territory lower-edge evade lane and visibility zone fully open."
+    ),
+}
 
 SECTOR_ANCHORS = (
     {
@@ -95,7 +122,55 @@ def assert_expected_boundary_source(
         )
 
 
-def candidate_terrain(source_map: dict) -> list[dict]:
+def global_gameplay_clearance_cells() -> set[tuple[int, int]]:
+    return {
+        (
+            x + int(LOCAL_TO_GLOBAL_OFFSET["x"]),
+            y + int(LOCAL_TO_GLOBAL_OFFSET["y"]),
+        )
+        for cells in GAMEPLAY_CLEARANCE_OPEN_LOCAL_CELLS.values()
+        for x, y in cells
+    }
+
+
+def _terrain_without_cells(
+    terrain: list[dict], open_cells: set[tuple[int, int]]
+) -> list[dict]:
+    result: list[dict] = []
+    for item in terrain:
+        if item.get("type") != "solid" or not (rect_cells(item) & open_cells):
+            result.append(dict(item))
+            continue
+
+        remaining = rect_cells(item) - open_cells
+        part_index = 0
+        for y in range(int(item["y"]), int(item["y"]) + int(item.get("h", 1))):
+            row_x = sorted(x for x, cell_y in remaining if cell_y == y)
+            run_start: int | None = None
+            previous_x: int | None = None
+            for x in [*row_x, None]:
+                if run_start is None:
+                    run_start = x
+                elif x is None or x != previous_x + 1:
+                    part_index += 1
+                    result.append(
+                        {
+                            **item,
+                            "id": f"{item['id']}_gameplay_clearance_{part_index:02d}",
+                            "x": run_start,
+                            "y": y,
+                            "w": previous_x - run_start + 1,
+                            "h": 1,
+                        }
+                    )
+                    run_start = x
+                previous_x = x
+    return result
+
+
+def candidate_terrain(
+    source_map: dict, gameplay_clearance_cells: set[tuple[int, int]]
+) -> list[dict]:
     terrain = [dict(item) for item in source_map.get("terrain", [])]
     terrain.extend(
         [
@@ -117,7 +192,7 @@ def candidate_terrain(source_map: dict) -> list[dict]:
             },
         ]
     )
-    return terrain
+    return _terrain_without_cells(terrain, gameplay_clearance_cells)
 
 
 def canonical_boat(source_map: dict) -> dict:
@@ -161,6 +236,13 @@ def camera_tests() -> list[dict]:
             "intent": "Canonical boat and intentional top-water opening review.",
         },
         {
+            "id": "production_level_opening_gameplay",
+            "center_x": 100,
+            "center_y": 25,
+            "zoom": 0.60,
+            "intent": "Transformed opening route, nearby salvage, and hazard review.",
+        },
+        {
             "id": "production_level_upper_left",
             "center_x": 38,
             "center_y": 49,
@@ -181,6 +263,13 @@ def camera_tests() -> list[dict]:
             "zoom": 0.30,
             "intent": "Lower-right sector-anchor topology review.",
         },
+        {
+            "id": "production_level_return_to_boat",
+            "center_x": 94,
+            "center_y": 18,
+            "zoom": 0.46,
+            "intent": "Continuous return context from the opening route to the canonical boat.",
+        },
     ]
 
 
@@ -195,8 +284,16 @@ def build_map_data(source_map: dict) -> dict:
 
     draft_solid = solid_cells(source_map)
     assert_expected_boundary_source(draft_solid, width, height)
+    gameplay_clearance_cells = global_gameplay_clearance_cells()
+    missing_clearance_source = gameplay_clearance_cells - draft_solid
+    if missing_clearance_source:
+        raise ValueError(
+            "Gameplay-clearance source signature changed; expected solid cells are already open: "
+            f"{sorted(missing_clearance_source)}"
+        )
     candidate_solid = set(draft_solid)
     candidate_solid.update(SEALED_BOUNDARY_CELLS)
+    candidate_solid.difference_update(gameplay_clearance_cells)
     remaining_open_boundary = boundary_cells(width, height) - candidate_solid
     if remaining_open_boundary != set(BOAT_OPENING_CELLS):
         raise ValueError(
@@ -209,12 +306,15 @@ def build_map_data(source_map: dict) -> dict:
         if point in candidate_solid:
             raise ValueError(f"Sector anchor {anchor['id']} is inside solid terrain at {point}.")
 
+    gameplay, gameplay_provenance = transform_gameplay_sections()
+
     return {
         "id": "production_level_01",
         "version": 1,
         "purpose": (
             "Contiguous full-level topology candidate generated from the complete full cave sketch. "
-            "Gameplay transformation follows in a separate source-owned pass."
+            "The proven slice-01 gameplay overlay is transformed into global coordinates through "
+            "a source-owned, inspectable pass."
         ),
         "source": {
             "map": "maps/full_cave_sketch_01.greybox.json",
@@ -228,10 +328,29 @@ def build_map_data(source_map: dict) -> dict:
                 "sealed_unintended_boundary_openings": [
                     {"x": x, "y": y} for x, y in SEALED_BOUNDARY_CELLS
                 ],
+                "gameplay_clearance_openings": [
+                    {
+                        "id": cleanup_id,
+                        "intent": GAMEPLAY_CLEARANCE_INTENTS[cleanup_id],
+                        "slice_local": [
+                            {"x": x, "y": y}
+                            for x, y in sorted(local_cells)
+                        ],
+                        "full_global": [
+                            {
+                                "x": x + int(LOCAL_TO_GLOBAL_OFFSET["x"]),
+                                "y": y + int(LOCAL_TO_GLOBAL_OFFSET["y"]),
+                            }
+                            for x, y in sorted(local_cells)
+                        ],
+                    }
+                    for cleanup_id, local_cells in GAMEPLAY_CLEARANCE_OPEN_LOCAL_CELLS.items()
+                ],
                 "notes": [
                     "The canonical surface_boat_entry opening at top x=91..98 remains open.",
                     "Nine adjacent top cells and the separate ten-cell top-right opening are sealed in global source coordinates.",
                     "No crop seal, stitched slice terrain, connector, teleport, pressure, or stabilizer-entry metadata is imported.",
+                    "Twenty-nine named source-owned cells are opened only where reused gameplay requires its proven clearance.",
                     "The full-sketch draft remains unchanged as conversion and provenance evidence.",
                 ],
             },
@@ -241,7 +360,9 @@ def build_map_data(source_map: dict) -> dict:
                 "draft_open_boundary_cells": len(BOAT_OPENING_CELLS)
                 + len(SEALED_BOUNDARY_CELLS),
                 "candidate_open_boundary_cells": len(BOAT_OPENING_CELLS),
+                "gameplay_clearance_opened_cells": len(gameplay_clearance_cells),
             },
+            "gameplay_overlay": gameplay_provenance,
             "review_artifact": "references/greybox/production_level_01_source_render_collision_review.png",
         },
         "units": {
@@ -254,8 +375,10 @@ def build_map_data(source_map: dict) -> dict:
             "solid": "Collision terrain from the full sketch plus named boundary cleanup",
             "boat_spawn": "Canonical top-water boat entry and extraction marker",
             "marker": "Non-gameplay validation or review annotation",
+            "salvage": "Collectible objective reused from the proven opening region",
+            "hazard": "Avoidance pressure reused from the proven opening region",
         },
-        "terrain": candidate_terrain(source_map),
+        "terrain": candidate_terrain(source_map, gameplay_clearance_cells),
         "zones": [
             {
                 "id": "production_level_bounds",
@@ -267,15 +390,28 @@ def build_map_data(source_map: dict) -> dict:
                 "intent": "Full extent of the contiguous production candidate.",
             },
             *SECTOR_ANCHORS,
+            *gameplay["zones"],
         ],
-        "background": [],
-        "entities": [canonical_boat(source_map)],
-        "camera_tests": camera_tests(),
+        "daily_conditions": gameplay["daily_conditions"],
+        "progression_containers": gameplay["progression_containers"],
+        "moving_hazards": gameplay["moving_hazards"],
+        "hostile_encounters": gameplay["hostile_encounters"],
+        "biological_resource_sources": gameplay["biological_resource_sources"],
+        "route_objectives": gameplay["route_objectives"],
+        "primary_route_objective_id": gameplay["primary_route_objective_id"],
+        "next_dive_objective_prompts": gameplay["next_dive_objective_prompts"],
+        "survey_targets": gameplay["survey_targets"],
+        "material_candidate_pools": gameplay["material_candidate_pools"],
+        "material_projects": gameplay["material_projects"],
+        "background": gameplay["background"],
+        "entities": [canonical_boat(source_map), *gameplay["entities"]],
+        "camera_tests": [*camera_tests(), *gameplay["camera_tests"]],
         "review_questions": [
             "Does the candidate preserve the complete supplied cave silhouette?",
             "Is the canonical boat opening the only visible route out of the outer boundary?",
             "Do the upper-left, lower-left, and lower-right anchors sit in recognizable open sectors?",
-            "Do source, render, and collision evidence agree before gameplay is transformed?",
+            "Does transformed opening gameplay retain its source-local relationships without a crop seam?",
+            "Do source, render, and collision evidence agree after gameplay transformation?",
         ],
     }
 
