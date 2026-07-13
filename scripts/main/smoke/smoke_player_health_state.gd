@@ -14,6 +14,7 @@ func _run() -> void:
 	_test_focused_state()
 	var main := MAIN_SCENE.instantiate()
 	get_root().add_child(main)
+	main._load_playable_map(main.PRODUCTION_SLICE_MAP_PATH, false)
 	main.set_process(false)
 	main._player.set_physics_process(false)
 	main._hazard_interactions_enabled = false

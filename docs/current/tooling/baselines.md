@@ -1,6 +1,6 @@
 # Baselines And Review Sheets
 
-List configured production-slice baseline targets:
+List configured production-map baseline targets:
 
 ```bash
 python tools/manage_production_slice_baseline.py --list-slices
@@ -9,13 +9,14 @@ python tools/manage_production_slice_baseline.py --list-slices
 Accept the current production-slice captures as the named visual baseline:
 
 ```bash
+python tools/manage_production_slice_baseline.py --slice production_level_01 accept
 python tools/manage_production_slice_baseline.py accept
 python tools/manage_production_slice_baseline.py --slice production_slice_02 accept
 python tools/manage_production_slice_baseline.py --slice production_slice_03 accept
 python tools/manage_production_slice_baseline.py --slice production_slice_04 accept
 ```
 
-The default command remains `production_slice_01` for backward compatibility. Slice-specific acceptance copies the configured captures into `visual_baselines/<slice>_accepted/` and writes a small manifest. Only run `accept` after that slice's current visuals are intentionally accepted as the comparison target.
+The default command remains `production_slice_01` for tooling backward compatibility; this is independent of the runtime default map. Map-specific acceptance copies the configured captures into `visual_baselines/<map>_accepted/` and writes a small manifest. Only run `accept` after that map's current visuals are intentionally accepted as the comparison target.
 
 The accept command only manages the configured PNG view files and `manifest.json`. It removes generated Godot/OS sidecars such as `*.import` from the target accepted-baseline directory and fails if other unexpected files are present. To clean or verify accepted baseline directories without accepting new images:
 
@@ -27,6 +28,7 @@ python tools/manage_production_slice_baseline.py check-clean --all-slices
 Render the accepted-baseline comparison sheet:
 
 ```bash
+python tools/manage_production_slice_baseline.py --slice production_level_01 compare
 python tools/manage_production_slice_baseline.py compare
 python tools/manage_production_slice_baseline.py --slice production_slice_02 compare
 python tools/manage_production_slice_baseline.py --slice production_slice_03 compare
@@ -41,7 +43,7 @@ Render all configured accepted-baseline comparison sheets with one command:
 python tools/manage_production_slice_baseline.py compare-all
 ```
 
-This compares `production_slice_01` through `production_slice_04` using the committed baseline-manager config. It fails if a configured current capture or accepted baseline view is missing or unreadable, and it does not accept or overwrite baseline PNGs.
+This compares the promoted `production_level_01` plus `production_slice_01` through `production_slice_04` using the committed baseline-manager config. It fails if a configured current capture or accepted baseline view is missing or unreadable, and it does not accept or overwrite baseline PNGs.
 
 For a future slice that has current captures but no accepted baseline yet, compare against the current capture directory as a tooling sanity check without accepting anything:
 
@@ -64,7 +66,7 @@ python tools/render_greybox_map.py maps/production_level_01.greybox.json referen
 python tools/render_map_review.py maps/production_level_01.greybox.json references/greybox/production_level_01_source_render_collision_review.png --godot-capture visual_captures/expansion_09_full_level/production_level_overview_1280x720.png
 ```
 
-These are candidate review artifacts. Do not accept or replace a default production-slice baseline until the Expansion 09 player gate returns GO.
+After the Expansion 09 player GO, these captures become the accepted `production_level_01` default-map baseline. Accept them with the explicit `--slice production_level_01` command; keep every focused-slice baseline unchanged as regression evidence.
 
 Generate the second production slice source/render/collision review sheet:
 

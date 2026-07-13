@@ -28,7 +28,7 @@ static func measure_and_quit(tree: SceneTree, world: Node, player: Node, startup
 			push_error("Full-level runtime measurement failed: %s" % failure)
 		tree.quit(1)
 		return
-	print("Full-level candidate measurement passed: map=%s startup_ms=%.2f terrain_cells=%d collision_rects=%d average_frame_ms=%.2f camera_bounds=true desktop_mobile_fit=true." % [
+	print("Promoted full-level measurement passed: map=%s startup_ms=%.2f terrain_cells=%d collision_rects=%d average_frame_ms=%.2f camera_bounds=true desktop_mobile_fit=true." % [
 		report["map_id"],
 		float(report["startup_ms"]),
 		int(report["terrain_cells"]),
