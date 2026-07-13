@@ -5,12 +5,20 @@ const DEFAULT_PROMPT := "Moving hazard - wait"
 var _elapsed_seconds := 0.0
 var _hazards: Array = []
 var _warning_hazard := {}
+var _active_condition_ids: Array[String] = []
 
 
-func reset(world = null) -> void:
-	_elapsed_seconds = 0.0
+func reset(world = null, active_condition_ids = null, preserve_phase := false) -> void:
+	if not preserve_phase:
+		_elapsed_seconds = 0.0
 	_warning_hazard = {}
 	_hazards = []
+	if active_condition_ids != null:
+		_active_condition_ids = []
+		for condition_id in active_condition_ids:
+			_active_condition_ids.append(str(condition_id))
+	if world != null and world.has_method("configure_moving_hazards"):
+		world.configure_moving_hazards(_active_condition_ids)
 	if world != null and world.has_method("get_moving_hazards"):
 		_hazards = world.get_moving_hazards()
 		_apply_positions(world)

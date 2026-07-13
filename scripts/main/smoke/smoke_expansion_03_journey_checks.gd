@@ -30,7 +30,7 @@ func _smoke_expansion_03_material_project_and_quit() -> void:
 	var recipe: Dictionary = _selected_recipe(day_one_ids)
 	if not _require(recipe["titanium"].size() == 2 and recipe["coil"].size() == 1, "day one did not guarantee exact cutter recipe: %s" % str(day_one_ids)):
 		return
-	_main._material_runtime.on_map_loaded(_world, _main._expedition_day_state)
+	_main._material_runtime.on_map_loaded(_world, _main._expedition_day_state, _main._daily_conditions.current_ids())
 	if not _require(_world.get_material_candidate_report().get("active_ids", []) == day_one_ids, "same-day selection rerolled"):
 		return
 
@@ -187,14 +187,26 @@ func _attach_profile(profile) -> void:
 func _selected_recipe(active_ids: Array) -> Dictionary:
 	var titanium := []
 	var coils := []
+	var condition_candidates := _condition_candidate_ids()
 	for candidate in _world.get_material_candidates():
-		if not active_ids.has(str(candidate.get("id", ""))):
+		var candidate_id := str(candidate.get("id", ""))
+		if not active_ids.has(candidate_id) or condition_candidates.has(candidate_id):
 			continue
 		if str(candidate.get("material_id", "")) == ExpansionProfileState.TITANIUM_MATERIAL_ID:
 			titanium.append(candidate)
 		elif str(candidate.get("material_id", "")) == ExpansionProfileState.COIL_MATERIAL_ID:
 			coils.append(candidate)
 	return {"titanium": titanium, "coil": coils}
+
+
+func _condition_candidate_ids() -> Dictionary:
+	var ids := {}
+	for pool in _world.get_material_candidate_pools():
+		if str(pool.get("daily_condition_id", "")).is_empty():
+			continue
+		for candidate_id in pool.get("candidate_ids", []):
+			ids[str(candidate_id)] = true
+	return ids
 
 
 func _recipe_candidate_ids(recipe: Dictionary) -> Array:

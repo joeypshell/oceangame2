@@ -59,6 +59,8 @@ var _salvage_nodes_by_id := {}
 var _container_nodes_by_id := {}
 var _moving_hazard_nodes_by_id := {}
 var _moving_hazard_positions_by_id := {}
+var _moving_hazard_aux_nodes_by_id := {}
+var _active_daily_condition_ids := {}
 var _visibility_zone_nodes_by_id := {}
 var _visibility_zone_upgrade_states := {}
 var _background_root: Node2D
@@ -137,6 +139,8 @@ func load_greybox() -> void:
 	_container_nodes_by_id = {}
 	_moving_hazard_nodes_by_id = {}
 	_moving_hazard_positions_by_id = {}
+	_moving_hazard_aux_nodes_by_id = {}
+	_active_daily_condition_ids = {}
 	_visibility_zone_nodes_by_id = {}
 	_visibility_zone_upgrade_states = {}
 
@@ -252,6 +256,10 @@ func set_survey_target_state(target_id: String, state: String) -> void:
 
 func get_material_candidate_pools() -> Array:
 	return _duplicate_dictionary_array(_map_data.get("material_candidate_pools", []))
+
+
+func get_daily_conditions() -> Array:
+	return _duplicate_dictionary_array(_map_data.get("daily_conditions", []))
 
 
 func get_material_projects() -> Array:
@@ -384,8 +392,22 @@ func set_visibility_upgrade_state(upgrade_id: String, active: bool) -> void:
 func get_moving_hazards() -> Array:
 	var hazards := []
 	for hazard in _moving_hazards:
-		hazards.append(_moving_hazard_runtime_info(hazard))
+		if _moving_hazard_active(hazard):
+			hazards.append(_moving_hazard_runtime_info(hazard))
 	return hazards
+
+
+func configure_moving_hazards(active_condition_ids: Array) -> void:
+	_active_daily_condition_ids = {}
+	for condition_id in active_condition_ids:
+		_active_daily_condition_ids[str(condition_id)] = true
+	for hazard in _moving_hazards:
+		var hazard_id := str(hazard.get("id", "moving_hazard"))
+		var active := _moving_hazard_active(hazard)
+		if _moving_hazard_nodes_by_id.has(hazard_id):
+			(_moving_hazard_nodes_by_id[hazard_id] as CanvasItem).visible = active
+		for node in _moving_hazard_aux_nodes_by_id.get(hazard_id, []):
+			(node as CanvasItem).visible = active
 
 
 func set_moving_hazard_center(hazard_id: String, center: Vector2) -> void:
@@ -635,7 +657,13 @@ func _moving_hazard_runtime_info(hazard: Dictionary) -> Dictionary:
 		"phase_offset_seconds": float(hazard.get("phase_offset_seconds", 0.0)),
 		"route_context": str(hazard.get("route_context", "")),
 		"display_label": str(hazard.get("display_label", "")),
+		"daily_condition_id": str(hazard.get("daily_condition_id", "")),
 	}
+
+
+func _moving_hazard_active(hazard: Dictionary) -> bool:
+	var condition_id := str(hazard.get("daily_condition_id", ""))
+	return condition_id.is_empty() or bool(_active_daily_condition_ids.get(condition_id, false))
 
 
 func _hostile_runtime_info(encounter: Dictionary) -> Dictionary:
@@ -819,9 +847,14 @@ func _build_moving_hazards(hazards: Array) -> void:
 		hazard_node.z_index = 12
 		_moving_hazard_nodes_by_id[hazard_id] = hazard_node
 		_moving_hazard_positions_by_id[hazard_id] = center
-		_add_moving_hazard_path_marker(hazard_id, hazard.get("path", []))
+		var aux_nodes: Array[CanvasItem] = []
+		var path_marker := _add_moving_hazard_path_marker(hazard_id, hazard.get("path", []))
+		if path_marker != null:
+			aux_nodes.append(path_marker)
 		if show_debug_overlay:
-			_add_debug_label("MOVING HAZARD", center + Vector2(18, -22), Color(1.0, 0.58, 0.69, 0.9))
+			aux_nodes.append(_add_debug_label("MOVING HAZARD", center + Vector2(18, -22), Color(1.0, 0.58, 0.69, 0.9)))
+		_moving_hazard_aux_nodes_by_id[hazard_id] = aux_nodes
+	configure_moving_hazards([])
 
 
 func _build_hostile_encounters(encounters: Array) -> void:
@@ -1014,14 +1047,15 @@ func _add_diamond(marker_name: String, center: Vector2, color: Color, radius: fl
 	return poly
 
 
-func _add_moving_hazard_path_marker(marker_name: String, path: Array) -> void:
+func _add_moving_hazard_path_marker(marker_name: String, path: Array) -> Line2D:
 	if path.size() < 2:
-		return
+		return null
 	var points := PackedVector2Array()
 	for point in path:
 		points.append(_point_center(point))
 	var line := _add_local_line(_marker_root, "%sPatrolPath" % marker_name, points, Color(1.0, 0.58, 0.69, 0.42), 3.0)
 	line.z_index = 6
+	return line
 
 
 func _add_local_polygon(parent: Node2D, polygon_name: String, points: PackedVector2Array, color: Color) -> Polygon2D:
