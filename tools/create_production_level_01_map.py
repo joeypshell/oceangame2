@@ -10,6 +10,13 @@ from production_level_01_gameplay_transform import (
     LOCAL_TO_GLOBAL_OFFSET,
     transform_gameplay_sections,
 )
+from production_level_01_expansion_10 import (
+    background as expansion_10_background,
+    camera_tests as expansion_10_camera_tests,
+    regional_journeys as expansion_10_regional_journeys,
+    source_provenance as expansion_10_source_provenance,
+    zones as expansion_10_zones,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -363,6 +370,7 @@ def build_map_data(source_map: dict) -> dict:
                 "gameplay_clearance_opened_cells": len(gameplay_clearance_cells),
             },
             "gameplay_overlay": gameplay_provenance,
+            "expansion_10": expansion_10_source_provenance(),
             "review_artifact": "references/greybox/production_level_01_source_render_collision_review.png",
         },
         "units": {
@@ -391,7 +399,9 @@ def build_map_data(source_map: dict) -> dict:
             },
             *SECTOR_ANCHORS,
             *gameplay["zones"],
+            *expansion_10_zones(),
         ],
+        "regional_journeys": expansion_10_regional_journeys(),
         "daily_conditions": gameplay["daily_conditions"],
         "progression_containers": gameplay["progression_containers"],
         "moving_hazards": gameplay["moving_hazards"],
@@ -403,9 +413,9 @@ def build_map_data(source_map: dict) -> dict:
         "survey_targets": gameplay["survey_targets"],
         "material_candidate_pools": gameplay["material_candidate_pools"],
         "material_projects": gameplay["material_projects"],
-        "background": gameplay["background"],
+        "background": [*gameplay["background"], *expansion_10_background()],
         "entities": [canonical_boat(source_map), *gameplay["entities"]],
-        "camera_tests": [*camera_tests(), *gameplay["camera_tests"]],
+        "camera_tests": [*camera_tests(), *gameplay["camera_tests"], *expansion_10_camera_tests()],
         "review_questions": [
             "Does the candidate preserve the complete supplied cave silhouette?",
             "Is the canonical boat opening the only visible route out of the outer boundary?",

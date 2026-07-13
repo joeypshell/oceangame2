@@ -14,6 +14,7 @@ const ANCHOR_IDS := [
 	"full_level_lower_right_anchor",
 	"full_level_lower_left_anchor",
 ]
+const PASSABLE_CAPABILITIES := ["propulsion_fins"]
 const FIXED_DELTA := 1.0 / 60.0
 const ENDPOINT_TOLERANCE_PX := 8.0
 const PATH_LOOKAHEAD_POINTS := 3
@@ -59,6 +60,16 @@ func _smoke_expansion_09_full_level_journey_and_quit() -> void:
 	if not _require(not entry_target.is_empty() and anchors.size() == ANCHOR_IDS.size(), "journey source ids are incomplete"):
 		return
 
+	var blocked_navigation = FullLevelNavigation.new()
+	blocked_navigation.build(_world, body_size, SALVAGE_COLLECTION_RADIUS)
+	if not _require(
+		blocked_navigation.path_between(boat_position, anchors["full_level_lower_right_anchor"]).is_empty(),
+		"fresh navigation found a bypass around the lower-right current seams"
+	):
+		return
+	if not _prepare_propulsion_fins():
+		_fail("could not prepare recipe-built fins for the gated lower-right sortie")
+		return
 	var profile_before := _profile_snapshot()
 	var initial_day: Dictionary = _main._expedition_day_state.report()
 	_starting_health = int(_main._player_health.report().get("current_health", 0))
@@ -76,7 +87,9 @@ func _smoke_expansion_09_full_level_journey_and_quit() -> void:
 	_main.set_process(false)
 	await get_tree().physics_frame
 	_navigation = FullLevelNavigation.new()
-	var nav_report: Dictionary = _navigation.build(_world, body_size, SALVAGE_COLLECTION_RADIUS)
+	var nav_report: Dictionary = _navigation.build(
+		_world, body_size, SALVAGE_COLLECTION_RADIUS, "", PASSABLE_CAPABILITIES
+	)
 
 	var route_reports := []
 	var upper_report: Dictionary = await _run_sortie(
@@ -112,10 +125,18 @@ func _smoke_expansion_09_full_level_journey_and_quit() -> void:
 		var destinations: Array = [anchors[anchor_id], boat_position]
 		_navigation = FullLevelNavigation.new()
 		if index == 1:
-			_navigation.build(_world, body_size, SALVAGE_COLLECTION_RADIUS, MATERIAL_TARGET_ID)
+			_navigation.build(
+				_world,
+				body_size,
+				SALVAGE_COLLECTION_RADIUS,
+				MATERIAL_TARGET_ID,
+				PASSABLE_CAPABILITIES
+			)
 			destinations = [material_target["center"], anchors[anchor_id], boat_position]
 		else:
-			_navigation.build(_world, body_size, SALVAGE_COLLECTION_RADIUS)
+			_navigation.build(
+				_world, body_size, SALVAGE_COLLECTION_RADIUS, "", PASSABLE_CAPABILITIES
+			)
 		var report: Dictionary = await _run_sortie(
 			anchor_id,
 			destinations,
@@ -181,7 +202,7 @@ func _smoke_expansion_09_full_level_journey_and_quit() -> void:
 	):
 		return
 
-	print("Expansion 09 full-level journey smoke passed: map=%s dimensions=%dx%d sectors=%s routes=%s material=%s:%s+%d auto_offload=true night=requested elapsed=%.1fs tank=%s capacity=%.1fs oxygen=%.1fs sorties=%d connectors=%d prompts=%d held=%d banked=%d score=%d profile=expected_material_only day=%d daylight=%.1fs health=%d/%d boat_health_refill=true collision=active movement=continuous_no_teleport nav=%s." % [
+	print("Expansion 09 full-level journey smoke passed: map=%s dimensions=%dx%d sectors=%s routes=%s material=%s:%s+%d auto_offload=true night=requested elapsed=%.1fs tank=%s capacity=%.1fs oxygen=%.1fs sorties=%d connectors=%d prompts=%d held=%d banked=%d score=%d profile=fins_fixture_plus_expected_material day=%d daylight=%.1fs health=%d/%d boat_health_refill=true regional_current=fins no_fins_bypass=false collision=active movement=continuous_no_teleport nav=%s." % [
 		_world.map_id,
 		_world.map_tile_size.x,
 		_world.map_tile_size.y,

@@ -335,6 +335,16 @@ def _validate_projects(
         runtime_fields = RUNTIME_FIELDS & set(project)
         if runtime_fields:
             failures.append(f"{label} must not author runtime/profile state fields: {', '.join(sorted(runtime_fields))}.")
+    for journey in _items(map_data, "regional_journeys"):
+        promise_id = str(journey.get("promise_gate_id", ""))
+        capability_id = str(journey.get("required_capability_id", ""))
+        promise = current_gates.get(promise_id)
+        if promise_id not in referenced_gates or promise is None or promise.get("required_capability_id") != capability_id:
+            continue
+        for gate_id in journey.get("entry_gate_ids", []):
+            gate = current_gates.get(str(gate_id))
+            if gate is not None and gate.get("required_capability_id") == capability_id:
+                referenced_gates.add(str(gate_id))
     for target_id in sorted(set(tool_entities) - referenced_targets):
         failures.append(f"Cutter target {target_id!r} is not referenced by a material project.")
     durable_gates = {

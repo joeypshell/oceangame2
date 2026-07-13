@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Validate basic greybox map reachability from the player entry cell."""
-
 from __future__ import annotations
 import argparse
 import json
@@ -17,6 +16,7 @@ from validate_material_sources import validate_material_source_reachability, val
 from validate_moving_hazards import validate_moving_hazard_reachability, validate_moving_hazard_schema
 from validate_next_dive_prompts import validate_next_dive_prompt_schema
 from validate_progression_containers import validate_progression_container_reachability, validate_progression_container_schema
+from validate_regional_journeys import validate_regional_journey_reachability, validate_regional_journey_schema
 from validate_relay_follow_through_objectives import validate_relay_follow_through_objective_reachability, validate_relay_follow_through_objective_schema
 from validate_route_objectives import (
     validate_objective_step_cue_reachability,
@@ -60,7 +60,6 @@ def spawn_cell(entity: dict) -> tuple[int, int]:
     return (int(entity["x"]), int(entity["y"]))
 def is_int_value(value) -> bool:
     return isinstance(value, int) and not isinstance(value, bool)
-
 def is_number_value(value) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool)
 def validate_required_fields(item: dict, item_label: str, required_fields: tuple[str, ...]) -> list[str]:
@@ -69,7 +68,6 @@ def validate_required_fields(item: dict, item_label: str, required_fields: tuple
         if field not in item:
             failures.append(f"{item_label} is missing required field {field}.")
     return failures
-
 def validate_id(value, item_label: str) -> list[str]:
     if not isinstance(value, str) or not value:
         return [f"{item_label} id must be a non-empty string."]
@@ -397,6 +395,7 @@ def main() -> int:
     failures.extend(validate_moving_hazard_schema(map_data))
     failures.extend(validate_next_dive_prompt_schema(map_data, entities, zones))
     failures.extend(validate_progression_container_schema(map_data))
+    failures.extend(validate_regional_journey_schema(map_data))
     failures.extend(validate_relay_follow_through_objective_schema(map_data, entities))
     failures.extend(validate_survey_target_schema(args.map_json, map_data))
     failures.extend(validate_visibility_zone_schema(map_data))
@@ -484,6 +483,7 @@ def main() -> int:
     failures.extend(validate_material_source_reachability(entities, solid, reachable))
     failures.extend(validate_moving_hazard_reachability(map_data.get("moving_hazards", []), solid, reachable))
     failures.extend(validate_progression_container_reachability(map_data.get("progression_containers", []), solid, reachable))
+    failures.extend(validate_regional_journey_reachability(map_data, solid, reachable))
     failures.extend(validate_relay_follow_through_objective_reachability(map_data, entities, solid, reachable))
     failures.extend(validate_survey_target_reachability(map_data.get("survey_targets", []), solid, reachable))
     failures.extend(validate_visibility_zone_reachability(zones, solid, reachable))

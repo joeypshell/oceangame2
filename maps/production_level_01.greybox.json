@@ -1299,6 +1299,21 @@
         }
       ]
     },
+    "expansion_10": {
+      "source": "tools/production_level_01_expansion_10.py",
+      "journey_ids": [
+        "east_current_signal_reef_route"
+      ],
+      "entry_gate_ids": [
+        "lower_right_west_current_gate",
+        "lower_right_east_current_gate"
+      ],
+      "landmark_zone_ids": [
+        "lower_right_signal_reef_landmark"
+      ],
+      "terrain_changes": [],
+      "intent": "Source-authored regional route metadata with no topology edits."
+    },
     "review_artifact": "references/greybox/production_level_01_source_render_collision_review.png"
   },
   "units": {
@@ -4492,6 +4507,62 @@
       "required_upgrade_id": "dive_light_1",
       "visual_only": true,
       "intent": "First visual-only darkness pressure zone around the lower-loop-to-deep-cache route."
+    },
+    {
+      "id": "lower_right_west_current_gate",
+      "type": "marker",
+      "x": 109,
+      "y": 81,
+      "w": 3,
+      "h": 6,
+      "current_gate": true,
+      "current_direction": "up",
+      "current_strength": 2.2,
+      "required_capability_id": "propulsion_fins",
+      "current_gate_label": "Signal Reef current",
+      "current_affordance_role": "barrier",
+      "route_context": "east_current_signal_reef_route"
+    },
+    {
+      "id": "lower_right_east_current_gate",
+      "type": "marker",
+      "x": 145,
+      "y": 75,
+      "w": 4,
+      "h": 4,
+      "current_gate": true,
+      "current_direction": "up",
+      "current_strength": 2.2,
+      "required_capability_id": "propulsion_fins",
+      "current_gate_label": "Signal Reef current",
+      "current_affordance_role": "barrier",
+      "route_context": "east_current_signal_reef_route"
+    },
+    {
+      "id": "lower_right_signal_reef_landmark",
+      "type": "marker",
+      "x": 132,
+      "y": 108,
+      "w": 10,
+      "h": 10,
+      "regional_landmark": true,
+      "regional_journey_id": "east_current_signal_reef_route",
+      "landmark_label": "Signal Reef"
+    }
+  ],
+  "regional_journeys": [
+    {
+      "id": "east_current_signal_reef_route",
+      "route_label": "Signal Reef route",
+      "promise_gate_id": "upper_right_current_pocket_gate",
+      "entry_gate_ids": [
+        "lower_right_west_current_gate",
+        "lower_right_east_current_gate"
+      ],
+      "required_capability_id": "propulsion_fins",
+      "landmark_zone_id": "lower_right_signal_reef_landmark",
+      "route_context": "east_current_signal_reef_route",
+      "intent": "Reuse the taught east-current language to gate one meaningful lower-right region and later boat-return discovery."
     }
   ],
   "daily_conditions": [
@@ -4833,6 +4904,16 @@
       "y": 58,
       "w": 44,
       "h": 18
+    },
+    {
+      "id": "lower_right_signal_reef_backdrop",
+      "type": "background",
+      "x": 132,
+      "y": 108,
+      "w": 10,
+      "h": 10,
+      "regional_landmark": true,
+      "regional_journey_id": "east_current_signal_reef_route"
     }
   ],
   "entities": [
@@ -5193,6 +5274,27 @@
       "center_y": 18,
       "zoom": 0.46,
       "intent": "Return path context from first branch back to boat extraction."
+    },
+    {
+      "id": "expansion_10_current_promise",
+      "center_x": 123.5,
+      "center_y": 41.0,
+      "zoom": 0.55,
+      "intent": "Existing east-current promise before the regional journey."
+    },
+    {
+      "id": "expansion_10_lower_right_entry",
+      "center_x": 129.0,
+      "center_y": 82.0,
+      "zoom": 0.28,
+      "intent": "Both passive current seams and continuous lower-right entry context."
+    },
+    {
+      "id": "expansion_10_signal_reef",
+      "center_x": 137.0,
+      "center_y": 113.0,
+      "zoom": 0.45,
+      "intent": "Signal Reef landmark silhouette and surrounding collision-active water."
     }
   ],
   "review_questions": [

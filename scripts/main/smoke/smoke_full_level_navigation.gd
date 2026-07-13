@@ -12,7 +12,13 @@ var _map_pixel_size := Vector2.ZERO
 var _blocked_point_count := 0
 
 
-func build(world, player_body_size: Vector2, collection_radius: float, collectible_material_id := "") -> Dictionary:
+func build(
+	world,
+	player_body_size: Vector2,
+	collection_radius: float,
+	collectible_material_id := "",
+	passable_capability_ids: Array = []
+) -> Dictionary:
 	_map_pixel_size = world.map_pixel_size
 	_grid_size = Vector2i(
 		int(floor(_map_pixel_size.x / NAV_STEP_PX)) + 1,
@@ -45,6 +51,8 @@ func build(world, player_body_size: Vector2, collection_radius: float, collectib
 		var territory: Rect2 = hostile.get("territory_rect", Rect2())
 		_block_expanded_rect(territory, Vector2.ONE * HOSTILE_CLEARANCE_PX)
 	for gate in world.get_current_gates():
+		if passable_capability_ids.has(str(gate.get("required_capability_id", ""))):
+			continue
 		var gate_rect: Rect2 = gate.get("rect", Rect2())
 		_block_expanded_rect(gate_rect, body_half + Vector2.ONE * INTERACTION_CLEARANCE_PX)
 	for candidate in world.get_material_candidates():
