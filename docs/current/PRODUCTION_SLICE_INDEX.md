@@ -1,6 +1,6 @@
 # Production Slice Index
 
-Date: 2026-07-09
+Date: 2026-07-13
 
 Issue: #66 `Add production slice status index`
 
@@ -8,13 +8,15 @@ Issue: #66 `Add production slice status index`
 
 Use this index as the quick source-of-truth for the current focused production slices. It summarizes what each slice is meant to test, how it is loaded, and which validation and visual-baseline artifacts protect it.
 
+`production_level_01` is now the default map. The four slices below remain explicitly selectable regression and provenance fixtures.
+
 Detailed rationale remains in the slice decision, evaluation, and baseline docs linked below. This file is an index, not a replacement for those records.
 
 ## Slice Summary
 
 | Slice | Role | Source Bounds | Entry And Extraction | Preview Status | Baseline Status |
 |---|---|---:|---|---|---|
-| `production_slice_01` | Top-center entry hub and first-area onboarding slice with the Pass 21 `lower_left_loop_connector` to slice 04 | `x=58, y=0, w=72, h=84` | `boat_spawn` at top water | Default Godot and public preview map | Accepted baseline at `visual_baselines/production_slice_01_accepted/` |
+| `production_slice_01` | Top-center entry hub and first-area onboarding slice with the Pass 21 `lower_left_loop_connector` to slice 04 | `x=58, y=0, w=72, h=84` | `boat_spawn` at top water | Explicit reference/regression slice; former default | Accepted baseline at `visual_baselines/production_slice_01_accepted/` |
 | `production_slice_02` | Lower-right later-game chamber route and relay-base proof | `x=88, y=78, w=66, h=72` | In-water `spawn` plus `base` relay extraction | Reference slice only | Accepted baseline at `visual_baselines/production_slice_02_accepted/` |
 | `production_slice_03` | Upper-left compact connector / landmark room-cluster slice | `x=0, y=8, w=76, h=82` | In-water `spawn` plus `base` relay extraction | Reference slice only | Accepted baseline at `visual_baselines/production_slice_03_accepted/` |
 | `production_slice_04` | Lower-left connector / return-loop slice with curved corridor movement and Pass 21 relay entry from slice 01 | `x=0, y=86, w=88, h=50` | In-water `spawn` plus `base` relay extraction | Reachable reference slice via Pass 21 connector | Accepted baseline at `visual_baselines/production_slice_04_accepted/` |
@@ -45,7 +47,7 @@ Pass 21 also adds `--smoke-pass-21-world-connector` to verify the prompted trans
 
 | Slice | Normal Captures | Debug Captures | Baseline Review Sheet | Notes |
 |---|---|---|---|---|
-| `production_slice_01` | `visual_captures/production_slice_01/` | `visual_captures/production_slice_01_debug/` | `references/asset_reviews/production_slice_01_visual_baseline_review.png` | Reconciled under #75 so the accepted default-slice baseline now covers the current six-view capture set. |
+| `production_slice_01` | `visual_captures/production_slice_01/` | `visual_captures/production_slice_01_debug/` | `references/asset_reviews/production_slice_01_visual_baseline_review.png` | Reconciled under #75; the accepted reference-slice baseline covers the current six-view capture set. |
 | `production_slice_02` | `visual_captures/production_slice_02/` | `visual_captures/production_slice_02_debug/` | `references/asset_reviews/production_slice_02_visual_baseline_review.png` | Accepted after the original framing and relay-readability blockers were resolved; refreshed under #71 for the prop sprite pass. |
 | `production_slice_03` | `visual_captures/production_slice_03/` | `visual_captures/production_slice_03_debug/` | `references/asset_reviews/production_slice_03_visual_baseline_review.png` | Keep as a connector/landmark reference; refreshed under #71 for the prop sprite pass; optional #52/#53 polish is deferred unless the accepted baseline intentionally changes. |
 | `production_slice_04` | `visual_captures/production_slice_04/` | `visual_captures/production_slice_04_debug/` | `references/asset_reviews/production_slice_04_visual_baseline_review.png` | Keep as a lower-left loop reference; refreshed under #71 for the prop sprite pass; curved-corridor stair steps are intentional for this prototype pass. |
@@ -65,4 +67,4 @@ Before changing terrain, camera framing, entity visuals, or route design for an 
 
 Use `python tools/manage_production_slice_baseline.py compare-all` to refresh all accepted baseline/current/difference review sheets before reviewing a controlled visual change.
 
-Do not promote another slice to the default preview as part of unrelated visual or tooling work. The default-preview decision should remain a separate scoped issue with launch smoke, route smoke, capture checks, docs, and web-preview expectation updates.
+Do not replace `production_level_01` with a slice as part of unrelated visual or tooling work. Any default-preview decision remains a separate scoped issue with launch smoke, route smoke, capture checks, docs, and Web-preview expectation updates.

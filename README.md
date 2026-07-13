@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-08 are complete. Expansion 09 issues #857-#863 have built and technically proved the contiguous full-level candidate. Exact-SHA candidate Web verification passes at `b0bb1f9`; #864 now waits for explicit player GO/HOLD while `production_slice_01` remains the default and #865 remains blocked.
+The compact diver foundation and OceanGame Expansions 01-09 are complete. The player-approved contiguous `production_level_01` is now the editor, local, and public Web default. Exact-SHA promotion and Web verification pass at `e825c88`; slices 01-04 remain unchanged, selectable regression fixtures.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 09 plan, locked source contract, and technical visual-review decision. Review the exact-SHA candidate through #864 before any promotion or new teleport, connector, stabilizer, or pressure-gate work. #865 cannot start on HOLD.
+Current handoff starts with the Expansion 09 closeout and Phase 2 roadmap. No next implementation milestone is selected yet; evaluate the promoted full level before creating a bounded regional or capability-gated batch. Teleport, connector-based normal traversal, stabilizer entry requirements, and pressure progression remain deferred.
 
 Core sources and operating docs:
 
@@ -95,6 +95,7 @@ Current release and expansion handoff:
 - [OceanGame Expansion 09 Contiguous Full-Level Plan](docs/current/OCEANGAME_EXPANSION_09_PLAN.md)
 - [Expansion 09 Full-Level Source Contract](docs/current/OCEANGAME_EXPANSION_09_SOURCE_CONTRACT.md)
 - [Expansion 09 Visual Review Decision](docs/current/OCEANGAME_EXPANSION_09_VISUAL_REVIEW_DECISION.md)
+- [Expansion 09 Closeout](docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -104,7 +105,7 @@ The current primary direction is [visual_direction_b_modular_cave.png](reference
 
 The original greybox source map is [cave_salvage_test_01.greybox.json](maps/cave_salvage_test_01.greybox.json), with a generated preview at [cave_salvage_test_01.svg](references/greybox/cave_salvage_test_01.svg). It remains available as a comparison map.
 
-The current default preview map is the first focused production slice: [production_slice_01.greybox.json](maps/production_slice_01.greybox.json), with a generated preview at [production_slice_01.svg](references/greybox/production_slice_01.svg). Run it locally with:
+The current default preview map is the contiguous production level: [production_level_01.greybox.json](maps/production_level_01.greybox.json), with a generated preview at [production_level_01.svg](references/greybox/production_level_01.svg). Run it locally with:
 
 ```powershell
 .\tools\open_godot_project.ps1 -Run
@@ -218,7 +219,7 @@ The preview shows compact review context in the upper-left corner with the loade
 
 Current in-engine baseline screenshot: [001_greybox_in_engine.png](visual_baselines/001_greybox_in_engine.png)
 
-Current named camera captures are generated under [visual_captures/latest](visual_captures/latest) from the default production slice.
+Current named camera captures are generated under [visual_captures/latest](visual_captures/latest) from the selected map. The accepted full-level review set lives under [visual_baselines/production_level_01_accepted](visual_baselines/production_level_01_accepted).
 
 ## Browser Preview
 
@@ -228,4 +229,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-08 meet that technical condition. Expansion 09 technically proves that the whole supplied cave topology can become one authoritative, continuously swimmable production candidate without connector travel; player GO/HOLD now determines whether it becomes the default.
+The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-09 meet that condition, including a player-approved, source-generated full cave that is continuously swimmable without connector travel.

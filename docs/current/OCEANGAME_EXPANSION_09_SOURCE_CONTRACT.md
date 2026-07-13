@@ -6,7 +6,7 @@ Issue: #857
 
 Milestone: OceanGame Expansion 09 `Contiguous Full-Level Foundation`
 
-Status: Locked for the frozen #857-#865 implementation batch.
+Status: Completed contract for #857-#865; retained as the source-authority record for the promoted level.
 
 ## Decision
 
@@ -20,8 +20,9 @@ The candidate remains:
 maps/production_level_01.greybox.json
 ```
 
-`production_slice_01` remains the default and slices 01-04 remain regression and
-provenance fixtures until the player approves promotion at #864.
+`production_slice_01` remained the default until player approval at #864. #865
+then promoted `production_level_01`; slices 01-04 remain regression and
+provenance fixtures.
 
 ## Canonical Pipeline
 
@@ -195,8 +196,8 @@ Implementation must prove, in dependency order:
    record and reference.
 5. #862-#863 prove candidate selection, framing, runtime practicality, and a
    collision-active no-connector journey.
-6. #864 presents candidate-only evidence and waits for player GO or HOLD.
-7. #865 may promote the default only after explicit GO.
+6. #864 presented candidate-only evidence and recorded player GO.
+7. #865 promoted the default after that explicit GO.
 
 ## Non-Goals
 

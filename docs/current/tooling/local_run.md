@@ -14,7 +14,7 @@ Run the current project scene locally:
 .\tools\open_godot_project.ps1 -Run
 ```
 
-The current default preview map is `maps/production_slice_01.greybox.json`.
+The current default preview map is `maps/production_level_01.greybox.json`.
 
 Use `docs/current/PRODUCTION_SLICE_INDEX.md` for a compact status table of the current production slices, including launch flags, route smoke flags, capture folders, review sheets, and accepted baseline status.
 
@@ -44,16 +44,16 @@ Run the full-map sketch topology draft:
 .\tools\open_godot_project.ps1 -Run -FullSketchMap
 ```
 
-Run the generated contiguous full-level candidate without changing the default map:
+Run the generated contiguous full level explicitly (the flag remains useful for scripts and review):
 
 ```powershell
 .\tools\open_godot_project.ps1 -Run -ProductionLevelMap
 ```
 
-The matching raw Godot flag is `--production-level-map`. Measure candidate startup, terrain/collision construction, camera limits, and a short frame sample headlessly with:
+The matching raw Godot flag is `--production-level-map`. Measure default full-level startup, terrain/collision construction, camera limits, and a short frame sample headlessly with:
 
 ```powershell
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --production-level-map --measure-map-runtime
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --measure-map-runtime
 ```
 
 The first candidate measurement is recorded in [OceanGame Expansion 09 Runtime Measurement](../OCEANGAME_EXPANSION_09_RUNTIME_MEASUREMENT.md).
@@ -108,7 +108,7 @@ run-production-slice-04.cmd
 
 In Command Prompt, run the `.cmd` wrappers instead of executing `.ps1` files directly. Depending on local file associations, typing a PowerShell script path from Command Prompt may open it in an editor instead of running it.
 
-Opening the Godot editor and pressing Play uses the default preview map unless Godot was launched with a `--map-path` argument. For non-default slices, the in-game overlay should show the requested map id; if it reads `Map production_slice_01 v1`, the default map was launched.
+Opening the Godot editor and pressing Play uses the default preview map unless Godot was launched with a `--map-path` argument. For non-default slices, the in-game overlay should show the requested map id; `Map production_level_01 v1` identifies the default map.
 
 Local/editor review runs show a small map selector in the review overlay. Use it to switch between the supported review maps without relaunching Godot. It is hidden for capture/smoke automation and exported builds unless explicitly enabled with `--review-map-selector`. Command-line flags such as `-ProductionSlice3Map` or `-MapPath` still control the initial map that opens.
 

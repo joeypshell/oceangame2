@@ -8,7 +8,7 @@ python tools/write_build_info.py
 
 This writes ignored `build_info.json`. The web export workflow generates that file from `GITHUB_SHA` before export, so the public preview can identify the deployed commit.
 
-The latest exact-SHA Pages verification is recorded in [OceanGame Expansion 08 Web Preview Verification](../OCEANGAME_EXPANSION_08_WEB_PREVIEW_VERIFICATION.md). The older [Simple Diver Game 08 Web Export Handoff](../SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md) remains the release-candidate foundation.
+The latest exact-SHA Pages verification is recorded in [OceanGame Expansion 09 Closeout](../OCEANGAME_EXPANSION_09_CLOSEOUT.md). The older [Simple Diver Game 08 Web Export Handoff](../SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md) remains the release-candidate foundation.
 
 Build a local Web export preview:
 
@@ -44,4 +44,4 @@ The public export uses the project stretch policy to keep a 1280x720 logical gam
 
 For an isolated player-review run, open `https://joeypshell.github.io/oceangame2/?review=<sha>`. The `review` query starts with a fresh in-memory profile without reading, deleting, or writing the normal durable profile; the overlay reports `Review profile fresh/isolated` and whether fins are owned. The Web checker exercises this URL and requires the startup marker before passing.
 
-Review the contiguous full-level candidate at `https://joeypshell.github.io/oceangame2/?review=<sha>&map=production_level_01`. Both parameters are required: the public root, `?review=<sha>` without `map`, and a bare `?map=production_level_01` continue to load `production_slice_01`. The Web checker verifies the candidate and isolated profile at 1280x720 desktop and 844x390 mobile browser sizes without promoting it to the default.
+The public root and `https://joeypshell.github.io/oceangame2/?review=<sha>` now load `production_level_01`; the review query still isolates profile state. To review a retained slice fixture, add an explicit supported map, for example `?review=<sha>&map=production_slice_01`. A bare `map` query without `review` does not override the default. The Web checker verifies the full-level default and explicit slice-01 fallback at desktop and mobile browser sizes.

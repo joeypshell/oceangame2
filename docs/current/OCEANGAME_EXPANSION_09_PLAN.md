@@ -8,7 +8,7 @@ Supersedes: #852 connector-first regional plan
 
 Milestone: OceanGame Expansion 09 `Contiguous Full-Level Foundation`
 
-Status: Direction accepted. Frozen implementation batch #857-#865 is active; #864 remains the player GO/HOLD gate.
+Status: Complete with player GO and default promotion. See `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md`.
 
 ## Decision
 
@@ -22,7 +22,7 @@ maps/production_level_01.greybox.json
 
 It will derive from `maps/full_cave_sketch_01.greybox.json`, preserve one continuous water space, and carry the proven `production_slice_01` gameplay into full-map coordinates through source-owned transformation. The player must be able to leave the top boat, swim through former slice boundaries, and return to the same boat without pressing `E`, changing maps, or teleporting.
 
-Keep `production_slice_01` as the default until the candidate passes source, clearance, route, camera, performance, visual, player, and Web review. The previous Drowned Relay Terminal, relay refuge, stabilizer entry, pressure survey, pressure lining, and connector journey are not part of this milestone.
+The implementation kept `production_slice_01` as the default until the candidate passed source, clearance, route, camera, performance, visual, player, and Web review. The previous Drowned Relay Terminal, relay refuge, stabilizer entry, pressure survey, pressure lining, and connector journey were not part of this milestone.
 
 ## Why This Is The Next Meaningful Change
 
@@ -165,7 +165,7 @@ Review for terrain continuity, accidental seams, repeated background noise, came
 
 ## Promotion Gate
 
-`production_slice_01` stays the default while the full map is a candidate. Promotion requires:
+`production_slice_01` stayed the default while the full map was a candidate. Promotion required:
 
 1. Generator determinism and clean regeneration.
 2. Schema, boundary, footprint, reachability, direct-return, progression, and parity validation.

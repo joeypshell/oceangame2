@@ -14,7 +14,7 @@ Capture the current named camera test views:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-camera-tests
 ```
 
-This reads `camera_tests` from the default preview map, currently `maps/production_slice_01.greybox.json`, and writes PNGs to `visual_captures/latest/`.
+This reads `camera_tests` from the default preview map, currently `maps/production_level_01.greybox.json`, and writes PNGs to `visual_captures/latest/`.
 Normal gameplay and capture views hide the greybox source grid. Add `--show-debug-overlay` when you specifically need the source TileMap/grid overlay for map debugging.
 
 Capture the focused player-readability view for Controlled Visual Revision review:
@@ -23,7 +23,7 @@ Capture the focused player-readability view for Controlled Visual Revision revie
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-player-readability
 ```
 
-This loads the default production slice, places the player a few tiles below the source-defined boat entry for a readable start-context shot, uses a close runtime camera, and writes `visual_captures/player_readability/production_slice_01_player_start.png`. Use this capture to review player sprite changes without changing map topology, gameplay, camera tests, or accepted baselines.
+This explicitly loads `production_slice_01`, places the player a few tiles below the source-defined boat entry for a readable start-context shot, uses a close runtime camera, and writes `visual_captures/player_readability/production_slice_01_player_start.png`. Use this capture to review player sprite changes without changing map topology, gameplay, camera tests, or accepted baselines.
 
 Capture the focused background-depth view for Controlled Visual Revision review:
 
@@ -31,7 +31,7 @@ Capture the focused background-depth view for Controlled Visual Revision review:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-background-depth
 ```
 
-This loads the default production slice, keeps map data and authored camera tests unchanged, frames the entry/crossing background silhouettes with terrain, water, player, props, and boat context, and writes `visual_captures/background_depth/production_slice_01_background_depth.png`. Use this capture to review non-collision background-depth changes without changing map topology, gameplay, camera tests, or accepted baselines.
+This explicitly loads `production_slice_01`, keeps map data and authored camera tests unchanged, frames the entry/crossing background silhouettes with terrain, water, player, props, and boat context, and writes `visual_captures/background_depth/production_slice_01_background_depth.png`. Use this capture to review non-collision background-depth changes without changing map topology, gameplay, camera tests, or accepted baselines.
 
 Capture the focused route-outcome result view for Controlled Gameplay review:
 
@@ -39,7 +39,7 @@ Capture the focused route-outcome result view for Controlled Gameplay review:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-route-outcome-result
 ```
 
-This loads the default production slice, completes a deterministic route-tagged collect-return run, keeps map data and accepted baselines unchanged, and writes `visual_captures/route_outcome/production_slice_01_route_outcome_result.png`. Use this capture to review the compact route outcome/result panel before accepting or replacing broader visual baselines.
+This explicitly loads `production_slice_01`, completes a deterministic route-tagged collect-return run, keeps map data and accepted baselines unchanged, and writes `visual_captures/route_outcome/production_slice_01_route_outcome_result.png`. Use this capture to review the compact route outcome/result panel before accepting or replacing broader visual baselines.
 
 Capture the focused timed-salvage interaction view for Controlled Gameplay review:
 
@@ -47,7 +47,7 @@ Capture the focused timed-salvage interaction view for Controlled Gameplay revie
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-timed-salvage
 ```
 
-This loads the default production slice, places the player on the authored timed salvage target, advances to a partial `Salvaging deep cache` progress state, frames the Pass 06 in-world marker and overlay progress bar, keeps map data and accepted baselines unchanged, and writes `visual_captures/timed_salvage/production_slice_01_timed_salvage.png`.
+This explicitly loads `production_slice_01`, places the player on the authored timed salvage target, advances to a partial `Salvaging deep cache` progress state, frames the Pass 06 in-world marker and overlay progress bar, keeps map data and accepted baselines unchanged, and writes `visual_captures/timed_salvage/production_slice_01_timed_salvage.png`.
 
 Capture the focused pry-salvage interaction view for Controlled Gameplay review:
 
@@ -55,7 +55,7 @@ Capture the focused pry-salvage interaction view for Controlled Gameplay review:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pry-salvage
 ```
 
-This loads the default production slice, places the player on the authored pry salvage target, advances to a partial `Prying sealed cache` stage-progress state, keeps map data and accepted baselines unchanged, and writes `visual_captures/pry_salvage/production_slice_01_pry_salvage.png`.
+This explicitly loads `production_slice_01`, places the player on the authored pry salvage target, advances to a partial `Prying sealed cache` stage-progress state, keeps map data and accepted baselines unchanged, and writes `visual_captures/pry_salvage/production_slice_01_pry_salvage.png`.
 
 Capture the focused Pass 07 hazard/navigation pressure view:
 
@@ -63,7 +63,7 @@ Capture the focused Pass 07 hazard/navigation pressure view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-07-hazard-pressure
 ```
 
-This loads the default production slice, collects the lower-loop payoff into held cargo, places the player in warning-only range near `hazard_right_branch`, frames the selected pressure segment with the deep-cache payoff and overlay warning, keeps map data and accepted baselines unchanged, and writes `visual_captures/hazard_pressure/production_slice_01_hazard_pressure.png`.
+This explicitly loads `production_slice_01`, collects the lower-loop payoff into held cargo, places the player in warning-only range near `hazard_right_branch`, frames the selected pressure segment with the deep-cache payoff and overlay warning, keeps map data and accepted baselines unchanged, and writes `visual_captures/hazard_pressure/production_slice_01_hazard_pressure.png`.
 
 Capture the focused Pass 08 route-extension view:
 
@@ -71,7 +71,7 @@ Capture the focused Pass 08 route-extension view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-08-route-extension
 ```
 
-This loads the default production slice, places the player near `salvage_southwest_return_cache` without collecting it, frames `southwest_return_pocket_extension` with compact overlay context, keeps map data and accepted baselines unchanged, and writes `visual_captures/route_extension/production_slice_01_route_extension.png`.
+This explicitly loads `production_slice_01`, places the player near `salvage_southwest_return_cache` without collecting it, frames `southwest_return_pocket_extension` with compact overlay context, keeps map data and accepted baselines unchanged, and writes `visual_captures/route_extension/production_slice_01_route_extension.png`.
 
 Capture the focused Pass 09 southwest pocket route-decision view:
 
@@ -79,7 +79,7 @@ Capture the focused Pass 09 southwest pocket route-decision view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-09-southwest-pocket-decision
 ```
 
-This loads the default production slice, collects `salvage_southwest_return_cache` through the normal runtime path, frames `southwest_return_pocket_extension` with compact payoff feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/southwest_pocket_decision/production_slice_01_southwest_pocket_decision.png`.
+This explicitly loads `production_slice_01`, collects `salvage_southwest_return_cache` through the normal runtime path, frames `southwest_return_pocket_extension` with compact payoff feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/southwest_pocket_decision/production_slice_01_southwest_pocket_decision.png`.
 
 Capture the focused Pass 10 return-pressure view:
 
@@ -87,7 +87,7 @@ Capture the focused Pass 10 return-pressure view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-10-return-pressure
 ```
 
-This loads the default production slice, fills cargo with the lower-loop and timed deep-cache pickups, places the player at `salvage_return_branch`, frames the compact `Cargo full - bank at boat` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_10_return_pressure/production_slice_01_return_pressure.png`.
+This explicitly loads `production_slice_01`, fills cargo with the lower-loop and timed deep-cache pickups, places the player at `salvage_return_branch`, frames the compact `Cargo full - bank at boat` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_10_return_pressure/production_slice_01_return_pressure.png`.
 
 Capture the focused Pass 11 pre-pickup route-cue view:
 
@@ -95,7 +95,7 @@ Capture the focused Pass 11 pre-pickup route-cue view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-11-pre-pickup-route-cue
 ```
 
-This loads the default production slice, places the player in `southwest_pocket_pre_pickup_cue` before collecting `salvage_southwest_return_cache`, frames the compact `Relay trail cache ahead` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_11_pre_pickup_route_cue/production_slice_01_pre_pickup_route_cue.png`.
+This explicitly loads `production_slice_01`, places the player in `southwest_pocket_pre_pickup_cue` before collecting `salvage_southwest_return_cache`, frames the compact `Relay trail cache ahead` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_11_pre_pickup_route_cue/production_slice_01_pre_pickup_route_cue.png`.
 
 Capture the focused Pass 15 objective-follow-through view:
 
@@ -103,7 +103,7 @@ Capture the focused Pass 15 objective-follow-through view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-15-objective-follow-through
 ```
 
-This loads the default production slice, places the player in `deep_cache_first_step_cue` before collecting `salvage_lower_loop`, frames the compact `Objective route: Lower loop` cue, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_15_objective_follow_through/production_slice_01_objective_follow_through.png`.
+This explicitly loads `production_slice_01`, places the player in `deep_cache_first_step_cue` before collecting `salvage_lower_loop`, frames the compact `Objective route: Lower loop` cue, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_15_objective_follow_through/production_slice_01_objective_follow_through.png`.
 
 Capture the focused primary dive completion result view:
 
@@ -111,7 +111,7 @@ Capture the focused primary dive completion result view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-primary-dive-completion
 ```
 
-This loads the default production slice, collects the primary objective targets through the normal runtime path, banks them at extraction, frames the completed result panel, keeps map data and accepted baselines unchanged, and writes `visual_captures/primary_dive_completion/production_slice_01_primary_dive_completion.png`.
+This explicitly loads `production_slice_01`, collects the primary objective targets through the normal runtime path, banks them at extraction, frames the completed result panel, keeps map data and accepted baselines unchanged, and writes `visual_captures/primary_dive_completion/production_slice_01_primary_dive_completion.png`.
 
 Capture the focused Pass 23 next-dive objective result view:
 
@@ -119,7 +119,7 @@ Capture the focused Pass 23 next-dive objective result view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-23-next-dive-objective
 ```
 
-This loads the default production slice, completes the primary objective through the normal runtime path, frames the result panel with the current `Next dive: Investigate east current` prompt, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_23_next_dive_objective/production_slice_01_pass_23_next_dive_objective.png`. The flag and output path retain their historical Pass 23 names for compatibility.
+This explicitly loads `production_slice_01`, completes the primary objective through the normal runtime path, frames the result panel with the current `Next dive: Investigate east current` prompt, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_23_next_dive_objective/production_slice_01_pass_23_next_dive_objective.png`. The flag and output path retain their historical Pass 23 names for compatibility.
 
 Capture the focused Pass 24 relay follow-through feedback view:
 
@@ -143,7 +143,7 @@ Capture the focused Pass 26 result presentation view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-26-result-presentation
 ```
 
-This starts from the default production slice, travels through the lower-left connector by the normal runtime path, completes the slice-04 final-dive payoff, frames the completed result panel with `Final dive signal locked`, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_26_result_presentation/production_slice_04_pass_26_result_presentation.png`.
+This explicitly starts from `production_slice_01`, travels through the lower-left connector by the normal runtime path, completes the slice-04 final-dive payoff, frames the completed result panel with `Final dive signal locked`, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_26_result_presentation/production_slice_04_pass_26_result_presentation.png`.
 
 Capture the focused Pass 27 player-facing review view:
 
@@ -151,7 +151,7 @@ Capture the focused Pass 27 player-facing review view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-27-player-facing
 ```
 
-This loads the default production slice, places the player in a readable open-water area, applies deterministic left/right reversals, frames the final right-facing body and light alignment, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_27_player_facing/production_slice_01_pass_27_player_facing.png`.
+This explicitly loads `production_slice_01`, places the player in a readable open-water area, applies deterministic left/right reversals, frames the final right-facing body and light alignment, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_27_player_facing/production_slice_01_pass_27_player_facing.png`.
 
 Capture the focused Expansion 01 anomaly survey and commit views:
 
@@ -223,7 +223,7 @@ Capture the focused Pass 18 progression upgrade view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-18-progression
 ```
 
-This loads the default production slice, banks enough salvage through the normal runtime path to afford the oxygen tank upgrade, purchases it at extraction, frames the compact wallet/upgrade feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_18_progression/production_slice_01_pass_18_progression.png`.
+This explicitly loads `production_slice_01`, banks enough salvage through the normal runtime path to afford the oxygen tank upgrade, purchases it at extraction, frames the compact wallet/upgrade feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_18_progression/production_slice_01_pass_18_progression.png`.
 
 Capture the focused Pass 19 cargo upgrade view:
 
@@ -231,7 +231,7 @@ Capture the focused Pass 19 cargo upgrade view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-19-cargo-upgrade
 ```
 
-This loads the default production slice, banks enough salvage through the normal runtime path to afford the cargo capacity upgrade, purchases it at extraction, frames compact wallet, `Cargo +1`, and `Held 0/3` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_19_cargo_upgrade/production_slice_01_pass_19_cargo_upgrade.png`.
+This explicitly loads `production_slice_01`, banks enough salvage through the normal runtime path to afford the cargo capacity upgrade, purchases it at extraction, frames compact wallet, `Cargo +1`, and `Held 0/3` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_19_cargo_upgrade/production_slice_01_pass_19_cargo_upgrade.png`.
 
 Capture the focused Pass 20 light upgrade view:
 
@@ -239,7 +239,7 @@ Capture the focused Pass 20 light upgrade view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-20-light-upgrade
 ```
 
-This loads the default production slice, banks enough salvage through the normal runtime path to afford the light upgrade, purchases it at extraction, frames compact wallet and `Light +range upgraded` feedback with the upgraded light cone visible, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_20_light_upgrade/production_slice_01_pass_20_light_upgrade.png`.
+This explicitly loads `production_slice_01`, banks enough salvage through the normal runtime path to afford the light upgrade, purchases it at extraction, frames compact wallet and `Light +range upgraded` feedback with the upgraded light cone visible, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_20_light_upgrade/production_slice_01_pass_20_light_upgrade.png`.
 
 Capture the focused darkness/light gate review pair:
 
@@ -247,7 +247,7 @@ Capture the focused darkness/light gate review pair:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-darkness-light-gate
 ```
 
-This loads the default production slice, frames `deep_cache_dark_pocket` with the player in the zone, writes a base-light shot and then a `Light +range` readability shot, keeps map data and accepted baselines unchanged, and writes `visual_captures/darkness_light_gate/production_slice_01_darkness_light_before_light.png` and `visual_captures/darkness_light_gate/production_slice_01_darkness_light_after_light.png`.
+This explicitly loads `production_slice_01`, frames `deep_cache_dark_pocket` with the player in the zone, writes a base-light shot and then a `Light +range` readability shot, keeps map data and accepted baselines unchanged, and writes `visual_captures/darkness_light_gate/production_slice_01_darkness_light_before_light.png` and `visual_captures/darkness_light_gate/production_slice_01_darkness_light_after_light.png`.
 
 Capture the focused Pass 21 world-connector arrival view:
 
@@ -255,7 +255,7 @@ Capture the focused Pass 21 world-connector arrival view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-pass-21-world-connector
 ```
 
-This loads the default production slice, moves the player to `lower_left_loop_connector`, triggers the source-authored transition into `production_slice_04`, frames compact `Arrived: Lower-left loop` and return-connector feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_21_world_connector/production_slice_04_world_connector_arrival.png`.
+This explicitly loads `production_slice_01`, moves the player to `lower_left_loop_connector`, triggers the source-authored transition into `production_slice_04`, frames compact `Arrived: Lower-left loop` and return-connector feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_21_world_connector/production_slice_04_world_connector_arrival.png`.
 
 Capture the focused blueprint-fins tracker and relay views:
 
@@ -263,7 +263,7 @@ Capture the focused blueprint-fins tracker and relay views:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --capture-upgrade-chest
 ```
 
-This loads the default production slice and writes desktop plus 844x390 mobile-viewport canvas captures for the explicit blueprint prompt/cue, partial banked/held recipe tracker, post-fins amber relay and `E` prompt, and cyan east stabilizer barrier under `visual_captures/upgrade_chest/`. It does not accept or replace baselines. Do not add `--quit-after 10`; the four-state capture exits on completion and a short frame cap can stop it mid-run.
+This explicitly loads `production_slice_01` and writes desktop plus 844x390 mobile-viewport canvas captures for the explicit blueprint prompt/cue, partial banked/held recipe tracker, post-fins amber relay and `E` prompt, and cyan east stabilizer barrier under `visual_captures/upgrade_chest/`. It does not accept or replace baselines. Do not add `--quit-after 10`; the four-state capture exits on completion and a short frame cap can stop it mid-run.
 
 Capture the focused moving-hazard dodge view:
 
@@ -271,7 +271,7 @@ Capture the focused moving-hazard dodge view:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 10 --capture-moving-hazard
 ```
 
-This loads the default production slice, advances `deep_route_jellyfish_patrol` to a readable patrol state, frames the route with compact `Jellyfish patrol - wait` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/moving_hazard/production_slice_01_moving_hazard.png`.
+This explicitly loads `production_slice_01`, advances `deep_route_jellyfish_patrol` to a readable patrol state, frames the route with compact `Jellyfish patrol - wait` feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/moving_hazard/production_slice_01_moving_hazard.png`.
 
 Capture the original rectangular salvage map comparison views:
 
@@ -305,13 +305,13 @@ Capture the full-map sketch topology draft:
 
 This reads `camera_tests` from `maps/full_cave_sketch_01.greybox.json` and writes PNGs to `visual_captures/full_cave_sketch/`.
 
-Capture the contiguous full-level candidate for Expansion 09 review:
+Capture the contiguous full level for Expansion 09 regression review:
 
 ```powershell
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 40 --capture-expansion-09-full-level
 ```
 
-This writes the authored `production_level_*` overview, boat, opening-gameplay, upper-left, lower-left, lower-right, and return contexts at 1280x720 and mobile 844x390 review sizes under `visual_captures/expansion_09_full_level/`. It is candidate evidence only and does not change the default map or accepted baselines.
+This writes the authored `production_level_*` overview, boat, opening-gameplay, upper-left, lower-left, lower-right, and return contexts at 1280x720 and mobile 844x390 review sizes under `visual_captures/expansion_09_full_level/`. These captures are the source for the accepted `production_level_01` baseline; regeneration does not accept or replace that baseline automatically.
 
 Capture the first production slice:
 
