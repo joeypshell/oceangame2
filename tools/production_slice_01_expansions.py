@@ -12,6 +12,12 @@ from production_slice_01_expansion_04 import expansion_04_entities, expansion_04
 from production_slice_01_expansion_05 import apply_expansion_05_material_research, expansion_05_survey_targets
 from production_slice_01_expansion_06 import expansion_06_hostile_encounters, expansion_06_projects
 from production_slice_01_expansion_07 import expansion_07_biological_resource_sources, expansion_07_projects
+from production_slice_01_expansion_08 import (
+    daily_conditions as expansion_08_daily_conditions,
+    expansion_entities as expansion_08_entities,
+    material_candidate_pools as expansion_08_material_candidate_pools,
+    moving_hazards as expansion_08_moving_hazards,
+)
 from production_slice_01_player_gate_correction import (
     lower_left_current_gate,
     propulsion_blueprint_container,
@@ -25,8 +31,16 @@ def progression_containers() -> list[dict]:
     return [propulsion_blueprint_container()]
 
 
+def daily_conditions() -> list[dict]:
+    return expansion_08_daily_conditions()
+
+
 def material_candidate_pools() -> list[dict]:
-    pools = [*expansion_03_material_candidate_pools(), propulsion_material_pool()]
+    pools = [
+        *expansion_03_material_candidate_pools(),
+        propulsion_material_pool(),
+        *expansion_08_material_candidate_pools(),
+    ]
     return apply_expansion_05_material_research(pools)
 
 
@@ -48,8 +62,17 @@ def hostile_encounters() -> list[dict]:
     return expansion_06_hostile_encounters()
 
 
+def moving_hazards() -> list[dict]:
+    return expansion_08_moving_hazards()
+
+
 def expansion_entities() -> list[dict]:
-    return [*expansion_03_entities(), *propulsion_material_entities(), *expansion_04_entities()]
+    return [
+        *expansion_03_entities(),
+        *propulsion_material_entities(),
+        *expansion_04_entities(),
+        *expansion_08_entities(),
+    ]
 
 
 def expansion_zones() -> list[dict]:
