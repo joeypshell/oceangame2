@@ -10,6 +10,8 @@ Journey](https://github.com/joeypshell/oceangame2/milestone/36)
 
 Frozen issue batch: #880-#889
 
+Source contract: `docs/current/OCEANGAME_EXPANSION_10_SOURCE_CONTRACT.md`
+
 ## Decision
 
 Expansion 10 will turn the existing passive east-current promise into the first
