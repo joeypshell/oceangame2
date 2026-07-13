@@ -6,6 +6,7 @@ from __future__ import annotations
 import unittest
 
 from progression_audit import audit_graph
+from progression_audit_views import build_view_graph, load_audit_views
 from progression_contract import load_contract
 from progression_graph import Edge, Node, ProgressionGraph, build_progression_graph, load_production_maps
 
@@ -26,6 +27,67 @@ class ProgressionGraphAuditTests(unittest.TestCase):
         capacitor = graph.resolve("shock_prod_capacitor_project")
         self.assertLess(result.stages[shock], result.stages[cache])
         self.assertLess(result.stages[cache], result.stages[capacitor])
+
+    def test_promoted_full_level_is_a_separate_canonical_view(self) -> None:
+        contract = load_contract()
+        views = {view.id: view for view in load_audit_views()}
+        slice_graph = build_view_graph(views["slice_provenance"], contract)
+        level_graph = build_view_graph(views["promoted_full_level"], contract)
+        level_result = audit_graph(level_graph)
+
+        self.assertEqual((), level_result.failures)
+        self.assertEqual("production_slice_01", contract["canonical_start"]["map_id"])
+        self.assertIn("map:production_slice_01", slice_graph.nodes)
+        self.assertNotIn("map:production_slice_01", level_graph.nodes)
+        self.assertTrue(level_graph.nodes["map:production_level_01"].attrs["start"])
+        self.assertEqual(
+            "production_level_01",
+            level_graph.nodes[level_graph.resolve("surface_boat_entry")].map_id,
+        )
+
+        expected_chain = (
+            "deep_cache_next_dive_prompt",
+            "propulsion_fins",
+            "upper_right_current_pocket_gate",
+            "salvage_current_pocket_cache",
+            "survey_scanner_1",
+            "lower_right_anomaly_survey",
+            "lower_right_anomaly_discovery",
+            "surface_boat_entry",
+        )
+        for raw_id in expected_chain:
+            key = level_graph.resolve(raw_id)
+            self.assertIn(key, level_graph.nodes, raw_id)
+            self.assertIn(key, level_result.stages, raw_id)
+
+        gate = level_graph.resolve("upper_right_current_pocket_gate")
+        fins = level_graph.resolve("propulsion_fins")
+        survey = level_graph.resolve("lower_right_anomaly_survey")
+        scanner = level_graph.resolve("survey_scanner_1")
+        discovery = level_graph.resolve("lower_right_anomaly_discovery")
+        boat = level_graph.resolve("surface_boat_entry")
+        self.assertTrue(any(edge.target == fins for edge in level_graph.requirements(gate)))
+        self.assertTrue(any(edge.target == scanner for edge in level_graph.requirements(survey)))
+        self.assertTrue(any(edge.target == boat for edge in level_graph.requirements(discovery)))
+
+    def test_full_level_view_rejects_self_gated_fins_blueprint(self) -> None:
+        view = next(view for view in load_audit_views() if view.id == "promoted_full_level")
+        graph = build_view_graph(view, load_contract())
+        chest = graph.resolve("lower_loop_upgrade_chest", "production_level_01")
+        fins = graph.resolve("propulsion_fins")
+        graph.add_edge(chest, fins, "requires", hard=True, note="invalid self gate")
+        result = audit_graph(graph)
+        self.assertTrue(any("Hard dependency cycle" in failure for failure in result.failures), result.failures)
+
+    def test_full_level_view_rejects_scanner_funding_below_cost(self) -> None:
+        view = next(view for view in load_audit_views() if view.id == "promoted_full_level")
+        contract = load_contract()
+        contract["durable_purchases"][0]["cost"] = 301
+        result = audit_graph(build_view_graph(view, contract))
+        self.assertTrue(
+            any("Survey Scanner 1" in failure and "funding floor 300" in failure for failure in result.failures),
+            result.failures,
+        )
 
     def test_optional_material_pool_does_not_join_mandatory_chain(self) -> None:
         maps = load_production_maps()

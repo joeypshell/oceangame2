@@ -1,0 +1,37 @@
+{
+  "version": 1,
+  "views": [
+    {
+      "id": "slice_provenance",
+      "label": "Production slice provenance",
+      "map_paths": [
+        "maps/production_slice_01.greybox.json",
+        "maps/production_slice_02.greybox.json",
+        "maps/production_slice_03.greybox.json",
+        "maps/production_slice_04.greybox.json"
+      ],
+      "expected_map_ids": [
+        "production_slice_01",
+        "production_slice_02",
+        "production_slice_03",
+        "production_slice_04"
+      ],
+      "map_id_aliases": {},
+      "detailed_review": false
+    },
+    {
+      "id": "promoted_full_level",
+      "label": "Promoted production level",
+      "map_paths": [
+        "maps/production_level_01.greybox.json"
+      ],
+      "expected_map_ids": [
+        "production_level_01"
+      ],
+      "map_id_aliases": {
+        "production_slice_01": "production_level_01"
+      },
+      "detailed_review": true
+    }
+  ]
+}
