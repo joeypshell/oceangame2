@@ -4,7 +4,7 @@
 
 The current project is a Godot 4.7 side-view ocean salvage prototype for proving the source-driven map, terrain, validation, capture, and gameplay workflow that will support a finished small diver game.
 
-The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`; the latest completed decision is `docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md`. Expansion 07 closed with an explicitly authorized technical GO after source, deterministic journey, focused visual, and exact-SHA Web verification. Expansion 08 daily conditions and enemy ecology is the next planning gate. Earlier controlled gameplay and visual passes remain implementation evidence, not the whole product direction.
+The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`; the latest completed decision is `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md`. Expansion 08 closed with an explicitly authorized technical GO after source, deterministic journey, focused visual, release, and exact-SHA Web verification. Expansion 09 regional growth remains directional and has no implementation batch. Earlier controlled gameplay and visual passes remain implementation evidence, not the whole product direction.
 
 ## Source Of Truth
 
@@ -47,6 +47,7 @@ Additional current map sources:
   - Authors the Pass 10 `return_pressure_to_boat` marker and `salvage_return_branch` metadata tagged as `return_pressure_decision` / `return_branch_bank_prompt`.
   - Authors the Pass 11 `southwest_pocket_pre_pickup_cue` marker for compact pre-pickup route cue feedback before `salvage_southwest_return_cache`.
   - Authors the Pass 12 `lower_loop_oxygen_rest_pocket` marker for limited `Rest pocket +oxygen` feedback in the lower-loop return corridor.
+  - Authors `southwest_jellyfish_bloom`, its optional bonus coil pool/candidate, and its migration patrol as condition-linked data without changing terrain or required progression.
   - Authors the Pass 13 `deep_cache_route_objective` route objective requiring `salvage_lower_loop` and `salvage_deep_right_cache` to be banked in one committed route chain.
   - Authors the Pass 15 `deep_cache_first_step_cue` marker for compact `Objective route: Lower loop` follow-through feedback after leaving the boat.
   - Sets `primary_route_objective_id` to `deep_cache_route_objective` so the default dive completes after the authored primary objective is banked.
@@ -220,6 +221,11 @@ Art placement must not create, remove, or move collision.
 - `--smoke-expansion-05-practical-research` protects the complete gate-to-survey-to-boat-to-next-day journey. `--capture-expansion-05-practical-research` renders clue, partial survey, committed finding, and following-day lead states at both review viewports.
 - The progression-reward lane uses reachable `lower_loop_upgrade_chest` as the source-authored `propulsion_fins_blueprint`; recovery enters durable discovery knowledge without cargo or a second inventory. `--smoke-upgrade-chest` protects blueprint-to-recipe-to-passive-current-to-same-map-cache-to-scanner progression.
 - The route-pressure lane adds `deep_route_jellyfish_patrol`, one source-authored deterministic `linear_patrol` moving hazard on the lower-loop-to-deep-cache route. Contact reuses existing hazard reset/oxygen semantics, and the scope remains dodge pressure, not combat or broad enemy AI. It is protected by `--smoke-moving-hazard`.
+- `daily_condition_state.gd` derives current and next condition ids from immutable source definitions plus the expedition day number; it owns no map mutation, RNG, or persistence schema.
+- Material and moving-hazard runtime filter condition-linked optional content at initialization. Normal material pools, the unconditional patrol, terrain, connectors, and mandatory progression remain unchanged.
+- `daily_condition_presentation.gd` adds one night forecast line and one active-day line without taking ownership of day transitions or the broader HUD.
+- `--smoke-expansion-08-daily-condition-journey` protects baseline day, forecast, bloom activation, normal pools/patrol, cargo-full, banking, connector, hazard/oxygen restore, day-three removal, and progression semantics.
+- `--capture-expansion-08-daily-condition` renders the night forecast and active southwest opportunity at both review viewports without replacing accepted baselines.
 - The default slice has one source-authored `timed_salvage` target, `salvage_deep_right_cache`, that renders a small in-world affordance and requires 2.5 seconds of in-range progress before entering held cargo.
 - Timed-salvage feedback covers progress, cancel, completion, cargo-full blocking, hazard reset, and oxygen failure/reset through `--smoke-timed-salvage`.
 - The default slice has one source-authored `pry_salvage` target, `salvage_pry_locker`, that requires staged in-range progress before entering held cargo and keeps completed stages during normal exploration.

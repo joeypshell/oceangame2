@@ -14,10 +14,11 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_06_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_08_PLAN.md`
+- `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md`
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-07 are complete. Expansion 07 closed with an explicitly authorized technical GO after the biological journey and its progression/current corrections were deterministically verified and deployed at exact SHA `73a3667`. This confirms technical readiness, not human judgments about fun, pacing, or clarity.
+Simple Diver Game 01-09 and OceanGame Expansions 01-08 are complete. Expansion 08 closed with an explicitly authorized technical GO after its deterministic southwest condition journey was validated, visually reviewed, and deployed at exact SHA `f2dc68d`. This confirms technical readiness, not human judgments about fun, pacing, clarity, map learnability, or another-day motivation.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
@@ -25,14 +26,13 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: implement the bounded Expansion 08 southwest jellyfish-bloom plan in source/validation/runtime order.
-- Directional: Expansion 09 retains goals and exit criteria only.
+- Committed: no implementation batch is active; select the next milestone after player review of the completed Expansion 08 journey.
+- Directional: Expansion 09 retains goals and exit criteria only and has no issue batch.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Open GitHub Milestones
 
-1. [Expansion 08: Daily Conditions And Enemy Ecology](https://github.com/joeypshell/oceangame2/milestone/34) - readable seeded opportunities inside stable geography and a broader small ecology.
-2. [Expansion 09: Regional World Growth](https://github.com/joeypshell/oceangame2/milestone/35) - memorable authored regions through the JSON pipeline.
+1. [Expansion 09: Regional World Growth](https://github.com/joeypshell/oceangame2/milestone/35) - directional only; memorable authored regions through the JSON pipeline.
 
 ## Completed Expansion 04
 
@@ -50,13 +50,17 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 #790-#799 plus focused corrections through #831 are complete with a technical GO. The final journey preserves behavioral eel guarding, deliberate blueprint and ingredient progression, passive fins traversal through the east current, same-map scanner progression, and isolated fresh-profile review.
 
+## Completed Expansion 08
+
+#836 and #838-#843 are complete with a technical GO. Odd/even expedition days now forecast and activate one optional southwest jellyfish migration plus bonus coil trace without changing terrain, required progression, or normal material guarantees.
+
 ## Next Batch
 
-Follow `OCEANGAME_EXPANSION_08_PLAN.md`: contract/validation, source authoring, runtime, deterministic journey smoke, focused technical visual review, and exact-SHA Web closeout. #52/#53 remain deferred optional slice-03 polish.
+No issue batch is active. Use the Expansion 08 player-experience question to decide whether Expansion 09 should become committed; do not treat technical automation as proof of motivation or map learnability. #52/#53 remain deferred optional slice-03 polish.
 
 ## Roadmap Rules
 
-- Do not pre-batch Expansion 09 before Expansion 08 closes.
+- Do not pre-batch Expansion 09 merely because Expansion 08 closed technically; select it explicitly after player review and roadmap evaluation.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_slice_01` as the default boat hub unless a separate source-driven decision changes it.
 - Preserve source-authored maps, reachability, parity, focused captures, and public Web verification in every milestone.

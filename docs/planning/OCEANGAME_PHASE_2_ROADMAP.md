@@ -2,7 +2,7 @@
 
 Date: 2026-07-13
 
-Status: Expansions 01-07 are complete. Expansion 08 has selected one bounded southwest jellyfish-bloom plan; Expansion 09 remains directional.
+Status: Expansions 01-08 are complete. Expansion 09 remains directional and has no implementation issue batch.
 
 ## Decision
 
@@ -89,11 +89,11 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 08 is committed through `docs/current/OCEANGAME_EXPANSION_08_PLAN.md`: forecast one deterministic optional southwest jellyfish migration plus bonus coil opportunity without changing geography or required progression.
+No implementation milestone is currently committed. Expansion 08 is technically complete; player review should inform the next explicit selection.
 
 ### Directional
 
-Expansion 09 remains directional; create its batch only after Expansion 08 closes.
+Expansion 09 remains directional; create its batch only after an explicit roadmap selection informed by the completed Expansion 08 journey.
 
 ### Vision
 
@@ -214,7 +214,7 @@ Exit question: do creatures feel like part of the ocean's ecology and technology
 
 ### Expansion 08: Daily Conditions And Enemy Ecology
 
-Status: Committed bounded plan; implementation follows source/validation/runtime order.
+Status: Complete with technical GO. See `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md`; the decision proves technical readiness and does not claim automation proved the player-facing exit question.
 
 Goal: make tomorrow meaningfully different without erasing place memory.
 
@@ -287,7 +287,7 @@ Treat the original [joeypshell/OceanGame](https://github.com/joeypshell/OceanGam
 
 ## Execution Rules
 
-- Close each milestone with GO, HOLD, or a smaller corrective pass before selecting the next.
+- Close each milestone with GO, HOLD, or a smaller corrective pass before selecting the next. A technical GO must preserve any unresolved human experience question explicitly.
 - Keep approximately ten actionable issues only for the committed milestone.
 - Preserve #52/#53 as deferred slice-03 polish unless slice-03 presentation becomes the selected goal.
 - Source contract and validation precede map/entity authoring; authoring precedes runtime; smoke precedes visual acceptance; Web verification closes the pass.

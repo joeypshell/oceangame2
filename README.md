@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-07 are complete. Expansion 07 closed with an explicitly authorized technical GO after biological progression, eel/fins/current corrections, deterministic review, and exact-SHA deployment; the decision does not claim automation proved player enjoyment or clarity. Expansion 08 daily conditions and enemy ecology is the active committed milestone, while regional growth remains directional.
+The compact diver foundation and OceanGame Expansions 01-08 are complete. Expansion 08 closed with an explicitly authorized technical GO after deterministic daily-condition source, runtime, journey, visual, and exact-SHA Web verification. The decision does not claim automation proved player enjoyment, clarity, map learnability, or another-day motivation. Expansion 09 regional growth remains directional; no implementation batch is active.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 07 closeout and the Expansion 08 plan. The selected proof forecasts one optional southwest jellyfish bloom and bonus coil opportunity while preserving authored geography and guaranteed progression.
+Current handoff starts with the Expansion 08 closeout. The completed proof forecasts one optional southwest jellyfish bloom and bonus coil opportunity while preserving authored geography and guaranteed progression.
 
 Core sources and operating docs:
 
@@ -87,6 +87,11 @@ Current release and expansion handoff:
 - [Expansion 07 Player Gate Correction](docs/current/OCEANGAME_EXPANSION_07_PLAYER_GATE_CORRECTION.md)
 - [Expansion 07 Closeout](docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md)
 - [OceanGame Expansion 08 Plan](docs/current/OCEANGAME_EXPANSION_08_PLAN.md)
+- [Expansion 08 State Contract](docs/current/OCEANGAME_EXPANSION_08_STATE_CONTRACT.md)
+- [Expansion 08 Source Contract](docs/current/OCEANGAME_EXPANSION_08_SOURCE_CONTRACT.md)
+- [Expansion 08 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_08_VISUAL_BASELINE_DECISION.md)
+- [Expansion 08 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_08_WEB_PREVIEW_VERIFICATION.md)
+- [Expansion 08 Closeout](docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -220,4 +225,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can cross connected slices, use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-07 meet that technical condition. Expansion 08 should next prove that a readable forecast creates another-day motivation without making authored geography or required progression arbitrary.
+The current foundation succeeds when one authored expedition can cross connected slices, use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-08 meet that technical condition. Player review should answer whether the forecast actually motivates another day before Expansion 09 becomes the next committed issue batch.
