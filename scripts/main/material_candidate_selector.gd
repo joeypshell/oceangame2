@@ -7,6 +7,8 @@ static func select_for_day(map_id: String, pools: Array, day_number: int, comple
 		if typeof(value) != TYPE_DICTIONARY:
 			continue
 		var pool := value as Dictionary
+		if not str(pool.get("daily_condition_id", "")).is_empty():
+			continue
 		var candidate_ids: Array = _effective_candidate_ids(pool, completed_discovery_ids)
 		var select_count := clampi(int(pool.get("select_count", 0)), 0, candidate_ids.size())
 		if candidate_ids.is_empty() or select_count <= 0:
