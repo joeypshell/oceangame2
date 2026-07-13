@@ -47,6 +47,8 @@ const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd"
 const ExpeditionDayPresentation := preload("res://scripts/main/expedition_day_presentation.gd")
 const ExpeditionDayDebrief := preload("res://scripts/main/expedition_day_debrief.gd")
 const DailyConditionState := preload("res://scripts/main/daily_condition_state.gd")
+const MapCatalog := preload("res://scripts/main/map_catalog.gd")
+const MapRuntimeProbe := preload("res://scripts/main/map_runtime_probe.gd")
 const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
 const PlayerHealthState := preload("res://scripts/main/player_health_state.gd")
@@ -84,15 +86,16 @@ const SmokeExpansion07BiologicalJourneyChecks := preload("res://scripts/main/smo
 const SmokeExpansion08DailyConditionJourneyChecks := preload("res://scripts/main/smoke/smoke_expansion_08_daily_condition_journey_checks.gd")
 const SmokeReleaseJourneyChecks := preload("res://scripts/main/smoke/smoke_release_journey_checks.gd")
 const UpgradeChestCapture := preload("res://scripts/main/captures/upgrade_chest_capture.gd")
-const DEFAULT_MAP_PATH := "res://maps/production_slice_01.greybox.json"
-const ORIGINAL_MAP_PATH := "res://maps/cave_salvage_test_01.greybox.json"
-const TILESET_TEST_MAP_PATH := "res://maps/cave_tileset_test_01.greybox.json"
-const ORGANIC_MAP_PATH := "res://maps/cave_salvage_organic_01.greybox.json"
-const FULL_SKETCH_MAP_PATH := "res://maps/full_cave_sketch_01.greybox.json"
-const PRODUCTION_SLICE_MAP_PATH := "res://maps/production_slice_01.greybox.json"
-const PRODUCTION_SLICE_02_MAP_PATH := "res://maps/production_slice_02.greybox.json"
-const PRODUCTION_SLICE_03_MAP_PATH := "res://maps/production_slice_03.greybox.json"
-const PRODUCTION_SLICE_04_MAP_PATH := "res://maps/production_slice_04.greybox.json"
+const DEFAULT_MAP_PATH := MapCatalog.DEFAULT_MAP_PATH
+const ORIGINAL_MAP_PATH := MapCatalog.ORIGINAL_MAP_PATH
+const TILESET_TEST_MAP_PATH := MapCatalog.TILESET_TEST_MAP_PATH
+const ORGANIC_MAP_PATH := MapCatalog.ORGANIC_MAP_PATH
+const FULL_SKETCH_MAP_PATH := MapCatalog.FULL_SKETCH_MAP_PATH
+const PRODUCTION_LEVEL_MAP_PATH := MapCatalog.PRODUCTION_LEVEL_MAP_PATH
+const PRODUCTION_SLICE_MAP_PATH := MapCatalog.PRODUCTION_SLICE_MAP_PATH
+const PRODUCTION_SLICE_02_MAP_PATH := MapCatalog.PRODUCTION_SLICE_02_MAP_PATH
+const PRODUCTION_SLICE_03_MAP_PATH := MapCatalog.PRODUCTION_SLICE_03_MAP_PATH
+const PRODUCTION_SLICE_04_MAP_PATH := MapCatalog.PRODUCTION_SLICE_04_MAP_PATH
 const CAMERA_TEST_CAPTURE_DIR := "res://visual_captures/latest"
 const ORIGINAL_CAPTURE_DIR := "res://visual_captures/original_salvage"
 const TILESET_TEST_CAPTURE_DIR := "res://visual_captures/tileset_test"
@@ -167,16 +170,6 @@ const OXYGEN_BONUS_POINTS_PER_SECOND := 1
 const SAFE_ROUTE_CHOICE_ID := "safe_route_choice"
 const EXPANDED_ROUTE_CHOICE_ID := "expanded_route_choice"
 const SOUTHWEST_POCKET_DECISION_ID := "southwest_pocket_decision"
-const REVIEW_MAP_OPTIONS := [
-	{"label": "Production 01", "path": PRODUCTION_SLICE_MAP_PATH},
-	{"label": "Production 02", "path": PRODUCTION_SLICE_02_MAP_PATH},
-	{"label": "Production 03", "path": PRODUCTION_SLICE_03_MAP_PATH},
-	{"label": "Production 04", "path": PRODUCTION_SLICE_04_MAP_PATH},
-	{"label": "Original", "path": ORIGINAL_MAP_PATH},
-	{"label": "Organic", "path": ORGANIC_MAP_PATH},
-	{"label": "Full Sketch", "path": FULL_SKETCH_MAP_PATH},
-]
-
 var _world
 var _player
 var _anomaly_survey
@@ -423,7 +416,8 @@ func _ready() -> void:
 	var smoke_expansion_06_combat_foundation := _has_arg(user_args, engine_args, "--smoke-expansion-06-combat-foundation")
 	var smoke_expansion_07_biological_progression := _has_arg(user_args, engine_args, "--smoke-expansion-07-biological-progression")
 	var smoke_expansion_08_daily_condition_journey := _has_arg(user_args, engine_args, "--smoke-expansion-08-daily-condition-journey")
-	var requested_map_path := _arg_value(user_args, engine_args, "--map-path")
+	var requested_map_path := MapCatalog.requested_map_path(user_args, engine_args)
+	var measure_map_runtime := _has_arg(user_args, engine_args, "--measure-map-runtime")
 	var parity_output_path := _arg_value(user_args, engine_args, "--parity-output")
 
 	var selected_map_path := DEFAULT_MAP_PATH
@@ -622,7 +616,8 @@ func _ready() -> void:
 		or capture_production_slice_04_debug_map
 	)
 	var automated_review := (
-		check_map_parity
+		measure_map_runtime
+		or check_map_parity
 		or capture_original_map
 		or capture_tileset_test
 		or capture_organic_map
@@ -748,7 +743,14 @@ func _ready() -> void:
 		_write_parity_report_and_quit(world, parity_output_path)
 		return
 
+	var map_load_started_usec := Time.get_ticks_usec()
 	_load_playable_map(selected_map_path, _debug_overlay_enabled)
+	var map_startup_ms := float(Time.get_ticks_usec() - map_load_started_usec) / 1000.0
+	if OS.has_feature("web"):
+		print("Web map active: map=%s review=%s." % [_world.map_id, str(_fresh_review_profile_enabled).to_lower()])
+	if measure_map_runtime:
+		await MapRuntimeProbe.measure_and_quit(get_tree(), _world, _player, map_startup_ms)
+		return
 
 	if smoke_salvage_loop:
 		_smoke_score_checks._smoke_salvage_loop_and_quit()
@@ -1697,7 +1699,7 @@ func _create_review_overlay(world: Node) -> void:
 	if _map_selector_enabled:
 		_map_selector = OptionButton.new()
 		_map_selector.name = "ReviewMapSelector"
-		for option in REVIEW_MAP_OPTIONS:
+		for option in MapCatalog.review_options():
 			var index := _map_selector.item_count
 			_map_selector.add_item(str(option["label"]))
 			_map_selector.set_item_metadata(index, str(option["path"]))
