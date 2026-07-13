@@ -1,0 +1,4 @@
+interface:
+  display_name: "Overnight Technical Run"
+  short_description: "Run bounded unattended technical batches"
+  default_prompt: "Use $overnight-technical-run for up to eight hours to resolve meaningful technical work through bounded audit, PR, CI, and integration loops while stopping at player, visual, product, or roadmap decisions."
