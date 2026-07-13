@@ -4,7 +4,7 @@
 
 The current project is a Godot 4.7 side-view ocean salvage prototype for proving the source-driven map, terrain, validation, capture, and gameplay workflow that will support a finished small diver game.
 
-The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`; the latest completed decision is `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md`. The corrected Expansion 09 plan and locked source contract now drive the frozen #857-#865 batch that promotes the complete full-sketch topology into one contiguous production candidate. Earlier controlled gameplay and visual passes remain implementation evidence, not the whole product direction.
+The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`; the latest completed milestone decision is `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md`. Expansion 09 issues #857-#863 have generated and technically proved one contiguous full-level candidate. Its current visual-review decision records exact-SHA evidence while #864 waits for player GO/HOLD and #865 remains blocked. Earlier controlled gameplay and visual passes remain implementation evidence, not the whole product direction.
 
 ## Source Of Truth
 
@@ -18,7 +18,7 @@ The Godot scene reads this JSON at runtime. Do not hand-tune in-engine terrain t
 
 Cross-map progression is audited as one dependency system. Production JSON owns authored connectors, objectives, gates, surveys, projects, hostile guards, and payoffs; `config/progression_contract.json` owns only runtime purchase/scoring relationships that maps cannot own. `tools/audit_progression_graph.py` checks the merged graph and deterministic `docs/current/PROGRESSION_GRAPH.md`, while generated `scripts/main/progression_contract.gd` supplies those runtime constants to Godot.
 
-Existing prompted world connectors remain implemented for historical slice regression. They are not the Expansion 09 traversal model. The planned `production_level_01` candidate must keep one map id while the player swims through former slice boundaries, and it must contain no connector, teleport, or map-menu requirement.
+Existing prompted world connectors remain implemented for historical slice regression. They are not the Expansion 09 traversal model. The `production_level_01` candidate keeps one map id while the player swims through former slice boundaries, and it contains no connector, teleport, or map-menu requirement.
 
 Additional current map sources:
 

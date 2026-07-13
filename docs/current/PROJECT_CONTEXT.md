@@ -30,7 +30,7 @@ Expansion 07 added bounded passive/eel biological materials and one shock-prod c
 
 Expansion 08 added one odd/even-day southwest jellyfish bloom, a night-ahead forecast, one optional bonus coil trace, and one condition-bound migration patrol. Source validation, deterministic journey coverage, focused visual review, the integrated release suite, and exact-SHA Web verification passed at `f2dc68d`. The authorized technical GO does not claim automation proved fun, clarity, map learnability, or another-day motivation.
 
-Expansion 09 is now an active contiguous full-level foundation. The frozen #857-#865 batch promotes the complete `full_cave_sketch_01` topology into a separately generated production candidate, transforms the proven slice-01 gameplay overlay into full-map coordinates, and requires continuous swimming from the boat through the level and back. The earlier #852 teleport/relay-terminal direction is superseded. New connector travel, stabilizer entry requirements, and pressure progression are deferred until the full level works.
+Expansion 09 is at its player gate. Issues #857-#863 generated the complete `full_cave_sketch_01` topology as `production_level_01`, transformed the proven slice-01 gameplay overlay, validated continuous collision-active swimming and direct boat return, and produced candidate-only desktop/mobile evidence. Exact-SHA Web verification passes at `b0bb1f9`. #864 waits for explicit player GO/HOLD; `production_slice_01` remains the default and #865 remains blocked. The earlier #852 teleport/relay-terminal direction is superseded, and connector travel, stabilizer entry requirements, and pressure progression remain deferred.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -192,7 +192,8 @@ Current issue state as of 2026-07-13:
 - Closed: #768-#777 completed Expansion 06 with a GO.
 - Closed: #790-#799 and corrective issues through #831 complete Expansion 07 with a technical GO.
 - Closed: #836 and #838-#843 completed Expansion 08 with a technical GO.
-- Active milestone batch: #857-#865 implements and reviews #855's contiguous full-level plan. #864 is the player GO/HOLD gate; #865 remains blocked without GO.
+- Closed: #857-#863 implemented and technically proved #855's contiguous full-level candidate.
+- Active: #864 is the exact-SHA player GO/HOLD gate; #865 remains blocked without GO.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
@@ -329,7 +330,7 @@ Current issue state as of 2026-07-13:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star, `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md` as the latest completed decision, and the Expansion 09 plan plus source contract as the active implementation handoff. Resolve frozen issues #857-#865 in order, stopping at #864 for explicit player GO or HOLD before any default-map promotion.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and the Expansion 09 plan, source contract, and visual-review decision as the active handoff. Run #864's exact-SHA player review now; begin #865 only after explicit GO.
 
 Accepted constraints for next work:
 
