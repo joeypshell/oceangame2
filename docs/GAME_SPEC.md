@@ -76,14 +76,14 @@ Accepted constraints for the next phase:
 
 ## Current Expansion Direction
 
-The compact diver game and first anomaly-survey expansion have GO closeouts. Phase 2 now grows toward the larger OceanGame in dependency order:
+The compact diver game and OceanGame Expansions 01-07 have completed technical closeouts. Phase 2 now grows toward the larger OceanGame in dependency order:
 
 - add daylight, open-surface oxygen refill, boat-only banking, multiple sorties, and a compact night transition
 - introduce minimal typed materials, controlled authored candidate pools, one blueprint/project, and one active tool
 - plan remembered map promises around oxygen, darkness, current, pressure, and tool capabilities
 - expand scanner knowledge into practical resource, environment, and creature research
 - add health, enemies, weapons, and later biological materials used by equipment progression
-- broaden daily conditions and regions only after the deterministic authored loops work
+- next, plan one bounded daily-condition and enemy-ecology proof; broaden regions only after that deterministic authored loop works
 - place hard-guarded payoffs only after their required counter is obtainable; the first eel cache requires both the durable shock prod and current-day eel defeat
 - validate map travel, objectives, rewards, gates, discoveries, materials, projects, and capabilities as one cross-map dependency graph
 

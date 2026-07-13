@@ -1,12 +1,12 @@
 # Project Context
 
-Last updated: 2026-07-10
+Last updated: 2026-07-13
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
 ## Current Goal
 
-`oceangame2` has a GO release candidate and six completed bounded Phase 2 expansions. OceanGame Expansion 01 proved:
+`oceangame2` has a GO release candidate and seven completed bounded Phase 2 expansions. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -26,7 +26,7 @@ Expansion 05 added one stabilizer-gated mineral survey, an exact boat-committed 
 
 Expansion 06 added separate player health, one source-authored territorial eel, a viable unarmed evade route, and one durable shock-prod project built from non-enemy materials. Defeating the eel clears its territory only for the current day and grants no automatic reward. The pass closed with GO.
 
-Expansion 07 added bounded passive/eel biological materials and one shock-prod capacitor step, then completed deterministic, visual, and initial Web verification. #815 corrected behavioral eel guarding, recipe-built fins, and the visible relay; #825 added a blueprint-led recipe tracker; #827 makes blueprint recovery an explicit `E`/ACT action, makes daytime BUILD non-mutating and explicit, and distinguishes the amber far-left fins relay from the cyan east stabilizer barrier. Player review #799 remains HOLD until the merged build is verified and rerun; Expansion 08 must not begin before that GO/HOLD decision.
+Expansion 07 added bounded passive/eel biological materials and one shock-prod capacitor step. Corrective review work established behavioral eel guarding, deliberate blueprint-plus-ingredient fins progression, passive same-map east-current traversal, scanner-before-weapon ordering, and isolated fresh-profile review. It closed at `73a3667` with an explicitly authorized technical GO; this confirms deterministic/source/visual/Web readiness, not human judgments about fun or clarity. Expansion 08 is now the planning gate.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -51,17 +51,17 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Current docs index: `README.md`
 - Finished foundation roadmap: `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`
 - Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
-- Current Expansion 07 handoff: `docs/current/OCEANGAME_EXPANSION_07_PLAN.md`, `docs/current/OCEANGAME_EXPANSION_07_STATE_CONTRACT.md`, `docs/current/OCEANGAME_EXPANSION_07_SOURCE_CONTRACT.md`, `docs/current/OCEANGAME_EXPANSION_07_PLAYER_GATE_CORRECTION.md`
+- Completed Expansion 07 handoff: `docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md` plus its linked plan, source/state contracts, visual/Web decisions, and player-gate correction
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest completed expansion decision: `docs/current/OCEANGAME_EXPANSION_06_CLOSEOUT.md`; Expansion 07 awaits #799 closeout.
-- Active expansion plan: `docs/current/OCEANGAME_EXPANSION_07_PLAN.md`
+- Latest completed expansion decision: `docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md`
+- Active expansion direction: Expansion 08 in `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`; create its bounded plan before implementation issues
 - Latest visual decision: `docs/current/OCEANGAME_EXPANSION_07_VISUAL_BASELINE_DECISION.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: `docs/current/OCEANGAME_EXPANSION_07_WEB_PREVIEW_VERIFICATION.md`; the #825 build was verified at `e6c9cf7`, and #827 requires a new exact-SHA deploy check.
+- Latest Web verification: the isolated fresh-review build at `73a3667`, recorded in `docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md`; the original focused Expansion 07 verification remains in `docs/current/OCEANGAME_EXPANSION_07_WEB_PREVIEW_VERIFICATION.md`.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -128,7 +128,7 @@ Current map-loading helper:
 
 ## Web Preview Status
 
-The public preview was last verified for the blueprint-led correction at build `e6c9cf7`. #827 must verify its merged SHA before returning to #799:
+The public preview was last verified for the isolated fresh-profile current review at exact build `73a3667`:
 
 ```text
 https://joeypshell.github.io/oceangame2/
@@ -176,7 +176,7 @@ For map changes, run the relevant generator, SVG renderer, validator, parity che
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Each issue needs acceptance criteria, relevant files, implementation notes, and verification steps.
 
-Current issue state as of 2026-07-10:
+Current issue state as of 2026-07-13:
 
 - Closed: #662-#671 completed Expansion 01 with a GO.
 - Closed: #685-#694 completed Expansion 02 with a GO.
@@ -184,9 +184,8 @@ Current issue state as of 2026-07-10:
 - Closed: #726-#735 completed Expansion 04 with a GO; #739 resolved a narrow validator blocker found during authoring.
 - Closed: #748-#757 completed Expansion 05 with a GO.
 - Closed: #768-#777 completed Expansion 06 with a GO.
-- Closed/current source: #790-#798 and #800-#826 implement and technically verify Expansion 07 plus its prior player-gate corrections.
-- Current correction: #827 makes the fins blueprint and the two current roles unmistakable in normal play.
-- Open: #799 remains the player GO/HOLD closeout for Expansion 07.
+- Closed: #790-#799 and corrective issues through #831 complete Expansion 07 with a technical GO.
+- Planning gate: Expansion 08 has no implementation batch until its bounded plan is committed.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
@@ -323,7 +322,7 @@ Current issue state as of 2026-07-10:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_07_PLAYER_GATE_CORRECTION.md` as the current correction contract. Expansions 01-06 are complete with GO decisions; #829 replaces the mistaken fins relay with passive east-current traversal and same-map scanner progression, then Expansion 07 returns to #799 player closeout. Do not begin Expansion 08 yet.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md` as the latest completed decision. Expansions 01-07 are technically complete. Next, plan one bounded Expansion 08 daily-condition and enemy-ecology proof before creating or implementing its batch.
 
 Accepted constraints for next work:
 
@@ -340,7 +339,7 @@ Accepted constraints for next work:
 - Do not expand the map broadly merely to host the first combat proof.
 - Keep future resource and encounter variation inside authored candidates; never reroll geography or required progression arbitrarily.
 - Do not add shortcut or fast-travel networks.
-- Plan one bounded biological-resource-to-equipment proof before changing source or runtime; do not broaden into a creature catalog, arsenal, ecosystem simulation, grind, or map-scale expansion.
+- Preserve the completed biological-resource-to-equipment proof; do not broaden Expansion 08 into a creature catalog, ecosystem simulation, grind, or map-scale expansion.
 - Keep #52/#53 as optional post-baseline slice-03 improvement issues unless the selected goal shifts back to slice-03 presentation.
 
 Keep new work small. If a task touches visual style, map topology, renderer behavior, and gameplay at once, split it into separate issues.

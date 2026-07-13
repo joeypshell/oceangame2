@@ -2,7 +2,7 @@
 
 Date: 2026-07-10
 
-Status: Expansion 06 is complete with GO. Expansion 07 is implemented and at player closeout #799 after correction #815; Expansions 08-09 remain directional only.
+Status: Expansions 01-07 are complete. Expansion 07 closed with an explicitly authorized technical GO; Expansion 08 is the committed planning gate and Expansion 09 remains directional.
 
 ## Decision
 
@@ -89,11 +89,11 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 07's bounded implementation and corrections through #829 are complete in current source. The passive east-current journey must be deployed and reviewed through #799; do not commit Expansion 08 work before that player gate returns GO.
+Expansion 08 planning is committed. Lock one bounded proof, source/runtime boundaries, deterministic validation, non-goals, and an exit question before creating its implementation batch.
 
 ### Directional
 
-Expansions 08-09 remain directional; create each batch only after the prior player closeout confirms readiness.
+Expansion 09 remains directional; create its batch only after Expansion 08 closes.
 
 ### Vision
 
@@ -197,7 +197,7 @@ Exit question: does combat add route pressure and preparation without taking ove
 
 ### Expansion 07: Biological Resources And Weapon Progression
 
-Status: Directional; next planning candidate, with no implementation batch yet.
+Status: Complete with technical GO. See `docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md`; the decision proves technical readiness and does not claim automation proved player experience.
 
 Goal: connect wildlife and enemies to useful progression.
 
@@ -214,7 +214,7 @@ Exit question: do creatures feel like part of the ocean's ecology and technology
 
 ### Expansion 08: Daily Conditions And Enemy Ecology
 
-Status: Directional.
+Status: Selected planning gate; no implementation batch yet.
 
 Goal: make tomorrow meaningfully different without erasing place memory.
 

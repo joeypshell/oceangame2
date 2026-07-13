@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-06 are complete with GO decisions. Expansion 07 biological resources and weapon progression is implemented and remains at player review #799 after the focused #815 eel/fins/relay correction; broader ecology and regional growth stay directional. The controlled source/validation/visual workflow remains authoritative while that game grows.
+The compact diver foundation and OceanGame Expansions 01-07 are complete. Expansion 07 closed with an explicitly authorized technical GO after biological progression, eel/fins/current corrections, deterministic review, and exact-SHA deployment; the decision does not claim automation proved player enjoyment or clarity. Expansion 08 daily conditions and enemy ecology is the next planning gate, while regional growth remains directional.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 07 plan/contracts, Web verification, and player-gate correction. #799 remains the GO/HOLD closeout; do not begin Expansion 08 before that decision.
+Current handoff starts with the Expansion 07 closeout and the Phase 2 roadmap. Plan Expansion 08 before creating its implementation batch; preserve authored geography and guaranteed progression while selecting one bounded daily-condition/ecology proof.
 
 Core sources and operating docs:
 
@@ -85,6 +85,7 @@ Current release and expansion handoff:
 - [Expansion 07 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_07_VISUAL_BASELINE_DECISION.md)
 - [Expansion 07 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_07_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 07 Player Gate Correction](docs/current/OCEANGAME_EXPANSION_07_PLAYER_GATE_CORRECTION.md)
+- [Expansion 07 Closeout](docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -218,4 +219,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can cross connected slices, use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-06 meet that condition; Expansion 07 has implemented its bounded biological-resource/equipment proof and now needs the #799 player GO/HOLD decision.
+The current foundation succeeds when one authored expedition can cross connected slices, use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-07 meet that technical condition. Expansion 08 should next prove that a readable forecast creates another-day motivation without making authored geography or required progression arbitrary.
