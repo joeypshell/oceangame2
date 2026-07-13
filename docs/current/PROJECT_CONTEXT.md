@@ -53,17 +53,17 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Current docs index: `README.md`
 - Finished foundation roadmap: `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`
 - Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
-- Completed Expansion 07 handoff: `docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md` plus its linked plan, source/state contracts, visual/Web decisions, and player-gate correction
+- Completed Expansion 08 handoff: `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md` plus its linked plan, source/state contracts, and visual/Web decisions
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest completed expansion decision: `docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md`
-- Active expansion plan: `docs/current/OCEANGAME_EXPANSION_08_PLAN.md`
-- Latest visual decision: `docs/current/OCEANGAME_EXPANSION_07_VISUAL_BASELINE_DECISION.md`
+- Latest completed expansion decision: `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md`
+- Active expansion planning issue: #852 `Plan Expansion 09 around one authored regional growth proof`
+- Latest visual decision: `docs/current/OCEANGAME_EXPANSION_08_VISUAL_BASELINE_DECISION.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: the isolated fresh-review build at `73a3667`, recorded in `docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md`; the original focused Expansion 07 verification remains in `docs/current/OCEANGAME_EXPANSION_07_WEB_PREVIEW_VERIFICATION.md`.
+- Latest Web verification: the isolated fresh-review build at `f2dc68d`, recorded in `docs/current/OCEANGAME_EXPANSION_08_WEB_PREVIEW_VERIFICATION.md`.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -107,7 +107,7 @@ Current terrain renderer:
 - Hides the source grid in normal preview mode.
 - Supports `--show-debug-overlay` for map debugging.
 
-The main scene also shows a compact preview overlay with map id, build label, banked salvage score, salvage progress, held salvage capacity/score, and a scoped oxygen timer. A compact expedition result panel appears after run completion or oxygen failure with total score, salvage score, oxygen bonus, current map session-best score, salvage, optional route outcome, oxygen, and retry status. The minimal gameplay loop lets the player collect authored salvage, return to the extraction zone to complete the run, and press `R` to reset. Hazards now have a small bump/reset interaction without a full health system.
+The main scene also shows a compact preview overlay with map id, build label, banked salvage score, salvage progress, held salvage capacity/score, and a scoped oxygen timer. A compact expedition result panel appears after run completion or oxygen failure with total score, salvage score, oxygen bonus, current map session-best score, salvage, optional route outcome, oxygen, and retry status. The gameplay loop includes separate player health, hazard reset/oxygen pressure, and one optional territorial-eel evade/fight encounter.
 
 Maps may use either a legacy `spawn` entity or the newer `boat_spawn` entity. `boat_spawn` is the preferred top-water entry/extraction marker for production-style maps; the player starts at its `entry_x`/`entry_y` cell, and runtime extraction checks also accept its boat rectangle.
 
@@ -130,7 +130,7 @@ Current map-loading helper:
 
 ## Web Preview Status
 
-The public preview was last verified for the isolated fresh-profile current review at exact build `73a3667`:
+The public preview was last verified for the isolated fresh-profile Expansion 08 review at exact build `f2dc68d`:
 
 ```text
 https://joeypshell.github.io/oceangame2/
@@ -188,7 +188,7 @@ Current issue state as of 2026-07-13:
 - Closed: #768-#777 completed Expansion 06 with a GO.
 - Closed: #790-#799 and corrective issues through #831 complete Expansion 07 with a technical GO.
 - Closed: #836 and #838-#843 completed Expansion 08 with a technical GO.
-- No implementation milestone is active; Expansion 09 remains directional until explicitly selected after player review and roadmap evaluation.
+- Active planning milestone: Expansion 09 through planning issue #852. No implementation batch is active until that plan is reviewed.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
@@ -325,7 +325,7 @@ Current issue state as of 2026-07-13:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md` as the latest completed decision. Review the deployed condition journey before selecting Expansion 09 or another bounded milestone; no implementation issue batch is currently active.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star, `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md` as the latest completed decision, and #852 as the active planning gate. Select one bounded authored regional proof before creating any Expansion 09 implementation issues.
 
 Accepted constraints for next work:
 

@@ -2,7 +2,7 @@
 
 Date: 2026-07-13
 
-Status: Expansions 01-08 are complete. Expansion 09 remains directional and has no implementation issue batch.
+Status: Expansions 01-08 are complete. Expansion 09 is committed at the planning gate through #852; no implementation batch exists yet.
 
 ## Decision
 
@@ -89,11 +89,11 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-No implementation milestone is currently committed. Expansion 08 is technically complete; player review should inform the next explicit selection.
+Expansion 09 planning issue #852 is committed to select one bounded authored regional-growth proof. Implementation remains uncommitted until that plan is reviewed.
 
 ### Directional
 
-Expansion 09 remains directional; create its batch only after an explicit roadmap selection informed by the completed Expansion 08 journey.
+Expansion 09 implementation details remain directional. Create its batch only after #852 locks and reviews the bounded regional proof.
 
 ### Vision
 
@@ -230,7 +230,7 @@ Exit question: does the forecast create a reason to plan another day while the m
 
 ### Expansion 09: Regional World Growth
 
-Status: Directional.
+Status: Committed at planning only through #852; implementation batch pending plan review.
 
 Goal: expand into a coherent authored ocean made of memorable regions.
 

@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-08 are complete. Expansion 08 closed with an explicitly authorized technical GO after deterministic daily-condition source, runtime, journey, visual, and exact-SHA Web verification. The decision does not claim automation proved player enjoyment, clarity, map learnability, or another-day motivation. Expansion 09 regional growth remains directional; no implementation batch is active.
+The compact diver foundation and OceanGame Expansions 01-08 are complete. Expansion 08 closed with an explicitly authorized technical GO after deterministic daily-condition source, runtime, journey, visual, and exact-SHA Web verification. The user subsequently supplied GO to advance. Expansion 09 regional growth is committed at the planning gate through #852; no implementation batch is active.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 08 closeout. The completed proof forecasts one optional southwest jellyfish bloom and bonus coil opportunity while preserving authored geography and guaranteed progression.
+Current handoff starts with the Expansion 08 closeout and Expansion 09 planning issue #852. The completed condition proof preserves authored geography and guaranteed progression; the next plan must select only one bounded regional-growth proof.
 
 Core sources and operating docs:
 
@@ -225,4 +225,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can cross connected slices, use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-08 meet that technical condition. Player review should answer whether the forecast actually motivates another day before Expansion 09 becomes the next committed issue batch.
+The current foundation succeeds when one authored expedition can cross connected slices, use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-08 meet that technical condition. The user supplied GO to advance; #852 must now plan one authored regional proof before any Expansion 09 implementation batch is created.

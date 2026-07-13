@@ -21,6 +21,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-03-material-project
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-06-combat-foundation
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-07-biological-progression
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-expansion-08-daily-condition-journey
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-loop
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-02-route
@@ -74,6 +75,8 @@ The integrated Expansion 03 smoke verifies deterministic recipe selection, conne
 The integrated Expansion 06 smoke verifies source territory/timing, normal unarmed cache progress, active-eel contact/knockback interruption, health/oxygen separation, exact-once non-enemy shock-prod construction, profile reload, reward-free armed victory, guarded-cache collection/banking, connector/day persistence, and combat/hazard/oxygen restoration. CI and release validation run it as `--smoke-expansion-06-combat-foundation`.
 
 The integrated Expansion 07 smoke verifies nonlethal timed sampling, explicit post-defeat harvesting, cargo-full and failure restoration, boat banking, exact-once capacitor construction/reload, and a one-damage warning interruption. CI and release validation run it as `--smoke-expansion-07-biological-progression`.
+
+The integrated Expansion 08 smoke verifies baseline day, night-ahead forecast, southwest bloom patrol and bonus coil activation, unchanged normal pools/patrol, cargo-full, banking, connector, hazard/oxygen restoration, day-three removal, and required progression. CI and release validation run it as `--smoke-expansion-08-daily-condition-journey`.
 
 The salvage-loop smoke check loads the default production slice, collects all authored salvage through the same runtime methods used in play, returns to extraction, confirms completion, resets, and exits.
 
