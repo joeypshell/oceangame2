@@ -2536,6 +2536,16 @@
       "intent": "First visual-only darkness pressure zone around the lower-loop-to-deep-cache route."
     }
   ],
+  "daily_conditions": [
+    {
+      "id": "southwest_jellyfish_bloom",
+      "schedule": "even_days_v1",
+      "forecast_label": "Tomorrow: Southwest jellyfish bloom",
+      "active_label": "Southwest bloom: jellyfish + coil trace",
+      "route_context": "southwest_pocket_decision",
+      "intent": "Forecast one optional southwest risk-reward opportunity."
+    }
+  ],
   "progression_containers": [
     {
       "id": "lower_loop_upgrade_chest",
@@ -2573,6 +2583,28 @@
       "route_context": "deep_cache_pressure",
       "display_label": "Jellyfish patrol",
       "intent": "First deterministic moving hazard on the lower-loop to deep-cache route."
+    },
+    {
+      "id": "southwest_bloom_jellyfish_patrol",
+      "kind": "jellyfish",
+      "x": 8,
+      "y": 78,
+      "movement": "linear_patrol",
+      "path": [
+        {
+          "x": 8,
+          "y": 78
+        },
+        {
+          "x": 20,
+          "y": 78
+        }
+      ],
+      "speed_tiles_per_second": 1.0,
+      "route_context": "southwest_pocket_decision",
+      "display_label": "Bloom jellyfish patrol",
+      "daily_condition_id": "southwest_jellyfish_bloom",
+      "intent": "Optional even-day patrol paired with the southwest coil opportunity."
     }
   ],
   "hostile_encounters": [
@@ -2750,6 +2782,17 @@
         "material_rubber_entry",
         "material_rubber_lower_loop"
       ]
+    },
+    {
+      "id": "southwest_bloom_coil_bonus_pool",
+      "material_id": "conductive_coil",
+      "selection_strategy": "day_rotation_v1",
+      "select_count": 1,
+      "candidate_ids": [
+        "material_coil_southwest_bloom"
+      ],
+      "pool_role": "optional_bonus",
+      "daily_condition_id": "southwest_jellyfish_bloom"
     }
   ],
   "material_projects": [
@@ -3099,6 +3142,18 @@
       "validation_route": "propulsion_fins_payoff",
       "route_context": "upper_right_current_pocket",
       "intent": "Visible valuable scanner-funding payoff behind the first propulsion-fins current gate."
+    },
+    {
+      "id": "material_coil_southwest_bloom",
+      "type": "material_candidate",
+      "x": 8,
+      "y": 80,
+      "kind": "crate",
+      "interaction": "material_collect",
+      "material_id": "conductive_coil",
+      "material_quantity": 1,
+      "candidate_pool_id": "southwest_bloom_coil_bonus_pool",
+      "intent": "Optional even-day coil trace below the southwest migration lane."
     }
   ],
   "camera_tests": [

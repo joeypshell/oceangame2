@@ -6,7 +6,7 @@ from __future__ import annotations
 import json
 from collections import deque
 from pathlib import Path
-from production_slice_01_expansions import biological_resource_sources, expansion_entities, expansion_survey_targets, expansion_zones, hostile_encounters, material_candidate_pools, material_projects, progression_containers
+from production_slice_01_expansions import biological_resource_sources, daily_conditions, expansion_entities, expansion_survey_targets, expansion_zones, hostile_encounters, material_candidate_pools, material_projects, moving_hazards, progression_containers
 from production_slice_01_player_gate_correction import behavioral_guarded_cache
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -339,8 +339,9 @@ def build_map_data(source_map: dict) -> dict:
             },
             {"id": "deep_cache_dark_pocket", "type": "marker", "x": 50, "y": 68, "w": 16, "h": 11, "visibility_zone": True, "visibility_level": "dark", "visibility_label": "Dark pocket", "route_context": "deep_cache_pressure", "required_upgrade_id": "dive_light_1", "visual_only": True, "intent": "First visual-only darkness pressure zone around the lower-loop-to-deep-cache route."},
         ],
+        "daily_conditions": daily_conditions(),
         "progression_containers": progression_containers(),
-        "moving_hazards": [{"id": "deep_route_jellyfish_patrol", "kind": "jellyfish", "x": 54, "y": 68, "movement": "linear_patrol", "path": [{"x": 54, "y": 68}, {"x": 64, "y": 68}], "speed_tiles_per_second": 1.0, "route_context": "deep_cache_pressure", "display_label": "Jellyfish patrol", "intent": "First deterministic moving hazard on the lower-loop to deep-cache route."}],
+        "moving_hazards": [{"id": "deep_route_jellyfish_patrol", "kind": "jellyfish", "x": 54, "y": 68, "movement": "linear_patrol", "path": [{"x": 54, "y": 68}, {"x": 64, "y": 68}], "speed_tiles_per_second": 1.0, "route_context": "deep_cache_pressure", "display_label": "Jellyfish patrol", "intent": "First deterministic moving hazard on the lower-loop to deep-cache route."}, *moving_hazards()],
         "hostile_encounters": hostile_encounters(),
         "biological_resource_sources": biological_resource_sources(),
         "route_objectives": PASS_13_ROUTE_OBJECTIVES,

@@ -17,7 +17,18 @@ MAP_PATH = ROOT / "maps" / "production_slice_01.greybox.json"
 
 
 def source_map() -> dict:
-    return json.loads(MAP_PATH.read_text(encoding="utf-8"))
+    data = json.loads(MAP_PATH.read_text(encoding="utf-8"))
+    data.pop("daily_conditions", None)
+    data["entities"] = [item for item in data["entities"] if item.get("id") != "material_coil_southwest_bloom"]
+    data["material_candidate_pools"] = [
+        item for item in data["material_candidate_pools"]
+        if item.get("id") != "southwest_bloom_coil_bonus_pool"
+    ]
+    data["moving_hazards"] = [
+        item for item in data["moving_hazards"]
+        if item.get("id") != "southwest_bloom_jellyfish_patrol"
+    ]
+    return data
 
 
 def with_condition() -> dict:
