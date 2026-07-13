@@ -26,7 +26,7 @@ Expansion 05 added one stabilizer-gated mineral survey, an exact boat-committed 
 
 Expansion 06 added separate player health, one source-authored territorial eel, a viable unarmed evade route, and one durable shock-prod project built from non-enemy materials. Defeating the eel clears its territory only for the current day and grants no automatic reward. The pass closed with GO.
 
-Expansion 07 added bounded passive/eel biological materials and one shock-prod capacitor step. Corrective review work established behavioral eel guarding, deliberate blueprint-plus-ingredient fins progression, passive same-map east-current traversal, scanner-before-weapon ordering, and isolated fresh-profile review. It closed at `73a3667` with an explicitly authorized technical GO; this confirms deterministic/source/visual/Web readiness, not human judgments about fun or clarity. Expansion 08 is now the planning gate.
+Expansion 07 added bounded passive/eel biological materials and one shock-prod capacitor step. Corrective review work established behavioral eel guarding, deliberate blueprint-plus-ingredient fins progression, passive same-map east-current traversal, scanner-before-weapon ordering, and isolated fresh-profile review. It closed at `73a3667` with an explicitly authorized technical GO; this confirms deterministic/source/visual/Web readiness, not human judgments about fun or clarity. Expansion 08 now selects one forecasted optional southwest jellyfish migration and bonus coil opportunity.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -57,7 +57,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
 - Latest completed expansion decision: `docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md`
-- Active expansion direction: Expansion 08 in `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`; create its bounded plan before implementation issues
+- Active expansion plan: `docs/current/OCEANGAME_EXPANSION_08_PLAN.md`
 - Latest visual decision: `docs/current/OCEANGAME_EXPANSION_07_VISUAL_BASELINE_DECISION.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
@@ -185,7 +185,7 @@ Current issue state as of 2026-07-13:
 - Closed: #748-#757 completed Expansion 05 with a GO.
 - Closed: #768-#777 completed Expansion 06 with a GO.
 - Closed: #790-#799 and corrective issues through #831 complete Expansion 07 with a technical GO.
-- Planning gate: Expansion 08 has no implementation batch until its bounded plan is committed.
+- Active milestone: Expansion 08 follows the bounded plan from source contract and validation through technical Web closeout.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
@@ -322,7 +322,7 @@ Current issue state as of 2026-07-13:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md` as the latest completed decision. Expansions 01-07 are technically complete. Next, plan one bounded Expansion 08 daily-condition and enemy-ecology proof before creating or implementing its batch.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star, `docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md` as the latest completed decision, and `docs/current/OCEANGAME_EXPANSION_08_PLAN.md` as the active contract. Implement its optional southwest condition in source/validation/runtime order without broadening the map or ecology.
 
 Accepted constraints for next work:
 

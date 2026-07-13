@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-07 are complete. Expansion 07 closed with an explicitly authorized technical GO after biological progression, eel/fins/current corrections, deterministic review, and exact-SHA deployment; the decision does not claim automation proved player enjoyment or clarity. Expansion 08 daily conditions and enemy ecology is the next planning gate, while regional growth remains directional.
+The compact diver foundation and OceanGame Expansions 01-07 are complete. Expansion 07 closed with an explicitly authorized technical GO after biological progression, eel/fins/current corrections, deterministic review, and exact-SHA deployment; the decision does not claim automation proved player enjoyment or clarity. Expansion 08 daily conditions and enemy ecology is the active committed milestone, while regional growth remains directional.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 07 closeout and the Phase 2 roadmap. Plan Expansion 08 before creating its implementation batch; preserve authored geography and guaranteed progression while selecting one bounded daily-condition/ecology proof.
+Current handoff starts with the Expansion 07 closeout and the Expansion 08 plan. The selected proof forecasts one optional southwest jellyfish bloom and bonus coil opportunity while preserving authored geography and guaranteed progression.
 
 Core sources and operating docs:
 
@@ -86,6 +86,7 @@ Current release and expansion handoff:
 - [Expansion 07 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_07_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 07 Player Gate Correction](docs/current/OCEANGAME_EXPANSION_07_PLAYER_GATE_CORRECTION.md)
 - [Expansion 07 Closeout](docs/current/OCEANGAME_EXPANSION_07_CLOSEOUT.md)
+- [OceanGame Expansion 08 Plan](docs/current/OCEANGAME_EXPANSION_08_PLAN.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
