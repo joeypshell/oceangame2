@@ -8,6 +8,8 @@
 
 `visual_captures/full_cave_sketch/` contains generated screenshots from the supplied full-map sketch topology draft.
 
+`visual_captures/expansion_09_full_level/` contains desktop and mobile candidate-only screenshots for the contiguous full-level player gate. They do not replace accepted slice baselines.
+
 `visual_captures/production_slice_01/` contains generated screenshots from the first focused production slice.
 
 `visual_captures/route_outcome/` contains a focused generated screenshot of the completed route-outcome result panel for Controlled Gameplay review.
