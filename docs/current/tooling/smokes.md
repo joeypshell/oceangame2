@@ -79,9 +79,9 @@ The integrated Expansion 07 smoke verifies nonlethal timed sampling, explicit po
 
 The integrated Expansion 08 smoke verifies baseline day, night-ahead forecast, southwest bloom patrol and bonus coil activation, unchanged normal pools/patrol, cargo-full, banking, connector, hazard/oxygen restoration, day-three removal, and required progression. CI and release validation run it as `--smoke-expansion-08-daily-condition-journey`.
 
-The integrated Expansion 09 smoke uses active player collision to swim three direct boat-return sorties through the contiguous `production_level_01` candidate. It reaches the upper-left, lower-right, and lower-left sector anchors without position assignment, connector travel, collision disablement, or oxygen disablement; banks transformed salvage through the canonical boat; and reports route distance, oxygen, daylight, health, cargo, profile, day, and connector state. CI and release validation run it as `--smoke-expansion-09-full-level-journey`.
+The integrated Expansion 09 smoke uses active player collision to swim three direct boat-return sorties through the default contiguous `production_level_01`. It reaches the upper-left, lower-right, and lower-left sector anchors without position assignment, connector travel, collision disablement, or oxygen disablement; banks transformed salvage through the canonical boat; and reports route distance, oxygen, daylight, health, cargo, profile, day, and connector state. CI and release validation run it as `--smoke-expansion-09-full-level-journey`.
 
-The salvage-loop smoke check loads the default production slice, collects all authored salvage through the same runtime methods used in play, returns to extraction, confirms completion, resets, and exits.
+The salvage-loop smoke check loads the default production level, collects authored salvage through the same runtime methods used in play, returns to extraction, confirms completion, resets, and exits.
 
 The production-slice route smoke loads `production_slice_01`, checks open-water source routes to each authored salvage point, banks cargo at the boat whenever the held capacity fills, confirms completion, resets, and exits.
 
@@ -99,7 +99,7 @@ The production-slice-04 route smoke loads `production_slice_04`, asks the world 
 
 The `Godot Smoke` workflow runs all four production-slice route smoke flags so CI catches broken authored routes across the accepted/reference slices, not only the default preview loop.
 
-The map-selector smoke loads the default map, reloads `production_slice_03`, then reloads `production_slice_01` through the same clean map/player reload path used by the local review selector.
+The map-selector smoke explicitly loads `production_level_01`, then `production_slice_03`, then `production_slice_01` through the same clean map/player reload path used by the local review selector.
 
 The hazard-interaction smoke loads `production_slice_01`, collects one salvage item, moves to warning-only range near an authored hazard, confirms the overlay reports `Hazard nearby - keep clear` without dropping cargo or moving the player, then touches the hazard, confirms the 12-second oxygen penalty, spawn reset, held-salvage restoration, and recollection behavior, then verifies a low-oxygen hazard hit cleanly shows the failed expedition result panel. `--smoke-hazard-pressure` runs the same deterministic check with CI-oriented output that reports hazard id, warning distance/radii, oxygen before/after, and restored salvage id.
 

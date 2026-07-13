@@ -2,7 +2,7 @@
 
 Date: 2026-07-13
 
-Status: Expansions 01-08 are complete. Expansion 09 is active as the frozen #857-#865 contiguous full-level implementation batch under the corrected #855 plan.
+Status: Expansions 01-09 are complete. Expansion 09 closed with player GO, `production_level_01` default promotion, and exact-SHA Web verification at `e825c88`.
 
 ## Decision
 
@@ -68,7 +68,7 @@ knowledge + base materials + special component = changed capability
 
 - Geography, collision, landmarks, gates, habitats, and important promises remain source-authored and learnable.
 - The main explorable world is contiguous authored geography by default. Separate loaded maps are exceptions for explicit interiors or exceptional destinations, not the normal capability-gate chain.
-- Expansion 09 must establish the complete full-sketch topology as one production level before adding any exceptional destination transition. The optional current stabilizer is not an entry requirement for that level.
+- Expansion 09 established the complete full-sketch topology as one production level before any exceptional destination transition. The optional current stabilizer is not an entry requirement for that level.
 - Standard currents are passive traversal gates: blocked by flow before the capability, crossed through normal swimming after it. `E`/ACT is reserved for explicit entrances and interactions.
 - Daily seeds may select among authored resource, wildlife, patrol, visibility, current, and rare-signal candidates.
 - Required progression cannot depend on arbitrary coordinates or an unlucky seed.
@@ -90,11 +90,11 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 09 is committed to turn the complete full-sketch topology into one source-generated, continuously swimmable production candidate. The corrected #855 plan is now being resolved through the frozen #857-#865 batch; #864 is the player GO/HOLD gate.
+No next implementation milestone is committed. Expansion 09 completed its frozen #857-#865 batch and player gate; the next batch should be selected only after normal play on the promoted full level identifies one meaningful regional or capability-gated improvement.
 
 ### Directional
 
-Candidate promotion remains directional until #864 records explicit player GO. Region content and exceptional interiors follow the map foundation instead of preceding it, and #865 cannot promote the candidate on HOLD.
+Regional identity, capability-gated returns, and authored exploration payoffs should deepen the contiguous level before exceptional interiors or broader world transitions are considered.
 
 ### Vision
 
@@ -231,7 +231,7 @@ Exit question: does the forecast create a reason to plan another day while the m
 
 ### Expansion 09: Contiguous Full-Level Foundation
 
-Status: Active frozen implementation batch #857-#865; source contract starts at #857 and default promotion remains gated by #864.
+Status: Complete with player GO. See `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md`.
 
 Goal: promote the entire supplied cave topology into one coherent production level before adding teleport or connector-based world expansion.
 
@@ -243,12 +243,12 @@ Prove:
 - no stitched crop JSON, imported crop-edge seals, teleport, prompted connector, map menu, or stabilizer entry gate
 - sealed unintended outer-boundary openings while preserving the authored top-water boat entry
 - player-footprint clearance, entity reachability, direct return, render/collision parity, camera bounds, and practical runtime performance
-- candidate-only local and Web review before replacing `production_slice_01` as the default
+- candidate-only local and Web review followed by explicit player GO and default promotion
 - unchanged production slices 01-04 as regression and provenance fixtures
 
-After this foundation is accepted, later milestones may author regional identities, capability gates, wildlife, research, and exceptional interiors inside or beyond the contiguous world. The current stabilizer and new pressure progression remain deferred until then.
+Later milestones may author regional identities, capability gates, wildlife, research, and exceptional interiors inside or beyond the contiguous world. The current stabilizer and new pressure progression remain deferred until separately selected.
 
-Exit question: can the player launch at the boat, swim through the full authored cave, understand where they are, and return without a teleport while map authority and runtime readability remain trustworthy?
+Exit question: can the player launch at the boat, swim through the full authored cave, understand where they are, and return without a teleport while map authority and runtime readability remain trustworthy? **GO recorded at #864/#865.**
 
 ## Original OceanGame Convergence
 

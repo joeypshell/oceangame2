@@ -4,14 +4,14 @@ Date: 2026-07-13
 
 Issue: #864 `Capture and run the player gate for the contiguous full-level candidate`
 
-Status: **Technical PASS. Player GO/HOLD pending.**
+Status: **Player GO recorded; default promotion and exact-SHA Web verification complete.**
 
 ## Decision Boundary
 
-The contiguous `production_level_01` candidate is technically ready for player
-review. This is not a GO to make it the default map. `production_slice_01`
-remains the default, no accepted baseline was replaced, and #865 remains blocked
-until the player explicitly answers GO.
+The player approved the contiguous `production_level_01` candidate after direct
+review and focused boat-offload correction. #865 promoted it as the normal
+default in PR #877. Its 14 reviewed views are now an accepted full-level baseline;
+the four established slice baselines remain unchanged regression evidence.
 
 ## Candidate Evidence
 
@@ -74,23 +74,23 @@ These are review questions, not evidence for an automated terrain rewrite.
 
 ## Exact Web Review
 
-Verified runtime commit:
-`b0bb1f97576f1504128b61247dbb21916be44b1e` (`b0bb1f9`)
+Verified promoted runtime commit:
+`e825c88ece33eefde14acd5af892f2c5bf6f6d3c` (`e825c88`)
 
 Godot Web Export run:
-[29271637330](https://github.com/joeypshell/oceangame2/actions/runs/29271637330)
+[29279390276](https://github.com/joeypshell/oceangame2/actions/runs/29279390276)
 
 Player review URL:
 
 ```text
-https://joeypshell.github.io/oceangame2/?review=b0bb1f97576f1504128b61247dbb21916be44b1e&map=production_level_01
+https://joeypshell.github.io/oceangame2/?review=e825c88ece33eefde14acd5af892f2c5bf6f6d3c
 ```
 
 Independent browser verification confirmed:
 
 - exact `build_info.json` full-SHA match
-- public root still loads `production_slice_01`
-- review URL loads `production_level_01` with an isolated fresh profile
+- public root and map-unspecified review URL load `production_level_01`
+- explicit `map=production_slice_01` review still loads the retained slice fixture
 - desktop 1280x720, wide 1920x1080, and mobile 844x390 initialization
 - mobile canvas at `(0, 0)` and all four touch probes above tolerance
 - no failed requests, missing resources, script errors, or Godot errors
@@ -98,7 +98,7 @@ Independent browser verification confirmed:
 Chromium emitted only software-WebGL fallback and `ReadPixels` performance
 warnings; neither affected initialization or framing.
 
-## Player Checklist
+## Player Gate Result
 
 Play from the boat and answer these six questions:
 
@@ -109,10 +109,11 @@ Play from the boat and answer these six questions:
 5. **Scale:** Does the larger geography feel worth exploring rather than merely oversized?
 6. **Return:** Can you deliberately find and complete a direct swim back to the boat?
 
-Reply **GO** only if this feels like one full level that can support future
-capability-gated exploration without teleports. Reply **HOLD** with concrete
-locations or behaviors that need correction. HOLD creates only scoped corrective
-issues; it does not start #865.
+The player returned **GO** after the cargo-offload correction and clean-browser
+input verification. The checklist remains useful for future regression review,
+but it no longer blocks promotion. Orientation, sparse-sector readability,
+broad-camera diver scale, and mobile HUD density remain review inputs for future
+scoped work rather than reasons to regenerate the level.
 
 ## Verification
 

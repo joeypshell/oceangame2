@@ -6,7 +6,7 @@ This file is the compact handoff for new Codex or ChatGPT Project sessions. It c
 
 ## Current Goal
 
-`oceangame2` has a GO release candidate and eight completed bounded Phase 2 expansions. OceanGame Expansion 01 proved:
+`oceangame2` has a GO release candidate and nine completed bounded Phase 2 expansions. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -30,7 +30,7 @@ Expansion 07 added bounded passive/eel biological materials and one shock-prod c
 
 Expansion 08 added one odd/even-day southwest jellyfish bloom, a night-ahead forecast, one optional bonus coil trace, and one condition-bound migration patrol. Source validation, deterministic journey coverage, focused visual review, the integrated release suite, and exact-SHA Web verification passed at `f2dc68d`. The authorized technical GO does not claim automation proved fun, clarity, map learnability, or another-day motivation.
 
-Expansion 09 is at its player gate. Issues #857-#863 generated the complete `full_cave_sketch_01` topology as `production_level_01`, transformed the proven slice-01 gameplay overlay, validated continuous collision-active swimming and direct boat return, and produced candidate-only desktop/mobile evidence. Exact-SHA Web verification passes at `b0bb1f9`. #864 waits for explicit player GO/HOLD; `production_slice_01` remains the default and #865 remains blocked. The earlier #852 teleport/relay-terminal direction is superseded, and connector travel, stabilizer entry requirements, and pressure progression remain deferred.
+Expansion 09 generated the complete `full_cave_sketch_01` topology as `production_level_01`, transformed the proven slice-01 gameplay overlay, validated continuous collision-active swimming and direct boat return, and passed player review. #864 recorded GO; #865 promoted the full level through PR #877 and exact-SHA Web verification at `e825c88`. `production_level_01` is now the normal default while slices 01-04 remain unchanged regression/provenance fixtures. The earlier #852 teleport/relay-terminal direction remains superseded, and connector travel, stabilizer entry requirements, and pressure progression remain deferred.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -42,11 +42,11 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Public preview: `https://joeypshell.github.io/oceangame2/`
 - Engine: Godot 4.7, GDScript
 - Main scene: `scenes/main/Main.tscn`
-- Default preview map source: `maps/production_slice_01.greybox.json`
+- Default preview map source: `maps/production_level_01.greybox.json`
 - Original comparison map source: `maps/cave_salvage_test_01.greybox.json`
 - Organic tileset stress-test map: `maps/cave_tileset_test_01.greybox.json`
 - Full-map sketch topology draft: `maps/full_cave_sketch_01.greybox.json`
-- Planned full-level production candidate: `maps/production_level_01.greybox.json` (not implemented yet)
+- Full-level production source: `maps/production_level_01.greybox.json`
 - First production slice source: `maps/production_slice_01.greybox.json`
 - Second production slice source: `maps/production_slice_02.greybox.json`
 - Third production slice source: `maps/production_slice_03.greybox.json`
@@ -56,18 +56,18 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Current docs index: `README.md`
 - Finished foundation roadmap: `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`
 - Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
-- Completed Expansion 08 handoff: `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md` plus its linked plan, source/state contracts, and visual/Web decisions
+- Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest completed expansion decision: `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md`
-- Current expansion plan: `docs/current/OCEANGAME_EXPANSION_09_PLAN.md`, corrected through #855
-- Active source contract: `docs/current/OCEANGAME_EXPANSION_09_SOURCE_CONTRACT.md`, locked by #857
-- Latest visual decision: `docs/current/OCEANGAME_EXPANSION_08_VISUAL_BASELINE_DECISION.md`
+- Latest completed expansion decision: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md`
+- Latest expansion plan: `docs/current/OCEANGAME_EXPANSION_09_PLAN.md`, completed through #865
+- Latest source contract: `docs/current/OCEANGAME_EXPANSION_09_SOURCE_CONTRACT.md`, completed through #865
+- Latest visual decision: `docs/current/OCEANGAME_EXPANSION_09_VISUAL_REVIEW_DECISION.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: the isolated fresh-review build at `f2dc68d`, recorded in `docs/current/OCEANGAME_EXPANSION_08_WEB_PREVIEW_VERIFICATION.md`.
+- Latest Web verification: the promoted default build at `e825c88`, recorded in `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md`.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -120,7 +120,7 @@ The greybox validator now checks entity schema as well as reachability: unique l
 Current map-loading helper:
 
 - Open the editor: `.\tools\open_godot_project.ps1`
-- Run the default production slice locally: `.\tools\open_godot_project.ps1 -Run`
+- Run the default production level locally: `.\tools\open_godot_project.ps1 -Run`
 - Run the organic comparison map locally: `.\tools\open_godot_project.ps1 -Run -OrganicMap`
 - Run the original comparison map locally: `.\tools\open_godot_project.ps1 -Run -OriginalMap`
 - Run the full-map sketch draft locally: `.\tools\open_godot_project.ps1 -Run -FullSketchMap`
@@ -134,7 +134,7 @@ Current map-loading helper:
 
 ## Web Preview Status
 
-The public preview was last verified for the isolated fresh-profile Expansion 08 review at exact build `f2dc68d`:
+The public preview was last verified for the promoted Expansion 09 default at exact build `e825c88`:
 
 ```text
 https://joeypshell.github.io/oceangame2/
@@ -166,6 +166,7 @@ Use `docs/current/TOOLING.md` and its focused pages for detailed commands. The c
 
 ```powershell
 python tools/run_release_candidate_validation.py --require-godot
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-09-full-level-journey
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-current-gate
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-06-combat-foundation
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 20 --capture-current-gate
@@ -192,18 +193,18 @@ Current issue state as of 2026-07-13:
 - Closed: #768-#777 completed Expansion 06 with a GO.
 - Closed: #790-#799 and corrective issues through #831 complete Expansion 07 with a technical GO.
 - Closed: #836 and #838-#843 completed Expansion 08 with a technical GO.
-- Closed: #857-#863 implemented and technically proved #855's contiguous full-level candidate.
-- Active: #864 is the exact-SHA player GO/HOLD gate; #865 remains blocked without GO.
+- Closed: #857-#865 plus correction #875 via PR #876 completed the contiguous full-level foundation, player GO, default promotion, and exact-SHA Web verification.
+- Active: no next implementation milestone is selected.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
 ## Known Limits
 
 - Terrain art has a first targeted polish pass, but it is still structural prototype art rather than final production art.
-- `production_slice_01` is the default preview map.
+- `production_level_01` is the default preview map; slices 01-04 remain explicit regression/provenance fixtures.
 - `cave_salvage_organic_01` is preserved as a first playable organic source-map comparison pass.
 - `cave_salvage_test_01` is preserved as the original rectangular comparison map.
-- `full_cave_sketch_01` is a topology-only draft conversion from a supplied full-map sketch; icons are intentionally ignored and the top-water `boat_spawn` is present for entry/extraction validation. It is now the topology source for the planned `production_level_01` candidate, not a runtime production map itself.
+- `full_cave_sketch_01` is a topology-only draft conversion from a supplied full-map sketch; icons are intentionally ignored and the top-water `boat_spawn` is present for entry/extraction validation. It is the topology source for generated `production_level_01`, not the runtime production map itself.
 - `docs/current/PRODUCTION_SLICE_SELECTION_CRITERIA.md` defines reusable roles and checklist criteria for choosing future focused slices from the full sketch.
 - `docs/current/PRODUCTION_SLICE_INDEX.md` summarizes the current production slices, including role, source, launch command, route smoke, capture folders, source/render/collision review sheet, and accepted baseline status.
 - `docs/current/POST_SLICE_WORKFLOW_DECISION.md` records the earlier focused-slice decision. Expansion 09 supersedes only its old full-sketch deferral; the slice fixtures and their source-discipline lessons remain valid.
@@ -229,7 +230,7 @@ Current issue state as of 2026-07-13:
 - `docs/current/BOAT_SPAWN_WEB_PREVIEW_VERIFICATION.md` records #87: the public Pages preview deployed the boat sprite runtime commit successfully, matched external build metadata, loaded assets without missing texture warnings, and showed the updated boat in the browser screenshot.
 - `docs/current/BACKGROUND_DEPTH_BASELINE_DECISION.md` records #91: `background_rocks_02.png` is approved for the current prototype, and accepted baselines were updated for production slices 01-04.
 - `docs/current/BACKGROUND_DEPTH_WEB_PREVIEW_VERIFICATION.md` records #92: the public Pages preview deployed the background-depth runtime commit successfully, matched external build metadata, and loaded the updated runtime without missing texture warnings.
-- `docs/current/PRODUCTION_SLICE_01_VISUAL_BASELINE_RECONCILIATION.md` records #75: the default slice accepted baseline now covers the current six-view capture set.
+- `docs/current/PRODUCTION_SLICE_01_VISUAL_BASELINE_RECONCILIATION.md` records #75: the former default slice's accepted baseline covers the current six-view fixture set.
 - `docs/current/BACKLOG_REFRESH_2026_07_06.md` records the recommended issue order after #74.
 - `docs/current/BACKLOG_REFRESH_POST_GAMEPLAY_PASS_01_2026_07_06.md` records the active recommended issue order after Controlled Gameplay Pass 01 and the salvage/oxygen feedback pass.
 - `docs/current/CONTROLLED_GAMEPLAY_PASS_02_PLAN.md` selects the next controlled prototype target: one readable route-choice loop in `production_slice_01`, pairing a safer salvage route with a more valuable pickup under oxygen pressure while preserving source-of-truth map discipline.
@@ -330,17 +331,17 @@ Current issue state as of 2026-07-13:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and the Expansion 09 plan, source contract, and visual-review decision as the active handoff. Run #864's exact-SHA player review now; begin #865 only after explicit GO.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` as the current handoff. No next issue batch is selected. First evaluate normal play on the promoted full level, then choose one bounded regional or capability-gated improvement with a clear exploration-and-return payoff.
 
 Accepted constraints for next work:
 
-- Keep `production_slice_01` as the default preview map until the full-level candidate passes its promotion gate.
+- Keep `production_level_01` as the default preview map unless a separate reviewed decision changes it.
 - Preserve `maps/full_cave_sketch_01.greybox.json` as the generated topology draft and source for a separately named `production_level_01` output.
-- Build the complete full-sketch topology as one contiguous level. Do not stitch crop JSONs together or import their artificial edge seals.
+- Preserve the complete full-sketch topology as one contiguous level. Do not stitch crop JSONs together or import their artificial edge seals.
 - Keep map topology, collision, spawn, extraction, and camera tests source-driven.
 - Transform the proven slice-01 gameplay overlay through shared source data; do not copy generated JSON by hand.
 - Preserve the scanner, same-map east-pocket anomaly, returned discovery, daylight, surface oxygen, repeated sorties, boat return, night transition, seeded material ownership, canonical-boat commitment, and mandatory fins/cutter/weapon chain.
-- Omit prompted connectors, map transitions, and the optional advanced stabilizer gate from the full-level candidate. Existing slice behavior remains only as a protected reference surface.
+- Omit prompted connectors, map transitions, and the optional advanced stabilizer gate from normal full-level traversal. Existing slice behavior remains only as a protected reference surface.
 - Keep standard capability gates inside contiguous authored geography and traversable through movement; reserve `E` connectors for explicit exceptional entrances/interiors.
 - Preserve the completed mineral research, fresh-day selection, and broad habitat-lead behavior as the practical-knowledge regression surface.
 - Preserve separate health, the source-authored eel territory, viable unarmed evasion, non-circular shock-prod project, day-local defeat, and no-reward combat semantics.
