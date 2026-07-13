@@ -32,6 +32,8 @@ Expansion 08 added one odd/even-day southwest jellyfish bloom, a night-ahead for
 
 Expansion 09 generated the complete `full_cave_sketch_01` topology as `production_level_01`, transformed the proven slice-01 gameplay overlay, validated continuous collision-active swimming and direct boat return, and passed player review. #864 recorded GO; #865 promoted the full level through PR #877 and exact-SHA Web verification at `e825c88`. `production_level_01` is now the normal default while slices 01-04 remain unchanged regression/provenance fixtures. The earlier #852 teleport/relay-terminal direction remains superseded, and connector travel, stabilizer entry requirements, and pressure progression remain deferred.
 
+Expansion 10 is committed after player GO on #879. Milestone #36 freezes #880-#889 around one east-current-to-lower-right regional journey: reuse propulsion fins for passive crossing, reach a recognizable landmark through continuous geography, resolve one scanner-backed pending discovery, and commit its payoff at the canonical boat. The pass adds no teleport, prompted current crossing, pressure capability, broad map population, or second traversal capability.
+
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
 Controlled gameplay/visual passes are now a validation lane inside the roadmap, not the whole roadmap. New work should serve curiosity, pressure, payoff, remembered-place progress, meaningful route choice, or a reason to try another expedition.
@@ -57,6 +59,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Finished foundation roadmap: `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`
 - Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
+- Active Expansion 10 handoff: `docs/current/OCEANGAME_EXPANSION_10_PLAN.md` and frozen milestone #36 issues #880-#889
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
@@ -331,7 +334,7 @@ Current issue state as of 2026-07-13:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` as the product north star and `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` as the current handoff. No next issue batch is selected. First evaluate normal play on the promoted full level, then choose one bounded regional or capability-gated improvement with a clear exploration-and-return payoff.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`, `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md`, and `docs/current/OCEANGAME_EXPANSION_10_PLAN.md` as the current handoff. Resolve only frozen milestone #36 issues #880-#889 in dependency order; do not select Expansion 11 during this batch.
 
 Accepted constraints for next work:
 

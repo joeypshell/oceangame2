@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 09 closeout and Phase 2 roadmap. No next implementation milestone is selected yet; evaluate the promoted full level before creating a bounded regional or capability-gated batch. Teleport, connector-based normal traversal, stabilizer entry requirements, and pressure progression remain deferred.
+Current handoff starts with the Expansion 09 closeout, Phase 2 roadmap, and committed Expansion 10 plan. Expansion 10 uses the existing passive east current, propulsion fins, scanner, and canonical boat to create one continuous lower-right regional journey. Teleport, connector-based normal traversal, stabilizer entry requirements, and pressure progression remain deferred.
 
 Core sources and operating docs:
 
@@ -96,6 +96,7 @@ Current release and expansion handoff:
 - [Expansion 09 Full-Level Source Contract](docs/current/OCEANGAME_EXPANSION_09_SOURCE_CONTRACT.md)
 - [Expansion 09 Visual Review Decision](docs/current/OCEANGAME_EXPANSION_09_VISUAL_REVIEW_DECISION.md)
 - [Expansion 09 Closeout](docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md)
+- [OceanGame Expansion 10 East-Current Regional Journey Plan](docs/current/OCEANGAME_EXPANSION_10_PLAN.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
