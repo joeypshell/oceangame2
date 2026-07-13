@@ -309,7 +309,8 @@ class ProgressionGraphBuilder:
         self.graph.nodes[key].attrs["candidate_keys"] = candidates
         material_id = str(item.get("material_id", ""))
         quantity = max(0, int(item.get("select_count", 0)))
-        self.graph.add_edge(key, f"material:{material_id}", "rewards", quantity=quantity)
+        relation = "optional_reward" if item.get("pool_role") == "optional_bonus" else "rewards"
+        self.graph.add_edge(key, f"material:{material_id}", relation, quantity=quantity)
         for candidate in candidates:
             self.graph.add_edge(key, candidate, "contains")
 

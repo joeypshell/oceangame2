@@ -27,6 +27,22 @@ class ProgressionGraphAuditTests(unittest.TestCase):
         self.assertLess(result.stages[shock], result.stages[cache])
         self.assertLess(result.stages[cache], result.stages[capacitor])
 
+    def test_optional_material_pool_does_not_join_mandatory_chain(self) -> None:
+        maps = load_production_maps()
+        target = next(item for item in maps if item.get("id") == "production_slice_01")
+        target["entities"].append({
+            "id": "test_optional_coil", "type": "material_candidate", "x": 1, "y": 1,
+            "material_id": "conductive_coil", "candidate_pool_id": "test_optional_pool",
+        })
+        target["material_candidate_pools"].append({
+            "id": "test_optional_pool", "material_id": "conductive_coil", "select_count": 1,
+            "candidate_ids": ["test_optional_coil"], "pool_role": "optional_bonus",
+        })
+        graph = build_progression_graph(maps, load_contract())
+        pool_key = graph.resolve("test_optional_pool")
+        self.assertFalse(graph.nodes[pool_key].mandatory)
+        self.assertTrue(any(edge.relation == "optional_reward" for edge in graph.outgoing(pool_key)))
+
     def test_rejects_unresolved_reference(self) -> None:
         graph = graph_with_start()
         graph.add_node(Node("objective:test", "Test objective", "objective", mandatory=True), "test_objective")

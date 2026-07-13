@@ -2,7 +2,6 @@
 """Validate basic greybox map reachability from the player entry cell."""
 
 from __future__ import annotations
-
 import argparse
 import json
 import re
@@ -10,6 +9,7 @@ from collections import deque
 from pathlib import Path
 from validate_biological_resources import validate_biological_resource_reachability, validate_biological_resource_schema
 from validate_current_gates import validate_current_gate_reachability, validate_current_gate_schema
+from validate_daily_conditions import validate_daily_condition_schema
 from validate_destination_payoffs import validate_destination_payoff_schema
 from validate_final_dive_objective_seeds import validate_final_dive_objective_seed_reachability, validate_final_dive_objective_seed_schema
 from validate_hostile_encounters import validate_hostile_encounter_reachability, validate_hostile_encounter_schema
@@ -389,6 +389,7 @@ def main() -> int:
     failures.extend(validate_zone_schema(zones, width, height))
     failures.extend(validate_biological_resource_schema(map_data))
     failures.extend(validate_current_gate_schema(map_data))
+    failures.extend(validate_daily_condition_schema(map_data))
     failures.extend(validate_destination_payoff_schema(args.map_json, map_data))
     failures.extend(validate_final_dive_objective_seed_schema(map_data, entities))
     failures.extend(validate_hostile_encounter_schema(map_data))
@@ -495,6 +496,5 @@ def main() -> int:
 
     print(f"{map_data['id']} passed reachability validation from entry {spawn}.")
     return 0
-
 if __name__ == "__main__":
     raise SystemExit(main())

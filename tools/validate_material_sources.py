@@ -170,10 +170,11 @@ def _validate_pools(
                 failures.append(f"{label} candidate {candidate_id!r} metadata does not match its pool/material.")
         if _is_int(select_count) and int(select_count) > len(candidate_ids):
             failures.append(f"{label} select_count exceeds its candidate count.")
-        minimum = MINIMUM_CANDIDATES.get(str(material_id), 0)
+        is_optional_bonus = pool.get("pool_role") == "optional_bonus"
+        minimum = 0 if is_optional_bonus else MINIMUM_CANDIDATES.get(str(material_id), 0)
         if minimum and len(candidate_ids) < minimum:
             failures.append(f"{label} requires at least {minimum} authored candidates for {material_id}.")
-        if material_id in selected_yields and _is_int(select_count) and int(select_count) > 0:
+        if not is_optional_bonus and material_id in selected_yields and _is_int(select_count) and int(select_count) > 0:
             selected_yields[str(material_id)] += int(select_count)
         runtime_fields = RUNTIME_FIELDS & set(pool)
         if runtime_fields:
