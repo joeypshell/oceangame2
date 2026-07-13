@@ -1,13 +1,22 @@
 extends RefCounted
 
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
+const DailyConditionPresentation := preload("res://scripts/main/daily_condition_presentation.gd")
 const DUSK_WARNING_SECONDS := 60.0
 const NIGHT_SOON_SECONDS := 30.0
 
 
 static func decorate_status(main, status_text: String) -> String:
 	var line := overlay_line(main)
-	return status_text if line.is_empty() else "%s\n%s" % [line, status_text]
+	var lines: Array[String] = []
+	if not line.is_empty():
+		lines.append(line)
+	var condition_line := DailyConditionPresentation.active_line(main._daily_conditions if main != null else null)
+	if not condition_line.is_empty():
+		lines.append(condition_line)
+	if not status_text.is_empty():
+		lines.append(status_text)
+	return "\n".join(lines)
 
 
 static func overlay_line(main) -> String:

@@ -45,6 +45,7 @@ const SessionProgression := preload("res://scripts/main/session_progression.gd")
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpeditionDayPresentation := preload("res://scripts/main/expedition_day_presentation.gd")
 const ExpeditionDayDebrief := preload("res://scripts/main/expedition_day_debrief.gd")
+const DailyConditionState := preload("res://scripts/main/daily_condition_state.gd")
 const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
 const PlayerHealthState := preload("res://scripts/main/player_health_state.gd")
@@ -187,6 +188,7 @@ var _moving_hazards
 var _shock_prod
 var _hostiles
 var _material_runtime
+var _daily_conditions
 var _material_project
 var _next_dive_objective_prompt
 var _oxygen_rest_feedback
@@ -280,6 +282,7 @@ func _ready() -> void:
 	_player_health = PlayerHealthState.new()
 	_sortie_state = SortieState.new(OXYGEN_MAX_SECONDS)
 	_expedition_day_state = ExpeditionDayState.new()
+	_daily_conditions = DailyConditionState.new()
 	_progression_runtime = ProgressionRuntimeController.new(_session_progression)
 	_timed_salvage = TimedSalvageController.new()
 	_world_connector = WorldConnectorController.new()
@@ -1046,7 +1049,8 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_player = player
 	_anomaly_survey.on_map_loaded(world)
 	_expedition_day_state.on_map_loaded(str(world.map_id))
-	_material_runtime.on_map_loaded(world, _expedition_day_state)
+	_daily_conditions.sync(world.get_daily_conditions(), _expedition_day_state.day_number)
+	_material_runtime.on_map_loaded(world, _expedition_day_state, _daily_conditions.current_ids())
 	_material_project.on_map_loaded(world)
 	_cutter_salvage.on_map_loaded(world)
 	_hostiles.on_map_loaded(world, preserve_sortie)
@@ -1071,7 +1075,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_banked_score = 0
 	_completion_oxygen_bonus = 0
 	_current_gate.reset()
-	_moving_hazards.reset(world)
+	_moving_hazards.reset(world, _daily_conditions.current_ids(), preserve_sortie)
 	_pry_salvage.reset()
 	_timed_salvage.reset()
 	_progression_containers.apply_opened_to_world(world, Callable(_anomaly_survey.profile_state(), "has_completed_discovery"))

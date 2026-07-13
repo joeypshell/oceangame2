@@ -1,13 +1,14 @@
 extends RefCounted
 
 
-static func select_for_day(map_id: String, pools: Array, day_number: int, completed_discovery_ids := []) -> Array[String]:
+static func select_for_day(map_id: String, pools: Array, day_number: int, completed_discovery_ids := [], active_condition_ids := []) -> Array[String]:
 	var selected: Array[String] = []
 	for value in pools:
 		if typeof(value) != TYPE_DICTIONARY:
 			continue
 		var pool := value as Dictionary
-		if not str(pool.get("daily_condition_id", "")).is_empty():
+		var condition_id := str(pool.get("daily_condition_id", ""))
+		if not condition_id.is_empty() and not active_condition_ids.has(condition_id):
 			continue
 		var candidate_ids: Array = _effective_candidate_ids(pool, completed_discovery_ids)
 		var select_count := clampi(int(pool.get("select_count", 0)), 0, candidate_ids.size())

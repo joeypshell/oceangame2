@@ -2,6 +2,7 @@ extends RefCounted
 
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpeditionDayPresentation := preload("res://scripts/main/expedition_day_presentation.gd")
+const DailyConditionPresentation := preload("res://scripts/main/daily_condition_presentation.gd")
 const OffloadController := preload("res://scripts/main/offload_controller.gd")
 const RESULT_PANEL_POSITION := Vector2(12, 204)
 const DEBRIEF_PANEL_POSITION := Vector2(12, 12)
@@ -82,11 +83,11 @@ static func apply_result_panel(main) -> bool:
 		review_panel.visible = false
 	main._result_panel.position = DEBRIEF_PANEL_POSITION
 	main._result_panel.visible = true
-	main._result_label.text = build_text(main._expedition_day_state, main._material_project)
+	main._result_label.text = build_text(main._expedition_day_state, main._material_project, main._daily_conditions)
 	return true
 
 
-static func build_text(day, material_project = null) -> String:
+static func build_text(day, material_project = null, daily_conditions = null) -> String:
 	var reason_text := "Day ended at boat"
 	if day.end_reason == "nightfall":
 		reason_text = "Returned at nightfall"
@@ -106,6 +107,9 @@ static func build_text(day, material_project = null) -> String:
 	if material_project != null and material_project.has_method("debrief_lines"):
 		for line in material_project.debrief_lines():
 			lines.append(str(line))
+	var forecast_line := DailyConditionPresentation.forecast_line(daily_conditions)
+	if not forecast_line.is_empty():
+		lines.append(forecast_line)
 	lines.append("N: Start day %d" % (day.day_number + 1))
 	return "\n".join(lines)
 

@@ -21,7 +21,7 @@ func _init(profile_state) -> void:
 	_profile = profile_state
 
 
-func on_map_loaded(world, day_state) -> Dictionary:
+func on_map_loaded(world, day_state, active_condition_ids := []) -> Dictionary:
 	_current_map_has_materials = false
 	_current_map_has_biological_resources = false
 	_research_lead_text = ""
@@ -34,7 +34,7 @@ func on_map_loaded(world, day_state) -> Dictionary:
 		_current_map_has_biological_resources = not world.get_biological_resource_sources().is_empty()
 	var profile_report: Dictionary = _profile.report() if _profile != null else {}
 	var completed_discoveries: Array = profile_report.get("completed_discoveries", [])
-	var selected: Array[String] = day_state.material_selection_for(str(world.map_id), pools, completed_discoveries)
+	var selected: Array[String] = day_state.material_selection_for(str(world.map_id), pools, completed_discoveries, active_condition_ids)
 	_researched_pool_ids = day_state.material_researched_pool_ids(str(world.map_id))
 	_research_lead_text = PracticalResearchPresentation.lead_text(pools, _researched_pool_ids)
 	var depleted: Array[String] = day_state.material_depleted_ids(str(world.map_id))

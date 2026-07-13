@@ -94,14 +94,14 @@ func on_map_transition(destination_map_id: String) -> void:
 	current_map_id = destination_map_id
 
 
-func material_selection_for(map_id: String, pools: Array, completed_discovery_ids := []) -> Array[String]:
+func material_selection_for(map_id: String, pools: Array, completed_discovery_ids := [], active_condition_ids := []) -> Array[String]:
 	if _material_selected_by_map.has(map_id):
 		var stored: Array = _material_selected_by_map[map_id]
 		var copy: Array[String] = []
 		for candidate_id in stored:
 			copy.append(str(candidate_id))
 		return copy
-	var selected := MaterialCandidateSelector.select_for_day(map_id, pools, material_day_seed, completed_discovery_ids)
+	var selected := MaterialCandidateSelector.select_for_day(map_id, pools, material_day_seed, completed_discovery_ids, active_condition_ids)
 	_material_selected_by_map[map_id] = selected.duplicate()
 	_material_researched_pools_by_map[map_id] = MaterialCandidateSelector.researched_pool_ids(pools, completed_discovery_ids)
 	return selected
