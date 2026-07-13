@@ -17,6 +17,7 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_09_PLAN.md`
 - `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md`
+- `docs/current/OCEANGAME_EXPANSION_10_PLAN.md`
 
 ## Current State
 
@@ -28,13 +29,14 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: no next implementation milestone is selected. The next planning pass must evaluate normal play on the promoted full level before freezing another issue batch.
-- Directional: add bounded regional identity and capability-gated reasons to revisit the contiguous level before considering exceptional interior transitions.
+- Committed: Expansion 10 uses the existing east-current/fins promise to create one continuous lower-right regional journey with a scanner-backed boat-return payoff.
+- Directional: deepen other regional identities and capability-gated returns only after Expansion 10 closes.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Current GitHub Milestone State
 
-1. [Expansion 09: Contiguous Full-Level Foundation](https://github.com/joeypshell/oceangame2/milestone/35) - complete through #865 with player GO, default promotion, accepted full-level baseline, and exact-SHA Web verification.
+1. [Expansion 10: East-Current Regional Journey](https://github.com/joeypshell/oceangame2/milestone/36) - open with frozen issues #880-#889.
+2. [Expansion 09: Contiguous Full-Level Foundation](https://github.com/joeypshell/oceangame2/milestone/35) - complete through #865 with player GO, default promotion, accepted full-level baseline, and exact-SHA Web verification.
 
 ## Completed Expansion 04
 
@@ -60,13 +62,14 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 #857-#865 plus focused player-gate correction #875 via PR #876 are complete with GO. `production_level_01` is one generated, continuously swimmable default map with direct boat returns, no normal connector travel, and retained slice fixtures.
 
-## Next Batch
+## Active Expansion 10 Batch
 
-Evaluate the promoted full level during normal play, then select one bounded next milestone that adds a meaningful regional or capability-gated reason to explore and return. Do not create the next batch merely to keep the queue full. #52/#53 remain deferred optional slice-03 polish.
+#880-#889 are frozen in dependency order: source contract, direct full-level progression audit, regional route/landmark authoring, scanner-backed payoff, focused runtime feedback, integrated journey smoke, focused captures, visual decision, exact-SHA Web verification, and player closeout. Do not add Expansion 11 work while this milestone is active. #52/#53 remain deferred optional slice-03 polish.
 
 ## Roadmap Rules
 
 - Do not reopen the completed Expansion 09 batch merely to keep the queue full.
+- Resolve only the frozen Expansion 10 #880-#889 batch before selecting another milestone.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
 - Do not use teleports, prompted connectors, map menus, or the current stabilizer for normal traversal of the full level.

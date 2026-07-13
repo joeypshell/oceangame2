@@ -2,7 +2,7 @@
 
 Date: 2026-07-13
 
-Status: Expansions 01-09 are complete. Expansion 09 closed with player GO, `production_level_01` default promotion, and exact-SHA Web verification at `e825c88`.
+Status: Expansions 01-09 are complete. Expansion 10 is committed through planning issue #879 and milestone #36 with frozen issues #880-#889.
 
 ## Decision
 
@@ -90,11 +90,11 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-No next implementation milestone is committed. Expansion 09 completed its frozen #857-#865 batch and player gate; the next batch should be selected only after normal play on the promoted full level identifies one meaningful regional or capability-gated improvement.
+Expansion 10 is committed. It turns the existing passive east-current / propulsion-fins promise into one continuous lower-right regional journey with a recognizable landmark, scanner-backed pending discovery, canonical-boat commitment, and a broad reason for another expedition.
 
 ### Directional
 
-Regional identity, capability-gated returns, and authored exploration payoffs should deepen the contiguous level before exceptional interiors or broader world transitions are considered.
+Other regional identities and capability-gated returns remain directional until Expansion 10 closes. Exceptional interiors and broader world transitions remain later decisions.
 
 ### Vision
 
@@ -249,6 +249,31 @@ Prove:
 Later milestones may author regional identities, capability gates, wildlife, research, and exceptional interiors inside or beyond the contiguous world. The current stabilizer and new pressure progression remain deferred until separately selected.
 
 Exit question: can the player launch at the boat, swim through the full authored cave, understand where they are, and return without a teleport while map authority and runtime readability remain trustworthy? **GO recorded at #864/#865.**
+
+### Expansion 10: East-Current Regional Journey
+
+Status: Committed through `docs/current/OCEANGAME_EXPANSION_10_PLAN.md` and
+[milestone #36](https://github.com/joeypshell/oceangame2/milestone/36).
+
+Goal: make the existing east current the readable entrance to one meaningful
+lower-right place, using the established fins, scanner, and boat-return loop.
+
+Prove:
+
+- the current promises a larger route before fins are available
+- the existing blueprint/material/night project unlocks passive crossing
+- continuous collision-active swimming reaches a recognizable lower-right landmark
+- one scanner-backed result remains pending until canonical-boat return
+- the committed payoff gives a broad reason to begin another expedition
+- direct full-level progression auditing catches circular or unreachable dependencies
+- focused desktop/mobile captures, Web verification, and player GO/HOLD close the pass
+
+No teleport, prompted current crossing, stabilizer entry, pressure capability,
+broad map population, or second new traversal capability belongs in this milestone.
+
+Exit question: did building fins turn the east current into the entrance to a
+place the player remembers, and did the lower-right payoff make the return journey
+and another expedition feel worthwhile?
 
 ## Original OceanGame Convergence
 
