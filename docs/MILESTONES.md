@@ -27,13 +27,13 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: Expansion 09 uses the corrected #855 plan to build one contiguous full-level candidate from the complete full-sketch topology. No implementation batch is active until that plan is reviewed.
+- Committed: Expansion 09 uses the corrected #855 plan and locked #857 source contract to build one contiguous full-level candidate from the complete full-sketch topology. The frozen #857-#865 implementation batch is active.
 - Directional: Region content, new capability gates, and exceptional interior transitions follow only after the contiguous level is validated and playable.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Open GitHub Milestones
 
-1. [Expansion 09: Contiguous Full-Level Foundation](https://github.com/joeypshell/oceangame2/milestone/35) - corrected through #855; promote the full sketch through the JSON pipeline before adding connector-based expansion.
+1. [Expansion 09: Contiguous Full-Level Foundation](https://github.com/joeypshell/oceangame2/milestone/35) - active frozen batch #857-#865; promote the full sketch through the JSON pipeline before adding connector-based expansion.
 
 ## Completed Expansion 04
 
@@ -57,11 +57,11 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Next Batch
 
-Review the corrected Expansion 09 plan, then create only its dependency-ordered full-level implementation batch. #52/#53 remain deferred optional slice-03 polish.
+Resolve the frozen Expansion 09 batch in dependency order: #857-#863 build and prove the candidate, #864 runs the player GO/HOLD gate, and #865 promotes only after explicit GO. #52/#53 remain deferred optional slice-03 polish.
 
 ## Roadmap Rules
 
-- Do not pre-batch Expansion 09 implementation merely because planning is committed; review the corrected contiguous-level decision first.
+- Do not add work to the frozen Expansion 09 batch merely to keep the queue full.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_slice_01` as the default boat hub until the full-level candidate passes source, clearance, route, camera, visual, player, and Web review.
 - Do not use teleports, prompted connectors, map menus, or the current stabilizer to traverse the new full-level candidate.

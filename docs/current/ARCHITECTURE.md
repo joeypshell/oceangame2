@@ -4,7 +4,7 @@
 
 The current project is a Godot 4.7 side-view ocean salvage prototype for proving the source-driven map, terrain, validation, capture, and gameplay workflow that will support a finished small diver game.
 
-The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`; the latest completed decision is `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md`. The corrected Expansion 09 plan promotes the complete full-sketch topology into one contiguous production candidate, with no implementation batch until that plan is reviewed. Earlier controlled gameplay and visual passes remain implementation evidence, not the whole product direction.
+The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`; the latest completed decision is `docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md`. The corrected Expansion 09 plan and locked source contract now drive the frozen #857-#865 batch that promotes the complete full-sketch topology into one contiguous production candidate. Earlier controlled gameplay and visual passes remain implementation evidence, not the whole product direction.
 
 ## Source Of Truth
 

@@ -8,7 +8,7 @@ Supersedes: #852 connector-first regional plan
 
 Milestone: OceanGame Expansion 09 `Contiguous Full-Level Foundation`
 
-Status: Plan ready for review. Do not create the implementation batch until the direction is accepted.
+Status: Direction accepted. Frozen implementation batch #857-#865 is active; #864 remains the player GO/HOLD gate.
 
 ## Decision
 
@@ -178,7 +178,7 @@ Only after GO should a scoped issue change the default map, regenerate affected 
 
 ## Recommended Issue Batch
 
-Create this batch only after the plan is reviewed:
+The accepted plan is represented by frozen issues #857-#865:
 
 1. Lock the full-level source, coordinate-transform, boundary, and exclusion contract.
 2. Extract reusable slice-01 gameplay source definitions with zero regenerated slice diff.

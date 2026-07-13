@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-08 are complete. Expansion 08 closed with an explicitly authorized technical GO after deterministic daily-condition source, runtime, journey, visual, and exact-SHA Web verification. Expansion 09 is committed to a contiguous full-level foundation through the corrected #855 plan; its implementation batch waits for plan review.
+The compact diver foundation and OceanGame Expansions 01-08 are complete. Expansion 08 closed with an explicitly authorized technical GO after deterministic daily-condition source, runtime, journey, visual, and exact-SHA Web verification. Expansion 09 is now active as the frozen #857-#865 contiguous full-level implementation batch, beginning with its source and coordinate contract while `production_slice_01` remains the default.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 08 closeout and the corrected Expansion 09 plan. The next milestone promotes the complete full-sketch topology into one generated production candidate before any new teleport, connector, stabilizer, or pressure-gate work.
+Current handoff starts with the Expansion 08 closeout, corrected Expansion 09 plan, and locked full-level source contract. Resolve #857-#865 in dependency order to promote the complete full-sketch topology into one generated production candidate before any new teleport, connector, stabilizer, or pressure-gate work. #864 is the player GO/HOLD gate; #865 cannot start on HOLD.
 
 Core sources and operating docs:
 
@@ -93,6 +93,7 @@ Current release and expansion handoff:
 - [Expansion 08 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_08_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 08 Closeout](docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md)
 - [OceanGame Expansion 09 Contiguous Full-Level Plan](docs/current/OCEANGAME_EXPANSION_09_PLAN.md)
+- [Expansion 09 Full-Level Source Contract](docs/current/OCEANGAME_EXPANSION_09_SOURCE_CONTRACT.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
