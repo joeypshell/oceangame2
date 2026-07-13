@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-08 are complete. Expansion 08 closed with an explicitly authorized technical GO after deterministic daily-condition source, runtime, journey, visual, and exact-SHA Web verification. Expansion 09 is now active as the frozen #857-#865 contiguous full-level implementation batch, beginning with its source and coordinate contract while `production_slice_01` remains the default.
+The compact diver foundation and OceanGame Expansions 01-08 are complete. Expansion 09 issues #857-#863 have built and technically proved the contiguous full-level candidate. Exact-SHA candidate Web verification passes at `b0bb1f9`; #864 now waits for explicit player GO/HOLD while `production_slice_01` remains the default and #865 remains blocked.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 08 closeout, corrected Expansion 09 plan, and locked full-level source contract. Resolve #857-#865 in dependency order to promote the complete full-sketch topology into one generated production candidate before any new teleport, connector, stabilizer, or pressure-gate work. #864 is the player GO/HOLD gate; #865 cannot start on HOLD.
+Current handoff starts with the Expansion 09 plan, locked source contract, and technical visual-review decision. Review the exact-SHA candidate through #864 before any promotion or new teleport, connector, stabilizer, or pressure-gate work. #865 cannot start on HOLD.
 
 Core sources and operating docs:
 
@@ -94,6 +94,7 @@ Current release and expansion handoff:
 - [Expansion 08 Closeout](docs/current/OCEANGAME_EXPANSION_08_CLOSEOUT.md)
 - [OceanGame Expansion 09 Contiguous Full-Level Plan](docs/current/OCEANGAME_EXPANSION_09_PLAN.md)
 - [Expansion 09 Full-Level Source Contract](docs/current/OCEANGAME_EXPANSION_09_SOURCE_CONTRACT.md)
+- [Expansion 09 Visual Review Decision](docs/current/OCEANGAME_EXPANSION_09_VISUAL_REVIEW_DECISION.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -227,4 +228,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-08 meet that technical condition. Expansion 09 next proves that the whole supplied cave topology can become one authoritative, continuously swimmable production level without connector travel.
+The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-08 meet that technical condition. Expansion 09 technically proves that the whole supplied cave topology can become one authoritative, continuously swimmable production candidate without connector travel; player GO/HOLD now determines whether it becomes the default.

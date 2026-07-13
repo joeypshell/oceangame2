@@ -19,7 +19,7 @@ This is the compact milestone index. Detailed direction lives in:
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-08 are complete. Expansion 08 closed with an explicitly authorized technical GO after its deterministic southwest condition journey was validated, visually reviewed, and deployed at exact SHA `f2dc68d`. This confirms technical readiness, not human judgments about fun, pacing, clarity, map learnability, or another-day motivation.
+Simple Diver Game 01-09 and OceanGame Expansions 01-08 are complete. Expansion 09 issues #857-#863 have generated and technically proved the contiguous full-level candidate. Candidate capture, unchanged-slice comparison, continuous journey, and exact-SHA Web verification pass at `b0bb1f9`; #864 still requires a human GO/HOLD on continuity, readability, scale, and return.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
@@ -27,13 +27,13 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: Expansion 09 uses the corrected #855 plan and locked #857 source contract to build one contiguous full-level candidate from the complete full-sketch topology. The frozen #857-#865 implementation batch is active.
+- Committed: Expansion 09 is at its #864 player gate. #865 may promote the technically verified candidate only after explicit GO.
 - Directional: Region content, new capability gates, and exceptional interior transitions follow only after the contiguous level is validated and playable.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Open GitHub Milestones
 
-1. [Expansion 09: Contiguous Full-Level Foundation](https://github.com/joeypshell/oceangame2/milestone/35) - active frozen batch #857-#865; promote the full sketch through the JSON pipeline before adding connector-based expansion.
+1. [Expansion 09: Contiguous Full-Level Foundation](https://github.com/joeypshell/oceangame2/milestone/35) - #857-#863 complete; #864 awaits player GO/HOLD and #865 remains blocked.
 
 ## Completed Expansion 04
 
@@ -57,7 +57,7 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Next Batch
 
-Resolve the frozen Expansion 09 batch in dependency order: #857-#863 build and prove the candidate, #864 runs the player GO/HOLD gate, and #865 promotes only after explicit GO. #52/#53 remain deferred optional slice-03 polish.
+Run the #864 player review against exact build `b0bb1f9`. On GO, resolve #865; on HOLD, create only concrete candidate corrections and leave promotion blocked. #52/#53 remain deferred optional slice-03 polish.
 
 ## Roadmap Rules
 
