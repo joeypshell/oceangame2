@@ -2,8 +2,9 @@ extends RefCounted
 
 const ANOMALY_DISCOVERY_ID := "lower_right_anomaly_discovery"
 const MINERAL_TRACE_RESEARCH_ID := "upper_right_mineral_trace_research"
-const SUPPORTED_DISCOVERY_IDS := {ANOMALY_DISCOVERY_ID: true, MINERAL_TRACE_RESEARCH_ID: true}
-const METADATA_FIELDS := ["target_type", "finding_label"]
+const SIGNAL_REEF_DISCOVERY_ID := "lower_right_signal_reef_discovery"
+const SUPPORTED_DISCOVERY_IDS := {ANOMALY_DISCOVERY_ID: true, MINERAL_TRACE_RESEARCH_ID: true, SIGNAL_REEF_DISCOVERY_ID: true}
+const METADATA_FIELDS := ["target_type", "finding_label", "next_lead_label"]
 
 var _pending := {}
 var _last_event := "idle"
@@ -78,6 +79,14 @@ func pending_discovery_id() -> String:
 
 func pending_metadata() -> Dictionary:
 	return _pending.get("metadata", {}).duplicate(true)
+
+
+func pending_commit_map_id() -> String:
+	return str(_pending.get("commit_map_id", ""))
+
+
+func pending_commit_entry_id() -> String:
+	return str(_pending.get("commit_entry_id", ""))
 
 
 func report() -> Dictionary:

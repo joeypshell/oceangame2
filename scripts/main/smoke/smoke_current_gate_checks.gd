@@ -3,7 +3,7 @@ extends "res://scripts/main/smoke/smoke_check_base.gd"
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 
 const CURRENT_GATE_ID := "upper_right_current_pocket_gate"
-const EXPECTED_PROMPT := "Strong east current - need propulsion fins | swim through after upgrade"
+const EXPECTED_PROMPT := "Strong east current - need propulsion fins | larger route beyond"
 const PHYSICS_STEP := 1.0 / 60.0
 const SWIM_HOLD_SECONDS := 2.0
 

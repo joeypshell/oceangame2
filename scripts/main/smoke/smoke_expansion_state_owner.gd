@@ -80,6 +80,39 @@ func _run() -> void:
 	_expect(repeated_commit.get("status") == "already_committed", "repeat commit was not idempotent")
 	_expect(not expedition.has_pending(), "repeat commit retained stale pending discovery")
 
+	var regional_pending: Dictionary = expedition.create_pending(
+		ExpansionProfileState.SIGNAL_REEF_DISCOVERY_ID,
+		"production_level_01",
+		"lower_right_signal_reef_survey",
+		"production_level_01",
+		"surface_boat_entry",
+		{
+			"target_type": "regional",
+			"finding_label": "Discovery logged: Signal Reef chart",
+			"next_lead_label": "Next lead: deeper harmonic below reef",
+		}
+	)
+	_expect(regional_pending.get("status") == "pending_created", "regional pending discovery was not created")
+	_expect(
+		str(expedition.pending_metadata().get("next_lead_label", "")) == "Next lead: deeper harmonic below reef",
+		"regional pending metadata lost the next lead"
+	)
+	var wrong_regional_commit: Dictionary = expedition.commit_at("production_slice_01", "surface_boat_entry", final_reload)
+	_expect(wrong_regional_commit.get("status") == "wrong_commit_location", "regional discovery committed at wrong map")
+	var regional_commit: Dictionary = expedition.commit_at("production_level_01", "surface_boat_entry", final_reload)
+	_expect(regional_commit.get("status") == "committed", "regional discovery did not commit at full-level boat")
+	_expect(
+		final_reload.has_completed_discovery(ExpansionProfileState.SIGNAL_REEF_DISCOVERY_ID),
+		"profile did not record regional discovery"
+	)
+	var regional_reload := ExpansionProfileState.new(TEST_PATH)
+	regional_reload.load_profile()
+	_expect(
+		regional_reload.has_completed_discovery(ExpansionProfileState.SIGNAL_REEF_DISCOVERY_ID),
+		"regional discovery did not survive reload"
+	)
+	final_reload = regional_reload
+
 	_create_pending(expedition)
 	expedition.clear_pending("oxygen_failure")
 	_expect(not expedition.has_pending(), "oxygen failure retained pending discovery")
@@ -121,10 +154,11 @@ func _run() -> void:
 			push_error("Expansion state owner smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Expansion state owner smoke passed: schema=%d capability=%s discovery=%s pending_cleanup=hazard,oxygen_failure,reset cross_map=true sortie_owner=true day_owner=true exact_once=true report=%s." % [
+	print("Expansion state owner smoke passed: schema=%d capability=%s discovery=%s regional_discovery=%s pending_cleanup=hazard,oxygen_failure,reset cross_map=true sortie_owner=true day_owner=true exact_once=true report=%s." % [
 		ExpansionProfileState.SCHEMA_VERSION,
 		ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID,
 		ExpansionProfileState.ANOMALY_DISCOVERY_ID,
+		ExpansionProfileState.SIGNAL_REEF_DISCOVERY_ID,
 		str(final_report),
 	])
 	quit(0)
