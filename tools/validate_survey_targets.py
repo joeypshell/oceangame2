@@ -13,14 +13,17 @@ ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 DISPLAY_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,31}$")
 COMPACT_TEXT_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'|:.-]{0,63}$")
 COORDINATE_PATTERN = re.compile(r"(?:\b[xy]\s*=?\s*\d+\b|\b\d+\s*,\s*\d+\b)", re.IGNORECASE)
-SUPPORTED_TARGET_TYPES = {"anomaly", "resource"}
+SUPPORTED_TARGET_TYPES = {"anomaly", "regional", "resource"}
 SUPPORTED_CAPABILITIES = {"survey_scanner_1"}
 SUPPORTED_INTERACTIONS = {"survey"}
 TARGET_DISCOVERIES = {
     "anomaly": "lower_right_anomaly_discovery",
+    "regional": "lower_right_signal_reef_discovery",
     "resource": "upper_right_mineral_trace_research",
 }
-RESOURCE_FIELDS = {"clue_label", "finding_label", "research_material_pool_id"}
+FINDING_FIELDS = {"clue_label", "finding_label"}
+RESOURCE_FIELDS = {*FINDING_FIELDS, "research_material_pool_id"}
+REGIONAL_FIELDS = {*FINDING_FIELDS, "next_lead_label", "required_route_id"}
 SURVEY_SPECIFIC_FIELDS = {
     "target_type",
     "required_capability_id",
@@ -29,6 +32,7 @@ SURVEY_SPECIFIC_FIELDS = {
     "commit_map_path",
     "commit_entry_id",
     *RESOURCE_FIELDS,
+    *REGIONAL_FIELDS,
 }
 RUNTIME_STATE_FIELDS = {
     "active",
@@ -255,19 +259,38 @@ def validate_survey_target_schema(map_path: Path, map_data: dict[str, Any]) -> l
         expected_discovery = TARGET_DISCOVERIES.get(str(target_type))
         if expected_discovery is not None and discovery_id != expected_discovery:
             failures.append(f"{item_label} {target_type} discovery_id must be {expected_discovery!r}.")
-        if target_type == "resource":
-            for field in sorted(RESOURCE_FIELDS):
+        if target_type in {"regional", "resource"}:
+            type_fields = REGIONAL_FIELDS if target_type == "regional" else RESOURCE_FIELDS
+            for field in sorted(type_fields):
                 if field not in target:
-                    failures.append(f"{item_label} resource survey target is missing required field {field}.")
+                    failures.append(f"{item_label} {target_type} survey target is missing required field {field}.")
             failures.extend(_validate_compact_text(target.get("clue_label"), item_label, "clue_label"))
             failures.extend(_validate_compact_text(target.get("finding_label"), item_label, "finding_label"))
-            failures.extend(_validate_id(target.get("research_material_pool_id"), item_label, "research_material_pool_id"))
+            if target_type == "resource":
+                failures.extend(_validate_id(target.get("research_material_pool_id"), item_label, "research_material_pool_id"))
+                unexpected_fields = (REGIONAL_FIELDS - FINDING_FIELDS) & set(target)
+            else:
+                failures.extend(_validate_compact_text(target.get("next_lead_label"), item_label, "next_lead_label"))
+                failures.extend(_validate_id(target.get("required_route_id"), item_label, "required_route_id"))
+                if target.get("required_route_id") != target.get("route_context"):
+                    failures.append(f"{item_label} required_route_id must equal route_context.")
+                unexpected_fields = (RESOURCE_FIELDS - FINDING_FIELDS) & set(target)
+            if unexpected_fields:
+                failures.append(
+                    f"{item_label} unsupported {target_type} metadata: {', '.join(sorted(unexpected_fields))}."
+                )
         else:
             unexpected_resource_fields = RESOURCE_FIELDS & set(target)
             if unexpected_resource_fields:
                 failures.append(
                     f"{item_label} resource metadata ({', '.join(sorted(unexpected_resource_fields))}) "
                     "is only supported on resource survey targets."
+                )
+            unexpected_regional_fields = (REGIONAL_FIELDS - FINDING_FIELDS) & set(target)
+            if unexpected_regional_fields:
+                failures.append(
+                    f"{item_label} regional metadata ({', '.join(sorted(unexpected_regional_fields))}) "
+                    "is only supported on regional survey targets."
                 )
         failures.extend(_validate_id(target.get("route_context"), item_label, "route_context"))
         failures.extend(_validate_commit_reference(map_path, target, item_label))

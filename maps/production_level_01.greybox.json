@@ -1311,6 +1311,9 @@
       "landmark_zone_ids": [
         "lower_right_signal_reef_landmark"
       ],
+      "survey_target_ids": [
+        "lower_right_signal_reef_survey"
+      ],
       "terrain_changes": [],
       "intent": "Source-authored regional route metadata with no topology edits."
     },
@@ -4561,6 +4564,8 @@
       ],
       "required_capability_id": "propulsion_fins",
       "landmark_zone_id": "lower_right_signal_reef_landmark",
+      "survey_target_id": "lower_right_signal_reef_survey",
+      "commit_entry_id": "surface_boat_entry",
       "route_context": "east_current_signal_reef_route",
       "intent": "Reuse the taught east-current language to gate one meaningful lower-right region and later boat-return discovery."
     }
@@ -4772,6 +4777,28 @@
       "commit_map_path": "res://maps/production_level_01.greybox.json",
       "commit_entry_id": "surface_boat_entry",
       "intent": "Expansion 05 mineral trace beyond the durable current gate; its committed finding favors the existing deep-cache coil habitat on a fresh day."
+    },
+    {
+      "id": "lower_right_signal_reef_survey",
+      "target_type": "regional",
+      "x": 136,
+      "y": 112,
+      "w": 2,
+      "h": 2,
+      "required_capability_id": "survey_scanner_1",
+      "required_route_id": "east_current_signal_reef_route",
+      "interaction": "survey",
+      "interaction_seconds": 3.0,
+      "interaction_label": "Survey Signal Reef",
+      "clue_label": "Signal Reef | Harmonic pattern unresolved",
+      "finding_label": "Discovery logged: Signal Reef chart",
+      "next_lead_label": "Next lead: deeper harmonic below reef",
+      "discovery_id": "lower_right_signal_reef_discovery",
+      "route_context": "east_current_signal_reef_route",
+      "commit_map_id": "production_level_01",
+      "commit_map_path": "res://maps/production_level_01.greybox.json",
+      "commit_entry_id": "surface_boat_entry",
+      "intent": "Turn the fins-gated regional landmark into a scanner-backed discovery that commits only at the canonical surface boat."
     }
   ],
   "material_candidate_pools": [

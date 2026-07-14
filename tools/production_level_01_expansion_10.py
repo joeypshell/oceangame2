@@ -13,6 +13,9 @@ ENTRY_GATE_IDS = (
 LANDMARK_ZONE_ID = "lower_right_signal_reef_landmark"
 LANDMARK_BACKGROUND_ID = "lower_right_signal_reef_backdrop"
 CAPABILITY_ID = "propulsion_fins"
+SURVEY_TARGET_ID = "lower_right_signal_reef_survey"
+DISCOVERY_ID = "lower_right_signal_reef_discovery"
+COMMIT_ENTRY_ID = "surface_boat_entry"
 
 
 def regional_journeys() -> list[dict]:
@@ -23,10 +26,40 @@ def regional_journeys() -> list[dict]:
         "entry_gate_ids": list(ENTRY_GATE_IDS),
         "required_capability_id": CAPABILITY_ID,
         "landmark_zone_id": LANDMARK_ZONE_ID,
+        "survey_target_id": SURVEY_TARGET_ID,
+        "commit_entry_id": COMMIT_ENTRY_ID,
         "route_context": JOURNEY_ID,
         "intent": (
             "Reuse the taught east-current language to gate one meaningful "
             "lower-right region and later boat-return discovery."
+        ),
+    }]
+
+
+def survey_targets() -> list[dict]:
+    return [{
+        "id": SURVEY_TARGET_ID,
+        "target_type": "regional",
+        "x": 136,
+        "y": 112,
+        "w": 2,
+        "h": 2,
+        "required_capability_id": "survey_scanner_1",
+        "required_route_id": JOURNEY_ID,
+        "interaction": "survey",
+        "interaction_seconds": 3.0,
+        "interaction_label": "Survey Signal Reef",
+        "clue_label": "Signal Reef | Harmonic pattern unresolved",
+        "finding_label": "Discovery logged: Signal Reef chart",
+        "next_lead_label": "Next lead: deeper harmonic below reef",
+        "discovery_id": DISCOVERY_ID,
+        "route_context": JOURNEY_ID,
+        "commit_map_id": "production_level_01",
+        "commit_map_path": "res://maps/production_level_01.greybox.json",
+        "commit_entry_id": COMMIT_ENTRY_ID,
+        "intent": (
+            "Turn the fins-gated regional landmark into a scanner-backed "
+            "discovery that commits only at the canonical surface boat."
         ),
     }]
 
@@ -122,6 +155,7 @@ def source_provenance() -> dict:
         "journey_ids": [JOURNEY_ID],
         "entry_gate_ids": list(ENTRY_GATE_IDS),
         "landmark_zone_ids": [LANDMARK_ZONE_ID],
+        "survey_target_ids": [SURVEY_TARGET_ID],
         "terrain_changes": [],
         "intent": "Source-authored regional route metadata with no topology edits.",
     }

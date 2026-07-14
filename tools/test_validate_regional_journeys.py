@@ -31,13 +31,36 @@ class RegionalJourneyValidationTests(unittest.TestCase):
         failures = validate_regional_journey_schema(candidate)
         self.assertTrue(any("backdrop" in failure for failure in failures), failures)
 
+    def test_survey_must_require_route_and_remain_inside_landmark(self) -> None:
+        candidate = copy.deepcopy(self.map_data)
+        survey = candidate["survey_targets"][-1]
+        survey["required_route_id"] = "wrong_route"
+        survey["x"] -= 20
+        failures = validate_regional_journey_schema(candidate)
+        self.assertTrue(any("target requiring this route" in failure for failure in failures), failures)
+
+        survey["required_route_id"] = candidate["regional_journeys"][0]["id"]
+        failures = validate_regional_journey_schema(candidate)
+        self.assertTrue(any("inside its landmark" in failure for failure in failures), failures)
+
+    def test_payoff_requires_source_target_and_canonical_boat(self) -> None:
+        candidate = copy.deepcopy(self.map_data)
+        journey = candidate["regional_journeys"][0]
+        journey["survey_target_id"] = "missing_survey"
+        journey["commit_entry_id"] = "missing_boat"
+        failures = validate_regional_journey_schema(candidate)
+        self.assertTrue(any("survey_target_id" in failure for failure in failures), failures)
+        self.assertTrue(any("canonical boat" in failure for failure in failures), failures)
+
     def test_runtime_state_and_malformed_gate_ids_fail_cleanly(self) -> None:
         candidate = copy.deepcopy(self.map_data)
         journey = candidate["regional_journeys"][0]
         journey["pending"] = True
+        journey["required_capability_id"] = "current_stabilizer"
         journey["entry_gate_ids"] = [{"id": "not_an_id"}]
         failures = validate_regional_journey_schema(candidate)
         self.assertTrue(any("runtime state" in failure for failure in failures), failures)
+        self.assertTrue(any("must be propulsion_fins" in failure for failure in failures), failures)
         self.assertTrue(any("lower_snake_case" in failure for failure in failures), failures)
 
 
