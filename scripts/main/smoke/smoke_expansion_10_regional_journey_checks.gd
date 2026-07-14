@@ -156,13 +156,13 @@ func _recover_blueprint() -> bool:
 	if not _require(not profile.has_completed_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID), "blueprint auto-recovered from proximity"):
 		return false
 	_press_key(KEY_E)
-	_advance(0.0)
 	if not _require(profile.has_completed_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID), "E did not recover the fins blueprint"):
 		return false
 	if not _require(_main._progression_containers.is_opened(BLUEPRINT_CONTAINER_ID), "blueprint container did not open"):
 		return false
+	if not _require(_main._progression_project_tracker.visible and _main._progression_project_tracker.snapshot_text().find("Titanium  0/2 banked") != -1 and _main._progression_project_tracker.snapshot_text().find("Rubber  0/1 banked") != -1, "blueprint recipe tracker was not visible on the acquisition frame"):
+		return false
 	return await _return_to_boat("blueprint_return", navigation)
-
 func _collect_and_bank_recipe() -> bool:
 	var profile = _main._anomaly_survey.profile_state()
 	var candidates := _active_recipe_candidates()
