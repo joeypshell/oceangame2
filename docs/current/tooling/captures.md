@@ -317,6 +317,14 @@ Capture the focused Expansion 10 regional journey review states:
 
 This writes pre-fins current-promise, post-fins regional-entry, and Signal Reef pending-return frames at 1280x720 and mobile 844x390 review sizes under `visual_captures/expansion_10_regional_journey/`. It uses the authored Expansion 10 camera tests and does not accept or replace baselines.
 
+Capture the focused Expansion 11 light-return review states:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --capture-expansion-11-light-return
+```
+
+This writes the pre-light harmonic requirement, exact incomplete light recipe, post-light 50% survey progress, and pending boat-return states at 1280x720 and mobile 844x390 review sizes under ignored `visual_captures/expansion_11_deep_harmonic_light/`. It uses the authored Expansion 11 camera tests and does not accept or replace baselines.
+
 Capture the first production slice:
 
 ```powershell
