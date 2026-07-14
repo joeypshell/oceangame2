@@ -328,9 +328,7 @@ class ProgressionGraphBuilder:
             self.graph.add_edge(key, self.graph.resolve(survey_id, map_id), "unlocks")
 
     def _survey_edges(self, key: str, item: dict[str, Any], map_id: str) -> None:
-        requirement = str(item.get("required_capability_id", ""))
-        if requirement:
-            self.graph.add_edge(key, self.graph.resolve(requirement), "requires", hard=True)
+        self._required_id_edges(key, [item.get("required_capability_id"), item.get("required_light_capability_id")])
         route_id = str(item.get("required_route_id", ""))
         if route_id:
             route_key = self.graph.resolve(route_id, map_id)

@@ -12,10 +12,11 @@ SUPPORTED_MATERIALS = {
 }
 SUPPORTED_PROJECTS = {
     "propulsion_fins_project", "salvage_cutter_project", "current_stabilizer_project",
-    "shock_prod_project", "shock_prod_capacitor_project",
+    "shock_prod_project", "shock_prod_capacitor_project", "dive_light_1_project",
 }
 SUPPORTED_CAPABILITIES = {
     "propulsion_fins", "salvage_cutter", "current_stabilizer", "shock_prod", "shock_prod_capacitor",
+    "dive_light_1",
 }
 SUPPORTED_STRATEGIES = {"day_rotation_v1"}
 SUPPORTED_BUILD_PHASES = {"night_debrief"}
@@ -27,6 +28,9 @@ EXPECTED_RECIPES = {
     "shock_prod_project": {"titanium_scrap": 2, "conductive_coil": 1},
     "shock_prod_capacitor_project": {
         "conductive_coil": 1, "insulating_gel": 1, "eel_electrocyte": 1,
+    },
+    "dive_light_1_project": {
+        "titanium_scrap": 1, "conductive_coil": 1, "insulating_gel": 1,
     },
 }
 PROJECT_RULES = {
@@ -62,6 +66,14 @@ PROJECT_RULES = {
         "target_field": "target_hostile_id",
         "hostile_required_capability_id": "shock_prod",
         "capability_effect": "interrupt_warning_lunge",
+    },
+    "dive_light_1_project": {
+        "capability_id": "dive_light_1",
+        "required_discovery_id": "lower_right_signal_reef_discovery",
+        "required_project_id": None,
+        "target_field": "target_id",
+        "target_collection": "survey_targets",
+        "target_capability_field": "required_light_capability_id",
     },
 }
 MATERIAL_FIELDS = {"material_id", "material_quantity", "candidate_pool_id"}

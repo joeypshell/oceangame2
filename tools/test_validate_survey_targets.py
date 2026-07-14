@@ -60,6 +60,20 @@ def valid_regional_target() -> dict:
     return target
 
 
+def valid_deep_harmonic_target() -> dict:
+    target = valid_regional_target()
+    target.update({
+        "id": "signal_reef_deep_harmonic_survey",
+        "interaction_label": "Survey deep harmonic",
+        "clue_label": "Deep harmonic | Stronger light required",
+        "finding_label": "Discovery logged: Deep harmonic chart",
+        "next_lead_label": "Next lead: signal descends into deeper water",
+        "discovery_id": "signal_reef_deep_harmonic_discovery",
+        "required_light_capability_id": "dive_light_1",
+    })
+    return target
+
+
 class SurveyTargetValidationTests(unittest.TestCase):
     def test_valid_schema_and_reachability(self) -> None:
         map_data = valid_map()
@@ -84,6 +98,21 @@ class SurveyTargetValidationTests(unittest.TestCase):
         target["next_lead_label"] = "Next lead: x=123"
         failures = validate_survey_target_schema(SOURCE_MAP, map_data)
         self.assertTrue(any("next_lead_label must not contain coordinates" in failure for failure in failures), failures)
+
+    def test_accepts_only_the_contract_light_gated_regional_target(self) -> None:
+        map_data = valid_map()
+        map_data["survey_targets"] = [valid_deep_harmonic_target()]
+        self.assertEqual(validate_survey_target_schema(SOURCE_MAP, map_data), [])
+
+        map_data["survey_targets"][0]["required_light_capability_id"] = "wrong_light"
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertTrue(any("required_light_capability_id must be 'dive_light_1'" in failure for failure in failures), failures)
+
+        ordinary = valid_regional_target()
+        ordinary["required_light_capability_id"] = "dive_light_1"
+        map_data["survey_targets"] = [ordinary]
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertTrue(any("only supported on a light-gated target" in failure for failure in failures), failures)
 
     def test_requires_dedicated_list_and_unique_ids(self) -> None:
         map_data = valid_map()

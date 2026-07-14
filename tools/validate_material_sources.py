@@ -219,6 +219,11 @@ def _validate_projects(
         for hostile in _items(map_data, "hostile_encounters")
         if isinstance(hostile.get("id"), str)
     }
+    survey_targets = {
+        str(target.get("id")): target
+        for target in _items(map_data, "survey_targets")
+        if isinstance(target.get("id"), str)
+    }
     for index, project in enumerate(raw_projects):
         if not isinstance(project, dict):
             failures.append(f"material_projects[{index}] must be an object.")
@@ -253,7 +258,7 @@ def _validate_projects(
         if project.get("build_phase") not in SUPPORTED_BUILD_PHASES:
             failures.append(f"{label} build_phase must be one of: {', '.join(sorted(SUPPORTED_BUILD_PHASES))}.")
         for label_field in ("project_label", "completion_label"):
-            if project_id in {"propulsion_fins_project", "shock_prod_project", "shock_prod_capacitor_project"} and label_field not in project:
+            if project_id in {"propulsion_fins_project", "shock_prod_project", "shock_prod_capacitor_project", "dive_light_1_project"} and label_field not in project:
                 failures.append(f"{label} requires {label_field}.")
             elif label_field in project:
                 value = project[label_field]
@@ -308,11 +313,19 @@ def _validate_projects(
                 failures.append(f"{label} must use {rules['target_field']}.")
             if target_field == "target_id" and isinstance(target_id, str):
                 referenced_targets.add(target_id)
-                target = tool_entities.get(target_id)
-                if target is None:
-                    failures.append(f"{label} target_id {target_id!r} does not reference a cutter salvage target.")
-                elif target.get("tool_project_id") != project_id or target.get("required_tool_id") != project.get("unlocks_capability_id"):
-                    failures.append(f"{label} target {target_id!r} does not link back to the project/tool.")
+                if rules is not None and rules.get("target_collection") == "survey_targets":
+                    target = survey_targets.get(target_id)
+                    capability_field = str(rules.get("target_capability_field", "required_capability_id"))
+                    if target is None:
+                        failures.append(f"{label} target_id {target_id!r} does not reference a survey target.")
+                    elif target.get(capability_field) != project.get("unlocks_capability_id"):
+                        failures.append(f"{label} target survey does not link back to the project capability.")
+                else:
+                    target = tool_entities.get(target_id)
+                    if target is None:
+                        failures.append(f"{label} target_id {target_id!r} does not reference a cutter salvage target.")
+                    elif target.get("tool_project_id") != project_id or target.get("required_tool_id") != project.get("unlocks_capability_id"):
+                        failures.append(f"{label} target {target_id!r} does not link back to the project/tool.")
             elif target_field == "target_gate_id" and isinstance(target_id, str):
                 referenced_gates.add(target_id)
                 gate = current_gates.get(target_id)

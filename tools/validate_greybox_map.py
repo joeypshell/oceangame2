@@ -12,6 +12,7 @@ from validate_daily_conditions import validate_daily_condition_schema
 from validate_destination_payoffs import validate_destination_payoff_schema
 from validate_final_dive_objective_seeds import validate_final_dive_objective_seed_reachability, validate_final_dive_objective_seed_schema
 from validate_hostile_encounters import validate_hostile_encounter_reachability, validate_hostile_encounter_schema
+from validate_light_return import validate_light_return
 from validate_material_sources import validate_material_source_reachability, validate_material_source_schema
 from validate_moving_hazards import validate_moving_hazard_reachability, validate_moving_hazard_schema
 from validate_next_dive_prompts import validate_next_dive_prompt_schema
@@ -74,7 +75,6 @@ def validate_id(value, item_label: str) -> list[str]:
     if not ID_PATTERN.match(value):
         return [f"{item_label} id {value!r} must use lower_snake_case."]
     return []
-
 
 def validate_kind(value, item_label: str) -> list[str]:
     if not isinstance(value, str) or not value:
@@ -361,7 +361,6 @@ def validate_boat_spawn(entity: dict, solid: set[tuple[int, int]], width: int, h
     if not boat_cells - solid:
         failures.append(f"{entity['id']} boat extraction rectangle has no open cells.")
     return failures
-
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("map_json", type=Path)
@@ -488,6 +487,7 @@ def main() -> int:
     failures.extend(validate_survey_target_reachability(map_data.get("survey_targets", []), solid, reachable))
     failures.extend(validate_visibility_zone_reachability(zones, solid, reachable))
     failures.extend(validate_world_connector_reachability(zones, solid, reachable))
+    failures.extend(validate_light_return(args.map_json, map_data, solid, reachable))
 
     if failures:
         for failure in failures:

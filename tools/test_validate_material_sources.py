@@ -200,6 +200,29 @@ def with_capacitor_project(map_data: dict) -> dict:
     return map_data
 
 
+def with_dive_light_project(map_data: dict) -> dict:
+    map_data["biological_resource_sources"] = [{
+        "id": "upper_right_glow_anemone_sample",
+        "material_id": "insulating_gel",
+        "material_quantity": 1,
+    }]
+    map_data["survey_targets"] = [{
+        "id": "signal_reef_deep_harmonic_survey",
+        "required_light_capability_id": "dive_light_1",
+    }]
+    map_data["material_projects"].append({
+        "id": "dive_light_1_project",
+        "required_discovery_id": "lower_right_signal_reef_discovery",
+        "required_materials": {"titanium_scrap": 1, "conductive_coil": 1, "insulating_gel": 1},
+        "unlocks_capability_id": "dive_light_1",
+        "target_id": "signal_reef_deep_harmonic_survey",
+        "build_phase": "night_debrief",
+        "project_label": "Dive light project",
+        "completion_label": "Dive light built",
+    })
+    return map_data
+
+
 class MaterialSourceValidationTests(unittest.TestCase):
     def test_valid_schema_and_reachability(self) -> None:
         map_data = valid_map()
@@ -240,6 +263,16 @@ class MaterialSourceValidationTests(unittest.TestCase):
 
     def test_accepts_guaranteed_biological_capacitor_recipe(self) -> None:
         self.assertEqual(validate_material_source_schema(with_capacitor_project(valid_map())), [])
+
+    def test_accepts_light_project_with_guaranteed_gel_and_survey_link(self) -> None:
+        self.assertEqual(validate_material_source_schema(with_dive_light_project(valid_map())), [])
+
+        map_data = with_dive_light_project(valid_map())
+        map_data["survey_targets"][0]["required_light_capability_id"] = "wrong_light"
+        map_data["material_projects"][-1]["required_materials"]["insulating_gel"] = 2
+        failures = validate_material_source_schema(map_data)
+        self.assertTrue(any("target survey does not link back" in failure for failure in failures), failures)
+        self.assertTrue(any("required_materials must be exactly" in failure for failure in failures), failures)
 
     def test_rejects_capacitor_effect_or_unguaranteed_biology(self) -> None:
         map_data = with_capacitor_project(valid_map())
