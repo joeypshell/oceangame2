@@ -17,16 +17,18 @@ SUPPORTED_TARGET_TYPES = {"anomaly", "regional", "resource"}
 SUPPORTED_CAPABILITIES = {"survey_scanner_1"}
 SUPPORTED_INTERACTIONS = {"survey"}
 TARGET_DISCOVERIES = {
-    "anomaly": "lower_right_anomaly_discovery",
-    "regional": "lower_right_signal_reef_discovery",
-    "resource": "upper_right_mineral_trace_research",
+    "anomaly": {"lower_right_anomaly_discovery"},
+    "regional": {"lower_right_signal_reef_discovery", "signal_reef_deep_harmonic_discovery"},
+    "resource": {"upper_right_mineral_trace_research"},
 }
+LIGHT_GATED_TARGETS = {"signal_reef_deep_harmonic_survey": "dive_light_1"}
 FINDING_FIELDS = {"clue_label", "finding_label"}
 RESOURCE_FIELDS = {*FINDING_FIELDS, "research_material_pool_id"}
 REGIONAL_FIELDS = {*FINDING_FIELDS, "next_lead_label", "required_route_id"}
 SURVEY_SPECIFIC_FIELDS = {
     "target_type",
     "required_capability_id",
+    "required_light_capability_id",
     "discovery_id",
     "commit_map_id",
     "commit_map_path",
@@ -256,9 +258,15 @@ def validate_survey_target_schema(map_path: Path, map_data: dict[str, Any]) -> l
             if discovery_id in seen_discovery_ids:
                 failures.append(f"Duplicate survey discovery id {discovery_id!r}.")
             seen_discovery_ids.add(discovery_id)
-        expected_discovery = TARGET_DISCOVERIES.get(str(target_type))
-        if expected_discovery is not None and discovery_id != expected_discovery:
-            failures.append(f"{item_label} {target_type} discovery_id must be {expected_discovery!r}.")
+        expected_discoveries = TARGET_DISCOVERIES.get(str(target_type))
+        if expected_discoveries is not None and discovery_id not in expected_discoveries:
+            allowed = ", ".join(sorted(expected_discoveries))
+            failures.append(f"{item_label} {target_type} discovery_id must be one of: {allowed}.")
+        expected_light = LIGHT_GATED_TARGETS.get(str(target_id))
+        if expected_light is not None and target.get("required_light_capability_id") != expected_light:
+            failures.append(f"{item_label} required_light_capability_id must be {expected_light!r}.")
+        elif expected_light is None and "required_light_capability_id" in target:
+            failures.append(f"{item_label} required_light_capability_id is only supported on a light-gated target.")
         if target_type in {"regional", "resource"}:
             type_fields = REGIONAL_FIELDS if target_type == "regional" else RESOURCE_FIELDS
             for field in sorted(type_fields):

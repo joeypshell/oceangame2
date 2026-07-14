@@ -3,12 +3,13 @@
 
 from __future__ import annotations
 
+import copy
 import unittest
 
 from progression_audit import audit_graph
 from progression_audit_views import build_view_graph, load_audit_views
 from progression_contract import load_contract
-from progression_graph import Edge, Node, ProgressionGraph, build_progression_graph, load_production_maps
+from progression_graph import Edge, Node, ProgressionGraph, ROOT, build_progression_graph, load_production_maps
 
 
 def graph_with_start() -> ProgressionGraph:
@@ -95,6 +96,49 @@ class ProgressionGraphAuditTests(unittest.TestCase):
         graph.add_edge(route, survey, "requires", hard=True, note="invalid circular route capability")
         result = audit_graph(graph)
         self.assertTrue(any("Hard dependency cycle" in failure for failure in result.failures), result.failures)
+
+    def test_deep_harmonic_chain_includes_durable_light_requirement(self) -> None:
+        maps = load_production_maps((ROOT / "maps" / "production_level_01.greybox.json",))
+        level = next(item for item in maps if item.get("id") == "production_level_01")
+        level["material_projects"].append({
+            "id": "dive_light_1_project",
+            "required_discovery_id": "lower_right_signal_reef_discovery",
+            "required_materials": {"titanium_scrap": 1, "conductive_coil": 1, "insulating_gel": 1},
+            "unlocks_capability_id": "dive_light_1",
+            "target_id": "signal_reef_deep_harmonic_survey",
+        })
+        level["survey_targets"].append({
+            "id": "signal_reef_deep_harmonic_survey",
+            "target_type": "regional",
+            "required_capability_id": "survey_scanner_1",
+            "required_light_capability_id": "dive_light_1",
+            "required_route_id": "east_current_signal_reef_route",
+            "route_context": "east_current_signal_reef_route",
+            "discovery_id": "signal_reef_deep_harmonic_discovery",
+            "commit_map_id": "production_level_01",
+            "commit_entry_id": "surface_boat_entry",
+        })
+        contract = copy.deepcopy(load_contract())
+        contract["session_upgrades"] = [item for item in contract["session_upgrades"] if item["id"] != "dive_light_1"]
+        contract["canonical_start"]["map_id"] = "production_level_01"
+        for purchase in contract["durable_purchases"]:
+            purchase["purchase_map_id"] = "production_level_01"
+        graph = build_progression_graph(maps, contract)
+
+        project = graph.resolve("dive_light_1_project")
+        light = graph.resolve("dive_light_1")
+        survey = graph.resolve("signal_reef_deep_harmonic_survey")
+        signal_reef = graph.resolve("lower_right_signal_reef_discovery")
+        scanner = graph.resolve("survey_scanner_1")
+        route = graph.resolve("east_current_signal_reef_route")
+        discovery = graph.resolve("signal_reef_deep_harmonic_discovery")
+        self.assertTrue(any(edge.target == signal_reef for edge in graph.requirements(project)))
+        self.assertTrue(any(edge.target == project for edge in graph.requirements(light)))
+        self.assertTrue(any(edge.target == light for edge in graph.requirements(survey)))
+        self.assertTrue(any(edge.target == scanner for edge in graph.requirements(survey)))
+        self.assertTrue(any(edge.target == route for edge in graph.requirements(survey)))
+        self.assertTrue(any(edge.target == survey for edge in graph.requirements(discovery)))
+        self.assertEqual((), audit_graph(graph).failures)
 
     def test_full_level_view_rejects_self_gated_fins_blueprint(self) -> None:
         view = next(view for view in load_audit_views() if view.id == "promoted_full_level")
