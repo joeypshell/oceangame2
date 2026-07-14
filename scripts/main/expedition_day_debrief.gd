@@ -4,6 +4,7 @@ const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd"
 const ExpeditionDayPresentation := preload("res://scripts/main/expedition_day_presentation.gd")
 const DailyConditionPresentation := preload("res://scripts/main/daily_condition_presentation.gd")
 const OffloadController := preload("res://scripts/main/offload_controller.gd")
+const PRODUCTION_LEVEL_MAP_ID := "production_level_01"
 const RESULT_PANEL_POSITION := Vector2(12, 204)
 const DEBRIEF_PANEL_POSITION := Vector2(12, 12)
 
@@ -36,9 +37,10 @@ static func handle_day_key(main) -> Dictionary:
 	if main._expedition_day_state.phase != ExpeditionDayState.PHASE_DEBRIEF:
 		return ExpeditionDayPresentation.try_request_voluntary_end(main)
 
+	var restart_map_path := _restart_map_path(main)
 	main._expedition_day_state.begin_next_day()
 	main._load_playable_map(
-		main.PRODUCTION_SLICE_MAP_PATH,
+		restart_map_path,
 		main._debug_overlay_enabled,
 		"surface_boat_entry",
 		"New expedition day"
@@ -134,7 +136,7 @@ static func _resolve_nightfall(main) -> void:
 	if not main._sortie_state.held_salvage_ids.is_empty():
 		main._world.restore_salvage(main._sortie_state.clear_held())
 	main._load_playable_map(
-		main.PRODUCTION_SLICE_MAP_PATH,
+		_restart_map_path(main),
 		main._debug_overlay_enabled,
 		"surface_boat_entry",
 		"Nightfall recovery"
@@ -167,6 +169,12 @@ static func _enter_debrief(main, reason: String) -> void:
 		if main._player.has_method("reset_motion"):
 			main._player.reset_motion()
 	main._update_status_label()
+
+
+static func _restart_map_path(main) -> String:
+	if main._world != null and str(main._world.map_id) == PRODUCTION_LEVEL_MAP_ID:
+		return main.PRODUCTION_LEVEL_MAP_PATH
+	return main.PRODUCTION_SLICE_MAP_PATH
 
 
 static func _failure_text(reason: String) -> String:
