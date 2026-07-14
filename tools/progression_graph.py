@@ -9,6 +9,15 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from progression_graph_contract import CANONICAL_CHAIN_IDS
+from progression_graph_helpers import (
+    as_dict as _dict,
+    as_list as _list,
+    display as _display,
+    item_label as _item_label,
+    items as _items,
+    rects_overlap as _rects_overlap,
+    requirement_id as _requirement_id,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -137,6 +146,7 @@ class ProgressionGraphBuilder:
             "next_dive_objective_prompts",
             "relay_follow_through_objectives",
             "final_dive_objective_seeds",
+            "regional_journeys",
             "survey_targets",
             "material_candidate_pools",
             "material_projects",
@@ -157,7 +167,15 @@ class ProgressionGraphBuilder:
                     attrs["wallet_reward"] = int(self.contract["salvage_score_by_tier"].get(tier, 0))
                 if kind == "container" and item.get("reward_type") == "wallet":
                     attrs["wallet_reward"] = int(item.get("reward_amount", 0))
-                self.graph.add_node(Node(key, _item_label(item), kind, map_id, str(item.get("route_context", "")), attrs=attrs), raw_id)
+                self.graph.add_node(Node(
+                    key,
+                    _item_label(item),
+                    kind,
+                    map_id,
+                    str(item.get("route_context", "")),
+                    mandatory=kind == "regional_journey",
+                    attrs=attrs,
+                ), raw_id)
                 self.items_by_map.setdefault(map_id, []).append((key, item))
                 if kind == "container" and item.get("reward_type") == "blueprint":
                     discovery_id = str(item.get("reward_id", ""))
@@ -197,6 +215,8 @@ class ProgressionGraphBuilder:
                 return "gate"
             if item.get("visibility_zone") is True:
                 return "pressure"
+            if item.get("regional_landmark") is True:
+                return "landmark"
             return ""
         return {
             "progression_containers": "container",
@@ -204,6 +224,7 @@ class ProgressionGraphBuilder:
             "next_dive_objective_prompts": "prompt",
             "relay_follow_through_objectives": "relay_objective",
             "final_dive_objective_seeds": "signal",
+            "regional_journeys": "regional_journey",
             "survey_targets": "survey",
             "material_candidate_pools": "material_pool",
             "material_projects": "project",
@@ -232,6 +253,8 @@ class ProgressionGraphBuilder:
                 self._relay_edges(key, item, map_id)
             elif node.kind == "signal":
                 self._signal_edges(key, item, map_id)
+            elif node.kind == "regional_journey":
+                self._regional_journey_edges(key, item, map_id)
             elif node.kind == "survey":
                 self._survey_edges(key, item, map_id)
             elif node.kind == "material_pool":
@@ -287,11 +310,34 @@ class ProgressionGraphBuilder:
     def _signal_edges(self, key: str, item: dict[str, Any], map_id: str) -> None:
         self._required_id_edges(key, [item.get("source_objective_id"), item.get("target_id")], map_id)
 
+    def _regional_journey_edges(self, key: str, item: dict[str, Any], map_id: str) -> None:
+        requirement = str(item.get("required_capability_id", ""))
+        if requirement:
+            self.graph.add_edge(key, self.graph.resolve(requirement), "requires", hard=True)
+        references = [
+            item.get("promise_gate_id"),
+            *_list(item.get("entry_gate_ids")),
+            item.get("landmark_zone_id"),
+            item.get("commit_entry_id"),
+        ]
+        for raw_id in references:
+            if raw_id:
+                self.graph.add_edge(key, self.graph.resolve(str(raw_id), map_id), "targets")
+        survey_id = str(item.get("survey_target_id", ""))
+        if survey_id:
+            self.graph.add_edge(key, self.graph.resolve(survey_id, map_id), "unlocks")
+
     def _survey_edges(self, key: str, item: dict[str, Any], map_id: str) -> None:
         requirement = str(item.get("required_capability_id", ""))
         if requirement:
             self.graph.add_edge(key, self.graph.resolve(requirement), "requires", hard=True)
-        self._apply_route_gate(key, item, map_id)
+        route_id = str(item.get("required_route_id", ""))
+        if route_id:
+            route_key = self.graph.resolve(route_id, map_id)
+            self.graph.add_edge(key, route_key, "requires", hard=True, note="regional route")
+            self.graph.add_edge(route_key, key, "unlocks")
+        else:
+            self._apply_route_gate(key, item, map_id)
         discovery_id = str(item.get("discovery_id", ""))
         if discovery_id:
             discovery_key = self.graph.resolve(discovery_id)
@@ -428,7 +474,7 @@ class ProgressionGraphBuilder:
                     if edge.target in self.graph.nodes and not self.graph.nodes[edge.target].mandatory:
                         self.graph.nodes[edge.target].mandatory = True
                         changed = True
-                if node.kind in {"project", "prompt", "upgrade", "capability"}:
+                if node.kind in {"project", "prompt", "regional_journey", "survey", "upgrade", "capability"}:
                     for edge in self.graph.outgoing(node.key):
                         if edge.relation in {"unlocks", "targets"} and edge.target in self.graph.nodes and not self.graph.nodes[edge.target].mandatory:
                             self.graph.nodes[edge.target].mandatory = True
@@ -452,46 +498,3 @@ class ProgressionGraphBuilder:
 
 def build_progression_graph(maps: list[dict[str, Any]], contract: dict[str, Any]) -> ProgressionGraph:
     return ProgressionGraphBuilder(maps, contract).build()
-
-
-def _items(payload: dict[str, Any], field: str) -> list[dict[str, Any]]:
-    value = payload.get(field, [])
-    return [item for item in value if isinstance(item, dict)] if isinstance(value, list) else []
-
-
-def _list(value: Any) -> list[Any]:
-    if value is None or value == "":
-        return []
-    return value if isinstance(value, list) else [value]
-
-
-def _dict(value: Any) -> dict[Any, Any]:
-    return value if isinstance(value, dict) else {}
-
-
-def _display(value: str) -> str:
-    return value.replace("_", " ").strip().title()
-
-
-def _item_label(item: dict[str, Any]) -> str:
-    for field in ("label", "project_label", "display_label", "connector_label", "current_gate_label", "visibility_label", "interaction_label"):
-        value = str(item.get(field, "")).strip()
-        if value:
-            return value
-    return _display(str(item.get("id", "")))
-
-
-def _requirement_id(item: dict[str, Any]) -> str:
-    return str(item.get("required_upgrade_id") or item.get("required_capability_id") or "")
-
-
-def _rects_overlap(left: dict[str, Any], right: dict[str, Any]) -> bool:
-    try:
-        return not (
-            int(left["x"]) + int(left.get("w", 1)) <= int(right["x"])
-            or int(right["x"]) + int(right.get("w", 1)) <= int(left["x"])
-            or int(left["y"]) + int(left.get("h", 1)) <= int(right["y"])
-            or int(right["y"]) + int(right.get("h", 1)) <= int(left["y"])
-        )
-    except (KeyError, TypeError, ValueError):
-        return False

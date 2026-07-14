@@ -24,6 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MAP = ROOT / "maps" / "production_level_01.greybox.json"
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 DISPLAY_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,47}$")
+SUPPORTED_CAPABILITY_IDS = {"propulsion_fins"}
 REQUIRED_FIELDS = (
     "id",
     "route_label",
@@ -31,10 +32,12 @@ REQUIRED_FIELDS = (
     "entry_gate_ids",
     "required_capability_id",
     "landmark_zone_id",
+    "survey_target_id",
+    "commit_entry_id",
     "route_context",
     "intent",
 )
-ALLOWED_FIELDS = set(REQUIRED_FIELDS) | {"survey_target_id", "commit_entry_id"}
+ALLOWED_FIELDS = set(REQUIRED_FIELDS)
 FORBIDDEN_STATE_FIELDS = {
     "active",
     "completed",
@@ -56,6 +59,18 @@ def _valid_id(value: Any) -> bool:
 
 def _valid_label(value: Any) -> bool:
     return isinstance(value, str) and DISPLAY_PATTERN.fullmatch(value) is not None
+
+
+def _rect_contains(outer: dict[str, Any], inner: dict[str, Any]) -> bool:
+    try:
+        return (
+            int(outer["x"]) <= int(inner["x"])
+            and int(outer["y"]) <= int(inner["y"])
+            and int(inner["x"]) + int(inner["w"]) <= int(outer["x"]) + int(outer["w"])
+            and int(inner["y"]) + int(inner["h"]) <= int(outer["y"]) + int(outer["h"])
+        )
+    except (KeyError, TypeError, ValueError):
+        return False
 
 
 def validate_regional_journey_schema(map_data: dict[str, Any]) -> list[str]:
@@ -96,10 +111,19 @@ def validate_regional_journey_schema(map_data: dict[str, Any]) -> list[str]:
         if unknown_fields:
             failures.append(f"{label} contains unsupported fields: {unknown_fields}.")
 
-        id_fields = ("promise_gate_id", "required_capability_id", "landmark_zone_id", "route_context")
+        id_fields = (
+            "promise_gate_id",
+            "required_capability_id",
+            "landmark_zone_id",
+            "survey_target_id",
+            "commit_entry_id",
+            "route_context",
+        )
         for field in id_fields:
             if not _valid_id(journey[field]):
                 failures.append(f"{label} {field} must use lower_snake_case.")
+        if journey["required_capability_id"] not in SUPPORTED_CAPABILITY_IDS:
+            failures.append(f"{label} required_capability_id must be propulsion_fins.")
         if journey["route_context"] != journey["id"]:
             failures.append(f"{label} route_context must equal its journey id.")
 
@@ -138,14 +162,13 @@ def validate_regional_journey_schema(map_data: dict[str, Any]) -> list[str]:
         ):
             failures.append(f"{label} must have one non-collision backdrop matching its landmark rectangle.")
 
-        survey_id = journey.get("survey_target_id")
-        if survey_id is not None:
-            survey = surveys.get(str(survey_id))
-            if survey is None or survey.get("required_route_id") != journey["id"]:
-                failures.append(f"{label} survey_target_id must resolve to a target requiring this route.")
-            commit_id = journey.get("commit_entry_id")
-            if entities.get(str(commit_id), {}).get("type") != "boat_spawn":
-                failures.append(f"{label} commit_entry_id must resolve to the canonical boat.")
+        survey = surveys.get(str(journey["survey_target_id"]))
+        if survey is None or survey.get("required_route_id") != journey["id"]:
+            failures.append(f"{label} survey_target_id must resolve to a target requiring this route.")
+        elif landmark is not None and not _rect_contains(landmark, survey):
+            failures.append(f"{label} survey target must sit inside its landmark rectangle.")
+        if entities.get(str(journey["commit_entry_id"]), {}).get("type") != "boat_spawn":
+            failures.append(f"{label} commit_entry_id must resolve to the canonical boat.")
     return failures
 
 

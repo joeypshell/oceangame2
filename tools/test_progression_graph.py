@@ -53,6 +53,9 @@ class ProgressionGraphAuditTests(unittest.TestCase):
             "survey_scanner_1",
             "lower_right_anomaly_survey",
             "lower_right_anomaly_discovery",
+            "east_current_signal_reef_route",
+            "lower_right_signal_reef_survey",
+            "lower_right_signal_reef_discovery",
             "surface_boat_entry",
         )
         for raw_id in expected_chain:
@@ -69,6 +72,29 @@ class ProgressionGraphAuditTests(unittest.TestCase):
         self.assertTrue(any(edge.target == fins for edge in level_graph.requirements(gate)))
         self.assertTrue(any(edge.target == scanner for edge in level_graph.requirements(survey)))
         self.assertTrue(any(edge.target == boat for edge in level_graph.requirements(discovery)))
+
+        route = level_graph.resolve("east_current_signal_reef_route")
+        regional_survey = level_graph.resolve("lower_right_signal_reef_survey")
+        regional_discovery = level_graph.resolve("lower_right_signal_reef_discovery")
+        self.assertTrue(level_graph.nodes[route].mandatory)
+        self.assertTrue(level_graph.nodes[regional_survey].mandatory)
+        self.assertTrue(level_graph.nodes[regional_discovery].mandatory)
+        self.assertTrue(any(edge.target == fins for edge in level_graph.requirements(route)))
+        self.assertTrue(any(edge.target == route for edge in level_graph.requirements(regional_survey)))
+        self.assertTrue(any(edge.target == scanner for edge in level_graph.requirements(regional_survey)))
+        self.assertTrue(any(edge.target == regional_survey for edge in level_graph.requirements(regional_discovery)))
+        self.assertTrue(any(edge.target == boat for edge in level_graph.requirements(regional_discovery)))
+        self.assertLess(level_result.stages[route], level_result.stages[regional_survey])
+        self.assertLess(level_result.stages[regional_survey], level_result.stages[regional_discovery])
+
+    def test_full_level_view_rejects_circular_regional_prerequisite(self) -> None:
+        view = next(view for view in load_audit_views() if view.id == "promoted_full_level")
+        graph = build_view_graph(view, load_contract())
+        route = graph.resolve("east_current_signal_reef_route")
+        survey = graph.resolve("lower_right_signal_reef_survey")
+        graph.add_edge(route, survey, "requires", hard=True, note="invalid circular route capability")
+        result = audit_graph(graph)
+        self.assertTrue(any("Hard dependency cycle" in failure for failure in result.failures), result.failures)
 
     def test_full_level_view_rejects_self_gated_fins_blueprint(self) -> None:
         view = next(view for view in load_audit_views() if view.id == "promoted_full_level")

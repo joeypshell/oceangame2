@@ -44,12 +44,46 @@ def valid_map() -> dict:
     }
 
 
+def valid_regional_target() -> dict:
+    target = valid_target()
+    target.update({
+        "id": "lower_right_signal_reef_survey",
+        "target_type": "regional",
+        "interaction_label": "Survey Signal Reef",
+        "clue_label": "Signal Reef | Harmonic pattern unresolved",
+        "finding_label": "Discovery logged: Signal Reef chart",
+        "next_lead_label": "Next lead: deeper harmonic below reef",
+        "discovery_id": "lower_right_signal_reef_discovery",
+        "required_route_id": "east_current_signal_reef_route",
+        "route_context": "east_current_signal_reef_route",
+    })
+    return target
+
+
 class SurveyTargetValidationTests(unittest.TestCase):
     def test_valid_schema_and_reachability(self) -> None:
         map_data = valid_map()
         self.assertEqual(validate_survey_target_schema(SOURCE_MAP, map_data), [])
         reachable = {(x, y) for y in range(8) for x in range(8)}
         self.assertEqual(validate_survey_target_reachability(map_data["survey_targets"], set(), reachable), [])
+
+    def test_validates_regional_finding_and_broad_next_lead(self) -> None:
+        map_data = valid_map()
+        map_data["survey_targets"] = [valid_regional_target()]
+        self.assertEqual(validate_survey_target_schema(SOURCE_MAP, map_data), [])
+
+        target = map_data["survey_targets"][0]
+        target.pop("next_lead_label")
+        target["required_route_id"] = "wrong_route"
+        target["research_material_pool_id"] = "wrong_pool"
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertTrue(any("missing required field next_lead_label" in failure for failure in failures), failures)
+        self.assertTrue(any("required_route_id must equal route_context" in failure for failure in failures), failures)
+        self.assertTrue(any("unsupported regional metadata: research_material_pool_id" in failure for failure in failures), failures)
+
+        target["next_lead_label"] = "Next lead: x=123"
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertTrue(any("next_lead_label must not contain coordinates" in failure for failure in failures), failures)
 
     def test_requires_dedicated_list_and_unique_ids(self) -> None:
         map_data = valid_map()

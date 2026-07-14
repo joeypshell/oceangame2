@@ -15,6 +15,7 @@ from production_level_01_expansion_10 import (
     camera_tests as expansion_10_camera_tests,
     regional_journeys as expansion_10_regional_journeys,
     source_provenance as expansion_10_source_provenance,
+    survey_targets as expansion_10_survey_targets,
     zones as expansion_10_zones,
 )
 
@@ -410,7 +411,7 @@ def build_map_data(source_map: dict) -> dict:
         "route_objectives": gameplay["route_objectives"],
         "primary_route_objective_id": gameplay["primary_route_objective_id"],
         "next_dive_objective_prompts": gameplay["next_dive_objective_prompts"],
-        "survey_targets": gameplay["survey_targets"],
+        "survey_targets": [*gameplay["survey_targets"], *expansion_10_survey_targets()],
         "material_candidate_pools": gameplay["material_candidate_pools"],
         "material_projects": gameplay["material_projects"],
         "background": [*gameplay["background"], *expansion_10_background()],
