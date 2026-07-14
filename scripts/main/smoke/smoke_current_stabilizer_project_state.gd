@@ -31,7 +31,7 @@ func _run() -> void:
 	var runtime := MaterialProjectRuntime.new(profile)
 	var source_report: Dictionary = runtime.on_map_loaded(world)
 	_expect(source_report.get("project_ids") == [ExpansionProfileState.PROPULSION_FINS_PROJECT_ID, ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, ExpansionProfileState.SHOCK_PROD_PROJECT_ID, ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID, ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID], "source catalog did not keep advanced current project optional and last")
-	_expect(source_report.get("project_id") == ExpansionProfileState.PROPULSION_FINS_PROJECT_ID, "migrated pre-fins profile did not select the new recipe project")
+	_expect(source_report.get("project_id") == ExpansionProfileState.SHOCK_PROD_PROJECT_ID, "status-aware selection did not surface the migrated profile's first ready project")
 	profile.complete_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID, true)
 	profile.deposit_materials({ExpansionProfileState.RUBBER_MATERIAL_ID: 1}, true)
 	var fins_completed: Dictionary = runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
@@ -93,7 +93,7 @@ func _run() -> void:
 			push_error("Current stabilizer project smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Current stabilizer project state smoke passed: schema=v2_to_v3 mandatory=fins>cutter>shock_prod>capacitor optional_last=current_stabilizer migrated_fins=Ti2+Rubber1 prerequisite=true recipe=2_titanium+1_coil night_only=true exact_once=true profile_reload=true.")
+	print("Current stabilizer project state smoke passed: schema=v2_to_v3 selection=status_aware mandatory=fins>cutter>shock_prod>capacitor optional_last=current_stabilizer migrated_fins=Ti2+Rubber1 prerequisite=true recipe=2_titanium+1_coil night_only=true exact_once=true profile_reload=true.")
 	quit(0)
 
 

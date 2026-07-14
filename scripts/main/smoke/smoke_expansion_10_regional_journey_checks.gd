@@ -35,34 +35,7 @@ var _traversed_gate_ids: Array[String] = []
 
 
 func _smoke_expansion_10_regional_journey_and_quit() -> void:
-	if not _require(_world.map_id == MAP_ID, "loaded unexpected map %s" % _world.map_id):
-		return
-	if not _require(_world.get_world_connectors().is_empty(), "full level contains connectors"):
-		return
-	var collision := _player.get_node_or_null("CollisionShape2D") as CollisionShape2D
-	if not _require(collision != null and collision.shape is RectangleShape2D and not collision.disabled, "player collision is unavailable"):
-		return
-	_body_size = (collision.shape as RectangleShape2D).size
-	_starting_health = int(_main._player_health.current_health)
-	_minimum_oxygen = _oxygen_seconds
-	if not _verify_fresh_profile():
-		return
-	if not _require(_world.is_inside_boat(_player.global_position), "journey did not begin at the canonical boat"):
-		return
-
-	_prepare_controlled_movement()
-	await get_tree().physics_frame
-	if not await _prove_pre_fins_denial():
-		return
-	if not await _recover_blueprint():
-		return
-	if not await _collect_and_bank_recipe():
-		return
-	if not _build_fins_and_begin_day_two():
-		return
-	if not await _acquire_scanner():
-		return
-	if not await _complete_regional_journey():
+	if not await run_to_committed_signal_reef():
 		return
 
 	var day_report: Dictionary = _main._expedition_day_state.report()
@@ -93,18 +66,49 @@ func _smoke_expansion_10_regional_journey_and_quit() -> void:
 	])
 	get_tree().quit(0)
 
+func run_to_committed_signal_reef() -> bool:
+	if not _require(_world.map_id == MAP_ID, "loaded unexpected map %s" % _world.map_id):
+		return false
+	if not _require(_world.get_world_connectors().is_empty(), "full level contains connectors"):
+		return false
+	var collision := _player.get_node_or_null("CollisionShape2D") as CollisionShape2D
+	if not _require(collision != null and collision.shape is RectangleShape2D and not collision.disabled, "player collision is unavailable"):
+		return false
+	_body_size = (collision.shape as RectangleShape2D).size
+	_starting_health = int(_main._player_health.current_health)
+	_minimum_oxygen = _oxygen_seconds
+	if not _verify_fresh_profile():
+		return false
+	if not _require(_world.is_inside_boat(_player.global_position), "journey did not begin at the canonical boat"):
+		return false
+
+	_prepare_controlled_movement()
+	await get_tree().physics_frame
+	if not await _prove_pre_fins_denial():
+		return false
+	if not await _recover_blueprint():
+		return false
+	if not await _collect_and_bank_recipe():
+		return false
+	if not _build_fins_and_begin_day_two():
+		return false
+	if not await _acquire_scanner():
+		return false
+	if not await _complete_regional_journey():
+		return false
+	return true
 
 func _verify_fresh_profile() -> bool:
 	var profile = _main._anomaly_survey.profile_state()
 	var report: Dictionary = profile.report()
+	var storage_status := str(profile.last_storage_report().get("status", ""))
 	return (
-		_require(str(profile.last_storage_report().get("status", "")) == "memory", "smoke loaded a durable profile")
+		_require(storage_status in ["memory", "missing"], "smoke loaded an existing durable profile")
 		and _require(report.get("completed_discoveries", []).is_empty(), "fresh profile already has discoveries")
 		and _require(report.get("unlocked_capabilities", []).is_empty(), "fresh profile already has capabilities")
 		and _require(report.get("material_inventory", {}).is_empty(), "fresh profile already has materials")
 		and _require(report.get("completed_projects", []).is_empty(), "fresh profile already has projects")
 	)
-
 
 func _prove_pre_fins_denial() -> bool:
 	var landmark_center: Vector2 = FullLevelNavigation.new().marker_center(_world, LANDMARK_ID)
@@ -140,7 +144,6 @@ func _prove_pre_fins_denial() -> bool:
 		return false
 	return await _return_to_boat("pre_fins_return", navigation)
 
-
 func _recover_blueprint() -> bool:
 	var profile = _main._anomaly_survey.profile_state()
 	var container := _container_by_id(BLUEPRINT_CONTAINER_ID)
@@ -159,7 +162,6 @@ func _recover_blueprint() -> bool:
 	if not _require(_main._progression_containers.is_opened(BLUEPRINT_CONTAINER_ID), "blueprint container did not open"):
 		return false
 	return await _return_to_boat("blueprint_return", navigation)
-
 
 func _collect_and_bank_recipe() -> bool:
 	var profile = _main._anomaly_survey.profile_state()
@@ -186,7 +188,6 @@ func _collect_and_bank_recipe() -> bool:
 		and profile.material_quantity(ExpansionProfileState.RUBBER_MATERIAL_ID) == 1,
 		"banked recipe was not exactly titanium 2 and rubber 1"
 	)
-
 
 func _build_fins_and_begin_day_two() -> bool:
 	var profile = _main._anomaly_survey.profile_state()
@@ -220,7 +221,6 @@ func _build_fins_and_begin_day_two() -> bool:
 		and _require(not _gate_by_id(REGIONAL_GATE_IDS[0]).is_empty(), "day two lost the regional current passage")
 		and _require(FullLevelNavigation.new().marker_center(_world, LANDMARK_ID).x >= 0.0, "day two lost the Signal Reef landmark")
 	)
-
 
 func _acquire_scanner() -> bool:
 	var cache := _salvage_by_id(CACHE_ID)
@@ -452,7 +452,7 @@ func _blocked_salvage_ids(allowed_id := "") -> Array[String]:
 	var ids: Array[String] = []
 	for salvage in _world.get_salvage_centers():
 		var salvage_id := str(salvage.get("id", ""))
-		if salvage_id != allowed_id:
+		if salvage_id != allowed_id and not _world.is_salvage_collected(salvage_id):
 			ids.append(salvage_id)
 	return ids
 

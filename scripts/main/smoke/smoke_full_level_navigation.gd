@@ -56,8 +56,14 @@ func build(
 			continue
 		var gate_rect: Rect2 = gate.get("rect", Rect2())
 		_block_expanded_rect(gate_rect, body_half + Vector2.ONE * INTERACTION_CLEARANCE_PX)
+	var material_report: Dictionary = world.get_material_candidate_report()
+	var active_material_ids: Array = material_report.get("active_ids", [])
+	var depleted_material_ids: Array = material_report.get("depleted_ids", [])
 	for candidate in world.get_material_candidates():
-		if str(candidate.get("id", "")) == collectible_material_id:
+		var candidate_id := str(candidate.get("id", ""))
+		if candidate_id == collectible_material_id:
+			continue
+		if not active_material_ids.has(candidate_id) or depleted_material_ids.has(candidate_id):
 			continue
 		_block_circle(
 			candidate.get("center", Vector2.ZERO),

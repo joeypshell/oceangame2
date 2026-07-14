@@ -23,6 +23,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-07-biological-progression
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-expansion-08-daily-condition-journey
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-09-full-level-journey
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-11-deep-harmonic-light-return
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-loop
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-02-route
@@ -82,6 +83,8 @@ The integrated Expansion 08 smoke verifies baseline day, night-ahead forecast, s
 The integrated Expansion 09 smoke uses active player collision to swim three direct boat-return sorties through the default contiguous `production_level_01`. It reaches the upper-left, lower-right, and lower-left sector anchors without position assignment, connector travel, collision disablement, or oxygen disablement; banks transformed salvage through the canonical boat; and reports route distance, oxygen, daylight, health, cargo, profile, day, and connector state. CI and release validation run it as `--smoke-expansion-09-full-level-journey`.
 
 The integrated Expansion 10 smoke starts from a memory-only fresh profile, proves the pre-fins current denial, recovers and builds the authored fins recipe at night, earns the scanner, then swims the collision-active Signal Reef route out and back without teleport or connector travel. It reports source ids, world positions, route distance, oxygen/day state, pending survey state, boat commitment, and the next-expedition lead. CI and release validation run it as `--smoke-expansion-10-regional-journey`.
+
+The integrated Expansion 11 smoke reuses that real prerequisite journey with an isolated temporary profile, scouts the harmonic target before light, banks Ti1+Coil1+Gel1 through cargo-capacity pressure, builds the durable light during a real night debrief, verifies next-day readability and failure cleanup, then swims the harmonic return and commits its discovery only at the canonical boat. It checks duplicate prevention and reload before deleting the temporary profile. CI and release validation run it as `--smoke-expansion-11-deep-harmonic-light-return`.
 
 The salvage-loop smoke check loads the default production level, collects authored salvage through the same runtime methods used in play, returns to extraction, confirms completion, resets, and exits.
 

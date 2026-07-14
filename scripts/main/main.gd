@@ -88,6 +88,7 @@ const SmokeExpansion07BiologicalJourneyChecks := preload("res://scripts/main/smo
 const SmokeExpansion08DailyConditionJourneyChecks := preload("res://scripts/main/smoke/smoke_expansion_08_daily_condition_journey_checks.gd")
 const SmokeExpansion09FullLevelJourneyChecks := preload("res://scripts/main/smoke/smoke_expansion_09_full_level_journey_checks.gd")
 const SmokeExpansion10RegionalJourneyChecks := preload("res://scripts/main/smoke/smoke_expansion_10_regional_journey_checks.gd")
+const SmokeExpansion11LightReturnChecks := preload("res://scripts/main/smoke/smoke_expansion_11_light_return_checks.gd")
 const SmokeReleaseJourneyChecks := preload("res://scripts/main/smoke/smoke_release_journey_checks.gd")
 const UpgradeChestCapture := preload("res://scripts/main/captures/upgrade_chest_capture.gd")
 const DEFAULT_MAP_PATH := MapCatalog.DEFAULT_MAP_PATH
@@ -424,6 +425,7 @@ func _ready() -> void:
 	var smoke_expansion_08_daily_condition_journey := _has_arg(user_args, engine_args, "--smoke-expansion-08-daily-condition-journey")
 	var smoke_expansion_09_full_level_journey := _has_arg(user_args, engine_args, "--smoke-expansion-09-full-level-journey")
 	var smoke_expansion_10_regional_journey := _has_arg(user_args, engine_args, "--smoke-expansion-10-regional-journey")
+	var smoke_expansion_11_light_return := _has_arg(user_args, engine_args, "--smoke-expansion-11-deep-harmonic-light-return")
 	var requested_map_path := MapCatalog.requested_map_path(user_args, engine_args)
 	var measure_map_runtime := _has_arg(user_args, engine_args, "--measure-map-runtime")
 	var parity_output_path := _arg_value(user_args, engine_args, "--parity-output")
@@ -619,6 +621,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
 	elif smoke_expansion_10_regional_journey:
 		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
+	elif smoke_expansion_11_light_return:
+		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
 	elif not requested_map_path.is_empty():
 		selected_map_path = requested_map_path
 
@@ -741,11 +745,13 @@ func _ready() -> void:
 		or smoke_expansion_08_daily_condition_journey
 		or smoke_expansion_09_full_level_journey
 		or smoke_expansion_10_regional_journey
+		or smoke_expansion_11_light_return
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
 		or _has_arg(user_args, engine_args, "--capture-camera-tests")
 	)
 	var profile_persistence_enabled := ReviewProfileMode.persistence_enabled(automated_review, _fresh_review_profile_enabled)
-	_anomaly_survey = AnomalySurveyRuntime.new(_progression_runtime, profile_persistence_enabled)
+	var profile_state = SmokeExpansion11LightReturnChecks.create_clean_profile() if smoke_expansion_11_light_return else null
+	_anomaly_survey = AnomalySurveyRuntime.new(_progression_runtime, profile_persistence_enabled, profile_state)
 	_progression_runtime.set_profile_state(_anomaly_survey.profile_state())
 	_material_runtime = MaterialRuntimeController.new(_anomaly_survey.profile_state())
 	_material_project = MaterialProjectRuntime.new(_anomaly_survey.profile_state())
@@ -895,6 +901,9 @@ func _ready() -> void:
 		return
 	if smoke_expansion_10_regional_journey:
 		await SmokeExpansion10RegionalJourneyChecks.new(self)._smoke_expansion_10_regional_journey_and_quit()
+		return
+	if smoke_expansion_11_light_return:
+		await SmokeExpansion11LightReturnChecks.new(self)._smoke_expansion_11_light_return_and_quit()
 		return
 	if smoke_oxygen_pressure:
 		_smoke_interaction_checks._smoke_oxygen_pressure_and_quit()

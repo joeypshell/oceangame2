@@ -258,6 +258,22 @@ jobs:
             exit 1
           fi
 
+      - name: Run Expansion 11 deep-harmonic light-return smoke check
+        run: |
+          set +e
+          timeout 420s godot --headless --path . --smoke-expansion-11-deep-harmonic-light-return 2>&1 | tee godot-expansion-11-light-return.log
+          godot_status=${PIPESTATUS[0]}
+          set -e
+
+          if [ "${godot_status}" -ne 0 ]; then
+            exit "${godot_status}"
+          fi
+
+          if grep -E "SCRIPT ERROR|ERROR:" godot-expansion-11-light-return.log; then
+            echo "Godot reported errors during Expansion 11 light-return smoke check."
+            exit 1
+          fi
+
       - name: Measure promoted full-level default startup and camera bounds
         run: |
           set +e
