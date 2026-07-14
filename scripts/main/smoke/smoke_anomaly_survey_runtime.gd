@@ -208,6 +208,7 @@ func _exercise_harmonic_return(runtime, progression, profile, world, player) -> 
 	var partial: Dictionary = runtime.update(world, player, 1.0)
 	var partial_progress := float(partial.get("survey", {}).get("progress", 0.0))
 	_expect(partial_progress > 0.0 and partial_progress < 1.0, "light-owned harmonic survey did not report partial progress")
+	_expect(runtime.overlay_text(world, player).is_empty(), "light-owned harmonic survey retained the pre-light requirement clue")
 	player.global_position = Vector2.ZERO
 	var canceled: Dictionary = runtime.update(world, player, 0.0)
 	_expect(canceled.get("state") == "canceled", "leaving harmonic range did not cancel partial progress")

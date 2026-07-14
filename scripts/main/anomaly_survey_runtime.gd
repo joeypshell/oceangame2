@@ -162,6 +162,9 @@ func overlay_text(world, player) -> String:
 			return _completed_overlay_text(nearby_target)
 		if _is_finding_target(nearby_target):
 			var clue := str(nearby_target.get("clue_label", "Mineral trace")).strip_edges()
+			var light_capability_id := str(nearby_target.get("required_light_capability_id", "")).strip_edges()
+			if has_scanner() and not light_capability_id.is_empty() and _profile.has_capability(light_capability_id):
+				return ""
 			return clue if has_scanner() else "%s | Scanner required" % clue
 	if _profile.has_completed_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID):
 		return "Discovery logged | Lower-right anomaly"
