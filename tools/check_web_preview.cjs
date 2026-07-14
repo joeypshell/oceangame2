@@ -336,7 +336,7 @@ async function inspectPreview(browser, url, viewport, outputPath, pageOptions = 
 }
 
 async function probeMobileControls(page, canvasRect) {
-	// These logical points mirror mobile_test_controls.gd and sample both extremes of the action grid.
+	// These logical points mirror the eight-command grid in mobile_test_controls.gd.
 	const probes = [
 		{
 			name: "stick_down",
@@ -350,13 +350,13 @@ async function probeMobileControls(page, canvasRect) {
 		},
 		{
 			name: "project_button",
-			point: { x: 1048, y: 486 },
-			region: { left: 984, top: 446, width: 128, height: 80 },
+			point: { x: 910, y: 486 },
+			region: { left: 846, top: 446, width: 128, height: 80 },
 		},
 		{
 			name: "attack_button",
-			point: { x: 1186, y: 576 },
-			region: { left: 1122, top: 536, width: 128, height: 80 },
+			point: { x: 1048, y: 576 },
+			region: { left: 984, top: 536, width: 128, height: 80 },
 		},
 	];
 	const client = await page.context().newCDPSession(page);
