@@ -19,6 +19,7 @@ def propulsion_blueprint_container() -> dict:
         "interaction": "interact",
         "reward_type": "blueprint",
         "reward_id": PROPULSION_BLUEPRINT_ID,
+        "reward_label": "Propulsion fins",
         "route_context": "lower_loop_reward",
         "intent": "Guaranteed pre-gate recovered plan that reveals the propulsion-fins recipe.",
     }

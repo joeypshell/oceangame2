@@ -253,13 +253,13 @@ Capture the focused Pass 21 world-connector arrival view:
 
 This explicitly loads `production_slice_01`, moves the player to `lower_left_loop_connector`, triggers the source-authored transition into `production_slice_04`, frames compact `Arrived: Lower-left loop` and return-connector feedback, keeps map data and accepted baselines unchanged, and writes `visual_captures/pass_21_world_connector/production_slice_04_world_connector_arrival.png`.
 
-Capture the focused blueprint-fins tracker and relay views:
+Capture the focused fins/scanner blueprint-project and current views:
 
 ```powershell
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --capture-upgrade-chest
 ```
 
-This explicitly loads `production_slice_01` and writes desktop plus 844x390 mobile-viewport canvas captures for the explicit blueprint prompt/cue, partial banked/held recipe tracker, post-fins amber relay and `E` prompt, and cyan east stabilizer barrier under `visual_captures/upgrade_chest/`. It does not accept or replace baselines. Do not add `--quit-after 10`; the four-state capture exits on completion and a short frame cap can stop it mid-run.
+This explicitly loads `production_slice_01` and writes desktop plus 844x390 mobile-viewport canvas captures for the fins and scanner blueprint prompts, both partial banked/held recipe trackers, the post-fins standard current, and the advanced relay current under `visual_captures/upgrade_chest/`. It does not accept or replace baselines. Do not add `--quit-after 10`; the six-state capture exits on completion and a short frame cap can stop it mid-run.
 
 Capture the focused moving-hazard dodge view:
 

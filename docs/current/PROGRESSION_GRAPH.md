@@ -9,8 +9,8 @@ Status: **PASS**
 
 | View | Sources | Status | Graph |
 | --- | --- | --- | --- |
-| `slice_provenance` (Production slice provenance) | `maps/production_slice_01.greybox.json`, `maps/production_slice_02.greybox.json`, `maps/production_slice_03.greybox.json`, `maps/production_slice_04.greybox.json` | **PASS** | 87 nodes / 288 edges |
-| `promoted_full_level` (Promoted production level) | `maps/production_level_01.greybox.json` | **PASS** | 66 nodes / 230 edges |
+| `slice_provenance` (Production slice provenance) | `maps/production_slice_01.greybox.json`, `maps/production_slice_02.greybox.json`, `maps/production_slice_03.greybox.json`, `maps/production_slice_04.greybox.json` | **PASS** | 91 nodes / 297 edges |
+| `promoted_full_level` (Promoted production level) | `maps/production_level_01.greybox.json` | **PASS** | 70 nodes / 239 edges |
 
 ## Detailed Canonical View
 
@@ -40,35 +40,35 @@ The table and dependency diagram below describe the promoted full-level view.
 | 3 | `Next dive: Investigate east current` | production_level_01 / upper_right_current_pocket | Lower-loop trail | production_level_01, Lower-loop trail | state/payoff | stage 3 |
 | 4 | `Propulsion fins project` | production_level_01 | Propulsion Fins Blueprint, Titanium Scrap, Rubber Sheet | production_level_01, Propulsion Fins Blueprint, Titanium Scrap | Propulsion Fins | stage 4 |
 | 5 | `Propulsion Fins` | global | Propulsion fins project | Propulsion fins project | Strong east current, Signal Reef current | stage 5 |
+| 6 | `Scanner blueprint chest` | production_level_01 / upper_right_current_pocket | Propulsion Fins | production_level_01, Propulsion Fins | Survey Scanner Blueprint | stage 6 |
 | 6 | `Signal Reef current` | production_level_01 / east_current_signal_reef_route | Propulsion Fins | production_level_01, Propulsion Fins | state/payoff | stage 6 |
 | 6 | `Signal Reef current` | production_level_01 / east_current_signal_reef_route | Propulsion Fins | production_level_01, Propulsion Fins | state/payoff | stage 6 |
 | 6 | `Strong east current` | production_level_01 / upper_right_current_pocket | Propulsion Fins | production_level_01, Propulsion Fins | state/payoff | stage 6 |
 | 6 | `Signal Reef route` | production_level_01 / east_current_signal_reef_route | Propulsion Fins | production_level_01, Propulsion Fins | Survey Signal Reef, Survey deep harmonic | stage 6 |
-| 6 | `Salvage Current Pocket Cache` | production_level_01 / upper_right_current_pocket | Propulsion Fins | production_level_01, Propulsion Fins | state/payoff | stage 6 |
-| 7 | `Survey Scanner 1` | global | Surface Boat Entry, Salvage Current Pocket Cache, wallet 300 | Salvage Current Pocket Cache | Survey anomaly, Survey mineral trace, Glow anemone | stage 7 |
-| 8 | `Glow anemone` | production_level_01 / upper_right_current_pocket | Survey Scanner 1, Propulsion Fins | production_level_01, Survey Scanner 1, Propulsion Fins | Insulating Gel | stage 8 |
-| 8 | `Survey anomaly` | production_level_01 / upper_right_current_pocket | Survey Scanner 1, Propulsion Fins | production_level_01, Survey Scanner 1, Propulsion Fins | Lower Right Anomaly Discovery | stage 8 |
-| 8 | `Survey Signal Reef` | production_level_01 / east_current_signal_reef_route | Survey Scanner 1, Signal Reef route | production_level_01, Survey Scanner 1, Signal Reef route | Lower Right Signal Reef Discovery | stage 8 |
-| 8 | `Survey mineral trace` | production_level_01 / upper_right_current_pocket | Survey Scanner 1, Propulsion Fins | production_level_01, Survey Scanner 1, Propulsion Fins | Upper Right Mineral Trace Research | stage 8 |
-| 9 | `Insulating Gel` | global | none | Glow anemone | state/payoff | stage 9 |
-| 9 | `Lower Right Anomaly Discovery` | production_level_01 / upper_right_current_pocket | Survey anomaly, Surface Boat Entry | Survey anomaly, production_level_01, Surface Boat Entry | state/payoff | stage 9 |
-| 9 | `Lower Right Signal Reef Discovery` | production_level_01 / east_current_signal_reef_route | Survey Signal Reef, Surface Boat Entry | Survey Signal Reef, production_level_01, Surface Boat Entry | state/payoff | stage 9 |
-| 9 | `Upper Right Mineral Trace Research` | production_level_01 / upper_right_current_pocket | Survey mineral trace, Surface Boat Entry | Survey mineral trace, production_level_01, Surface Boat Entry | state/payoff | stage 9 |
-| 10 | `Dive light project` | production_level_01 | Lower Right Signal Reef Discovery, Titanium Scrap, Conductive Coil, Insulating Gel | production_level_01, Lower Right Signal Reef Discovery, Titanium Scrap | Dive Light 1 | stage 10 |
-| 10 | `Salvage Cutter Project` | production_level_01 | Lower Right Anomaly Discovery, Titanium Scrap, Conductive Coil | production_level_01, Lower Right Anomaly Discovery, Titanium Scrap | Salvage Cutter | stage 10 |
-| 11 | `Dive Light 1` | global | Dive light project | Dive light project | Dark pocket, Deep harmonic dark water | stage 11 |
-| 11 | `Salvage Cutter` | global | Salvage Cutter Project | Salvage Cutter Project | state/payoff | stage 11 |
-| 11 | `Shock prod project` | production_level_01 | Salvage Cutter Project, Lower Right Anomaly Discovery, Titanium Scrap, Conductive Coil | production_level_01, Salvage Cutter Project, Lower Right Anomaly Discovery | Shock Prod | stage 11 |
-| 12 | `Shock Prod` | global | Shock prod project | Shock prod project | state/payoff | stage 12 |
-| 12 | `Survey deep harmonic` | production_level_01 / east_current_signal_reef_route | Survey Scanner 1, Dive Light 1, Signal Reef route | production_level_01, Survey Scanner 1, Dive Light 1 | Signal Reef Deep Harmonic Discovery | stage 12 |
-| 12 | `sealed wreck` | production_level_01 | Salvage Cutter | production_level_01, Salvage Cutter | state/payoff | stage 12 |
-| 13 | `Defeat Deep Cache Territorial Eel` | production_level_01 / deep_cache_pressure | Deep Cache Territorial Eel, Shock Prod | Deep Cache Territorial Eel, Shock Prod | state/payoff | stage 13 |
-| 13 | `Signal Reef Deep Harmonic Discovery` | production_level_01 / east_current_signal_reef_route | Survey deep harmonic, Surface Boat Entry | Survey deep harmonic, production_level_01, Surface Boat Entry | state/payoff | stage 13 |
-| 14 | `Eel electrocyte` | production_level_01 / deep_cache_pressure | Defeat Deep Cache Territorial Eel | production_level_01, Defeat Deep Cache Territorial Eel | Eel Electrocyte | stage 14 |
-| 14 | `deep cache` | production_level_01 | Defeat Deep Cache Territorial Eel | production_level_01, Defeat Deep Cache Territorial Eel | state/payoff | stage 14 |
-| 15 | `Eel Electrocyte` | global | none | Eel electrocyte | state/payoff | stage 15 |
-| 16 | `Shock-prod capacitor project` | production_level_01 | Shock prod project, Lower Right Anomaly Discovery, Conductive Coil, Insulating Gel, Eel Electrocyte | production_level_01, Shock prod project, Lower Right Anomaly Discovery | Shock Prod Capacitor | stage 16 |
-| 17 | `Shock Prod Capacitor` | global | Shock-prod capacitor project | Shock-prod capacitor project | state/payoff | stage 17 |
+| 7 | `Survey Scanner Blueprint` | production_level_01 | Scanner blueprint chest | Scanner blueprint chest | state/payoff | stage 7 |
+| 8 | `Survey scanner project` | production_level_01 | Survey Scanner Blueprint, Titanium Scrap, Conductive Coil | production_level_01, Survey Scanner Blueprint, Titanium Scrap | Survey Scanner 1 | stage 8 |
+| 9 | `Survey Scanner 1` | global | Survey scanner project | Survey scanner project | state/payoff | stage 9 |
+| 10 | `Glow anemone` | production_level_01 / upper_right_current_pocket | Survey Scanner 1, Propulsion Fins | production_level_01, Survey Scanner 1, Propulsion Fins | Insulating Gel | stage 10 |
+| 10 | `Survey anomaly` | production_level_01 / upper_right_current_pocket | Survey Scanner 1, Propulsion Fins | production_level_01, Survey Scanner 1, Propulsion Fins | Lower Right Anomaly Discovery | stage 10 |
+| 10 | `Survey Signal Reef` | production_level_01 / east_current_signal_reef_route | Survey Scanner 1, Signal Reef route | production_level_01, Survey Scanner 1, Signal Reef route | Lower Right Signal Reef Discovery | stage 10 |
+| 11 | `Insulating Gel` | global | none | Glow anemone | state/payoff | stage 11 |
+| 11 | `Lower Right Anomaly Discovery` | production_level_01 / upper_right_current_pocket | Survey anomaly, Surface Boat Entry | Survey anomaly, production_level_01, Surface Boat Entry | state/payoff | stage 11 |
+| 11 | `Lower Right Signal Reef Discovery` | production_level_01 / east_current_signal_reef_route | Survey Signal Reef, Surface Boat Entry | Survey Signal Reef, production_level_01, Surface Boat Entry | state/payoff | stage 11 |
+| 12 | `Dive light project` | production_level_01 | Lower Right Signal Reef Discovery, Titanium Scrap, Conductive Coil, Insulating Gel | production_level_01, Lower Right Signal Reef Discovery, Titanium Scrap | Dive Light 1 | stage 12 |
+| 12 | `Salvage Cutter Project` | production_level_01 | Lower Right Anomaly Discovery, Titanium Scrap, Conductive Coil | production_level_01, Lower Right Anomaly Discovery, Titanium Scrap | Salvage Cutter | stage 12 |
+| 13 | `Dive Light 1` | global | Dive light project | Dive light project | Dark pocket, Deep harmonic dark water | stage 13 |
+| 13 | `Salvage Cutter` | global | Salvage Cutter Project | Salvage Cutter Project | state/payoff | stage 13 |
+| 13 | `Shock prod project` | production_level_01 | Salvage Cutter Project, Lower Right Anomaly Discovery, Titanium Scrap, Conductive Coil | production_level_01, Salvage Cutter Project, Lower Right Anomaly Discovery | Shock Prod | stage 13 |
+| 14 | `Shock Prod` | global | Shock prod project | Shock prod project | state/payoff | stage 14 |
+| 14 | `Survey deep harmonic` | production_level_01 / east_current_signal_reef_route | Survey Scanner 1, Dive Light 1, Signal Reef route | production_level_01, Survey Scanner 1, Dive Light 1 | Signal Reef Deep Harmonic Discovery | stage 14 |
+| 14 | `sealed wreck` | production_level_01 | Salvage Cutter | production_level_01, Salvage Cutter | state/payoff | stage 14 |
+| 15 | `Defeat Deep Cache Territorial Eel` | production_level_01 / deep_cache_pressure | Deep Cache Territorial Eel, Shock Prod | Deep Cache Territorial Eel, Shock Prod | state/payoff | stage 15 |
+| 15 | `Signal Reef Deep Harmonic Discovery` | production_level_01 / east_current_signal_reef_route | Survey deep harmonic, Surface Boat Entry | Survey deep harmonic, production_level_01, Surface Boat Entry | state/payoff | stage 15 |
+| 16 | `Eel electrocyte` | production_level_01 / deep_cache_pressure | Defeat Deep Cache Territorial Eel | production_level_01, Defeat Deep Cache Territorial Eel | Eel Electrocyte | stage 16 |
+| 16 | `deep cache` | production_level_01 | Defeat Deep Cache Territorial Eel | production_level_01, Defeat Deep Cache Territorial Eel | state/payoff | stage 16 |
+| 17 | `Eel Electrocyte` | global | none | Eel electrocyte | state/payoff | stage 17 |
+| 18 | `Shock-prod capacitor project` | production_level_01 | Shock prod project, Lower Right Anomaly Discovery, Conductive Coil, Insulating Gel, Eel Electrocyte | production_level_01, Shock prod project, Lower Right Anomaly Discovery | Shock Prod Capacitor | stage 18 |
+| 19 | `Shock Prod Capacitor` | global | Shock-prod capacitor project | Shock-prod capacitor project | state/payoff | stage 19 |
 
 ## Soft Pressure Annotations
 
@@ -86,176 +86,170 @@ flowchart LR
     n5["Shock Prod"]
     n6["Shock Prod Capacitor"]
     n7["Survey Scanner 1"]
-    n22["Conductive Coil"]
-    n23["Eel Electrocyte"]
-    n24["Insulating Gel"]
-    n25["Rubber Sheet"]
-    n26["Titanium Scrap"]
+    n23["Conductive Coil"]
+    n24["Eel Electrocyte"]
+    n25["Insulating Gel"]
+    n26["Rubber Sheet"]
+    n27["Titanium Scrap"]
   end
   subgraph production_level_01["production_level_01"]
     n0["Eel electrocyte"]
     n1["Glow anemone"]
-    n8["Fins blueprint chest"]
-    n9["Defeat Deep Cache Territorial Eel"]
-    n10["Lower Right Anomaly Discovery"]
-    n11["Lower Right Signal Reef Discovery"]
-    n12["Propulsion Fins Blueprint"]
-    n13["Signal Reef Deep Harmonic Discovery"]
-    n14["Upper Right Mineral Trace Research"]
-    n15["Surface Boat Entry"]
-    n16["Signal Reef current"]
+    n8["Scanner blueprint chest"]
+    n9["Fins blueprint chest"]
+    n10["Defeat Deep Cache Territorial Eel"]
+    n11["Lower Right Anomaly Discovery"]
+    n12["Lower Right Signal Reef Discovery"]
+    n13["Propulsion Fins Blueprint"]
+    n14["Signal Reef Deep Harmonic Discovery"]
+    n15["Survey Scanner Blueprint"]
+    n16["Surface Boat Entry"]
     n17["Signal Reef current"]
-    n18["Strong east current"]
-    n19["Deep Cache Territorial Eel"]
-    n20["Lower Right Signal Reef Landmark"]
-    n21["production_level_01"]
-    n27["Conductive Coil Pool"]
-    n28["Rubber Sheet Pool"]
-    n29["Titanium Scrap Pool"]
-    n30["Lower-loop trail"]
-    n31["Dark pocket"]
-    n32["Deep harmonic dark water"]
-    n33["Dive light project"]
-    n34["Propulsion fins project"]
-    n35["Salvage Cutter Project"]
-    n36["Shock-prod capacitor project"]
-    n37["Shock prod project"]
-    n38["Next dive: Investigate east current"]
-    n39["Signal Reef route"]
-    n40["Salvage Current Pocket Cache"]
-    n41["deep cache"]
-    n42["Salvage Lower Loop"]
-    n43["Salvage Southwest Return Cache"]
-    n44["Survey anomaly"]
-    n45["Survey Signal Reef"]
-    n46["Survey deep harmonic"]
-    n47["Survey mineral trace"]
+    n18["Signal Reef current"]
+    n19["Strong east current"]
+    n20["Deep Cache Territorial Eel"]
+    n21["Lower Right Signal Reef Landmark"]
+    n22["production_level_01"]
+    n28["Conductive Coil Pool"]
+    n29["Rubber Sheet Pool"]
+    n30["Titanium Scrap Pool"]
+    n31["Lower-loop trail"]
+    n32["Dark pocket"]
+    n33["Deep harmonic dark water"]
+    n34["Dive light project"]
+    n35["Propulsion fins project"]
+    n36["Salvage Cutter Project"]
+    n37["Shock-prod capacitor project"]
+    n38["Shock prod project"]
+    n39["Survey scanner project"]
+    n40["Next dive: Investigate east current"]
+    n41["Signal Reef route"]
+    n42["deep cache"]
+    n43["Salvage Lower Loop"]
+    n44["Salvage Southwest Return Cache"]
+    n45["Survey anomaly"]
+    n46["Survey Signal Reef"]
+    n47["Survey deep harmonic"]
     n48["sealed wreck"]
   end
-  n0 -->|"requires"| n9
-  n0 -->|"requires"| n21
-  n0 -->|"rewards"| n23
+  n0 -->|"requires"| n10
+  n0 -->|"requires"| n22
+  n0 -->|"rewards"| n24
   n1 -->|"requires"| n3
   n1 -->|"requires"| n7
-  n1 -->|"requires"| n21
-  n1 -->|"rewards"| n24
-  n2 -->|"unlocks"| n31
+  n1 -->|"requires"| n22
+  n1 -->|"rewards"| n25
   n2 -->|"unlocks"| n32
-  n2 -->|"requires"| n33
-  n3 -->|"unlocks"| n16
+  n2 -->|"unlocks"| n33
+  n2 -->|"requires"| n34
   n3 -->|"unlocks"| n17
   n3 -->|"unlocks"| n18
-  n3 -->|"requires"| n34
-  n4 -->|"requires"| n35
-  n5 -->|"requires"| n37
-  n6 -->|"requires"| n36
-  n7 -->|"unlocks"| n1
-  n7 -->|"requires"| n15
-  n7 -->|"requires"| n21
-  n7 -->|"requires"| n40
-  n7 -->|"unlocks"| n44
-  n7 -->|"unlocks"| n47
-  n8 -->|"unlocks"| n12
-  n8 -->|"requires"| n21
-  n9 -->|"requires"| n5
-  n9 -->|"requires"| n19
-  n10 -->|"requires"| n15
-  n10 -->|"requires"| n21
-  n10 -->|"requires"| n44
-  n11 -->|"requires"| n15
-  n11 -->|"requires"| n21
+  n3 -->|"unlocks"| n19
+  n3 -->|"requires"| n35
+  n4 -->|"requires"| n36
+  n5 -->|"requires"| n38
+  n6 -->|"requires"| n37
+  n7 -->|"requires"| n39
+  n8 -->|"requires"| n3
+  n8 -->|"unlocks"| n15
+  n8 -->|"requires"| n22
+  n9 -->|"unlocks"| n13
+  n9 -->|"requires"| n22
+  n10 -->|"requires"| n5
+  n10 -->|"requires"| n20
+  n11 -->|"requires"| n16
+  n11 -->|"requires"| n22
   n11 -->|"requires"| n45
-  n12 -->|"requires"| n8
-  n13 -->|"requires"| n15
-  n13 -->|"requires"| n21
-  n13 -->|"requires"| n46
-  n14 -->|"requires"| n15
-  n14 -->|"requires"| n21
+  n12 -->|"requires"| n16
+  n12 -->|"requires"| n22
+  n12 -->|"requires"| n46
+  n13 -->|"requires"| n9
+  n14 -->|"requires"| n16
+  n14 -->|"requires"| n22
   n14 -->|"requires"| n47
-  n15 -->|"requires"| n21
-  n16 -->|"requires"| n3
-  n16 -->|"requires"| n21
+  n15 -->|"requires"| n8
+  n16 -->|"requires"| n22
   n17 -->|"requires"| n3
-  n17 -->|"requires"| n21
+  n17 -->|"requires"| n22
   n18 -->|"requires"| n3
-  n18 -->|"requires"| n21
-  n19 -->|"requires"| n21
-  n19 -->|"guards"| n41
-  n20 -->|"requires"| n21
-  n27 -->|"requires"| n21
-  n27 -->|"rewards"| n22
-  n28 -->|"requires"| n21
-  n28 -->|"rewards"| n25
-  n29 -->|"requires"| n21
+  n18 -->|"requires"| n22
+  n19 -->|"requires"| n3
+  n19 -->|"requires"| n22
+  n20 -->|"requires"| n22
+  n20 -->|"guards"| n42
+  n21 -->|"requires"| n22
+  n28 -->|"requires"| n22
+  n28 -->|"rewards"| n23
+  n29 -->|"requires"| n22
   n29 -->|"rewards"| n26
-  n30 -->|"requires"| n21
-  n30 -->|"requires"| n42
-  n30 -->|"requires"| n43
-  n31 -.->|"requires"| n2
-  n31 -->|"requires"| n21
+  n30 -->|"requires"| n22
+  n30 -->|"rewards"| n27
+  n31 -->|"requires"| n22
+  n31 -->|"requires"| n43
+  n31 -->|"requires"| n44
   n32 -.->|"requires"| n2
-  n32 -->|"requires"| n21
-  n33 -->|"unlocks"| n2
-  n33 -->|"requires"| n11
-  n33 -->|"requires"| n21
+  n32 -->|"requires"| n22
+  n33 -.->|"requires"| n2
   n33 -->|"requires"| n22
-  n33 -->|"requires"| n24
-  n33 -->|"requires"| n26
-  n34 -->|"unlocks"| n3
+  n34 -->|"unlocks"| n2
   n34 -->|"requires"| n12
-  n34 -->|"requires"| n21
+  n34 -->|"requires"| n22
+  n34 -->|"requires"| n23
   n34 -->|"requires"| n25
-  n34 -->|"requires"| n26
-  n35 -->|"unlocks"| n4
-  n35 -->|"requires"| n10
-  n35 -->|"requires"| n21
+  n34 -->|"requires"| n27
+  n35 -->|"unlocks"| n3
+  n35 -->|"requires"| n13
   n35 -->|"requires"| n22
   n35 -->|"requires"| n26
-  n36 -->|"unlocks"| n6
-  n36 -->|"requires"| n10
-  n36 -->|"requires"| n21
+  n35 -->|"requires"| n27
+  n36 -->|"unlocks"| n4
+  n36 -->|"requires"| n11
   n36 -->|"requires"| n22
   n36 -->|"requires"| n23
-  n36 -->|"requires"| n24
-  n36 -->|"requires"| n37
-  n37 -->|"unlocks"| n5
-  n37 -->|"requires"| n10
-  n37 -->|"requires"| n21
+  n36 -->|"requires"| n27
+  n37 -->|"unlocks"| n6
+  n37 -->|"requires"| n11
   n37 -->|"requires"| n22
-  n37 -->|"requires"| n26
-  n37 -->|"requires"| n35
-  n38 -->|"requires"| n21
-  n38 -->|"requires"| n30
-  n39 -->|"requires"| n3
-  n39 -->|"requires"| n21
-  n39 -->|"unlocks"| n45
-  n39 -->|"unlocks"| n46
-  n40 -->|"requires"| n3
-  n40 -->|"funds"| n7
-  n40 -->|"requires"| n21
-  n41 -->|"requires"| n9
-  n41 -->|"requires"| n21
-  n42 -->|"requires"| n21
-  n43 -->|"requires"| n21
-  n44 -->|"requires"| n3
-  n44 -->|"requires"| n7
-  n44 -->|"unlocks"| n10
-  n44 -->|"requires"| n21
+  n37 -->|"requires"| n23
+  n37 -->|"requires"| n24
+  n37 -->|"requires"| n25
+  n37 -->|"requires"| n38
+  n38 -->|"unlocks"| n5
+  n38 -->|"requires"| n11
+  n38 -->|"requires"| n22
+  n38 -->|"requires"| n23
+  n38 -->|"requires"| n27
+  n38 -->|"requires"| n36
+  n39 -->|"unlocks"| n7
+  n39 -->|"requires"| n15
+  n39 -->|"requires"| n22
+  n39 -->|"requires"| n23
+  n39 -->|"requires"| n27
+  n40 -->|"requires"| n22
+  n40 -->|"requires"| n31
+  n41 -->|"requires"| n3
+  n41 -->|"requires"| n22
+  n41 -->|"unlocks"| n46
+  n41 -->|"unlocks"| n47
+  n42 -->|"requires"| n10
+  n42 -->|"requires"| n22
+  n43 -->|"requires"| n22
+  n44 -->|"requires"| n22
+  n45 -->|"requires"| n3
   n45 -->|"requires"| n7
   n45 -->|"unlocks"| n11
-  n45 -->|"requires"| n21
-  n45 -->|"requires"| n39
-  n46 -->|"requires"| n2
+  n45 -->|"requires"| n22
   n46 -->|"requires"| n7
-  n46 -->|"unlocks"| n13
-  n46 -->|"requires"| n21
-  n46 -->|"requires"| n39
-  n47 -->|"requires"| n3
+  n46 -->|"unlocks"| n12
+  n46 -->|"requires"| n22
+  n46 -->|"requires"| n41
+  n47 -->|"requires"| n2
   n47 -->|"requires"| n7
   n47 -->|"unlocks"| n14
-  n47 -->|"requires"| n21
+  n47 -->|"requires"| n22
+  n47 -->|"requires"| n41
   n48 -->|"requires"| n4
-  n48 -->|"requires"| n21
+  n48 -->|"requires"| n22
 ```
 
 ## Diagnostics

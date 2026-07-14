@@ -40,7 +40,7 @@ func prompt_at(world, player_position: Vector2) -> String:
 	if str(container.get("interaction", "instant")) != EXPLICIT_INTERACTION:
 		return ""
 	if str(container.get("reward_type", "")) == "blueprint":
-		return "E: Recover %s" % str(container.get("reward_id", "blueprint")).replace("_", " ")
+		return "E: Recover %s blueprint" % _blueprint_label(container).to_lower()
 	return "E: Open %s" % _display_label(container)
 
 
@@ -99,7 +99,7 @@ func _open_blueprint(world, container: Dictionary, container_id: String, grant_d
 		"state": "opened",
 		"id": container_id,
 		"reward_id": reward_id,
-		"note": "Blueprint recovered: Propulsion fins",
+		"note": "Blueprint recovered: %s" % _blueprint_label(container),
 	}
 
 
@@ -108,3 +108,8 @@ func _display_label(container: Dictionary) -> String:
 	if label.is_empty():
 		label = DEFAULT_LABEL
 	return label.replace("_", " ")
+
+
+func _blueprint_label(container: Dictionary) -> String:
+	var label := str(container.get("reward_label", "")).strip_edges()
+	return label if not label.is_empty() else str(container.get("reward_id", "blueprint")).replace("_", " ").capitalize()

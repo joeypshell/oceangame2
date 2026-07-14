@@ -431,7 +431,8 @@
           "southwest_jellyfish_bloom"
         ],
         "progression_containers": [
-          "lower_loop_upgrade_chest"
+          "lower_loop_upgrade_chest",
+          "east_current_scanner_blueprint_chest"
         ],
         "moving_hazards": [
           "deep_route_jellyfish_patrol",
@@ -462,6 +463,7 @@
         ],
         "material_projects": [
           "propulsion_fins_project",
+          "survey_scanner_project",
           "salvage_cutter_project",
           "shock_prod_project",
           "shock_prod_capacitor_project"
@@ -488,6 +490,7 @@
           "material_titanium_crossing",
           "material_titanium_return",
           "material_titanium_lower_loop",
+          "material_coil_scanner_floor",
           "material_coil_deep_approach",
           "material_coil_deep_cache",
           "salvage_sealed_wreck_cache",
@@ -765,6 +768,22 @@
           "full_global": {
             "x": 76,
             "y": 72,
+            "w": 2,
+            "h": 2
+          }
+        },
+        {
+          "section": "progression_containers",
+          "id": "east_current_scanner_blueprint_chest",
+          "slice_local": {
+            "x": 67,
+            "y": 40,
+            "w": 2,
+            "h": 2
+          },
+          "full_global": {
+            "x": 125,
+            "y": 40,
             "w": 2,
             "h": 2
           }
@@ -1143,6 +1162,18 @@
         },
         {
           "section": "entities",
+          "id": "material_coil_scanner_floor",
+          "slice_local": {
+            "x": 62,
+            "y": 36
+          },
+          "full_global": {
+            "x": 120,
+            "y": 36
+          }
+        },
+        {
+          "section": "entities",
           "id": "material_coil_deep_approach",
           "slice_local": {
             "x": 54,
@@ -1205,12 +1236,12 @@
           "section": "entities",
           "id": "salvage_current_pocket_cache",
           "slice_local": {
-            "x": 69,
-            "y": 40
+            "x": 68,
+            "y": 32
           },
           "full_global": {
-            "x": 127,
-            "y": 40
+            "x": 126,
+            "y": 32
           }
         },
         {
@@ -4626,8 +4657,24 @@
       "interaction": "interact",
       "reward_type": "blueprint",
       "reward_id": "propulsion_fins_blueprint",
+      "reward_label": "Propulsion fins",
       "route_context": "lower_loop_reward",
       "intent": "Guaranteed pre-gate recovered plan that reveals the propulsion-fins recipe."
+    },
+    {
+      "id": "east_current_scanner_blueprint_chest",
+      "container_type": "upgrade_chest",
+      "x": 125,
+      "y": 40,
+      "w": 2,
+      "h": 2,
+      "display_label": "Scanner blueprint chest",
+      "interaction": "interact",
+      "reward_type": "blueprint",
+      "reward_id": "survey_scanner_blueprint",
+      "reward_label": "Survey scanner",
+      "route_context": "upper_right_current_pocket",
+      "intent": "Guaranteed post-fins plan that reveals the survey-scanner recipe."
     }
   ],
   "moving_hazards": [
@@ -4877,8 +4924,12 @@
       "selection_strategy": "day_rotation_v1",
       "select_count": 1,
       "candidate_ids": [
+        "material_coil_scanner_floor",
         "material_coil_deep_approach",
         "material_coil_deep_cache"
+      ],
+      "guaranteed_candidate_ids": [
+        "material_coil_scanner_floor"
       ],
       "research_discovery_id": "upper_right_mineral_trace_research",
       "researched_candidate_ids": [
@@ -4921,6 +4972,19 @@
       "build_phase": "night_debrief",
       "project_label": "Propulsion fins project",
       "completion_label": "Fins installed - east current passable"
+    },
+    {
+      "id": "survey_scanner_project",
+      "required_discovery_id": "survey_scanner_blueprint",
+      "required_materials": {
+        "titanium_scrap": 1,
+        "conductive_coil": 1
+      },
+      "unlocks_capability_id": "survey_scanner_1",
+      "target_id": "lower_right_anomaly_survey",
+      "build_phase": "night_debrief",
+      "project_label": "Survey scanner project",
+      "completion_label": "Survey scanner built"
     },
     {
       "id": "salvage_cutter_project",
@@ -5196,6 +5260,18 @@
       "intent": "Lower-loop titanium candidate rewarding a western side-pocket detour."
     },
     {
+      "id": "material_coil_scanner_floor",
+      "type": "material_candidate",
+      "x": 120,
+      "y": 36,
+      "kind": "crate",
+      "interaction": "material_collect",
+      "material_id": "conductive_coil",
+      "material_quantity": 1,
+      "candidate_pool_id": "conductive_coil_pool",
+      "intent": "Guaranteed pre-scanner coil in an open side pocket; research later favors the deep-cache source."
+    },
+    {
       "id": "material_coil_deep_approach",
       "type": "material_candidate",
       "x": 112,
@@ -5260,13 +5336,13 @@
     {
       "id": "salvage_current_pocket_cache",
       "type": "salvage",
-      "x": 127,
-      "y": 40,
+      "x": 126,
+      "y": 32,
       "kind": "relic",
       "tier": "valuable",
       "validation_route": "propulsion_fins_payoff",
       "route_context": "upper_right_current_pocket",
-      "intent": "Visible valuable scanner-funding payoff behind the first propulsion-fins current gate."
+      "intent": "Optional valuable score payoff in the open upper side room of the first current pocket."
     },
     {
       "id": "material_coil_southwest_bloom",

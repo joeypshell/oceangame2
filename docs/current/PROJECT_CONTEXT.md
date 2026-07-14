@@ -34,7 +34,7 @@ Expansion 09 generated the complete `full_cave_sketch_01` topology as `productio
 
 Expansion 10 completed through #889 plus player-gate correction #900. Propulsion fins now open one passive east-current route through continuous geography to Signal Reef, where a scanner-backed pending discovery commits only at the canonical boat. The correction preserves `production_level_01` through the real night/build/next-day transition. Exact-SHA Web verification passed at `c576d13`, and the player gave GO. The pass adds no teleport, prompted current crossing, pressure capability, broad map population, or second traversal capability.
 
-Expansion 11 is active under milestone #37. The source-state contract, focused validators, durable profile owner, full-level project/dark-harmonic survey source, and light-gated survey/boat-commit runtime are complete. The old 900-score session purchase plus `L`/`LAMP` affordance are retired; integrated journey proof, visual review, Web verification, and the player gate remain.
+Expansion 11 is active under milestone #37. The source-state contract, focused validators, durable profile owner, full-level project/dark-harmonic survey source, and light-gated survey/boat-commit runtime are complete. The old 900-score session purchase plus `L`/`LAMP` affordance are retired. Correction #927 also retires the scanner's 300-wallet shortcut: a guaranteed post-fins blueprint reveals a Ti1/Coil1 night project, while the nearby valuable cache remains optional score. Exact-SHA Web verification and player gate #914 remain.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -62,7 +62,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
 - Completed Expansion 10 handoff: `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md` plus its linked plan, source contract, visual decision, Web verification, and correction #900
-- Active Expansion 11 handoff: `docs/current/OCEANGAME_EXPANSION_11_PLAN.md`, milestone #37, and frozen issues #905-#914 after planning GO on #903
+- Active Expansion 11 handoff: `docs/current/OCEANGAME_EXPANSION_11_PLAN.md`, milestone #37, completed implementation issues #905-#913, scanner correction #927, and player gate #914
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
@@ -201,7 +201,7 @@ Current issue state as of 2026-07-14:
 - Closed: #836 and #838-#843 completed Expansion 08 with a technical GO.
 - Closed: #857-#865 plus correction #875 via PR #876 completed the contiguous full-level foundation, player GO, default promotion, and exact-SHA Web verification.
 - Closed: #880-#889 plus correction #900 via PR #901 completed the east-current regional journey, player GO, and exact-SHA Web verification.
-- Active: #905-#914 are frozen for Expansion 11 after planning GO on #903.
+- Active: Expansion 11 implementation #905-#913 is complete; scanner correction #927 returns the corrected exact-SHA build to the still-open player gate #914.
 - Open bookkeeping: #849 names three UID sidecars already committed by `e825c88`; it does not block planning and should be closed separately with that evidence.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -321,7 +321,7 @@ Current issue state as of 2026-07-14:
 - `lower_loop_oxygen_rest_pocket` provides the Pass 12 limited oxygen-rest beat: compact `Rest pocket +oxygen` feedback, slow recovery up to a 45-second cap, and deterministic `--smoke-pass-12-oxygen-rest-pressure` coverage.
 - The stable `deep_cache_route_objective` id now presents as `Relay trail`: bank `salvage_lower_loop` and `salvage_southwest_return_cache` to complete the opening objective without entering the eel encounter. Propulsion fins instead require the recovered lower-loop blueprint plus Ti2/Rubber1; historical pass docs retain former wording as snapshots.
 - `salvage_pry_locker` provides the Pass 17 staged pry salvage beat: 3 in-range stages at 1.2 seconds each, partial-stage cancel on leaving range, completed-stage persistence during normal exploration, cargo-full blocking without deletion, and deterministic `--smoke-pry-salvage` coverage.
-- Pass 18-20 historically introduced three score purchases. The live session wallet now owns only `O2 tank +15` and `Cargo +1`; `dive_light_1` moved to the durable Signal-Reef-knowledge plus Ti1/Coil1/Gel1 night project. `--smoke-pass-20-light-upgrade` remains a compatibility name but proves there is no score path and that profile-owned light rendering survives reset independently of oxygen/cargo upgrades.
+- Pass 18-20 historically introduced three score purchases. The live session wallet now owns only `O2 tank +15` and `Cargo +1`; `survey_scanner_1` uses a recovered blueprint plus Ti1/Coil1 night project, and `dive_light_1` uses Signal-Reef knowledge plus Ti1/Coil1/Gel1. Historical pass docs may retain the retired scanner purchase as a snapshot, but #927 and the generated progression graph supersede that wording.
 - Salvage map data may include optional `tier` values. Missing tiers default conceptually to `common`; the current supported tiers are `common` and `valuable`. Runtime salvage score is tier-derived for now: `common` is worth 100 and `valuable` is worth 300, and pickup status feedback names the tier and score. Completed expeditions add a small runtime oxygen bonus of 1 point per remaining oxygen second; failed expeditions receive no oxygen bonus.
 - Held salvage capacity is 2 pickups by default and 3 after the session `Cargo +1` upgrade. Full cargo blocks additional collection without hiding or banking the blocked pickup, shows a compact return-to-extraction status prompt, and returning to extraction frees capacity.
 - Run completion shows a compact result panel that now orders objective/payoff text before route and score bookkeeping, then shows score, salvage score, oxygen bonus, current map session-best score, salvage banked, progression/wallet, oxygen, and retry prompt. Maps with `primary_route_objective_id` complete after the primary objective's required salvage is banked and returned to extraction; maps without it preserve all-salvage completion. Route-tagged production-slice completions summarize the strongest banked route as `Route: Deep route` or `Route: Safe route`; Pass 26 adds `Final dive signal locked` when the final-dive result is present, while failed/reset states suppress stale success text. Oxygen depletion shows the same result panel as a failed expedition with zero oxygen bonus and pauses the run until reset without overwriting session best. The panel stays hidden during normal exploration.
@@ -339,7 +339,7 @@ Current issue state as of 2026-07-14:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`, `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md`, and `docs/current/OCEANGAME_EXPANSION_11_PLAN.md` as the current handoff. Resolve only frozen milestone #37 issues #905-#914 in dependency order; do not select Expansion 12 during this batch.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`, `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md`, and `docs/current/OCEANGAME_EXPANSION_11_PLAN.md` as the current handoff. After #927 deploys, return #914 to player GO/HOLD with the exact public SHA; do not select Expansion 12 before that decision.
 
 Accepted constraints for next work:
 
@@ -348,7 +348,7 @@ Accepted constraints for next work:
 - Preserve the complete full-sketch topology as one contiguous level. Do not stitch crop JSONs together or import their artificial edge seals.
 - Keep map topology, collision, spawn, extraction, and camera tests source-driven.
 - Transform the proven slice-01 gameplay overlay through shared source data; do not copy generated JSON by hand.
-- Preserve the scanner, same-map east-pocket anomaly, returned discovery, daylight, surface oxygen, repeated sorties, boat return, night transition, seeded material ownership, canonical-boat commitment, and mandatory fins/cutter/weapon chain.
+- Preserve the blueprint-and-material scanner project, same-map east-pocket anomaly, explicit returned cutter plan, daylight, surface oxygen, repeated sorties, boat return, night transition, seeded material ownership, canonical-boat commitment, and mandatory fins/cutter/weapon chain.
 - Omit prompted connectors, map transitions, and the optional advanced stabilizer gate from normal full-level traversal. Existing slice behavior remains only as a protected reference surface.
 - Keep standard capability gates inside contiguous authored geography and traversable through movement; reserve `E` connectors for explicit exceptional entrances/interiors.
 - Preserve the completed mineral research, fresh-day selection, and broad habitat-lead behavior as the practical-knowledge regression surface.

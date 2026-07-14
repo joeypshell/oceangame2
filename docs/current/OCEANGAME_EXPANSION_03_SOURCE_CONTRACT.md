@@ -68,6 +68,7 @@ Rules:
 - `candidate_ids` is the stable authored order. Runtime must not depend on entity/node iteration order.
 - `day_rotation_v1` derives an offset from map id, pool id, and day number with the documented stable runtime algorithm, then selects `select_count` consecutive ids with wraparound.
 - `select_count` is a positive integer no greater than the candidate count.
+- Optional `guaranteed_candidate_ids` is a unique lower-snake-case subset of `candidate_ids`, contains no more than `select_count` ids, and is selected before deterministic rotating candidates.
 - `titanium_scrap` requires at least four candidates and selects two.
 - `conductive_coil` requires at least two candidates and selects one.
 - Candidate ids are unique within and across pools.

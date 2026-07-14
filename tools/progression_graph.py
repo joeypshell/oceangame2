@@ -244,7 +244,7 @@ class ProgressionGraphBuilder:
             if node.kind == "connector":
                 self._connector_edges(key, item, map_id)
             elif node.kind == "container":
-                self._container_edges(key, item)
+                self._container_edges(key, item, map_id)
             elif node.kind in {"gate", "pressure"}:
                 self._gate_edges(key, item)
             elif node.kind == "objective":
@@ -281,8 +281,8 @@ class ProgressionGraphBuilder:
                 requirement = _requirement_id(gate)
                 if requirement:
                     self.graph.add_edge(key, self.graph.resolve(requirement), "requires", hard=True, note=f"via {gate.get('id')}")
-
-    def _container_edges(self, key: str, item: dict[str, Any]) -> None:
+    def _container_edges(self, key: str, item: dict[str, Any], map_id: str) -> None:
+        self._apply_route_gate(key, item, map_id)
         if item.get("reward_type") != "blueprint":
             return
         discovery_key = self.graph.resolve(str(item.get("reward_id", "")))

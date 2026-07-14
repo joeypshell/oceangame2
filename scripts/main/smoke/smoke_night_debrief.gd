@@ -4,6 +4,7 @@ const MAIN_SCENE := preload("res://scenes/main/Main.tscn")
 const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime.gd")
 const ExpeditionDayDebrief := preload("res://scripts/main/expedition_day_debrief.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+const SmokeProfileProjectFixture := preload("res://scripts/main/smoke/smoke_profile_project_fixture.gd")
 
 const TEST_PROFILE_PATH := "user://oceangame2_night_debrief_smoke.json"
 
@@ -24,7 +25,7 @@ func _run() -> void:
 	_expect(main._world.map_id == "production_level_01", "night smoke did not start on the default full level")
 	var profile := ExpansionProfileState.new(TEST_PROFILE_PATH)
 	profile.load_profile()
-	profile.unlock_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID, true)
+	SmokeProfileProjectFixture.complete_scanner(profile, main._world, true)
 	profile.complete_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID, true)
 	main._anomaly_survey = AnomalySurveyRuntime.new(main._progression_runtime, true, profile)
 	main._anomaly_survey.on_map_loaded(main._world)

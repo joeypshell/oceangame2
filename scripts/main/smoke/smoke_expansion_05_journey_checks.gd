@@ -6,6 +6,7 @@ const ExpansionProfileState := preload("res://scripts/main/expansion_profile_sta
 const MaterialCandidateSelector := preload("res://scripts/main/material_candidate_selector.gd")
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
 const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
+const SmokeProfileProjectFixture := preload("res://scripts/main/smoke/smoke_profile_project_fixture.gd")
 
 const TEST_PROFILE_PATH := "user://oceangame2_expansion_05_journey_smoke.json"
 const MAP_ID := "production_slice_01"
@@ -17,7 +18,7 @@ const OUTBOUND_CONNECTOR_ID := "lower_left_loop_connector"
 const RETURN_CONNECTOR_ID := "return_to_boat_hub_connector"
 const COIL_POOL_ID := "conductive_coil_pool"
 const RESEARCHED_COIL_ID := "material_coil_deep_cache"
-const NORMAL_DAY_THREE_COIL_ID := "material_coil_deep_approach"
+const NORMAL_DAY_THREE_COIL_ID := "material_coil_scanner_floor"
 const RESEARCH_LEAD := "Research lead | Coils near deep-cache machinery"
 
 
@@ -47,7 +48,7 @@ func _smoke_expansion_05_practical_research_and_quit() -> void:
 	_process(0.0)
 	if not _require(_last_status_note == "Scanner required" and not _main._anomaly_survey.has_pending_discovery(), "scanner-less survey was not blocked"):
 		return
-	if not _require(bool(profile.unlock_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID, false).get("changed", false)), "scanner fixture could not unlock"):
+	if not _require(bool(SmokeProfileProjectFixture.complete_scanner(profile, _world).get("changed", false)), "scanner fixture could not build"):
 		return
 
 	_player.global_position = gate["center"]

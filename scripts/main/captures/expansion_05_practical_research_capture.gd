@@ -2,6 +2,7 @@ extends RefCounted
 
 const ExpeditionDayDebrief := preload("res://scripts/main/expedition_day_debrief.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+const ReviewProgressionFixture := preload("res://scripts/main/review_progression_fixture.gd")
 
 const CAPTURE_SIZES := [
 	{"suffix": "1280x720", "size": Vector2i(1280, 720)},
@@ -111,7 +112,7 @@ func _prepare_capture() -> bool:
 	_main.set_process(false)
 	_prepare_runtime_nodes()
 	var profile = _main._anomaly_survey.profile_state()
-	if not bool(profile.unlock_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID, false).get("changed", false)):
+	if not bool(ReviewProgressionFixture.complete_capability(_main, ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID).get("ready", false)):
 		_fail("capture setup could not unlock scanner")
 		return false
 	if not bool(profile.complete_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID, false).get("changed", false)):

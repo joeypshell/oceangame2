@@ -3,6 +3,7 @@ extends "res://scripts/main/smoke/smoke_check_base.gd"
 const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime.gd")
 const ExpeditionDayDebrief := preload("res://scripts/main/expedition_day_debrief.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+const SmokeProfileProjectFixture := preload("res://scripts/main/smoke/smoke_profile_project_fixture.gd")
 
 const TEST_PROFILE_PATH := "user://oceangame2_expedition_day_smoke.json"
 const OUTBOUND_CONNECTOR_ID := "lower_left_loop_connector"
@@ -133,7 +134,7 @@ func _smoke_expedition_day_and_quit() -> void:
 func _prepare_profile() -> void:
 	var profile := ExpansionProfileState.new(TEST_PROFILE_PATH)
 	profile.load_profile()
-	profile.unlock_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID, true)
+	SmokeProfileProjectFixture.complete_scanner(profile, _world, true)
 	profile.complete_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID, true)
 	_main._anomaly_survey = AnomalySurveyRuntime.new(_main._progression_runtime, true, profile)
 	_main._anomaly_survey.on_map_loaded(_world)

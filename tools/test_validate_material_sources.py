@@ -153,6 +153,24 @@ def with_propulsion_project(map_data: dict) -> dict:
     return map_data
 
 
+def with_scanner_project(map_data: dict) -> dict:
+    map_data["survey_targets"] = [{
+        "id": "lower_right_anomaly_survey",
+        "required_capability_id": "survey_scanner_1",
+    }]
+    map_data["material_projects"].insert(0, {
+        "id": "survey_scanner_project",
+        "required_discovery_id": "survey_scanner_blueprint",
+        "required_materials": {"titanium_scrap": 1, "conductive_coil": 1},
+        "unlocks_capability_id": "survey_scanner_1",
+        "target_id": "lower_right_anomaly_survey",
+        "build_phase": "night_debrief",
+        "project_label": "Survey scanner project",
+        "completion_label": "Survey scanner built",
+    })
+    return map_data
+
+
 def with_shock_prod_project(map_data: dict) -> dict:
     with_stabilizer_project(map_data)
     map_data["hostile_encounters"] = [
@@ -236,6 +254,9 @@ class MaterialSourceValidationTests(unittest.TestCase):
     def test_accepts_blueprint_gated_propulsion_project_without_score(self) -> None:
         self.assertEqual(validate_material_source_schema(with_propulsion_project(valid_map())), [])
 
+    def test_accepts_blueprint_gated_scanner_project_without_score(self) -> None:
+        self.assertEqual(validate_material_source_schema(with_scanner_project(valid_map())), [])
+
     def test_accepts_regional_gates_reusing_the_promised_fins_capability(self) -> None:
         map_data = with_propulsion_project(valid_map())
         map_data["zones"].append({
@@ -309,6 +330,19 @@ class MaterialSourceValidationTests(unittest.TestCase):
             "does not reference a material_candidate entity",
         ):
             self.assertTrue(any(expected in failure for failure in failures), expected)
+
+    def test_validates_guaranteed_candidate_subset(self) -> None:
+        map_data = valid_map()
+        pool = map_data["material_candidate_pools"][0]
+        pool["guaranteed_candidate_ids"] = [pool["candidate_ids"][0]]
+        self.assertEqual(validate_material_source_schema(map_data), [])
+        pool["guaranteed_candidate_ids"] = [pool["candidate_ids"][0], pool["candidate_ids"][1], "missing_candidate"]
+        failures = validate_material_source_schema(map_data)
+        self.assertTrue(any("must belong to candidate_ids" in failure for failure in failures), failures)
+        self.assertTrue(any("must not exceed select_count" in failure for failure in failures), failures)
+        pool["guaranteed_candidate_ids"] = [pool["candidate_ids"][0], {"invalid": "id"}]
+        failures = validate_material_source_schema(map_data)
+        self.assertTrue(any("must be a non-empty string" in failure for failure in failures), failures)
 
     def test_rejects_invalid_material_metadata_and_runtime_state(self) -> None:
         map_data = valid_map()

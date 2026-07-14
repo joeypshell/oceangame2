@@ -1,6 +1,7 @@
 extends SceneTree
 
 const MAIN_SCENE := preload("res://scenes/main/Main.tscn")
+const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const PlayerHealthState := preload("res://scripts/main/player_health_state.gd")
 
 var _failures: Array[String] = []
@@ -110,12 +111,21 @@ func _test_focused_state() -> void:
 
 
 func _seed_pending_survey(main) -> void:
-	main._anomaly_survey.profile_state().unlock_capability("survey_scanner_1", false)
-	main._anomaly_survey.activate_lead()
+	var profile = main._anomaly_survey.profile_state()
+	profile.complete_discovery(ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID, false)
+	profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 1, ExpansionProfileState.COIL_MATERIAL_ID: 1}, false)
+	profile.complete_material_project(_project_by_id(main._world, ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID), false)
 	var target: Dictionary = main._world.get_survey_targets()[0]
 	main._player.global_position = target.get("center", Vector2.ZERO)
 	main._anomaly_survey.update(main._world, main._player, float(target.get("interaction_seconds", 1.0)) + 0.1)
 	_expect(main._anomaly_survey.has_pending_discovery(), "survey setup did not create pending state")
+
+
+func _project_by_id(world, project_id: String) -> Dictionary:
+	for project in world.get_material_projects():
+		if str(project.get("id", "")) == project_id:
+			return project
+	return {}
 
 
 func _surface_center_outside_boat(world) -> Vector2:

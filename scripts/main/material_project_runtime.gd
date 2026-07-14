@@ -84,6 +84,14 @@ func has_propulsion_blueprint() -> bool:
 	return _profile != null and _profile.has_completed_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID)
 
 
+func has_scanner() -> bool:
+	return _profile != null and _profile.has_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID)
+
+
+func has_scanner_blueprint() -> bool:
+	return _profile != null and _profile.has_completed_discovery(ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID)
+
+
 func has_current_stabilizer() -> bool:
 	return _profile != null and _profile.has_capability(ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID)
 
@@ -100,9 +108,9 @@ func has_dive_light() -> bool:
 	return _profile != null and _profile.has_capability(ExpansionProfileState.DIVE_LIGHT_CAPABILITY_ID)
 
 
-func propulsion_fins_guidance(map_id := "", scanner_lead_available := false) -> String:
+func propulsion_fins_guidance(map_id := "", scanner_blueprint_recovered := false) -> String:
 	if has_propulsion_fins():
-		if scanner_lead_available or str(map_id) != "production_slice_01":
+		if scanner_blueprint_recovered or str(map_id) != "production_slice_01":
 			return ""
 		return "Fins ready | East current passable | Swim through"
 	var project := _project_by_id(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID)
@@ -118,21 +126,27 @@ func propulsion_fins_guidance(map_id := "", scanner_lead_available := false) -> 
 	return "Fins project unavailable"
 
 
-func active_day_build_feedback(map_id := "", scanner_lead_available := false) -> String:
-	if has_propulsion_fins():
-		var guidance := propulsion_fins_guidance(map_id, scanner_lead_available)
-		return guidance if not guidance.is_empty() else "Fins ready | Already installed"
-	var project := _project_by_id(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID)
+func active_day_build_feedback(map_id := "", scanner_blueprint_recovered := false) -> String:
+	var project := _selected_project()
+	if str(project.get("id", "")) == ExpansionProfileState.PROPULSION_FINS_PROJECT_ID:
+		if has_propulsion_fins():
+			var guidance := propulsion_fins_guidance(map_id, scanner_blueprint_recovered)
+			return guidance if not guidance.is_empty() else "Fins ready | Already installed"
+		return _active_day_feedback_for(project, "Fins")
+	return _active_day_feedback_for(project, _project_prefix(project).trim_suffix(" project"))
+
+
+func _active_day_feedback_for(project: Dictionary, label: String) -> String:
 	var project_status := _status_for(project)
 	if project_status == "knowledge_required":
-		return "Fins project unchanged | Recover blueprint with E at lower-loop chest"
+		return "%s unchanged | Find %s" % [label, _knowledge_label(project)]
 	if project_status == "ready":
-		return "Fins project unchanged | Nothing builds during day | Return to boat, N for night, then P"
+		return "%s unchanged | Nothing builds during day | Return to boat, N for night, then P" % label
 	if project_status == "incomplete":
-		return "Fins project unchanged | %s | Bank materials, then N/P at night" % _material_progress_text(project)
+		return "%s unchanged | %s | Bank materials, then N/P at night" % [label, _material_progress_text(project)]
 	if project_status == "inconsistent_profile":
-		return "Fins project unchanged | Profile repair required"
-	return "Fins project unchanged | Build projects only during night debrief"
+		return "%s unchanged | Profile repair required" % label
+	return "%s unchanged | Build projects only during night debrief" % label
 
 
 func shock_prod_guidance() -> String:
@@ -179,6 +193,7 @@ func report() -> Dictionary:
 		"required_project_id": str(project.get("required_project_id", "")),
 		"required_materials": project.get("required_materials", {}).duplicate(true),
 		"propulsion_required_materials": _project_by_id(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID).get("required_materials", {}).duplicate(true),
+		"scanner_required_materials": _project_by_id(ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID).get("required_materials", {}).duplicate(true),
 		"titanium_banked": _profile.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID) if _profile != null else 0,
 		"rubber_banked": _profile.material_quantity(ExpansionProfileState.RUBBER_MATERIAL_ID) if _profile != null else 0,
 		"coil_banked": _profile.material_quantity(ExpansionProfileState.COIL_MATERIAL_ID) if _profile != null else 0,
@@ -186,6 +201,9 @@ func report() -> Dictionary:
 		"propulsion_blueprint_recovered": has_propulsion_blueprint(),
 		"propulsion_status": status_for(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID),
 		"propulsion_fins_unlocked": has_propulsion_fins(),
+		"scanner_blueprint_recovered": has_scanner_blueprint(),
+		"scanner_status": status_for(ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID),
+		"scanner_unlocked": has_scanner(),
 		"cutter_unlocked": has_cutter(),
 		"current_stabilizer_unlocked": has_current_stabilizer(),
 		"shock_prod_unlocked": has_shock_prod(),
@@ -283,15 +301,19 @@ func _project_prefix(project: Dictionary) -> String:
 
 
 func _project_action_label(project: Dictionary) -> String:
+	if str(project.get("id", "")) == ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID:
+		return "survey scanner"
 	return str(project.get("unlocks_capability_id", "project")).replace("_", " ")
 
 
 func _knowledge_label(project: Dictionary) -> String:
 	if str(project.get("required_discovery_id", "")) == ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID:
-		return "recovered blueprint"
+		return "fins blueprint"
+	if str(project.get("required_discovery_id", "")) == ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID:
+		return "scanner blueprint beyond east current"
 	if str(project.get("required_discovery_id", "")) == ExpansionProfileState.SIGNAL_REEF_DISCOVERY_ID:
 		return "Signal Reef chart"
-	return "anomaly knowledge"
+	return "salvage cutter plan"
 
 
 func _completed_text(project: Dictionary) -> String:
@@ -340,6 +362,8 @@ func _project_effect_lines(project: Dictionary) -> Array[String]:
 	match str(project.get("id", "")):
 		ExpansionProfileState.PROPULSION_FINS_PROJECT_ID:
 			return ["Access: east current pocket | Swim through"]
+		ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID:
+			return ["Use: Q/SCAN for guidance | Hold near survey signals"]
 		ExpansionProfileState.SHOCK_PROD_PROJECT_ID:
 			return ["Use: Space at short range | 1 health damage per hit"]
 		ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID:

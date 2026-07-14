@@ -30,7 +30,7 @@ func _run() -> void:
 	world.load_greybox()
 	var runtime := MaterialProjectRuntime.new(profile)
 	var source_report: Dictionary = runtime.on_map_loaded(world)
-	_expect(source_report.get("project_ids") == [ExpansionProfileState.PROPULSION_FINS_PROJECT_ID, ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, ExpansionProfileState.SHOCK_PROD_PROJECT_ID, ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID, ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID], "source catalog did not keep advanced current project optional and last")
+	_expect(source_report.get("project_ids") == [ExpansionProfileState.PROPULSION_FINS_PROJECT_ID, ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID, ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, ExpansionProfileState.SHOCK_PROD_PROJECT_ID, ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID, ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID], "source catalog did not keep scanner before cutter and advanced current project optional and last")
 	_expect(source_report.get("project_id") == ExpansionProfileState.SHOCK_PROD_PROJECT_ID, "status-aware selection did not surface the migrated profile's first ready project")
 	profile.complete_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID, true)
 	profile.deposit_materials({ExpansionProfileState.RUBBER_MATERIAL_ID: 1}, true)
@@ -84,7 +84,7 @@ func _run() -> void:
 	var next_runtime := MaterialProjectRuntime.new(reloaded)
 	var next_report: Dictionary = next_runtime.on_map_loaded(world)
 	_expect(next_runtime.status_for(ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID) == "completed", "next-day catalog did not retain completed stabilizer")
-	_expect(next_report.get("project_id") == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID and next_runtime.status() == "completed", "next-day catalog did not retain completed optional stabilizer")
+	_expect(next_report.get("project_id") == ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID and next_runtime.status() == "knowledge_required", "synthetic cutter-only legacy profile did not surface its unresolved scanner project")
 
 	world.queue_free()
 	_cleanup_profile()
@@ -93,7 +93,7 @@ func _run() -> void:
 			push_error("Current stabilizer project smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Current stabilizer project state smoke passed: schema=v2_to_v3 selection=status_aware mandatory=fins>cutter>shock_prod>capacitor optional_last=current_stabilizer migrated_fins=Ti2+Rubber1 prerequisite=true recipe=2_titanium+1_coil night_only=true exact_once=true profile_reload=true.")
+	print("Current stabilizer project state smoke passed: schema=v2_to_v3 selection=status_aware mandatory=fins>scanner>cutter>shock_prod>capacitor optional_last=current_stabilizer migrated_fins=Ti2+Rubber1 scanner=Ti1+Coil1 prerequisite=true recipe=2_titanium+1_coil night_only=true exact_once=true profile_reload=true.")
 	quit(0)
 
 

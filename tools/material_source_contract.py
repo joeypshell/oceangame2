@@ -11,11 +11,11 @@ SUPPORTED_MATERIALS = {
     "titanium_scrap", "rubber_sheet", "conductive_coil", "insulating_gel", "eel_electrocyte",
 }
 SUPPORTED_PROJECTS = {
-    "propulsion_fins_project", "salvage_cutter_project", "current_stabilizer_project",
+    "propulsion_fins_project", "survey_scanner_project", "salvage_cutter_project", "current_stabilizer_project",
     "shock_prod_project", "shock_prod_capacitor_project", "dive_light_1_project",
 }
 SUPPORTED_CAPABILITIES = {
-    "propulsion_fins", "salvage_cutter", "current_stabilizer", "shock_prod", "shock_prod_capacitor",
+    "propulsion_fins", "survey_scanner_1", "salvage_cutter", "current_stabilizer", "shock_prod", "shock_prod_capacitor",
     "dive_light_1",
 }
 SUPPORTED_STRATEGIES = {"day_rotation_v1"}
@@ -23,6 +23,7 @@ SUPPORTED_BUILD_PHASES = {"night_debrief"}
 MINIMUM_CANDIDATES = {"titanium_scrap": 4, "rubber_sheet": 2, "conductive_coil": 2}
 EXPECTED_RECIPES = {
     "propulsion_fins_project": {"titanium_scrap": 2, "rubber_sheet": 1},
+    "survey_scanner_project": {"titanium_scrap": 1, "conductive_coil": 1},
     "salvage_cutter_project": {"titanium_scrap": 2, "conductive_coil": 1},
     "current_stabilizer_project": {"titanium_scrap": 2, "conductive_coil": 1},
     "shock_prod_project": {"titanium_scrap": 2, "conductive_coil": 1},
@@ -39,6 +40,13 @@ PROJECT_RULES = {
         "required_discovery_id": "propulsion_fins_blueprint",
         "required_project_id": None,
         "target_field": "target_gate_id",
+    },
+    "survey_scanner_project": {
+        "capability_id": "survey_scanner_1",
+        "required_discovery_id": "survey_scanner_blueprint",
+        "required_project_id": None,
+        "target_field": "target_id",
+        "target_collection": "survey_targets",
     },
     "salvage_cutter_project": {
         "capability_id": "salvage_cutter",

@@ -49,14 +49,14 @@ def expansion_04_entities() -> list[dict]:
         {
             "id": "salvage_current_pocket_cache",
             "type": "salvage",
-            "x": 69,
-            "y": 40,
+            "x": 68,
+            "y": 32,
             "kind": "relic",
             "tier": "valuable",
             "validation_route": "propulsion_fins_payoff",
             "route_context": "upper_right_current_pocket",
             "intent": (
-                "Visible valuable scanner-funding payoff behind the first propulsion-fins current gate."
+                "Optional valuable score payoff in the open upper side room of the first current pocket."
             ),
         }
     ]

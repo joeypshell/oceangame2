@@ -100,13 +100,13 @@ func _prepare_prerequisite_profile() -> bool:
 		_main,
 		ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID
 	)
-	var scanner: Dictionary = profile.unlock_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID, false)
+	var scanner: Dictionary = ReviewProgressionFixture.complete_capability(_main, ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID)
 	var signal_result: Dictionary = profile.complete_discovery(SIGNAL_DISCOVERY_ID, false)
 	var materials: Dictionary = profile.deposit_materials({
 		ExpansionProfileState.TITANIUM_MATERIAL_ID: 1,
 		ExpansionProfileState.COIL_MATERIAL_ID: 1,
 	}, false)
-	if not bool(fins.get("ready", false)) or not bool(scanner.get("changed", false)) or not bool(signal_result.get("changed", false)) or not bool(materials.get("changed", false)):
+	if not bool(fins.get("ready", false)) or not bool(scanner.get("ready", false)) or not bool(signal_result.get("changed", false)) or not bool(materials.get("changed", false)):
 		_fail("could not prepare fins, scanner, Signal Reef knowledge, and partial light recipe")
 		return false
 	_main._material_project.on_map_loaded(_main._world)

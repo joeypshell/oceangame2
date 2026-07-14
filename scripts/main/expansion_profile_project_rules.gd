@@ -9,6 +9,14 @@ const RULES := {
 		"target_id": "upper_right_current_pocket_gate",
 		"required_materials": {"titanium_scrap": 2, "rubber_sheet": 1},
 	},
+	"survey_scanner_project": {
+		"capability_id": "survey_scanner_1",
+		"required_discovery_id": "survey_scanner_blueprint",
+		"required_project_id": "",
+		"target_field": "target_id",
+		"target_id": "lower_right_anomaly_survey",
+		"required_materials": {"titanium_scrap": 1, "conductive_coil": 1},
+	},
 	"salvage_cutter_project": {
 		"capability_id": "salvage_cutter",
 		"required_discovery_id": "lower_right_anomaly_discovery",

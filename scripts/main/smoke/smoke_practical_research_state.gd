@@ -29,11 +29,13 @@ func _run() -> void:
 	_cleanup_profile()
 	var profile := ExpansionProfileState.new(TEST_PROFILE_PATH)
 	profile.load_profile()
-	profile.unlock_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID, true)
-	var runtime := AnomalySurveyRuntime.new(ProgressionRuntimeController.new(SessionProgression.new()), true, profile)
 	var world: Node = WORLD_SCENE.instantiate()
 	world.map_path = MAP_PATH
 	get_root().add_child(world)
+	profile.complete_discovery(ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID, false)
+	profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 1, ExpansionProfileState.COIL_MATERIAL_ID: 1}, false)
+	profile.complete_material_project(_project_by_id(world, ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID), true)
+	var runtime := AnomalySurveyRuntime.new(ProgressionRuntimeController.new(SessionProgression.new()), true, profile)
 	var player := Node2D.new()
 	get_root().add_child(player)
 	runtime.on_map_loaded(world)
@@ -41,7 +43,7 @@ func _run() -> void:
 	var target := _target_by_id(world, TARGET_ID)
 	_expect(not target.is_empty(), "resource survey target missing")
 	_expect(str(target.get("target_type", "")) == "resource", "resource target type mismatch")
-	_expect(not bool(runtime.report().get("lead_available", false)), "resource setup unexpectedly activated anomaly lead")
+	_expect(runtime.has_scanner(), "resource setup did not own project-built scanner")
 	player.global_position = target.get("center", Vector2.ZERO)
 	_expect(runtime.overlay_text(world, player) == str(target.get("clue_label", "")), "resource clue was not source-derived")
 	var partial: Dictionary = runtime.update(world, player, 1.0)
@@ -114,6 +116,13 @@ func _target_by_id(world, target_id: String) -> Dictionary:
 	for target in world.get_survey_targets():
 		if str(target.get("id", "")) == target_id:
 			return target
+	return {}
+
+
+func _project_by_id(world, project_id: String) -> Dictionary:
+	for project in world.get_material_projects():
+		if str(project.get("id", "")) == project_id:
+			return project
 	return {}
 
 

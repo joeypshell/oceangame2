@@ -1,6 +1,7 @@
 extends RefCounted
 
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+const ReviewProgressionFixture := preload("res://scripts/main/review_progression_fixture.gd")
 
 const MAP_ID := "production_level_01"
 const PROMISE_GATE_ID := "upper_right_current_pocket_gate"
@@ -116,8 +117,8 @@ func _prepare_post_fins_state() -> bool:
 
 func _prepare_pending_survey_state() -> bool:
 	var profile = _main._anomaly_survey.profile_state()
-	var unlock: Dictionary = profile.unlock_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID, false)
-	if not bool(unlock.get("changed", false)):
+	var unlock: Dictionary = ReviewProgressionFixture.complete_capability(_main, ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID)
+	if not bool(unlock.get("ready", false)):
 		_fail("could not prepare scanner capability: %s" % str(unlock))
 		return false
 	_main._anomaly_survey.on_map_loaded(_main._world)

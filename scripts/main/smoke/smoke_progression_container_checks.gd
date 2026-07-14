@@ -1,10 +1,11 @@
 extends "res://scripts/main/smoke/smoke_check_base.gd"
 
-const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime.gd")
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
 
 const CHEST_ID := "lower_loop_upgrade_chest"
+const SCANNER_CHEST_ID := "east_current_scanner_blueprint_chest"
 const FINS_GATE_ID := "upper_right_current_pocket_gate"
 const ADVANCED_GATE_ID := "lower_left_loop_current"
 const RELAY_CONNECTOR_ID := "lower_left_loop_connector"
@@ -95,6 +96,19 @@ func _smoke_upgrade_chest_and_quit() -> void:
 		return
 	if not _verify_fins_gate_passive():
 		return
+	var scanner_chest := _container_by_id(SCANNER_CHEST_ID)
+	if not _require(not scanner_chest.is_empty(), "missing post-fins scanner blueprint chest"):
+		return
+	_player.global_position = scanner_chest["center"]
+	_process(0.0)
+	if not _require(_status_text().find("E: Recover survey scanner blueprint") != -1, "scanner blueprint prompt was not next: %s" % _status_text()):
+		return
+	_press_key(KEY_E)
+	_process(0.0)
+	if not _require(profile.has_completed_discovery(ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID), "scanner blueprint did not enter profile"):
+		return
+	if not _verify_tracker("Titanium  0/1 banked", "Coil  0/1 banked"):
+		return
 	_player.global_position = _world.get_extraction_center()
 	_process(0.0)
 	var wallet_before_payoff := _session_wallet()
@@ -114,22 +128,19 @@ func _smoke_upgrade_chest_and_quit() -> void:
 		return
 	_player.global_position = _world.get_extraction_center()
 	_process(0.0)
-	if not _require(bool(_main._anomaly_survey.report().get("lead_available", false)), "banked current-pocket payoff did not activate scanner lead"):
-		return
-	if not _require(_session_wallet() == wallet_before_payoff + AnomalySurveyRuntime.SCANNER_COST, "current-pocket payoff delta=%d expected=%d" % [_session_wallet() - wallet_before_payoff, AnomalySurveyRuntime.SCANNER_COST]):
+	var valuable_score := int(ProgressionContract.SALVAGE_SCORE_BY_TIER["valuable"])
+	if not _require(_session_wallet() == wallet_before_payoff + valuable_score, "current-pocket payoff delta=%d expected=%d" % [_session_wallet() - wallet_before_payoff, valuable_score]):
 		return
 	if not _require(_world.map_id == "production_slice_01" and _world.is_inside_boat(_player.global_position), "payoff return did not remain at canonical boat"):
 		return
 	var scanner_status := _status_text()
-	if not _require(scanner_status.find("Q: Scanner (%d)" % AnomalySurveyRuntime.SCANNER_COST) != -1, "scanner was not the next action: %s" % scanner_status):
-		return
-	if not _require(scanner_status.find("Shock prod locked") == -1, "scanner-next HUD still advertised shock prod: %s" % scanner_status):
+	if not _require(scanner_status.find("Scanner project | Ti 1 + Coil 1") != -1, "scanner project was not the next action: %s" % scanner_status):
 		return
 	_press_key(KEY_Q)
-	if not _require(_main._anomaly_survey.has_scanner() and _session_wallet() == wallet_before_payoff, "Q did not spend exactly the guaranteed current-pocket payoff"):
+	if not _require(not _main._anomaly_survey.has_scanner() and _session_wallet() == wallet_before_payoff + valuable_score, "Q used score to bypass the scanner project"):
 		return
 
-	print("Blueprint fins journey smoke passed: blueprint=%s explicit_e=true proximity_auto_open=false daytime_build=false recipe=ti2+rubber1 tracker=banked_vs_held passive_current=true e_required=false same_map=true controller_frames=%d payoff=%s scanner_next=true shock_prod_suppressed=true." % [
+	print("Blueprint fins journey smoke passed: blueprint=%s explicit_e=true proximity_auto_open=false daytime_build=false recipe=ti2+rubber1 tracker=banked_vs_held passive_current=true e_required=false same_map=true controller_frames=%d payoff=%s scanner_blueprint_next=true scanner_recipe=ti1+coil1 score_bypass=false." % [
 		ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID,
 		_movement_frames,
 		PAYOFF_ID,
