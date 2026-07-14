@@ -143,6 +143,27 @@ class ProductionLevelGameplayTransformTests(unittest.TestCase):
             candidate["source"]["stats"]["gameplay_clearance_opened_cells"], 29
         )
 
+    def test_generated_candidate_owns_signal_reef_route_without_terrain_edits(self) -> None:
+        source_map = json.loads(SOURCE_MAP_PATH.read_text(encoding="utf-8"))
+        candidate = build_map_data(source_map)
+        zones = by_id(candidate["zones"])
+        journey = candidate["regional_journeys"][0]
+
+        self.assertEqual(journey["id"], "east_current_signal_reef_route")
+        self.assertEqual(journey["entry_gate_ids"], [
+            "lower_right_west_current_gate",
+            "lower_right_east_current_gate",
+        ])
+        for gate_id in journey["entry_gate_ids"]:
+            self.assertEqual(zones[gate_id]["required_capability_id"], "propulsion_fins")
+            self.assertEqual(zones[gate_id]["route_context"], journey["id"])
+        landmark = zones[journey["landmark_zone_id"]]
+        self.assertEqual(
+            {field: landmark[field] for field in ("x", "y", "w", "h")},
+            {"x": 132, "y": 108, "w": 10, "h": 10},
+        )
+        self.assertEqual(candidate["source"]["expansion_10"]["terrain_changes"], [])
+
 
 if __name__ == "__main__":
     unittest.main()

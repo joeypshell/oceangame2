@@ -213,6 +213,22 @@ class MaterialSourceValidationTests(unittest.TestCase):
     def test_accepts_blueprint_gated_propulsion_project_without_score(self) -> None:
         self.assertEqual(validate_material_source_schema(with_propulsion_project(valid_map())), [])
 
+    def test_accepts_regional_gates_reusing_the_promised_fins_capability(self) -> None:
+        map_data = with_propulsion_project(valid_map())
+        map_data["zones"].append({
+            **map_data["zones"][0],
+            "id": "regional_fins_gate",
+            "x": 7,
+            "route_context": "regional_fins_route",
+        })
+        map_data["regional_journeys"] = [{
+            "id": "regional_fins_route",
+            "promise_gate_id": "upper_right_current_pocket_gate",
+            "entry_gate_ids": ["regional_fins_gate"],
+            "required_capability_id": "propulsion_fins",
+        }]
+        self.assertEqual(validate_material_source_schema(map_data), [])
+
     def test_rejects_propulsion_project_without_blueprint_requirement(self) -> None:
         map_data = with_propulsion_project(valid_map())
         map_data["material_projects"][0].pop("required_discovery_id")
