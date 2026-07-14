@@ -11,6 +11,9 @@ const TARGET_MAP_PATH := "res://maps/production_slice_01.greybox.json"
 const REGIONAL_MAP_PATH := "res://maps/production_level_01.greybox.json"
 const TARGET_ID := "lower_right_anomaly_survey"
 const REGIONAL_TARGET_ID := "lower_right_signal_reef_survey"
+const HARMONIC_TARGET_ID := "signal_reef_deep_harmonic_survey"
+const HARMONIC_ZONE_ID := "signal_reef_deep_harmonic_dark_zone"
+const TEST_PATH := "user://oceangame2_harmonic_survey_test.json"
 
 var _failures: Array[String] = []
 
@@ -20,11 +23,13 @@ func _init() -> void:
 
 
 func _run() -> void:
+	_cleanup_file(TEST_PATH)
 	var session := SessionProgression.new()
 	var progression := ProgressionRuntimeController.new(session)
 	progression.grant_wallet_reward(AnomalySurveyRuntime.SCANNER_COST)
-	var profile := ExpansionProfileState.new(ExpansionProfileState.DEFAULT_STORAGE_PATH, false)
-	var runtime := AnomalySurveyRuntime.new(progression, false, profile)
+	var profile := ExpansionProfileState.new(TEST_PATH, true)
+	var runtime := AnomalySurveyRuntime.new(progression, true, profile)
+	progression.set_profile_state(profile)
 	var player := Node2D.new()
 	get_root().add_child(player)
 
@@ -131,27 +136,137 @@ func _run() -> void:
 		regional_target.get("next_lead_label", ""),
 	]
 	_expect(runtime.result_text() == expected_regional_result, "regional result did not use authored finding and next lead")
+	var harmonic_report := _exercise_harmonic_return(runtime, progression, profile, regional_world, player)
 
 	var report := runtime.report()
 	origin.queue_free()
 	target_world.queue_free()
 	regional_world.queue_free()
 	player.queue_free()
+	_cleanup_file(TEST_PATH)
 	if not _failures.is_empty():
 		for failure in _failures:
 			push_error("Anomaly survey runtime smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Anomaly survey runtime smoke passed: target=%s seconds=%.1f partial=%.2f cancel=true pending_across_connectors=true regional_target=%s full_level_commit=true wallet=%d exact_once=true result=\"%s\" report=%s." % [
+	print("Anomaly survey runtime smoke passed: target=%s seconds=%.1f partial=%.2f cancel=true pending_across_connectors=true regional_target=%s full_level_commit=true harmonic=%s pre_light_blocked=true light_readability=true failure_cleanup=true reload=true wallet=%d exact_once=true result=\"%s\" report=%s." % [
 		TARGET_ID,
 		float(target.get("interaction_seconds", 0.0)),
 		progress,
 		REGIONAL_TARGET_ID,
+		str(harmonic_report),
 		progression.wallet(),
 		runtime.result_text().replace("\n", " | "),
 		str(report),
 	])
 	quit(0)
+
+
+func _exercise_harmonic_return(runtime, progression, profile, world, player) -> Dictionary:
+	runtime.clear_unbanked("harmonic_setup", world)
+	var target := _target_by_id(world, HARMONIC_TARGET_ID)
+	var zone := _visibility_zone_by_id(world, HARMONIC_ZONE_ID)
+	_expect(not target.is_empty(), "source-authored harmonic survey target missing at runtime")
+	_expect(not zone.is_empty(), "source-authored harmonic dark zone missing at runtime")
+	if target.is_empty() or zone.is_empty():
+		return {}
+
+	player.global_position = target.get("center", Vector2.ZERO)
+	progression.apply_light_profile(world, player)
+	var pre_light_alpha := float(_visibility_zone_by_id(world, HARMONIC_ZONE_ID).get("overlay_alpha", 0.0))
+	var clue := str(target.get("clue_label", ""))
+	_expect(runtime.overlay_text(world, player) == clue, "pre-light harmonic clue was not source-derived")
+	var blocked: Dictionary = runtime.update(world, player, 1.0)
+	_expect(blocked.get("reason") == "light_required", "harmonic survey advanced without durable light")
+	_expect(str(blocked.get("note", "")) == clue, "pre-light denial did not use the source clue")
+	_expect(
+		is_zero_approx(float(runtime.report().get("interaction", {}).get("progress", -1.0))),
+		"pre-light denial retained survey progress"
+	)
+	_expect(not runtime.has_pending_discovery(), "pre-light denial created pending discovery")
+	_expect(str(_target_by_id(world, HARMONIC_TARGET_ID).get("state", "")) == "locked", "pre-light target was not visibly locked")
+
+	var project := _project_by_id(world, ExpansionProfileState.DIVE_LIGHT_PROJECT_ID)
+	_expect(not project.is_empty(), "source-authored dive-light project missing at runtime")
+	if project.is_empty():
+		return {}
+	var deposited: Dictionary = profile.deposit_materials({
+		ExpansionProfileState.TITANIUM_MATERIAL_ID: 1,
+		ExpansionProfileState.COIL_MATERIAL_ID: 1,
+		ExpansionProfileState.INSULATING_GEL_MATERIAL_ID: 1,
+	}, true)
+	_expect(bool(deposited.get("changed", false)), "harmonic fixture could not bank the exact light recipe")
+	var built: Dictionary = profile.complete_material_project(project, true)
+	_expect(bool(built.get("changed", false)), "real light project transaction did not unlock the survey requirement")
+	progression.apply_light_profile(world, player)
+	runtime.on_map_loaded(world)
+	var upgraded_alpha := float(_visibility_zone_by_id(world, HARMONIC_ZONE_ID).get("overlay_alpha", 0.0))
+	_expect(upgraded_alpha > 0.0 and upgraded_alpha < pre_light_alpha, "durable light did not improve harmonic-zone readability")
+	_expect(str(_target_by_id(world, HARMONIC_TARGET_ID).get("state", "")) == "available", "light-owned harmonic target did not become available")
+
+	player.global_position = target.get("center", Vector2.ZERO)
+	var partial: Dictionary = runtime.update(world, player, 1.0)
+	var partial_progress := float(partial.get("survey", {}).get("progress", 0.0))
+	_expect(partial_progress > 0.0 and partial_progress < 1.0, "light-owned harmonic survey did not report partial progress")
+	player.global_position = Vector2.ZERO
+	var canceled: Dictionary = runtime.update(world, player, 0.0)
+	_expect(canceled.get("state") == "canceled", "leaving harmonic range did not cancel partial progress")
+
+	for reason in ["hazard", "oxygen_failure", "combat_defeat", "reset"]:
+		player.global_position = target.get("center", Vector2.ZERO)
+		runtime.update(world, player, 1.0)
+		runtime.clear_unbanked(reason, world)
+		_expect(
+			is_zero_approx(float(runtime.report().get("interaction", {}).get("progress", -1.0)))
+			and not runtime.has_pending_discovery(),
+			"%s cleanup retained harmonic progress or pending state" % reason
+		)
+
+	player.global_position = target.get("center", Vector2.ZERO)
+	var pending: Dictionary = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
+	_expect(bool(pending.get("pending", false)), "completed harmonic survey did not become pending")
+	runtime.clear_unbanked("hazard", world)
+	_expect(
+		not runtime.has_pending_discovery()
+		and not profile.has_completed_discovery(ExpansionProfileState.DEEP_HARMONIC_DISCOVERY_ID),
+		"failure cleanup committed or retained the pending harmonic discovery"
+	)
+
+	player.global_position = target.get("center", Vector2.ZERO)
+	pending = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
+	_expect(bool(pending.get("pending", false)), "harmonic survey did not restart after cleanup")
+	player.global_position = world.get_extraction_center()
+	var committed: Dictionary = runtime.update(world, player, 0.0)
+	var expected_result := "%s\n%s" % [target.get("finding_label", ""), target.get("next_lead_label", "")]
+	_expect(bool(committed.get("committed", false)), "canonical full-level boat did not commit harmonic discovery")
+	_expect(profile.has_completed_discovery(ExpansionProfileState.DEEP_HARMONIC_DISCOVERY_ID), "harmonic discovery did not reach the profile")
+	_expect(runtime.result_text() == expected_result, "harmonic boat payoff did not use source finding and next lead")
+
+	runtime.on_map_loaded(world)
+	player.global_position = target.get("center", Vector2.ZERO)
+	var next_day: Dictionary = runtime.update(world, player, 0.0)
+	_expect(next_day.get("reason") == "completed" and not runtime.has_pending_discovery(), "next day recreated harmonic pending state")
+
+	var reloaded_profile := ExpansionProfileState.new(TEST_PATH, true)
+	var reload_progression := ProgressionRuntimeController.new(SessionProgression.new())
+	var reload_runtime := AnomalySurveyRuntime.new(reload_progression, true, reloaded_profile)
+	reload_progression.set_profile_state(reloaded_profile)
+	reload_runtime.on_map_loaded(world)
+	var reload_repeat: Dictionary = reload_runtime.update(world, player, 0.0)
+	_expect(
+		reloaded_profile.has_capability(ExpansionProfileState.DIVE_LIGHT_CAPABILITY_ID)
+		and reloaded_profile.has_completed_discovery(ExpansionProfileState.DEEP_HARMONIC_DISCOVERY_ID),
+		"profile reload lost durable light or harmonic discovery"
+	)
+	_expect(reload_repeat.get("reason") == "completed" and not reload_runtime.has_pending_discovery(), "profile reload duplicated harmonic survey or commit")
+	return {
+		"target": HARMONIC_TARGET_ID,
+		"seconds": target.get("interaction_seconds", 0.0),
+		"partial": partial_progress,
+		"pre_alpha": pre_light_alpha,
+		"upgraded_alpha": upgraded_alpha,
+		"committed": profile.has_completed_discovery(ExpansionProfileState.DEEP_HARMONIC_DISCOVERY_ID),
+	}
 
 
 func _load_world(path: String):
@@ -166,6 +281,27 @@ func _target_by_id(world, target_id: String) -> Dictionary:
 		if str(target.get("id", "")) == target_id:
 			return target
 	return {}
+
+
+func _visibility_zone_by_id(world, zone_id: String) -> Dictionary:
+	for zone in world.get_visibility_zones():
+		if str(zone.get("id", "")) == zone_id:
+			return zone
+	return {}
+
+
+func _project_by_id(world, project_id: String) -> Dictionary:
+	for project in world.get_material_projects():
+		if str(project.get("id", "")) == project_id:
+			return project
+	return {}
+
+
+func _cleanup_file(path: String) -> void:
+	for suffix in ["", ".tmp", ".bak"]:
+		var candidate := "%s%s" % [path, suffix]
+		if FileAccess.file_exists(candidate):
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(candidate))
 
 
 func _expect(condition: bool, message: String) -> void:

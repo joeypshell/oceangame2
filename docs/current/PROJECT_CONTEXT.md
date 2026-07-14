@@ -34,7 +34,7 @@ Expansion 09 generated the complete `full_cave_sketch_01` topology as `productio
 
 Expansion 10 completed through #889 plus player-gate correction #900. Propulsion fins now open one passive east-current route through continuous geography to Signal Reef, where a scanner-backed pending discovery commits only at the canonical boat. The correction preserves `production_level_01` through the real night/build/next-day transition. Exact-SHA Web verification passed at `c576d13`, and the player gave GO. The pass adds no teleport, prompted current crossing, pressure capability, broad map population, or second traversal capability.
 
-Expansion 11 is active under milestone #37. The source-state contract, focused validators, durable profile owner, and full-level project/dark-harmonic survey source are complete. The old 900-score session purchase plus `L`/`LAMP` affordance are retired; runtime integration, integrated journey proof, visual review, Web verification, and the player gate remain.
+Expansion 11 is active under milestone #37. The source-state contract, focused validators, durable profile owner, full-level project/dark-harmonic survey source, and light-gated survey/boat-commit runtime are complete. The old 900-score session purchase plus `L`/`LAMP` affordance are retired; integrated journey proof, visual review, Web verification, and the player gate remain.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
