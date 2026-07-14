@@ -13,7 +13,7 @@ source state at:
 https://joeypshell.github.io/oceangame2/
 ```
 
-Verified deployment:
+Initial reviewed deployment:
 
 - runtime/export SHA: `4a85c93dfb7a0fe9fa092bfc2bf0f846a5cf81c3`
 - build version: `4a85c93`
@@ -75,11 +75,35 @@ This proves the deployed source has the reviewed route contract. Whether that
 journey is clear, memorable, and worth another expedition remains the player
 GO/HOLD question in #889.
 
+## Corrected Final Deployment
+
+Player review found that the real night/build/next-day sequence reloaded
+`production_slice_01`, making the expanded passage disappear. #900 and PR #901
+preserved the active `production_level_01` path for voluntary and forced
+next-day reloads and changed the integrated journey smoke to exercise the real
+`N`, `P`, `N` sequence.
+
+Final accepted deployment:
+
+- runtime/export SHA: `c576d13f9c6dd486cf59579a1ff5170ef983f26f`
+- build version: `c576d13`
+- [Godot Web Export run 29303834484](https://github.com/joeypshell/oceangame2/actions/runs/29303834484): success
+- Godot Smoke run `29303834458`: success
+- Progression Audit run `29303834449`: success
+- external `build_info.json`: exact full-SHA match on clean `main`
+- fresh review URL:
+  `https://joeypshell.github.io/oceangame2/?review=c576d13f9c6dd486cf59579a1ff5170ef983f26f`
+
+The public checker passed default full-level, fresh-profile, reference-slice,
+desktop, wide, and mobile initialization plus touch alignment. The correction
+changed no map source, terrain, assets, captures, or accepted visual baseline.
+The player replayed this corrected build and gave GO in #889.
+
 ## Commands
 
 ```powershell
 $env:NODE_PATH = "$env:TEMP\oceangame2-web-preview-check\node_modules"
-node tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha 4a85c93dfb7a0fe9fa092bfc2bf0f846a5cf81c3
+node tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha c576d13f9c6dd486cf59579a1ff5170ef983f26f
 python tools/check_file_lengths.py
 git diff --check
 ```

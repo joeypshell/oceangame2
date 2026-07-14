@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-09 are complete. The player-approved contiguous `production_level_01` is now the editor, local, and public Web default. Exact-SHA promotion and Web verification pass at `e825c88`; slices 01-04 remain unchanged, selectable regression fixtures.
+The compact diver foundation and OceanGame Expansions 01-10 are complete. The player-approved contiguous `production_level_01` is the editor, local, and public Web default. The corrected east-current regional journey and exact-SHA Web verification pass at `c576d13`; slices 01-04 remain unchanged, selectable regression fixtures.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 09 closeout, Phase 2 roadmap, and committed Expansion 10 plan. Expansion 10 uses the existing passive east current, propulsion fins, scanner, and canonical boat to create one continuous lower-right regional journey. Teleport, connector-based normal traversal, stabilizer entry requirements, and pressure progression remain deferred.
+Current handoff starts with the Expansion 10 closeout and Phase 2 roadmap. Expansion 10 uses the existing passive east current, propulsion fins, scanner, and canonical boat to create one continuous lower-right regional journey. No next implementation milestone is selected; teleport, connector-based normal traversal, stabilizer entry requirements, and pressure progression remain deferred.
 
 Core sources and operating docs:
 
@@ -97,6 +97,10 @@ Current release and expansion handoff:
 - [Expansion 09 Visual Review Decision](docs/current/OCEANGAME_EXPANSION_09_VISUAL_REVIEW_DECISION.md)
 - [Expansion 09 Closeout](docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md)
 - [OceanGame Expansion 10 East-Current Regional Journey Plan](docs/current/OCEANGAME_EXPANSION_10_PLAN.md)
+- [Expansion 10 Source Contract](docs/current/OCEANGAME_EXPANSION_10_SOURCE_CONTRACT.md)
+- [Expansion 10 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_10_VISUAL_BASELINE_DECISION.md)
+- [Expansion 10 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_10_WEB_PREVIEW_VERIFICATION.md)
+- [Expansion 10 Closeout](docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -230,4 +234,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-09 meet that condition, including a player-approved, source-generated full cave that is continuously swimmable without connector travel.
+The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-10 meet that condition, including a player-approved, source-generated full cave and one capability-gated regional journey that remain continuously swimmable without connector travel.

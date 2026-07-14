@@ -2,8 +2,8 @@
 
 Date: 2026-07-13
 
-Status: Committed after player GO on planning issue #879. Implementation has not
-started.
+Status: Complete after player GO on #889. Issues #880-#889 closed, with the
+player-gate map-persistence correction completed in #900.
 
 GitHub milestone: [#36 OceanGame Expansion 10: East-Current Regional
 Journey](https://github.com/joeypshell/oceangame2/milestone/36)
