@@ -7,8 +7,10 @@ const SessionProgression := preload("res://scripts/main/session_progression.gd")
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 
 const ORIGIN_MAP_PATH := "res://maps/production_slice_01.greybox.json"
-const TARGET_MAP_PATH := "res://maps/production_slice_02.greybox.json"
+const TARGET_MAP_PATH := "res://maps/production_slice_01.greybox.json"
+const REGIONAL_MAP_PATH := "res://maps/production_level_01.greybox.json"
 const TARGET_ID := "lower_right_anomaly_survey"
+const REGIONAL_TARGET_ID := "lower_right_signal_reef_survey"
 
 var _failures: Array[String] = []
 
@@ -74,19 +76,77 @@ func _run() -> void:
 	_expect(not bool(repeat_commit.get("committed", false)), "discovery committed more than once")
 	_expect(runtime.result_text().find("Next lead:") != -1, "commit result omitted next-lead feedback")
 
+	var regional_world: Node = _load_world(REGIONAL_MAP_PATH)
+	runtime.clear_unbanked("regional_setup", regional_world)
+	runtime.on_map_loaded(regional_world)
+	var regional_target := _target_by_id(regional_world, REGIONAL_TARGET_ID)
+	_expect(not regional_target.is_empty(), "source-authored regional survey target missing at runtime")
+	_expect(str(regional_target.get("target_type", "")) == "regional", "regional survey target type drifted")
+	var full_level_session := SessionProgression.new()
+	var full_level_progression := ProgressionRuntimeController.new(full_level_session)
+	full_level_progression.grant_wallet_reward(AnomalySurveyRuntime.SCANNER_COST)
+	var full_level_profile := ExpansionProfileState.new(ExpansionProfileState.DEFAULT_STORAGE_PATH, false)
+	var full_level_runtime := AnomalySurveyRuntime.new(full_level_progression, false, full_level_profile)
+	full_level_runtime.activate_lead()
+	player.global_position = regional_world.get_extraction_center()
+	var full_level_unlock: Dictionary = full_level_runtime.try_unlock_scanner(regional_world, player)
+	_expect(bool(full_level_unlock.get("changed", false)), "scanner did not unlock at promoted full-level boat")
+	player.global_position = regional_target.get("center", Vector2.ZERO)
+	var regional_clue := runtime.overlay_text(regional_world, player)
+	_expect(regional_clue == str(regional_target.get("clue_label", "")), "regional clue did not use source text")
+	var regional_complete: Dictionary = runtime.update(
+		regional_world,
+		player,
+		float(regional_target.get("interaction_seconds", 0.0))
+	)
+	_expect(bool(regional_complete.get("pending", false)), "regional survey did not create pending discovery")
+	_expect(runtime.has_pending_discovery(), "regional pending discovery owner remained empty")
+	var pending_metadata: Dictionary = runtime.report().get("expedition", {}).get("pending", {}).get("metadata", {})
+	_expect(
+		str(pending_metadata.get("next_lead_label", "")) == str(regional_target.get("next_lead_label", "")),
+		"regional pending state lost the source next lead"
+	)
+	runtime.clear_unbanked("hazard", regional_world)
+	_expect(not runtime.has_pending_discovery(), "regional hazard cleanup retained pending discovery")
+	_expect(
+		not profile.has_completed_discovery(ExpansionProfileState.SIGNAL_REEF_DISCOVERY_ID),
+		"regional hazard cleanup committed discovery"
+	)
+	player.global_position = regional_target.get("center", Vector2.ZERO)
+	regional_complete = runtime.update(
+		regional_world,
+		player,
+		float(regional_target.get("interaction_seconds", 0.0))
+	)
+	_expect(bool(regional_complete.get("pending", false)), "regional survey did not restart after cleanup")
+	player.global_position = regional_world.get_extraction_center()
+	var regional_commit: Dictionary = runtime.update(regional_world, player, 0.0)
+	_expect(bool(regional_commit.get("committed", false)), "full-level boat did not commit regional discovery")
+	_expect(
+		profile.has_completed_discovery(ExpansionProfileState.SIGNAL_REEF_DISCOVERY_ID),
+		"regional discovery did not reach profile"
+	)
+	var expected_regional_result := "%s\n%s" % [
+		regional_target.get("finding_label", ""),
+		regional_target.get("next_lead_label", ""),
+	]
+	_expect(runtime.result_text() == expected_regional_result, "regional result did not use authored finding and next lead")
+
 	var report := runtime.report()
 	origin.queue_free()
 	target_world.queue_free()
+	regional_world.queue_free()
 	player.queue_free()
 	if not _failures.is_empty():
 		for failure in _failures:
 			push_error("Anomaly survey runtime smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Anomaly survey runtime smoke passed: target=%s seconds=%.1f partial=%.2f cancel=true pending_across_connectors=true wallet=%d exact_once=true result=\"%s\" report=%s." % [
+	print("Anomaly survey runtime smoke passed: target=%s seconds=%.1f partial=%.2f cancel=true pending_across_connectors=true regional_target=%s full_level_commit=true wallet=%d exact_once=true result=\"%s\" report=%s." % [
 		TARGET_ID,
 		float(target.get("interaction_seconds", 0.0)),
 		progress,
+		REGIONAL_TARGET_ID,
 		progression.wallet(),
 		runtime.result_text().replace("\n", " | "),
 		str(report),

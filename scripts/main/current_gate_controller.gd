@@ -85,7 +85,7 @@ func block_prompt(gate: Dictionary) -> String:
 	if requirement_id == CURRENT_STABILIZER_ID:
 		return "%s - need current stabilizer | advanced current" % _display_label(gate)
 	if requirement_id == PROPULSION_FINS_ID:
-		return "%s - need propulsion fins | swim through after upgrade" % _display_label(gate)
+		return "%s - need propulsion fins | larger route beyond" % _display_label(gate)
 	return "%s - need %s" % [_display_label(gate), _requirement_label(requirement_id)]
 
 

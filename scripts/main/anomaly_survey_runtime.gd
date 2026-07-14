@@ -7,10 +7,10 @@ const SurveyInteractionController := preload("res://scripts/main/survey_interact
 
 const SCANNER_CAPABILITY_ID := ProgressionContract.SCANNER_CAPABILITY_ID
 const SCANNER_COST := ProgressionContract.SCANNER_COST
-const CANONICAL_MAP_ID := ProgressionContract.SCANNER_PURCHASE_MAP_ID
-const CANONICAL_ENTRY_ID := ProgressionContract.SCANNER_PURCHASE_ENTRY_ID
 const COMMIT_NOTE := "Discovery committed at surface boat"
 const COMMIT_RESULT := "Discovery logged: Lower-right anomaly\nNext lead: investigate territorial signal"
+const ANOMALY_TARGET_TYPE := "anomaly"
+const REGIONAL_TARGET_TYPE := "regional"
 const RESOURCE_TARGET_TYPE := "resource"
 const RESOURCE_COMMIT_NOTE := "Research committed at surface boat"
 
@@ -156,7 +156,7 @@ func overlay_text(world, player) -> String:
 		var discovery_id := str(nearby_target.get("discovery_id", ""))
 		if _profile.has_completed_discovery(discovery_id):
 			return _completed_overlay_text(nearby_target)
-		if _is_resource_target(nearby_target):
+		if _is_finding_target(nearby_target):
 			var clue := str(nearby_target.get("clue_label", "Mineral trace")).strip_edges()
 			return clue if has_scanner() else "%s | Scanner required" % clue
 	if _profile.has_completed_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID):
@@ -220,9 +220,13 @@ func report() -> Dictionary:
 
 
 func _try_commit(world, player) -> Dictionary:
-	if not _expedition.has_pending() or not _at_canonical_boat(world, player):
+	if not _expedition.has_pending() or not _at_pending_commit_boat(world, player):
 		return {}
-	var commit: Dictionary = _expedition.commit_at(CANONICAL_MAP_ID, CANONICAL_ENTRY_ID, _profile)
+	var commit: Dictionary = _expedition.commit_at(
+		_expedition.pending_commit_map_id(),
+		_expedition.pending_commit_entry_id(),
+		_profile
+	)
 	var status := str(commit.get("status", ""))
 	if status not in ["committed", "already_committed"]:
 		return _note_result(false, status, "Discovery commit failed")
@@ -232,6 +236,12 @@ func _try_commit(world, player) -> Dictionary:
 		_lead_available = false
 		_last_note = COMMIT_NOTE
 		_last_result = COMMIT_RESULT
+	elif str(metadata.get("target_type", "")) == REGIONAL_TARGET_TYPE:
+		_last_note = COMMIT_NOTE
+		_last_result = str(metadata.get("finding_label", "Discovery logged"))
+		var next_lead := str(metadata.get("next_lead_label", "")).strip_edges()
+		if not next_lead.is_empty():
+			_last_result += "\n%s" % next_lead
 	else:
 		_last_note = RESOURCE_COMMIT_NOTE
 		_last_result = str(metadata.get("finding_label", "Research finding committed"))
@@ -274,9 +284,18 @@ func _at_canonical_boat(world, player) -> bool:
 	return (
 		world != null
 		and player != null
-		and str(world.map_id) == CANONICAL_MAP_ID
-		and world.has_method("is_inside_extraction")
-		and world.is_inside_extraction(player.global_position)
+		and world.has_method("is_inside_boat")
+		and world.is_inside_boat(player.global_position)
+	)
+
+
+func _at_pending_commit_boat(world, player) -> bool:
+	return (
+		world != null
+		and player != null
+		and str(world.map_id) == _expedition.pending_commit_map_id()
+		and world.has_method("is_inside_boat")
+		and world.is_inside_boat(player.global_position)
 	)
 
 
@@ -296,17 +315,26 @@ func _target_available(target: Dictionary) -> bool:
 
 
 func _target_requires_lead(target: Dictionary) -> bool:
-	return not _is_resource_target(target)
+	return str(target.get("target_type", "")) == ANOMALY_TARGET_TYPE
 
 
 func _is_resource_target(target: Dictionary) -> bool:
 	return str(target.get("target_type", "")) == RESOURCE_TARGET_TYPE
 
 
+func _is_regional_target(target: Dictionary) -> bool:
+	return str(target.get("target_type", "")) == REGIONAL_TARGET_TYPE
+
+
+func _is_finding_target(target: Dictionary) -> bool:
+	return _is_resource_target(target) or _is_regional_target(target)
+
+
 func _pending_metadata(target: Dictionary) -> Dictionary:
 	return {
 		"target_type": str(target.get("target_type", "")),
 		"finding_label": str(target.get("finding_label", "")),
+		"next_lead_label": str(target.get("next_lead_label", "")),
 	}
 
 
@@ -315,11 +343,11 @@ func _survey_complete_note(target: Dictionary) -> String:
 
 
 func _completed_note(target: Dictionary) -> String:
-	return str(target.get("finding_label", "Research already logged")) if _is_resource_target(target) else "Anomaly already logged"
+	return str(target.get("finding_label", "Finding already logged")) if _is_finding_target(target) else "Anomaly already logged"
 
 
 func _completed_overlay_text(target: Dictionary) -> String:
-	return str(target.get("finding_label", "Research logged")) if _is_resource_target(target) else "Discovery logged | Lower-right anomaly"
+	return str(target.get("finding_label", "Finding logged")) if _is_finding_target(target) else "Discovery logged | Lower-right anomaly"
 
 
 func _pending_overlay_text() -> String:
