@@ -106,6 +106,10 @@ func update(world, player, delta: float) -> Dictionary:
 		_interaction.reset()
 		_set_target_state(world, target_id, "locked")
 		return _note_result(false, "scanner_required", "Scanner required")
+	if not _has_required_light(target):
+		_interaction.reset()
+		_set_target_state(world, target_id, "locked")
+		return _note_result(false, "light_required", _light_required_note(target))
 
 	_set_target_state(world, target_id, "active")
 	var survey_result: Dictionary = _interaction.update(target, delta)
@@ -182,6 +186,7 @@ func is_status_note(status_note: String) -> bool:
 		or status_note.begins_with("Anomaly")
 		or status_note.begins_with("Research")
 		or status_note.begins_with("Mineral")
+		or status_note.find("light required") != -1
 	)
 
 
@@ -310,8 +315,19 @@ func _note_result(changed: bool, reason: String, note: String, extra := {}) -> D
 func _target_available(target: Dictionary) -> bool:
 	return (
 		_profile.has_capability(str(target.get("required_capability_id", "")))
+		and _has_required_light(target)
 		and (not _target_requires_lead(target) or _lead_available)
 	)
+
+
+func _has_required_light(target: Dictionary) -> bool:
+	var capability_id := str(target.get("required_light_capability_id", "")).strip_edges()
+	return capability_id.is_empty() or _profile.has_capability(capability_id)
+
+
+func _light_required_note(target: Dictionary) -> String:
+	var clue := str(target.get("clue_label", "")).strip_edges()
+	return clue if not clue.is_empty() else "Stronger light required"
 
 
 func _target_requires_lead(target: Dictionary) -> bool:
