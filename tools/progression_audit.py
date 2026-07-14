@@ -160,6 +160,8 @@ def _can_reach(graph: ProgressionGraph, key: str, reached: set[str]) -> bool:
         if node.attrs.get("start") is True:
             return True
         return any(edge.source in reached for edge in graph.incoming(key, "travels_to"))
+    if node.attrs.get("declaration_only") is True:
+        return any(edge.source in reached for edge in graph.incoming(key, "unlocks"))
     requirements = graph.requirements(key)
     if any(edge.target not in graph.nodes or edge.target not in reached for edge in requirements):
         return False

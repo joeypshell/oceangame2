@@ -109,7 +109,7 @@ def godot_gates(godot: str) -> list[Gate]:
         ("smoke: expansion 10 regional journey", ["--smoke-expansion-10-regional-journey"]),
         ("smoke: pass 18 progression", ["--quit-after", "1", "--smoke-pass-18-progression"]),
         ("smoke: pass 19 cargo upgrade", ["--quit-after", "1", "--smoke-pass-19-cargo-upgrade"]),
-        ("smoke: pass 20 light upgrade", ["--quit-after", "1", "--smoke-pass-20-light-upgrade"]),
+        ("smoke: pass 20 durable-light compatibility", ["--quit-after", "1", "--smoke-pass-20-light-upgrade"]),
         ("smoke: pass 27 facing transitions", ["--smoke-pass-27-facing-transitions"]),
     )
 
@@ -135,6 +135,12 @@ def godot_gates(godot: str) -> list[Gate]:
         Gate(
             "smoke: material project state",
             [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_material_project_state.gd"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
+            "smoke: durable light project state",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_durable_light_project_state.gd"],
             godot_backed=True,
             fail_on_godot_error=True,
         ),

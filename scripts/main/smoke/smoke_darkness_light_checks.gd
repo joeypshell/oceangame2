@@ -3,6 +3,67 @@ extends "res://scripts/main/smoke/smoke_check_base.gd"
 const ZONE_ID := "deep_cache_dark_pocket"
 const EXPECTED_LEVEL := "dark"
 const STEP_SECONDS := 0.25
+const LIGHT_ID := "dive_light_1"
+const LIGHT_PROJECT_ID := "dive_light_1_project"
+const BASE_RANGE_SCALE := 1.0
+const BASE_ALPHA := 0.38
+const UPGRADED_RANGE_SCALE := 1.25
+const UPGRADED_ALPHA := 0.48
+
+
+func _smoke_pass_20_durable_light_and_quit() -> void:
+	if _world.map_id != "production_slice_01" or not _player.has_method("get_facing_report"):
+		push_error("Pass 20 compatibility smoke requires production_slice_01 player light reporting.")
+		get_tree().quit(1)
+		return
+	var base_report: Dictionary = _player.get_facing_report()
+	if _session_wallet() != 0 or _session_payout_total() != 0 or _has_light_upgrade():
+		push_error("Pass 20 compatibility smoke expected a fresh wallet and durable profile.")
+		get_tree().quit(1)
+		return
+	if not _light_report_matches(base_report, BASE_RANGE_SCALE, BASE_ALPHA):
+		push_error("Pass 20 compatibility smoke expected base light, got %s." % base_report)
+		get_tree().quit(1)
+		return
+
+	_player.global_position = _world.get_extraction_center()
+	var blocked: Dictionary = _main._progression_runtime.try_purchase(LIGHT_ID, _world, _player)
+	if bool(blocked.get("purchased", false)) or str(blocked.get("note", "")) != "Build dive light at night" or _session_wallet() != 0:
+		push_error("Pass 20 compatibility smoke found an active score purchase path: %s." % blocked)
+		get_tree().quit(1)
+		return
+	if not _prepare_durable_light():
+		get_tree().quit(1)
+		return
+	var upgraded_report: Dictionary = _player.get_facing_report()
+	var profile = _main._anomaly_survey.profile_state()
+	if (
+		not profile.has_completed_project(LIGHT_PROJECT_ID)
+		or not _has_light_upgrade()
+		or _session_wallet() != 0
+		or _has_oxygen_tank_upgrade()
+		or _has_cargo_capacity_upgrade()
+		or not _light_report_matches(upgraded_report, UPGRADED_RANGE_SCALE, UPGRADED_ALPHA)
+	):
+		push_error("Pass 20 compatibility smoke durable state mismatch: profile=%s report=%s." % [profile.report(), upgraded_report])
+		get_tree().quit(1)
+		return
+
+	_reset_run()
+	_main._progression_runtime.apply_light_profile(_world, _player)
+	var reset_report: Dictionary = _player.get_facing_report()
+	if not _has_light_upgrade() or not _light_report_matches(reset_report, UPGRADED_RANGE_SCALE, UPGRADED_ALPHA):
+		push_error("Pass 20 compatibility smoke reset lost durable light: %s." % reset_report)
+		get_tree().quit(1)
+		return
+	print("Pass 20 light compatibility smoke passed: id=%s owner=profile_project wallet_cost=none recipe=Ti1+Coil1+Gel1 base_range=%.2f base_alpha=%.2f upgraded_range=%.2f upgraded_alpha=%.2f reset_persisted=true independent_upgrades=true." % [
+		LIGHT_ID,
+		float(base_report.get("light_cone_range_scale", 0.0)),
+		float(base_report.get("light_cone_alpha", 0.0)),
+		float(upgraded_report.get("light_cone_range_scale", 0.0)),
+		float(upgraded_report.get("light_cone_alpha", 0.0)),
+	])
+	get_tree().quit()
 
 
 func _smoke_darkness_light_gate_and_quit() -> void:
@@ -30,7 +91,7 @@ func _smoke_darkness_light_gate_and_quit() -> void:
 		])
 		get_tree().quit(1)
 		return
-	if str(zone.get("visibility_level", "")) != EXPECTED_LEVEL or upgrade_id != _main.SessionProgression.LIGHT_UPGRADE_ID:
+	if str(zone.get("visibility_level", "")) != EXPECTED_LEVEL or upgrade_id != LIGHT_ID:
 		push_error("Darkness/light smoke unexpected zone metadata: %s." % zone)
 		get_tree().quit(1)
 		return
@@ -62,13 +123,8 @@ func _smoke_darkness_light_gate_and_quit() -> void:
 		get_tree().quit(1)
 		return
 
-	_player.global_position = _world.get_extraction_center()
-	_main._session_progression.record_banked_salvage(_main.SessionProgression.LIGHT_UPGRADE_COST)
-	if not _try_purchase_light_upgrade() or not _has_light_upgrade():
-		push_error("Darkness/light smoke could not purchase light upgrade: wallet=%d status=%s." % [
-			_session_wallet(),
-			_status_text(),
-		])
+	if not _prepare_durable_light() or not _has_light_upgrade():
+		push_error("Darkness/light smoke could not prepare durable light profile: status=%s." % _status_text())
 		get_tree().quit(1)
 		return
 
@@ -143,3 +199,11 @@ func _visibility_zone_by_id(zone_id: String) -> Dictionary:
 
 func _status_text() -> String:
 	return _status_label.text if _status_label != null else ""
+
+
+func _light_report_matches(report: Dictionary, range_scale: float, alpha: float) -> bool:
+	return (
+		is_equal_approx(float(report.get("root_scale_x", 0.0)), 1.0)
+		and is_equal_approx(float(report.get("light_cone_range_scale", 0.0)), range_scale)
+		and is_equal_approx(float(report.get("light_cone_alpha", 0.0)), alpha)
+	)

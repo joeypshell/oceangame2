@@ -96,6 +96,10 @@ func has_shock_prod_capacitor() -> bool:
 	return _profile != null and _profile.has_capability(ExpansionProfileState.SHOCK_PROD_CAPACITOR_CAPABILITY_ID)
 
 
+func has_dive_light() -> bool:
+	return _profile != null and _profile.has_capability(ExpansionProfileState.DIVE_LIGHT_CAPABILITY_ID)
+
+
 func propulsion_fins_guidance(map_id := "", scanner_lead_available := false) -> String:
 	if has_propulsion_fins():
 		if scanner_lead_available or str(map_id) != "production_slice_01":
@@ -186,12 +190,17 @@ func report() -> Dictionary:
 		"current_stabilizer_unlocked": has_current_stabilizer(),
 		"shock_prod_unlocked": has_shock_prod(),
 		"shock_prod_capacitor_unlocked": has_shock_prod_capacitor(),
+		"dive_light_unlocked": has_dive_light(),
 	}
 
 
 func _selected_project() -> Dictionary:
 	if not _last_completed_project_id.is_empty():
 		return _project_by_id(_last_completed_project_id)
+	for desired_status in ["ready", "incomplete"]:
+		for project in _projects:
+			if _profile != null and not _profile.has_completed_project(str(project.get("id", ""))) and _status_for(project) == desired_status:
+				return project
 	for project in _projects:
 		if _profile == null or not _profile.has_completed_project(str(project.get("id", ""))):
 			return project
@@ -280,6 +289,8 @@ func _project_action_label(project: Dictionary) -> String:
 func _knowledge_label(project: Dictionary) -> String:
 	if str(project.get("required_discovery_id", "")) == ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID:
 		return "recovered blueprint"
+	if str(project.get("required_discovery_id", "")) == ExpansionProfileState.SIGNAL_REEF_DISCOVERY_ID:
+		return "Signal Reef chart"
 	return "anomaly knowledge"
 
 
@@ -308,6 +319,15 @@ func _material_progress_text(project: Dictionary) -> String:
 			_profile.material_quantity(ExpansionProfileState.EEL_ELECTROCYTE_MATERIAL_ID),
 			int(required.get(ExpansionProfileState.EEL_ELECTROCYTE_MATERIAL_ID, 0)),
 		]
+	if str(project.get("id", "")) == ExpansionProfileState.DIVE_LIGHT_PROJECT_ID:
+		return "Ti %d/%d | Coil %d/%d | Gel %d/%d" % [
+			_profile.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.TITANIUM_MATERIAL_ID, 0)),
+			_profile.material_quantity(ExpansionProfileState.COIL_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.COIL_MATERIAL_ID, 0)),
+			_profile.material_quantity(ExpansionProfileState.INSULATING_GEL_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.INSULATING_GEL_MATERIAL_ID, 0)),
+		]
 	return "Ti %d/%d | Coil %d/%d" % [
 		_profile.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID),
 		int(required.get(ExpansionProfileState.TITANIUM_MATERIAL_ID, 0)),
@@ -324,6 +344,8 @@ func _project_effect_lines(project: Dictionary) -> Array[String]:
 			return ["Use: Space at short range | 1 health damage per hit"]
 		ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID:
 			return ["Effect: hit during WARNING/LUNGE to force RECOVERY | damage stays 1"]
+		ExpansionProfileState.DIVE_LIGHT_PROJECT_ID:
+			return ["Effect: improved visibility in dark water"]
 	return []
 
 

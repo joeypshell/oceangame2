@@ -8,7 +8,7 @@ import unittest
 
 from progression_audit import audit_graph
 from progression_audit_views import build_view_graph, load_audit_views
-from progression_contract import load_contract
+from progression_contract import load_contract, validate_contract
 from progression_graph import Edge, Node, ProgressionGraph, ROOT, build_progression_graph, load_production_maps
 
 
@@ -19,6 +19,23 @@ def graph_with_start() -> ProgressionGraph:
 
 
 class ProgressionGraphAuditTests(unittest.TestCase):
+    def test_durable_light_declaration_is_not_a_purchase_owner(self) -> None:
+        contract = load_contract()
+        declaration = contract["durable_capabilities"][0]
+        self.assertEqual("dive_light_1", declaration["id"])
+        self.assertNotIn("cost", declaration)
+        graph = build_progression_graph(load_production_maps(), contract)
+        light = graph.resolve("dive_light_1")
+        self.assertEqual("capability", graph.nodes[light].kind)
+        self.assertFalse(graph.requirements(light))
+        self.assertNotIn(light, audit_graph(graph).stages)
+
+    def test_durable_capability_declaration_rejects_purchase_fields(self) -> None:
+        contract = load_contract()
+        contract["durable_capabilities"][0]["cost"] = 900
+        failures = validate_contract(contract)
+        self.assertTrue(any("unsupported ownership fields" in failure for failure in failures), failures)
+
     def test_current_source_chain_is_reachable_and_non_circular(self) -> None:
         graph = build_progression_graph(load_production_maps(), load_contract())
         result = audit_graph(graph)

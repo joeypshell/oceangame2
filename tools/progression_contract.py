@@ -50,7 +50,8 @@ def validate_contract(payload: Any) -> list[str]:
 
     seen_ids: set[str] = set()
     seen_constants: set[str] = set()
-    for collection_name in ("session_upgrades", "durable_purchases"):
+    purchase_collections = {"session_upgrades", "durable_purchases"}
+    for collection_name in ("session_upgrades", "durable_capabilities", "durable_purchases"):
         items = payload.get(collection_name)
         if not isinstance(items, list):
             failures.append(f"{collection_name} must be an array")
@@ -71,10 +72,14 @@ def validate_contract(payload: Any) -> list[str]:
             seen_ids.add(item_id)
             if isinstance(constant_name, str):
                 seen_constants.add(constant_name)
-            if not _positive_int(item.get("cost")):
+            if collection_name in purchase_collections and not _positive_int(item.get("cost")):
                 failures.append(f"{label}.cost must be a positive integer")
             if not isinstance(item.get("mandatory"), bool):
                 failures.append(f"{label}.mandatory must be boolean")
+            if collection_name == "durable_capabilities":
+                unsupported = sorted(set(item) - {"id", "constant_name", "mandatory"})
+                if unsupported:
+                    failures.append(f"{label} has unsupported ownership fields {unsupported}")
             for field in ("purchase_map_id", "purchase_entry_id", "required_lead_source_id"):
                 if field in item:
                     _require_id(item.get(field), f"{label}.{field}", failures)
@@ -99,6 +104,9 @@ def render_gdscript(contract: dict[str, Any]) -> str:
         prefix = item["constant_name"]
         lines.append(f'const {prefix}_UPGRADE_ID := "{item["id"]}"')
         lines.append(f"const {prefix}_UPGRADE_COST := {item['cost']}")
+    for item in contract["durable_capabilities"]:
+        prefix = item["constant_name"]
+        lines.append(f'const {prefix}_CAPABILITY_ID := "{item["id"]}"')
     for item in contract["durable_purchases"]:
         prefix = item["constant_name"]
         lines.append(f'const {prefix}_CAPABILITY_ID := "{item["id"]}"')

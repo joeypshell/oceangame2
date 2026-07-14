@@ -246,6 +246,14 @@ func _prepare_propulsion_fins() -> bool:
 	return _prepare_profile_capability("propulsion_fins")
 
 
+func _prepare_durable_light() -> bool:
+	var result: Dictionary = ReviewProgressionFixture.complete_dive_light(_main)
+	if not bool(result.get("ready", false)):
+		push_error("Could not prepare durable light fixture: %s" % str(result))
+		return false
+	return true
+
+
 func _reset_run() -> void:
 	_main._reset_run()
 
@@ -280,10 +288,6 @@ func _try_purchase_oxygen_tank_upgrade() -> bool:
 
 func _try_purchase_cargo_capacity_upgrade() -> bool:
 	return _main._try_purchase_cargo_capacity_upgrade()
-
-
-func _try_purchase_light_upgrade() -> bool:
-	return _main._try_purchase_light_upgrade()
 
 
 func _has_oxygen_tank_upgrade() -> bool:

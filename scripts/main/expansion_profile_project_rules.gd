@@ -43,4 +43,12 @@ const RULES := {
 		"required_materials": {"conductive_coil": 1, "insulating_gel": 1, "eel_electrocyte": 1},
 		"capability_effect": "interrupt_warning_lunge",
 	},
+	"dive_light_1_project": {
+		"capability_id": "dive_light_1",
+		"required_discovery_id": "lower_right_signal_reef_discovery",
+		"required_project_id": "",
+		"target_field": "target_id",
+		"target_id": "signal_reef_deep_harmonic_survey",
+		"required_materials": {"titanium_scrap": 1, "conductive_coil": 1, "insulating_gel": 1},
+	},
 }

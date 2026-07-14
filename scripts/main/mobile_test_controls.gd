@@ -14,7 +14,6 @@ const GRID_COLUMNS := 3
 const COMMANDS := [
 	{"id": &"oxygen", "label": "O2", "keycode": KEY_U},
 	{"id": &"cargo", "label": "BAG", "keycode": KEY_C},
-	{"id": &"light", "label": "LAMP", "keycode": KEY_L},
 	{"id": &"scanner", "label": "SCAN", "keycode": KEY_Q},
 	{"id": &"project", "label": "BUILD", "keycode": KEY_P},
 	{"id": &"day", "label": "DAY", "keycode": KEY_N},

@@ -127,6 +127,22 @@ jobs:
             exit 1
           fi
 
+      - name: Run durable light project state smoke check
+        run: |
+          set +e
+          godot --headless --path . --script res://scripts/main/smoke/smoke_durable_light_project_state.gd 2>&1 | tee godot-durable-light-project-state.log
+          godot_status=${PIPESTATUS[0]}
+          set -e
+
+          if [ "${godot_status}" -ne 0 ]; then
+            exit "${godot_status}"
+          fi
+
+          if grep -E "SCRIPT ERROR|ERROR:" godot-durable-light-project-state.log; then
+            echo "Godot reported errors during durable light project state smoke check."
+            exit 1
+          fi
+
       - name: Run salvage loop smoke check
         run: |
           set +e

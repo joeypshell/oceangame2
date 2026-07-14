@@ -40,8 +40,7 @@ func _smoke_pass_21_world_connector_and_quit() -> void:
 	_main._session_progression.record_banked_salvage(3600)
 	_main._session_progression.purchase_oxygen_tank_upgrade()
 	_main._session_progression.purchase_cargo_capacity_upgrade()
-	_main._session_progression.purchase_light_upgrade()
-	if not _prepare_propulsion_fins() or not _prepare_profile_capability("current_stabilizer"):
+	if not _prepare_durable_light() or not _prepare_propulsion_fins() or not _prepare_profile_capability("current_stabilizer"):
 		return
 	var wallet_before := _session_wallet()
 

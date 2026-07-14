@@ -5,7 +5,6 @@ const MobileTestControls := preload("res://scripts/main/mobile_test_controls.gd"
 const EXPECTED_COMMANDS := {
 	&"oxygen": KEY_U,
 	&"cargo": KEY_C,
-	&"light": KEY_L,
 	&"scanner": KEY_Q,
 	&"project": KEY_P,
 	&"day": KEY_N,
@@ -42,8 +41,8 @@ func _run() -> void:
 	var command_rects: Dictionary = report.get("command_rects", {})
 	var viewport_size: Vector2 = report.get("viewport_size", Vector2.ZERO)
 	var bottom_inset := float(report.get("bottom_inset", 0.0))
-	_expect(commands.size() == EXPECTED_COMMANDS.size(), "command pad did not expose exactly nine commands")
-	_expect(command_rects.size() == EXPECTED_COMMANDS.size(), "command pad did not lay out exactly nine touch regions")
+	_expect(commands.size() == EXPECTED_COMMANDS.size(), "command pad did not expose exactly eight commands")
+	_expect(command_rects.size() == EXPECTED_COMMANDS.size(), "command pad did not lay out exactly eight touch regions")
 
 	var stick_rect: Rect2 = report.get("stick_rect", Rect2())
 	var reachable_bottom := viewport_size.y - bottom_inset
@@ -93,7 +92,7 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: mobile test controls auto_hidden=headless stick=8_direction down_reachable=true bottom_inset=104 commands=9 simultaneous_input=true keyboard_events=U,C,L,Q,P,N,R,E attack_action=combat_attack.")
+	print("PASS: mobile test controls auto_hidden=headless stick=8_direction down_reachable=true bottom_inset=104 commands=8 simultaneous_input=true keyboard_events=U,C,Q,P,N,R,E attack_action=combat_attack.")
 	quit(0)
 
 
