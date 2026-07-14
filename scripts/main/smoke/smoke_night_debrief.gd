@@ -21,6 +21,7 @@ func _run() -> void:
 	main.set_process(false)
 	main._player.set_physics_process(false)
 	main._hazard_interactions_enabled = false
+	_expect(main._world.map_id == "production_level_01", "night smoke did not start on the default full level")
 	var profile := ExpansionProfileState.new(TEST_PROFILE_PATH)
 	profile.load_profile()
 	profile.unlock_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID, true)
@@ -46,7 +47,7 @@ func _run() -> void:
 	main._hazard_interactions_enabled = false
 	_expect(main._expedition_day_state.day_number == 2 and main._expedition_day_state.phase == main._expedition_day_state.PHASE_ACTIVE, "next day did not start active")
 	_expect(main._expedition_day_state.sortie_count == 0 and main._expedition_day_state.banked_score == 0, "next day retained day-scoped totals")
-	_expect(main._world.map_id == "production_slice_01" and main._world.is_inside_boat(main._player.global_position), "next day did not start at canonical boat")
+	_expect(main._world.map_id == "production_level_01" and main._world.is_inside_boat(main._player.global_position), "next day did not preserve the full-level canonical boat")
 	_expect(main._anomaly_survey.has_scanner() and main._anomaly_survey.has_completed_discovery(), "next day lost profile progression")
 
 	var targets := _instant_salvage(main._world)
@@ -67,6 +68,7 @@ func _run() -> void:
 		_expect(main._sortie_state.held_salvage == 0, "forced recovery retained unbanked cargo")
 		_expect(forced_text.find("Forced recovery at nightfall") != -1 and forced_text.find("unbanked progress lost") != -1, "forced debrief omitted recovery consequence")
 		_expect(main._anomaly_survey.has_completed_discovery(), "forced recovery lost profile discovery")
+		_expect(main._world.map_id == "production_level_01" and main._world.is_inside_boat(main._player.global_position), "forced recovery did not preserve the full-level canonical boat")
 
 	var reloaded := ExpansionProfileState.new(TEST_PROFILE_PATH)
 	var reload_report: Dictionary = reloaded.load_profile()
@@ -80,7 +82,7 @@ func _run() -> void:
 			push_error("Night debrief smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Night debrief smoke passed: voluntary_day=1 dives=2 banked=2 value=450 discovery=1 next_day=2 forced_recovery=true unbanked_cleared=true profile_reloaded=true survival_tax=false.")
+	print("Night debrief smoke passed: voluntary_day=1 dives=2 banked=2 value=450 discovery=1 next_day=2 map=production_level_01 forced_recovery=true map_preserved=true unbanked_cleared=true profile_reloaded=true survival_tax=false.")
 	quit(0)
 
 

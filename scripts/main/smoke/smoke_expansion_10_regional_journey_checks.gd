@@ -207,16 +207,18 @@ func _build_fins_and_begin_day_two() -> bool:
 		return false
 	if not _require(_session_wallet() == wallet_before, "recipe project changed wallet value"):
 		return false
-	_main._expedition_day_state.begin_next_day()
-	_main._load_playable_map(_main.PRODUCTION_LEVEL_MAP_PATH, false, BOAT_ENTRY_ID, "Expansion 10 smoke day")
+	_press_key(KEY_N)
+	_advance(0.0)
 	_prepare_controlled_movement()
 	_body_size = ((_player.get_node("CollisionShape2D") as CollisionShape2D).shape as RectangleShape2D).size
 	_starting_health = int(_main._player_health.current_health)
 	_minimum_oxygen = _oxygen_seconds
 	return (
-		_require(_world.map_id == MAP_ID, "deterministic day-two setup left the full level")
+		_require(_world.map_id == MAP_ID, "real next-day transition left the full level")
 		and _require(_main._expedition_day_state.day_number == 2 and _main._expedition_day_state.phase == ExpeditionDayState.PHASE_ACTIVE, "day two did not begin active")
 		and _require(_world.is_inside_boat(_player.global_position), "day two did not begin at the boat")
+		and _require(not _gate_by_id(REGIONAL_GATE_IDS[0]).is_empty(), "day two lost the regional current passage")
+		and _require(FullLevelNavigation.new().marker_center(_world, LANDMARK_ID).x >= 0.0, "day two lost the Signal Reef landmark")
 	)
 
 
