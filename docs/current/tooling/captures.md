@@ -308,10 +308,18 @@ This reads `camera_tests` from `maps/full_cave_sketch_01.greybox.json` and write
 Capture the contiguous full level for Expansion 09 regression review:
 
 ```powershell
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 40 --capture-expansion-09-full-level
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --capture-expansion-09-full-level
 ```
 
 This writes the authored `production_level_*` overview, boat, opening-gameplay, upper-left, lower-left, lower-right, and return contexts at 1280x720 and mobile 844x390 review sizes under `visual_captures/expansion_09_full_level/`. These captures are the source for the accepted `production_level_01` baseline; regeneration does not accept or replace that baseline automatically.
+
+Capture the focused Expansion 10 regional journey review states:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --capture-expansion-10-regional-journey
+```
+
+This writes pre-fins current-promise, post-fins regional-entry, and Signal Reef pending-return frames at 1280x720 and mobile 844x390 review sizes under `visual_captures/expansion_10_regional_journey/`. It uses the authored Expansion 10 camera tests and does not accept or replace baselines.
 
 Capture the first production slice:
 
