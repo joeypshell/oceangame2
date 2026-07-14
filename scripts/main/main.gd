@@ -86,6 +86,7 @@ const SmokeExpansion06CombatJourneyChecks := preload("res://scripts/main/smoke/s
 const SmokeExpansion07BiologicalJourneyChecks := preload("res://scripts/main/smoke/smoke_expansion_07_biological_journey_checks.gd")
 const SmokeExpansion08DailyConditionJourneyChecks := preload("res://scripts/main/smoke/smoke_expansion_08_daily_condition_journey_checks.gd")
 const SmokeExpansion09FullLevelJourneyChecks := preload("res://scripts/main/smoke/smoke_expansion_09_full_level_journey_checks.gd")
+const SmokeExpansion10RegionalJourneyChecks := preload("res://scripts/main/smoke/smoke_expansion_10_regional_journey_checks.gd")
 const SmokeReleaseJourneyChecks := preload("res://scripts/main/smoke/smoke_release_journey_checks.gd")
 const UpgradeChestCapture := preload("res://scripts/main/captures/upgrade_chest_capture.gd")
 const DEFAULT_MAP_PATH := MapCatalog.DEFAULT_MAP_PATH
@@ -421,6 +422,7 @@ func _ready() -> void:
 	var smoke_expansion_07_biological_progression := _has_arg(user_args, engine_args, "--smoke-expansion-07-biological-progression")
 	var smoke_expansion_08_daily_condition_journey := _has_arg(user_args, engine_args, "--smoke-expansion-08-daily-condition-journey")
 	var smoke_expansion_09_full_level_journey := _has_arg(user_args, engine_args, "--smoke-expansion-09-full-level-journey")
+	var smoke_expansion_10_regional_journey := _has_arg(user_args, engine_args, "--smoke-expansion-10-regional-journey")
 	var requested_map_path := MapCatalog.requested_map_path(user_args, engine_args)
 	var measure_map_runtime := _has_arg(user_args, engine_args, "--measure-map-runtime")
 	var parity_output_path := _arg_value(user_args, engine_args, "--parity-output")
@@ -614,6 +616,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_expansion_09_full_level_journey:
 		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
+	elif smoke_expansion_10_regional_journey:
+		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
 	elif not requested_map_path.is_empty():
 		selected_map_path = requested_map_path
 
@@ -735,6 +739,7 @@ func _ready() -> void:
 		or smoke_expansion_07_biological_progression
 		or smoke_expansion_08_daily_condition_journey
 		or smoke_expansion_09_full_level_journey
+		or smoke_expansion_10_regional_journey
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
 		or _has_arg(user_args, engine_args, "--capture-camera-tests")
 	)
@@ -885,6 +890,9 @@ func _ready() -> void:
 		return
 	if smoke_expansion_09_full_level_journey:
 		await SmokeExpansion09FullLevelJourneyChecks.new(self)._smoke_expansion_09_full_level_journey_and_quit()
+		return
+	if smoke_expansion_10_regional_journey:
+		await SmokeExpansion10RegionalJourneyChecks.new(self)._smoke_expansion_10_regional_journey_and_quit()
 		return
 	if smoke_oxygen_pressure:
 		_smoke_interaction_checks._smoke_oxygen_pressure_and_quit()

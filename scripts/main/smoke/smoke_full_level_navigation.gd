@@ -17,7 +17,8 @@ func build(
 	player_body_size: Vector2,
 	collection_radius: float,
 	collectible_material_id := "",
-	passable_capability_ids: Array = []
+	passable_capability_ids: Array = [],
+	blocked_salvage_ids: Array = []
 ) -> Dictionary:
 	_map_pixel_size = world.map_pixel_size
 	_grid_size = Vector2i(
@@ -61,6 +62,13 @@ func build(
 		_block_circle(
 			candidate.get("center", Vector2.ZERO),
 			collection_radius + INTERACTION_CLEARANCE_PX * 2.0
+		)
+	for salvage in world.get_salvage_centers():
+		if not blocked_salvage_ids.has(str(salvage.get("id", ""))):
+			continue
+		_block_circle(
+			salvage.get("center", Vector2.ZERO),
+			collection_radius + INTERACTION_CLEARANCE_PX
 		)
 
 	return {

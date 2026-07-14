@@ -81,6 +81,8 @@ The integrated Expansion 08 smoke verifies baseline day, night-ahead forecast, s
 
 The integrated Expansion 09 smoke uses active player collision to swim three direct boat-return sorties through the default contiguous `production_level_01`. It reaches the upper-left, lower-right, and lower-left sector anchors without position assignment, connector travel, collision disablement, or oxygen disablement; banks transformed salvage through the canonical boat; and reports route distance, oxygen, daylight, health, cargo, profile, day, and connector state. CI and release validation run it as `--smoke-expansion-09-full-level-journey`.
 
+The integrated Expansion 10 smoke starts from a memory-only fresh profile, proves the pre-fins current denial, recovers and builds the authored fins recipe at night, earns the scanner, then swims the collision-active Signal Reef route out and back without teleport or connector travel. It reports source ids, world positions, route distance, oxygen/day state, pending survey state, boat commitment, and the next-expedition lead. CI and release validation run it as `--smoke-expansion-10-regional-journey`.
+
 The salvage-loop smoke check loads the default production level, collects authored salvage through the same runtime methods used in play, returns to extraction, confirms completion, resets, and exits.
 
 The production-slice route smoke loads `production_slice_01`, checks open-water source routes to each authored salvage point, banks cargo at the boat whenever the held capacity fills, confirms completion, resets, and exits.
