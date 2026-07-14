@@ -19,6 +19,7 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_10_PLAN.md`
 - `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md`
+- `docs/current/OCEANGAME_EXPANSION_11_PLAN.md` (proposed; awaiting GO/HOLD)
 
 ## Current State
 
@@ -31,10 +32,13 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 ## Planning Horizons
 
 - Committed: no implementation milestone is selected after the Expansion 10 GO.
-- Directional: the next audit may deepen one regional identity or capability-gated return when it names a bounded goal, non-goals, and exit question.
+- Proposed: #903 recommends a durable dive-light project and dark Signal Reef return; no milestone or batch exists before player GO/HOLD.
+- Directional: oxygen-distance progression, pressure protection, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Current GitHub Milestone State
+
+No milestone is open. Planning issue #903 is the only proposed next-direction gate.
 
 1. [Expansion 10: East-Current Regional Journey](https://github.com/joeypshell/oceangame2/milestone/36) - complete through #889, with player-gate correction #900, player GO, accepted full-level baseline, and exact-SHA Web verification.
 2. [Expansion 09: Contiguous Full-Level Foundation](https://github.com/joeypshell/oceangame2/milestone/35) - complete through #865 with player GO, default promotion, accepted full-level baseline, and exact-SHA Web verification.
@@ -71,6 +75,7 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 - Do not reopen the completed Expansion 09 batch merely to keep the queue full.
 - Select only one bounded milestone at the next audit; do not pre-batch multiple directional expansions.
+- Do not create the proposed Expansion 11 milestone or implementation batch until #903 receives player GO.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
 - Do not use teleports, prompted connectors, map menus, or the current stabilizer for normal traversal of the full level.

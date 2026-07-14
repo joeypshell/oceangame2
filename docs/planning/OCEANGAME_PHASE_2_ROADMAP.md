@@ -2,7 +2,9 @@
 
 Date: 2026-07-13
 
-Status: Expansions 01-09 are complete. Expansion 10 is committed through planning issue #879 and milestone #36 with frozen issues #880-#889.
+Status: Expansions 01-10 are complete with player GO. Planning issue #903
+proposes Expansion 11, but no milestone or implementation batch exists before
+player GO/HOLD on `docs/current/OCEANGAME_EXPANSION_11_PLAN.md`.
 
 ## Decision
 
@@ -90,11 +92,19 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 10 is committed. It turns the existing passive east-current / propulsion-fins promise into one continuous lower-right regional journey with a recognizable landmark, scanner-backed pending discovery, canonical-boat commitment, and a broad reason for another expedition.
+No implementation milestone is committed after the Expansion 10 GO.
+
+### Proposed Planning Gate
+
+Expansion 11 proposes turning the Signal Reef deeper-harmonic lead into one
+durable recipe-built dive-light project and remembered dark return. It remains a
+proposal until the player accepts or holds issue #903.
 
 ### Directional
 
-Other regional identities and capability-gated returns remain directional until Expansion 10 closes. Exceptional interiors and broader world transitions remain later decisions.
+Other regional identities, oxygen-distance progression, pressure protection,
+and exceptional interiors remain directional. Do not batch them alongside the
+proposed light return.
 
 ### Vision
 
@@ -252,7 +262,8 @@ Exit question: can the player launch at the boat, swim through the full authored
 
 ### Expansion 10: East-Current Regional Journey
 
-Status: Committed through `docs/current/OCEANGAME_EXPANSION_10_PLAN.md` and
+Status: Complete with player GO. See
+`docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md` and closed
 [milestone #36](https://github.com/joeypshell/oceangame2/milestone/36).
 
 Goal: make the existing east current the readable entrance to one meaningful
@@ -273,7 +284,35 @@ broad map population, or second new traversal capability belongs in this milesto
 
 Exit question: did building fins turn the east current into the entrance to a
 place the player remembers, and did the lower-right payoff make the return journey
-and another expedition feel worthwhile?
+and another expedition feel worthwhile? **GO recorded at #889 after correction
+#900.**
+
+### Expansion 11: Deep-Harmonic Light Return
+
+Status: Proposed by planning issue #903. Awaiting player GO/HOLD; no milestone
+or implementation issues exist.
+
+Goal: replace the score-owned session light with one durable knowledge/material
+project and use it to resolve a remembered dark harmonic survey beyond Signal
+Reef without changing topology.
+
+Prove:
+
+- Signal Reef knowledge unlocks one exact light recipe
+- guaranteed base materials plus a nonlethal biological component support it
+- night construction creates one durable capability owner
+- existing darkness readability improves and one survey requires the light
+- movement remains continuous, with no invisible wall or prompted crossing
+- the result remains pending until canonical-boat return
+- source, progression, smoke, visual, mobile, and Web evidence remain controlled
+
+Non-goals include pressure progression, terrain expansion, global lighting,
+batteries, inventory, a second light tier, broad region population, and changes
+to oxygen/cargo upgrades.
+
+Exit question: did the Signal Reef clue, material hunt, and night-built light
+make returning to the dark lower-right route feel like a capability earned for a
+place the player remembered, with a payoff worth bringing back to the boat?
 
 ## Original OceanGame Convergence
 

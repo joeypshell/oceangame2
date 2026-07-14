@@ -60,6 +60,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
 - Completed Expansion 10 handoff: `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md` plus its linked plan, source contract, visual decision, Web verification, and correction #900
+- Proposed Expansion 11 planning gate: `docs/current/OCEANGAME_EXPANSION_11_PLAN.md` and issue #903; no milestone or implementation batch before player GO/HOLD
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
@@ -198,7 +199,8 @@ Current issue state as of 2026-07-13:
 - Closed: #836 and #838-#843 completed Expansion 08 with a technical GO.
 - Closed: #857-#865 plus correction #875 via PR #876 completed the contiguous full-level foundation, player GO, default promotion, and exact-SHA Web verification.
 - Closed: #880-#889 plus correction #900 via PR #901 completed the east-current regional journey, player GO, and exact-SHA Web verification.
-- Active: no next implementation milestone is selected.
+- Active planning gate: #903 proposes a durable dive-light/deep-harmonic return; no next implementation milestone is selected before player GO/HOLD.
+- Open bookkeeping: #849 names three UID sidecars already committed by `e825c88`; it does not block planning and should be closed separately with that evidence.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
@@ -335,7 +337,7 @@ Current issue state as of 2026-07-13:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` and `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md` as the current handoff. Expansion 10 is closed with GO. No next implementation milestone is selected; the next audit should choose one bounded roadmap direction before creating an issue batch.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`, `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md`, and proposed `docs/current/OCEANGAME_EXPANSION_11_PLAN.md` as the current handoff. Expansion 10 is closed with GO. Issue #903 is the planning gate; do not create the proposed milestone or implementation batch before player GO/HOLD.
 
 Accepted constraints for next work:
 
