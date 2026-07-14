@@ -131,6 +131,8 @@ class ProgressionGraphBuilder:
     def _add_global_nodes(self) -> None:
         for item in self.contract["session_upgrades"]:
             self.graph.add_node(Node(f"upgrade:{item['id']}", _display(item["id"]), "upgrade", attrs=dict(item)), item["id"])
+        for item in self.contract["durable_capabilities"]:
+            self.graph.add_node(Node(f"capability:{item['id']}", _display(item["id"]), "capability", attrs={**item, "declaration_only": True}), item["id"])
         for item in self.contract["durable_purchases"]:
             self.graph.add_node(Node(f"capability:{item['id']}", _display(item["id"]), "capability", attrs=dict(item)), item["id"])
 
@@ -449,7 +451,7 @@ class ProgressionGraphBuilder:
     def _mark_mandatory_chain(self) -> None:
         for raw_id in CANONICAL_CHAIN_IDS:
             self._mark(self.graph.resolve(raw_id))
-        for item in [*self.contract["session_upgrades"], *self.contract["durable_purchases"]]:
+        for item in [*self.contract["session_upgrades"], *self.contract["durable_capabilities"], *self.contract["durable_purchases"]]:
             if item.get("mandatory") is True:
                 self._mark(self.graph.resolve(item["id"]))
                 for raw_id in _list(item.get("funding_source_ids")) + _list(item.get("unlocks_target_ids")):

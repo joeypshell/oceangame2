@@ -14,6 +14,9 @@ const SALVAGE_CUTTER_CAPABILITY_ID := "salvage_cutter"
 const ANOMALY_DISCOVERY_ID := "lower_right_anomaly_discovery"
 const MINERAL_TRACE_RESEARCH_ID := "upper_right_mineral_trace_research"
 const SIGNAL_REEF_DISCOVERY_ID := "lower_right_signal_reef_discovery"
+const DIVE_LIGHT_CAPABILITY_ID := ProgressionContract.DIVE_LIGHT_CAPABILITY_ID
+const DIVE_LIGHT_PROJECT_ID := "dive_light_1_project"
+const DIVE_LIGHT_TARGET_ID := "signal_reef_deep_harmonic_survey"
 const SALVAGE_CUTTER_PROJECT_ID := "salvage_cutter_project"
 const SALVAGE_CUTTER_TARGET_ID := "salvage_sealed_wreck_cache"
 const CURRENT_STABILIZER_CAPABILITY_ID := "current_stabilizer"
@@ -40,11 +43,11 @@ const PROFILE_KEYS := {
 }
 const LEGACY_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true}
 const MATERIAL_SCHEMA_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true}
-const SUPPORTED_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, PROPULSION_FINS_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true, CURRENT_STABILIZER_CAPABILITY_ID: true, SHOCK_PROD_CAPABILITY_ID: true, SHOCK_PROD_CAPACITOR_CAPABILITY_ID: true}
+const SUPPORTED_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, PROPULSION_FINS_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true, CURRENT_STABILIZER_CAPABILITY_ID: true, SHOCK_PROD_CAPABILITY_ID: true, SHOCK_PROD_CAPACITOR_CAPABILITY_ID: true, DIVE_LIGHT_CAPABILITY_ID: true}
 const SUPPORTED_DISCOVERY_IDS := {PROPULSION_FINS_BLUEPRINT_ID: true, ANOMALY_DISCOVERY_ID: true, MINERAL_TRACE_RESEARCH_ID: true, SIGNAL_REEF_DISCOVERY_ID: true}
 const SUPPORTED_MATERIAL_IDS := {TITANIUM_MATERIAL_ID: true, RUBBER_MATERIAL_ID: true, COIL_MATERIAL_ID: true, INSULATING_GEL_MATERIAL_ID: true, EEL_ELECTROCYTE_MATERIAL_ID: true}
 const MATERIAL_SCHEMA_PROJECT_IDS := {SALVAGE_CUTTER_PROJECT_ID: true}
-const SUPPORTED_PROJECT_IDS := {PROPULSION_FINS_PROJECT_ID: true, SALVAGE_CUTTER_PROJECT_ID: true, CURRENT_STABILIZER_PROJECT_ID: true, SHOCK_PROD_PROJECT_ID: true, SHOCK_PROD_CAPACITOR_PROJECT_ID: true}
+const SUPPORTED_PROJECT_IDS := {PROPULSION_FINS_PROJECT_ID: true, SALVAGE_CUTTER_PROJECT_ID: true, CURRENT_STABILIZER_PROJECT_ID: true, SHOCK_PROD_PROJECT_ID: true, SHOCK_PROD_CAPACITOR_PROJECT_ID: true, DIVE_LIGHT_PROJECT_ID: true}
 const PROJECT_RULES := ExpansionProfileProjectRules.RULES
 
 var _storage_path: String
@@ -115,7 +118,7 @@ func unlock_capability(capability_id: String, persist := true) -> Dictionary:
 		return {"changed": false, "reason": "unsupported_capability", "capability_id": capability_id}
 	if has_capability(capability_id):
 		return {"changed": false, "reason": "already_unlocked", "capability_id": capability_id}
-	if capability_id in [PROPULSION_FINS_CAPABILITY_ID, SALVAGE_CUTTER_CAPABILITY_ID, CURRENT_STABILIZER_CAPABILITY_ID, SHOCK_PROD_CAPABILITY_ID, SHOCK_PROD_CAPACITOR_CAPABILITY_ID]:
+	if capability_id in [PROPULSION_FINS_CAPABILITY_ID, SALVAGE_CUTTER_CAPABILITY_ID, CURRENT_STABILIZER_CAPABILITY_ID, SHOCK_PROD_CAPABILITY_ID, SHOCK_PROD_CAPACITOR_CAPABILITY_ID, DIVE_LIGHT_CAPABILITY_ID]:
 		return {"changed": false, "reason": "project_transaction_required", "capability_id": capability_id}
 	_unlocked_capabilities[capability_id] = true
 	if persist and not save_profile():

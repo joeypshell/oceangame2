@@ -1,5 +1,6 @@
 extends RefCounted
 
+const ReviewProgressionFixture := preload("res://scripts/main/review_progression_fixture.gd")
 const ZONE_ID := "deep_cache_dark_pocket"
 const EXPECTED_LEVEL := "dark"
 const CAPTURE_ZOOM := Vector2(0.82, 0.82)
@@ -47,7 +48,7 @@ func capture_and_quit(capture_dir: String) -> void:
 	await _save_capture(camera, capture_dir, "before_light")
 
 	_main.set_process(true)
-	if not _purchase_light_upgrade():
+	if not _prepare_durable_light():
 		return
 	zone = _visibility_zone_by_id(ZONE_ID)
 	if not bool(zone.get("readability_upgraded", false)):
@@ -65,13 +66,10 @@ func capture_and_quit(capture_dir: String) -> void:
 	_main.get_tree().quit()
 
 
-func _purchase_light_upgrade() -> bool:
-	_main._player.global_position = _main._world.get_extraction_center()
-	if _main._player.has_method("reset_motion"):
-		_main._player.reset_motion()
-	_main._session_progression.record_banked_salvage(_main.SessionProgression.LIGHT_UPGRADE_COST)
-	if not _main._try_purchase_light_upgrade():
-		push_error("Darkness/light capture could not purchase light upgrade: wallet=%d." % _main._session_wallet())
+func _prepare_durable_light() -> bool:
+	var result: Dictionary = ReviewProgressionFixture.complete_dive_light(_main)
+	if not bool(result.get("ready", false)):
+		push_error("Darkness/light capture could not prepare durable light: %s." % result)
 		_main.get_tree().quit(1)
 		return false
 	return true

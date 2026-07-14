@@ -1,5 +1,7 @@
 extends RefCounted
 
+const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+
 
 static func prepare_guarded_salvage(main, salvage: Dictionary) -> Dictionary:
 	if main == null or salvage.is_empty():
@@ -40,6 +42,39 @@ static func complete_capability(main, capability_id: String) -> Dictionary:
 	completion["ready"] = bool(completion.get("ready", false)) and profile.has_capability(capability_id)
 	completion["capability_id"] = capability_id
 	return completion
+
+
+static func complete_dive_light(main) -> Dictionary:
+	var profile = main._anomaly_survey.profile_state() if main != null and main._anomaly_survey != null else null
+	if profile == null:
+		return {"ready": false, "reason": "missing_profile", "capability_id": ExpansionProfileState.DIVE_LIGHT_CAPABILITY_ID}
+	if profile.has_capability(ExpansionProfileState.DIVE_LIGHT_CAPABILITY_ID):
+		_apply_dive_light(main)
+		return {"ready": true, "reason": "already_completed", "capability_id": ExpansionProfileState.DIVE_LIGHT_CAPABILITY_ID}
+	var project := dive_light_project_definition()
+	var completion := _complete_project([project], profile, project)
+	completion["ready"] = bool(completion.get("ready", false)) and profile.has_capability(ExpansionProfileState.DIVE_LIGHT_CAPABILITY_ID)
+	completion["capability_id"] = ExpansionProfileState.DIVE_LIGHT_CAPABILITY_ID
+	if bool(completion["ready"]):
+		_apply_dive_light(main)
+	return completion
+
+
+static func dive_light_project_definition() -> Dictionary:
+	return {
+		"id": ExpansionProfileState.DIVE_LIGHT_PROJECT_ID,
+		"required_discovery_id": ExpansionProfileState.SIGNAL_REEF_DISCOVERY_ID,
+		"required_materials": {
+			ExpansionProfileState.TITANIUM_MATERIAL_ID: 1,
+			ExpansionProfileState.COIL_MATERIAL_ID: 1,
+			ExpansionProfileState.INSULATING_GEL_MATERIAL_ID: 1,
+		},
+		"unlocks_capability_id": ExpansionProfileState.DIVE_LIGHT_CAPABILITY_ID,
+		"target_id": ExpansionProfileState.DIVE_LIGHT_TARGET_ID,
+		"build_phase": "night_debrief",
+		"project_label": "Dive light project",
+		"completion_label": "Dive light built",
+	}
 
 
 static func _complete_project(projects: Array, profile, project: Dictionary) -> Dictionary:
@@ -87,3 +122,8 @@ static func _project_by_id(projects: Array, project_id: String) -> Dictionary:
 		if str(project.get("id", "")) == project_id:
 			return project
 	return {}
+
+
+static func _apply_dive_light(main) -> void:
+	if main._progression_runtime != null:
+		main._progression_runtime.apply_light_profile(main._world, main._player)

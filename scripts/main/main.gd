@@ -130,7 +130,6 @@ const PASS_14_OBJECTIVE_CUE_CAPTURE_DIR := "res://visual_captures/pass_14_object
 const PASS_15_OBJECTIVE_FOLLOW_THROUGH_CAPTURE_DIR := "res://visual_captures/pass_15_objective_follow_through"
 const PASS_18_PROGRESSION_CAPTURE_DIR := "res://visual_captures/pass_18_progression"
 const PASS_19_CARGO_UPGRADE_CAPTURE_DIR := "res://visual_captures/pass_19_cargo_upgrade"
-const PASS_20_LIGHT_UPGRADE_CAPTURE_DIR := "res://visual_captures/pass_20_light_upgrade"
 const PASS_21_WORLD_CONNECTOR_CAPTURE_DIR := "res://visual_captures/pass_21_world_connector"
 const PASS_22_DESTINATION_PAYOFF_CAPTURE_DIR := "res://visual_captures/pass_22_destination_payoff"
 const PASS_23_NEXT_DIVE_OBJECTIVE_CAPTURE_DIR := "res://visual_captures/pass_23_next_dive_objective"
@@ -344,7 +343,6 @@ func _ready() -> void:
 	var capture_pass_15_objective_follow_through := _has_arg(user_args, engine_args, "--capture-pass-15-objective-follow-through")
 	var capture_pass_18_progression := _has_arg(user_args, engine_args, "--capture-pass-18-progression")
 	var capture_pass_19_cargo_upgrade := _has_arg(user_args, engine_args, "--capture-pass-19-cargo-upgrade")
-	var capture_pass_20_light_upgrade := _has_arg(user_args, engine_args, "--capture-pass-20-light-upgrade")
 	var capture_pass_21_world_connector := _has_arg(user_args, engine_args, "--capture-pass-21-world-connector")
 	var capture_pass_22_destination_payoff := _has_arg(user_args, engine_args, "--capture-pass-22-destination-payoff")
 	var capture_pass_23_next_dive_objective := _has_arg(user_args, engine_args, "--capture-pass-23-next-dive-objective")
@@ -488,8 +486,6 @@ func _ready() -> void:
 	elif capture_pass_18_progression:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_pass_19_cargo_upgrade:
-		selected_map_path = PRODUCTION_SLICE_MAP_PATH
-	elif capture_pass_20_light_upgrade:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif capture_pass_21_world_connector:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
@@ -665,7 +661,6 @@ func _ready() -> void:
 		or capture_pass_15_objective_follow_through
 		or capture_pass_18_progression
 		or capture_pass_19_cargo_upgrade
-		or capture_pass_20_light_upgrade
 		or capture_pass_21_world_connector
 		or capture_pass_22_destination_payoff
 		or capture_pass_23_next_dive_objective
@@ -751,6 +746,7 @@ func _ready() -> void:
 	)
 	var profile_persistence_enabled := ReviewProfileMode.persistence_enabled(automated_review, _fresh_review_profile_enabled)
 	_anomaly_survey = AnomalySurveyRuntime.new(_progression_runtime, profile_persistence_enabled)
+	_progression_runtime.set_profile_state(_anomaly_survey.profile_state())
 	_material_runtime = MaterialRuntimeController.new(_anomaly_survey.profile_state())
 	_material_project = MaterialProjectRuntime.new(_anomaly_survey.profile_state())
 	_cutter_salvage = CutterSalvageController.new(_anomaly_survey.profile_state())
@@ -832,7 +828,7 @@ func _ready() -> void:
 		_smoke_progression_checks._smoke_pass_19_cargo_upgrade_and_quit()
 		return
 	if smoke_pass_20_light_upgrade:
-		_smoke_progression_checks._smoke_pass_20_light_upgrade_and_quit()
+		_smoke_darkness_light_checks._smoke_pass_20_durable_light_and_quit()
 		return
 	if smoke_pass_21_world_connector:
 		_smoke_world_connector_checks._smoke_pass_21_world_connector_and_quit()
@@ -1011,8 +1007,6 @@ func _ready() -> void:
 		_capture_controller.capture_pass_18_progression_and_quit(PASS_18_PROGRESSION_CAPTURE_DIR)
 	elif capture_pass_19_cargo_upgrade:
 		_capture_controller.capture_pass_19_cargo_upgrade_and_quit(PASS_19_CARGO_UPGRADE_CAPTURE_DIR)
-	elif capture_pass_20_light_upgrade:
-		_capture_controller.capture_pass_20_light_upgrade_and_quit(PASS_20_LIGHT_UPGRADE_CAPTURE_DIR)
 	elif capture_pass_21_world_connector:
 		_capture_controller.capture_pass_21_world_connector_and_quit(PASS_21_WORLD_CONNECTOR_CAPTURE_DIR)
 	elif capture_pass_22_destination_payoff:
@@ -1113,7 +1107,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_player_health.begin_map_leg(preserve_sortie)
 	player.position = world.get_entry_position(entry_id) if not entry_id.is_empty() and world.has_method("get_entry_position") else world.spawn_position
 	add_child(player)
-	_apply_session_light_profile()
+	_apply_durable_light_profile()
 
 	if player.has_method("set_camera_limits"):
 		player.set_camera_limits(Rect2(Vector2.ZERO, world.map_pixel_size))
@@ -1338,8 +1332,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		_try_purchase_oxygen_tank_upgrade()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_C:
 		_try_purchase_cargo_capacity_upgrade()
-	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_L:
-		_try_purchase_light_upgrade()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_P:
 		_show_propulsion_project_guidance()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_Q:
@@ -2270,10 +2262,6 @@ func _try_purchase_cargo_capacity_upgrade() -> bool:
 	return _try_purchase_progression_upgrade(SessionProgression.CARGO_CAPACITY_UPGRADE_ID)
 
 
-func _try_purchase_light_upgrade() -> bool:
-	return _try_purchase_progression_upgrade(SessionProgression.LIGHT_UPGRADE_ID)
-
-
 func _show_propulsion_project_guidance() -> void:
 	if _material_project != null:
 		_last_status_note = _material_project.active_day_build_feedback(_current_map_id(), _scanner_lead_available())
@@ -2310,7 +2298,7 @@ func _has_upgrade_id(upgrade_id: String) -> bool:
 	return _progression_runtime != null and _progression_runtime.has_upgrade_id(upgrade_id)
 
 
-func _apply_session_light_profile() -> void:
+func _apply_durable_light_profile() -> void:
 	if _progression_runtime != null:
 		_progression_runtime.apply_light_profile(_world, _player)
 

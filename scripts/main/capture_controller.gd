@@ -10,7 +10,6 @@ const Pass14ObjectiveCueCapture := preload("res://scripts/main/captures/pass_14_
 const Pass15ObjectiveFollowThroughCapture := preload("res://scripts/main/captures/pass_15_objective_follow_through_capture.gd")
 const Pass18ProgressionCapture := preload("res://scripts/main/captures/pass_18_progression_capture.gd")
 const Pass19CargoUpgradeCapture := preload("res://scripts/main/captures/pass_19_cargo_upgrade_capture.gd")
-const Pass20LightUpgradeCapture := preload("res://scripts/main/captures/pass_20_light_upgrade_capture.gd")
 const Pass21WorldConnectorCapture := preload("res://scripts/main/captures/pass_21_world_connector_capture.gd")
 const PrimaryDiveCompletionCapture := preload("res://scripts/main/captures/primary_dive_completion_capture.gd")
 const DarknessLightCapture := preload("res://scripts/main/captures/darkness_light_capture.gd")
@@ -446,11 +445,6 @@ func capture_pass_18_progression_and_quit(capture_dir: String) -> void:
 
 func capture_pass_19_cargo_upgrade_and_quit(capture_dir: String) -> void:
 	var capture := Pass19CargoUpgradeCapture.new(_main)
-	await capture.capture_and_quit(capture_dir)
-
-
-func capture_pass_20_light_upgrade_and_quit(capture_dir: String) -> void:
-	var capture := Pass20LightUpgradeCapture.new(_main)
 	await capture.capture_and_quit(capture_dir)
 
 

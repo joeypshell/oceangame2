@@ -1,12 +1,24 @@
 extends RefCounted
 
 const SessionProgression := preload("res://scripts/main/session_progression.gd")
+const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
+
+const DIVE_LIGHT_CAPABILITY_ID := ProgressionContract.DIVE_LIGHT_CAPABILITY_ID
+const BASE_LIGHT_RANGE_SCALE := 1.0
+const BASE_LIGHT_ALPHA := 0.38
+const DIVE_LIGHT_RANGE_SCALE := 1.25
+const DIVE_LIGHT_ALPHA := 0.48
 
 var _progression
+var _profile
 
 
 func _init(progression) -> void:
 	_progression = progression
+
+
+func set_profile_state(profile_state) -> void:
+	_profile = profile_state
 
 
 func record_banked_salvage(banked_score: int) -> int:
@@ -30,6 +42,8 @@ func total_payout_earned() -> int:
 
 
 func try_purchase(upgrade_id: String, world, player) -> Dictionary:
+	if upgrade_id == DIVE_LIGHT_CAPABILITY_ID:
+		return {"purchased": false, "note": "Build dive light at night"}
 	if _progression == null or world == null or player == null:
 		return {"purchased": false}
 	if not world.is_inside_extraction(player.global_position):
@@ -37,8 +51,6 @@ func try_purchase(upgrade_id: String, world, player) -> Dictionary:
 
 	var result := _purchase(upgrade_id)
 	if bool(result.get("purchased", false)):
-		if upgrade_id == SessionProgression.LIGHT_UPGRADE_ID:
-			apply_light_profile(world, player)
 		return {
 			"purchased": true,
 			"note": _purchase_note(upgrade_id, true),
@@ -64,8 +76,6 @@ func _purchase(upgrade_id: String) -> Dictionary:
 			return _progression.purchase_oxygen_tank_upgrade()
 		SessionProgression.CARGO_CAPACITY_UPGRADE_ID:
 			return _progression.purchase_cargo_capacity_upgrade()
-		SessionProgression.LIGHT_UPGRADE_ID:
-			return _progression.purchase_light_upgrade()
 	return {"purchased": false, "reason": "blocked"}
 
 
@@ -75,8 +85,6 @@ func _purchase_note(upgrade_id: String, purchased: bool) -> String:
 			return "O2 tank upgraded" if purchased else "O2 tank already upgraded"
 		SessionProgression.CARGO_CAPACITY_UPGRADE_ID:
 			return "Cargo +1 upgraded" if purchased else "Cargo +1 already upgraded"
-		SessionProgression.LIGHT_UPGRADE_ID:
-			return "Light +range upgraded" if purchased else "Light +range already upgraded"
 	return "Upgrade blocked"
 
 
@@ -89,7 +97,7 @@ func has_cargo_capacity_upgrade() -> bool:
 
 
 func has_light_upgrade() -> bool:
-	return _progression != null and _progression.has_light_upgrade()
+	return _profile != null and _profile.has_capability(DIVE_LIGHT_CAPABILITY_ID)
 
 
 func has_upgrade_id(upgrade_id: String) -> bool:
@@ -98,18 +106,18 @@ func has_upgrade_id(upgrade_id: String) -> bool:
 			return has_oxygen_tank_upgrade()
 		SessionProgression.CARGO_CAPACITY_UPGRADE_ID:
 			return has_cargo_capacity_upgrade()
-		SessionProgression.LIGHT_UPGRADE_ID:
+		DIVE_LIGHT_CAPABILITY_ID:
 			return has_light_upgrade()
 	return false
 
 
 func apply_light_profile(world, player) -> void:
-	if _progression == null:
-		return
+	var range_scale := DIVE_LIGHT_RANGE_SCALE if has_light_upgrade() else BASE_LIGHT_RANGE_SCALE
+	var alpha := DIVE_LIGHT_ALPHA if has_light_upgrade() else BASE_LIGHT_ALPHA
 	if player != null and player.has_method("apply_light_profile"):
-		player.apply_light_profile(_progression.light_range_scale(), _progression.light_alpha())
+		player.apply_light_profile(range_scale, alpha)
 	if world != null and world.has_method("set_visibility_upgrade_state"):
-		world.set_visibility_upgrade_state(SessionProgression.LIGHT_UPGRADE_ID, has_light_upgrade())
+		world.set_visibility_upgrade_state(DIVE_LIGHT_CAPABILITY_ID, has_light_upgrade())
 
 
 func held_salvage_capacity(base_capacity: int) -> int:
@@ -133,22 +141,17 @@ func overlay_text(world, player) -> String:
 			int(SessionProgression.CARGO_CAPACITY_UPGRADE_BONUS),
 			SessionProgression.CARGO_CAPACITY_UPGRADE_COST,
 		]
-	var at_extraction: bool = world != null and player != null and world.is_inside_extraction(player.global_position)
-	var light_text := "Light +range" if has_light_upgrade() else "Light base"
-	if not has_light_upgrade() and at_extraction:
-		light_text = "L: Light +range (%d)" % SessionProgression.LIGHT_UPGRADE_COST
-	return "Wallet %d\n%s | %s\n%s" % [
+	return "Wallet %d\n%s | %s" % [
 		wallet(),
 		oxygen_text,
 		cargo_text,
-		light_text,
 	]
 
 
 func result_text() -> String:
 	var oxygen_text := "O2 tank +%ds" % int(SessionProgression.OXYGEN_TANK_UPGRADE_SECONDS) if has_oxygen_tank_upgrade() else "O2 tank base"
 	var cargo_text := "Cargo +%d" % int(SessionProgression.CARGO_CAPACITY_UPGRADE_BONUS) if has_cargo_capacity_upgrade() else "Cargo base"
-	var light_text := "Light +range" if has_light_upgrade() else "Light base"
+	var light_text := "Dive light built" if has_light_upgrade() else "Dive light not built"
 	return "Wallet %d | %s | %s | %s" % [wallet(), oxygen_text, cargo_text, light_text]
 
 
@@ -158,8 +161,7 @@ func is_status_note(status_note: String) -> bool:
 		or status_note == "O2 tank already upgraded"
 		or status_note == "Cargo +1 upgraded"
 		or status_note == "Cargo +1 already upgraded"
-		or status_note == "Light +range upgraded"
-		or status_note == "Light +range already upgraded"
+		or status_note == "Build dive light at night"
 		or status_note.begins_with("Upgrade chest +")
 		or status_note == "Upgrade at extraction"
 		or status_note == "Upgrade blocked"

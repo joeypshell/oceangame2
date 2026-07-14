@@ -20,11 +20,12 @@
       "constant_name": "CARGO_CAPACITY",
       "cost": 700,
       "mandatory": false
-    },
+    }
+  ],
+  "durable_capabilities": [
     {
       "id": "dive_light_1",
-      "constant_name": "LIGHT",
-      "cost": 900,
+      "constant_name": "DIVE_LIGHT",
       "mandatory": false
     }
   ],
