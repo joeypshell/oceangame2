@@ -18,6 +18,13 @@ from production_level_01_expansion_10 import (
     survey_targets as expansion_10_survey_targets,
     zones as expansion_10_zones,
 )
+from production_level_01_expansion_11 import (
+    camera_tests as expansion_11_camera_tests,
+    material_projects as expansion_11_material_projects,
+    source_provenance as expansion_11_source_provenance,
+    survey_targets as expansion_11_survey_targets,
+    zones as expansion_11_zones,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -372,6 +379,7 @@ def build_map_data(source_map: dict) -> dict:
             },
             "gameplay_overlay": gameplay_provenance,
             "expansion_10": expansion_10_source_provenance(),
+            "expansion_11": expansion_11_source_provenance(),
             "review_artifact": "references/greybox/production_level_01_source_render_collision_review.png",
         },
         "units": {
@@ -401,6 +409,7 @@ def build_map_data(source_map: dict) -> dict:
             *SECTOR_ANCHORS,
             *gameplay["zones"],
             *expansion_10_zones(),
+            *expansion_11_zones(),
         ],
         "regional_journeys": expansion_10_regional_journeys(),
         "daily_conditions": gameplay["daily_conditions"],
@@ -411,12 +420,21 @@ def build_map_data(source_map: dict) -> dict:
         "route_objectives": gameplay["route_objectives"],
         "primary_route_objective_id": gameplay["primary_route_objective_id"],
         "next_dive_objective_prompts": gameplay["next_dive_objective_prompts"],
-        "survey_targets": [*gameplay["survey_targets"], *expansion_10_survey_targets()],
+        "survey_targets": [
+            *gameplay["survey_targets"],
+            *expansion_10_survey_targets(),
+            *expansion_11_survey_targets(),
+        ],
         "material_candidate_pools": gameplay["material_candidate_pools"],
-        "material_projects": gameplay["material_projects"],
+        "material_projects": [*gameplay["material_projects"], *expansion_11_material_projects()],
         "background": [*gameplay["background"], *expansion_10_background()],
         "entities": [canonical_boat(source_map), *gameplay["entities"]],
-        "camera_tests": [*camera_tests(), *gameplay["camera_tests"], *expansion_10_camera_tests()],
+        "camera_tests": [
+            *camera_tests(),
+            *gameplay["camera_tests"],
+            *expansion_10_camera_tests(),
+            *expansion_11_camera_tests(),
+        ],
         "review_questions": [
             "Does the candidate preserve the complete supplied cave silhouette?",
             "Is the canonical boat opening the only visible route out of the outer boundary?",

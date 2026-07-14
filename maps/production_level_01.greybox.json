@@ -1317,6 +1317,25 @@
       "terrain_changes": [],
       "intent": "Source-authored regional route metadata with no topology edits."
     },
+    "expansion_11": {
+      "source": "tools/production_level_01_expansion_11.py",
+      "project_ids": [
+        "dive_light_1_project"
+      ],
+      "zone_ids": [
+        "signal_reef_deep_harmonic_dark_zone"
+      ],
+      "survey_target_ids": [
+        "signal_reef_deep_harmonic_survey"
+      ],
+      "camera_test_ids": [
+        "expansion_11_pre_light_route_context",
+        "expansion_11_upgraded_harmonic_survey",
+        "expansion_11_pending_boat_return"
+      ],
+      "terrain_changes": [],
+      "intent": "Source-authored durable-light return metadata in existing open water."
+    },
     "review_artifact": "references/greybox/production_level_01_source_render_collision_review.png"
   },
   "units": {
@@ -4551,6 +4570,21 @@
       "regional_landmark": true,
       "regional_journey_id": "east_current_signal_reef_route",
       "landmark_label": "Signal Reef"
+    },
+    {
+      "id": "signal_reef_deep_harmonic_dark_zone",
+      "type": "marker",
+      "x": 132,
+      "y": 118,
+      "w": 10,
+      "h": 6,
+      "visibility_zone": true,
+      "visibility_level": "dark",
+      "visibility_label": "Deep harmonic dark water",
+      "required_upgrade_id": "dive_light_1",
+      "visual_only": true,
+      "route_context": "east_current_signal_reef_route",
+      "intent": "Use the existing open pocket directly below Signal Reef for a scoutable dark-water return without terrain or collision changes."
     }
   ],
   "regional_journeys": [
@@ -4799,6 +4833,29 @@
       "commit_map_path": "res://maps/production_level_01.greybox.json",
       "commit_entry_id": "surface_boat_entry",
       "intent": "Turn the fins-gated regional landmark into a scanner-backed discovery that commits only at the canonical surface boat."
+    },
+    {
+      "id": "signal_reef_deep_harmonic_survey",
+      "target_type": "regional",
+      "x": 136,
+      "y": 120,
+      "w": 2,
+      "h": 2,
+      "required_capability_id": "survey_scanner_1",
+      "required_light_capability_id": "dive_light_1",
+      "required_route_id": "east_current_signal_reef_route",
+      "route_context": "east_current_signal_reef_route",
+      "interaction": "survey",
+      "interaction_seconds": 3.0,
+      "interaction_label": "Survey deep harmonic",
+      "clue_label": "Deep harmonic | Stronger light required",
+      "finding_label": "Discovery logged: Deep harmonic chart",
+      "next_lead_label": "Next lead: signal descends into deeper water",
+      "discovery_id": "signal_reef_deep_harmonic_discovery",
+      "commit_map_id": "production_level_01",
+      "commit_map_path": "res://maps/production_level_01.greybox.json",
+      "commit_entry_id": "surface_boat_entry",
+      "intent": "Make the deeper Signal Reef signal visible before the light while reserving timed progress for the durable capability."
     }
   ],
   "material_candidate_pools": [
@@ -4905,6 +4962,20 @@
       "build_phase": "night_debrief",
       "project_label": "Shock-prod capacitor project",
       "completion_label": "Shock-prod capacitor built"
+    },
+    {
+      "id": "dive_light_1_project",
+      "required_discovery_id": "lower_right_signal_reef_discovery",
+      "required_materials": {
+        "titanium_scrap": 1,
+        "conductive_coil": 1,
+        "insulating_gel": 1
+      },
+      "unlocks_capability_id": "dive_light_1",
+      "target_id": "signal_reef_deep_harmonic_survey",
+      "build_phase": "night_debrief",
+      "project_label": "Dive light project",
+      "completion_label": "Dive light built"
     }
   ],
   "background": [
@@ -5322,6 +5393,27 @@
       "center_y": 113.0,
       "zoom": 0.45,
       "intent": "Signal Reef landmark silhouette and surrounding collision-active water."
+    },
+    {
+      "id": "expansion_11_pre_light_route_context",
+      "center_x": 137.0,
+      "center_y": 116.0,
+      "zoom": 0.42,
+      "intent": "Known Signal Reef landmark above the scoutable dark return pocket."
+    },
+    {
+      "id": "expansion_11_upgraded_harmonic_survey",
+      "center_x": 137.0,
+      "center_y": 121.0,
+      "zoom": 0.55,
+      "intent": "Durable-light survey interaction inside the deep harmonic zone."
+    },
+    {
+      "id": "expansion_11_pending_boat_return",
+      "center_x": 95.0,
+      "center_y": 12.0,
+      "zoom": 0.55,
+      "intent": "Pending deep-harmonic discovery returning to the canonical boat."
     }
   ],
   "review_questions": [

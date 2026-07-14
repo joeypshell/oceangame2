@@ -33,13 +33,18 @@ class RegionalJourneyValidationTests(unittest.TestCase):
 
     def test_survey_must_require_route_and_remain_inside_landmark(self) -> None:
         candidate = copy.deepcopy(self.map_data)
-        survey = candidate["survey_targets"][-1]
+        journey = candidate["regional_journeys"][0]
+        survey = next(
+            item
+            for item in candidate["survey_targets"]
+            if item["id"] == journey["survey_target_id"]
+        )
         survey["required_route_id"] = "wrong_route"
         survey["x"] -= 20
         failures = validate_regional_journey_schema(candidate)
         self.assertTrue(any("target requiring this route" in failure for failure in failures), failures)
 
-        survey["required_route_id"] = candidate["regional_journeys"][0]["id"]
+        survey["required_route_id"] = journey["id"]
         failures = validate_regional_journey_schema(candidate)
         self.assertTrue(any("inside its landmark" in failure for failure in failures), failures)
 
