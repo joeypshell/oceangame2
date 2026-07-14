@@ -1,6 +1,6 @@
 # Project Context
 
-Last updated: 2026-07-13
+Last updated: 2026-07-14
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
@@ -60,7 +60,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
 - Completed Expansion 10 handoff: `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md` plus its linked plan, source contract, visual decision, Web verification, and correction #900
-- Proposed Expansion 11 planning gate: `docs/current/OCEANGAME_EXPANSION_11_PLAN.md` and issue #903; no milestone or implementation batch before player GO/HOLD
+- Active Expansion 11 handoff: `docs/current/OCEANGAME_EXPANSION_11_PLAN.md`, milestone #37, and frozen issues #905-#914 after planning GO on #903
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
@@ -187,7 +187,7 @@ For map changes, run the relevant generator, SVG renderer, validator, parity che
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Each issue needs acceptance criteria, relevant files, implementation notes, and verification steps.
 
-Current issue state as of 2026-07-13:
+Current issue state as of 2026-07-14:
 
 - Closed: #662-#671 completed Expansion 01 with a GO.
 - Closed: #685-#694 completed Expansion 02 with a GO.
@@ -199,7 +199,7 @@ Current issue state as of 2026-07-13:
 - Closed: #836 and #838-#843 completed Expansion 08 with a technical GO.
 - Closed: #857-#865 plus correction #875 via PR #876 completed the contiguous full-level foundation, player GO, default promotion, and exact-SHA Web verification.
 - Closed: #880-#889 plus correction #900 via PR #901 completed the east-current regional journey, player GO, and exact-SHA Web verification.
-- Active planning gate: #903 proposes a durable dive-light/deep-harmonic return; no next implementation milestone is selected before player GO/HOLD.
+- Active: #905-#914 are frozen for Expansion 11 after planning GO on #903.
 - Open bookkeeping: #849 names three UID sidecars already committed by `e825c88`; it does not block planning and should be closed separately with that evidence.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -337,7 +337,7 @@ Current issue state as of 2026-07-13:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`, `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md`, and proposed `docs/current/OCEANGAME_EXPANSION_11_PLAN.md` as the current handoff. Expansion 10 is closed with GO. Issue #903 is the planning gate; do not create the proposed milestone or implementation batch before player GO/HOLD.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`, `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md`, and `docs/current/OCEANGAME_EXPANSION_11_PLAN.md` as the current handoff. Resolve only frozen milestone #37 issues #905-#914 in dependency order; do not select Expansion 12 during this batch.
 
 Accepted constraints for next work:
 

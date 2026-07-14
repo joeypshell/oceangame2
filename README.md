@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 10 closeout and Phase 2 roadmap. Planning issue #903 proposes a durable recipe-built dive light and one dark Signal Reef return as Expansion 11, but no milestone or implementation batch exists before player GO/HOLD. Teleport, connector-based normal traversal, stabilizer entry requirements, and pressure progression remain deferred.
+Current handoff starts with the Expansion 10 closeout, Phase 2 roadmap, and committed Expansion 11 plan. Milestone #37 freezes #905-#914 around a durable recipe-built dive light and one dark Signal Reef return. Teleport, connector-based normal traversal, stabilizer entry requirements, and pressure progression remain deferred.
 
 Core sources and operating docs:
 
@@ -101,7 +101,7 @@ Current release and expansion handoff:
 - [Expansion 10 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_10_VISUAL_BASELINE_DECISION.md)
 - [Expansion 10 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_10_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 10 Closeout](docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md)
-- [Proposed OceanGame Expansion 11 Plan](docs/current/OCEANGAME_EXPANSION_11_PLAN.md)
+- [OceanGame Expansion 11 Plan](docs/current/OCEANGAME_EXPANSION_11_PLAN.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 

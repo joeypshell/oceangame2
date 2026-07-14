@@ -1,10 +1,9 @@
 # OceanGame Phase 2 Roadmap
 
-Date: 2026-07-13
+Date: 2026-07-14
 
-Status: Expansions 01-10 are complete with player GO. Planning issue #903
-proposes Expansion 11, but no milestone or implementation batch exists before
-player GO/HOLD on `docs/current/OCEANGAME_EXPANSION_11_PLAN.md`.
+Status: Expansions 01-10 are complete with player GO. Expansion 11 is committed
+after planning GO on #903 through milestone #37 and frozen issues #905-#914.
 
 ## Decision
 
@@ -92,19 +91,15 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-No implementation milestone is committed after the Expansion 10 GO.
-
-### Proposed Planning Gate
-
-Expansion 11 proposes turning the Signal Reef deeper-harmonic lead into one
-durable recipe-built dive-light project and remembered dark return. It remains a
-proposal until the player accepts or holds issue #903.
+Expansion 11 turns the Signal Reef deeper-harmonic lead into one durable
+recipe-built dive-light project and remembered dark return through milestone #37
+and frozen issues #905-#914.
 
 ### Directional
 
 Other regional identities, oxygen-distance progression, pressure protection,
 and exceptional interiors remain directional. Do not batch them alongside the
-proposed light return.
+committed light return.
 
 ### Vision
 
@@ -289,8 +284,10 @@ and another expedition feel worthwhile? **GO recorded at #889 after correction
 
 ### Expansion 11: Deep-Harmonic Light Return
 
-Status: Proposed by planning issue #903. Awaiting player GO/HOLD; no milestone
-or implementation issues exist.
+Status: Committed after player GO on #903 through
+`docs/current/OCEANGAME_EXPANSION_11_PLAN.md`, open
+[milestone #37](https://github.com/joeypshell/oceangame2/milestone/37), and frozen
+issues #905-#914.
 
 Goal: replace the score-owned session light with one durable knowledge/material
 project and use it to resolve a remembered dark harmonic survey beyond Signal

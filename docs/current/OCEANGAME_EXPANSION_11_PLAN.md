@@ -1,13 +1,17 @@
 # OceanGame Expansion 11 Plan
 
-Date: 2026-07-13
+Date: 2026-07-14
 
-Status: Proposed by planning issue #903; awaiting player GO/HOLD. No milestone or
-implementation batch exists.
+Status: Committed after player GO on planning issue #903.
+
+GitHub milestone: [#37 OceanGame Expansion 11: Deep-Harmonic Light
+Return](https://github.com/joeypshell/oceangame2/milestone/37)
+
+Frozen issue batch: #905-#914
 
 ## Decision
 
-Propose **OceanGame Expansion 11: Deep-Harmonic Light Return**.
+OceanGame Expansion 11 is **Deep-Harmonic Light Return**.
 
 The committed Signal Reef discovery will become the knowledge prerequisite for
 one durable `dive_light_1` project. The player will combine guaranteed base
@@ -80,7 +84,7 @@ satisfy the milestone.
 
 ## Capability And Recipe Contract
 
-Proposed stable ids:
+Accepted stable ids:
 
 - project: `dive_light_1_project`
 - capability: `dive_light_1`
@@ -127,26 +131,24 @@ chain. Completed durable capability state remains idempotent across reloads.
 - Do not grow `main.gd`; use the existing focused project, progression, survey,
   and presentation owners.
 
-## Planned Issue Shape
+## Planned Issue Batch
 
-Create the implementation batch only after player GO:
+Dependency order:
 
-1. Lock the Expansion 11 source/state and legacy-light migration contract.
-2. Add progression/schema validation for the durable light chain.
-3. Author the project, dark route, survey, and payoff through the full-level
+1. #905 locks the source/state and legacy-light migration contract.
+2. #906 adds progression/schema validation for the durable light chain.
+3. #907 authors the project, dark route, survey, and payoff through the full-level
    source generator without topology changes.
-4. Move `dive_light_1` ownership from session wallet to durable project/profile
-   state and preserve the existing visual effect.
-5. Integrate the light-gated survey, compact guidance, pending state, and boat
+4. #908 moves `dive_light_1` ownership from session wallet to durable project/profile
+   state and preserves the existing visual effect.
+5. #909 integrates the light-gated survey, compact guidance, pending state, and boat
    commitment through existing owners.
-6. Add deterministic fresh-profile journey and regression coverage.
-7. Add focused desktop/mobile captures for recipe, pre-light denial, improved
+6. #910 adds deterministic fresh-profile journey and regression coverage.
+7. #911 adds focused desktop/mobile captures for recipe, pre-light denial, improved
    readability, and pending return.
-8. Review and accept only intentional full-level visual differences.
-9. Verify the exact merged SHA on the public Web preview.
-10. Run the player GO/HOLD gate and close out the milestone.
-
-This is a proposed dependency shape, not an authorized or created issue batch.
+8. #912 reviews and accepts only intentional full-level visual differences.
+9. #913 verifies the exact merged SHA on the public Web preview.
+10. #914 runs the player GO/HOLD gate and closes out the milestone.
 
 ## Validation And Review Plan
 

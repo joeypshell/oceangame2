@@ -4,7 +4,7 @@
 
 The current project is a Godot 4.7 side-view ocean salvage prototype for proving the source-driven map, terrain, validation, capture, and gameplay workflow that will support a finished small diver game.
 
-The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`; the latest completed milestone decision is `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md`. Expansion 10 added and player-approved one continuous east-current journey to Signal Reef, including the corrected full-level night transition at exact Web build `c576d13`. `docs/current/OCEANGAME_EXPANSION_11_PLAN.md` is proposed planning only until #903 receives player GO/HOLD. Earlier controlled gameplay and visual passes remain implementation evidence, not the whole product direction.
+The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`; the latest completed milestone decision is `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md`. Expansion 10 added and player-approved one continuous east-current journey to Signal Reef, including the corrected full-level night transition at exact Web build `c576d13`. `docs/current/OCEANGAME_EXPANSION_11_PLAN.md` is now committed through milestone #37 and frozen issues #905-#914; its durable-light changes are not yet implemented. Earlier controlled gameplay and visual passes remain implementation evidence, not the whole product direction.
 
 ## Source Of Truth
 
