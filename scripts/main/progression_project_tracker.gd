@@ -1,5 +1,7 @@
 extends PanelContainer
 
+const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+
 const TITANIUM_COLOR := Color(0.52, 0.84, 0.92, 1.0)
 const RUBBER_COLOR := Color(0.96, 0.72, 0.28, 1.0)
 const READY_COLOR := Color(0.50, 0.94, 0.58, 1.0)
@@ -24,11 +26,11 @@ func _init() -> void:
 	_build_ui()
 
 
-func refresh(project_report: Dictionary, held: Dictionary, map_id: String, in_debrief: bool) -> void:
+func refresh(project_report: Dictionary, held: Dictionary, in_debrief: bool) -> void:
 	visible = (
 		bool(project_report.get("propulsion_blueprint_recovered", false))
 		and not bool(project_report.get("propulsion_fins_unlocked", false))
-		and map_id == "production_slice_01"
+		and project_report.get("project_ids", []).has(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID)
 		and not in_debrief
 	)
 	if not visible:

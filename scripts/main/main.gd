@@ -2350,7 +2350,6 @@ func _update_progression_project_tracker() -> void:
 	_progression_project_tracker.refresh(
 		_material_project.report(),
 		_material_runtime.held_quantities(),
-		_current_map_id(),
 		_expedition_day_state != null and _expedition_day_state.phase == ExpeditionDayState.PHASE_DEBRIEF
 	)
 
