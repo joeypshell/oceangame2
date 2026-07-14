@@ -686,6 +686,7 @@ func _progression_container_runtime_info(container: Dictionary) -> Dictionary:
 		"interaction": str(container.get("interaction", "instant")),
 		"reward_type": str(container.get("reward_type", "")),
 		"reward_id": str(container.get("reward_id", "")),
+		"reward_label": str(container.get("reward_label", "")),
 		"reward_amount": int(container.get("reward_amount", 0)),
 		"route_context": str(container.get("route_context", "")),
 	}

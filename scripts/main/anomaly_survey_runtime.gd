@@ -6,10 +6,8 @@ const ProgressionContract := preload("res://scripts/main/progression_contract.gd
 const SurveyInteractionController := preload("res://scripts/main/survey_interaction_controller.gd")
 
 const SCANNER_CAPABILITY_ID := ProgressionContract.SCANNER_CAPABILITY_ID
-const SCANNER_COST := ProgressionContract.SCANNER_COST
 const COMMIT_NOTE := "Discovery committed at surface boat"
-const COMMIT_RESULT := "Discovery logged: Lower-right anomaly\nNext lead: investigate territorial signal"
-const ANOMALY_TARGET_TYPE := "anomaly"
+const COMMIT_RESULT := "Cutter plan recovered: Lower-right anomaly\nProject unlocked: Salvage cutter"
 const REGIONAL_TARGET_TYPE := "regional"
 const RESOURCE_TARGET_TYPE := "resource"
 const RESOURCE_COMMIT_NOTE := "Research committed at surface boat"
@@ -18,7 +16,6 @@ var _progression_runtime
 var _profile
 var _expedition
 var _interaction
-var _lead_available := false
 var _last_note := ""
 var _last_result := ""
 
@@ -33,42 +30,15 @@ func _init(progression_runtime, persist_profile := true, profile_state = null) -
 	_interaction = SurveyInteractionController.new()
 
 
-func activate_lead() -> Dictionary:
-	if _profile.has_completed_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID):
-		return {"changed": false, "reason": "discovery_complete"}
-	var changed := not _lead_available
-	_lead_available = true
-	return {"changed": changed, "reason": "lead_available"}
-
-
-func activate_lead_from_banked_ids(banked_ids: Array[String]) -> Dictionary:
-	if not banked_ids.has(ProgressionContract.SCANNER_LEAD_SOURCE_ID):
-		return {"changed": false, "reason": "lead_source_missing"}
-	return activate_lead()
-
-
-func try_unlock_scanner(world, player) -> Dictionary:
-	if _profile.has_capability(SCANNER_CAPABILITY_ID):
-		return _note_result(false, "already_unlocked", "Scanner already unlocked")
-	if not _lead_available:
-		return _note_result(false, "lead_unavailable", "Scanner lead unavailable")
-	if not _at_canonical_boat(world, player):
-		return _note_result(false, "wrong_location", "Unlock scanner at surface boat")
-	if _progression_runtime == null or not _progression_runtime.has_method("spend_wallet"):
-		return _note_result(false, "wallet_unavailable", "Scanner purchase unavailable")
-
-	var spend: Dictionary = _progression_runtime.spend_wallet(SCANNER_COST)
-	if not bool(spend.get("spent", false)):
-		return _note_result(
-			false,
-			str(spend.get("reason", "insufficient_funds")),
-			"Need %d more for scanner" % int(spend.get("needed", SCANNER_COST))
-		)
-	var unlock: Dictionary = _profile.unlock_capability(SCANNER_CAPABILITY_ID, true)
-	if not bool(unlock.get("changed", false)):
-		_progression_runtime.grant_wallet_reward(SCANNER_COST)
-		return _note_result(false, str(unlock.get("reason", "storage_error")), "Scanner unlock failed - wallet restored")
-	return _note_result(true, "unlocked", "Scanner unlocked")
+func scanner_action(world, player) -> Dictionary:
+	if not has_scanner():
+		if _profile.has_completed_discovery(ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID):
+			return _note_result(false, "project_required", "Scanner project | Ti 1 + Coil 1 | Build at night")
+		return _note_result(false, "blueprint_required", "Find scanner blueprint beyond east current")
+	var target := _survey_target_at(world, player.global_position) if world != null and player != null else {}
+	if not target.is_empty() and not _profile.has_completed_discovery(str(target.get("discovery_id", ""))):
+		return _note_result(false, "active", "Scanner active | Hold position")
+	return _note_result(false, "ready", "Scanner ready | Approach a survey signal")
 
 
 func update(world, player, delta: float) -> Dictionary:
@@ -98,10 +68,6 @@ func update(world, player, delta: float) -> Dictionary:
 		var same_pending: bool = _expedition.pending_discovery_id() == discovery_id
 		_set_target_state(world, target_id, "pending" if same_pending else "locked")
 		return _note_result(false, "pending" if same_pending else "pending_exists", _pending_status_note())
-	if _target_requires_lead(target) and not _lead_available:
-		_interaction.reset()
-		_set_target_state(world, target_id, "locked")
-		return _note_result(false, "lead_required", "Anomaly lead required")
 	if not _profile.has_capability(str(target.get("required_capability_id", ""))):
 		_interaction.reset()
 		_set_target_state(world, target_id, "locked")
@@ -167,11 +133,9 @@ func overlay_text(world, player) -> String:
 				return ""
 			return clue if has_scanner() else "%s | Scanner required" % clue
 	if _profile.has_completed_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID):
-		return "Discovery logged | Lower-right anomaly"
-	if not _lead_available:
-		return ""
-	if not _profile.has_capability(SCANNER_CAPABILITY_ID):
-		return "Q: Scanner (%d)" % SCANNER_COST if _at_canonical_boat(world, player) else "Anomaly lead | Unlock scanner at boat"
+		return "Cutter plan recovered | Salvage cutter project"
+	if not has_scanner():
+		return "Scanner project | Ti 1 + Coil 1 | Build at night" if _profile.has_completed_discovery(ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID) else ""
 	return "Scanner ready | Survey lower-right anomaly"
 
 
@@ -182,8 +146,8 @@ func result_text() -> String:
 func is_status_note(status_note: String) -> bool:
 	return (
 		status_note.begins_with("Scanner")
-		or status_note.begins_with("Unlock scanner")
-		or status_note.find(" for scanner") != -1
+		or status_note.begins_with("Find scanner")
+		or status_note.begins_with("Cutter")
 		or status_note.begins_with("Survey")
 		or status_note.begins_with("Discovery")
 		or status_note.begins_with("Anomaly")
@@ -215,9 +179,7 @@ func profile_state():
 
 func report() -> Dictionary:
 	return {
-		"lead_available": _lead_available,
 		"scanner_unlocked": has_scanner(),
-		"scanner_cost": SCANNER_COST,
 		"wallet": _progression_runtime.wallet() if _progression_runtime != null else 0,
 		"profile": _profile.report(),
 		"expedition": _expedition.report(),
@@ -241,7 +203,6 @@ func _try_commit(world, player) -> Dictionary:
 	var discovery_id := str(commit.get("committed_discovery_id", ""))
 	var metadata: Dictionary = commit.get("metadata", {})
 	if discovery_id == ExpansionProfileState.ANOMALY_DISCOVERY_ID:
-		_lead_available = false
 		_last_note = COMMIT_NOTE
 		_last_result = COMMIT_RESULT
 	elif str(metadata.get("target_type", "")) == REGIONAL_TARGET_TYPE:
@@ -319,7 +280,6 @@ func _target_available(target: Dictionary) -> bool:
 	return (
 		_profile.has_capability(str(target.get("required_capability_id", "")))
 		and _has_required_light(target)
-		and (not _target_requires_lead(target) or _lead_available)
 	)
 
 
@@ -331,10 +291,6 @@ func _has_required_light(target: Dictionary) -> bool:
 func _light_required_note(target: Dictionary) -> String:
 	var clue := str(target.get("clue_label", "")).strip_edges()
 	return clue if not clue.is_empty() else "Stronger light required"
-
-
-func _target_requires_lead(target: Dictionary) -> bool:
-	return str(target.get("target_type", "")) == ANOMALY_TARGET_TYPE
 
 
 func _is_resource_target(target: Dictionary) -> bool:
@@ -362,11 +318,11 @@ func _survey_complete_note(target: Dictionary) -> String:
 
 
 func _completed_note(target: Dictionary) -> String:
-	return str(target.get("finding_label", "Finding already logged")) if _is_finding_target(target) else "Anomaly already logged"
+	return str(target.get("finding_label", "Finding already logged")) if _is_finding_target(target) else "Salvage cutter plan already recovered"
 
 
 func _completed_overlay_text(target: Dictionary) -> String:
-	return str(target.get("finding_label", "Finding logged")) if _is_finding_target(target) else "Discovery logged | Lower-right anomaly"
+	return str(target.get("finding_label", "Finding logged")) if _is_finding_target(target) else "Cutter plan recovered | Salvage cutter project"
 
 
 func _pending_overlay_text() -> String:

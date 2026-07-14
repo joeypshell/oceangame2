@@ -25,10 +25,11 @@ from production_slice_01_player_gate_correction import (
     propulsion_material_pool,
     propulsion_project,
 )
+from production_slice_01_scanner_project import scanner_blueprint_container, scanner_project
 
 
 def progression_containers() -> list[dict]:
-    return [propulsion_blueprint_container()]
+    return [propulsion_blueprint_container(), scanner_blueprint_container()]
 
 
 def daily_conditions() -> list[dict]:
@@ -47,6 +48,7 @@ def material_candidate_pools() -> list[dict]:
 def material_projects() -> list[dict]:
     return [
         propulsion_project(),
+        scanner_project(),
         *expansion_03_projects(),
         *expansion_06_projects(),
         *expansion_07_projects(),

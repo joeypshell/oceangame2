@@ -11,7 +11,7 @@ Status: passive fins/current correction implemented; #799 remains the player GO/
 1. `salvage_deep_right_cache` is guarded by eel behavior, not a collection permission.
 2. `propulsion_fins` requires an explicitly recovered blueprint plus Ti2/Rubber1; neither knowledge nor equipment is bought with score.
 3. Fins passively overcome the standard east current. The player swims through normally after the upgrade; `E`/ACT is never part of standard current traversal.
-4. The east pocket remains in `production_slice_01` and contains the valuable scanner-funding cache, anomaly survey, mineral trace, and glow-anemone sample.
+4. The east pocket remains in `production_slice_01` and contains a guaranteed scanner blueprint, optional valuable cache, anomaly survey, mineral trace, and glow-anemone sample.
 5. `current_stabilizer` is a later optional advanced-current project targeting the lower-left relay current. It is not a shock-prod prerequisite.
 6. Main-world geography is contiguous by default. Prompted connectors are reserved for explicit exceptional entrances or interiors and are not the ordinary capability-gate pattern.
 
@@ -41,7 +41,8 @@ It builds only during `night_debrief`, spends no wallet, and reports `Fins insta
 - Before fins, pushback prevents eastward passage while oxygen/daylight continue.
 - After fins, the current applies no push and the player collision envelope can move through the same corridor.
 - The gate has no world connector and pressing `E` there cannot change maps.
-- `salvage_current_pocket_cache` grants the 300 wallet and lead required for the scanner.
+- `east_current_scanner_blueprint_chest` grants `survey_scanner_blueprint`; Ti1/Coil1 then builds the scanner only during `night_debrief`.
+- `salvage_current_pocket_cache` remains an optional 300-score payoff and cannot substitute for scanner knowledge or materials.
 - `lower_right_anomaly_survey` now lives in the same pocket and commits at the canonical surface boat.
 
 The pocket has a small source-authored chamber extension so its cache, anomaly, mineral survey, and biological sample do not compete for one interaction position.
@@ -56,8 +57,8 @@ This preserves a later stronger-current tier without making an unrelated relay t
 
 - Generator, map validation, parity, and progression audit prove the same-map chain and optional relay status.
 - `--smoke-current-gate` proves pushback before fins, no push after fins, a clear player collision sweep, and no `E` transition.
-- `--smoke-upgrade-chest` proves blueprint interaction, ingredient/night build, passive east-current traversal, same-map cache banking, and scanner-next guidance.
-- `--smoke-anomaly-survey-journey` proves cache-to-scanner-to-anomaly-to-boat commitment without connectors.
+- `--smoke-upgrade-chest` proves both blueprint interactions, exact recipe presentation, night builds, passive east-current traversal, and optional-cache independence.
+- `--smoke-anomaly-survey-journey` proves blueprint-to-scanner-to-anomaly-to-cutter-plan commitment without connectors.
 - Combat coverage proves shock prod follows cutter and precedes the behaviorally guarded cache.
 - `--capture-current-gate` writes before/after east-current review images without accepting baselines.
-- #799 remains the only human GO/HOLD closeout.
+- #914 remains the current human GO/HOLD closeout.

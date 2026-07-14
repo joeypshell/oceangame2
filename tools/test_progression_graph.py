@@ -21,7 +21,7 @@ def graph_with_start() -> ProgressionGraph:
 class ProgressionGraphAuditTests(unittest.TestCase):
     def test_durable_light_declaration_is_not_a_purchase_owner(self) -> None:
         contract = load_contract()
-        declaration = contract["durable_capabilities"][0]
+        declaration = next(item for item in contract["durable_capabilities"] if item["id"] == "dive_light_1")
         self.assertEqual("dive_light_1", declaration["id"])
         self.assertNotIn("cost", declaration)
         graph = build_progression_graph(load_production_maps(), contract)
@@ -32,7 +32,7 @@ class ProgressionGraphAuditTests(unittest.TestCase):
 
     def test_durable_capability_declaration_rejects_purchase_fields(self) -> None:
         contract = load_contract()
-        contract["durable_capabilities"][0]["cost"] = 900
+        next(item for item in contract["durable_capabilities"] if item["id"] == "survey_scanner_1")["cost"] = 300
         failures = validate_contract(contract)
         self.assertTrue(any("unsupported ownership fields" in failure for failure in failures), failures)
 
@@ -67,7 +67,9 @@ class ProgressionGraphAuditTests(unittest.TestCase):
             "deep_cache_next_dive_prompt",
             "propulsion_fins",
             "upper_right_current_pocket_gate",
-            "salvage_current_pocket_cache",
+            "east_current_scanner_blueprint_chest",
+            "survey_scanner_blueprint",
+            "survey_scanner_project",
             "survey_scanner_1",
             "lower_right_anomaly_survey",
             "lower_right_anomaly_discovery",
@@ -166,15 +168,26 @@ class ProgressionGraphAuditTests(unittest.TestCase):
         result = audit_graph(graph)
         self.assertTrue(any("Hard dependency cycle" in failure for failure in result.failures), result.failures)
 
-    def test_full_level_view_rejects_scanner_funding_below_cost(self) -> None:
+    def test_full_level_scanner_uses_gated_blueprint_project_without_wallet(self) -> None:
         view = next(view for view in load_audit_views() if view.id == "promoted_full_level")
-        contract = load_contract()
-        contract["durable_purchases"][0]["cost"] = 301
-        result = audit_graph(build_view_graph(view, contract))
-        self.assertTrue(
-            any("Survey Scanner 1" in failure and "funding floor 300" in failure for failure in result.failures),
-            result.failures,
-        )
+        graph = build_view_graph(view, load_contract())
+        scanner = graph.resolve("survey_scanner_1")
+        project = graph.resolve("survey_scanner_project")
+        blueprint = graph.resolve("survey_scanner_blueprint")
+        chest = graph.resolve("east_current_scanner_blueprint_chest", "production_level_01")
+        fins = graph.resolve("propulsion_fins")
+        cache = graph.resolve("salvage_current_pocket_cache", "production_level_01")
+        coil_pool = graph.resolve("conductive_coil_pool", "production_level_01")
+        coil_floor = graph.resolve("material_coil_scanner_floor", "production_level_01")
+        self.assertTrue(any(edge.target == project for edge in graph.requirements(scanner)))
+        self.assertTrue(any(edge.target == blueprint for edge in graph.requirements(project)))
+        self.assertTrue(any(edge.target == chest for edge in graph.requirements(blueprint)))
+        self.assertTrue(any(edge.target == fins for edge in graph.requirements(chest)))
+        self.assertFalse(any(edge.target == cache for edge in graph.requirements(scanner)))
+        self.assertEqual(graph.nodes[coil_pool].attrs.get("guaranteed_candidate_ids"), ["material_coil_scanner_floor"])
+        self.assertIn(coil_floor, graph.nodes[coil_pool].attrs.get("candidate_keys", []))
+        self.assertEqual([edge.target for edge in graph.requirements(coil_floor)], ["map:production_level_01"])
+        self.assertEqual(0, int(graph.nodes[scanner].attrs.get("cost", 0)))
 
     def test_optional_material_pool_does_not_join_mandatory_chain(self) -> None:
         maps = load_production_maps()

@@ -60,7 +60,7 @@ These fields augment the existing pool. They do not replace:
 - `select_count: 1`
 - `material_id: "conductive_coil"`
 
-Without the committed discovery, selection uses all existing `candidate_ids`. With it, a fresh day selection applies the same deterministic selector to `researched_candidate_ids`.
+Without the committed discovery, selection uses all existing `candidate_ids` and preselects any `guaranteed_candidate_ids`. With it, a fresh day selection applies the same deterministic selector to `researched_candidate_ids`; guarantees outside that researched subset no longer apply.
 
 ## Validation Rules
 

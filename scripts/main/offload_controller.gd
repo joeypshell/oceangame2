@@ -22,7 +22,6 @@ static func try_offload(main) -> bool:
 	main._banked_salvage_ids.append_array(held_ids)
 	var relay_note: String = main._relay_follow_through_feedback.banked_feedback(held_ids)
 	var final_dive_note: String = main._final_dive_objective_seed.banked_feedback(held_ids)
-	main._anomaly_survey.activate_lead_from_banked_ids(held_ids)
 	main._expedition_day_state.record_bank(held_count, held_score)
 	main._cutter_salvage.mark_banked(held_ids)
 	main._sortie_state.clear_held()

@@ -8,6 +8,7 @@ const ExpansionProfileState := preload("res://scripts/main/expansion_profile_sta
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
 const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
 const ShockProdController := preload("res://scripts/main/shock_prod_controller.gd")
+const SmokeProfileProjectFixture := preload("res://scripts/main/smoke/smoke_profile_project_fixture.gd")
 
 const TEST_PROFILE_PATH := "user://oceangame2_expansion_07_biological_smoke.json"
 const PASSIVE_ID := "upper_right_glow_anemone_sample"
@@ -291,7 +292,7 @@ func _exercise_capacitor_interrupt() -> Dictionary:
 
 
 func _seed_base_shock_prod(profile) -> bool:
-	if not _require(bool(profile.unlock_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID, false).get("changed", false)), "could not seed scanner"):
+	if not _require(bool(SmokeProfileProjectFixture.complete_scanner(profile, _world).get("changed", false)), "could not seed scanner"):
 		return false
 	if not _require(bool(profile.complete_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID, false).get("changed", false)), "could not seed anomaly knowledge"):
 		return false

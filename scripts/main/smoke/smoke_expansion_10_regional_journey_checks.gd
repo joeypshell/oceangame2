@@ -1,9 +1,9 @@
 extends "res://scripts/main/smoke/smoke_check_base.gd"
 
-const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime.gd")
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const FullLevelNavigation := preload("res://scripts/main/smoke/smoke_full_level_navigation.gd")
+const ScannerProjectJourney := preload("res://scripts/main/smoke/smoke_scanner_project_journey.gd")
 
 const MAP_ID := "production_level_01"
 const BOAT_ENTRY_ID := "surface_boat_entry"
@@ -14,7 +14,6 @@ const LANDMARK_ID := "lower_right_signal_reef_landmark"
 const SURVEY_TARGET_ID := "lower_right_signal_reef_survey"
 const DISCOVERY_ID := "lower_right_signal_reef_discovery"
 const BLUEPRINT_CONTAINER_ID := "lower_loop_upgrade_chest"
-const CACHE_ID := "salvage_current_pocket_cache"
 const PASSABLE_CAPABILITIES := [ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID]
 const FIXED_DELTA := 1.0 / 60.0
 const ENDPOINT_TOLERANCE_PX := 8.0
@@ -41,13 +40,14 @@ func _smoke_expansion_10_regional_journey_and_quit() -> void:
 	var day_report: Dictionary = _main._expedition_day_state.report()
 	var survey := _survey_by_id(SURVEY_TARGET_ID)
 	var result_text: String = _main._anomaly_survey.result_text()
-	print("Expansion 10 regional journey smoke passed: route=%s promise_gate=%s regional_gates=%s capability=%s blueprint=%s recipe=ti2+rubber1 night_project=true scanner=%s target=%s survey_seconds=%.1f discovery=%s pending_away=true committed_at_boat=true next_lead=\"%s\" movement=continuous_no_teleport collision=active current_e_required=false map=%s distance=%.1fpx elapsed=%.1fs oxygen=%.1f/%.1f day=%d daylight=%.1fs sorties=%d connectors=%d prompts=%d result=\"%s\"." % [
+	print("Expansion 10 regional journey smoke passed: route=%s promise_gate=%s regional_gates=%s capability=%s blueprint=%s recipe=ti2+rubber1 night_project=true scanner_blueprint=%s scanner_recipe=ti1+coil1 scanner=%s optional_cache_uncollected=true target=%s survey_seconds=%.1f discovery=%s pending_away=true committed_at_boat=true next_lead=\"%s\" movement=continuous_no_teleport collision=active current_e_required=false map=%s distance=%.1fpx elapsed=%.1fs oxygen=%.1f/%.1f day=%d daylight=%.1fs sorties=%d connectors=%d prompts=%d result=\"%s\"." % [
 		ROUTE_ID,
 		PROMISE_GATE_ID,
 		",".join(PackedStringArray(_regional_gate_contacts())),
 		ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID,
 		ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID,
-		AnomalySurveyRuntime.SCANNER_CAPABILITY_ID,
+		ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID,
+		ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID,
 		SURVEY_TARGET_ID,
 		float(survey.get("interaction_seconds", 0.0)),
 		DISCOVERY_ID,
@@ -92,7 +92,7 @@ func run_to_committed_signal_reef() -> bool:
 		return false
 	if not _build_fins_and_begin_day_two():
 		return false
-	if not await _acquire_scanner():
+	if not await ScannerProjectJourney.new().run(self):
 		return false
 	if not await _complete_regional_journey():
 		return false
@@ -221,31 +221,6 @@ func _build_fins_and_begin_day_two() -> bool:
 		and _require(not _gate_by_id(REGIONAL_GATE_IDS[0]).is_empty(), "day two lost the regional current passage")
 		and _require(FullLevelNavigation.new().marker_center(_world, LANDMARK_ID).x >= 0.0, "day two lost the Signal Reef landmark")
 	)
-
-func _acquire_scanner() -> bool:
-	var cache := _salvage_by_id(CACHE_ID)
-	if not _require(not cache.is_empty(), "missing scanner-funding cache %s" % CACHE_ID):
-		return false
-	var wallet_before := _session_wallet()
-	var navigation = _navigation_for("", PASSABLE_CAPABILITIES, CACHE_ID)
-	if not await _drive_to("scanner_cache_outbound", cache["center"], navigation):
-		return false
-	_advance(0.0)
-	if not _require(_world.is_salvage_collected(CACHE_ID), "current-pocket cache did not collect"):
-		return false
-	if not await _return_to_boat("scanner_cache_return", navigation):
-		return false
-	if not _require(bool(_main._anomaly_survey.report().get("lead_available", false)), "banked cache did not activate scanner lead"):
-		return false
-	if not _require(_session_wallet() == wallet_before + AnomalySurveyRuntime.SCANNER_COST, "cache did not fund the exact scanner cost"):
-		return false
-	_press_key(KEY_Q)
-	if not _require(_main._anomaly_survey.has_scanner(), "Q did not unlock scanner at the full-level boat"):
-		return false
-	if not _require(_session_wallet() == wallet_before, "scanner purchase did not spend the exact cache reward"):
-		return false
-	return _require(_traversed_gate_ids.has(PROMISE_GATE_ID), "fins route never crossed the remembered promise gate")
-
 
 func _complete_regional_journey() -> bool:
 	var profile = _main._anomaly_survey.profile_state()

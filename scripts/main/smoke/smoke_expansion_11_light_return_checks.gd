@@ -111,7 +111,7 @@ func _collect_and_bank_light_recipe() -> bool:
 	var profile = _main._anomaly_survey.profile_state()
 	var titanium := _active_material_by_type(ProfileState.TITANIUM_MATERIAL_ID)
 	var gel := _biological_source_by_id(PASSIVE_GEL_SOURCE_ID)
-	if not _require(not titanium.is_empty() and not gel.is_empty(), "day-two titanium or gel source is missing"):
+	if not _require(not titanium.is_empty() and not gel.is_empty(), "post-scanner titanium or gel source is missing"):
 		return false
 	if not await _collect_material(titanium):
 		return false
@@ -146,7 +146,7 @@ func _collect_and_bank_light_recipe() -> bool:
 	if not _begin_next_day_without_light():
 		return false
 	var coil := _active_material_by_type(ProfileState.COIL_MATERIAL_ID)
-	if not _require(str(coil.get("id", "")) == "material_coil_deep_approach", "day-three noncombat coil source was not active"):
+	if not _require(str(coil.get("id", "")) == "material_coil_scanner_floor", "day-four guaranteed scanner-floor coil source was not active"):
 		return false
 	if not await _collect_material(coil):
 		return false
@@ -173,7 +173,7 @@ func _begin_next_day_without_light() -> bool:
 	_press_key(KEY_N)
 	_advance(0.0)
 	_refresh_controlled_world()
-	return _require(_main._expedition_day_state.day_number == 3 and _world.map_id == MAP_ID and _world.is_inside_boat(_player.global_position), "day three did not resume at the full-level boat")
+	return _require(_main._expedition_day_state.day_number == 4 and _world.map_id == MAP_ID and _world.is_inside_boat(_player.global_position), "day four did not resume at the full-level boat")
 
 
 func _collect_material(candidate: Dictionary) -> bool:
@@ -213,7 +213,7 @@ func _build_light_and_begin_next_day() -> bool:
 	_upgraded_alpha = float(_visibility_zone_by_id(HARMONIC_ZONE_ID).get("overlay_alpha", 0.0))
 	return (
 		_require(_world.map_id == MAP_ID and _world.is_inside_boat(_player.global_position), "next day left the full-level boat")
-		and _require(_main._expedition_day_state.day_number == 4 and _main._expedition_day_state.phase == ExpeditionDayState.PHASE_ACTIVE, "light day did not begin as active day four")
+		and _require(_main._expedition_day_state.day_number == 5 and _main._expedition_day_state.phase == ExpeditionDayState.PHASE_ACTIVE, "light day did not begin as active day five")
 		and _require(_main._progression_runtime.has_light_upgrade() and _upgraded_alpha > 0.0 and _upgraded_alpha < _pre_light_alpha, "next-day world did not apply durable light readability")
 		and _require(str(_survey_by_id(HARMONIC_TARGET_ID).get("state", "")) == "available", "next-day harmonic target did not become available")
 	)

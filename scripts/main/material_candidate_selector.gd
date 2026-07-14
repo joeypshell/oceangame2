@@ -14,10 +14,18 @@ static func select_for_day(map_id: String, pools: Array, day_number: int, comple
 		var select_count := clampi(int(pool.get("select_count", 0)), 0, candidate_ids.size())
 		if candidate_ids.is_empty() or select_count <= 0:
 			continue
+		var guaranteed_ids := _guaranteed_candidate_ids(pool, candidate_ids)
+		for candidate_id in guaranteed_ids:
+			if not selected.has(candidate_id):
+				selected.append(candidate_id)
+		var rotating_ids: Array = candidate_ids.filter(func(candidate_id): return not guaranteed_ids.has(candidate_id))
+		var rotating_count := select_count - guaranteed_ids.size()
+		if rotating_count <= 0 or rotating_ids.is_empty():
+			continue
 		var pool_id := str(pool.get("id", "material_pool"))
-		var offset := (_stable_hash("%s:%s" % [map_id, pool_id]) + maxi(1, day_number) - 1) % candidate_ids.size()
-		for index in range(select_count):
-			var candidate_id := str(candidate_ids[(offset + index) % candidate_ids.size()])
+		var offset := (_stable_hash("%s:%s" % [map_id, pool_id]) + maxi(1, day_number) - 1) % rotating_ids.size()
+		for index in range(rotating_count):
+			var candidate_id := str(rotating_ids[(offset + index) % rotating_ids.size()])
 			if not candidate_id.is_empty() and not selected.has(candidate_id):
 				selected.append(candidate_id)
 	return selected
@@ -42,6 +50,15 @@ static func _effective_candidate_ids(pool: Dictionary, completed_discovery_ids) 
 		if not researched.is_empty():
 			return researched
 	return pool.get("candidate_ids", [])
+
+
+static func _guaranteed_candidate_ids(pool: Dictionary, effective_ids: Array) -> Array[String]:
+	var guaranteed: Array[String] = []
+	for candidate_id in pool.get("guaranteed_candidate_ids", []):
+		var normalized := str(candidate_id)
+		if effective_ids.has(normalized) and not guaranteed.has(normalized):
+			guaranteed.append(normalized)
+	return guaranteed
 
 
 static func _stable_hash(value: String) -> int:

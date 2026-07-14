@@ -24,9 +24,11 @@ def material_candidate_pools() -> list[dict]:
             "selection_strategy": "day_rotation_v1",
             "select_count": 1,
             "candidate_ids": [
+                "material_coil_scanner_floor",
                 "material_coil_deep_approach",
                 "material_coil_deep_cache",
             ],
+            "guaranteed_candidate_ids": ["material_coil_scanner_floor"],
         },
     ]
 
@@ -80,6 +82,14 @@ def expansion_03_entities() -> list[dict]:
             "titanium_scrap",
             "titanium_scrap_pool",
             "Lower-loop titanium candidate rewarding a western side-pocket detour.",
+        ),
+        _material_candidate(
+            "material_coil_scanner_floor",
+            62,
+            36,
+            "conductive_coil",
+            "conductive_coil_pool",
+            "Guaranteed pre-scanner coil in an open side pocket; research later favors the deep-cache source.",
         ),
         _material_candidate(
             "material_coil_deep_approach",

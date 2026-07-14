@@ -168,6 +168,25 @@ def _validate_pools(
                 failures.append(f"{label} candidate id {candidate_id!r} does not reference a material_candidate entity.")
             elif entity.get("candidate_pool_id") != pool_id or entity.get("material_id") != material_id:
                 failures.append(f"{label} candidate {candidate_id!r} metadata does not match its pool/material.")
+        guaranteed_ids = pool.get("guaranteed_candidate_ids", [])
+        if not isinstance(guaranteed_ids, list):
+            failures.append(f"{label} guaranteed_candidate_ids must be a list when present.")
+        else:
+            seen_guaranteed: set[str] = set()
+            has_duplicate = False
+            for candidate_id in guaranteed_ids:
+                failures.extend(_validate_id(candidate_id, label, "guaranteed candidate id"))
+                if not isinstance(candidate_id, str):
+                    continue
+                if candidate_id in seen_guaranteed:
+                    has_duplicate = True
+                seen_guaranteed.add(candidate_id)
+                if candidate_id not in candidate_ids:
+                    failures.append(f"{label} guaranteed candidate {candidate_id!r} must belong to candidate_ids.")
+            if has_duplicate:
+                failures.append(f"{label} guaranteed_candidate_ids must not contain duplicates.")
+            if _is_int(select_count) and len(guaranteed_ids) > int(select_count):
+                failures.append(f"{label} guaranteed candidate count must not exceed select_count.")
         if _is_int(select_count) and int(select_count) > len(candidate_ids):
             failures.append(f"{label} select_count exceeds its candidate count.")
         is_optional_bonus = pool.get("pool_role") == "optional_bonus"
@@ -258,7 +277,7 @@ def _validate_projects(
         if project.get("build_phase") not in SUPPORTED_BUILD_PHASES:
             failures.append(f"{label} build_phase must be one of: {', '.join(sorted(SUPPORTED_BUILD_PHASES))}.")
         for label_field in ("project_label", "completion_label"):
-            if project_id in {"propulsion_fins_project", "shock_prod_project", "shock_prod_capacitor_project", "dive_light_1_project"} and label_field not in project:
+            if project_id in {"propulsion_fins_project", "survey_scanner_project", "shock_prod_project", "shock_prod_capacitor_project", "dive_light_1_project"} and label_field not in project:
                 failures.append(f"{label} requires {label_field}.")
             elif label_field in project:
                 value = project[label_field]

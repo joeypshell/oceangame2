@@ -10,7 +10,7 @@ const MAP_PATH := "res://maps/production_slice_01.greybox.json"
 const MAP_ID := "production_slice_01"
 const COIL_POOL_ID := "conductive_coil_pool"
 const RESEARCHED_CANDIDATE_ID := "material_coil_deep_cache"
-const NORMAL_DAY_THREE_CANDIDATE_ID := "material_coil_deep_approach"
+const PROGRESSION_FLOOR_CANDIDATE_ID := "material_coil_scanner_floor"
 const LEAD_TEXT := "Research lead | Coils near deep-cache machinery"
 const TEST_PROFILE_PATH := "user://oceangame2_practical_research_material.json"
 
@@ -34,7 +34,7 @@ func _run() -> void:
 
 	runtime.on_map_loaded(world, day)
 	var before_ids: Array = world.get_material_candidate_report().get("active_ids", [])
-	_expect(_coil_id(before_ids) == RESEARCHED_CANDIDATE_ID, "day-two control coil selection drifted")
+	_expect(_coil_id(before_ids) == PROGRESSION_FLOOR_CANDIDATE_ID, "day-two progression-floor coil selection drifted")
 	_expect(str(runtime.report().get("research_lead_text", "")).is_empty(), "unresearched day showed habitat lead")
 	profile.complete_discovery(ExpansionProfileState.MINERAL_TRACE_RESEARCH_ID, true)
 	var reloaded_profile := ExpansionProfileState.new(TEST_PROFILE_PATH)
@@ -47,7 +47,7 @@ func _run() -> void:
 
 	var pools: Array = world.get_material_candidate_pools()
 	var normal_day_three := MaterialCandidateSelector.select_for_day(MAP_ID, pools, 3, [])
-	_expect(_coil_id(normal_day_three) == NORMAL_DAY_THREE_CANDIDATE_ID, "day-three counterfactual coil selection drifted")
+	_expect(_coil_id(normal_day_three) == PROGRESSION_FLOOR_CANDIDATE_ID, "day-three progression-floor coil selection drifted")
 	day.begin_next_day()
 	runtime.on_map_loaded(world, day)
 	var researched_ids: Array = world.get_material_candidate_report().get("active_ids", [])
@@ -70,7 +70,7 @@ func _run() -> void:
 			push_error("Practical research material state smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Practical research material state smoke passed: day=2 before=%s same_day=%s normal_day3=%s researched_day3=%s pool=%s yield=Ti2+Rubber1+Coil1 lead=\"%s\"." % [
+	print("Practical research material state smoke passed: day=2 progression_floor=%s same_day=%s unresearched_day3=%s researched_day3=%s pool=%s yield=Ti2+Rubber1+Coil1 lead=\"%s\"." % [
 		str(before_ids),
 		str(same_day_ids),
 		str(normal_day_three),

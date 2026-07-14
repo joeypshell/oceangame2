@@ -4,6 +4,7 @@ const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime
 const CutterSalvageController := preload("res://scripts/main/cutter_salvage_controller.gd")
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+const SmokeProfileProjectFixture := preload("res://scripts/main/smoke/smoke_profile_project_fixture.gd")
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
 const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
 const ShockProdController := preload("res://scripts/main/shock_prod_controller.gd")
@@ -183,6 +184,9 @@ func _seed_prerequisites_and_recipe(profile) -> bool:
 	if not _require(bool(profile.complete_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID, false).get("changed", false)), "could not seed project discovery"):
 		return false
 	if not _require(_prepare_profile_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID), "could not seed recipe-built propulsion fins"):
+		return false
+	var scanner: Dictionary = SmokeProfileProjectFixture.complete_scanner(profile, _world, false)
+	if not _require(bool(scanner.get("changed", false)) or scanner.get("reason") == "already_completed", "could not seed recipe-built scanner"):
 		return false
 	var first_project_guidance: String = _main._material_project.shock_prod_guidance()
 	if not _require(first_project_guidance.find("next Cutter project") != -1 and first_project_guidance.find("Ti 0/2") != -1 and first_project_guidance.find("bank at boat, then P at night") != -1, "locked guidance did not expose the current project, exact materials, and debrief action"):

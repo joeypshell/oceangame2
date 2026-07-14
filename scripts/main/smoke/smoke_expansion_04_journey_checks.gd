@@ -5,6 +5,7 @@ const CutterSalvageController := preload("res://scripts/main/cutter_salvage_cont
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
 const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
+const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
 
 const TEST_PROFILE_PATH := "user://oceangame2_expansion_04_journey_smoke.json"
 const MAP_ID := "production_slice_01"
@@ -94,20 +95,21 @@ func _smoke_expansion_04_current_pocket_and_quit() -> void:
 	payoff = _salvage_by_id(PAYOFF_ID)
 	_player.global_position = payoff["center"]
 	_process(0.0)
-	if not _require(_held_salvage_ids.has(PAYOFF_ID) and _held_salvage_score == AnomalySurveyRuntime.SCANNER_COST, "same-map payoff did not enter normal valuable cargo"):
+	var valuable_score := int(ProgressionContract.SALVAGE_SCORE_BY_TIER["valuable"])
+	if not _require(_held_salvage_ids.has(PAYOFF_ID) and _held_salvage_score == valuable_score, "same-map payoff did not enter normal valuable cargo"):
 		return
 	_player.global_position = _world.get_extraction_center()
 	_process(0.0)
 	if not _require(
 		_banked_salvage_ids.has(PAYOFF_ID)
-		and _banked_score == AnomalySurveyRuntime.SCANNER_COST
-		and bool(_main._anomaly_survey.report().get("lead_available", false)),
-		"same-map payoff did not fund and activate scanner lead"
+		and _banked_score == valuable_score
+		and not _main._anomaly_survey.has_scanner(),
+		"optional payoff changed scanner ownership or score semantics"
 	):
 		return
 
 	_cleanup_profile()
-	print("Expansion 04 current-pocket smoke passed: gate=%s capability=%s blocked_before=true push=%.1f passive_after=true crossed_by_swimming=true e_required=false payoff=%s scanner_funding=%d scanner_lead=true shock_prerequisite=cutter advanced_current=optional reload=%s." % [
+	print("Expansion 04 current-pocket smoke passed: gate=%s capability=%s blocked_before=true push=%.1f passive_after=true crossed_by_swimming=true e_required=false payoff=%s optional_score=%d scanner_unlock=false shock_prerequisite=cutter advanced_current=optional reload=%s." % [
 		GATE_ID,
 		CAPABILITY_ID,
 		blocked_push,

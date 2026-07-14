@@ -1351,9 +1351,9 @@ func _unhandled_input(event: InputEvent) -> void:
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_C:
 		_try_purchase_cargo_capacity_upgrade()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_P:
-		_show_propulsion_project_guidance()
+		_show_project_guidance()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_Q:
-		var scanner_result: Dictionary = _anomaly_survey.try_unlock_scanner(_world, _player)
+		var scanner_result: Dictionary = _anomaly_survey.scanner_action(_world, _player)
 		_last_status_note = str(scanner_result.get("note", _last_status_note))
 		_update_status_label()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_E:
@@ -2280,9 +2280,9 @@ func _try_purchase_cargo_capacity_upgrade() -> bool:
 	return _try_purchase_progression_upgrade(SessionProgression.CARGO_CAPACITY_UPGRADE_ID)
 
 
-func _show_propulsion_project_guidance() -> void:
+func _show_project_guidance() -> void:
 	if _material_project != null:
-		_last_status_note = _material_project.active_day_build_feedback(_current_map_id(), _scanner_lead_available())
+		_last_status_note = _material_project.active_day_build_feedback(_current_map_id(), _scanner_blueprint_recovered())
 	_update_status_label()
 
 
@@ -2338,7 +2338,7 @@ func _progression_overlay_text() -> String:
 	if _progression_runtime != null:
 		lines.append(_progression_runtime.overlay_text(_world, _player))
 	if _material_project != null:
-		var fins_guidance: String = _material_project.propulsion_fins_guidance(_current_map_id(), _scanner_lead_available())
+		var fins_guidance: String = _material_project.propulsion_fins_guidance(_current_map_id(), _scanner_blueprint_recovered())
 		if not fins_guidance.is_empty():
 			lines.append(fins_guidance)
 	return "\n".join(lines)
@@ -2358,8 +2358,8 @@ func _current_map_id() -> String:
 	return str(_world.map_id) if _world != null else ""
 
 
-func _scanner_lead_available() -> bool:
-	return _anomaly_survey != null and bool(_anomaly_survey.report().get("lead_available", false))
+func _scanner_blueprint_recovered() -> bool:
+	return _material_project != null and _material_project.has_scanner_blueprint()
 
 
 func _progression_result_text() -> String:

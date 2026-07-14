@@ -4,7 +4,8 @@
 CANONICAL_CHAIN_IDS = (
     "propulsion_fins_blueprint",
     "propulsion_fins",
-    "salvage_current_pocket_cache",
+    "survey_scanner_blueprint",
+    "survey_scanner_project",
     "survey_scanner_1",
     "lower_right_anomaly_discovery",
     "salvage_cutter_project",

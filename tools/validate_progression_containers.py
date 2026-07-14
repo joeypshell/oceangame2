@@ -34,11 +34,11 @@ def _validate_id(value: Any, item_label: str, field: str) -> list[str]:
     return []
 
 
-def _validate_label(value: Any, item_label: str) -> list[str]:
+def _validate_label(value: Any, item_label: str, field: str = "display_label") -> list[str]:
     if not isinstance(value, str) or not value:
-        return [f"{item_label} display_label must be a non-empty string."]
+        return [f"{item_label} {field} must be a non-empty string."]
     if "\n" in value or "\r" in value or not (ID_PATTERN.match(value) or DISPLAY_LABEL_PATTERN.match(value)):
-        return [f"{item_label} display_label must be lower_snake_case or short display-safe text."]
+        return [f"{item_label} {field} must be lower_snake_case or short display-safe text."]
     return []
 
 
@@ -95,6 +95,8 @@ def validate_progression_container_schema(map_data: dict[str, Any]) -> list[str]
         if reward_type not in REWARD_TYPES:
             failures.append(f"{item_label} reward_type must be one of: {', '.join(sorted(REWARD_TYPES))}.")
         failures.extend(_validate_id(container.get("reward_id"), item_label, "reward_id"))
+        if "reward_label" in container:
+            failures.extend(_validate_label(container["reward_label"], item_label, "reward_label"))
 
         if reward_type == "wallet":
             amount = container.get("reward_amount")

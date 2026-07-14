@@ -5,6 +5,7 @@ const BiologicalResourceController := preload("res://scripts/main/biological_res
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
+const SmokeProfileProjectFixture := preload("res://scripts/main/smoke/smoke_profile_project_fixture.gd")
 const TerritorialHostileController := preload("res://scripts/main/territorial_hostile_controller.gd")
 
 const SLICE_01 := "res://maps/production_slice_01.greybox.json"
@@ -23,12 +24,12 @@ func _init() -> void:
 func _run() -> void:
 	var profile := ExpansionProfileState.new("", false)
 	profile.load_profile()
-	_expect(bool(profile.unlock_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID, false).get("changed", false)), "scanner fixture did not unlock")
+	var world = _build_world(SLICE_01)
+	_expect(bool(SmokeProfileProjectFixture.complete_scanner(profile, world).get("changed", false)), "scanner fixture did not build")
 	var material_runtime := MaterialRuntimeController.new(profile)
 	var biological := BiologicalResourceController.new(profile)
 	var hostiles := TerritorialHostileController.new()
 	var day := ExpeditionDayState.new()
-	var world = _build_world(SLICE_01)
 	material_runtime.on_map_loaded(world, day)
 	hostiles.on_map_loaded(world, false)
 	biological.on_map_loaded(world, false)

@@ -38,11 +38,28 @@ func _run() -> void:
 	_expect(report.get("status") == "invalid_schema", "unsupported/extra profile fields were accepted")
 	_expect(not report.get("failures", []).is_empty(), "invalid profile had no diagnostic")
 
+	_write_text(TEST_PATH, JSON.stringify({
+		"schema_version": ExpansionProfileState.SCHEMA_VERSION,
+		"completed_discoveries": [],
+		"unlocked_capabilities": [ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID],
+		"material_inventory": {},
+		"completed_projects": [],
+	}))
+	profile = ExpansionProfileState.new(TEST_PATH)
+	report = profile.load_profile()
+	_expect(report.get("status") == "migrated_scanner_purchase", "legacy scanner purchase did not migrate")
+	_expect(profile.has_completed_discovery(ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID), "scanner migration omitted blueprint")
+	_expect(profile.has_completed_project(ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID), "scanner migration omitted project")
+
 	_cleanup_files()
 	profile = ExpansionProfileState.new(TEST_PATH)
 	profile.load_profile()
 	var unlock: Dictionary = profile.unlock_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID, true)
-	_expect(bool(unlock.get("changed", false)), "scanner capability did not persist")
+	_expect(unlock.get("reason") == "project_transaction_required", "scanner bypassed its project transaction")
+	profile.complete_discovery(ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID, false)
+	profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 1, ExpansionProfileState.COIL_MATERIAL_ID: 1}, false)
+	var scanner_build: Dictionary = profile.complete_material_project(_scanner_project_definition(), true)
+	_expect(bool(scanner_build.get("changed", false)), "scanner project did not persist")
 	_expect(FileAccess.file_exists(TEST_PATH), "profile save file was not created")
 	_expect(not FileAccess.file_exists("%s.tmp" % TEST_PATH), "atomic temp file leaked")
 	_expect(not FileAccess.file_exists("%s.bak" % TEST_PATH), "atomic backup file leaked")
@@ -172,6 +189,17 @@ func _create_pending(expedition) -> Dictionary:
 		"production_slice_01",
 		"surface_boat_entry"
 	)
+
+
+func _scanner_project_definition() -> Dictionary:
+	return {
+		"id": ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID,
+		"required_discovery_id": ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID,
+		"required_materials": {ExpansionProfileState.TITANIUM_MATERIAL_ID: 1, ExpansionProfileState.COIL_MATERIAL_ID: 1},
+		"unlocks_capability_id": ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID,
+		"target_id": ExpansionProfileState.SURVEY_SCANNER_TARGET_ID,
+		"build_phase": "night_debrief",
+	}
 
 
 func _expect(condition: bool, message: String) -> void:

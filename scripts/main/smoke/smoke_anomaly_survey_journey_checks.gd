@@ -5,10 +5,12 @@ const CutterSalvageController := preload("res://scripts/main/cutter_salvage_cont
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
 const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
+const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
 
 const TEST_PROFILE_PATH := "user://oceangame2_anomaly_journey_smoke.json"
 const MAP_ID := "production_slice_01"
 const PAYOFF_TARGET_ID := "salvage_current_pocket_cache"
+const SCANNER_CONTAINER_ID := "east_current_scanner_blueprint_chest"
 const SURVEY_TARGET_ID := "lower_right_anomaly_survey"
 const RESOURCE_TARGET_ID := "upper_right_mineral_trace_survey"
 const DISCOVERY_ID := ExpansionProfileState.ANOMALY_DISCOVERY_ID
@@ -34,13 +36,21 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 		return
 
 	_player.global_position = _world.get_extraction_center()
-	var blocked: Dictionary = _main._anomaly_survey.try_unlock_scanner(_world, _player)
-	if not _require(blocked.get("reason") == "lead_unavailable", "scanner unlocked before the configured cache lead"):
+	var blocked: Dictionary = _main._anomaly_survey.scanner_action(_world, _player)
+	if not _require(blocked.get("reason") == "blueprint_required", "scanner bypassed its recovered plan"):
 		return
 	if not _prepare_propulsion_fins():
 		_require(false, "could not seed recipe-built fins")
 		return
 
+	var scanner_container := _container_by_id(SCANNER_CONTAINER_ID)
+	if not _require(not scanner_container.is_empty(), "missing scanner blueprint container"):
+		return
+	_player.global_position = scanner_container["center"]
+	if not _require(_main._try_progression_container_interaction(), "could not recover scanner blueprint"):
+		return
+	if not _require(profile.has_completed_discovery(ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID), "scanner blueprint did not reach profile"):
+		return
 	var payoff := _salvage_by_id(PAYOFF_TARGET_ID)
 	if not _require(not payoff.is_empty(), "missing same-map scanner payoff"):
 		return
@@ -50,16 +60,18 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 	_player.global_position = _world.get_extraction_center()
 	_process(0.0)
 	if not _require(
-		bool(_main._anomaly_survey.report().get("lead_available", false))
-		and _session_wallet() == AnomalySurveyRuntime.SCANNER_COST,
-		"same-map cache did not activate and fund scanner"
+		_session_wallet() == int(ProgressionContract.SALVAGE_SCORE_BY_TIER["valuable"])
+		and not _main._anomaly_survey.has_scanner(),
+		"optional cache changed scanner ownership or score semantics"
 	):
 		return
-	var unlock: Dictionary = _main._anomaly_survey.try_unlock_scanner(_world, _player)
-	if not _require(bool(unlock.get("changed", false)) and _session_wallet() == 0, "scanner purchase failed: %s" % str(unlock)):
+	if not _require(_main._anomaly_survey.scanner_action(_world, _player).get("reason") == "project_required", "wallet bypassed scanner project"):
 		return
-	if not _require(_main._anomaly_survey.try_unlock_scanner(_world, _player).get("reason") == "already_unlocked", "repeat scanner purchase was not idempotent"):
+	profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 1, ExpansionProfileState.COIL_MATERIAL_ID: 1}, false)
+	var build: Dictionary = profile.complete_material_project(_project_by_id(ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID), true)
+	if not _require(bool(build.get("changed", false)) and _main._anomaly_survey.has_scanner(), "scanner project transaction failed"):
 		return
+	var wallet_after_cache := _session_wallet()
 
 	var oxygen_before: float = _oxygen_seconds
 	var held_before: int = _held_salvage
@@ -72,20 +84,20 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 	_process(0.0)
 	if not _require(not _main._anomaly_survey.has_pending_discovery() and _last_status_note == "Survey interrupted", "leave-range cancel failed"):
 		return
-	if not _complete_survey(target, held_before):
+	if not _complete_survey(target, held_before, wallet_after_cache):
 		return
 
 	_reset_run()
 	_prepare_current_map()
 	if not _require(not _main._anomaly_survey.has_pending_discovery(), "retry retained pending discovery"):
 		return
-	if not _complete_survey(target, held_before):
+	if not _complete_survey(target, held_before, wallet_after_cache):
 		return
 	_main._handle_hazard_hit("anomaly_smoke_hazard")
 	if not _require(not _main._anomaly_survey.has_pending_discovery(), "hazard retained pending discovery"):
 		return
 	_prepare_current_map()
-	if not _complete_survey(target, held_before):
+	if not _complete_survey(target, held_before, wallet_after_cache):
 		return
 
 	_player.global_position = _world.get_extraction_center()
@@ -98,7 +110,7 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 	):
 		return
 	var committed_result: String = _main._anomaly_survey.result_text()
-	if not _require(committed_result.find("Next lead:") != -1, "commit omitted next-lead result"):
+	if not _require(committed_result.find("Cutter plan recovered:") != -1, "commit omitted cutter-plan result"):
 		return
 
 	var reloaded := ExpansionProfileState.new(TEST_PROFILE_PATH)
@@ -112,11 +124,11 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 		return
 
 	_cleanup_profile()
-	print("Anomaly survey journey smoke passed: map=%s contiguous=true connectors=none fins_gate=%s payoff=%s scanner_cost=%d target=%s partial=%.2f cancel_on_leave=true failure_clears_pending=true committed_at_boat=true discovery=%s profile=%s." % [
+	print("Anomaly survey journey smoke passed: map=%s contiguous=true connectors=none fins_gate=%s payoff=%s optional_score=%d scanner_blueprint=true recipe=ti1+coil1 score_bypass=false target=%s partial=%.2f cancel_on_leave=true failure_clears_pending=true committed_at_boat=true cutter_plan=true discovery=%s profile=%s." % [
 		MAP_ID,
 		ExpansionProfileState.PROPULSION_FINS_GATE_ID,
 		PAYOFF_TARGET_ID,
-		AnomalySurveyRuntime.SCANNER_COST,
+		wallet_after_cache,
 		SURVEY_TARGET_ID,
 		partial,
 		DISCOVERY_ID,
@@ -125,13 +137,13 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 	get_tree().quit(0)
 
 
-func _complete_survey(target: Dictionary, expected_held: int) -> bool:
+func _complete_survey(target: Dictionary, expected_held: int, expected_wallet: int) -> bool:
 	_player.global_position = target["center"]
 	_process(float(target.get("interaction_seconds", 0.0)) + 0.1)
 	return _require(
 		_main._anomaly_survey.has_pending_discovery()
 		and _held_salvage == expected_held
-		and _session_wallet() == 0,
+		and _session_wallet() == expected_wallet,
 		"survey completion changed cargo or wallet semantics"
 	)
 
@@ -158,6 +170,20 @@ func _salvage_by_id(salvage_id: String) -> Dictionary:
 	for salvage in _world.get_salvage_centers():
 		if str(salvage.get("id", "")) == salvage_id:
 			return salvage
+	return {}
+
+
+func _container_by_id(container_id: String) -> Dictionary:
+	for container in _world.get_progression_containers():
+		if str(container.get("id", "")) == container_id:
+			return container
+	return {}
+
+
+func _project_by_id(project_id: String) -> Dictionary:
+	for project in _world.get_material_projects():
+		if str(project.get("id", "")) == project_id:
+			return project
 	return {}
 
 

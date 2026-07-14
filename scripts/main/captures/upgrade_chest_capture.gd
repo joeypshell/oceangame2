@@ -3,6 +3,7 @@ extends RefCounted
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 
 const CHEST_ID := "lower_loop_upgrade_chest"
+const SCANNER_CHEST_ID := "east_current_scanner_blueprint_chest"
 const CONNECTOR_ID := "lower_left_loop_connector"
 const EAST_GATE_ID := "upper_right_current_pocket_gate"
 const ADVANCED_GATE_ID := "lower_left_loop_current"
@@ -29,10 +30,11 @@ func capture_and_quit(capture_dir: String) -> void:
 		return
 	_camera = _create_camera()
 	var chest := _container_by_id(CHEST_ID)
+	var scanner_chest := _container_by_id(SCANNER_CHEST_ID)
 	var connector := _connector_by_id(CONNECTOR_ID)
 	var east_gate := _gate_by_id(EAST_GATE_ID)
 	var advanced_gate := _gate_by_id(ADVANCED_GATE_ID)
-	if chest.is_empty() or connector.is_empty() or east_gate.is_empty() or advanced_gate.is_empty():
+	if chest.is_empty() or scanner_chest.is_empty() or connector.is_empty() or east_gate.is_empty() or advanced_gate.is_empty():
 		_fail("missing blueprint chest, current gates, or optional connector")
 		return
 	if not _prepare_blueprint_prompt_state(chest):
@@ -47,11 +49,19 @@ func capture_and_quit(capture_dir: String) -> void:
 		return
 	if not await _capture_pair(capture_dir, "post_fins_current_passable", east_gate["center"] + EAST_CAMERA_OFFSET, RELAY_CAMERA_ZOOM):
 		return
+	if not _prepare_scanner_prompt_state(scanner_chest):
+		return
+	if not await _capture_pair(capture_dir, "scanner_blueprint_prompt", scanner_chest["center"] + TRACKER_CAMERA_OFFSET, TRACKER_CAMERA_ZOOM):
+		return
+	if not _prepare_scanner_tracker_state(scanner_chest):
+		return
+	if not await _capture_pair(capture_dir, "scanner_project_tracker", scanner_chest["center"] + TRACKER_CAMERA_OFFSET, TRACKER_CAMERA_ZOOM):
+		return
 	if not _prepare_advanced_barrier_state(advanced_gate):
 		return
 	if not await _capture_pair(capture_dir, "advanced_relay_current", advanced_gate["center"] + RELAY_CAMERA_OFFSET, RELAY_CAMERA_ZOOM):
 		return
-	print("Saved blueprint-fins journey review captures under: %s" % ProjectSettings.globalize_path(capture_dir))
+	print("Saved blueprint-project journey review captures under: %s" % ProjectSettings.globalize_path(capture_dir))
 	_main.get_tree().quit(0)
 
 
@@ -149,6 +159,39 @@ func _prepare_advanced_barrier_state(gate: Dictionary) -> bool:
 	var status: String = _main._status_label.text if _main._status_label != null else ""
 	if status.find("need current stabilizer | advanced current") == -1 or _main._world.get_world_connector_at(gate["center"]).is_empty():
 		_fail("optional advanced relay current was not readable: %s" % status)
+		return false
+	return true
+
+
+func _prepare_scanner_prompt_state(chest: Dictionary) -> bool:
+	_main._player.global_position = chest["center"]
+	_main._last_status_note = ""
+	_main._process(0.0)
+	var status: String = _main._status_label.text if _main._status_label != null else ""
+	if status.find("E: Recover survey scanner blueprint") == -1:
+		_fail("scanner blueprint prompt was not visible: %s" % status)
+		return false
+	return true
+
+
+func _prepare_scanner_tracker_state(chest: Dictionary) -> bool:
+	var profile = _main._anomaly_survey.profile_state()
+	if not _main._try_progression_container_interaction():
+		_fail("E interaction did not recover scanner blueprint")
+		return false
+	profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 1}, false)
+	var coil := _active_material(ExpansionProfileState.COIL_MATERIAL_ID)
+	if coil.is_empty():
+		_fail("active day has no guaranteed coil")
+		return false
+	_main._player.global_position = coil["center"]
+	_main._process(0.0)
+	_main._player.global_position = chest["center"]
+	_main._last_status_note = "Blueprint recovered: Survey scanner"
+	_main._update_status_label()
+	var tracker_text: String = _main._progression_project_tracker.snapshot_text()
+	if tracker_text.find("Titanium  1/1 banked") == -1 or tracker_text.find("Coil  0/1 banked  (+1 held)") == -1:
+		_fail("scanner tracker did not show exact banked/held recipe: %s" % tracker_text)
 		return false
 	return true
 
@@ -260,10 +303,10 @@ func _save_capture(capture_dir: String, filename: String, image: Image) -> bool:
 	if error != OK:
 		_fail("could not save %s (error %d)" % [output_path, error])
 		return false
-	print("Saved blueprint-fins capture: %s" % ProjectSettings.globalize_path(output_path))
+	print("Saved equipment-progression capture: %s" % ProjectSettings.globalize_path(output_path))
 	return true
 
 
 func _fail(message: String) -> void:
-	push_error("Blueprint-fins journey capture failed: %s." % message)
+	push_error("Equipment-progression journey capture failed: %s." % message)
 	_main.get_tree().quit(1)

@@ -1,5 +1,6 @@
 extends RefCounted
 
+const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const SURVEY_TARGET_ID := "lower_right_anomaly_survey"
 const SURVEY_MAP_PATH := "res://maps/production_slice_02.greybox.json"
 const ORIGIN_MAP_PATH := "res://maps/production_slice_01.greybox.json"
@@ -54,7 +55,7 @@ func capture_and_quit(capture_dir: String) -> void:
 	_main._process(0.0)
 	_main._update_status_label()
 	var result_text: String = _main._anomaly_survey.result_text()
-	if result_text.find("Discovery logged:") == -1 or result_text.find("Next lead:") == -1:
+	if result_text.find("Cutter plan recovered:") == -1 or result_text.find("Project unlocked:") == -1:
 		_fail("commit feedback missing from result: %s" % result_text)
 		return
 
@@ -70,14 +71,22 @@ func _prepare_scanner_and_target() -> bool:
 	if _main._world == null or _main._player == null or _main._world.map_id != "production_slice_01":
 		_fail("capture requires the default production slice")
 		return false
-	_main._anomaly_survey.activate_lead()
-	_main._session_progression.grant_wallet_reward(_main._anomaly_survey.SCANNER_COST)
-	var unlock: Dictionary = _main._anomaly_survey.try_unlock_scanner(_main._world, _main._player)
+	var profile = _main._anomaly_survey.profile_state()
+	profile.complete_discovery(ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID, false)
+	profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 1, ExpansionProfileState.COIL_MATERIAL_ID: 1}, false)
+	var unlock: Dictionary = profile.complete_material_project(_project_by_id(ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID), false)
 	if not bool(unlock.get("changed", false)):
 		_fail("could not prepare scanner: %s" % str(unlock))
 		return false
 	_main._load_playable_map(SURVEY_MAP_PATH, false)
 	return _main._world.map_id == "production_slice_02"
+
+
+func _project_by_id(project_id: String) -> Dictionary:
+	for project in _main._world.get_material_projects():
+		if str(project.get("id", "")) == project_id:
+			return project
+	return {}
 
 
 func _survey_target_by_id(target_id: String) -> Dictionary:
