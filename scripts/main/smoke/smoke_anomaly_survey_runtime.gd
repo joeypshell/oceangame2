@@ -13,6 +13,7 @@ const TARGET_ID := "lower_right_anomaly_survey"
 const REGIONAL_TARGET_ID := "lower_right_signal_reef_survey"
 const HARMONIC_TARGET_ID := "signal_reef_deep_harmonic_survey"
 const HARMONIC_ZONE_ID := "signal_reef_deep_harmonic_dark_zone"
+const ABYSSAL_TARGET_ID := "abyssal_basin_harmonic_source_survey"
 const TEST_PATH := "user://oceangame2_harmonic_survey_test.json"
 
 var _failures: Array[String] = []
@@ -135,6 +136,7 @@ func _run() -> void:
 	]
 	_expect(runtime.result_text() == expected_regional_result, "regional result did not use authored finding and next lead")
 	var harmonic_report := _exercise_harmonic_return(runtime, progression, profile, regional_world, player)
+	var abyssal_report := _exercise_abyssal_return(runtime, progression, profile, regional_world, player)
 
 	var report := runtime.report()
 	origin.queue_free()
@@ -147,12 +149,13 @@ func _run() -> void:
 			push_error("Anomaly survey runtime smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Anomaly survey runtime smoke passed: target=%s seconds=%.1f partial=%.2f cancel=true pending_across_connectors=true regional_target=%s full_level_commit=true harmonic=%s pre_light_blocked=true light_readability=true failure_cleanup=true reload=true wallet=%d exact_once=true result=\"%s\" report=%s." % [
+	print("Anomaly survey runtime smoke passed: target=%s seconds=%.1f partial=%.2f cancel=true pending_across_connectors=true regional_target=%s full_level_commit=true harmonic=%s abyssal=%s pre_light_blocked=true light_readability=true failure_cleanup=true reload=true wallet=%d exact_once=true result=\"%s\" report=%s." % [
 		TARGET_ID,
 		float(target.get("interaction_seconds", 0.0)),
 		progress,
 		REGIONAL_TARGET_ID,
 		str(harmonic_report),
+		str(abyssal_report),
 		progression.wallet(),
 		runtime.result_text().replace("\n", " | "),
 		str(report),
@@ -265,6 +268,103 @@ func _exercise_harmonic_return(runtime, progression, profile, world, player) -> 
 		"pre_alpha": pre_light_alpha,
 		"upgraded_alpha": upgraded_alpha,
 		"committed": profile.has_completed_discovery(ExpansionProfileState.DEEP_HARMONIC_DISCOVERY_ID),
+	}
+
+
+func _exercise_abyssal_return(runtime, _progression, profile, world, player) -> Dictionary:
+	runtime.clear_unbanked("abyssal_setup", world)
+	var target := _target_by_id(world, ABYSSAL_TARGET_ID)
+	_expect(not target.is_empty(), "source-authored abyssal survey target missing at runtime")
+	if target.is_empty():
+		return {}
+
+	player.global_position = target.get("center", Vector2.ZERO)
+	var clue := str(target.get("clue_label", ""))
+	_expect(runtime.overlay_text(world, player) == clue, "pre-suit abyssal clue was not source-derived")
+	var blocked: Dictionary = runtime.update(world, player, 1.0)
+	_expect(blocked.get("reason") == "pressure_required", "abyssal survey advanced without pressure suit")
+	_expect(str(blocked.get("note", "")) == clue, "pre-suit abyssal denial did not use source clue")
+	_expect(
+		is_zero_approx(float(runtime.report().get("interaction", {}).get("progress", -1.0)))
+		and not runtime.has_pending_discovery(),
+		"pre-suit abyssal denial retained progress or pending state"
+	)
+	_expect(str(_target_by_id(world, ABYSSAL_TARGET_ID).get("state", "")) == "locked", "pre-suit abyssal target was not visibly locked")
+
+	var project := _project_by_id(world, ExpansionProfileState.PRESSURE_SUIT_PROJECT_ID)
+	_expect(not project.is_empty(), "source-authored pressure-suit project missing at runtime")
+	if project.is_empty():
+		return {}
+	var deposited: Dictionary = profile.deposit_materials({
+		ExpansionProfileState.TITANIUM_MATERIAL_ID: 2,
+		ExpansionProfileState.RUBBER_MATERIAL_ID: 1,
+		ExpansionProfileState.INSULATING_GEL_MATERIAL_ID: 1,
+	}, true)
+	_expect(bool(deposited.get("changed", false)), "abyssal fixture could not bank the exact pressure recipe")
+	var built: Dictionary = profile.complete_material_project(project, true)
+	_expect(bool(built.get("changed", false)), "real pressure project did not unlock survey protection")
+	runtime.on_map_loaded(world)
+	_expect(str(_target_by_id(world, ABYSSAL_TARGET_ID).get("state", "")) == "available", "pressure-owned abyssal target did not become available")
+
+	player.global_position = target.get("center", Vector2.ZERO)
+	var partial: Dictionary = runtime.update(world, player, 1.0)
+	var partial_progress := float(partial.get("survey", {}).get("progress", 0.0))
+	_expect(partial_progress > 0.0 and partial_progress < 1.0, "protected abyssal survey did not report partial progress")
+	_expect(runtime.overlay_text(world, player).is_empty(), "protected abyssal survey retained the suit requirement clue")
+	player.global_position = Vector2.ZERO
+	_expect(runtime.update(world, player, 0.0).get("state") == "canceled", "leaving abyssal range did not cancel progress")
+
+	for reason in ["hazard", "oxygen_failure", "combat_defeat", "reset", "nightfall"]:
+		player.global_position = target.get("center", Vector2.ZERO)
+		runtime.update(world, player, 1.0)
+		runtime.clear_unbanked(reason, world)
+		_expect(
+			is_zero_approx(float(runtime.report().get("interaction", {}).get("progress", -1.0)))
+			and not runtime.has_pending_discovery(),
+			"%s cleanup retained abyssal progress or pending state" % reason
+		)
+
+	player.global_position = target.get("center", Vector2.ZERO)
+	var pending: Dictionary = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
+	_expect(bool(pending.get("pending", false)), "completed abyssal survey did not become pending")
+	_expect(pending.get("note") == "Abyssal source charted | Return to boat", "abyssal pending feedback drifted")
+	_expect(runtime.overlay_text(world, player) == "Abyssal source charted | Return to boat", "abyssal pending overlay drifted")
+	runtime.clear_unbanked("hazard", world)
+	_expect(
+		not runtime.has_pending_discovery()
+		and not profile.has_completed_discovery(ExpansionProfileState.ABYSSAL_HARMONIC_DISCOVERY_ID),
+		"failure cleanup committed or retained the pending abyssal discovery"
+	)
+
+	player.global_position = target.get("center", Vector2.ZERO)
+	pending = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
+	_expect(bool(pending.get("pending", false)), "abyssal survey did not restart after cleanup")
+	player.global_position = world.get_extraction_center()
+	var committed: Dictionary = runtime.update(world, player, 0.0)
+	var expected_result := "%s\n%s" % [target.get("finding_label", ""), target.get("next_lead_label", "")]
+	_expect(bool(committed.get("committed", false)), "canonical boat did not commit abyssal discovery")
+	_expect(profile.has_completed_discovery(ExpansionProfileState.ABYSSAL_HARMONIC_DISCOVERY_ID), "abyssal discovery did not reach profile")
+	_expect(runtime.result_text() == expected_result, "abyssal boat payoff did not use source finding and next lead")
+
+	runtime.on_map_loaded(world)
+	player.global_position = target.get("center", Vector2.ZERO)
+	var next_day: Dictionary = runtime.update(world, player, 0.0)
+	_expect(next_day.get("reason") == "completed" and not runtime.has_pending_discovery(), "next day recreated abyssal pending state")
+	var reloaded_profile := ExpansionProfileState.new(TEST_PATH, true)
+	var reload_runtime := AnomalySurveyRuntime.new(_progression, true, reloaded_profile)
+	reload_runtime.on_map_loaded(world)
+	var reload_repeat: Dictionary = reload_runtime.update(world, player, 0.0)
+	_expect(
+		reloaded_profile.has_capability(ExpansionProfileState.PRESSURE_SUIT_CAPABILITY_ID)
+		and reloaded_profile.has_completed_discovery(ExpansionProfileState.ABYSSAL_HARMONIC_DISCOVERY_ID),
+		"profile reload lost durable pressure suit or abyssal discovery"
+	)
+	_expect(reload_repeat.get("reason") == "completed" and not reload_runtime.has_pending_discovery(), "profile reload duplicated abyssal survey or commit")
+	return {
+		"target": ABYSSAL_TARGET_ID,
+		"seconds": target.get("interaction_seconds", 0.0),
+		"partial": partial_progress,
+		"committed": profile.has_completed_discovery(ExpansionProfileState.ABYSSAL_HARMONIC_DISCOVERY_ID),
 	}
 
 

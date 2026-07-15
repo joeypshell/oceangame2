@@ -4,8 +4,9 @@ const ANOMALY_DISCOVERY_ID := "lower_right_anomaly_discovery"
 const MINERAL_TRACE_RESEARCH_ID := "upper_right_mineral_trace_research"
 const SIGNAL_REEF_DISCOVERY_ID := "lower_right_signal_reef_discovery"
 const DEEP_HARMONIC_DISCOVERY_ID := "signal_reef_deep_harmonic_discovery"
-const SUPPORTED_DISCOVERY_IDS := {ANOMALY_DISCOVERY_ID: true, MINERAL_TRACE_RESEARCH_ID: true, SIGNAL_REEF_DISCOVERY_ID: true, DEEP_HARMONIC_DISCOVERY_ID: true}
-const METADATA_FIELDS := ["target_type", "finding_label", "next_lead_label"]
+const ABYSSAL_HARMONIC_DISCOVERY_ID := "abyssal_basin_harmonic_source_discovery"
+const SUPPORTED_DISCOVERY_IDS := {ANOMALY_DISCOVERY_ID: true, MINERAL_TRACE_RESEARCH_ID: true, SIGNAL_REEF_DISCOVERY_ID: true, DEEP_HARMONIC_DISCOVERY_ID: true, ABYSSAL_HARMONIC_DISCOVERY_ID: true}
+const METADATA_FIELDS := ["target_type", "finding_label", "next_lead_label", "required_pressure_capability_id"]
 
 var _pending := {}
 var _last_event := "idle"
