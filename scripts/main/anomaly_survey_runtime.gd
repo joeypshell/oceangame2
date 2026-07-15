@@ -76,6 +76,10 @@ func update(world, player, delta: float) -> Dictionary:
 		_interaction.reset()
 		_set_target_state(world, target_id, "locked")
 		return _note_result(false, "light_required", _light_required_note(target))
+	if not _has_required_pressure_protection(target):
+		_interaction.reset()
+		_set_target_state(world, target_id, "locked")
+		return _note_result(false, "pressure_required", _pressure_required_note(target))
 
 	_set_target_state(world, target_id, "active")
 	var survey_result: Dictionary = _interaction.update(target, delta)
@@ -129,7 +133,14 @@ func overlay_text(world, player) -> String:
 		if _is_finding_target(nearby_target):
 			var clue := str(nearby_target.get("clue_label", "Mineral trace")).strip_edges()
 			var light_capability_id := str(nearby_target.get("required_light_capability_id", "")).strip_edges()
-			if has_scanner() and not light_capability_id.is_empty() and _profile.has_capability(light_capability_id):
+			var pressure_capability_id := str(nearby_target.get("required_pressure_capability_id", "")).strip_edges()
+			var requirements_met: bool = (
+				has_scanner()
+				and (not light_capability_id.is_empty() or not pressure_capability_id.is_empty())
+				and (light_capability_id.is_empty() or _profile.has_capability(light_capability_id))
+				and (pressure_capability_id.is_empty() or _profile.has_capability(pressure_capability_id))
+			)
+			if requirements_met:
 				return ""
 			return clue if has_scanner() else "%s | Scanner required" % clue
 	if _profile.has_completed_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID):
@@ -153,6 +164,8 @@ func is_status_note(status_note: String) -> bool:
 		or status_note.begins_with("Anomaly")
 		or status_note.begins_with("Research")
 		or status_note.begins_with("Mineral")
+		or status_note.begins_with("Pressure")
+		or status_note.begins_with("Abyssal")
 		or status_note.find("light required") != -1
 	)
 
@@ -280,6 +293,7 @@ func _target_available(target: Dictionary) -> bool:
 	return (
 		_profile.has_capability(str(target.get("required_capability_id", "")))
 		and _has_required_light(target)
+		and _has_required_pressure_protection(target)
 	)
 
 
@@ -291,6 +305,16 @@ func _has_required_light(target: Dictionary) -> bool:
 func _light_required_note(target: Dictionary) -> String:
 	var clue := str(target.get("clue_label", "")).strip_edges()
 	return clue if not clue.is_empty() else "Stronger light required"
+
+
+func _has_required_pressure_protection(target: Dictionary) -> bool:
+	var capability_id := str(target.get("required_pressure_capability_id", "")).strip_edges()
+	return capability_id.is_empty() or _profile.has_capability(capability_id)
+
+
+func _pressure_required_note(target: Dictionary) -> String:
+	var clue := str(target.get("clue_label", "")).strip_edges()
+	return clue if not clue.is_empty() else "Abyssal signal | Pressure suit required"
 
 
 func _is_resource_target(target: Dictionary) -> bool:
@@ -310,10 +334,13 @@ func _pending_metadata(target: Dictionary) -> Dictionary:
 		"target_type": str(target.get("target_type", "")),
 		"finding_label": str(target.get("finding_label", "")),
 		"next_lead_label": str(target.get("next_lead_label", "")),
+		"required_pressure_capability_id": str(target.get("required_pressure_capability_id", "")),
 	}
 
 
 func _survey_complete_note(target: Dictionary) -> String:
+	if not str(target.get("required_pressure_capability_id", "")).strip_edges().is_empty():
+		return "Abyssal source charted | Return to boat"
 	return "Research complete - return to surface boat" if _is_resource_target(target) else "Survey complete - return to surface boat"
 
 
@@ -327,9 +354,13 @@ func _completed_overlay_text(target: Dictionary) -> String:
 
 func _pending_overlay_text() -> String:
 	var metadata: Dictionary = _expedition.pending_metadata()
+	if not str(metadata.get("required_pressure_capability_id", "")).is_empty():
+		return "Abyssal source charted | Return to boat"
 	return "Research pending | Return to surface boat" if str(metadata.get("target_type", "")) == RESOURCE_TARGET_TYPE else "Discovery pending | Return to surface boat"
 
 
 func _pending_status_note() -> String:
 	var metadata: Dictionary = _expedition.pending_metadata()
+	if not str(metadata.get("required_pressure_capability_id", "")).is_empty():
+		return "Abyssal source charted | Return to boat"
 	return "Research pending - return to surface boat" if str(metadata.get("target_type", "")) == RESOURCE_TARGET_TYPE else "Discovery pending - return to surface boat"

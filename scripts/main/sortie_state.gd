@@ -65,6 +65,10 @@ func apply_oxygen_penalty(seconds: float) -> bool:
 	return oxygen_seconds <= 0.0
 
 
+func drain_oxygen(seconds: float, multiplier := 1.0) -> bool:
+	return apply_oxygen_penalty(maxf(0.0, seconds) * maxf(0.0, multiplier))
+
+
 func report() -> Dictionary:
 	return {
 		"current_map_id": current_map_id,
