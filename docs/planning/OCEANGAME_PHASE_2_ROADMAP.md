@@ -4,6 +4,8 @@ Date: 2026-07-14
 
 Status: Expansions 01-11 are complete with player GO. Expansion 11 closed after
 final scanner-progression correction #927 and exact-SHA Web review at `eb940b7`.
+Planning gate #930 proposes an abyssal pressure return; it is not committed
+until player GO.
 
 ## Decision
 
@@ -91,13 +93,21 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-No implementation milestone is currently committed. A fresh audit should select
-one bounded direction from this roadmap before creating the next issue batch.
+No implementation milestone is currently committed.
+
+### Proposed
+
+`docs/current/OCEANGAME_EXPANSION_12_PLAN.md` proposes one durable pressure-suit
+project, a source-authored pressure zone in the existing lower-central basin,
+and one boat-committed abyssal payoff. Planning issue #930 requires player
+GO/HOLD before a milestone or implementation batch is created.
 
 ### Directional
 
-Other regional identities, oxygen-distance progression, pressure protection,
-and exceptional interiors remain directional until one is selected and scoped.
+Other regional identities, oxygen-distance progression, and exceptional
+interiors remain directional until one is selected and scoped. Broad pressure
+simulation and later pressure tiers remain directional even if the bounded
+Expansion 12 proposal receives GO.
 
 ### Vision
 
@@ -308,6 +318,33 @@ Exit question: did the Signal Reef clue, material hunt, and night-built light
 make returning to the dark lower-right route feel like a capability earned for a
 place the player remembered, with a payoff worth bringing back to the boat?
 **GO recorded at #914 after corrections #925/#927.**
+
+### Proposed Expansion 12: Abyssal Pressure Return
+
+Status: Proposed under planning gate #930. No GitHub milestone or implementation
+batch exists until player GO. See
+`docs/current/OCEANGAME_EXPANSION_12_PLAN.md`.
+
+Goal: turn the committed deep-harmonic clue into one durable pressure-suit
+project and one return through existing continuous geography to the
+lower-central abyssal basin.
+
+Prove:
+
+- exact Ti2/Rubber1/Gel1 night construction and one durable capability owner
+- a source-authored pressure threshold that is briefly scoutable before the suit
+- accelerated unprotected oxygen drain that the optional `O2 tank +15` cannot bypass
+- normal zone drain and useful return margin after the pressure suit
+- one basin landmark, timed finding, pending state, and canonical-boat commitment
+- unchanged terrain, collision, slices, session upgrades, health, and normal travel
+
+Non-goals include global pressure simulation, health damage, terrain expansion,
+loaded destinations, oxygen rebalance, new materials, inventory, enemies,
+vehicles, and broad art replacement.
+
+Exit question: did the deep-harmonic clue, pressure warning, material hunt, and
+night-built suit make the abyssal basin feel like a dangerous place the player
+learned to reach, with a payoff worth carrying back to the boat?
 
 ## Original OceanGame Convergence
 
