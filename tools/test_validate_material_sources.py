@@ -241,6 +241,30 @@ def with_dive_light_project(map_data: dict) -> dict:
     return map_data
 
 
+def with_pressure_suit_project(map_data: dict) -> dict:
+    with_propulsion_project(map_data)
+    map_data["biological_resource_sources"] = [{
+        "id": "upper_right_glow_anemone_sample",
+        "material_id": "insulating_gel",
+        "material_quantity": 1,
+    }]
+    map_data["survey_targets"] = [{
+        "id": "abyssal_basin_harmonic_source_survey",
+        "required_pressure_capability_id": "pressure_suit_1",
+    }]
+    map_data["material_projects"].append({
+        "id": "pressure_suit_1_project",
+        "required_discovery_id": "signal_reef_deep_harmonic_discovery",
+        "required_materials": {"titanium_scrap": 2, "rubber_sheet": 1, "insulating_gel": 1},
+        "unlocks_capability_id": "pressure_suit_1",
+        "target_id": "abyssal_basin_harmonic_source_survey",
+        "build_phase": "night_debrief",
+        "project_label": "Pressure suit project",
+        "completion_label": "Pressure suit built",
+    })
+    return map_data
+
+
 class MaterialSourceValidationTests(unittest.TestCase):
     def test_valid_schema_and_reachability(self) -> None:
         map_data = valid_map()
@@ -291,6 +315,16 @@ class MaterialSourceValidationTests(unittest.TestCase):
         map_data = with_dive_light_project(valid_map())
         map_data["survey_targets"][0]["required_light_capability_id"] = "wrong_light"
         map_data["material_projects"][-1]["required_materials"]["insulating_gel"] = 2
+        failures = validate_material_source_schema(map_data)
+        self.assertTrue(any("target survey does not link back" in failure for failure in failures), failures)
+        self.assertTrue(any("required_materials must be exactly" in failure for failure in failures), failures)
+
+    def test_accepts_pressure_project_with_recipe_and_survey_link(self) -> None:
+        self.assertEqual(validate_material_source_schema(with_pressure_suit_project(valid_map())), [])
+
+        map_data = with_pressure_suit_project(valid_map())
+        map_data["survey_targets"][0]["required_pressure_capability_id"] = "wrong_suit"
+        map_data["material_projects"][-1]["required_materials"]["rubber_sheet"] = 2
         failures = validate_material_source_schema(map_data)
         self.assertTrue(any("target survey does not link back" in failure for failure in failures), failures)
         self.assertTrue(any("required_materials must be exactly" in failure for failure in failures), failures)

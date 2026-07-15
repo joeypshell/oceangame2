@@ -11,3 +11,4 @@ const CARGO_CAPACITY_UPGRADE_ID := "cargo_pouch_1"
 const CARGO_CAPACITY_UPGRADE_COST := 700
 const SCANNER_CAPABILITY_ID := "survey_scanner_1"
 const DIVE_LIGHT_CAPABILITY_ID := "dive_light_1"
+const PRESSURE_SUIT_CAPABILITY_ID := "pressure_suit_1"

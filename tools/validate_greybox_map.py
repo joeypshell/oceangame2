@@ -16,6 +16,7 @@ from validate_light_return import validate_light_return
 from validate_material_sources import validate_material_source_reachability, validate_material_source_schema
 from validate_moving_hazards import validate_moving_hazard_reachability, validate_moving_hazard_schema
 from validate_next_dive_prompts import validate_next_dive_prompt_schema
+from validate_pressure_return import validate_pressure_return
 from validate_progression_containers import validate_progression_container_reachability, validate_progression_container_schema
 from validate_regional_journeys import validate_regional_journey_reachability, validate_regional_journey_schema
 from validate_relay_follow_through_objectives import validate_relay_follow_through_objective_reachability, validate_relay_follow_through_objective_schema
@@ -488,12 +489,11 @@ def main() -> int:
     failures.extend(validate_visibility_zone_reachability(zones, solid, reachable))
     failures.extend(validate_world_connector_reachability(zones, solid, reachable))
     failures.extend(validate_light_return(args.map_json, map_data, solid, reachable))
-
+    failures.extend(validate_pressure_return(args.map_json, map_data))
     if failures:
         for failure in failures:
             print(failure)
         return 1
-
     print(f"{map_data['id']} passed reachability validation from entry {spawn}.")
     return 0
 if __name__ == "__main__":

@@ -12,11 +12,11 @@ SUPPORTED_MATERIALS = {
 }
 SUPPORTED_PROJECTS = {
     "propulsion_fins_project", "survey_scanner_project", "salvage_cutter_project", "current_stabilizer_project",
-    "shock_prod_project", "shock_prod_capacitor_project", "dive_light_1_project",
+    "shock_prod_project", "shock_prod_capacitor_project", "dive_light_1_project", "pressure_suit_1_project",
 }
 SUPPORTED_CAPABILITIES = {
     "propulsion_fins", "survey_scanner_1", "salvage_cutter", "current_stabilizer", "shock_prod", "shock_prod_capacitor",
-    "dive_light_1",
+    "dive_light_1", "pressure_suit_1",
 }
 SUPPORTED_STRATEGIES = {"day_rotation_v1"}
 SUPPORTED_BUILD_PHASES = {"night_debrief"}
@@ -32,6 +32,9 @@ EXPECTED_RECIPES = {
     },
     "dive_light_1_project": {
         "titanium_scrap": 1, "conductive_coil": 1, "insulating_gel": 1,
+    },
+    "pressure_suit_1_project": {
+        "titanium_scrap": 2, "rubber_sheet": 1, "insulating_gel": 1,
     },
 }
 PROJECT_RULES = {
@@ -82,6 +85,14 @@ PROJECT_RULES = {
         "target_field": "target_id",
         "target_collection": "survey_targets",
         "target_capability_field": "required_light_capability_id",
+    },
+    "pressure_suit_1_project": {
+        "capability_id": "pressure_suit_1",
+        "required_discovery_id": "signal_reef_deep_harmonic_discovery",
+        "required_project_id": None,
+        "target_field": "target_id",
+        "target_collection": "survey_targets",
+        "target_capability_field": "required_pressure_capability_id",
     },
 }
 MATERIAL_FIELDS = {"material_id", "material_quantity", "candidate_pool_id"}

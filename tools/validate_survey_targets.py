@@ -18,10 +18,15 @@ SUPPORTED_CAPABILITIES = {"survey_scanner_1"}
 SUPPORTED_INTERACTIONS = {"survey"}
 TARGET_DISCOVERIES = {
     "anomaly": {"lower_right_anomaly_discovery"},
-    "regional": {"lower_right_signal_reef_discovery", "signal_reef_deep_harmonic_discovery"},
+    "regional": {
+        "lower_right_signal_reef_discovery",
+        "signal_reef_deep_harmonic_discovery",
+        "abyssal_basin_harmonic_source_discovery",
+    },
     "resource": {"upper_right_mineral_trace_research"},
 }
 LIGHT_GATED_TARGETS = {"signal_reef_deep_harmonic_survey": "dive_light_1"}
+PRESSURE_GATED_TARGETS = {"abyssal_basin_harmonic_source_survey": "pressure_suit_1"}
 FINDING_FIELDS = {"clue_label", "finding_label"}
 RESOURCE_FIELDS = {*FINDING_FIELDS, "research_material_pool_id"}
 REGIONAL_FIELDS = {*FINDING_FIELDS, "next_lead_label", "required_route_id"}
@@ -29,6 +34,7 @@ SURVEY_SPECIFIC_FIELDS = {
     "target_type",
     "required_capability_id",
     "required_light_capability_id",
+    "required_pressure_capability_id",
     "discovery_id",
     "commit_map_id",
     "commit_map_path",
@@ -196,6 +202,8 @@ def validate_survey_target_schema(map_path: Path, map_data: dict[str, Any]) -> l
             fields = SURVEY_SPECIFIC_FIELDS & set(item)
             if collection_name == "zones" and item.get("type") == "marker" and item.get("current_gate") is True:
                 fields.discard("required_capability_id")
+            if collection_name == "zones" and item.get("type") == "marker" and item.get("pressure_zone") is True:
+                fields.discard("required_capability_id")
             if collection_name == "entities" and item.get("type") == "salvage" and isinstance(item.get("guarded_by_hostile_id"), str):
                 fields.discard("required_capability_id")
             if item.get("interaction") == "survey":
@@ -267,6 +275,11 @@ def validate_survey_target_schema(map_path: Path, map_data: dict[str, Any]) -> l
             failures.append(f"{item_label} required_light_capability_id must be {expected_light!r}.")
         elif expected_light is None and "required_light_capability_id" in target:
             failures.append(f"{item_label} required_light_capability_id is only supported on a light-gated target.")
+        expected_pressure = PRESSURE_GATED_TARGETS.get(str(target_id))
+        if expected_pressure is not None and target.get("required_pressure_capability_id") != expected_pressure:
+            failures.append(f"{item_label} required_pressure_capability_id must be {expected_pressure!r}.")
+        elif expected_pressure is None and "required_pressure_capability_id" in target:
+            failures.append(f"{item_label} required_pressure_capability_id is only supported on a pressure-gated target.")
         if target_type in {"regional", "resource"}:
             type_fields = REGIONAL_FIELDS if target_type == "regional" else RESOURCE_FIELDS
             for field in sorted(type_fields):
