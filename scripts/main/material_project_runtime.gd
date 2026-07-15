@@ -108,6 +108,10 @@ func has_dive_light() -> bool:
 	return _profile != null and _profile.has_capability(ExpansionProfileState.DIVE_LIGHT_CAPABILITY_ID)
 
 
+func has_pressure_suit() -> bool:
+	return _profile != null and _profile.has_capability(ExpansionProfileState.PRESSURE_SUIT_CAPABILITY_ID)
+
+
 func propulsion_fins_guidance(map_id := "", scanner_blueprint_recovered := false) -> String:
 	if has_propulsion_fins():
 		if scanner_blueprint_recovered or str(map_id) != "production_slice_01":
@@ -209,6 +213,7 @@ func report() -> Dictionary:
 		"shock_prod_unlocked": has_shock_prod(),
 		"shock_prod_capacitor_unlocked": has_shock_prod_capacitor(),
 		"dive_light_unlocked": has_dive_light(),
+		"pressure_suit_unlocked": has_pressure_suit(),
 	}
 
 
@@ -303,6 +308,8 @@ func _project_prefix(project: Dictionary) -> String:
 func _project_action_label(project: Dictionary) -> String:
 	if str(project.get("id", "")) == ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID:
 		return "survey scanner"
+	if str(project.get("id", "")) == ExpansionProfileState.PRESSURE_SUIT_PROJECT_ID:
+		return "pressure suit"
 	return str(project.get("unlocks_capability_id", "project")).replace("_", " ")
 
 
@@ -313,6 +320,8 @@ func _knowledge_label(project: Dictionary) -> String:
 		return "scanner blueprint beyond east current"
 	if str(project.get("required_discovery_id", "")) == ExpansionProfileState.SIGNAL_REEF_DISCOVERY_ID:
 		return "Signal Reef chart"
+	if str(project.get("required_discovery_id", "")) == ExpansionProfileState.DEEP_HARMONIC_DISCOVERY_ID:
+		return "deep harmonic chart"
 	return "salvage cutter plan"
 
 
@@ -347,6 +356,15 @@ func _material_progress_text(project: Dictionary) -> String:
 			int(required.get(ExpansionProfileState.TITANIUM_MATERIAL_ID, 0)),
 			_profile.material_quantity(ExpansionProfileState.COIL_MATERIAL_ID),
 			int(required.get(ExpansionProfileState.COIL_MATERIAL_ID, 0)),
+			_profile.material_quantity(ExpansionProfileState.INSULATING_GEL_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.INSULATING_GEL_MATERIAL_ID, 0)),
+		]
+	if str(project.get("id", "")) == ExpansionProfileState.PRESSURE_SUIT_PROJECT_ID:
+		return "Ti %d/%d | Rubber %d/%d | Gel %d/%d" % [
+			_profile.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.TITANIUM_MATERIAL_ID, 0)),
+			_profile.material_quantity(ExpansionProfileState.RUBBER_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.RUBBER_MATERIAL_ID, 0)),
 			_profile.material_quantity(ExpansionProfileState.INSULATING_GEL_MATERIAL_ID),
 			int(required.get(ExpansionProfileState.INSULATING_GEL_MATERIAL_ID, 0)),
 		]
