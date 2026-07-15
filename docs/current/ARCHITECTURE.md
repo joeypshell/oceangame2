@@ -4,7 +4,7 @@
 
 The current project is a Godot 4.7 side-view ocean salvage prototype for proving the source-driven map, terrain, validation, capture, and gameplay workflow that will support a finished small diver game.
 
-The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`; the latest completed milestone decision is `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md`. Expansion 11 received player GO after adding one durable Signal-Reef light project and remembered dark-harmonic return, then correcting immediate recipe presentation and scanner blueprint/material progression. The final public build is exact SHA `eb940b7`. No next implementation milestone is selected. Earlier controlled gameplay and visual passes remain implementation evidence, not the whole product direction.
+The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`; the latest completed milestone decision is `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md`. Expansion 11 received player GO after adding one durable Signal-Reef light project and remembered dark-harmonic return, then correcting immediate recipe presentation and scanner blueprint/material progression. The final public build is exact SHA `eb940b7`. `docs/current/OCEANGAME_EXPANSION_12_PLAN.md` proposes one source-authored abyssal pressure return under planning gate #930; it changes no runtime architecture unless the player gives GO. Earlier controlled gameplay and visual passes remain implementation evidence, not the whole product direction.
 
 ## Source Of Truth
 

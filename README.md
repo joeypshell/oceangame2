@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 11 closeout and Phase 2 roadmap. No next implementation milestone is selected; a fresh audit should choose one bounded direction before creating another issue batch. Teleport, connector-based normal traversal, stabilizer entry requirements, and pressure progression remain deferred.
+Current handoff starts with the Expansion 11 closeout and Phase 2 roadmap. Planning issue #930 selects an Expansion 12 abyssal pressure return; its scoped implementation milestone follows the planning merge. Teleport, connector-based normal traversal, stabilizer entry requirements, and broad pressure progression remain deferred.
 
 Core sources and operating docs:
 
@@ -106,6 +106,7 @@ Current release and expansion handoff:
 - [Expansion 11 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_11_VISUAL_BASELINE_DECISION.md)
 - [Expansion 11 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_11_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 11 Closeout](docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md)
+- [Proposed OceanGame Expansion 12 Plan](docs/current/OCEANGAME_EXPANSION_12_PLAN.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -239,4 +240,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-10 meet that condition, including a player-approved, source-generated full cave and one capability-gated regional journey that remain continuously swimmable without connector travel.
+The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-11 meet that condition, including a player-approved source-generated full cave, a capability-gated regional journey, and a durable light return that remain continuously swimmable without connector travel.

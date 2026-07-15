@@ -21,6 +21,7 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_11_PLAN.md`
 - `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md`
+- `docs/current/OCEANGAME_EXPANSION_12_PLAN.md` (selected next expansion)
 
 ## Current State
 
@@ -32,8 +33,9 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: no implementation milestone is selected after the Expansion 11 GO; the next audit must choose one bounded direction before batching issues.
-- Directional: oxygen-distance progression, pressure protection, other regional identities, and exceptional interiors remain uncommitted.
+- Committed: #930 selects one abyssal pressure-return milestone in existing contiguous geography; create its scoped implementation batch after the planning merge.
+- Proposed: no later expansion is selected.
+- Directional: oxygen-distance progression, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
@@ -77,7 +79,7 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 ## Roadmap Rules
 
 - Do not reopen completed expansion batches merely to keep the queue full.
-- Select one bounded next milestone through a fresh roadmap/repository audit; do not auto-batch Expansion 12 solely by sequence.
+- Create the #930 Expansion 12 milestone and scoped implementation batch after the planning merge; reserve GO/HOLD for its deployed player playtest.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
 - Do not use teleports, prompted connectors, map menus, or the current stabilizer for normal traversal of the full level.
