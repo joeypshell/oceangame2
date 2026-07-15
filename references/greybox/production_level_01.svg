@@ -15,6 +15,7 @@
 <rect x="2752" y="768" width="960" height="768" rx="64" fill="#237fad" opacity="0.22"/>
 <rect x="2304" y="1856" width="1408" height="576" rx="64" fill="#237fad" opacity="0.22"/>
 <rect x="4224" y="3456" width="320" height="320" rx="64" fill="#237fad" opacity="0.22"/>
+<rect x="2592" y="4512" width="1056" height="480" rx="64" fill="#237fad" opacity="0.22"/>
 <rect x="0" y="0" width="5056" height="5152" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
 <text x="12.0" y="34.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">production_level_bounds</text>
 <rect x="1216" y="1568" width="32" height="32" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
@@ -53,6 +54,10 @@
 <text x="4236.0" y="3490.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">lower_right_signal_reef_landmark</text>
 <rect x="4224" y="3776" width="320" height="192" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
 <text x="4236.0" y="3810.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">signal_reef_deep_harmonic_dark_zone</text>
+<rect x="1920" y="4032" width="2464" height="960" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="1932.0" y="4066.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">abyssal_basin_pressure_zone</text>
+<rect x="2592" y="4512" width="1056" height="480" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="2604.0" y="4546.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">abyssal_basin_landmark</text>
 <rect x="3456" y="0" width="1056" height="256" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="0" y="0" width="2912" height="320" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="0" y="320" width="2880" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
@@ -480,6 +485,9 @@
 <rect x="4352" y="3840" width="64" height="64" rx="8" fill="#69f0dc" fill-opacity="0.28" stroke="#07584f" stroke-width="6"/>
 <circle cx="4384.0" cy="3872.0" r="14" fill="none" stroke="#69f0dc" stroke-width="6"/>
 <text x="4360.0" y="3830.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">signal_reef_deep_harmonic_survey</text>
+<rect x="3040" y="4768" width="64" height="64" rx="8" fill="#69f0dc" fill-opacity="0.28" stroke="#07584f" stroke-width="6"/>
+<circle cx="3072.0" cy="4800.0" r="14" fill="none" stroke="#69f0dc" stroke-width="6"/>
+<text x="3048.0" y="4758.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">abyssal_basin_harmonic_source_survey</text>
 <circle cx="4048.0" cy="1488.0" r="17" fill="#b8f36b" stroke="#3f6619" stroke-width="5"/>
 <circle cx="4036.0" cy="1496.0" r="8" fill="#b8f36b" stroke="#3f6619" stroke-width="4"/>
 <text x="4072.0" y="1522.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="20" paint-order="stroke" stroke="#10384a" stroke-width="4">upper_right_glow_anemone_sample</text>

@@ -386,7 +386,8 @@
       "notes": [
         "The canonical surface_boat_entry opening at top x=91..98 remains open.",
         "Nine adjacent top cells and the separate ten-cell top-right opening are sealed in global source coordinates.",
-        "No crop seal, stitched slice terrain, connector, teleport, pressure, or stabilizer-entry metadata is imported.",
+        "No crop seal, stitched slice terrain, connector, teleport, or stabilizer-entry metadata is imported.",
+        "Expansion 12 pressure records come only from their focused source helper.",
         "Twenty-nine named source-owned cells are opened only where reused gameplay requires its proven clearance.",
         "The full-sketch draft remains unchanged as conversion and provenance evidence."
       ]
@@ -1366,6 +1367,31 @@
       ],
       "terrain_changes": [],
       "intent": "Source-authored durable-light return metadata in existing open water."
+    },
+    "expansion_12": {
+      "source": "tools/production_level_01_expansion_12.py",
+      "project_ids": [
+        "pressure_suit_1_project"
+      ],
+      "journey_ids": [
+        "deep_harmonic_abyssal_basin_route"
+      ],
+      "zone_ids": [
+        "abyssal_basin_pressure_zone",
+        "abyssal_basin_landmark"
+      ],
+      "survey_target_ids": [
+        "abyssal_basin_harmonic_source_survey"
+      ],
+      "camera_test_ids": [
+        "expansion_12_pre_suit_pressure_warning",
+        "expansion_12_pressure_suit_project",
+        "expansion_12_protected_crossing",
+        "expansion_12_abyssal_survey",
+        "expansion_12_pending_boat_return"
+      ],
+      "terrain_changes": [],
+      "intent": "Source-authored pressure return metadata in existing open water."
     },
     "review_artifact": "references/greybox/production_level_01_source_render_collision_review.png"
   },
@@ -4616,6 +4642,33 @@
       "visual_only": true,
       "route_context": "east_current_signal_reef_route",
       "intent": "Use the existing open pocket directly below Signal Reef for a scoutable dark-water return without terrain or collision changes."
+    },
+    {
+      "id": "abyssal_basin_pressure_zone",
+      "type": "marker",
+      "x": 60,
+      "y": 126,
+      "w": 77,
+      "h": 30,
+      "pressure_zone": true,
+      "pressure_level": "abyssal",
+      "pressure_label": "Abyssal pressure",
+      "required_capability_id": "pressure_suit_1",
+      "warning_grace_seconds": 1.0,
+      "unprotected_oxygen_drain_multiplier": 8.0,
+      "route_context": "deep_harmonic_abyssal_basin_route",
+      "intent": "Teach retreat at the existing lower-central pressure threshold without changing terrain or blocking ordinary movement."
+    },
+    {
+      "id": "abyssal_basin_landmark",
+      "type": "marker",
+      "x": 81,
+      "y": 141,
+      "w": 33,
+      "h": 15,
+      "regional_landmark": true,
+      "regional_journey_id": "deep_harmonic_abyssal_basin_route",
+      "landmark_label": "Abyssal Basin"
     }
   ],
   "regional_journeys": [
@@ -4633,6 +4686,20 @@
       "commit_entry_id": "surface_boat_entry",
       "route_context": "east_current_signal_reef_route",
       "intent": "Reuse the taught east-current language to gate one meaningful lower-right region and later boat-return discovery."
+    },
+    {
+      "id": "deep_harmonic_abyssal_basin_route",
+      "route_label": "Abyssal basin route",
+      "promise_gate_id": "signal_reef_deep_harmonic_dark_zone",
+      "entry_gate_ids": [
+        "abyssal_basin_pressure_zone"
+      ],
+      "required_capability_id": "pressure_suit_1",
+      "landmark_zone_id": "abyssal_basin_landmark",
+      "survey_target_id": "abyssal_basin_harmonic_source_survey",
+      "commit_entry_id": "surface_boat_entry",
+      "route_context": "deep_harmonic_abyssal_basin_route",
+      "intent": "Return through continuous lower-central geography after learning the deep harmonic, then commit the abyssal discovery at the boat."
     }
   ],
   "daily_conditions": [
@@ -4903,6 +4970,29 @@
       "commit_map_path": "res://maps/production_level_01.greybox.json",
       "commit_entry_id": "surface_boat_entry",
       "intent": "Make the deeper Signal Reef signal visible before the light while reserving timed progress for the durable capability."
+    },
+    {
+      "id": "abyssal_basin_harmonic_source_survey",
+      "target_type": "regional",
+      "x": 95,
+      "y": 149,
+      "w": 2,
+      "h": 2,
+      "required_capability_id": "survey_scanner_1",
+      "required_pressure_capability_id": "pressure_suit_1",
+      "required_route_id": "deep_harmonic_abyssal_basin_route",
+      "route_context": "deep_harmonic_abyssal_basin_route",
+      "interaction": "survey",
+      "interaction_seconds": 3.0,
+      "interaction_label": "Survey abyssal source",
+      "clue_label": "Abyssal signal | Pressure suit required",
+      "finding_label": "Discovery logged: Abyssal harmonic source",
+      "next_lead_label": "Abyssal source charted | Further descent unresolved",
+      "discovery_id": "abyssal_basin_harmonic_source_discovery",
+      "commit_map_id": "production_level_01",
+      "commit_map_path": "res://maps/production_level_01.greybox.json",
+      "commit_entry_id": "surface_boat_entry",
+      "intent": "Reward one protected return to the existing basin while keeping the finding pending until the canonical boat."
     }
   ],
   "material_candidate_pools": [
@@ -5040,6 +5130,20 @@
       "build_phase": "night_debrief",
       "project_label": "Dive light project",
       "completion_label": "Dive light built"
+    },
+    {
+      "id": "pressure_suit_1_project",
+      "required_discovery_id": "signal_reef_deep_harmonic_discovery",
+      "required_materials": {
+        "titanium_scrap": 2,
+        "rubber_sheet": 1,
+        "insulating_gel": 1
+      },
+      "unlocks_capability_id": "pressure_suit_1",
+      "target_id": "abyssal_basin_harmonic_source_survey",
+      "build_phase": "night_debrief",
+      "project_label": "Pressure suit project",
+      "completion_label": "Pressure suit built"
     }
   ],
   "background": [
@@ -5076,6 +5180,16 @@
       "h": 10,
       "regional_landmark": true,
       "regional_journey_id": "east_current_signal_reef_route"
+    },
+    {
+      "id": "abyssal_basin_harmonic_source_backdrop",
+      "type": "background",
+      "x": 81,
+      "y": 141,
+      "w": 33,
+      "h": 15,
+      "regional_landmark": true,
+      "regional_journey_id": "deep_harmonic_abyssal_basin_route"
     }
   ],
   "entities": [
@@ -5490,6 +5604,41 @@
       "center_y": 12.0,
       "zoom": 0.55,
       "intent": "Pending deep-harmonic discovery returning to the canonical boat."
+    },
+    {
+      "id": "expansion_12_pre_suit_pressure_warning",
+      "center_x": 79.0,
+      "center_y": 137.0,
+      "zoom": 0.38,
+      "intent": "Scoutable pressure threshold and retreat route before suit ownership."
+    },
+    {
+      "id": "expansion_12_pressure_suit_project",
+      "center_x": 95.0,
+      "center_y": 12.0,
+      "zoom": 0.55,
+      "intent": "Canonical boat context for the night-built pressure suit project."
+    },
+    {
+      "id": "expansion_12_protected_crossing",
+      "center_x": 84.0,
+      "center_y": 144.0,
+      "zoom": 0.34,
+      "intent": "Continuous protected crossing into the existing abyssal basin."
+    },
+    {
+      "id": "expansion_12_abyssal_survey",
+      "center_x": 96.0,
+      "center_y": 150.0,
+      "zoom": 0.55,
+      "intent": "Pressure-suit survey interaction at the harmonic source."
+    },
+    {
+      "id": "expansion_12_pending_boat_return",
+      "center_x": 95.0,
+      "center_y": 12.0,
+      "zoom": 0.55,
+      "intent": "Pending abyssal discovery returning to the canonical boat."
     }
   ],
   "review_questions": [
@@ -5497,6 +5646,10 @@
     "Is the canonical boat opening the only visible route out of the outer boundary?",
     "Do the upper-left, lower-left, and lower-right anchors sit in recognizable open sectors?",
     "Does transformed opening gameplay retain its source-local relationships without a crop seam?",
-    "Do source, render, and collision evidence agree after gameplay transformation?"
+    "Do source, render, and collision evidence agree after gameplay transformation?",
+    "Can the pressure threshold be scouted and safely retreated from before the suit?",
+    "Does the pressure-suit return preserve continuous remembered geography?",
+    "Is the abyssal survey clearly deeper than the known Signal Reef harmonic?",
+    "Does the completed survey remain pending until the canonical boat return?"
   ]
 }
