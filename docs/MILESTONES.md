@@ -20,10 +20,11 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_10_PLAN.md`
 - `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_11_PLAN.md`
+- `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md`
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-10 are complete. #864 recorded player GO for the contiguous full level, and #889 records GO for the corrected east-current regional journey. `production_level_01` remains the normal editor, local, and public Web default. Exact-SHA validation and deployment pass at `c576d13`; slices 01-04 remain unchanged regression/provenance fixtures.
+Simple Diver Game 01-09 and OceanGame Expansions 01-11 are complete. #864 recorded player GO for the contiguous full level, #889 records GO for the corrected east-current regional journey, and #914 records GO for the final corrected light-return journey. `production_level_01` remains the normal editor, local, and public Web default. Exact-SHA validation and deployment pass at `eb940b7`; slices 01-04 remain unchanged regression/provenance fixtures.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
@@ -31,14 +32,13 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: Expansion 11 uses Signal Reef knowledge, a durable material project, and one dark harmonic return through frozen issues #905-#914.
+- Committed: no implementation milestone is selected after the Expansion 11 GO; the next audit must choose one bounded direction before batching issues.
 - Directional: oxygen-distance progression, pressure protection, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
-## Current GitHub Milestone State
+## Recent GitHub Milestone State
 
-1. [Expansion 11: Deep-Harmonic Light Return](https://github.com/joeypshell/oceangame2/milestone/37) - open with frozen issues #905-#914 after planning GO on #903.
-
+1. [Expansion 11: Deep-Harmonic Light Return](https://github.com/joeypshell/oceangame2/milestone/37) - complete through #914 plus corrections #925/#927, with player GO and final exact-SHA Web verification.
 2. [Expansion 10: East-Current Regional Journey](https://github.com/joeypshell/oceangame2/milestone/36) - complete through #889, with player-gate correction #900, player GO, accepted full-level baseline, and exact-SHA Web verification.
 3. [Expansion 09: Contiguous Full-Level Foundation](https://github.com/joeypshell/oceangame2/milestone/35) - complete through #865 with player GO, default promotion, accepted full-level baseline, and exact-SHA Web verification.
 
@@ -70,11 +70,14 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 #880-#889 plus player-gate correction #900 are complete with GO. Propulsion fins now open one continuous east-current route to Signal Reef, where a scanner result remains pending until the canonical boat return. The correction preserves the full level through the night/build/next-day transition. #52/#53 remain deferred optional slice-03 polish.
 
+## Completed Expansion 11
+
+#905-#914 plus player-feedback corrections #925/#927 are complete with GO. Signal Reef knowledge now leads to a durable Ti1/Coil1/Gel1 night-built light and remembered dark-harmonic return. Scanner progression uses its own recovered blueprint and Ti1/Coil1 night project instead of score; the current-pocket cache remains optional score. Final exact-SHA Web verification passed at `eb940b7`.
+
 ## Roadmap Rules
 
-- Do not reopen the completed Expansion 09 batch merely to keep the queue full.
-- Resolve only frozen Expansion 11 issues #905-#914 before selecting another milestone.
-- Do not create or begin Expansion 12 while milestone #37 is active.
+- Do not reopen completed expansion batches merely to keep the queue full.
+- Select one bounded next milestone through a fresh roadmap/repository audit; do not auto-batch Expansion 12 solely by sequence.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
 - Do not use teleports, prompted connectors, map menus, or the current stabilizer for normal traversal of the full level.

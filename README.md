@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-10 are complete. The player-approved contiguous `production_level_01` is the editor, local, and public Web default. The corrected east-current regional journey and exact-SHA Web verification pass at `c576d13`; slices 01-04 remain unchanged, selectable regression fixtures.
+The compact diver foundation and OceanGame Expansions 01-11 are complete with player GO. The player-approved contiguous `production_level_01` is the editor, local, and public Web default. The final corrected light-return and scanner-project journey is verified at exact SHA `eb940b7`; slices 01-04 remain unchanged, selectable regression fixtures.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 10 closeout, Phase 2 roadmap, and committed Expansion 11 plan. Milestone #37 freezes #905-#914 around a durable recipe-built dive light and one dark Signal Reef return. Teleport, connector-based normal traversal, stabilizer entry requirements, and pressure progression remain deferred.
+Current handoff starts with the Expansion 11 closeout and Phase 2 roadmap. No next implementation milestone is selected; a fresh audit should choose one bounded direction before creating another issue batch. Teleport, connector-based normal traversal, stabilizer entry requirements, and pressure progression remain deferred.
 
 Core sources and operating docs:
 
@@ -102,6 +102,10 @@ Current release and expansion handoff:
 - [Expansion 10 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_10_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 10 Closeout](docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md)
 - [OceanGame Expansion 11 Plan](docs/current/OCEANGAME_EXPANSION_11_PLAN.md)
+- [Expansion 11 Source/State Contract](docs/current/OCEANGAME_EXPANSION_11_SOURCE_STATE_CONTRACT.md)
+- [Expansion 11 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_11_VISUAL_BASELINE_DECISION.md)
+- [Expansion 11 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_11_WEB_PREVIEW_VERIFICATION.md)
+- [Expansion 11 Closeout](docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
