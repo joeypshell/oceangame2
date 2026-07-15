@@ -59,4 +59,12 @@ const RULES := {
 		"target_id": "signal_reef_deep_harmonic_survey",
 		"required_materials": {"titanium_scrap": 1, "conductive_coil": 1, "insulating_gel": 1},
 	},
+	"pressure_suit_1_project": {
+		"capability_id": "pressure_suit_1",
+		"required_discovery_id": "signal_reef_deep_harmonic_discovery",
+		"required_project_id": "",
+		"target_field": "target_id",
+		"target_id": "abyssal_basin_harmonic_source_survey",
+		"required_materials": {"titanium_scrap": 2, "rubber_sheet": 1, "insulating_gel": 1},
+	},
 }

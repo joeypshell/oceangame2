@@ -143,6 +143,22 @@ jobs:
             exit 1
           fi
 
+      - name: Run pressure suit project state smoke check
+        run: |
+          set +e
+          godot --headless --path . --script res://scripts/main/smoke/smoke_pressure_suit_project_state.gd 2>&1 | tee godot-pressure-suit-project-state.log
+          godot_status=${PIPESTATUS[0]}
+          set -e
+
+          if [ "${godot_status}" -ne 0 ]; then
+            exit "${godot_status}"
+          fi
+
+          if grep -E "SCRIPT ERROR|ERROR:" godot-pressure-suit-project-state.log; then
+            echo "Godot reported errors during pressure suit project state smoke check."
+            exit 1
+          fi
+
       - name: Run salvage loop smoke check
         run: |
           set +e
