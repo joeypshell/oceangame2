@@ -1,6 +1,6 @@
 # Milestones
 
-Last updated: 2026-07-14
+Last updated: 2026-07-15
 
 This is the compact milestone index. Detailed direction lives in:
 
@@ -22,6 +22,7 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_11_PLAN.md`
 - `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_12_PLAN.md` (selected next expansion)
+- `docs/current/OCEANGAME_EXPANSION_12_SOURCE_STATE_CONTRACT.md`
 
 ## Current State
 
@@ -33,16 +34,16 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: #930 selects one abyssal pressure-return milestone in existing contiguous geography; create its scoped implementation batch after the planning merge.
+- Committed: [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) is active as #932-#941 in existing contiguous geography.
 - Proposed: no later expansion is selected.
 - Directional: oxygen-distance progression, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-1. [Expansion 11: Deep-Harmonic Light Return](https://github.com/joeypshell/oceangame2/milestone/37) - complete through #914 plus corrections #925/#927, with player GO and final exact-SHA Web verification.
-2. [Expansion 10: East-Current Regional Journey](https://github.com/joeypshell/oceangame2/milestone/36) - complete through #889, with player-gate correction #900, player GO, accepted full-level baseline, and exact-SHA Web verification.
-3. [Expansion 09: Contiguous Full-Level Foundation](https://github.com/joeypshell/oceangame2/milestone/35) - complete through #865 with player GO, default promotion, accepted full-level baseline, and exact-SHA Web verification.
+1. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - active as the frozen #932-#941 batch; #941 is the deployed player playtest gate.
+2. [Expansion 11: Deep-Harmonic Light Return](https://github.com/joeypshell/oceangame2/milestone/37) - complete through #914 plus corrections #925/#927, with player GO and final exact-SHA Web verification.
+3. [Expansion 10: East-Current Regional Journey](https://github.com/joeypshell/oceangame2/milestone/36) - complete through #889, with player-gate correction #900, player GO, accepted full-level baseline, and exact-SHA Web verification.
 
 ## Completed Expansion 04
 
@@ -79,7 +80,7 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 ## Roadmap Rules
 
 - Do not reopen completed expansion batches merely to keep the queue full.
-- Create the #930 Expansion 12 milestone and scoped implementation batch after the planning merge; reserve GO/HOLD for its deployed player playtest.
+- Resolve frozen Expansion 12 issues #932-#941 in dependency order; reserve GO/HOLD for the deployed #941 player playtest.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
 - Do not use teleports, prompted connectors, map menus, or the current stabilizer for normal traversal of the full level.
