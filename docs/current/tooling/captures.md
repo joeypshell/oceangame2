@@ -325,6 +325,14 @@ Capture the focused Expansion 11 light-return review states:
 
 This writes the pre-light harmonic requirement, exact incomplete light recipe, post-light 50% survey progress, and pending boat-return states at 1280x720 and mobile 844x390 review sizes under ignored `visual_captures/expansion_11_deep_harmonic_light/`. It uses the authored Expansion 11 camera tests and does not accept or replace baselines.
 
+Capture the focused Expansion 12 pressure-return review states:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --capture-expansion-12-pressure-return
+```
+
+This writes the pre-suit warning, incomplete pressure-suit recipe, protected crossing, 50% abyssal survey, and pending boat-return states at 1280x720 and mobile 844x390 review sizes under ignored `visual_captures/expansion_12_abyssal_pressure/`. It uses the authored Expansion 12 camera tests and does not accept or replace baselines.
+
 Capture the first production slice:
 
 ```powershell
