@@ -65,8 +65,65 @@ class RegionalJourneyValidationTests(unittest.TestCase):
         journey["entry_gate_ids"] = [{"id": "not_an_id"}]
         failures = validate_regional_journey_schema(candidate)
         self.assertTrue(any("runtime state" in failure for failure in failures), failures)
-        self.assertTrue(any("must be propulsion_fins" in failure for failure in failures), failures)
+        self.assertTrue(any("required_capability_id must be one of" in failure for failure in failures), failures)
         self.assertTrue(any("lower_snake_case" in failure for failure in failures), failures)
+
+    def test_accepts_pressure_journey_with_visibility_promise_and_pressure_entry(self) -> None:
+        candidate = copy.deepcopy(self.map_data)
+        candidate["zones"].extend([
+            {
+                "id": "abyssal_basin_pressure_zone",
+                "type": "marker",
+                "x": 81,
+                "y": 141,
+                "w": 33,
+                "h": 15,
+                "pressure_zone": True,
+                "required_capability_id": "pressure_suit_1",
+                "route_context": "deep_harmonic_abyssal_basin_route",
+            },
+            {
+                "id": "abyssal_basin_landmark",
+                "type": "marker",
+                "x": 81,
+                "y": 141,
+                "w": 33,
+                "h": 15,
+                "regional_landmark": True,
+                "regional_journey_id": "deep_harmonic_abyssal_basin_route",
+                "landmark_label": "Abyssal Basin",
+            },
+        ])
+        candidate["background"].append({
+            "id": "abyssal_basin_harmonic_source_backdrop",
+            "type": "background",
+            "x": 81,
+            "y": 141,
+            "w": 33,
+            "h": 15,
+            "regional_journey_id": "deep_harmonic_abyssal_basin_route",
+        })
+        candidate["survey_targets"].append({
+            "id": "abyssal_basin_harmonic_source_survey",
+            "x": 95,
+            "y": 149,
+            "w": 2,
+            "h": 2,
+            "required_route_id": "deep_harmonic_abyssal_basin_route",
+        })
+        candidate["regional_journeys"].append({
+            "id": "deep_harmonic_abyssal_basin_route",
+            "route_label": "Abyssal basin route",
+            "promise_gate_id": "signal_reef_deep_harmonic_dark_zone",
+            "entry_gate_ids": ["abyssal_basin_pressure_zone"],
+            "required_capability_id": "pressure_suit_1",
+            "landmark_zone_id": "abyssal_basin_landmark",
+            "survey_target_id": "abyssal_basin_harmonic_source_survey",
+            "commit_entry_id": "surface_boat_entry",
+            "route_context": "deep_harmonic_abyssal_basin_route",
+            "intent": "Use the existing lower-central basin.",
+        })
+        self.assertEqual([], validate_regional_journey_schema(candidate))
 
 
 if __name__ == "__main__":

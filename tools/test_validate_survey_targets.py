@@ -74,6 +74,22 @@ def valid_deep_harmonic_target() -> dict:
     return target
 
 
+def valid_abyssal_target() -> dict:
+    target = valid_regional_target()
+    target.update({
+        "id": "abyssal_basin_harmonic_source_survey",
+        "interaction_label": "Survey abyssal source",
+        "clue_label": "Abyssal signal | Pressure suit required",
+        "finding_label": "Discovery logged: Abyssal harmonic source",
+        "next_lead_label": "Abyssal source charted | Further descent unresolved",
+        "discovery_id": "abyssal_basin_harmonic_source_discovery",
+        "required_pressure_capability_id": "pressure_suit_1",
+        "required_route_id": "deep_harmonic_abyssal_basin_route",
+        "route_context": "deep_harmonic_abyssal_basin_route",
+    })
+    return target
+
+
 class SurveyTargetValidationTests(unittest.TestCase):
     def test_valid_schema_and_reachability(self) -> None:
         map_data = valid_map()
@@ -113,6 +129,24 @@ class SurveyTargetValidationTests(unittest.TestCase):
         map_data["survey_targets"] = [ordinary]
         failures = validate_survey_target_schema(SOURCE_MAP, map_data)
         self.assertTrue(any("only supported on a light-gated target" in failure for failure in failures), failures)
+
+    def test_accepts_only_the_contract_pressure_gated_regional_target(self) -> None:
+        map_data = valid_map()
+        map_data["survey_targets"] = [valid_abyssal_target()]
+        self.assertEqual(validate_survey_target_schema(SOURCE_MAP, map_data), [])
+
+        map_data["survey_targets"][0]["required_pressure_capability_id"] = "wrong_suit"
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertTrue(
+            any("required_pressure_capability_id must be 'pressure_suit_1'" in failure for failure in failures),
+            failures,
+        )
+
+        ordinary = valid_regional_target()
+        ordinary["required_pressure_capability_id"] = "pressure_suit_1"
+        map_data["survey_targets"] = [ordinary]
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertTrue(any("only supported on a pressure-gated target" in failure for failure in failures), failures)
 
     def test_requires_dedicated_list_and_unique_ids(self) -> None:
         map_data = valid_map()

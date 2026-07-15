@@ -32,6 +32,11 @@
       "id": "dive_light_1",
       "constant_name": "DIVE_LIGHT",
       "mandatory": false
+    },
+    {
+      "id": "pressure_suit_1",
+      "constant_name": "PRESSURE_SUIT",
+      "mandatory": false
     }
   ],
   "durable_purchases": []

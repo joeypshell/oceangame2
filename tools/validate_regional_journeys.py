@@ -24,7 +24,10 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MAP = ROOT / "maps" / "production_level_01.greybox.json"
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 DISPLAY_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,47}$")
-SUPPORTED_CAPABILITY_IDS = {"propulsion_fins"}
+GATE_FIELD_BY_CAPABILITY = {
+    "propulsion_fins": "current_gate",
+    "pressure_suit_1": "pressure_zone",
+}
 REQUIRED_FIELDS = (
     "id",
     "route_label",
@@ -122,8 +125,12 @@ def validate_regional_journey_schema(map_data: dict[str, Any]) -> list[str]:
         for field in id_fields:
             if not _valid_id(journey[field]):
                 failures.append(f"{label} {field} must use lower_snake_case.")
-        if journey["required_capability_id"] not in SUPPORTED_CAPABILITY_IDS:
-            failures.append(f"{label} required_capability_id must be propulsion_fins.")
+        capability_id = journey["required_capability_id"]
+        if capability_id not in GATE_FIELD_BY_CAPABILITY:
+            failures.append(
+                f"{label} required_capability_id must be one of: "
+                f"{', '.join(sorted(GATE_FIELD_BY_CAPABILITY))}."
+            )
         if journey["route_context"] != journey["id"]:
             failures.append(f"{label} route_context must equal its journey id.")
 
@@ -139,14 +146,24 @@ def validate_regional_journey_schema(map_data: dict[str, Any]) -> list[str]:
             gate_ids = []
         if journey["promise_gate_id"] in gate_ids:
             failures.append(f"{label} promise gate must remain distinct from its regional entry gates.")
-        for gate_id in [journey["promise_gate_id"], *gate_ids]:
+        promise = zones.get(str(journey["promise_gate_id"]))
+        if capability_id == "pressure_suit_1":
+            if promise is None or promise.get("visibility_zone") is not True:
+                failures.append(f"{label} pressure promise reference is unresolved.")
+        elif promise is None or promise.get("current_gate") is not True:
+            failures.append(f"{label} current promise gate reference is unresolved.")
+        elif promise.get("required_capability_id") != capability_id:
+            failures.append(f"{label} promise gate must use the journey capability.")
+
+        expected_gate_field = GATE_FIELD_BY_CAPABILITY.get(str(capability_id), "")
+        for gate_id in gate_ids:
             gate = zones.get(str(gate_id))
-            if gate is None or gate.get("current_gate") is not True:
-                failures.append(f"{label} current gate reference {gate_id!r} is unresolved.")
+            if gate is None or not expected_gate_field or gate.get(expected_gate_field) is not True:
+                failures.append(f"{label} entry gate reference {gate_id!r} is unresolved.")
                 continue
-            if gate.get("required_capability_id") != journey["required_capability_id"]:
+            if gate.get("required_capability_id") != capability_id:
                 failures.append(f"{label} gate {gate_id!r} must use the journey capability.")
-            if gate_id in gate_ids and gate.get("route_context") != journey["id"]:
+            if gate.get("route_context") != journey["id"]:
                 failures.append(f"{label} entry gate {gate_id!r} must use the journey route_context.")
 
         landmark = zones.get(str(journey["landmark_zone_id"]))

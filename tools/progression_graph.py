@@ -215,7 +215,7 @@ class ProgressionGraphBuilder:
                 return "connector"
             if item.get("current_gate") is True:
                 return "gate"
-            if item.get("visibility_zone") is True:
+            if item.get("pressure_zone") is True or item.get("visibility_zone") is True:
                 return "pressure"
             if item.get("regional_landmark") is True:
                 return "landmark"
@@ -294,7 +294,7 @@ class ProgressionGraphBuilder:
         if not requirement:
             return
         requirement_key = self.graph.resolve(requirement)
-        hard = self.graph.nodes[key].kind == "gate" and item.get("visual_only") is not True
+        hard = (self.graph.nodes[key].kind == "gate" or item.get("pressure_zone") is True) and item.get("visual_only") is not True
         self.graph.add_edge(key, requirement_key, "requires", hard=hard, note="hard gate" if hard else "soft pressure")
         self.graph.add_edge(requirement_key, key, "unlocks", note="hard gate" if hard else "improves soft pressure")
 
@@ -330,7 +330,7 @@ class ProgressionGraphBuilder:
             self.graph.add_edge(key, self.graph.resolve(survey_id, map_id), "unlocks")
 
     def _survey_edges(self, key: str, item: dict[str, Any], map_id: str) -> None:
-        self._required_id_edges(key, [item.get("required_capability_id"), item.get("required_light_capability_id")])
+        self._required_id_edges(key, [item.get("required_capability_id"), item.get("required_light_capability_id"), item.get("required_pressure_capability_id")])
         route_id = str(item.get("required_route_id", ""))
         if route_id:
             route_key = self.graph.resolve(route_id, map_id)

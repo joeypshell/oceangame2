@@ -159,6 +159,73 @@ class ProgressionGraphAuditTests(unittest.TestCase):
         self.assertTrue(any(edge.target == survey for edge in graph.requirements(discovery)))
         self.assertEqual((), audit_graph(graph).failures)
 
+    def test_abyssal_chain_includes_pressure_project_route_and_boat_commit(self) -> None:
+        maps = load_production_maps((ROOT / "maps" / "production_level_01.greybox.json",))
+        level = maps[0]
+        level["material_projects"].append({
+            "id": "pressure_suit_1_project",
+            "required_discovery_id": "signal_reef_deep_harmonic_discovery",
+            "required_materials": {"titanium_scrap": 2, "rubber_sheet": 1, "insulating_gel": 1},
+            "unlocks_capability_id": "pressure_suit_1",
+            "target_id": "abyssal_basin_harmonic_source_survey",
+        })
+        level["zones"].extend([
+            {
+                "id": "abyssal_basin_pressure_zone",
+                "type": "marker",
+                "pressure_zone": True,
+                "required_capability_id": "pressure_suit_1",
+                "route_context": "deep_harmonic_abyssal_basin_route",
+            },
+            {
+                "id": "abyssal_basin_landmark",
+                "type": "marker",
+                "regional_landmark": True,
+                "route_context": "deep_harmonic_abyssal_basin_route",
+            },
+        ])
+        level["regional_journeys"].append({
+            "id": "deep_harmonic_abyssal_basin_route",
+            "required_capability_id": "pressure_suit_1",
+            "promise_gate_id": "signal_reef_deep_harmonic_dark_zone",
+            "entry_gate_ids": ["abyssal_basin_pressure_zone"],
+            "landmark_zone_id": "abyssal_basin_landmark",
+            "survey_target_id": "abyssal_basin_harmonic_source_survey",
+            "commit_entry_id": "surface_boat_entry",
+        })
+        level["survey_targets"].append({
+            "id": "abyssal_basin_harmonic_source_survey",
+            "target_type": "regional",
+            "required_capability_id": "survey_scanner_1",
+            "required_pressure_capability_id": "pressure_suit_1",
+            "required_route_id": "deep_harmonic_abyssal_basin_route",
+            "route_context": "deep_harmonic_abyssal_basin_route",
+            "discovery_id": "abyssal_basin_harmonic_source_discovery",
+            "commit_map_id": "production_level_01",
+            "commit_entry_id": "surface_boat_entry",
+        })
+        contract = copy.deepcopy(load_contract())
+        contract["canonical_start"]["map_id"] = "production_level_01"
+        graph = build_progression_graph(maps, contract)
+
+        knowledge = graph.resolve("signal_reef_deep_harmonic_discovery")
+        project = graph.resolve("pressure_suit_1_project")
+        suit = graph.resolve("pressure_suit_1")
+        route = graph.resolve("deep_harmonic_abyssal_basin_route")
+        survey = graph.resolve("abyssal_basin_harmonic_source_survey")
+        scanner = graph.resolve("survey_scanner_1")
+        discovery = graph.resolve("abyssal_basin_harmonic_source_discovery")
+        boat = graph.resolve("surface_boat_entry", "production_level_01")
+        self.assertTrue(any(edge.target == knowledge for edge in graph.requirements(project)))
+        self.assertTrue(any(edge.target == project for edge in graph.requirements(suit)))
+        self.assertTrue(any(edge.target == suit for edge in graph.requirements(route)))
+        self.assertTrue(any(edge.target == suit for edge in graph.requirements(survey)))
+        self.assertTrue(any(edge.target == scanner for edge in graph.requirements(survey)))
+        self.assertTrue(any(edge.target == route for edge in graph.requirements(survey)))
+        self.assertTrue(any(edge.target == survey for edge in graph.requirements(discovery)))
+        self.assertTrue(any(edge.target == boat for edge in graph.requirements(discovery)))
+        self.assertEqual((), audit_graph(graph).failures)
+
     def test_full_level_view_rejects_self_gated_fins_blueprint(self) -> None:
         view = next(view for view in load_audit_views() if view.id == "promoted_full_level")
         graph = build_view_graph(view, load_contract())

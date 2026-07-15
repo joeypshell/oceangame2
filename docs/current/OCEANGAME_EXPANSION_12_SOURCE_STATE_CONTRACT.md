@@ -55,7 +55,7 @@ The focused Expansion 12 source helper owns these records without changing
 `terrain`:
 
 - pressure zone: `x=60, y=126, w=77, h=30`
-- landmark marker: `x=60, y=141, w=54, h=15`
+- landmark marker: `x=81, y=141, w=33, h=15`
 - survey: `x=95, y=149, w=2, h=2`
 - survey center/review target: tile `(96, 150)`
 - interaction: `survey`, 3.0 seconds, cancel current progress on leave
