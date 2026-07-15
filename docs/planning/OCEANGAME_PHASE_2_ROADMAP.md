@@ -93,8 +93,8 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 12 is the committed next implementation milestone. Create its scoped
-batch after the planning merge.
+Expansion 12 is the active committed implementation milestone as milestone 38
+with frozen issues #932-#941.
 
 ### Proposed
 
@@ -322,8 +322,7 @@ place the player remembered, with a payoff worth bringing back to the boat?
 
 ### Committed Expansion 12: Abyssal Pressure Return
 
-Status: Selected by planning issue #930. Create the scoped GitHub milestone and
-implementation batch after the plan lands. See
+Status: Active as milestone 38 with frozen issues #932-#941. See
 `docs/current/OCEANGAME_EXPANSION_12_PLAN.md`.
 
 Goal: turn the committed deep-harmonic clue into one durable pressure-suit

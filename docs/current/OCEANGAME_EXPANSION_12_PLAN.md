@@ -2,13 +2,15 @@
 
 Date: 2026-07-14
 
-Status: Selected by planning issue #930. Create the scoped GitHub milestone and
-implementation batch after this plan lands; reserve GO/HOLD for its playable
-closeout.
+Status: Active as GitHub milestone 38 with frozen issues #932-#941. Reserve
+GO/HOLD for its playable closeout in #941.
+
+Locked implementation contract:
+`docs/current/OCEANGAME_EXPANSION_12_SOURCE_STATE_CONTRACT.md` (#932).
 
 ## Decision
 
-Propose OceanGame Expansion 12 as **Abyssal Pressure Return**.
+OceanGame Expansion 12 is **Abyssal Pressure Return**.
 
 The committed deep-harmonic discovery will reveal one durable
 `pressure_suit_1` project. The player will combine guaranteed titanium, rubber,
@@ -148,23 +150,23 @@ never substitutes for pressure-suit ingredients.
 
 ## Implementation Issue Batch
 
-Create this batch after the plan lands:
+Frozen implementation order:
 
-1. Lock the Expansion 12 pressure-return source and state contract.
-2. Add pressure-route, project, and progression validation.
-3. Author the pressure project, zone, basin landmark, survey, and payoff through
+1. #932 locks the Expansion 12 pressure-return source and state contract.
+2. #933 adds pressure-route, project, and progression validation.
+3. #934 authors the pressure project, zone, basin landmark, survey, and payoff through
    the production-level source path without topology changes.
-4. Add durable pressure-suit project/profile ownership while preserving the
+4. #935 adds durable pressure-suit project/profile ownership while preserving the
    optional session oxygen purchase as a distinct secondary benefit.
-5. Implement focused pressure-zone oxygen behavior and integrate the abyssal
+5. #936 implements focused pressure-zone oxygen behavior and integrates the abyssal
    survey, compact feedback, pending state, and boat payoff.
-6. Add deterministic fresh-profile pressure-return journey coverage and run the
+6. #937 adds deterministic fresh-profile pressure-return journey coverage and runs the
    full release suite once at this integration boundary.
-7. Add focused desktop/mobile captures for the warning, recipe, protected
+7. #938 adds focused desktop/mobile captures for the warning, recipe, protected
    crossing, basin survey, and pending boat return.
-8. Review and accept only intentional full-level visual differences.
-9. Verify the exact merged SHA on the public Web preview.
-10. Deploy the release candidate, run the player playtest gate, and close out
+8. #939 reviews and accepts only intentional full-level visual differences.
+9. #940 verifies the exact merged SHA on the public Web preview.
+10. #941 deploys the release candidate, runs the player playtest gate, and closes out
     the milestone after GO or a focused correction.
 
 ## Validation And Review Plan
