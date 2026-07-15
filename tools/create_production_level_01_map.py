@@ -6,6 +6,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import production_level_01_expansion_12 as expansion_12
+
 from production_level_01_gameplay_transform import (
     LOCAL_TO_GLOBAL_OFFSET,
     transform_gameplay_sections,
@@ -364,7 +366,8 @@ def build_map_data(source_map: dict) -> dict:
                 "notes": [
                     "The canonical surface_boat_entry opening at top x=91..98 remains open.",
                     "Nine adjacent top cells and the separate ten-cell top-right opening are sealed in global source coordinates.",
-                    "No crop seal, stitched slice terrain, connector, teleport, pressure, or stabilizer-entry metadata is imported.",
+                    "No crop seal, stitched slice terrain, connector, teleport, or stabilizer-entry metadata is imported.",
+                    "Expansion 12 pressure records come only from their focused source helper.",
                     "Twenty-nine named source-owned cells are opened only where reused gameplay requires its proven clearance.",
                     "The full-sketch draft remains unchanged as conversion and provenance evidence.",
                 ],
@@ -380,6 +383,7 @@ def build_map_data(source_map: dict) -> dict:
             "gameplay_overlay": gameplay_provenance,
             "expansion_10": expansion_10_source_provenance(),
             "expansion_11": expansion_11_source_provenance(),
+            "expansion_12": expansion_12.source_provenance(),
             "review_artifact": "references/greybox/production_level_01_source_render_collision_review.png",
         },
         "units": {
@@ -410,8 +414,12 @@ def build_map_data(source_map: dict) -> dict:
             *gameplay["zones"],
             *expansion_10_zones(),
             *expansion_11_zones(),
+            *expansion_12.zones(),
         ],
-        "regional_journeys": expansion_10_regional_journeys(),
+        "regional_journeys": [
+            *expansion_10_regional_journeys(),
+            *expansion_12.regional_journeys(),
+        ],
         "daily_conditions": gameplay["daily_conditions"],
         "progression_containers": gameplay["progression_containers"],
         "moving_hazards": gameplay["moving_hazards"],
@@ -424,16 +432,26 @@ def build_map_data(source_map: dict) -> dict:
             *gameplay["survey_targets"],
             *expansion_10_survey_targets(),
             *expansion_11_survey_targets(),
+            *expansion_12.survey_targets(),
         ],
         "material_candidate_pools": gameplay["material_candidate_pools"],
-        "material_projects": [*gameplay["material_projects"], *expansion_11_material_projects()],
-        "background": [*gameplay["background"], *expansion_10_background()],
+        "material_projects": [
+            *gameplay["material_projects"],
+            *expansion_11_material_projects(),
+            *expansion_12.material_projects(),
+        ],
+        "background": [
+            *gameplay["background"],
+            *expansion_10_background(),
+            *expansion_12.background(),
+        ],
         "entities": [canonical_boat(source_map), *gameplay["entities"]],
         "camera_tests": [
             *camera_tests(),
             *gameplay["camera_tests"],
             *expansion_10_camera_tests(),
             *expansion_11_camera_tests(),
+            *expansion_12.camera_tests(),
         ],
         "review_questions": [
             "Does the candidate preserve the complete supplied cave silhouette?",
@@ -441,6 +459,7 @@ def build_map_data(source_map: dict) -> dict:
             "Do the upper-left, lower-left, and lower-right anchors sit in recognizable open sectors?",
             "Does transformed opening gameplay retain its source-local relationships without a crop seam?",
             "Do source, render, and collision evidence agree after gameplay transformation?",
+            *expansion_12.review_questions(),
         ],
     }
 

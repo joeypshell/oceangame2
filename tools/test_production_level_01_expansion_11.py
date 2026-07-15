@@ -53,7 +53,8 @@ class ProductionLevelExpansion11Tests(unittest.TestCase):
     def test_source_order_does_not_author_project_dependency(self) -> None:
         project = next(item for item in self.map_data["material_projects"] if item["id"] == PROJECT_ID)
         self.assertNotIn("required_project_id", project)
-        self.assertEqual(PROJECT_ID, self.map_data["material_projects"][-1]["id"])
+        project_ids = [item["id"] for item in self.map_data["material_projects"]]
+        self.assertLess(project_ids.index(PROJECT_ID), project_ids.index("pressure_suit_1_project"))
 
     def test_provenance_and_camera_records_are_focused(self) -> None:
         source = self.map_data["source"]["expansion_11"]

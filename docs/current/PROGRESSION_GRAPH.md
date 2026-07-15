@@ -10,7 +10,7 @@ Status: **PASS**
 | View | Sources | Status | Graph |
 | --- | --- | --- | --- |
 | `slice_provenance` (Production slice provenance) | `maps/production_slice_01.greybox.json`, `maps/production_slice_02.greybox.json`, `maps/production_slice_03.greybox.json`, `maps/production_slice_04.greybox.json` | **PASS** | 92 nodes / 297 edges |
-| `promoted_full_level` (Promoted production level) | `maps/production_level_01.greybox.json` | **PASS** | 71 nodes / 239 edges |
+| `promoted_full_level` (Promoted production level) | `maps/production_level_01.greybox.json` | **PASS** | 77 nodes / 271 edges |
 
 ## Detailed Canonical View
 
@@ -24,6 +24,7 @@ The table and dependency diagram below describe the promoted full-level view.
 | 1 | `Fins blueprint chest` | production_level_01 / lower_loop_reward | none | production_level_01 | Propulsion Fins Blueprint | stage 1 |
 | 1 | `Surface Boat Entry` | production_level_01 | none | production_level_01 | state/payoff | stage 1 |
 | 1 | `Deep Cache Territorial Eel` | production_level_01 / deep_cache_pressure | none | production_level_01 | deep cache | stage 1 |
+| 1 | `Abyssal Basin Landmark` | production_level_01 | none | production_level_01 | state/payoff | stage 1 |
 | 1 | `Lower Right Signal Reef Landmark` | production_level_01 | none | production_level_01 | state/payoff | stage 1 |
 | 1 | `Dark pocket` | production_level_01 / deep_cache_pressure | none | production_level_01 | state/payoff | stage 1 |
 | 1 | `Deep harmonic dark water` | production_level_01 / east_current_signal_reef_route | none | production_level_01 | state/payoff | stage 1 |
@@ -65,10 +66,16 @@ The table and dependency diagram below describe the promoted full-level view.
 | 15 | `Defeat Deep Cache Territorial Eel` | production_level_01 / deep_cache_pressure | Deep Cache Territorial Eel, Shock Prod | Deep Cache Territorial Eel, Shock Prod | state/payoff | stage 15 |
 | 15 | `Signal Reef Deep Harmonic Discovery` | production_level_01 / east_current_signal_reef_route | Survey deep harmonic, Surface Boat Entry | Survey deep harmonic, production_level_01, Surface Boat Entry | state/payoff | stage 15 |
 | 16 | `Eel electrocyte` | production_level_01 / deep_cache_pressure | Defeat Deep Cache Territorial Eel | production_level_01, Defeat Deep Cache Territorial Eel | Eel Electrocyte | stage 16 |
+| 16 | `Pressure suit project` | production_level_01 | Signal Reef Deep Harmonic Discovery, Titanium Scrap, Rubber Sheet, Insulating Gel | production_level_01, Signal Reef Deep Harmonic Discovery, Titanium Scrap | Pressure Suit 1 | stage 16 |
 | 16 | `deep cache` | production_level_01 | Defeat Deep Cache Territorial Eel | production_level_01, Defeat Deep Cache Territorial Eel | state/payoff | stage 16 |
+| 17 | `Pressure Suit 1` | global | Pressure suit project | Pressure suit project | Abyssal Basin Pressure Zone | stage 17 |
 | 17 | `Eel Electrocyte` | global | none | Eel electrocyte | state/payoff | stage 17 |
+| 18 | `Abyssal Basin Pressure Zone` | production_level_01 / deep_harmonic_abyssal_basin_route | Pressure Suit 1 | production_level_01, Pressure Suit 1 | state/payoff | stage 18 |
 | 18 | `Shock-prod capacitor project` | production_level_01 | Shock prod project, Lower Right Anomaly Discovery, Conductive Coil, Insulating Gel, Eel Electrocyte | production_level_01, Shock prod project, Lower Right Anomaly Discovery | Shock Prod Capacitor | stage 18 |
+| 18 | `Abyssal basin route` | production_level_01 / deep_harmonic_abyssal_basin_route | Pressure Suit 1 | production_level_01, Pressure Suit 1 | Survey abyssal source | stage 18 |
 | 19 | `Shock Prod Capacitor` | global | Shock-prod capacitor project | Shock-prod capacitor project | state/payoff | stage 19 |
+| 19 | `Survey abyssal source` | production_level_01 / deep_harmonic_abyssal_basin_route | Survey Scanner 1, Pressure Suit 1, Abyssal basin route | production_level_01, Survey Scanner 1, Pressure Suit 1 | Abyssal Basin Harmonic Source Discovery | stage 19 |
+| 20 | `Abyssal Basin Harmonic Source Discovery` | production_level_01 / deep_harmonic_abyssal_basin_route | Survey abyssal source, Surface Boat Entry | Survey abyssal source, production_level_01, Surface Boat Entry | state/payoff | stage 20 |
 
 ## Soft Pressure Annotations
 
@@ -81,175 +88,204 @@ The table and dependency diagram below describe the promoted full-level view.
 flowchart LR
   subgraph global["global"]
     n2["Dive Light 1"]
-    n3["Propulsion Fins"]
-    n4["Salvage Cutter"]
-    n5["Shock Prod"]
-    n6["Shock Prod Capacitor"]
-    n7["Survey Scanner 1"]
-    n23["Conductive Coil"]
-    n24["Eel Electrocyte"]
-    n25["Insulating Gel"]
-    n26["Rubber Sheet"]
-    n27["Titanium Scrap"]
+    n3["Pressure Suit 1"]
+    n4["Propulsion Fins"]
+    n5["Salvage Cutter"]
+    n6["Shock Prod"]
+    n7["Shock Prod Capacitor"]
+    n8["Survey Scanner 1"]
+    n26["Conductive Coil"]
+    n27["Eel Electrocyte"]
+    n28["Insulating Gel"]
+    n29["Rubber Sheet"]
+    n30["Titanium Scrap"]
   end
   subgraph production_level_01["production_level_01"]
     n0["Eel electrocyte"]
     n1["Glow anemone"]
-    n8["Scanner blueprint chest"]
-    n9["Fins blueprint chest"]
-    n10["Defeat Deep Cache Territorial Eel"]
-    n11["Lower Right Anomaly Discovery"]
-    n12["Lower Right Signal Reef Discovery"]
-    n13["Propulsion Fins Blueprint"]
-    n14["Signal Reef Deep Harmonic Discovery"]
-    n15["Survey Scanner Blueprint"]
-    n16["Surface Boat Entry"]
-    n17["Signal Reef current"]
-    n18["Signal Reef current"]
-    n19["Strong east current"]
-    n20["Deep Cache Territorial Eel"]
-    n21["Lower Right Signal Reef Landmark"]
-    n22["production_level_01"]
-    n28["Conductive Coil Pool"]
-    n29["Rubber Sheet Pool"]
-    n30["Titanium Scrap Pool"]
-    n31["Lower-loop trail"]
-    n32["Dark pocket"]
-    n33["Deep harmonic dark water"]
-    n34["Dive light project"]
-    n35["Propulsion fins project"]
-    n36["Salvage Cutter Project"]
-    n37["Shock-prod capacitor project"]
-    n38["Shock prod project"]
-    n39["Survey scanner project"]
-    n40["Next dive: Investigate east current"]
-    n41["Signal Reef route"]
-    n42["deep cache"]
-    n43["Salvage Lower Loop"]
-    n44["Salvage Southwest Return Cache"]
-    n45["Survey anomaly"]
-    n46["Survey Signal Reef"]
-    n47["Survey deep harmonic"]
-    n48["sealed wreck"]
+    n9["Scanner blueprint chest"]
+    n10["Fins blueprint chest"]
+    n11["Defeat Deep Cache Territorial Eel"]
+    n12["Abyssal Basin Harmonic Source Discovery"]
+    n13["Lower Right Anomaly Discovery"]
+    n14["Lower Right Signal Reef Discovery"]
+    n15["Propulsion Fins Blueprint"]
+    n16["Signal Reef Deep Harmonic Discovery"]
+    n17["Survey Scanner Blueprint"]
+    n18["Surface Boat Entry"]
+    n19["Signal Reef current"]
+    n20["Signal Reef current"]
+    n21["Strong east current"]
+    n22["Deep Cache Territorial Eel"]
+    n23["Abyssal Basin Landmark"]
+    n24["Lower Right Signal Reef Landmark"]
+    n25["production_level_01"]
+    n31["Conductive Coil Pool"]
+    n32["Rubber Sheet Pool"]
+    n33["Titanium Scrap Pool"]
+    n34["Lower-loop trail"]
+    n35["Abyssal Basin Pressure Zone"]
+    n36["Dark pocket"]
+    n37["Deep harmonic dark water"]
+    n38["Dive light project"]
+    n39["Pressure suit project"]
+    n40["Propulsion fins project"]
+    n41["Salvage Cutter Project"]
+    n42["Shock-prod capacitor project"]
+    n43["Shock prod project"]
+    n44["Survey scanner project"]
+    n45["Next dive: Investigate east current"]
+    n46["Abyssal basin route"]
+    n47["Signal Reef route"]
+    n48["deep cache"]
+    n49["Salvage Lower Loop"]
+    n50["Salvage Southwest Return Cache"]
+    n51["Survey abyssal source"]
+    n52["Survey anomaly"]
+    n53["Survey Signal Reef"]
+    n54["Survey deep harmonic"]
+    n55["sealed wreck"]
   end
-  n0 -->|"requires"| n10
-  n0 -->|"requires"| n22
-  n0 -->|"rewards"| n24
-  n1 -->|"requires"| n3
-  n1 -->|"requires"| n7
-  n1 -->|"requires"| n22
-  n1 -->|"rewards"| n25
-  n2 -->|"unlocks"| n32
-  n2 -->|"unlocks"| n33
-  n2 -->|"requires"| n34
-  n3 -->|"unlocks"| n17
-  n3 -->|"unlocks"| n18
-  n3 -->|"unlocks"| n19
-  n3 -->|"requires"| n35
-  n4 -->|"requires"| n36
-  n5 -->|"requires"| n38
-  n6 -->|"requires"| n37
-  n7 -->|"requires"| n39
-  n8 -->|"requires"| n3
-  n8 -->|"unlocks"| n15
-  n8 -->|"requires"| n22
-  n9 -->|"unlocks"| n13
-  n9 -->|"requires"| n22
-  n10 -->|"requires"| n5
-  n10 -->|"requires"| n20
-  n11 -->|"requires"| n16
+  n0 -->|"requires"| n11
+  n0 -->|"requires"| n25
+  n0 -->|"rewards"| n27
+  n1 -->|"requires"| n4
+  n1 -->|"requires"| n8
+  n1 -->|"requires"| n25
+  n1 -->|"rewards"| n28
+  n2 -->|"unlocks"| n36
+  n2 -->|"unlocks"| n37
+  n2 -->|"requires"| n38
+  n3 -->|"unlocks"| n35
+  n3 -->|"requires"| n39
+  n4 -->|"unlocks"| n19
+  n4 -->|"unlocks"| n20
+  n4 -->|"unlocks"| n21
+  n4 -->|"requires"| n40
+  n5 -->|"requires"| n41
+  n6 -->|"requires"| n43
+  n7 -->|"requires"| n42
+  n8 -->|"requires"| n44
+  n9 -->|"requires"| n4
+  n9 -->|"unlocks"| n17
+  n9 -->|"requires"| n25
+  n10 -->|"unlocks"| n15
+  n10 -->|"requires"| n25
+  n11 -->|"requires"| n6
   n11 -->|"requires"| n22
-  n11 -->|"requires"| n45
-  n12 -->|"requires"| n16
-  n12 -->|"requires"| n22
-  n12 -->|"requires"| n46
-  n13 -->|"requires"| n9
-  n14 -->|"requires"| n16
-  n14 -->|"requires"| n22
-  n14 -->|"requires"| n47
-  n15 -->|"requires"| n8
-  n16 -->|"requires"| n22
-  n17 -->|"requires"| n3
-  n17 -->|"requires"| n22
-  n18 -->|"requires"| n3
-  n18 -->|"requires"| n22
-  n19 -->|"requires"| n3
-  n19 -->|"requires"| n22
-  n20 -->|"requires"| n22
-  n20 -->|"guards"| n42
-  n21 -->|"requires"| n22
-  n28 -->|"requires"| n22
-  n28 -->|"rewards"| n23
-  n29 -->|"requires"| n22
-  n29 -->|"rewards"| n26
-  n30 -->|"requires"| n22
-  n30 -->|"rewards"| n27
-  n31 -->|"requires"| n22
-  n31 -->|"requires"| n43
-  n31 -->|"requires"| n44
-  n32 -.->|"requires"| n2
-  n32 -->|"requires"| n22
-  n33 -.->|"requires"| n2
-  n33 -->|"requires"| n22
-  n34 -->|"unlocks"| n2
-  n34 -->|"requires"| n12
-  n34 -->|"requires"| n22
-  n34 -->|"requires"| n23
+  n12 -->|"requires"| n18
+  n12 -->|"requires"| n25
+  n12 -->|"requires"| n51
+  n13 -->|"requires"| n18
+  n13 -->|"requires"| n25
+  n13 -->|"requires"| n52
+  n14 -->|"requires"| n18
+  n14 -->|"requires"| n25
+  n14 -->|"requires"| n53
+  n15 -->|"requires"| n10
+  n16 -->|"requires"| n18
+  n16 -->|"requires"| n25
+  n16 -->|"requires"| n54
+  n17 -->|"requires"| n9
+  n18 -->|"requires"| n25
+  n19 -->|"requires"| n4
+  n19 -->|"requires"| n25
+  n20 -->|"requires"| n4
+  n20 -->|"requires"| n25
+  n21 -->|"requires"| n4
+  n21 -->|"requires"| n25
+  n22 -->|"requires"| n25
+  n22 -->|"guards"| n48
+  n23 -->|"requires"| n25
+  n24 -->|"requires"| n25
+  n31 -->|"requires"| n25
+  n31 -->|"rewards"| n26
+  n32 -->|"requires"| n25
+  n32 -->|"rewards"| n29
+  n33 -->|"requires"| n25
+  n33 -->|"rewards"| n30
   n34 -->|"requires"| n25
-  n34 -->|"requires"| n27
-  n35 -->|"unlocks"| n3
-  n35 -->|"requires"| n13
-  n35 -->|"requires"| n22
-  n35 -->|"requires"| n26
-  n35 -->|"requires"| n27
-  n36 -->|"unlocks"| n4
-  n36 -->|"requires"| n11
-  n36 -->|"requires"| n22
-  n36 -->|"requires"| n23
-  n36 -->|"requires"| n27
-  n37 -->|"unlocks"| n6
-  n37 -->|"requires"| n11
-  n37 -->|"requires"| n22
-  n37 -->|"requires"| n23
-  n37 -->|"requires"| n24
+  n34 -->|"requires"| n49
+  n34 -->|"requires"| n50
+  n35 -->|"requires"| n3
+  n35 -->|"requires"| n25
+  n36 -.->|"requires"| n2
+  n36 -->|"requires"| n25
+  n37 -.->|"requires"| n2
   n37 -->|"requires"| n25
-  n37 -->|"requires"| n38
-  n38 -->|"unlocks"| n5
-  n38 -->|"requires"| n11
-  n38 -->|"requires"| n22
-  n38 -->|"requires"| n23
-  n38 -->|"requires"| n27
-  n38 -->|"requires"| n36
-  n39 -->|"unlocks"| n7
-  n39 -->|"requires"| n15
-  n39 -->|"requires"| n22
-  n39 -->|"requires"| n23
-  n39 -->|"requires"| n27
-  n40 -->|"requires"| n22
-  n40 -->|"requires"| n31
-  n41 -->|"requires"| n3
-  n41 -->|"requires"| n22
-  n41 -->|"unlocks"| n46
-  n41 -->|"unlocks"| n47
-  n42 -->|"requires"| n10
-  n42 -->|"requires"| n22
-  n43 -->|"requires"| n22
-  n44 -->|"requires"| n22
-  n45 -->|"requires"| n3
-  n45 -->|"requires"| n7
-  n45 -->|"unlocks"| n11
-  n45 -->|"requires"| n22
-  n46 -->|"requires"| n7
-  n46 -->|"unlocks"| n12
-  n46 -->|"requires"| n22
-  n46 -->|"requires"| n41
-  n47 -->|"requires"| n2
-  n47 -->|"requires"| n7
-  n47 -->|"unlocks"| n14
-  n47 -->|"requires"| n22
-  n47 -->|"requires"| n41
-  n48 -->|"requires"| n4
-  n48 -->|"requires"| n22
+  n38 -->|"unlocks"| n2
+  n38 -->|"requires"| n14
+  n38 -->|"requires"| n25
+  n38 -->|"requires"| n26
+  n38 -->|"requires"| n28
+  n38 -->|"requires"| n30
+  n39 -->|"unlocks"| n3
+  n39 -->|"requires"| n16
+  n39 -->|"requires"| n25
+  n39 -->|"requires"| n28
+  n39 -->|"requires"| n29
+  n39 -->|"requires"| n30
+  n40 -->|"unlocks"| n4
+  n40 -->|"requires"| n15
+  n40 -->|"requires"| n25
+  n40 -->|"requires"| n29
+  n40 -->|"requires"| n30
+  n41 -->|"unlocks"| n5
+  n41 -->|"requires"| n13
+  n41 -->|"requires"| n25
+  n41 -->|"requires"| n26
+  n41 -->|"requires"| n30
+  n42 -->|"unlocks"| n7
+  n42 -->|"requires"| n13
+  n42 -->|"requires"| n25
+  n42 -->|"requires"| n26
+  n42 -->|"requires"| n27
+  n42 -->|"requires"| n28
+  n42 -->|"requires"| n43
+  n43 -->|"unlocks"| n6
+  n43 -->|"requires"| n13
+  n43 -->|"requires"| n25
+  n43 -->|"requires"| n26
+  n43 -->|"requires"| n30
+  n43 -->|"requires"| n41
+  n44 -->|"unlocks"| n8
+  n44 -->|"requires"| n17
+  n44 -->|"requires"| n25
+  n44 -->|"requires"| n26
+  n44 -->|"requires"| n30
+  n45 -->|"requires"| n25
+  n45 -->|"requires"| n34
+  n46 -->|"requires"| n3
+  n46 -->|"requires"| n25
+  n46 -->|"unlocks"| n51
+  n47 -->|"requires"| n4
+  n47 -->|"requires"| n25
+  n47 -->|"unlocks"| n53
+  n47 -->|"unlocks"| n54
+  n48 -->|"requires"| n11
+  n48 -->|"requires"| n25
+  n49 -->|"requires"| n25
+  n50 -->|"requires"| n25
+  n51 -->|"requires"| n3
+  n51 -->|"requires"| n8
+  n51 -->|"unlocks"| n12
+  n51 -->|"requires"| n25
+  n51 -->|"requires"| n46
+  n52 -->|"requires"| n4
+  n52 -->|"requires"| n8
+  n52 -->|"unlocks"| n13
+  n52 -->|"requires"| n25
+  n53 -->|"requires"| n8
+  n53 -->|"unlocks"| n14
+  n53 -->|"requires"| n25
+  n53 -->|"requires"| n47
+  n54 -->|"requires"| n2
+  n54 -->|"requires"| n8
+  n54 -->|"unlocks"| n16
+  n54 -->|"requires"| n25
+  n54 -->|"requires"| n47
+  n55 -->|"requires"| n5
+  n55 -->|"requires"| n25
 ```
 
 ## Diagnostics
