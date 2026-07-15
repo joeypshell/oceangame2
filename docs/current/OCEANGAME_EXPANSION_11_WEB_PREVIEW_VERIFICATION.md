@@ -84,5 +84,6 @@ python tools/check_file_lengths.py
 git diff --check
 ```
 
-Whether the clue, material hunt, night-built light, and remembered dark return
-form a satisfying player journey remains the GO/HOLD question in #914.
+This initial deployment fed the GO/HOLD review in #914. After bounded corrections
+#925 and #927, the player approved final exact-SHA build `eb940b7`; the final
+evidence and decision are recorded in `OCEANGAME_EXPANSION_11_CLOSEOUT.md`.

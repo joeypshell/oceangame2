@@ -2,8 +2,8 @@
 
 Date: 2026-07-14
 
-Status: Expansions 01-10 are complete with player GO. Expansion 11 is committed
-after planning GO on #903 through milestone #37 and frozen issues #905-#914.
+Status: Expansions 01-11 are complete with player GO. Expansion 11 closed after
+final scanner-progression correction #927 and exact-SHA Web review at `eb940b7`.
 
 ## Decision
 
@@ -91,15 +91,13 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 11 turns the Signal Reef deeper-harmonic lead into one durable
-recipe-built dive-light project and remembered dark return through milestone #37
-and frozen issues #905-#914.
+No implementation milestone is currently committed. A fresh audit should select
+one bounded direction from this roadmap before creating the next issue batch.
 
 ### Directional
 
 Other regional identities, oxygen-distance progression, pressure protection,
-and exceptional interiors remain directional. Do not batch them alongside the
-committed light return.
+and exceptional interiors remain directional until one is selected and scoped.
 
 ### Vision
 
@@ -284,10 +282,9 @@ and another expedition feel worthwhile? **GO recorded at #889 after correction
 
 ### Expansion 11: Deep-Harmonic Light Return
 
-Status: Committed after player GO on #903 through
-`docs/current/OCEANGAME_EXPANSION_11_PLAN.md`, open
-[milestone #37](https://github.com/joeypshell/oceangame2/milestone/37), and frozen
-issues #905-#914.
+Status: Complete with player GO. See
+`docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md` and closed
+[milestone #37](https://github.com/joeypshell/oceangame2/milestone/37).
 
 Goal: replace the score-owned session light with one durable knowledge/material
 project and use it to resolve a remembered dark harmonic survey beyond Signal
@@ -310,6 +307,7 @@ to oxygen/cargo upgrades.
 Exit question: did the Signal Reef clue, material hunt, and night-built light
 make returning to the dark lower-right route feel like a capability earned for a
 place the player remembered, with a payoff worth bringing back to the boat?
+**GO recorded at #914 after corrections #925/#927.**
 
 ## Original OceanGame Convergence
 

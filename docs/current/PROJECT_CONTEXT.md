@@ -34,7 +34,7 @@ Expansion 09 generated the complete `full_cave_sketch_01` topology as `productio
 
 Expansion 10 completed through #889 plus player-gate correction #900. Propulsion fins now open one passive east-current route through continuous geography to Signal Reef, where a scanner-backed pending discovery commits only at the canonical boat. The correction preserves `production_level_01` through the real night/build/next-day transition. Exact-SHA Web verification passed at `c576d13`, and the player gave GO. The pass adds no teleport, prompted current crossing, pressure capability, broad map population, or second traversal capability.
 
-Expansion 11 is active under milestone #37. The source-state contract, focused validators, durable profile owner, full-level project/dark-harmonic survey source, and light-gated survey/boat-commit runtime are complete. The old 900-score session purchase plus `L`/`LAMP` affordance are retired. Correction #927 also retires the scanner's 300-wallet shortcut: a guaranteed post-fins blueprint reveals a Ti1/Coil1 night project, while the nearby valuable cache remains optional score. Exact-SHA Web verification and player gate #914 remain.
+Expansion 11 is complete with player GO through #914 plus corrections #925/#927. Signal Reef knowledge now reveals a durable Ti1/Coil1/Gel1 night-built light for one remembered dark-harmonic return. The old 900-score light purchase and 300-wallet scanner shortcut are retired; scanner ownership instead uses a guaranteed post-fins blueprint and Ti1/Coil1 night project, while the nearby valuable cache remains optional score. Final exact-SHA Web verification passed at `eb940b7`.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -62,18 +62,18 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
 - Completed Expansion 10 handoff: `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md` plus its linked plan, source contract, visual decision, Web verification, and correction #900
-- Active Expansion 11 handoff: `docs/current/OCEANGAME_EXPANSION_11_PLAN.md`, milestone #37, completed implementation issues #905-#913, scanner correction #927, and player gate #914
+- Completed Expansion 11 handoff: `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #925/#927, and player GO #914
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest completed expansion decision: `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md`
-- Latest expansion plan: `docs/current/OCEANGAME_EXPANSION_10_PLAN.md`, completed through #889 plus correction #900
-- Latest source contract: `docs/current/OCEANGAME_EXPANSION_10_SOURCE_CONTRACT.md`
-- Latest visual decision: `docs/current/OCEANGAME_EXPANSION_10_VISUAL_BASELINE_DECISION.md`
+- Latest completed expansion decision: `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md`
+- Latest expansion plan: `docs/current/OCEANGAME_EXPANSION_11_PLAN.md`, completed through #914 plus corrections #925/#927
+- Latest source contract: `docs/current/OCEANGAME_EXPANSION_11_SOURCE_STATE_CONTRACT.md`
+- Latest visual decision: `docs/current/OCEANGAME_EXPANSION_11_VISUAL_BASELINE_DECISION.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: the corrected regional-journey build at `c576d13`, recorded in `docs/current/OCEANGAME_EXPANSION_10_WEB_PREVIEW_VERIFICATION.md`.
+- Latest Web verification: final accepted Expansion 11 build `eb940b7`, recorded in `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md`; initial milestone deployment evidence remains in `docs/current/OCEANGAME_EXPANSION_11_WEB_PREVIEW_VERIFICATION.md`.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -339,7 +339,7 @@ Current issue state as of 2026-07-14:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`, `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md`, and `docs/current/OCEANGAME_EXPANSION_11_PLAN.md` as the current handoff. After #927 deploys, return #914 to player GO/HOLD with the exact public SHA; do not select Expansion 12 before that decision.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` and `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md` as the current handoff. No next implementation milestone is selected. Run a fresh repository/roadmap audit, choose one bounded directional goal, and create only that issue batch.
 
 Accepted constraints for next work:
 
