@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the Expansion 11 closeout and Phase 2 roadmap. Planning gate #930 proposes an Expansion 12 abyssal pressure return, but no milestone or implementation batch exists until player GO/HOLD. Teleport, connector-based normal traversal, stabilizer entry requirements, and broad pressure progression remain deferred.
+Current handoff starts with the Expansion 11 closeout and Phase 2 roadmap. Planning issue #930 selects an Expansion 12 abyssal pressure return; its scoped implementation milestone follows the planning merge. Teleport, connector-based normal traversal, stabilizer entry requirements, and broad pressure progression remain deferred.
 
 Core sources and operating docs:
 

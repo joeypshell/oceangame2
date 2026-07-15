@@ -4,8 +4,8 @@ Date: 2026-07-14
 
 Status: Expansions 01-11 are complete with player GO. Expansion 11 closed after
 final scanner-progression correction #927 and exact-SHA Web review at `eb940b7`.
-Planning gate #930 proposes an abyssal pressure return; it is not committed
-until player GO.
+Planning issue #930 selects an abyssal pressure return as the next committed
+bounded expansion.
 
 ## Decision
 
@@ -93,21 +93,22 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-No implementation milestone is currently committed.
+Expansion 12 is the committed next implementation milestone. Create its scoped
+batch after the planning merge.
 
 ### Proposed
 
-`docs/current/OCEANGAME_EXPANSION_12_PLAN.md` proposes one durable pressure-suit
+No later expansion is selected. `docs/current/OCEANGAME_EXPANSION_12_PLAN.md`
+commits one durable pressure-suit
 project, a source-authored pressure zone in the existing lower-central basin,
-and one boat-committed abyssal payoff. Planning issue #930 requires player
-GO/HOLD before a milestone or implementation batch is created.
+and one boat-committed abyssal payoff for Expansion 12.
 
 ### Directional
 
 Other regional identities, oxygen-distance progression, and exceptional
 interiors remain directional until one is selected and scoped. Broad pressure
-simulation and later pressure tiers remain directional even if the bounded
-Expansion 12 proposal receives GO.
+simulation and later pressure tiers remain directional outside the bounded
+Expansion 12 plan.
 
 ### Vision
 
@@ -319,10 +320,10 @@ make returning to the dark lower-right route feel like a capability earned for a
 place the player remembered, with a payoff worth bringing back to the boat?
 **GO recorded at #914 after corrections #925/#927.**
 
-### Proposed Expansion 12: Abyssal Pressure Return
+### Committed Expansion 12: Abyssal Pressure Return
 
-Status: Proposed under planning gate #930. No GitHub milestone or implementation
-batch exists until player GO. See
+Status: Selected by planning issue #930. Create the scoped GitHub milestone and
+implementation batch after the plan lands. See
 `docs/current/OCEANGAME_EXPANSION_12_PLAN.md`.
 
 Goal: turn the committed deep-harmonic clue into one durable pressure-suit

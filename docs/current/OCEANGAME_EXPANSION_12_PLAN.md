@@ -2,8 +2,9 @@
 
 Date: 2026-07-14
 
-Status: Proposed under planning gate #930. Player GO/HOLD is required before a
-GitHub milestone or implementation batch is created.
+Status: Selected by planning issue #930. Create the scoped GitHub milestone and
+implementation batch after this plan lands; reserve GO/HOLD for its playable
+closeout.
 
 ## Decision
 
@@ -145,9 +146,9 @@ never substitutes for pressure-suit ingredients.
 - Keep feedback compact and contextual. Do not add an inventory screen,
   permanent recipe panel, depth gauge system, or broad HUD redesign.
 
-## Proposed Issue Batch
+## Implementation Issue Batch
 
-Create this batch only after player GO:
+Create this batch after the plan lands:
 
 1. Lock the Expansion 12 pressure-return source and state contract.
 2. Add pressure-route, project, and progression validation.
@@ -163,7 +164,8 @@ Create this batch only after player GO:
    crossing, basin survey, and pending boat return.
 8. Review and accept only intentional full-level visual differences.
 9. Verify the exact merged SHA on the public Web preview.
-10. Run the player GO/HOLD gate and close out the milestone.
+10. Deploy the release candidate, run the player playtest gate, and close out
+    the milestone after GO or a focused correction.
 
 ## Validation And Review Plan
 
@@ -195,7 +197,7 @@ Create this batch only after player GO:
 
 ## Exit Criteria
 
-Expansion 12 reaches its player gate when the deep-harmonic result reveals one
+Expansion 12 reaches its player playtest gate when the deep-harmonic result reveals one
 clear pressure-suit recipe, the source-authored pressure threshold is readable
 and cannot be bypassed by the session oxygen purchase, the durable suit makes
 the unchanged abyssal basin viable, one finding returns to the canonical boat,

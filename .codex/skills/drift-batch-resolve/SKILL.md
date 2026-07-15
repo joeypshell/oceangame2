@@ -1,6 +1,6 @@
 ---
 name: drift-batch-resolve
-description: "Run one bounded repository-maintenance cycle: audit current origin/main for drift, select or create one meaningful milestone issue batch, and resolve only that frozen issue set through feature branches, pull requests, applicable CI, and cleanup in one clean resolver worktree. Use when the user asks Codex to evaluate direction/backlog and keep moving through a complete scoped milestone. Stop at the player-experience gate unless the user explicitly requests an autonomous technical closeout, and never begin the next milestone in the same run."
+description: "Run one bounded repository-maintenance cycle: audit current origin/main for drift, select or create one meaningful milestone issue batch, and resolve only that frozen issue set through feature branches, pull requests, applicable CI, and cleanup in one clean resolver worktree. Use when the user asks Codex to evaluate direction/backlog and keep moving through a complete scoped milestone. Create evidence-backed plans and issue batches autonomously, stop only for a concrete player playtest gate, and never begin the next milestone in the same run."
 ---
 
 # Drift Batch Resolve
@@ -13,7 +13,8 @@ Run one bounded project-maintenance cycle:
 2. Audit direction and select exactly one milestone or explicit issue set.
 3. Create a meaningful batch only when needed.
 4. Resolve only the frozen batch through PRs and CI.
-5. Stop at the player-experience gate or close the selected milestone.
+5. Stop only when a playable milestone reaches its player-experience gate, or
+   close a selected milestone that does not require a playtest.
 
 This skill composes:
 
@@ -45,7 +46,10 @@ Invoking this skill without a narrower instruction means the full cycle. Honor `
   - dependency order
   - deferred issues
 - If there is no evidence-backed actionable scope, stop with the audit result. Do not manufacture work to reach a count.
-- If the next direction is not already named with a goal, boundaries, and exit criteria, create or recommend only the planning decision needed to unblock it and stop before implementation.
+- If the next direction is not already named with a goal, boundaries, and exit
+  criteria, create and resolve the smallest evidence-backed planning issue,
+  then create its scoped milestone and issue batch without requesting GO/HOLD.
+  Prefer a bounded, reversible decision and record uncertainty in the plan.
 
 ### 3. Freeze The Batch
 
@@ -80,6 +84,10 @@ For a milestone that changes gameplay, route pressure, progression, controls, or
 - Resolve technical implementation, smoke, capture, visual review, and Web verification first.
 - Before resolving the milestone closeout, give the user a short local playtest path and checklist tied to the milestone exit question.
 - Stop with the closeout issue open until the user reports GO, HOLD, or explicitly requests `autonomous technical closeout`.
+- Do not request GO/HOLD for roadmap choices, planning documents, milestone
+  creation, or issue-batch creation. Those are autonomous workflow steps; the
+  gate exists only for an available playable build and a concrete experience
+  question the automated suite cannot answer.
 - An autonomous override may record a **technical GO** only; do not claim that automation proved fun, pacing, or player motivation.
 - Pure documentation, tooling, and internal refactor batches do not require this gate unless the user asks for one.
 
