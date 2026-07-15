@@ -11,21 +11,15 @@ from pathlib import Path
 from progression_contract import load_contract
 from validate_pressure_return import (
     BACKGROUND_ID,
-    BACKGROUND_VALUES,
     BOAT_ID,
     CAPABILITY_ID,
     DISCOVERY_ID,
     KNOWLEDGE_ID,
     LANDMARK_ID,
-    LANDMARK_VALUES,
     PROJECT_ID,
-    PROJECT_VALUES,
     ROUTE_ID,
-    ROUTE_VALUES,
     SURVEY_ID,
-    SURVEY_VALUES,
     ZONE_ID,
-    ZONE_VALUES,
     pressure_route_budget,
     validate_pressure_return_routes,
     validate_pressure_return_schema,
@@ -37,19 +31,28 @@ MAP_PATH = ROOT / "maps" / "production_level_01.greybox.json"
 
 
 def authored_map() -> dict:
-    map_data = json.loads(MAP_PATH.read_text(encoding="utf-8"))
-    map_data["material_projects"].append({"id": PROJECT_ID, **copy.deepcopy(PROJECT_VALUES)})
-    map_data["zones"].extend([
-        {"id": ZONE_ID, **copy.deepcopy(ZONE_VALUES), "intent": "Pressure threshold for the existing basin."},
-        {"id": LANDMARK_ID, **copy.deepcopy(LANDMARK_VALUES)},
-    ])
-    map_data["background"].append({"id": BACKGROUND_ID, **copy.deepcopy(BACKGROUND_VALUES)})
-    map_data["regional_journeys"].append({
-        "id": ROUTE_ID,
-        **copy.deepcopy(ROUTE_VALUES),
-        "intent": "Return through continuous geography to the lower-central basin.",
-    })
-    map_data["survey_targets"].append({"id": SURVEY_ID, **copy.deepcopy(SURVEY_VALUES)})
+    return json.loads(MAP_PATH.read_text(encoding="utf-8"))
+
+
+def map_without_pressure_records() -> dict:
+    map_data = authored_map()
+    map_data["material_projects"] = [
+        item for item in map_data["material_projects"] if item.get("id") != PROJECT_ID
+    ]
+    map_data["zones"] = [
+        item for item in map_data["zones"] if item.get("id") not in {ZONE_ID, LANDMARK_ID}
+    ]
+    map_data["background"] = [
+        item for item in map_data["background"] if item.get("id") != BACKGROUND_ID
+    ]
+    map_data["regional_journeys"] = [
+        item for item in map_data["regional_journeys"] if item.get("id") != ROUTE_ID
+    ]
+    map_data["survey_targets"] = [
+        item
+        for item in map_data["survey_targets"]
+        if item.get("id") != SURVEY_ID and item.get("discovery_id") != DISCOVERY_ID
+    ]
     return map_data
 
 
@@ -112,7 +115,7 @@ class PressureReturnValidationTests(unittest.TestCase):
         self.assertTrue(any("can be completed with oxygen_tank_1" in failure for failure in failures), failures)
 
     def test_partial_pressure_records_activate_the_complete_contract(self) -> None:
-        current = json.loads(MAP_PATH.read_text(encoding="utf-8"))
+        current = map_without_pressure_records()
         self.assertEqual([], validate_pressure_return_schema(MAP_PATH, current, load_contract()))
         current["regional_journeys"].append({"id": ROUTE_ID})
         failures = validate_pressure_return_schema(MAP_PATH, current, load_contract())

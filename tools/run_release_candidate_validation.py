@@ -68,8 +68,10 @@ def base_gates() -> list[Gate]:
         Gate("maps: material source validator tests", python_command("tools/test_validate_material_sources.py")),
         Gate("maps: progression container validator tests", python_command("tools/test_validate_progression_containers.py")),
         Gate("maps: regional journey validator tests", python_command("tools/test_validate_regional_journeys.py")),
+        Gate("maps: pressure return validator tests", python_command("tools/test_validate_pressure_return.py")),
         Gate("maps: survey target validator tests", python_command("tools/test_validate_survey_targets.py")),
         Gate("maps: regional journey footprint", python_command("tools/validate_regional_journeys.py", "maps/production_level_01.greybox.json")),
+        Gate("maps: pressure return contract", python_command("tools/validate_pressure_return.py", "maps/production_level_01.greybox.json")),
         Gate("captures: production slice inventory", python_command("tools/check_production_slice_captures.py")),
         Gate(
             "visual baselines: accepted dirs clean",
@@ -108,6 +110,7 @@ def godot_gates(godot: str) -> list[Gate]:
         ("smoke: expansion 09 full-level journey", ["--smoke-expansion-09-full-level-journey"]),
         ("smoke: expansion 10 regional journey", ["--smoke-expansion-10-regional-journey"]),
         ("smoke: expansion 11 light return", ["--smoke-expansion-11-deep-harmonic-light-return"]),
+        ("smoke: expansion 12 pressure return", ["--smoke-expansion-12-abyssal-pressure-return"]),
         ("smoke: pass 18 progression", ["--quit-after", "1", "--smoke-pass-18-progression"]),
         ("smoke: pass 19 cargo upgrade", ["--quit-after", "1", "--smoke-pass-19-cargo-upgrade"]),
         ("smoke: pass 20 durable-light compatibility", ["--quit-after", "1", "--smoke-pass-20-light-upgrade"]),
@@ -142,6 +145,18 @@ def godot_gates(godot: str) -> list[Gate]:
         Gate(
             "smoke: durable light project state",
             [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_durable_light_project_state.gd"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
+            "smoke: pressure suit project state",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_pressure_suit_project_state.gd"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
+            "smoke: pressure zone state",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_pressure_zone_state.gd"],
             godot_backed=True,
             fail_on_godot_error=True,
         ),
