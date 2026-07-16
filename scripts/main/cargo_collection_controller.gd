@@ -75,6 +75,7 @@ func _update_tool_target(delta: float) -> bool:
 	if str(result.get("state", "")) == "complete":
 		var target_id := str(result.get("id", ""))
 		if _main._world.collect_tool_target(target_id):
+			_main._anomaly_survey.record_tool_target_clearance(target, _main._world)
 			var note := "%s opened +%d" % [
 				_display_label(str(result.get("label", "sealed wreck"))),
 				_main._world.get_salvage_score(target_id),

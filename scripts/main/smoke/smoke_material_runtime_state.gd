@@ -97,7 +97,7 @@ func _run() -> void:
 			push_error("Material runtime state smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Material runtime state smoke passed: day1=%s day2=%s held_capacity=2 failure_restored=2 relay_commit=false boat_commit=true full_level_material_commit=true full_level_biological_commit=true profile_material=%s migration=v1_to_v3." % [
+	print("Material runtime state smoke passed: day1=%s day2=%s held_capacity=2 failure_restored=2 relay_commit=false boat_commit=true full_level_material_commit=true full_level_biological_commit=true profile_material=%s migration=v1_to_v4." % [
 		str(day_one_ids),
 		str(day_two_ids),
 		first_material,

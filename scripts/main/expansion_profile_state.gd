@@ -2,7 +2,9 @@ extends RefCounted
 
 const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
 const ExpansionProfileProjectRules := preload("res://scripts/main/expansion_profile_project_rules.gd")
-const SCHEMA_VERSION := 3
+const ExpansionProfileStorage := preload("res://scripts/main/expansion_profile_storage.gd")
+const SCHEMA_VERSION := 4
+const PROJECT_SCHEMA_VERSION := 3
 const MATERIAL_SCHEMA_VERSION := 2
 const LEGACY_SCHEMA_VERSION := 1
 const SURVEY_SCANNER_CAPABILITY_ID := ProgressionContract.SCANNER_CAPABILITY_ID
@@ -19,6 +21,7 @@ const MINERAL_TRACE_RESEARCH_ID := "upper_right_mineral_trace_research"
 const SIGNAL_REEF_DISCOVERY_ID := "lower_right_signal_reef_discovery"
 const DEEP_HARMONIC_DISCOVERY_ID := "signal_reef_deep_harmonic_discovery"
 const ABYSSAL_HARMONIC_DISCOVERY_ID := "abyssal_basin_harmonic_source_discovery"
+const SOUTHEAST_WRECK_DISCOVERY_ID := "southeast_wreck_archive_discovery"
 const DIVE_LIGHT_CAPABILITY_ID := ProgressionContract.DIVE_LIGHT_CAPABILITY_ID
 const DIVE_LIGHT_PROJECT_ID := "dive_light_1_project"
 const DIVE_LIGHT_TARGET_ID := "signal_reef_deep_harmonic_survey"
@@ -26,6 +29,7 @@ const PRESSURE_SUIT_CAPABILITY_ID := ProgressionContract.PRESSURE_SUIT_CAPABILIT
 const PRESSURE_SUIT_PROJECT_ID := "pressure_suit_1_project"
 const SALVAGE_CUTTER_PROJECT_ID := "salvage_cutter_project"
 const SALVAGE_CUTTER_TARGET_ID := "salvage_sealed_wreck_cache"
+const SOUTHEAST_WRECK_RECORDER_ID := "southeast_wreck_recorder"
 const CURRENT_STABILIZER_CAPABILITY_ID := "current_stabilizer"
 const CURRENT_STABILIZER_PROJECT_ID := "current_stabilizer_project"
 const CURRENT_STABILIZER_GATE_ID := "lower_left_loop_current"
@@ -41,20 +45,29 @@ const INSULATING_GEL_MATERIAL_ID := "insulating_gel"
 const EEL_ELECTROCYTE_MATERIAL_ID := "eel_electrocyte"
 const DEFAULT_STORAGE_PATH := "user://oceangame2_profile.json"
 const LEGACY_PROFILE_KEYS := {"schema_version": true, "completed_discoveries": true, "unlocked_capabilities": true}
-const PROFILE_KEYS := {
+const PROJECT_PROFILE_KEYS := {
 	"schema_version": true,
 	"completed_discoveries": true,
 	"unlocked_capabilities": true,
 	"material_inventory": true,
 	"completed_projects": true,
 }
+const PROFILE_KEYS := {
+	"schema_version": true,
+	"completed_discoveries": true,
+	"unlocked_capabilities": true,
+	"material_inventory": true,
+	"completed_projects": true,
+	"banked_tool_target_ids": true,
+}
 const LEGACY_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true}
 const MATERIAL_SCHEMA_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true}
 const SUPPORTED_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, PROPULSION_FINS_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true, CURRENT_STABILIZER_CAPABILITY_ID: true, SHOCK_PROD_CAPABILITY_ID: true, SHOCK_PROD_CAPACITOR_CAPABILITY_ID: true, DIVE_LIGHT_CAPABILITY_ID: true, PRESSURE_SUIT_CAPABILITY_ID: true}
-const SUPPORTED_DISCOVERY_IDS := {PROPULSION_FINS_BLUEPRINT_ID: true, SURVEY_SCANNER_BLUEPRINT_ID: true, ANOMALY_DISCOVERY_ID: true, MINERAL_TRACE_RESEARCH_ID: true, SIGNAL_REEF_DISCOVERY_ID: true, DEEP_HARMONIC_DISCOVERY_ID: true, ABYSSAL_HARMONIC_DISCOVERY_ID: true}
+const SUPPORTED_DISCOVERY_IDS := {PROPULSION_FINS_BLUEPRINT_ID: true, SURVEY_SCANNER_BLUEPRINT_ID: true, ANOMALY_DISCOVERY_ID: true, MINERAL_TRACE_RESEARCH_ID: true, SIGNAL_REEF_DISCOVERY_ID: true, DEEP_HARMONIC_DISCOVERY_ID: true, ABYSSAL_HARMONIC_DISCOVERY_ID: true, SOUTHEAST_WRECK_DISCOVERY_ID: true}
 const SUPPORTED_MATERIAL_IDS := {TITANIUM_MATERIAL_ID: true, RUBBER_MATERIAL_ID: true, COIL_MATERIAL_ID: true, INSULATING_GEL_MATERIAL_ID: true, EEL_ELECTROCYTE_MATERIAL_ID: true}
 const MATERIAL_SCHEMA_PROJECT_IDS := {SALVAGE_CUTTER_PROJECT_ID: true}
 const SUPPORTED_PROJECT_IDS := {PROPULSION_FINS_PROJECT_ID: true, SURVEY_SCANNER_PROJECT_ID: true, SALVAGE_CUTTER_PROJECT_ID: true, CURRENT_STABILIZER_PROJECT_ID: true, SHOCK_PROD_PROJECT_ID: true, SHOCK_PROD_CAPACITOR_PROJECT_ID: true, DIVE_LIGHT_PROJECT_ID: true, PRESSURE_SUIT_PROJECT_ID: true}
+const SUPPORTED_BANKED_TOOL_TARGET_IDS := {SOUTHEAST_WRECK_RECORDER_ID: true}
 const PROJECT_RULES := ExpansionProfileProjectRules.RULES
 
 var _storage_path: String
@@ -63,6 +76,7 @@ var _completed_discoveries := {}
 var _unlocked_capabilities := {}
 var _material_inventory := {}
 var _completed_projects := {}
+var _banked_tool_target_ids := {}
 var _last_storage_report := {"status": "not_loaded"}
 
 
@@ -76,7 +90,7 @@ func load_profile() -> Dictionary:
 	if not _persistence_enabled:
 		_last_storage_report = _report("memory")
 		return _last_storage_report.duplicate(true)
-	_recover_interrupted_write()
+	ExpansionProfileStorage.recover_interrupted_write(_storage_path)
 	if not FileAccess.file_exists(_storage_path):
 		_last_storage_report = _report("missing")
 		return _last_storage_report.duplicate(true)
@@ -103,6 +117,8 @@ func load_profile() -> Dictionary:
 		for material_id in payload["material_inventory"]:
 			_material_inventory[str(material_id)] = int(payload["material_inventory"][material_id])
 		_load_ids(payload["completed_projects"], _completed_projects)
+	if loaded_version >= SCHEMA_VERSION:
+		_load_ids(payload["banked_tool_target_ids"], _banked_tool_target_ids)
 	if has_capability(SURVEY_SCANNER_CAPABILITY_ID):
 		_completed_discoveries[SURVEY_SCANNER_BLUEPRINT_ID] = true
 		_completed_projects[SURVEY_SCANNER_PROJECT_ID] = true
@@ -111,6 +127,8 @@ func load_profile() -> Dictionary:
 		status = "migrated_v1"
 	elif loaded_version == MATERIAL_SCHEMA_VERSION:
 		status = "migrated_v2"
+	elif loaded_version == PROJECT_SCHEMA_VERSION:
+		status = "migrated_v3"
 	elif scanner_migrated:
 		status = "migrated_scanner_purchase"
 	_last_storage_report = _report(status)
@@ -119,7 +137,7 @@ func save_profile() -> bool:
 	if not _persistence_enabled:
 		_last_storage_report = _report("saved_memory")
 		return true
-	var saved := _write_atomic(_profile_payload())
+	var saved := ExpansionProfileStorage.write_atomic(_storage_path, _profile_payload())
 	_last_storage_report = _report("saved" if saved else "write_error")
 	return saved
 func unlock_capability(capability_id: String, persist := true) -> Dictionary:
@@ -243,6 +261,22 @@ func material_inventory() -> Dictionary:
 	return _material_inventory.duplicate(true)
 
 
+func bank_tool_target(target_id: String, persist := true) -> Dictionary:
+	if not SUPPORTED_BANKED_TOOL_TARGET_IDS.has(target_id):
+		return {"changed": false, "reason": "unsupported_tool_target", "target_id": target_id}
+	if has_banked_tool_target(target_id):
+		return {"changed": false, "reason": "already_banked", "target_id": target_id}
+	_banked_tool_target_ids[target_id] = true
+	if persist and not save_profile():
+		_banked_tool_target_ids.erase(target_id)
+		return {"changed": false, "reason": "storage_error", "target_id": target_id}
+	return {"changed": true, "reason": "banked", "target_id": target_id}
+
+
+func has_banked_tool_target(target_id: String) -> bool:
+	return bool(_banked_tool_target_ids.get(target_id, false))
+
+
 func report() -> Dictionary:
 	return _report(str(_last_storage_report.get("status", "not_loaded")))
 
@@ -258,6 +292,7 @@ func _profile_payload() -> Dictionary:
 		"unlocked_capabilities": _sorted_ids(_unlocked_capabilities),
 		"material_inventory": _sorted_materials(),
 		"completed_projects": _sorted_ids(_completed_projects),
+		"banked_tool_target_ids": _sorted_ids(_banked_tool_target_ids),
 	}
 
 
@@ -292,13 +327,17 @@ func _validate_payload(payload: Dictionary) -> Array[String]:
 	if schema == MATERIAL_SCHEMA_VERSION:
 		return _validate_version(
 			payload,
-			PROFILE_KEYS,
+			PROJECT_PROFILE_KEYS,
 			MATERIAL_SCHEMA_CAPABILITY_IDS,
 			MATERIAL_SCHEMA_PROJECT_IDS,
 			true
 		)
+	if schema == PROJECT_SCHEMA_VERSION:
+		return _validate_version(payload, PROJECT_PROFILE_KEYS, SUPPORTED_CAPABILITY_IDS, SUPPORTED_PROJECT_IDS, true)
 	if schema == SCHEMA_VERSION:
-		return _validate_version(payload, PROFILE_KEYS, SUPPORTED_CAPABILITY_IDS, SUPPORTED_PROJECT_IDS, true)
+		var failures := _validate_version(payload, PROFILE_KEYS, SUPPORTED_CAPABILITY_IDS, SUPPORTED_PROJECT_IDS, true)
+		failures.append_array(_validate_id_array(payload.get("banked_tool_target_ids"), SUPPORTED_BANKED_TOOL_TARGET_IDS, "banked_tool_target_ids"))
+		return failures
 	return ["unsupported schema_version"]
 
 
@@ -421,7 +460,8 @@ func _validate_project_capability_pair(payload: Dictionary, supported_projects: 
 func _migrate_scanner_purchase_payload(payload: Dictionary) -> bool:
 	if typeof(payload.get("completed_discoveries")) != TYPE_ARRAY or typeof(payload.get("unlocked_capabilities")) != TYPE_ARRAY or typeof(payload.get("completed_projects")) != TYPE_ARRAY:
 		return false
-	if payload.get("schema_version") != SCHEMA_VERSION or not payload.get("unlocked_capabilities", []).has(SURVEY_SCANNER_CAPABILITY_ID) or payload.get("completed_projects", []).has(SURVEY_SCANNER_PROJECT_ID):
+	var schema_version := int(payload.get("schema_version", 0))
+	if (schema_version != PROJECT_SCHEMA_VERSION and schema_version != SCHEMA_VERSION) or not payload.get("unlocked_capabilities", []).has(SURVEY_SCANNER_CAPABILITY_ID) or payload.get("completed_projects", []).has(SURVEY_SCANNER_PROJECT_ID):
 		return false
 	if not payload["completed_discoveries"].has(SURVEY_SCANNER_BLUEPRINT_ID):
 		payload["completed_discoveries"].append(SURVEY_SCANNER_BLUEPRINT_ID)
@@ -441,60 +481,9 @@ func _is_nonnegative_integer_value(value) -> bool:
 	return number >= 0.0 and is_equal_approx(number, float(int(number)))
 
 
-func _write_atomic(payload: Dictionary) -> bool:
-	var temp_path := "%s.tmp" % _storage_path
-	var backup_path := "%s.bak" % _storage_path
-	var target_absolute := ProjectSettings.globalize_path(_storage_path)
-	var temp_absolute := ProjectSettings.globalize_path(temp_path)
-	var backup_absolute := ProjectSettings.globalize_path(backup_path)
-	DirAccess.make_dir_recursive_absolute(target_absolute.get_base_dir())
-	_remove_if_exists(temp_absolute)
-
-	var file := FileAccess.open(temp_path, FileAccess.WRITE)
-	if file == null:
-		return false
-	file.store_string(JSON.stringify(payload, "\t"))
-	file.flush()
-	file.close()
-
-	var had_original := FileAccess.file_exists(_storage_path)
-	if had_original:
-		_remove_if_exists(backup_absolute)
-		if DirAccess.rename_absolute(target_absolute, backup_absolute) != OK:
-			_remove_if_exists(temp_absolute)
-			return false
-	if DirAccess.rename_absolute(temp_absolute, target_absolute) != OK:
-		if had_original:
-			DirAccess.rename_absolute(backup_absolute, target_absolute)
-		_remove_if_exists(temp_absolute)
-		return false
-	_remove_if_exists(backup_absolute)
-	return true
-
-
-func _recover_interrupted_write() -> void:
-	var temp_path := "%s.tmp" % _storage_path
-	var backup_path := "%s.bak" % _storage_path
-	var target_absolute := ProjectSettings.globalize_path(_storage_path)
-	var temp_absolute := ProjectSettings.globalize_path(temp_path)
-	var backup_absolute := ProjectSettings.globalize_path(backup_path)
-	if FileAccess.file_exists(_storage_path):
-		_remove_if_exists(temp_absolute)
-		_remove_if_exists(backup_absolute)
-	elif FileAccess.file_exists(backup_path):
-		DirAccess.rename_absolute(backup_absolute, target_absolute)
-		_remove_if_exists(temp_absolute)
-	elif FileAccess.file_exists(temp_path):
-		DirAccess.rename_absolute(temp_absolute, target_absolute)
-
-
-func _remove_if_exists(absolute_path: String) -> void:
-	if FileAccess.file_exists(absolute_path):
-		DirAccess.remove_absolute(absolute_path)
-
-
 func _reset_memory() -> void:
 	_completed_discoveries = {}
 	_unlocked_capabilities = {}
 	_material_inventory = {}
 	_completed_projects = {}
+	_banked_tool_target_ids = {}
