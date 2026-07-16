@@ -4,6 +4,7 @@ const ExpeditionDiscoveryState := preload("res://scripts/main/expedition_discove
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
 const SurveyInteractionController := preload("res://scripts/main/survey_interaction_controller.gd")
+const SurveyDependencyState := preload("res://scripts/main/survey_dependency_state.gd")
 
 const SCANNER_CAPABILITY_ID := ProgressionContract.SCANNER_CAPABILITY_ID
 const COMMIT_NOTE := "Discovery committed at surface boat"
@@ -16,6 +17,7 @@ var _progression_runtime
 var _profile
 var _expedition
 var _interaction
+var _dependencies
 var _last_note := ""
 var _last_result := ""
 
@@ -28,6 +30,7 @@ func _init(progression_runtime, persist_profile := true, profile_state = null) -
 	_profile.load_profile()
 	_expedition = ExpeditionDiscoveryState.new()
 	_interaction = SurveyInteractionController.new()
+	_dependencies = SurveyDependencyState.new(_profile)
 
 
 func scanner_action(world, player) -> Dictionary:
@@ -49,6 +52,10 @@ func scanner_action(world, player) -> Dictionary:
 		var same_pending: bool = _expedition.pending_discovery_id() == discovery_id
 		_set_target_state(world, target_id, "pending" if same_pending else "locked")
 		return _note_result(false, "pending" if same_pending else "pending_exists", _pending_status_note())
+	if not _dependencies.is_survey_unlocked(target_id):
+		_interaction.reset()
+		_set_target_state(world, target_id, "locked")
+		return _note_result(false, "tool_clearance_required", _dependencies.requirement_note(target_id))
 	if not _profile.has_capability(str(target.get("required_capability_id", ""))):
 		_interaction.reset()
 		_set_target_state(world, target_id, "locked")
@@ -100,6 +107,10 @@ func update(world, player, delta: float) -> Dictionary:
 		var same_pending: bool = _expedition.pending_discovery_id() == discovery_id
 		_set_target_state(world, target_id, "pending" if same_pending else "locked")
 		return _note_result(false, "pending" if same_pending else "pending_exists", _pending_status_note())
+	if not _dependencies.is_survey_unlocked(target_id):
+		_interaction.reset()
+		_set_target_state(world, target_id, "locked")
+		return _note_result(false, "tool_clearance_required", _dependencies.requirement_note(target_id))
 	if not _profile.has_capability(str(target.get("required_capability_id", ""))):
 		_interaction.reset()
 		_set_target_state(world, target_id, "locked")
@@ -137,6 +148,7 @@ func update(world, player, delta: float) -> Dictionary:
 
 func on_map_loaded(world) -> void:
 	_interaction.reset()
+	_dependencies.on_map_loaded(world)
 	_refresh_world_targets(world)
 
 
@@ -147,6 +159,7 @@ func on_map_transition(destination_map_id: String) -> Dictionary:
 
 func clear_unbanked(reason: String, world = null) -> Dictionary:
 	_interaction.reset()
+	_dependencies.clear_unbanked()
 	_last_result = ""
 	var result: Dictionary = _expedition.clear_pending(reason)
 	_refresh_world_targets(world)
@@ -162,6 +175,8 @@ func overlay_text(world, player) -> String:
 		if _profile.has_completed_discovery(discovery_id):
 			return _completed_overlay_text(nearby_target)
 		var clue := str(nearby_target.get("clue_label", "")).strip_edges()
+		if not _dependencies.is_survey_unlocked(str(nearby_target.get("id", ""))):
+			return _dependencies.requirement_note(str(nearby_target.get("id", "")))
 		if not has_scanner():
 			return "%s | Scanner required" % clue if not clue.is_empty() else "Scanner required"
 		if not _has_required_light(nearby_target):
@@ -218,6 +233,13 @@ func profile_state():
 	return _profile
 
 
+func record_tool_target_clearance(target: Dictionary, world = null) -> Dictionary:
+	var result: Dictionary = _dependencies.record_clearance(target)
+	if bool(result.get("changed", false)):
+		_refresh_world_targets(world)
+	return result
+
+
 func report() -> Dictionary:
 	return {
 		"scanner_unlocked": has_scanner(),
@@ -225,6 +247,7 @@ func report() -> Dictionary:
 		"profile": _profile.report(),
 		"expedition": _expedition.report(),
 		"interaction": _interaction.report(),
+		"dependencies": _dependencies.report(),
 		"last_note": _last_note,
 		"result_text": _last_result,
 	}
@@ -319,7 +342,8 @@ func _note_result(changed: bool, reason: String, note: String, extra := {}) -> D
 
 func _target_available(target: Dictionary) -> bool:
 	return (
-		_profile.has_capability(str(target.get("required_capability_id", "")))
+		_dependencies.is_survey_unlocked(str(target.get("id", "")))
+		and _profile.has_capability(str(target.get("required_capability_id", "")))
 		and _has_required_light(target)
 		and _has_required_pressure_protection(target)
 	)

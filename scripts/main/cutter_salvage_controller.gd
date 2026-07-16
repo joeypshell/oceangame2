@@ -9,6 +9,7 @@ var _progress_seconds := 0.0
 var _required_seconds := 0.0
 var _label := ""
 var _banked_target_ids := {}
+var _durable_target_ids := {}
 
 
 func _init(profile_state) -> void:
@@ -24,14 +25,31 @@ func reset() -> void:
 
 func on_map_loaded(world) -> void:
 	reset()
+	_durable_target_ids = {}
+	if world != null and world.has_method("get_tool_targets"):
+		for target in world.get_tool_targets():
+			var target_id := str(target.get("id", ""))
+			if bool(target.get("durable_clearance", false)):
+				_durable_target_ids[target_id] = true
+				if _profile.has_banked_tool_target(target_id):
+					_banked_target_ids[target_id] = true
 	apply_banked_to_world(world)
 
 
-func mark_banked(salvage_ids: Array) -> void:
+func mark_banked(salvage_ids: Array) -> Dictionary:
+	var persisted_ids := []
+	var failures := []
 	for salvage_id in salvage_ids:
 		var target_id := str(salvage_id)
-		if target_id == ExpansionProfileState.SALVAGE_CUTTER_TARGET_ID:
+		if target_id == ExpansionProfileState.SALVAGE_CUTTER_TARGET_ID or _durable_target_ids.has(target_id):
 			_banked_target_ids[target_id] = true
+		if _durable_target_ids.has(target_id):
+			var result: Dictionary = _profile.bank_tool_target(target_id)
+			if str(result.get("reason", "")) in ["banked", "already_banked"]:
+				persisted_ids.append(target_id)
+			else:
+				failures.append(result)
+	return {"persisted_ids": persisted_ids, "failures": failures}
 
 
 func apply_banked_to_world(world) -> void:
@@ -106,6 +124,8 @@ func update(target: Dictionary, delta: float, occupied_cargo: int, cargo_capacit
 func report() -> Dictionary:
 	var banked_ids := _banked_target_ids.keys()
 	banked_ids.sort()
+	var durable_ids := _durable_target_ids.keys()
+	durable_ids.sort()
 	return {
 		"active_id": _active_id,
 		"progress_seconds": _progress_seconds,
@@ -113,6 +133,7 @@ func report() -> Dictionary:
 		"progress_ratio": clampf(_progress_seconds / _required_seconds, 0.0, 1.0) if _required_seconds > 0.0 else 0.0,
 		"cutter_unlocked": has_cutter(),
 		"banked_target_ids": banked_ids,
+		"durable_target_ids": durable_ids,
 	}
 
 

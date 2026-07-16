@@ -74,7 +74,7 @@ func _run() -> void:
 
 	var reloaded := ExpansionProfileState.new(TEST_PATH)
 	var reload_report: Dictionary = reloaded.load_profile()
-	_expect(reload_report.get("status") == "loaded", "schema-v3 stabilizer profile did not reload")
+	_expect(reload_report.get("status") == "loaded", "schema-v4 stabilizer profile did not reload")
 	_expect(reloaded.has_completed_project(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID), "reload lost migrated fins project")
 	_expect(reloaded.has_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID), "reload lost migrated fins capability")
 	_expect(reloaded.has_completed_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID), "reload lost recovered fins blueprint")
@@ -93,7 +93,7 @@ func _run() -> void:
 			push_error("Current stabilizer project smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Current stabilizer project state smoke passed: schema=v2_to_v3 selection=status_aware mandatory=fins>scanner>cutter>shock_prod>capacitor optional_last=current_stabilizer migrated_fins=Ti2+Rubber1 scanner=Ti1+Coil1 prerequisite=true recipe=2_titanium+1_coil night_only=true exact_once=true profile_reload=true.")
+	print("Current stabilizer project state smoke passed: schema=v2_to_v4 selection=status_aware mandatory=fins>scanner>cutter>shock_prod>capacitor optional_last=current_stabilizer migrated_fins=Ti2+Rubber1 scanner=Ti1+Coil1 prerequisite=true recipe=2_titanium+1_coil night_only=true exact_once=true profile_reload=true.")
 	quit(0)
 
 

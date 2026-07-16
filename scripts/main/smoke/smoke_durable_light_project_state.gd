@@ -162,6 +162,7 @@ func _profile_payload(projects: Array, capabilities: Array) -> Dictionary:
 		"unlocked_capabilities": capabilities,
 		"material_inventory": {},
 		"completed_projects": projects,
+		"banked_tool_target_ids": [],
 	}
 
 

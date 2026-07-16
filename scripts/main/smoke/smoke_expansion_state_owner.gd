@@ -20,6 +20,7 @@ func _run() -> void:
 	_expect(report.get("status") == "missing", "missing profile did not recover as fresh")
 	_expect(report.get("completed_discoveries", []).is_empty(), "fresh profile had discoveries")
 	_expect(report.get("unlocked_capabilities", []).is_empty(), "fresh profile had capabilities")
+	_expect(report.get("banked_tool_target_ids", []).is_empty(), "fresh profile had banked tool targets")
 
 	_write_text(TEST_PATH, "{not valid json")
 	profile = ExpansionProfileState.new(TEST_PATH)
@@ -39,17 +40,42 @@ func _run() -> void:
 	_expect(not report.get("failures", []).is_empty(), "invalid profile had no diagnostic")
 
 	_write_text(TEST_PATH, JSON.stringify({
-		"schema_version": ExpansionProfileState.SCHEMA_VERSION,
+		"schema_version": 3,
 		"completed_discoveries": [],
-		"unlocked_capabilities": [ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID],
+		"unlocked_capabilities": [],
 		"material_inventory": {},
 		"completed_projects": [],
 	}))
 	profile = ExpansionProfileState.new(TEST_PATH)
 	report = profile.load_profile()
-	_expect(report.get("status") == "migrated_scanner_purchase", "legacy scanner purchase did not migrate")
-	_expect(profile.has_completed_discovery(ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID), "scanner migration omitted blueprint")
-	_expect(profile.has_completed_project(ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID), "scanner migration omitted project")
+	_expect(report.get("status") == "migrated_v3", "schema-v3 profile did not migrate")
+	_expect(report.get("banked_tool_target_ids", []).is_empty(), "schema-v3 migration invented a banked tool target")
+
+	for invalid_ids in [["unsupported_target"], [ExpansionProfileState.SOUTHEAST_WRECK_RECORDER_ID, ExpansionProfileState.SOUTHEAST_WRECK_RECORDER_ID]]:
+		_write_text(TEST_PATH, JSON.stringify({
+			"schema_version": ExpansionProfileState.SCHEMA_VERSION,
+			"completed_discoveries": [],
+			"unlocked_capabilities": [],
+			"material_inventory": {},
+			"completed_projects": [],
+			"banked_tool_target_ids": invalid_ids,
+		}))
+		profile = ExpansionProfileState.new(TEST_PATH)
+		_expect(profile.load_profile().get("status") == "invalid_schema", "invalid banked tool target ids were accepted")
+
+	_write_text(TEST_PATH, JSON.stringify({
+		"schema_version": ExpansionProfileState.SCHEMA_VERSION,
+		"completed_discoveries": [],
+		"unlocked_capabilities": [ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID],
+		"material_inventory": {},
+		"completed_projects": [],
+		"banked_tool_target_ids": [],
+	}))
+	profile = ExpansionProfileState.new(TEST_PATH)
+	report = profile.load_profile()
+	_expect(report.get("status") == "migrated_scanner_purchase", "legacy scanner purchase did not migrate: %s" % report)
+	_expect(profile.has_completed_discovery(ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID), "scanner migration omitted blueprint: %s" % report)
+	_expect(profile.has_completed_project(ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID), "scanner migration omitted project: %s" % report)
 
 	_cleanup_files()
 	profile = ExpansionProfileState.new(TEST_PATH)
@@ -60,6 +86,10 @@ func _run() -> void:
 	profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 1, ExpansionProfileState.COIL_MATERIAL_ID: 1}, false)
 	var scanner_build: Dictionary = profile.complete_material_project(_scanner_project_definition(), true)
 	_expect(bool(scanner_build.get("changed", false)), "scanner project did not persist")
+	var banked_recorder: Dictionary = profile.bank_tool_target(ExpansionProfileState.SOUTHEAST_WRECK_RECORDER_ID, true)
+	_expect(bool(banked_recorder.get("changed", false)), "recorder clearance did not persist")
+	var repeat_bank: Dictionary = profile.bank_tool_target(ExpansionProfileState.SOUTHEAST_WRECK_RECORDER_ID, true)
+	_expect(repeat_bank.get("reason") == "already_banked", "recorder clearance banking was not exact-once")
 	_expect(FileAccess.file_exists(TEST_PATH), "profile save file was not created")
 	_expect(not FileAccess.file_exists("%s.tmp" % TEST_PATH), "atomic temp file leaked")
 	_expect(not FileAccess.file_exists("%s.bak" % TEST_PATH), "atomic backup file leaked")
@@ -68,6 +98,7 @@ func _run() -> void:
 	report = reloaded.load_profile()
 	_expect(report.get("status") == "loaded", "saved profile did not reload")
 	_expect(reloaded.has_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID), "reloaded scanner capability missing")
+	_expect(reloaded.has_banked_tool_target(ExpansionProfileState.SOUTHEAST_WRECK_RECORDER_ID), "reloaded recorder clearance missing")
 	var repeat_unlock: Dictionary = reloaded.unlock_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID, true)
 	_expect(repeat_unlock.get("reason") == "already_unlocked", "scanner unlock was not idempotent")
 
