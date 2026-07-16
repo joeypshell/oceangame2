@@ -28,6 +28,7 @@ from validate_route_objectives import (
     validate_route_objective_schema,
 )
 from validate_survey_targets import validate_survey_target_reachability, validate_survey_target_schema
+from validate_southeast_wreck_return import validate_southeast_wreck_return
 from validate_visibility_zones import validate_visibility_zone_reachability, validate_visibility_zone_schema
 from validate_world_connectors import validate_world_connector_reachability, validate_world_connector_schema
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
@@ -83,8 +84,6 @@ def validate_kind(value, item_label: str) -> list[str]:
     if not ID_PATTERN.match(value):
         return [f"{item_label} kind {value!r} must use lower_snake_case."]
     return []
-
-
 def validate_salvage_tier(value, item_label: str) -> list[str]:
     if not isinstance(value, str) or not value:
         return [f"{item_label} tier must be a non-empty string."]
@@ -176,8 +175,6 @@ def validate_salvage_interaction_metadata(entity: dict, item_label: str) -> list
             )
 
     return failures
-
-
 def validate_oxygen_rest_forbidden(item: dict, item_label: str, owner_label: str) -> list[str]:
     rest_fields = OXYGEN_REST_TRIGGER_FIELDS & set(item.keys())
     if not rest_fields:
@@ -490,6 +487,7 @@ def main() -> int:
     failures.extend(validate_world_connector_reachability(zones, solid, reachable))
     failures.extend(validate_light_return(args.map_json, map_data, solid, reachable))
     failures.extend(validate_pressure_return(args.map_json, map_data))
+    failures.extend(validate_southeast_wreck_return(map_data))
     if failures:
         for failure in failures:
             print(failure)

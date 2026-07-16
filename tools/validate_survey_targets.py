@@ -22,11 +22,15 @@ TARGET_DISCOVERIES = {
         "lower_right_signal_reef_discovery",
         "signal_reef_deep_harmonic_discovery",
         "abyssal_basin_harmonic_source_discovery",
+        "southeast_wreck_archive_discovery",
     },
     "resource": {"upper_right_mineral_trace_research"},
 }
 LIGHT_GATED_TARGETS = {"signal_reef_deep_harmonic_survey": "dive_light_1"}
-PRESSURE_GATED_TARGETS = {"abyssal_basin_harmonic_source_survey": "pressure_suit_1"}
+PRESSURE_GATED_TARGETS = {
+    "abyssal_basin_harmonic_source_survey": "pressure_suit_1",
+    "southeast_wreck_archive_survey": "pressure_suit_1",
+}
 FINDING_FIELDS = {"clue_label", "finding_label"}
 RESOURCE_FIELDS = {*FINDING_FIELDS, "research_material_pool_id"}
 REGIONAL_FIELDS = {*FINDING_FIELDS, "next_lead_label", "required_route_id"}
