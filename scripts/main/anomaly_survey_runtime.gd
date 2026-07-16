@@ -154,28 +154,23 @@ func clear_unbanked(reason: String, world = null) -> Dictionary:
 
 
 func overlay_text(world, player) -> String:
-	if not _last_result.is_empty():
-		return _last_result
 	if _expedition.has_pending():
-		return _pending_overlay_text()
+		return _pending_return_text()
 	var nearby_target := _survey_target_at(world, player.global_position) if world != null and player != null else {}
 	if not nearby_target.is_empty():
 		var discovery_id := str(nearby_target.get("discovery_id", ""))
 		if _profile.has_completed_discovery(discovery_id):
 			return _completed_overlay_text(nearby_target)
-		if _is_finding_target(nearby_target):
-			var clue := str(nearby_target.get("clue_label", "Mineral trace")).strip_edges()
-			var light_capability_id := str(nearby_target.get("required_light_capability_id", "")).strip_edges()
-			var pressure_capability_id := str(nearby_target.get("required_pressure_capability_id", "")).strip_edges()
-			var requirements_met: bool = (
-				has_scanner()
-				and (not light_capability_id.is_empty() or not pressure_capability_id.is_empty())
-				and (light_capability_id.is_empty() or _profile.has_capability(light_capability_id))
-				and (pressure_capability_id.is_empty() or _profile.has_capability(pressure_capability_id))
-			)
-			if requirements_met:
-				return ""
-			return clue if has_scanner() else "%s | Scanner required" % clue
+		var clue := str(nearby_target.get("clue_label", "")).strip_edges()
+		if not has_scanner():
+			return "%s | Scanner required" % clue if not clue.is_empty() else "Scanner required"
+		if not _has_required_light(nearby_target):
+			return _light_required_note(nearby_target)
+		if not _has_required_pressure_protection(nearby_target):
+			return _pressure_required_note(nearby_target)
+		return _nearby_scan_text(nearby_target, clue)
+	if not _last_result.is_empty():
+		return _last_result
 	if _profile.has_completed_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID):
 		return "Cutter plan recovered | Salvage cutter project"
 	if not has_scanner():
@@ -385,15 +380,21 @@ func _completed_overlay_text(target: Dictionary) -> String:
 	return str(target.get("finding_label", "Finding logged")) if _is_finding_target(target) else "Cutter plan recovered | Salvage cutter project"
 
 
-func _pending_overlay_text() -> String:
-	var metadata: Dictionary = _expedition.pending_metadata()
-	if not str(metadata.get("required_pressure_capability_id", "")).is_empty():
-		return "Abyssal source charted | Return to boat"
-	return "Research pending | Return to surface boat" if str(metadata.get("target_type", "")) == RESOURCE_TARGET_TYPE else "Discovery pending | Return to surface boat"
-
-
 func _pending_status_note() -> String:
+	return _pending_return_text()
+
+
+func _pending_return_text() -> String:
 	var metadata: Dictionary = _expedition.pending_metadata()
 	if not str(metadata.get("required_pressure_capability_id", "")).is_empty():
-		return "Abyssal source charted | Return to boat"
-	return "Research pending - return to surface boat" if str(metadata.get("target_type", "")) == RESOURCE_TARGET_TYPE else "Discovery pending - return to surface boat"
+		return "Abyssal chart pending | Return to surface boat before another scan"
+	return "Research pending | Return to surface boat before another scan" if str(metadata.get("target_type", "")) == RESOURCE_TARGET_TYPE else "Discovery pending | Return to surface boat before another scan"
+
+
+func _nearby_scan_text(target: Dictionary, clue: String) -> String:
+	var interaction: Dictionary = _interaction.report()
+	if str(interaction.get("active_target_id", "")) == str(target.get("id", "")):
+		return _last_note
+	var label := str(target.get("interaction_label", "Survey signal")).strip_edges()
+	var prompt := "Q/SCAN: %s" % (label if not label.is_empty() else "Survey signal")
+	return "%s\n%s" % [clue, prompt] if not clue.is_empty() else prompt

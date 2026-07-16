@@ -104,7 +104,7 @@ func _run() -> void:
 	_expect(bool(full_level_unlock.get("changed", false)), "scanner project did not unlock on promoted full level")
 	player.global_position = regional_target.get("center", Vector2.ZERO)
 	var regional_clue := runtime.overlay_text(regional_world, player)
-	_expect(regional_clue == str(regional_target.get("clue_label", "")), "regional clue did not use source text")
+	_expect(regional_clue.find(str(regional_target.get("clue_label", ""))) != -1 and regional_clue.find("Q/SCAN: Survey Signal Reef") != -1, "regional clue or scan action did not use source text")
 	runtime.scanner_action(regional_world, player)
 	var regional_complete: Dictionary = runtime.update(
 		regional_world,
@@ -219,7 +219,7 @@ func _exercise_harmonic_return(runtime, progression, profile, world, player) -> 
 	var partial: Dictionary = runtime.update(world, player, 1.0)
 	var partial_progress := float(partial.get("survey", {}).get("progress", 0.0))
 	_expect(partial_progress > 0.0 and partial_progress < 1.0, "light-owned harmonic survey did not report partial progress")
-	_expect(runtime.overlay_text(world, player).is_empty(), "light-owned harmonic survey retained the pre-light requirement clue")
+	_expect(runtime.overlay_text(world, player).begins_with("Survey deep harmonic "), "light-owned harmonic survey omitted active progress")
 	player.global_position = Vector2.ZERO
 	var canceled: Dictionary = runtime.update(world, player, 0.0)
 	_expect(canceled.get("state") == "canceled", "leaving harmonic range did not cancel partial progress")
@@ -324,7 +324,7 @@ func _exercise_abyssal_return(runtime, _progression, profile, world, player) -> 
 	var partial: Dictionary = runtime.update(world, player, 1.0)
 	var partial_progress := float(partial.get("survey", {}).get("progress", 0.0))
 	_expect(partial_progress > 0.0 and partial_progress < 1.0, "protected abyssal survey did not report partial progress")
-	_expect(runtime.overlay_text(world, player).is_empty(), "protected abyssal survey retained the suit requirement clue")
+	_expect(runtime.overlay_text(world, player).begins_with("Survey abyssal source "), "protected abyssal survey omitted active progress")
 	player.global_position = Vector2.ZERO
 	_expect(runtime.update(world, player, 0.0).get("state") == "canceled", "leaving abyssal range did not cancel progress")
 
@@ -344,7 +344,7 @@ func _exercise_abyssal_return(runtime, _progression, profile, world, player) -> 
 	var pending: Dictionary = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
 	_expect(bool(pending.get("pending", false)), "completed abyssal survey did not become pending")
 	_expect(pending.get("note") == "Abyssal source charted | Return to boat", "abyssal pending feedback drifted")
-	_expect(runtime.overlay_text(world, player) == "Abyssal source charted | Return to boat", "abyssal pending overlay drifted")
+	_expect(runtime.overlay_text(world, player) == "Abyssal chart pending | Return to surface boat before another scan", "abyssal pending overlay drifted")
 	runtime.clear_unbanked("hazard", world)
 	_expect(
 		not runtime.has_pending_discovery()
