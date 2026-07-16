@@ -437,6 +437,24 @@ class MaterialSourceValidationTests(unittest.TestCase):
         self.assertTrue(any("requires at least one material project" in failure for failure in failures))
         self.assertTrue(any("not referenced by a material project" in failure for failure in failures))
 
+    def test_allows_durable_target_to_reuse_existing_tool_project(self) -> None:
+        map_data = valid_map()
+        recorder = copy.deepcopy(map_data["entities"][-1])
+        recorder.update({
+            "id": "southeast_wreck_recorder",
+            "x": 9,
+            "interaction_label": "wreck recorder",
+            "durable_clearance": True,
+            "unlocks_survey_target_id": "southeast_wreck_archive_survey",
+        })
+        map_data["entities"].append(recorder)
+        self.assertEqual([], validate_material_source_schema(map_data))
+
+        recorder["required_tool_id"] = "wrong_tool"
+        failures = validate_material_source_schema(map_data)
+        self.assertTrue(any("required_tool_id must be salvage_cutter" in failure for failure in failures), failures)
+        self.assertTrue(any("not referenced by a material project" in failure for failure in failures), failures)
+
     def test_rejects_invalid_project_order_target_kind_and_gate_link(self) -> None:
         map_data = with_stabilizer_project(valid_map())
         project = map_data["material_projects"].pop()

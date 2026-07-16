@@ -377,6 +377,15 @@ def _validate_projects(
             gate = current_gates.get(str(gate_id))
             if gate is not None and gate.get("required_capability_id") == capability_id:
                 referenced_gates.add(str(gate_id))
+    for target_id, target in tool_entities.items():
+        project = projects.get(str(target.get("tool_project_id", "")))
+        if (
+            target.get("durable_clearance") is True
+            and isinstance(target.get("unlocks_survey_target_id"), str)
+            and project is not None
+            and target.get("required_tool_id") == project.get("unlocks_capability_id")
+        ):
+            referenced_targets.add(target_id)
     for target_id in sorted(set(tool_entities) - referenced_targets):
         failures.append(f"Cutter target {target_id!r} is not referenced by a material project.")
     durable_gates = {

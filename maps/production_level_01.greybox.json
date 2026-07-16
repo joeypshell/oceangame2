@@ -387,7 +387,7 @@
         "The canonical surface_boat_entry opening at top x=91..98 remains open.",
         "Nine adjacent top cells and the separate ten-cell top-right opening are sealed in global source coordinates.",
         "No crop seal, stitched slice terrain, connector, teleport, or stabilizer-entry metadata is imported.",
-        "Expansion 12 pressure records come only from their focused source helper.",
+        "Expansion 12/13 records come only from their focused source helpers.",
         "Twenty-nine named source-owned cells are opened only where reused gameplay requires its proven clearance.",
         "The full-sketch draft remains unchanged as conversion and provenance evidence."
       ]
@@ -1392,6 +1392,30 @@
       ],
       "terrain_changes": [],
       "intent": "Source-authored pressure return metadata in existing open water."
+    },
+    "expansion_13": {
+      "source": "tools/production_level_01_expansion_13.py",
+      "journey_ids": [
+        "southeast_wreck_archive_route"
+      ],
+      "zone_ids": [
+        "southeast_wreck_archive_landmark"
+      ],
+      "entity_ids": [
+        "southeast_wreck_recorder"
+      ],
+      "survey_target_ids": [
+        "southeast_wreck_archive_survey"
+      ],
+      "camera_test_ids": [
+        "expansion_13_wreck_promise",
+        "expansion_13_wreck_arrival",
+        "expansion_13_recorder_cut",
+        "expansion_13_archive_survey",
+        "expansion_13_pending_boat_return"
+      ],
+      "terrain_changes": [],
+      "intent": "Source-authored wreck return metadata in existing southeast open water."
     },
     "review_artifact": "references/greybox/production_level_01_source_render_collision_review.png"
   },
@@ -4669,6 +4693,17 @@
       "regional_landmark": true,
       "regional_journey_id": "deep_harmonic_abyssal_basin_route",
       "landmark_label": "Abyssal Basin"
+    },
+    {
+      "id": "southeast_wreck_archive_landmark",
+      "type": "marker",
+      "x": 146,
+      "y": 143,
+      "w": 5,
+      "h": 9,
+      "regional_landmark": true,
+      "regional_journey_id": "southeast_wreck_archive_route",
+      "landmark_label": "Southeast Wreck Archive"
     }
   ],
   "regional_journeys": [
@@ -4700,6 +4735,22 @@
       "commit_entry_id": "surface_boat_entry",
       "route_context": "deep_harmonic_abyssal_basin_route",
       "intent": "Return through continuous lower-central geography after learning the deep harmonic, then commit the abyssal discovery at the boat."
+    },
+    {
+      "id": "southeast_wreck_archive_route",
+      "route_label": "Southeast wreck archive route",
+      "promise_gate_id": "abyssal_basin_landmark",
+      "entry_gate_ids": [
+        "abyssal_basin_pressure_zone"
+      ],
+      "required_capability_id": "pressure_suit_1",
+      "required_discovery_id": "abyssal_basin_harmonic_source_discovery",
+      "landmark_zone_id": "southeast_wreck_archive_landmark",
+      "tool_target_id": "southeast_wreck_recorder",
+      "survey_target_id": "southeast_wreck_archive_survey",
+      "commit_entry_id": "surface_boat_entry",
+      "route_context": "southeast_wreck_archive_route",
+      "intent": "Reuse the pressure-protected lower route for one distant cutter and scanner chain that returns to the canonical boat."
     }
   ],
   "daily_conditions": [
@@ -4993,6 +5044,29 @@
       "commit_map_path": "res://maps/production_level_01.greybox.json",
       "commit_entry_id": "surface_boat_entry",
       "intent": "Reward one protected return to the existing basin while keeping the finding pending until the canonical boat."
+    },
+    {
+      "id": "southeast_wreck_archive_survey",
+      "target_type": "regional",
+      "x": 149,
+      "y": 149,
+      "w": 2,
+      "h": 2,
+      "required_capability_id": "survey_scanner_1",
+      "required_pressure_capability_id": "pressure_suit_1",
+      "required_route_id": "southeast_wreck_archive_route",
+      "route_context": "southeast_wreck_archive_route",
+      "interaction": "survey",
+      "interaction_seconds": 3.0,
+      "interaction_label": "Survey wreck archive",
+      "clue_label": "Wreck archive | Recorder access required",
+      "finding_label": "Discovery logged: Southeast wreck archive",
+      "next_lead_label": "Next lead: distant wreck network unresolved",
+      "discovery_id": "southeast_wreck_archive_discovery",
+      "commit_map_id": "production_level_01",
+      "commit_map_path": "res://maps/production_level_01.greybox.json",
+      "commit_entry_id": "surface_boat_entry",
+      "intent": "Keep the archive finding pending until the canonical boat return."
     }
   ],
   "material_candidate_pools": [
@@ -5190,6 +5264,17 @@
       "h": 15,
       "regional_landmark": true,
       "regional_journey_id": "deep_harmonic_abyssal_basin_route"
+    },
+    {
+      "id": "southeast_wreck_archive_backdrop",
+      "type": "background",
+      "x": 146,
+      "y": 143,
+      "w": 5,
+      "h": 9,
+      "regional_landmark": true,
+      "regional_journey_id": "southeast_wreck_archive_route",
+      "intent": "Distinct non-collision archive silhouette in the far southeast chamber."
     }
   ],
   "entities": [
@@ -5469,6 +5554,22 @@
       "material_quantity": 1,
       "candidate_pool_id": "southwest_bloom_coil_bonus_pool",
       "intent": "Optional even-day coil trace below the southwest migration lane."
+    },
+    {
+      "id": "southeast_wreck_recorder",
+      "type": "tool_target",
+      "x": 147,
+      "y": 149,
+      "kind": "crate",
+      "tier": "valuable",
+      "interaction": "cutter_salvage",
+      "interaction_seconds": 2.0,
+      "interaction_label": "wreck recorder",
+      "required_tool_id": "salvage_cutter",
+      "tool_project_id": "salvage_cutter_project",
+      "unlocks_survey_target_id": "southeast_wreck_archive_survey",
+      "durable_clearance": true,
+      "intent": "Cutter-opened recorder whose clearance exposes the archive survey."
     }
   ],
   "camera_tests": [
@@ -5639,6 +5740,41 @@
       "center_y": 12.0,
       "zoom": 0.55,
       "intent": "Pending abyssal discovery returning to the canonical boat."
+    },
+    {
+      "id": "expansion_13_wreck_promise",
+      "center_x": 105.0,
+      "center_y": 146.0,
+      "zoom": 0.28,
+      "intent": "Broad abyssal-to-southeast route promise without an exact path marker."
+    },
+    {
+      "id": "expansion_13_wreck_arrival",
+      "center_x": 148.0,
+      "center_y": 147.0,
+      "zoom": 0.55,
+      "intent": "Distinct wreck-archive arrival in unchanged continuous water."
+    },
+    {
+      "id": "expansion_13_recorder_cut",
+      "center_x": 147.5,
+      "center_y": 149.5,
+      "zoom": 0.72,
+      "intent": "Readable cutter interaction and recorder cargo state."
+    },
+    {
+      "id": "expansion_13_archive_survey",
+      "center_x": 149.5,
+      "center_y": 149.5,
+      "zoom": 0.72,
+      "intent": "Explicit scanner progress after recorder clearance."
+    },
+    {
+      "id": "expansion_13_pending_boat_return",
+      "center_x": 95.0,
+      "center_y": 12.0,
+      "zoom": 0.55,
+      "intent": "Recorder cargo and pending archive finding returning to the boat."
     }
   ],
   "review_questions": [
@@ -5650,6 +5786,10 @@
     "Can the pressure threshold be scouted and safely retreated from before the suit?",
     "Does the pressure-suit return preserve continuous remembered geography?",
     "Is the abyssal survey clearly deeper than the known Signal Reef harmonic?",
-    "Does the completed survey remain pending until the canonical boat return?"
+    "Does the completed survey remain pending until the canonical boat return?",
+    "Does the prior abyssal finding create a broad southeast wreck promise?",
+    "Is the archive a distinct destination without changing terrain?",
+    "Do cutter clearance and explicit scanner activation read as one chain?",
+    "Does the recorder and pending finding return feel tense but base-tank viable?"
   ]
 }
