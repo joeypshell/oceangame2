@@ -251,7 +251,7 @@ func _prepare_pending_return(camera_test: Dictionary) -> bool:
 	return _expect(
 		_main._anomaly_survey.has_pending_discovery()
 		and not _main._world.is_inside_boat(_main._player.global_position)
-		and _status_text().find("Abyssal source charted | Return to boat") != -1,
+		and _status_text().find("Abyssal chart pending | Return to surface boat before another scan") != -1,
 		"abyssal discovery did not remain pending on the boat approach"
 	)
 

@@ -74,31 +74,59 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 	var wallet_after_cache := _session_wallet()
 
 	var oxygen_before: float = _oxygen_seconds
-	var held_before: int = _held_salvage
+	var empty_held: int = _held_salvage
+	_held_salvage = _held_salvage_capacity()
+	_held_salvage_ids = ["scanner_full_cargo_a", "scanner_full_cargo_b"]
 	_player.global_position = target["center"]
+	_process(0.0)
+	var ready_status: String = _status_label.text
+	if not _require(
+		ready_status.find("Q/SCAN: Survey anomaly") != -1
+		and ready_status.find("Cargo full") != -1,
+		"full cargo hid the scanner activation prompt: %s" % ready_status
+	):
+		return
 	_press_key(KEY_Q)
 	_process(1.0)
 	var partial: float = float(_main._anomaly_survey.report().get("interaction", {}).get("progress", 0.0))
-	if not _require(partial > 0.0 and partial < 1.0 and _oxygen_seconds < oxygen_before, "partial survey progress or oxygen pressure drifted"):
+	var progress_status: String = _status_label.text
+	if not _require(
+		partial > 0.0
+		and partial < 1.0
+		and _oxygen_seconds < oxygen_before
+		and progress_status.find("Survey anomaly 33%") != -1
+		and progress_status.find("Cargo full") != -1,
+		"full-cargo survey progress or oxygen pressure drifted: %s" % progress_status
+	):
 		return
-	_player.global_position = _world.spawn_position
+	_player.global_position = Vector2.ZERO
 	_process(0.0)
-	if not _require(not _main._anomaly_survey.has_pending_discovery() and _last_status_note == "Survey interrupted", "leave-range cancel failed"):
+	if not _require(not _main._anomaly_survey.has_pending_discovery() and _main._anomaly_survey.report().get("last_note") == "Survey interrupted", "leave-range cancel failed"):
 		return
-	if not _complete_survey(target, held_before, wallet_after_cache):
+	if not _complete_survey(target, _held_salvage_capacity(), wallet_after_cache):
+		return
+	_player.global_position = resource_target["center"]
+	_process(0.0)
+	_press_key(KEY_Q)
+	var pending_status: String = _status_label.text
+	if not _require(
+		pending_status.find("Return to surface boat before another scan") != -1
+		and is_zero_approx(float(_main._anomaly_survey.report().get("interaction", {}).get("progress", -1.0))),
+		"pending result did not explain why another scan was blocked: %s" % pending_status
+	):
 		return
 
 	_reset_run()
 	_prepare_current_map()
-	if not _require(not _main._anomaly_survey.has_pending_discovery(), "retry retained pending discovery"):
+	if not _require(not _main._anomaly_survey.has_pending_discovery() and _held_salvage == empty_held, "retry retained pending discovery or full cargo"):
 		return
-	if not _complete_survey(target, held_before, wallet_after_cache):
+	if not _complete_survey(target, empty_held, wallet_after_cache):
 		return
 	_main._handle_hazard_hit("anomaly_smoke_hazard")
 	if not _require(not _main._anomaly_survey.has_pending_discovery(), "hazard retained pending discovery"):
 		return
 	_prepare_current_map()
-	if not _complete_survey(target, held_before, wallet_after_cache):
+	if not _complete_survey(target, empty_held, wallet_after_cache):
 		return
 
 	_player.global_position = _world.get_extraction_center()
@@ -125,7 +153,7 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 		return
 
 	_cleanup_profile()
-	print("Anomaly survey journey smoke passed: map=%s contiguous=true connectors=none fins_gate=%s payoff=%s optional_score=%d scanner_blueprint=true recipe=ti1+coil1 score_bypass=false target=%s partial=%.2f cancel_on_leave=true failure_clears_pending=true committed_at_boat=true cutter_plan=true discovery=%s profile=%s." % [
+	print("Anomaly survey journey smoke passed: map=%s contiguous=true connectors=none fins_gate=%s payoff=%s optional_score=%d scanner_blueprint=true recipe=ti1+coil1 score_bypass=false explicit_q=true full_cargo_scan=true pending_boat_guidance=true target=%s partial=%.2f cancel_on_leave=true failure_clears_pending=true committed_at_boat=true cutter_plan=true discovery=%s profile=%s." % [
 		MAP_ID,
 		ExpansionProfileState.PROPULSION_FINS_GATE_ID,
 		PAYOFF_TARGET_ID,

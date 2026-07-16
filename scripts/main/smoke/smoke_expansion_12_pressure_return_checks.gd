@@ -225,7 +225,7 @@ func _complete_abyssal_return() -> bool:
 	_advance(survey_seconds + 0.01)
 	if not _require(
 		_main._anomaly_survey.has_pending_discovery()
-		and _main._anomaly_survey.overlay_text(_world, _player) == "Abyssal source charted | Return to boat"
+		and _main._anomaly_survey.overlay_text(_world, _player) == "Abyssal chart pending | Return to surface boat before another scan"
 		and not profile.has_completed_discovery(ABYSSAL_DISCOVERY_ID),
 		"abyssal survey did not remain pending away from the boat"
 	):
