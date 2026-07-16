@@ -53,6 +53,7 @@ The recorder remains normal valuable tool-target salvage:
   "interaction_seconds": 2.0,
   "interaction_label": "wreck recorder",
   "required_tool_id": "salvage_cutter",
+  "tool_project_id": "salvage_cutter_project",
   "unlocks_survey_target_id": "southeast_wreck_archive_survey",
   "durable_clearance": true
 }

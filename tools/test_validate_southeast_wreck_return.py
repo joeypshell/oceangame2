@@ -36,8 +36,25 @@ def current_map() -> dict:
     return json.loads(MAP_PATH.read_text(encoding="utf-8"))
 
 
+def map_without_wreck_records() -> dict:
+    map_data = current_map()
+    map_data["zones"] = [item for item in map_data["zones"] if item.get("id") != LANDMARK_ID]
+    map_data["background"] = [item for item in map_data["background"] if item.get("id") != BACKGROUND_ID]
+    map_data["entities"] = [item for item in map_data["entities"] if item.get("id") != RECORDER_ID]
+    map_data["survey_targets"] = [
+        item for item in map_data["survey_targets"]
+        if item.get("id") != SURVEY_ID and item.get("discovery_id") != DISCOVERY_ID
+    ]
+    map_data["regional_journeys"] = [
+        item for item in map_data["regional_journeys"] if item.get("id") != ROUTE_ID
+    ]
+    return map_data
+
+
 def authored_fixture() -> dict:
     map_data = current_map()
+    if any(item.get("id") == ROUTE_ID for item in map_data.get("regional_journeys", [])):
+        return map_data
     map_data["zones"].append({
         "id": LANDMARK_ID,
         "type": "marker",
@@ -71,6 +88,7 @@ def authored_fixture() -> dict:
         "interaction_seconds": 2.0,
         "interaction_label": "wreck recorder",
         "required_tool_id": "salvage_cutter",
+        "tool_project_id": "salvage_cutter_project",
         "unlocks_survey_target_id": SURVEY_ID,
         "durable_clearance": True,
         "intent": "Cutter-opened recorder whose clearance exposes the archive survey.",
@@ -116,9 +134,9 @@ def authored_fixture() -> dict:
 
 
 class SoutheastWreckValidationTests(unittest.TestCase):
-    def test_current_map_keeps_validator_dormant(self) -> None:
-        self.assertEqual([], validate_southeast_wreck_schema(current_map()))
-        self.assertEqual([], validate_southeast_wreck_routes(current_map()))
+    def test_map_without_records_keeps_validator_dormant(self) -> None:
+        self.assertEqual([], validate_southeast_wreck_schema(map_without_wreck_records()))
+        self.assertEqual([], validate_southeast_wreck_routes(map_without_wreck_records()))
 
     def test_accepts_exact_chain_and_tight_optional_route_budget(self) -> None:
         map_data = authored_fixture()
@@ -203,7 +221,7 @@ class SoutheastWreckValidationTests(unittest.TestCase):
         self.assertTrue(any("bypasses" in failure for failure in failures), failures)
 
     def test_partial_record_activates_complete_contract(self) -> None:
-        map_data = current_map()
+        map_data = map_without_wreck_records()
         map_data["regional_journeys"].append({"id": ROUTE_ID})
         failures = validate_southeast_wreck_schema(map_data)
         self.assertTrue(any("requires exactly one entities" in failure for failure in failures), failures)
