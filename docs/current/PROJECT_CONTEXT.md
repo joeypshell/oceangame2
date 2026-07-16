@@ -38,7 +38,7 @@ Expansion 11 is complete with player GO through #914 plus corrections #925/#927.
 
 Expansion 12 is complete with player GO through #941 plus player-HOLD corrections #951-#953. The deep-harmonic clue now reveals a durable Ti2/Rubber1/Gel1 night-built pressure suit for one scoutable lower-central pressure threshold and protected abyssal survey. Explicit `Q/SCAN` activation, full-cargo scanner feedback, pending boat-return guidance, deterministic journey coverage, and exact-SHA Web verification pass at runtime `d864a9e`.
 
-Expansion 13 Southeast Wreck Return is active in milestone #39 through frozen batch #960-#969. It uses the empty farthest southeast chamber, the existing pressure suit/cutter/scanner chain, and a real 78.7-second interaction-inclusive route demand so the optional session oxygen upgrade improves margin without becoming a mandatory score lock. #960-#965 now lock and implement the source/state contract, validators, authored journey, durable recorder clearance, compact objective/result feedback, and deterministic full-route coverage; #966-#969 remain the capture, visual review, deployment, and player GO/HOLD lane.
+Expansion 13 Southeast Wreck Return is active in milestone #39 through frozen batch #960-#969. It uses the empty farthest southeast chamber, the existing pressure suit/cutter/scanner chain, and a real 78.7-second interaction-inclusive route demand so the optional session oxygen upgrade improves margin without becoming a mandatory score lock. #960-#966 now lock and implement the source/state contract, validators, authored journey, durable recorder clearance, compact objective/result feedback, deterministic full-route coverage, and focused desktop/mobile captures; #967-#969 remain the visual review, deployment, and player GO/HOLD lane.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -209,7 +209,7 @@ Current issue state as of 2026-07-16:
 - Closed: #880-#889 plus correction #900 via PR #901 completed the east-current regional journey, player GO, and exact-SHA Web verification.
 - Closed: #905-#914 plus corrections #925/#927 completed Expansion 11 with player GO and exact-SHA Web verification.
 - Closed: #932-#941 plus corrections #951-#953 completed Expansion 12 with player GO and exact-SHA Web verification.
-- Active: #966-#969 capture, review, deploy, and player-test Expansion 13 Southeast Wreck Return under milestone #39; #960-#965 are complete and #969 remains the player GO/HOLD gate.
+- Active: #967-#969 review, deploy, and player-test Expansion 13 Southeast Wreck Return under milestone #39; #960-#966 are complete and #969 remains the player GO/HOLD gate.
 - Open bookkeeping: #849 names three UID sidecars already committed by `e825c88`; it does not block planning and should be closed separately with that evidence.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.

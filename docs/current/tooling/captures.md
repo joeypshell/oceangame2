@@ -333,6 +333,14 @@ Capture the focused Expansion 12 pressure-return review states:
 
 This writes the pre-suit warning, incomplete pressure-suit recipe, protected crossing, 50% abyssal survey, and pending boat-return states at 1280x720 and mobile 844x390 review sizes under ignored `visual_captures/expansion_12_abyssal_pressure/`. It uses the authored Expansion 12 camera tests and does not accept or replace baselines.
 
+Capture the focused Expansion 13 southeast-wreck review states:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --capture-expansion-13-southeast-wreck
+```
+
+This writes the broad wreck promise, arrival with cutter requirement, 50% recorder cut, 50% explicit archive survey, and pending canonical-boat return states at 1280x720 and mobile 844x390 review sizes under ignored `visual_captures/expansion_13_southeast_wreck/`. It uses the authored Expansion 13 camera tests and does not accept or replace baselines.
+
 Capture the first production slice:
 
 ```powershell
