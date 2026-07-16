@@ -1,6 +1,6 @@
 # Project Context
 
-Last updated: 2026-07-15
+Last updated: 2026-07-16
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
@@ -38,6 +38,8 @@ Expansion 11 is complete with player GO through #914 plus corrections #925/#927.
 
 Expansion 12 is complete with player GO through #941 plus player-HOLD corrections #951-#953. The deep-harmonic clue now reveals a durable Ti2/Rubber1/Gel1 night-built pressure suit for one scoutable lower-central pressure threshold and protected abyssal survey. Explicit `Q/SCAN` activation, full-cargo scanner feedback, pending boat-return guidance, deterministic journey coverage, and exact-SHA Web verification pass at runtime `d864a9e`.
 
+Planning issue #958 selects Expansion 13 Southeast Wreck Return. The proposed next milestone uses the empty farthest southeast chamber, the existing pressure suit/cutter/scanner chain, and a real 73.7-second ideal round trip so the optional session oxygen upgrade improves margin without becoming a mandatory score lock. No implementation milestone or issue batch exists yet.
+
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
 Controlled gameplay/visual passes are now a validation lane inside the roadmap, not the whole roadmap. New work should serve curiosity, pressure, payoff, remembered-place progress, meaningful route choice, or a reason to try another expedition.
@@ -66,12 +68,13 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Completed Expansion 10 handoff: `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md` plus its linked plan, source contract, visual decision, Web verification, and correction #900
 - Completed Expansion 11 handoff: `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #925/#927, and player GO #914
 - Completed Expansion 12 handoff: `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #951-#953, and player GO #941
+- Selected next plan: `docs/current/OCEANGAME_EXPANSION_13_PLAN.md` (#958); implementation milestone and issues remain uncreated
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
 - Latest completed expansion decision: `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md`
-- Latest expansion plan: `docs/current/OCEANGAME_EXPANSION_12_PLAN.md`, completed through #941 plus corrections #951-#953
+- Latest expansion plan: `docs/current/OCEANGAME_EXPANSION_13_PLAN.md`, selected by #958 with no implementation batch yet
 - Latest source contract: `docs/current/OCEANGAME_EXPANSION_12_SOURCE_STATE_CONTRACT.md`
 - Latest visual decision: `docs/current/OCEANGAME_EXPANSION_12_VISUAL_BASELINE_DECISION.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
@@ -143,7 +146,7 @@ Current map-loading helper:
 
 ## Web Preview Status
 
-The public preview was last verified for the final corrected Expansion 11 journey at exact build `eb940b7`:
+The public preview was last verified for the final corrected Expansion 12 journey at exact build `d864a9e`:
 
 ```text
 https://joeypshell.github.io/oceangame2/
@@ -192,7 +195,7 @@ For map changes, run the relevant generator, SVG renderer, validator, parity che
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Each issue needs acceptance criteria, relevant files, implementation notes, and verification steps.
 
-Current issue state as of 2026-07-15:
+Current issue state as of 2026-07-16:
 
 - Closed: #662-#671 completed Expansion 01 with a GO.
 - Closed: #685-#694 completed Expansion 02 with a GO.
@@ -206,6 +209,7 @@ Current issue state as of 2026-07-15:
 - Closed: #880-#889 plus correction #900 via PR #901 completed the east-current regional journey, player GO, and exact-SHA Web verification.
 - Closed: #905-#914 plus corrections #925/#927 completed Expansion 11 with player GO and exact-SHA Web verification.
 - Closed: #932-#941 plus corrections #951-#953 completed Expansion 12 with player GO and exact-SHA Web verification.
+- Closed planning gate: #958 selects Expansion 13 Southeast Wreck Return; no implementation milestone or issue batch has been created.
 - Open bookkeeping: #849 names three UID sidecars already committed by `e825c88`; it does not block planning and should be closed separately with that evidence.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -343,7 +347,7 @@ Current issue state as of 2026-07-15:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` and `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md` as the current handoff. No later expansion is selected. Run a fresh direction audit, choose one bounded milestone with a clear exit question, and create only that milestone's scoped issue batch.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`, `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md`, and `docs/current/OCEANGAME_EXPANSION_13_PLAN.md` as the current handoff. The next audit should create only the selected Southeast Wreck Return milestone and its scoped implementation batch; it must not begin a second direction in the same run.
 
 Accepted constraints for next work:
 
