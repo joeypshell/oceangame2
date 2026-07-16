@@ -1,6 +1,6 @@
 # Milestones
 
-Last updated: 2026-07-15
+Last updated: 2026-07-16
 
 This is the compact milestone index. Detailed direction lives in:
 
@@ -24,6 +24,7 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_12_PLAN.md`
 - `docs/current/OCEANGAME_EXPANSION_12_SOURCE_STATE_CONTRACT.md`
 - `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md`
+- `docs/current/OCEANGAME_EXPANSION_13_PLAN.md`
 
 ## Current State
 
@@ -35,9 +36,9 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: none; the next milestone requires a fresh direction audit.
-- Proposed: no later expansion is selected.
-- Directional: oxygen-distance progression, other regional identities, and exceptional interiors remain uncommitted.
+- Committed: none; the Expansion 13 implementation milestone and issue batch have not been created.
+- Proposed: Expansion 13 Southeast Wreck Return is selected in #958. It will use the farthest empty southeast chamber, existing pressure/cutter/scanner capabilities, and honest oxygen-distance pressure without new terrain or a new upgrade.
+- Directional: pure oxygen-capacity progression, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
@@ -85,7 +86,7 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 ## Roadmap Rules
 
 - Do not reopen completed expansion batches merely to keep the queue full.
-- Select the next bounded expansion only through a fresh direction audit; no later milestone is currently committed.
+- Create only the selected Expansion 13 Southeast Wreck Return implementation milestone/batch next; do not select another later direction before it closes.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
 - Do not use teleports, prompted connectors, map menus, or the current stabilizer for normal traversal of the full level.

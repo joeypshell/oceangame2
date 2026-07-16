@@ -1,11 +1,11 @@
 # OceanGame Phase 2 Roadmap
 
-Date: 2026-07-14
+Date: 2026-07-16
 
-Status: Expansions 01-11 are complete with player GO. Expansion 11 closed after
-final scanner-progression correction #927 and exact-SHA Web review at `eb940b7`.
-Planning issue #930 selects an abyssal pressure return as the next committed
-bounded expansion.
+Status: Expansions 01-12 are complete with player GO. Expansion 12 closed after
+scanner-flow corrections #951-#953 and exact-SHA Web review at `d864a9e`.
+Planning issue #958 selects a southeast wreck return as Expansion 13; its
+implementation milestone and issue batch have not been created.
 
 ## Decision
 
@@ -93,20 +93,21 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-No implementation milestone is currently committed. A fresh direction audit
-must select the next bounded goal and exit question before issue creation.
+No implementation milestone is currently committed. The selected Expansion 13
+plan must be converted into one bounded issue batch before implementation.
 
 ### Proposed
 
-No later expansion is selected. Expansion 12 is complete with player GO; see
-`docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md`.
+Expansion 13 Southeast Wreck Return is selected in
+`docs/current/OCEANGAME_EXPANSION_13_PLAN.md`. It will reuse the pressure suit,
+cutter, and scanner in the farthest empty southeast chamber, with honest
+oxygen-distance pressure and no topology change or new upgrade.
 
 ### Directional
 
-Other regional identities, oxygen-distance progression, and exceptional
-interiors remain directional until one is selected and scoped. Broad pressure
-simulation and later pressure tiers remain outside the completed bounded
-Expansion 12 implementation.
+Pure oxygen-capacity progression, other regional identities, and exceptional
+interiors remain directional. Broad pressure simulation and later pressure
+tiers remain outside the completed bounded Expansion 12 implementation.
 
 ### Vision
 
@@ -344,6 +345,34 @@ Exit question: did the deep-harmonic clue, pressure warning, material hunt, and
 night-built suit make the abyssal basin feel like a dangerous place the player
 learned to reach, with a payoff worth carrying back to the boat?
 **GO recorded at #941 after corrections #951-#953.**
+
+### Expansion 13: Southeast Wreck Return
+
+Status: Selected by planning issue #958. Implementation milestone/issues have
+not been created. See `docs/current/OCEANGAME_EXPANSION_13_PLAN.md`.
+
+Goal: turn the empty farthest southeast chamber into one memorable wreck
+journey that pays off the existing pressure suit, cutter, and scanner while
+making oxygen preparation useful without making score mandatory.
+
+Prove:
+
+- one source-authored wreck landmark in unchanged contiguous geography
+- a route that crosses the existing pressure zone and returns to the boat
+- one cutter-opened recorder explicitly exposing one scanner survey
+- base oxygen remains technically viable but tight; optional `O2 tank +15`
+  provides a useful margin without becoming a source prerequisite
+- cargo-full, failure, reload, pending finding, and exact-once boat commitment
+  retain their established owners and semantics
+- focused source, progression, smoke, visual, mobile, and Web evidence
+
+Non-goals include a new oxygen upgrade, recipe, material, capability, terrain
+expansion, interior transition, teleport, connector, global oxygen/pressure
+rebalance, enemy, vehicle, inventory, or broad art pass.
+
+Exit question: did the distant wreck turn prior upgrades and the far southeast
+route into a tense, memorable expedition whose discovery felt worth bringing
+back to the boat?
 
 ## Original OceanGame Convergence
 
