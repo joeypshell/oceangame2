@@ -81,7 +81,7 @@ def valid_abyssal_target() -> dict:
         "interaction_label": "Survey abyssal source",
         "clue_label": "Abyssal signal | Pressure suit required",
         "finding_label": "Discovery logged: Abyssal harmonic source",
-        "next_lead_label": "Abyssal source charted | Further descent unresolved",
+        "next_lead_label": "Abyssal chart | Southeast wreck echo",
         "discovery_id": "abyssal_basin_harmonic_source_discovery",
         "required_pressure_capability_id": "pressure_suit_1",
         "required_route_id": "deep_harmonic_abyssal_basin_route",

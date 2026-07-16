@@ -139,7 +139,7 @@ Contextual text uses the existing overlay priority:
 - promise: `Abyssal chart | Southeast wreck echo`
 - arrival before cut: `Wreck recorder | Cutter required`
 - cutter progress: `Cutting wreck recorder`
-- exposed survey: `Archive exposed | Q: Scan`
+- exposed survey: `Archive exposed | Q/SCAN: Survey wreck archive`
 - survey progress: `Survey wreck archive`
 - pending result: `Wreck archive charted | Return to surface boat`
 - result: `Discovery logged: Southeast wreck archive`
