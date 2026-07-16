@@ -40,7 +40,8 @@ REQUIRED_FIELDS = (
     "route_context",
     "intent",
 )
-ALLOWED_FIELDS = set(REQUIRED_FIELDS)
+OPTIONAL_FIELDS = {"required_discovery_id", "tool_target_id"}
+ALLOWED_FIELDS = set(REQUIRED_FIELDS) | OPTIONAL_FIELDS
 FORBIDDEN_STATE_FIELDS = {
     "active",
     "completed",
@@ -69,8 +70,8 @@ def _rect_contains(outer: dict[str, Any], inner: dict[str, Any]) -> bool:
         return (
             int(outer["x"]) <= int(inner["x"])
             and int(outer["y"]) <= int(inner["y"])
-            and int(inner["x"]) + int(inner["w"]) <= int(outer["x"]) + int(outer["w"])
-            and int(inner["y"]) + int(inner["h"]) <= int(outer["y"]) + int(outer["h"])
+            and int(inner["x"]) + int(inner.get("w", 1)) <= int(outer["x"]) + int(outer["w"])
+            and int(inner["y"]) + int(inner.get("h", 1)) <= int(outer["y"]) + int(outer["h"])
         )
     except (KeyError, TypeError, ValueError):
         return False
@@ -122,6 +123,7 @@ def validate_regional_journey_schema(map_data: dict[str, Any]) -> list[str]:
             "commit_entry_id",
             "route_context",
         )
+        id_fields += tuple(field for field in sorted(OPTIONAL_FIELDS) if field in journey)
         for field in id_fields:
             if not _valid_id(journey[field]):
                 failures.append(f"{label} {field} must use lower_snake_case.")
@@ -146,8 +148,26 @@ def validate_regional_journey_schema(map_data: dict[str, Any]) -> list[str]:
             gate_ids = []
         if journey["promise_gate_id"] in gate_ids:
             failures.append(f"{label} promise gate must remain distinct from its regional entry gates.")
+        required_discovery_id = str(journey.get("required_discovery_id", ""))
+        discovery_sources = [
+            survey for survey in surveys.values()
+            if survey.get("discovery_id") == required_discovery_id
+        ] if required_discovery_id else []
         promise = zones.get(str(journey["promise_gate_id"]))
-        if capability_id == "pressure_suit_1":
+        if required_discovery_id:
+            if len(discovery_sources) != 1:
+                failures.append(f"{label} required_discovery_id must resolve to exactly one survey result.")
+            elif discovery_sources[0].get("required_route_id") == journey["id"]:
+                failures.append(f"{label} required discovery must not depend on the journey it unlocks.")
+            promise_route_id = str(promise.get("regional_journey_id", "")) if promise else ""
+            if (
+                promise is None
+                or promise.get("regional_landmark") is not True
+                or not discovery_sources
+                or discovery_sources[0].get("required_route_id") != promise_route_id
+            ):
+                failures.append(f"{label} discovery promise landmark is unresolved.")
+        elif capability_id == "pressure_suit_1":
             if promise is None or promise.get("visibility_zone") is not True:
                 failures.append(f"{label} pressure promise reference is unresolved.")
         elif promise is None or promise.get("current_gate") is not True:
@@ -163,7 +183,10 @@ def validate_regional_journey_schema(map_data: dict[str, Any]) -> list[str]:
                 continue
             if gate.get("required_capability_id") != capability_id:
                 failures.append(f"{label} gate {gate_id!r} must use the journey capability.")
-            if gate.get("route_context") != journey["id"]:
+            allowed_gate_contexts = {str(journey["id"])}
+            if discovery_sources:
+                allowed_gate_contexts.add(str(discovery_sources[0].get("required_route_id", "")))
+            if gate.get("route_context") not in allowed_gate_contexts:
                 failures.append(f"{label} entry gate {gate_id!r} must use the journey route_context.")
 
         landmark = zones.get(str(journey["landmark_zone_id"]))
@@ -184,6 +207,15 @@ def validate_regional_journey_schema(map_data: dict[str, Any]) -> list[str]:
             failures.append(f"{label} survey_target_id must resolve to a target requiring this route.")
         elif landmark is not None and not _rect_contains(landmark, survey):
             failures.append(f"{label} survey target must sit inside its landmark rectangle.")
+        tool_target_id = str(journey.get("tool_target_id", ""))
+        if tool_target_id:
+            tool_target = entities.get(tool_target_id)
+            if tool_target is None or tool_target.get("type") != "tool_target":
+                failures.append(f"{label} tool_target_id must resolve to a tool_target entity.")
+            elif tool_target.get("unlocks_survey_target_id") != journey["survey_target_id"]:
+                failures.append(f"{label} tool target must unlock the journey survey target.")
+            elif landmark is not None and not _rect_contains(landmark, tool_target):
+                failures.append(f"{label} tool target must sit inside its landmark rectangle.")
         if entities.get(str(journey["commit_entry_id"]), {}).get("type") != "boat_spawn":
             failures.append(f"{label} commit_entry_id must resolve to the canonical boat.")
     return failures

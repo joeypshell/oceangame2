@@ -19,13 +19,10 @@ from progression_graph_helpers import (
     requirement_id as _requirement_id,
 )
 
-
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCTION_MAP_PATHS = tuple(sorted((ROOT / "maps").glob("production_slice_*.greybox.json")))
 ENTRY_TYPES = {"boat_spawn", "spawn"}
 WALLET_ENTITY_TYPES = {"salvage", "tool_target"}
-
-
 @dataclass
 class Node:
     key: str
@@ -35,8 +32,6 @@ class Node:
     route: str = ""
     mandatory: bool = False
     attrs: dict[str, Any] = field(default_factory=dict)
-
-
 @dataclass(frozen=True)
 class Edge:
     source: str
@@ -45,8 +40,6 @@ class Edge:
     hard: bool = False
     note: str = ""
     quantity: int = 0
-
-
 @dataclass
 class ProgressionGraph:
     nodes: dict[str, Node] = field(default_factory=dict)
@@ -316,10 +309,12 @@ class ProgressionGraphBuilder:
         requirement = str(item.get("required_capability_id", ""))
         if requirement:
             self.graph.add_edge(key, self.graph.resolve(requirement), "requires", hard=True)
+        self._required_id_edges(key, [item.get("required_discovery_id")], map_id)
         references = [
             item.get("promise_gate_id"),
             *_list(item.get("entry_gate_ids")),
             item.get("landmark_zone_id"),
+            item.get("tool_target_id"),
             item.get("commit_entry_id"),
         ]
         for raw_id in references:
@@ -407,6 +402,11 @@ class ProgressionGraphBuilder:
             defeat_key = f"defeat:{map_id}/{guard_id}"
             self.graph.add_edge(hostile_key, key, "guards", note="explicit hard guard")
             self.graph.add_edge(key, defeat_key, "requires", hard=True, note="guard defeated")
+        survey_id = str(item.get("unlocks_survey_target_id", ""))
+        if survey_id:
+            survey_key = self.graph.resolve(survey_id, map_id)
+            self.graph.add_edge(survey_key, key, "requires", hard=True, note="tool target clearance")
+            self.graph.add_edge(key, survey_key, "unlocks")
         self._apply_route_gate(key, item, map_id)
 
     def _apply_route_gate(self, key: str, item: dict[str, Any], map_id: str) -> None:
