@@ -4,8 +4,8 @@ Date: 2026-07-16
 
 Status: Expansions 01-12 are complete with player GO. Expansion 12 closed after
 scanner-flow corrections #951-#953 and exact-SHA Web review at `d864a9e`.
-Planning issue #958 selects a southeast wreck return as Expansion 13; its
-implementation milestone and issue batch have not been created.
+Planning issue #958 selects a southeast wreck return as Expansion 13. Milestone
+#39 and frozen batch #960-#969 now implement and review that direction.
 
 ## Decision
 
@@ -93,8 +93,9 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-No implementation milestone is currently committed. The selected Expansion 13
-plan must be converted into one bounded issue batch before implementation.
+Expansion 13 Southeast Wreck Return is committed through milestone #39 and
+frozen issue batch #960-#969. Do not add or select a second direction while it
+is active.
 
 ### Proposed
 
@@ -348,8 +349,8 @@ learned to reach, with a payoff worth carrying back to the boat?
 
 ### Expansion 13: Southeast Wreck Return
 
-Status: Selected by planning issue #958. Implementation milestone/issues have
-not been created. See `docs/current/OCEANGAME_EXPANSION_13_PLAN.md`.
+Status: Active in milestone #39 through #960-#969. See
+`docs/current/OCEANGAME_EXPANSION_13_PLAN.md` and its source/state contract.
 
 Goal: turn the empty farthest southeast chamber into one memorable wreck
 journey that pays off the existing pressure suit, cutter, and scanner while

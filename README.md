@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the completed Expansion 12 closeout and the selected Expansion 13 Southeast Wreck Return plan. Its implementation milestone and issue batch have not been created. Teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
+Current handoff starts with the completed Expansion 12 closeout and active Expansion 13 Southeast Wreck Return milestone (#960-#969). The selected plan and locked source/state contract govern implementation. Teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
 
 Core sources and operating docs:
 
@@ -112,6 +112,7 @@ Current release and expansion handoff:
 - [Expansion 12 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_12_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 12 Closeout](docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md)
 - [OceanGame Expansion 13 Southeast Wreck Return Plan](docs/current/OCEANGAME_EXPANSION_13_PLAN.md)
+- [Expansion 13 Source/State Contract](docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
