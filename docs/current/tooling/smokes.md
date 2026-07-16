@@ -24,6 +24,8 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-expansion-08-daily-condition-journey
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-09-full-level-journey
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-11-deep-harmonic-light-return
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-12-abyssal-pressure-return
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-13-southeast-wreck-return
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --quit-after 1 --smoke-salvage-loop
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-route
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-production-slice-02-route
@@ -85,6 +87,10 @@ The integrated Expansion 09 smoke uses active player collision to swim three dir
 The integrated Expansion 10 smoke starts from a memory-only fresh profile, proves the pre-fins current denial, recovers and builds the authored fins recipe at night, recovers the east-pocket scanner blueprint, banks Ti1/Coil1, and builds the scanner on the following night without collecting the optional cache. It then swims the collision-active Signal Reef route out and back without teleport or connector travel. It reports source ids, world positions, route distance, oxygen/day state, pending survey state, boat commitment, and the next-expedition lead. CI and release validation run it as `--smoke-expansion-10-regional-journey`.
 
 The integrated Expansion 11 smoke reuses that real prerequisite journey with an isolated temporary profile, scouts the harmonic target before light, banks Ti1+Coil1+Gel1 through cargo-capacity pressure, builds the durable light during a real night debrief, verifies next-day readability and failure cleanup, then swims the harmonic return and commits its discovery only at the canonical boat. It checks duplicate prevention and reload before deleting the temporary profile. CI and release validation run it as `--smoke-expansion-11-deep-harmonic-light-return`.
+
+The integrated Expansion 12 smoke extends that journey through the pressure-suit project, scoutable pressure warning, protected abyssal survey, canonical-boat commitment, and profile reload. CI and release validation run it as `--smoke-expansion-12-abyssal-pressure-return`.
+
+The integrated Expansion 13 smoke starts with an empty temporary profile, prepares only the already-earned prerequisites, and then swims the real collision-active boat-to-wreck-to-boat route once. It protects pressure crossing, base and upgraded oxygen margins, recorder and scanner timing, full-cargo behavior, explicit `Q/SCAN`, leave-range cancellation, all three failure restorations, pending return, durable clearance, exact-once discovery commitment, and profile reload. CI and release validation run it as `--smoke-expansion-13-southeast-wreck-return`.
 
 The salvage-loop smoke check loads the default production level, collects authored salvage through the same runtime methods used in play, returns to extraction, confirms completion, resets, and exits.
 
