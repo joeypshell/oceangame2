@@ -2,8 +2,8 @@
 
 Date: 2026-07-14
 
-Status: Active as GitHub milestone 38 with frozen issues #932-#941. Reserve
-GO/HOLD for its playable closeout in #941.
+Status: Complete with player GO in #941 after focused corrections #951-#953.
+See `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md`.
 
 Locked implementation contract:
 `docs/current/OCEANGAME_EXPANSION_12_SOURCE_STATE_CONTRACT.md` (#932).

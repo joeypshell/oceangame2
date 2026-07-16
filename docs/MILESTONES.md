@@ -21,12 +21,13 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_11_PLAN.md`
 - `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md`
-- `docs/current/OCEANGAME_EXPANSION_12_PLAN.md` (selected next expansion)
+- `docs/current/OCEANGAME_EXPANSION_12_PLAN.md`
 - `docs/current/OCEANGAME_EXPANSION_12_SOURCE_STATE_CONTRACT.md`
+- `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md`
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-11 are complete. #864 recorded player GO for the contiguous full level, #889 records GO for the corrected east-current regional journey, and #914 records GO for the final corrected light-return journey. `production_level_01` remains the normal editor, local, and public Web default. Exact-SHA validation and deployment pass at `eb940b7`; slices 01-04 remain unchanged regression/provenance fixtures.
+Simple Diver Game 01-09 and OceanGame Expansions 01-12 are complete. #864 recorded player GO for the contiguous full level, #889 for the corrected east-current journey, #914 for the corrected light return, and #941 for the corrected abyssal pressure return. `production_level_01` remains the normal editor, local, and public Web default. The latest accepted runtime is exact SHA `d864a9e`; slices 01-04 remain unchanged regression/provenance fixtures.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
@@ -34,14 +35,14 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) is active as #932-#941 in existing contiguous geography.
+- Committed: none; the next milestone requires a fresh direction audit.
 - Proposed: no later expansion is selected.
 - Directional: oxygen-distance progression, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-1. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - active as the frozen #932-#941 batch; #941 is the deployed player playtest gate.
+1. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - complete through #941 plus corrections #951-#953, with player GO and exact-SHA Web verification.
 2. [Expansion 11: Deep-Harmonic Light Return](https://github.com/joeypshell/oceangame2/milestone/37) - complete through #914 plus corrections #925/#927, with player GO and final exact-SHA Web verification.
 3. [Expansion 10: East-Current Regional Journey](https://github.com/joeypshell/oceangame2/milestone/36) - complete through #889, with player-gate correction #900, player GO, accepted full-level baseline, and exact-SHA Web verification.
 
@@ -77,10 +78,14 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 #905-#914 plus player-feedback corrections #925/#927 are complete with GO. Signal Reef knowledge now leads to a durable Ti1/Coil1/Gel1 night-built light and remembered dark-harmonic return. Scanner progression uses its own recovered blueprint and Ti1/Coil1 night project instead of score; the current-pocket cache remains optional score. Final exact-SHA Web verification passed at `eb940b7`.
 
+## Completed Expansion 12
+
+#932-#941 plus player-HOLD corrections #951-#953 are complete with GO. The deep-harmonic clue now leads to a durable Ti2/Rubber1/Gel1 night-built pressure suit, one scoutable pressure threshold, and one protected abyssal survey with canonical-boat commitment. Surveys require explicit `Q/SCAN`, work at full cargo, and explain pending boat return. Final exact-SHA Web verification passed at `d864a9e`.
+
 ## Roadmap Rules
 
 - Do not reopen completed expansion batches merely to keep the queue full.
-- Resolve frozen Expansion 12 issues #932-#941 in dependency order; reserve GO/HOLD for the deployed #941 player playtest.
+- Select the next bounded expansion only through a fresh direction audit; no later milestone is currently committed.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
 - Do not use teleports, prompted connectors, map menus, or the current stabilizer for normal traversal of the full level.

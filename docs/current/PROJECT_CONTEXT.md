@@ -1,12 +1,12 @@
 # Project Context
 
-Last updated: 2026-07-14
+Last updated: 2026-07-15
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
 ## Current Goal
 
-`oceangame2` has a GO release candidate and eleven completed bounded Phase 2 expansions. OceanGame Expansion 01 proved:
+`oceangame2` has a GO release candidate and twelve completed bounded Phase 2 expansions. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -36,6 +36,8 @@ Expansion 10 completed through #889 plus player-gate correction #900. Propulsion
 
 Expansion 11 is complete with player GO through #914 plus corrections #925/#927. Signal Reef knowledge now reveals a durable Ti1/Coil1/Gel1 night-built light for one remembered dark-harmonic return. The old 900-score light purchase and 300-wallet scanner shortcut are retired; scanner ownership instead uses a guaranteed post-fins blueprint and Ti1/Coil1 night project, while the nearby valuable cache remains optional score. Final exact-SHA Web verification passed at `eb940b7`.
 
+Expansion 12 is complete with player GO through #941 plus player-HOLD corrections #951-#953. The deep-harmonic clue now reveals a durable Ti2/Rubber1/Gel1 night-built pressure suit for one scoutable lower-central pressure threshold and protected abyssal survey. Explicit `Q/SCAN` activation, full-cargo scanner feedback, pending boat-return guidance, deterministic journey coverage, and exact-SHA Web verification pass at runtime `d864a9e`.
+
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
 Controlled gameplay/visual passes are now a validation lane inside the roadmap, not the whole roadmap. New work should serve curiosity, pressure, payoff, remembered-place progress, meaningful route choice, or a reason to try another expedition.
@@ -63,18 +65,18 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
 - Completed Expansion 10 handoff: `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md` plus its linked plan, source contract, visual decision, Web verification, and correction #900
 - Completed Expansion 11 handoff: `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #925/#927, and player GO #914
-- Active Expansion 12 handoff: `docs/current/OCEANGAME_EXPANSION_12_PLAN.md`, locked source/state contract, milestone 38, and frozen issues #932-#941
+- Completed Expansion 12 handoff: `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #951-#953, and player GO #941
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest completed expansion decision: `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md`
-- Latest expansion plan: `docs/current/OCEANGAME_EXPANSION_11_PLAN.md`, completed through #914 plus corrections #925/#927
-- Latest source contract: `docs/current/OCEANGAME_EXPANSION_11_SOURCE_STATE_CONTRACT.md`
-- Latest visual decision: `docs/current/OCEANGAME_EXPANSION_11_VISUAL_BASELINE_DECISION.md`
+- Latest completed expansion decision: `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md`
+- Latest expansion plan: `docs/current/OCEANGAME_EXPANSION_12_PLAN.md`, completed through #941 plus corrections #951-#953
+- Latest source contract: `docs/current/OCEANGAME_EXPANSION_12_SOURCE_STATE_CONTRACT.md`
+- Latest visual decision: `docs/current/OCEANGAME_EXPANSION_12_VISUAL_BASELINE_DECISION.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: final accepted Expansion 11 build `eb940b7`, recorded in `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md`; initial milestone deployment evidence remains in `docs/current/OCEANGAME_EXPANSION_11_WEB_PREVIEW_VERIFICATION.md`.
+- Latest Web verification: corrected Expansion 12 runtime `d864a9e`, recorded in `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md` and `docs/current/OCEANGAME_EXPANSION_12_WEB_PREVIEW_VERIFICATION.md`.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -203,7 +205,7 @@ Current issue state as of 2026-07-15:
 - Closed: #857-#865 plus correction #875 via PR #876 completed the contiguous full-level foundation, player GO, default promotion, and exact-SHA Web verification.
 - Closed: #880-#889 plus correction #900 via PR #901 completed the east-current regional journey, player GO, and exact-SHA Web verification.
 - Closed: #905-#914 plus corrections #925/#927 completed Expansion 11 with player GO and exact-SHA Web verification.
-- Active: milestone 38 resolves one bounded abyssal pressure return through frozen issues #932-#941; #932 owns the locked source/state contract and #941 is the deployed player playtest gate.
+- Closed: #932-#941 plus corrections #951-#953 completed Expansion 12 with player GO and exact-SHA Web verification.
 - Open bookkeeping: #849 names three UID sidecars already committed by `e825c88`; it does not block planning and should be closed separately with that evidence.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -341,7 +343,7 @@ Current issue state as of 2026-07-15:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`, `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md`, and `docs/current/OCEANGAME_EXPANSION_12_PLAN.md` as the current handoff. #930 selects the next bounded expansion; create and resolve its scoped implementation milestone, reserving GO/HOLD for the deployed player playtest.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` and `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md` as the current handoff. No later expansion is selected. Run a fresh direction audit, choose one bounded milestone with a clear exit question, and create only that milestone's scoped issue batch.
 
 Accepted constraints for next work:
 

@@ -93,22 +93,20 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 12 is the active committed implementation milestone as milestone 38
-with frozen issues #932-#941.
+No implementation milestone is currently committed. A fresh direction audit
+must select the next bounded goal and exit question before issue creation.
 
 ### Proposed
 
-No later expansion is selected. `docs/current/OCEANGAME_EXPANSION_12_PLAN.md`
-commits one durable pressure-suit
-project, a source-authored pressure zone in the existing lower-central basin,
-and one boat-committed abyssal payoff for Expansion 12.
+No later expansion is selected. Expansion 12 is complete with player GO; see
+`docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md`.
 
 ### Directional
 
 Other regional identities, oxygen-distance progression, and exceptional
 interiors remain directional until one is selected and scoped. Broad pressure
-simulation and later pressure tiers remain directional outside the bounded
-Expansion 12 plan.
+simulation and later pressure tiers remain outside the completed bounded
+Expansion 12 implementation.
 
 ### Vision
 
@@ -320,10 +318,10 @@ make returning to the dark lower-right route feel like a capability earned for a
 place the player remembered, with a payoff worth bringing back to the boat?
 **GO recorded at #914 after corrections #925/#927.**
 
-### Committed Expansion 12: Abyssal Pressure Return
+### Expansion 12: Abyssal Pressure Return
 
-Status: Active as milestone 38 with frozen issues #932-#941. See
-`docs/current/OCEANGAME_EXPANSION_12_PLAN.md`.
+Status: Complete with player GO in #941 after corrections #951-#953. See
+`docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md`.
 
 Goal: turn the committed deep-harmonic clue into one durable pressure-suit
 project and one return through existing continuous geography to the
@@ -345,6 +343,7 @@ vehicles, and broad art replacement.
 Exit question: did the deep-harmonic clue, pressure warning, material hunt, and
 night-built suit make the abyssal basin feel like a dangerous place the player
 learned to reach, with a payoff worth carrying back to the boat?
+**GO recorded at #941 after corrections #951-#953.**
 
 ## Original OceanGame Convergence
 
