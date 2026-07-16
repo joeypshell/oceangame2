@@ -117,6 +117,7 @@ func _seed_pending_survey(main) -> void:
 	profile.complete_material_project(_project_by_id(main._world, ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID), false)
 	var target: Dictionary = main._world.get_survey_targets()[0]
 	main._player.global_position = target.get("center", Vector2.ZERO)
+	main._anomaly_survey.scanner_action(main._world, main._player)
 	main._anomaly_survey.update(main._world, main._player, float(target.get("interaction_seconds", 1.0)) + 0.1)
 	_expect(main._anomaly_survey.has_pending_discovery(), "survey setup did not create pending state")
 

@@ -68,7 +68,7 @@ func _run() -> void:
 		ExpansionProfileState.TITANIUM_MATERIAL_ID: 1,
 		ExpansionProfileState.COIL_MATERIAL_ID: 1,
 	}, true)
-	_expect(runtime.status() == "ready" and runtime.debrief_lines() == ["P: Build survey scanner", "Use: Q/SCAN for guidance | Hold near survey signals"], "scanner recipe did not become ready: %s" % str(runtime.debrief_lines()))
+	_expect(runtime.status() == "ready" and runtime.debrief_lines() == ["P: Build survey scanner", "Use: Q/SCAN near signal | Hold position to survey"], "scanner recipe did not become ready: %s" % str(runtime.debrief_lines()))
 	var scanner_completed: Dictionary = runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
 	_expect(bool(scanner_completed.get("changed", false)) and scanner_completed.get("reason") == "completed", "ready scanner project did not complete")
 	_expect(profile.material_inventory().is_empty(), "scanner did not consume the exact Ti1 + Coil1 recipe")

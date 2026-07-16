@@ -196,6 +196,7 @@ func _prepare_partial_survey() -> bool:
 	_main._player.reset_motion()
 	_main._last_status_note = ""
 	_main._process(0.0)
+	_main._anomaly_survey.scanner_action(_main._world, _main._player)
 	_main._process(float(target.get("interaction_seconds", 0.0)) * PARTIAL_PROGRESS_RATIO)
 	_main._update_status_label()
 	var progress := float(_main._anomaly_survey.report().get("interaction", {}).get("progress", 0.0))

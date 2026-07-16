@@ -46,6 +46,7 @@ func _run() -> void:
 	_expect(runtime.has_scanner(), "resource setup did not own project-built scanner")
 	player.global_position = target.get("center", Vector2.ZERO)
 	_expect(runtime.overlay_text(world, player) == str(target.get("clue_label", "")), "resource clue was not source-derived")
+	_expect(runtime.scanner_action(world, player).get("reason") == "activated", "Q/SCAN did not activate resource research")
 	var partial: Dictionary = runtime.update(world, player, 1.0)
 	_expect(str(partial.get("state", "")) == "progress", "resource survey did not progress without anomaly lead")
 	_expect(float(partial.get("survey", {}).get("progress", 0.0)) > 0.0, "resource survey progress missing")
@@ -53,6 +54,7 @@ func _run() -> void:
 	_expect(str(runtime.update(world, player, 0.0).get("state", "")) == "canceled", "resource leave-range did not cancel")
 
 	player.global_position = target.get("center", Vector2.ZERO)
+	runtime.scanner_action(world, player)
 	var completed: Dictionary = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
 	_expect(bool(completed.get("pending", false)), "resource survey did not create pending finding")
 	var pending: Dictionary = runtime.report().get("expedition", {}).get("pending", {})
@@ -128,6 +130,7 @@ func _project_by_id(world, project_id: String) -> Dictionary:
 
 func _complete_pending(runtime, world, player, target: Dictionary) -> void:
 	player.global_position = target.get("center", Vector2.ZERO)
+	runtime.scanner_action(world, player)
 	var completed: Dictionary = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
 	_expect(bool(completed.get("pending", false)) and runtime.has_pending_discovery(), "resource survey did not recreate pending finding")
 

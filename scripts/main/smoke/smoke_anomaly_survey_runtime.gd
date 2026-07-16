@@ -53,8 +53,11 @@ func _run() -> void:
 	var target := _target_by_id(target_world, TARGET_ID)
 	_expect(not target.is_empty(), "source-authored survey target missing at runtime")
 	player.global_position = target.get("center", Vector2.ZERO)
-	var initial: Dictionary = runtime.update(target_world, player, 0.0)
-	_expect(str(initial.get("state", "")) == "progress", "survey completed instantly")
+	var initial: Dictionary = runtime.update(target_world, player, 1.0)
+	_expect(str(initial.get("state", "")) == "awaiting_activation", "survey advanced before Q/SCAN activation")
+	_expect(is_zero_approx(float(initial.get("survey", {}).get("progress", -1.0))), "proximity-only survey retained progress")
+	var activated: Dictionary = runtime.scanner_action(target_world, player)
+	_expect(activated.get("reason") == "activated", "Q/SCAN did not activate the nearby survey")
 	var partial: Dictionary = runtime.update(target_world, player, 1.0)
 	var progress := float(partial.get("survey", {}).get("progress", 0.0))
 	_expect(progress > 0.0 and progress < 1.0, "survey did not report partial progress")
@@ -64,6 +67,10 @@ func _run() -> void:
 	_expect(not runtime.has_pending_discovery(), "canceled survey created pending discovery")
 
 	player.global_position = target.get("center", Vector2.ZERO)
+	var retry_wait: Dictionary = runtime.update(target_world, player, 1.0)
+	_expect(str(retry_wait.get("state", "")) == "awaiting_activation", "returning to a canceled survey did not require a new Q/SCAN press")
+	_expect(is_zero_approx(float(retry_wait.get("survey", {}).get("progress", -1.0))), "canceled survey resumed from proximity")
+	runtime.scanner_action(target_world, player)
 	var completed: Dictionary = runtime.update(target_world, player, float(target.get("interaction_seconds", 0.0)))
 	_expect(bool(completed.get("pending", false)), "completed survey did not create pending discovery")
 	_expect(runtime.has_pending_discovery(), "pending discovery owner remained empty")
@@ -98,6 +105,7 @@ func _run() -> void:
 	player.global_position = regional_target.get("center", Vector2.ZERO)
 	var regional_clue := runtime.overlay_text(regional_world, player)
 	_expect(regional_clue == str(regional_target.get("clue_label", "")), "regional clue did not use source text")
+	runtime.scanner_action(regional_world, player)
 	var regional_complete: Dictionary = runtime.update(
 		regional_world,
 		player,
@@ -117,6 +125,7 @@ func _run() -> void:
 		"regional hazard cleanup committed discovery"
 	)
 	player.global_position = regional_target.get("center", Vector2.ZERO)
+	runtime.scanner_action(regional_world, player)
 	regional_complete = runtime.update(
 		regional_world,
 		player,
@@ -206,6 +215,7 @@ func _exercise_harmonic_return(runtime, progression, profile, world, player) -> 
 	_expect(str(_target_by_id(world, HARMONIC_TARGET_ID).get("state", "")) == "available", "light-owned harmonic target did not become available")
 
 	player.global_position = target.get("center", Vector2.ZERO)
+	_expect(runtime.scanner_action(world, player).get("reason") == "activated", "Q/SCAN did not activate the harmonic survey")
 	var partial: Dictionary = runtime.update(world, player, 1.0)
 	var partial_progress := float(partial.get("survey", {}).get("progress", 0.0))
 	_expect(partial_progress > 0.0 and partial_progress < 1.0, "light-owned harmonic survey did not report partial progress")
@@ -216,6 +226,7 @@ func _exercise_harmonic_return(runtime, progression, profile, world, player) -> 
 
 	for reason in ["hazard", "oxygen_failure", "combat_defeat", "reset"]:
 		player.global_position = target.get("center", Vector2.ZERO)
+		runtime.scanner_action(world, player)
 		runtime.update(world, player, 1.0)
 		runtime.clear_unbanked(reason, world)
 		_expect(
@@ -225,6 +236,7 @@ func _exercise_harmonic_return(runtime, progression, profile, world, player) -> 
 		)
 
 	player.global_position = target.get("center", Vector2.ZERO)
+	runtime.scanner_action(world, player)
 	var pending: Dictionary = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
 	_expect(bool(pending.get("pending", false)), "completed harmonic survey did not become pending")
 	runtime.clear_unbanked("hazard", world)
@@ -235,6 +247,7 @@ func _exercise_harmonic_return(runtime, progression, profile, world, player) -> 
 	)
 
 	player.global_position = target.get("center", Vector2.ZERO)
+	runtime.scanner_action(world, player)
 	pending = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
 	_expect(bool(pending.get("pending", false)), "harmonic survey did not restart after cleanup")
 	player.global_position = world.get_extraction_center()
@@ -307,6 +320,7 @@ func _exercise_abyssal_return(runtime, _progression, profile, world, player) -> 
 	_expect(str(_target_by_id(world, ABYSSAL_TARGET_ID).get("state", "")) == "available", "pressure-owned abyssal target did not become available")
 
 	player.global_position = target.get("center", Vector2.ZERO)
+	_expect(runtime.scanner_action(world, player).get("reason") == "activated", "Q/SCAN did not activate the abyssal survey")
 	var partial: Dictionary = runtime.update(world, player, 1.0)
 	var partial_progress := float(partial.get("survey", {}).get("progress", 0.0))
 	_expect(partial_progress > 0.0 and partial_progress < 1.0, "protected abyssal survey did not report partial progress")
@@ -316,6 +330,7 @@ func _exercise_abyssal_return(runtime, _progression, profile, world, player) -> 
 
 	for reason in ["hazard", "oxygen_failure", "combat_defeat", "reset", "nightfall"]:
 		player.global_position = target.get("center", Vector2.ZERO)
+		runtime.scanner_action(world, player)
 		runtime.update(world, player, 1.0)
 		runtime.clear_unbanked(reason, world)
 		_expect(
@@ -325,6 +340,7 @@ func _exercise_abyssal_return(runtime, _progression, profile, world, player) -> 
 		)
 
 	player.global_position = target.get("center", Vector2.ZERO)
+	runtime.scanner_action(world, player)
 	var pending: Dictionary = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
 	_expect(bool(pending.get("pending", false)), "completed abyssal survey did not become pending")
 	_expect(pending.get("note") == "Abyssal source charted | Return to boat", "abyssal pending feedback drifted")
@@ -337,6 +353,7 @@ func _exercise_abyssal_return(runtime, _progression, profile, world, player) -> 
 	)
 
 	player.global_position = target.get("center", Vector2.ZERO)
+	runtime.scanner_action(world, player)
 	pending = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
 	_expect(bool(pending.get("pending", false)), "abyssal survey did not restart after cleanup")
 	player.global_position = world.get_extraction_center()
