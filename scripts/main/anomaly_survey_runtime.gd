@@ -36,9 +36,41 @@ func scanner_action(world, player) -> Dictionary:
 			return _note_result(false, "project_required", "Scanner project | Ti 1 + Coil 1 | Build at night")
 		return _note_result(false, "blueprint_required", "Find scanner blueprint beyond east current")
 	var target := _survey_target_at(world, player.global_position) if world != null and player != null else {}
-	if not target.is_empty() and not _profile.has_completed_discovery(str(target.get("discovery_id", ""))):
-		return _note_result(false, "active", "Scanner active | Hold position")
-	return _note_result(false, "ready", "Scanner ready | Approach a survey signal")
+	if target.is_empty():
+		return _note_result(false, "ready", "Scanner ready | Approach a survey signal")
+	var target_id := str(target.get("id", ""))
+	var discovery_id := str(target.get("discovery_id", ""))
+	if _profile.has_completed_discovery(discovery_id):
+		_interaction.reset()
+		_set_target_state(world, target_id, "completed")
+		return _note_result(false, "completed", _completed_note(target))
+	if _expedition.has_pending():
+		_interaction.reset()
+		var same_pending: bool = _expedition.pending_discovery_id() == discovery_id
+		_set_target_state(world, target_id, "pending" if same_pending else "locked")
+		return _note_result(false, "pending" if same_pending else "pending_exists", _pending_status_note())
+	if not _profile.has_capability(str(target.get("required_capability_id", ""))):
+		_interaction.reset()
+		_set_target_state(world, target_id, "locked")
+		return _note_result(false, "scanner_required", "Scanner required")
+	if not _has_required_light(target):
+		_interaction.reset()
+		_set_target_state(world, target_id, "locked")
+		return _note_result(false, "light_required", _light_required_note(target))
+	if not _has_required_pressure_protection(target):
+		_interaction.reset()
+		_set_target_state(world, target_id, "locked")
+		return _note_result(false, "pressure_required", _pressure_required_note(target))
+	var activation: Dictionary = _interaction.activate(target)
+	if str(activation.get("state", "")) != "activated":
+		return _note_result(false, "invalid", "Survey signal unavailable")
+	_set_target_state(world, target_id, "active")
+	return _note_result(
+		bool(activation.get("changed", false)),
+		"activated",
+		str(activation.get("note", "Scanner active | Hold position")),
+		{"target_id": target_id}
+	)
 
 
 func update(world, player, delta: float) -> Dictionary:
@@ -81,9 +113,10 @@ func update(world, player, delta: float) -> Dictionary:
 		_set_target_state(world, target_id, "locked")
 		return _note_result(false, "pressure_required", _pressure_required_note(target))
 
-	_set_target_state(world, target_id, "active")
 	var survey_result: Dictionary = _interaction.update(target, delta)
-	if str(survey_result.get("state", "")) != "complete":
+	var interaction_state := str(survey_result.get("state", ""))
+	_set_target_state(world, target_id, "active" if interaction_state in ["progress", "complete"] else "available")
+	if interaction_state != "complete":
 		_last_note = str(survey_result.get("note", "Survey anomaly"))
 		return {"state": survey_result.get("state", "progress"), "note": _last_note, "survey": survey_result}
 

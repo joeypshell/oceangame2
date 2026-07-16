@@ -47,6 +47,7 @@ func capture_and_quit(capture_dir: String) -> void:
 	if not await _capture_pair(capture_dir, "mineral_clue", target["center"] + TARGET_CAMERA_OFFSET, TARGET_CAMERA_ZOOM):
 		return
 
+	_main._anomaly_survey.scanner_action(_main._world, _main._player)
 	_main._process(PARTIAL_SECONDS)
 	_main._update_status_label()
 	var progress := float(_main._anomaly_survey.report().get("interaction", {}).get("progress", 0.0))

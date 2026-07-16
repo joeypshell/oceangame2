@@ -130,6 +130,7 @@ func _prepare_pending_survey_state() -> bool:
 	_main._player.reset_motion()
 	_main._last_status_note = ""
 	_main._process(0.0)
+	_main._anomaly_survey.scanner_action(_main._world, _main._player)
 	_main._process(float(target.get("interaction_seconds", 0.0)) + 0.01)
 	var status := _status_text()
 	if not _main._anomaly_survey.has_pending_discovery() or status.to_lower().find("return to surface boat") == -1:

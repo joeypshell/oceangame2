@@ -76,6 +76,7 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 	var oxygen_before: float = _oxygen_seconds
 	var held_before: int = _held_salvage
 	_player.global_position = target["center"]
+	_press_key(KEY_Q)
 	_process(1.0)
 	var partial: float = float(_main._anomaly_survey.report().get("interaction", {}).get("progress", 0.0))
 	if not _require(partial > 0.0 and partial < 1.0 and _oxygen_seconds < oxygen_before, "partial survey progress or oxygen pressure drifted"):
@@ -139,6 +140,7 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 
 func _complete_survey(target: Dictionary, expected_held: int, expected_wallet: int) -> bool:
 	_player.global_position = target["center"]
+	_press_key(KEY_Q)
 	_process(float(target.get("interaction_seconds", 0.0)) + 0.1)
 	return _require(
 		_main._anomaly_survey.has_pending_discovery()
@@ -185,6 +187,13 @@ func _project_by_id(project_id: String) -> Dictionary:
 		if str(project.get("id", "")) == project_id:
 			return project
 	return {}
+
+
+func _press_key(keycode: Key) -> void:
+	var event := InputEventKey.new()
+	event.pressed = true
+	event.keycode = keycode
+	_main._unhandled_input(event)
 
 
 func _prepare_current_map() -> void:

@@ -29,6 +29,7 @@ func capture_and_quit(capture_dir: String) -> void:
 	_main._player.global_position = target["center"]
 	_main._player.set_physics_process(false)
 	_main._hazard_interactions_enabled = false
+	_main._anomaly_survey.scanner_action(_main._world, _main._player)
 	_main._process(PARTIAL_SECONDS)
 	_main.set_process(false)
 	_main._update_status_label()

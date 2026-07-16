@@ -69,6 +69,7 @@ func _smoke_expansion_05_practical_research_and_quit() -> void:
 	var before_ids := _active_material_ids()
 	var oxygen_before := _oxygen_seconds
 	_player.global_position = target["center"]
+	_press_key(KEY_Q)
 	_process(1.0)
 	var partial_progress := float(_main._anomaly_survey.report().get("interaction", {}).get("progress", 0.0))
 	if not _require(partial_progress > 0.0 and partial_progress < 1.0 and _oxygen_seconds < oxygen_before, "partial survey progress or oxygen pressure drifted"):
@@ -224,8 +225,16 @@ func _seed_current_stabilizer(profile) -> bool:
 
 func _complete_research(target: Dictionary) -> bool:
 	_player.global_position = target["center"]
+	_press_key(KEY_Q)
 	_process(float(target.get("interaction_seconds", 0.0)) + 0.1)
 	return _require(_main._anomaly_survey.has_pending_discovery(), "resource survey did not create pending research")
+
+
+func _press_key(keycode: Key) -> void:
+	var event := InputEventKey.new()
+	event.pressed = true
+	event.keycode = keycode
+	_main._unhandled_input(event)
 
 
 func _transition(connector_id: String, expected_map_id: String) -> bool:
