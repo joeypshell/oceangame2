@@ -25,6 +25,7 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_12_SOURCE_STATE_CONTRACT.md`
 - `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_13_PLAN.md`
+- `docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md`
 
 ## Current State
 
@@ -36,8 +37,8 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: none; the Expansion 13 implementation milestone and issue batch have not been created.
-- Proposed: Expansion 13 Southeast Wreck Return is selected in #958. It will use the farthest empty southeast chamber, existing pressure/cutter/scanner capabilities, and honest oxygen-distance pressure without new terrain or a new upgrade.
+- Committed: Expansion 13 Southeast Wreck Return is active in milestone #39 through #960-#969. It uses the farthest empty southeast chamber, existing pressure/cutter/scanner capabilities, and honest oxygen-distance pressure without new terrain or a new upgrade.
+- Proposed: none while Expansion 13 is active.
 - Directional: pure oxygen-capacity progression, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
@@ -86,7 +87,7 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 ## Roadmap Rules
 
 - Do not reopen completed expansion batches merely to keep the queue full.
-- Create only the selected Expansion 13 Southeast Wreck Return implementation milestone/batch next; do not select another later direction before it closes.
+- Resolve only the frozen Expansion 13 batch #960-#969; stop at its player GO/HOLD gate and do not select another direction before it closes.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
 - Do not use teleports, prompted connectors, map menus, or the current stabilizer for normal traversal of the full level.

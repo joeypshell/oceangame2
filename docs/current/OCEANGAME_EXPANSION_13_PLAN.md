@@ -2,8 +2,9 @@
 
 Date: 2026-07-16
 
-Status: Selected by planning issue #958. The implementation milestone and issue
-batch have not been created.
+Status: Active in milestone #39 through frozen issue batch #960-#969. The
+source/state contract is locked in
+`docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md`.
 
 ## Decision
 
