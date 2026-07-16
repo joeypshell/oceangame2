@@ -129,8 +129,8 @@ func _test_profile_migration() -> void:
 	_expect(bool(deposit.get("changed", false)), "migrated profile could not deposit material")
 	var reloaded := ExpansionProfileState.new(TEST_PATH)
 	report = reloaded.load_profile()
-	_expect(report.get("status") == "loaded" and report.get("schema_version") == 3, "migrated profile did not persist as v3: %s" % str(report))
-	_expect(reloaded.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID) == 1, "v2 reload lost material: %s" % str(report))
+	_expect(report.get("status") == "loaded" and report.get("schema_version") == ExpansionProfileState.SCHEMA_VERSION, "migrated profile did not persist at the current schema: %s" % str(report))
+	_expect(reloaded.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID) == 1, "migrated reload lost material: %s" % str(report))
 
 
 func _build_world(path: String):
