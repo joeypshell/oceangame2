@@ -5,6 +5,7 @@ const ExpansionProfileState := preload("res://scripts/main/expansion_profile_sta
 const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
 const SurveyInteractionController := preload("res://scripts/main/survey_interaction_controller.gd")
 const SurveyDependencyState := preload("res://scripts/main/survey_dependency_state.gd")
+const RegionalJourneyPresentation := preload("res://scripts/main/regional_journey_presentation.gd")
 
 const SCANNER_CAPABILITY_ID := ProgressionContract.SCANNER_CAPABILITY_ID
 const COMMIT_NOTE := "Discovery committed at surface boat"
@@ -18,6 +19,7 @@ var _profile
 var _expedition
 var _interaction
 var _dependencies
+var _regional_presentation
 var _last_note := ""
 var _last_result := ""
 
@@ -31,6 +33,7 @@ func _init(progression_runtime, persist_profile := true, profile_state = null) -
 	_expedition = ExpeditionDiscoveryState.new()
 	_interaction = SurveyInteractionController.new()
 	_dependencies = SurveyDependencyState.new(_profile)
+	_regional_presentation = RegionalJourneyPresentation.new()
 
 
 func scanner_action(world, player) -> Dictionary:
@@ -186,6 +189,9 @@ func overlay_text(world, player) -> String:
 		return _nearby_scan_text(nearby_target, clue)
 	if not _last_result.is_empty():
 		return _last_result
+	var journey_promise: String = _regional_presentation.promise_text(world, _profile)
+	if not journey_promise.is_empty():
+		return journey_promise
 	if _profile.has_completed_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID):
 		return "Cutter plan recovered | Salvage cutter project"
 	if not has_scanner():
@@ -209,6 +215,7 @@ func is_status_note(status_note: String) -> bool:
 		or status_note.begins_with("Mineral")
 		or status_note.begins_with("Pressure")
 		or status_note.begins_with("Abyssal")
+		or _regional_presentation.is_feedback_note(status_note)
 		or status_note.find("light required") != -1
 	)
 
@@ -391,6 +398,9 @@ func _pending_metadata(target: Dictionary) -> Dictionary:
 
 
 func _survey_complete_note(target: Dictionary) -> String:
+	var regional_note: String = _regional_presentation.survey_complete_note(target)
+	if not regional_note.is_empty():
+		return regional_note
 	if not str(target.get("required_pressure_capability_id", "")).strip_edges().is_empty():
 		return "Abyssal source charted | Return to boat"
 	return "Research complete - return to surface boat" if _is_resource_target(target) else "Survey complete - return to surface boat"
@@ -410,6 +420,9 @@ func _pending_status_note() -> String:
 
 func _pending_return_text() -> String:
 	var metadata: Dictionary = _expedition.pending_metadata()
+	var regional_note: String = _regional_presentation.pending_return_text(metadata)
+	if not regional_note.is_empty():
+		return regional_note
 	if not str(metadata.get("required_pressure_capability_id", "")).is_empty():
 		return "Abyssal chart pending | Return to surface boat before another scan"
 	return "Research pending | Return to surface boat before another scan" if str(metadata.get("target_type", "")) == RESOURCE_TARGET_TYPE else "Discovery pending | Return to surface boat before another scan"
@@ -419,6 +432,9 @@ func _nearby_scan_text(target: Dictionary, clue: String) -> String:
 	var interaction: Dictionary = _interaction.report()
 	if str(interaction.get("active_target_id", "")) == str(target.get("id", "")):
 		return _last_note
+	var regional_prompt: String = _regional_presentation.nearby_scan_text(target)
+	if not regional_prompt.is_empty():
+		return regional_prompt
 	var label := str(target.get("interaction_label", "Survey signal")).strip_edges()
 	var prompt := "Q/SCAN: %s" % (label if not label.is_empty() else "Survey signal")
 	return "%s\n%s" % [clue, prompt] if not clue.is_empty() else prompt

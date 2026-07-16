@@ -244,6 +244,10 @@ func get_final_dive_objective_seeds() -> Array:
 			seeds.append(seed.duplicate(true))
 	return seeds
 
+
+func get_regional_journeys() -> Array:
+	return _duplicate_dictionary_array(_map_data.get("regional_journeys", []))
+
 func get_survey_targets() -> Array:
 	return _survey_target_runtime.get_targets()
 

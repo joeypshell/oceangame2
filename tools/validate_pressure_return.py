@@ -104,7 +104,7 @@ SURVEY_VALUES = {
     "interaction_label": "Survey abyssal source",
     "clue_label": "Abyssal signal | Pressure suit required",
     "finding_label": "Discovery logged: Abyssal harmonic source",
-    "next_lead_label": "Abyssal source charted | Further descent unresolved",
+    "next_lead_label": "Abyssal chart | Southeast wreck echo",
     "discovery_id": DISCOVERY_ID,
     "commit_map_id": MAP_ID,
     "commit_map_path": "res://maps/production_level_01.greybox.json",
