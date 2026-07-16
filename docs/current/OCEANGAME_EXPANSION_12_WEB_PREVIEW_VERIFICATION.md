@@ -4,7 +4,55 @@ Date: 2026-07-15
 
 Issue: #940 `Verify the exact Expansion 12 public Web release candidate`
 
-## Result
+## Player-Hold Correction Deployment
+
+**PASS for technical deployment. Player GO remains open in #941.** Feedback on
+the original release candidate identified two bounded scanner-flow defects:
+
+- [#951](https://github.com/joeypshell/oceangame2/issues/951) made `Q/SCAN`
+  explicitly activate a nearby survey. Proximity alone no longer advances it,
+  and leaving range disarms the interaction.
+- [#952](https://github.com/joeypshell/oceangame2/issues/952) keeps scanner
+  guidance and progress visible at full cargo and explains that a pending
+  result must be returned to the surface boat before another scan.
+
+Corrected deployment:
+
+- exact SHA: `d864a9ed744bbeb2e72e4b1d72bc1112069fdad6`
+- build version: `d864a9e`
+- [PR #954](https://github.com/joeypshell/oceangame2/pull/954): explicit
+  scanner activation
+- [PR #955](https://github.com/joeypshell/oceangame2/pull/955): full-cargo and
+  pending-return feedback
+- [Godot Web Export run 29461275873](https://github.com/joeypshell/oceangame2/actions/runs/29461275873): success, including Pages deploy
+- [Godot Smoke run 29461276679](https://github.com/joeypshell/oceangame2/actions/runs/29461276679): success
+- [Progression Audit run 29461275882](https://github.com/joeypshell/oceangame2/actions/runs/29461275882): success
+- fresh correction review URL:
+  `https://joeypshell.github.io/oceangame2/?review=d864a9ed744bbeb2e72e4b1d72bc1112069fdad6`
+
+The focused anomaly-survey journey reports
+`explicit_q=true full_cargo_scan=true pending_boat_guidance=true`. It verifies
+that no progress occurs before `Q/SCAN`, a survey can start and complete while
+cargo remains full, and a second target gives explicit boat-return guidance
+while one result is pending. The existing one-pending-result and exact-once
+boat-commit rules remain unchanged.
+
+Fresh ignored review captures at desktop and mobile sizes verified the 50%
+abyssal survey state and the visible text `Abyssal chart pending | Return to
+surface boat before another scan`. No map source, accepted baseline, or
+generated capture was committed.
+
+The public Web checker matched the exact corrected SHA, initialized the root,
+fresh-review, and slice-fallback URLs, passed desktop/wide/mobile framing and
+touch probes, and reported no failed requests, missing assets, `SCRIPT ERROR`,
+or Godot `ERROR:` output. A separate live browser inspection showed build
+`d864a9e`, the isolated fresh profile, and the contiguous full level with a
+clean console.
+
+These checks prove the corrected runtime is deployed. They do not replace the
+player journey in #941, which remains the only Expansion 12 GO/HOLD gate.
+
+## Original Release Result
 
 **PASS.** The public GitHub Pages preview serves the reviewed Expansion 12
 release candidate at:
@@ -77,4 +125,3 @@ node tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expe
 python tools/check_file_lengths.py
 git diff --check
 ```
-
