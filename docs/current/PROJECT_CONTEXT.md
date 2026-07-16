@@ -38,7 +38,7 @@ Expansion 11 is complete with player GO through #914 plus corrections #925/#927.
 
 Expansion 12 is complete with player GO through #941 plus player-HOLD corrections #951-#953. The deep-harmonic clue now reveals a durable Ti2/Rubber1/Gel1 night-built pressure suit for one scoutable lower-central pressure threshold and protected abyssal survey. Explicit `Q/SCAN` activation, full-cargo scanner feedback, pending boat-return guidance, deterministic journey coverage, and exact-SHA Web verification pass at runtime `d864a9e`.
 
-Expansion 13 Southeast Wreck Return is active in milestone #39 through frozen batch #960-#969. It uses the empty farthest southeast chamber, the existing pressure suit/cutter/scanner chain, and a real 78.7-second interaction-inclusive route demand so the optional session oxygen upgrade improves margin without becoming a mandatory score lock. #960-#967 now lock and implement the source/state contract, validators, authored journey, durable recorder clearance, compact objective/result feedback, deterministic full-route coverage, focused desktop/mobile captures, and accepted visual baseline; #968-#969 remain deployment and the player GO/HOLD lane.
+Expansion 13 Southeast Wreck Return is active in milestone #39 through frozen batch #960-#969. It uses the empty farthest southeast chamber, the existing pressure suit/cutter/scanner chain, and a real 78.7-second interaction-inclusive route demand so the optional session oxygen upgrade improves margin without becoming a mandatory score lock. #960-#968 now lock and implement the source/state contract, validators, authored journey, durable recorder clearance, compact objective/result feedback, deterministic full-route coverage, focused desktop/mobile captures, accepted visual baseline, and exact-SHA public candidate `a9d1431`; only #969 remains as the player GO/HOLD gate.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -68,7 +68,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Completed Expansion 10 handoff: `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md` plus its linked plan, source contract, visual decision, Web verification, and correction #900
 - Completed Expansion 11 handoff: `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #925/#927, and player GO #914
 - Completed Expansion 12 handoff: `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #951-#953, and player GO #941
-- Active Expansion 13 handoff: `docs/current/OCEANGAME_EXPANSION_13_PLAN.md`, its source/state contract, and `docs/current/OCEANGAME_EXPANSION_13_VISUAL_BASELINE_DECISION.md`, implemented through milestone #39 and #960-#969
+- Active Expansion 13 handoff: `docs/current/OCEANGAME_EXPANSION_13_PLAN.md`, its source/state contract, visual decision, and `docs/current/OCEANGAME_EXPANSION_13_WEB_PREVIEW_VERIFICATION.md`, implemented through milestone #39 and #960-#969
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
@@ -209,7 +209,7 @@ Current issue state as of 2026-07-16:
 - Closed: #880-#889 plus correction #900 via PR #901 completed the east-current regional journey, player GO, and exact-SHA Web verification.
 - Closed: #905-#914 plus corrections #925/#927 completed Expansion 11 with player GO and exact-SHA Web verification.
 - Closed: #932-#941 plus corrections #951-#953 completed Expansion 12 with player GO and exact-SHA Web verification.
-- Active: #968-#969 deploy and player-test Expansion 13 Southeast Wreck Return under milestone #39; #960-#967 are complete and #969 remains the player GO/HOLD gate.
+- Active: #969 player-tests Expansion 13 Southeast Wreck Return under milestone #39; #960-#968 are complete and the public candidate is exact SHA `a9d1431`.
 - Open bookkeeping: #849 names three UID sidecars already committed by `e825c88`; it does not block planning and should be closed separately with that evidence.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.

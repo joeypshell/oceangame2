@@ -114,6 +114,7 @@ Current release and expansion handoff:
 - [OceanGame Expansion 13 Southeast Wreck Return Plan](docs/current/OCEANGAME_EXPANSION_13_PLAN.md)
 - [Expansion 13 Source/State Contract](docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md)
 - [Expansion 13 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_13_VISUAL_BASELINE_DECISION.md)
+- [Expansion 13 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_13_WEB_PREVIEW_VERIFICATION.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
