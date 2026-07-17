@@ -223,7 +223,7 @@ def transform_gameplay_sections(source_sections: dict | None = None) -> tuple[di
                 "section": section,
                 "id": record_id,
                 "fields": deepcopy(fields),
-                "intent": "Full-level scanner artifact source; slices remain unchanged.",
+                "intent": "Full-level scanner-to-cutter journey source; slices remain unchanged.",
             }
             for (section, record_id), fields in CANDIDATE_SOURCE_OVERRIDES.items()
         ],

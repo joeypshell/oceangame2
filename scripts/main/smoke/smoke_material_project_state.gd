@@ -1,11 +1,13 @@
 extends SceneTree
 
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
+const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime.gd")
 const ExpeditionDayDebrief := preload("res://scripts/main/expedition_day_debrief.gd")
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
 const ProgressionProjectTracker := preload("res://scripts/main/progression_project_tracker.gd")
+const ScannerCutterJourneyPresentation := preload("res://scripts/main/scanner_cutter_journey_presentation.gd")
 const TEST_PATH := "user://oceangame2_material_project_test.json"
 const SLICE_01 := "res://maps/production_slice_01.greybox.json"
 const LEVEL_01 := "res://maps/production_level_01.greybox.json"
@@ -158,6 +160,9 @@ func _test_cutter_blueprint_contract() -> void:
 	world.load_greybox()
 	var runtime := MaterialProjectRuntime.new(profile)
 	runtime.on_map_loaded(world)
+	var journey_presentation := ScannerCutterJourneyPresentation.new()
+	var survey_runtime := AnomalySurveyRuntime.new(null, false, profile)
+	survey_runtime.on_map_loaded(world)
 	for project_id in [ExpansionProfileState.PROPULSION_FINS_PROJECT_ID, ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID]:
 		var project: Dictionary = runtime.project_definition_for(project_id)
 		profile.complete_discovery(str(project.get("required_discovery_id", "")), false)
@@ -168,6 +173,9 @@ func _test_cutter_blueprint_contract() -> void:
 		var prerequisite: Dictionary = profile.complete_material_project(project, false)
 		_expect(bool(prerequisite.get("changed", false)), "blueprint fixture could not complete prerequisite %s: %s" % [project_id, str(prerequisite)])
 	runtime.on_map_loaded(world)
+	var opening_lead := survey_runtime.overlay_text(world, null)
+	_expect(opening_lead == "Maintenance signal | Beyond east current", "fresh scanner state omitted the broad place-based maintenance lead: %s" % opening_lead)
+	_expect(opening_lead.to_lower().find("cutter") == -1 and opening_lead.find("Ti ") == -1, "fresh scanner state exposed the undiscovered cutter recipe")
 	_expect(runtime.status_for(ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID) == "knowledge_required", "fresh cutter project did not require its blueprint")
 	_expect(runtime.status() == "unavailable" and runtime.debrief_lines().is_empty(), "cutter project guidance appeared before blueprint commitment")
 	_expect(runtime.active_day_build_feedback().find("Cutter") == -1, "daytime feedback named cutter before blueprint commitment")
@@ -185,6 +193,8 @@ func _test_cutter_blueprint_contract() -> void:
 		false
 	)
 	_expect(bool(reward.get("changed", false)) and runtime.has_cutter_blueprint(), "committed artifact did not grant cutter blueprint")
+	survey_runtime._last_result = "Blueprint recovered: Salvage cutter"
+	_expect(survey_runtime.overlay_text(world, null) == "Blueprint recovered: Salvage cutter", "boat commitment did not own the blueprint result before the build")
 	_expect(runtime.project_definition().get("id") == ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, "optional project preempted committed cutter blueprint")
 	tracker.refresh(runtime.report(), {}, false)
 	_expect(tracker.visible and tracker.snapshot_text().find("Titanium  0/2") != -1 and tracker.snapshot_text().find("Coil  0/1") != -1, "committed blueprint did not expose Ti2/Coil1 tracker")
@@ -194,6 +204,11 @@ func _test_cutter_blueprint_contract() -> void:
 	_expect(runtime.try_build(ExpeditionDayState.PHASE_ACTIVE).get("reason") == "wrong_phase", "cutter built during active day")
 	var built: Dictionary = runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
 	_expect(bool(built.get("changed", false)) and runtime.has_cutter(), "blueprint-backed cutter did not build at night")
+	_expect(survey_runtime.overlay_text(world, null) == "Cutter ready | Return beyond east current to sealed wreck", "night build did not replace the stale blueprint result with the remembered wreck")
+	var payoff_target: Dictionary = world.get_tool_targets().filter(func(target): return str(target.get("id", "")) == ExpansionProfileState.SALVAGE_CUTTER_TARGET_ID)[0]
+	_expect(journey_presentation.completion_note(payoff_target, 300) == "Sealed wreck opened +300", "source-authored cutter payoff did not name the concrete result")
+	world.collect_tool_target(ExpansionProfileState.SALVAGE_CUTTER_TARGET_ID)
+	_expect(survey_runtime.overlay_text(world, null) == "Faint maintenance signal continues deeper southeast", "collected wreck did not leave one broad next mystery")
 	tracker.refresh(runtime.report(), {}, false)
 	_expect(not tracker.visible, "cutter tracker remained after exact-once build")
 	_expect(runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF).get("reason") == "already_completed", "cutter repeat build was not exact-once")
