@@ -28,10 +28,11 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md`
 - `docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_13_PLAYER_HOLD_CORRECTION_PLAN.md`
+- `docs/current/OCEANGAME_EXPANSION_13_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-12 are complete. Expansion 13 is back at HOLD in open milestone #39 after the `a9d1431` player review found arbitrary scanner targets, no explicit cutter blueprint, and weak forward drive. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
+Simple Diver Game 01-09 and OceanGame Expansions 01-12 are complete. Expansion 13 remains at player HOLD in open milestone #39, but #986-#990 have technically corrected its scanner-to-cutter journey and verified exact public runtime `89371d6`. #969 is the only remaining gate and requires at least five unfamiliar-player reviews. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
@@ -39,14 +40,14 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: correct Expansion 13 under #980 and player gate #969 before selecting another milestone.
-- Proposed: the correction plan's bounded scanner/artifact/progression batch; no Expansion 14 work.
+- Committed: run Expansion 13 player gate #969 before selecting another milestone.
+- Proposed: classify the unfamiliar-player findings as GO or a bounded HOLD; no Expansion 14 work.
 - Directional: pure oxygen-capacity progression, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-1. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - reopened after player HOLD; #980 plans the scanner/cutter/progression correction and #969 remains the final gate.
+1. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - correction #986-#990 is technically complete at `89371d6`; #969 remains the final unfamiliar-player gate.
 2. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - complete through #941 plus corrections #951-#953, with player GO and exact-SHA Web verification.
 3. [Expansion 11: Deep-Harmonic Light Return](https://github.com/joeypshell/oceangame2/milestone/37) - complete through #914 plus corrections #925/#927, with player GO and final exact-SHA Web verification.
 
@@ -88,12 +89,12 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Expansion 13 Player HOLD
 
-#960-#968 delivered and technically verified the southeast wreck journey at `a9d1431`, but the later fresh-profile review withdrew the recorded GO. #980 now owns a bounded correction for deliberate forward-cone scanning, a physical cutter-blueprint artifact, knowledge-gated project presentation, and a stronger place-based reason to continue. #969 remains open.
+#960-#968 delivered the original southeast wreck journey at `a9d1431`, but the later fresh-profile review withdrew the recorded GO. #980 planned and #986-#990 delivered deliberate forward-cone scanning, a physical cutter-blueprint artifact, knowledge-gated project presentation, deterministic correction coverage, accepted full-level evidence, and exact public runtime `89371d6`. #969 remains open for at least five unfamiliar-player reviews; automation cannot declare GO.
 
 ## Roadmap Rules
 
 - Do not reopen completed expansion batches merely to keep the queue full.
-- Resolve only the bounded Expansion 13 player-HOLD correction and return to #969 before selecting another milestone.
+- Complete #969's unfamiliar-player GO/HOLD review before selecting another milestone.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
 - Do not use teleports, prompted connectors, map menus, or the current stabilizer for normal traversal of the full level.

@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-12 are complete with player GO. Expansion 13 remains at player HOLD after review of exact runtime SHA `a9d1431` exposed arbitrary scanner targets, cutter-blueprint causality, and weak forward drive. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
+The compact diver foundation and OceanGame Expansions 01-12 are complete with player GO. Expansion 13 remains at player HOLD, but its bounded scanner-to-cutter correction is technically complete and publicly verified at exact runtime SHA `89371d6`. #969 and milestone #39 remain open for the unfamiliar-player gate. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff is the Expansion 13 player-HOLD correction plan under #980 and open player gate #969. Correct the scanner-to-cutter causal loop before selecting another expansion. Teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
+Current handoff is the open Expansion 13 player gate #969. The scanner-to-cutter causal loop is corrected; at least five unfamiliar players must now review the exact fresh-profile candidate before GO/HOLD closeout or selection of another expansion. Teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
 
 Core sources and operating docs:
 
@@ -117,6 +117,7 @@ Current release and expansion handoff:
 - [Expansion 13 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_13_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 13 Closeout](docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md)
 - [Expansion 13 Player-HOLD Correction Plan](docs/current/OCEANGAME_EXPANSION_13_PLAYER_HOLD_CORRECTION_PLAN.md)
+- [Expansion 13 HOLD Correction Visual And Web Verification](docs/current/OCEANGAME_EXPANSION_13_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -250,4 +251,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-12 meet that condition through the player-approved full cave, regional, light, and pressure returns. Expansion 13 remains technically stable but does not meet the player-experience condition until the scanner/cutter correction resolves its HOLD.
+The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-12 meet that condition through the player-approved full cave, regional, light, and pressure returns. Expansion 13 is technically corrected and stable, but it does not meet the player-experience condition until #969 records the required unfamiliar-player GO/HOLD review.
