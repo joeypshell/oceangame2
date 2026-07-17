@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-12 are complete with player GO. The player-approved contiguous `production_level_01` is the editor, local, and public Web default. The corrected abyssal pressure-return journey is verified at exact runtime SHA `d864a9e`; slices 01-04 remain unchanged, selectable regression fixtures.
+The compact diver foundation and OceanGame Expansions 01-13 are complete with player GO. The player-approved contiguous `production_level_01` is the editor, local, and public Web default. The Southeast Wreck Return is verified at exact runtime SHA `a9d1431`; slices 01-04 remain unchanged, selectable regression fixtures.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff starts with the completed Expansion 12 closeout and active Expansion 13 Southeast Wreck Return milestone (#960-#969). The selected plan and locked source/state contract govern implementation. Teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
+Current handoff starts with the completed Expansion 13 Southeast Wreck Return closeout (#960-#969). No next implementation milestone is selected; a fresh drift audit must choose one bounded direction before creating another batch. Teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
 
 Core sources and operating docs:
 
@@ -115,6 +115,7 @@ Current release and expansion handoff:
 - [Expansion 13 Source/State Contract](docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md)
 - [Expansion 13 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_13_VISUAL_BASELINE_DECISION.md)
 - [Expansion 13 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_13_WEB_PREVIEW_VERIFICATION.md)
+- [Expansion 13 Closeout](docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -248,4 +249,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-12 meet that condition, including a player-approved source-generated full cave, capability-gated regional and light returns, and one bounded pressure-protection journey that preserve continuous travel without connector shortcuts.
+The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-13 meet that condition, including a player-approved source-generated full cave, capability-gated regional, light, pressure, and southeast-wreck returns that preserve continuous travel without connector shortcuts.

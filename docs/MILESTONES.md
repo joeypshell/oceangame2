@@ -26,10 +26,11 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_13_PLAN.md`
 - `docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md`
+- `docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-12 are complete. #864 recorded player GO for the contiguous full level, #889 for the corrected east-current journey, #914 for the corrected light return, and #941 for the corrected abyssal pressure return. `production_level_01` remains the normal editor, local, and public Web default. The latest accepted runtime is exact SHA `d864a9e`; slices 01-04 remain unchanged regression/provenance fixtures.
+Simple Diver Game 01-09 and OceanGame Expansions 01-13 are complete. #864 recorded player GO for the contiguous full level, #889 for the corrected east-current journey, #914 for the corrected light return, #941 for the corrected abyssal pressure return, and #969 for the Southeast Wreck Return. `production_level_01` remains the normal editor, local, and public Web default. The latest accepted runtime is exact SHA `a9d1431`; slices 01-04 remain unchanged regression/provenance fixtures.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
@@ -37,16 +38,16 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: Expansion 13 Southeast Wreck Return is active in milestone #39 through #960-#969. It uses the farthest empty southeast chamber, existing pressure/cutter/scanner capabilities, and honest oxygen-distance pressure without new terrain or a new upgrade.
-- Proposed: none while Expansion 13 is active.
+- Committed: none. Expansion 13 is complete and no next implementation milestone is selected.
+- Proposed: none pending a fresh drift audit and one bounded planning decision.
 - Directional: pure oxygen-capacity progression, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-1. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - complete through #941 plus corrections #951-#953, with player GO and exact-SHA Web verification.
-2. [Expansion 11: Deep-Harmonic Light Return](https://github.com/joeypshell/oceangame2/milestone/37) - complete through #914 plus corrections #925/#927, with player GO and final exact-SHA Web verification.
-3. [Expansion 10: East-Current Regional Journey](https://github.com/joeypshell/oceangame2/milestone/36) - complete through #889, with player-gate correction #900, player GO, accepted full-level baseline, and exact-SHA Web verification.
+1. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - complete through #969, with player GO, accepted full-level baseline, and exact-SHA Web verification at `a9d1431`.
+2. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - complete through #941 plus corrections #951-#953, with player GO and exact-SHA Web verification.
+3. [Expansion 11: Deep-Harmonic Light Return](https://github.com/joeypshell/oceangame2/milestone/37) - complete through #914 plus corrections #925/#927, with player GO and final exact-SHA Web verification.
 
 ## Completed Expansion 04
 
@@ -84,10 +85,14 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 #932-#941 plus player-HOLD corrections #951-#953 are complete with GO. The deep-harmonic clue now leads to a durable Ti2/Rubber1/Gel1 night-built pressure suit, one scoutable pressure threshold, and one protected abyssal survey with canonical-boat commitment. Surveys require explicit `Q/SCAN`, work at full cargo, and explain pending boat return. Final exact-SHA Web verification passed at `d864a9e`.
 
+## Completed Expansion 13
+
+#960-#969 are complete with GO. The abyssal clue now leads through the existing pressure route to one cutter-opened southeast wreck recorder and explicit archive survey. The base tank remains viable but tight, optional oxygen margin is useful, and both cargo and pending knowledge return to the canonical boat. Exact-SHA Web verification passed at `a9d1431`.
+
 ## Roadmap Rules
 
 - Do not reopen completed expansion batches merely to keep the queue full.
-- Resolve only the frozen Expansion 13 batch #960-#969; stop at its player GO/HOLD gate and do not select another direction before it closes.
+- Run a fresh drift audit before selecting or batching the next bounded implementation milestone.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
 - Do not use teleports, prompted connectors, map menus, or the current stabilizer for normal traversal of the full level.

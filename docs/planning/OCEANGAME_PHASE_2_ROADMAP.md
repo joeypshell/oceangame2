@@ -2,10 +2,9 @@
 
 Date: 2026-07-16
 
-Status: Expansions 01-12 are complete with player GO. Expansion 12 closed after
-scanner-flow corrections #951-#953 and exact-SHA Web review at `d864a9e`.
-Planning issue #958 selects a southeast wreck return as Expansion 13. Milestone
-#39 and frozen batch #960-#969 now implement and review that direction.
+Status: Expansions 01-13 are complete with player GO. Expansion 13 closed
+through #969 after exact-SHA Web review at `a9d1431`. No next implementation
+milestone is selected; a fresh drift audit must choose one bounded direction.
 
 ## Decision
 
@@ -93,16 +92,11 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 13 Southeast Wreck Return is committed through milestone #39 and
-frozen issue batch #960-#969. Do not add or select a second direction while it
-is active.
+None. Expansion 13 is complete and no implementation batch is active.
 
 ### Proposed
 
-Expansion 13 Southeast Wreck Return is selected in
-`docs/current/OCEANGAME_EXPANSION_13_PLAN.md`. It will reuse the pressure suit,
-cutter, and scanner in the farthest empty southeast chamber, with honest
-oxygen-distance pressure and no topology change or new upgrade.
+None pending a fresh drift audit and one bounded planning decision.
 
 ### Directional
 
@@ -349,8 +343,8 @@ learned to reach, with a payoff worth carrying back to the boat?
 
 ### Expansion 13: Southeast Wreck Return
 
-Status: Active in milestone #39 through #960-#969. See
-`docs/current/OCEANGAME_EXPANSION_13_PLAN.md` and its source/state contract.
+Status: Complete with player GO in #969. See
+`docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`.
 
 Goal: turn the empty farthest southeast chamber into one memorable wreck
 journey that pays off the existing pressure suit, cutter, and scanner while
@@ -374,6 +368,7 @@ rebalance, enemy, vehicle, inventory, or broad art pass.
 Exit question: did the distant wreck turn prior upgrades and the far southeast
 route into a tense, memorable expedition whose discovery felt worth bringing
 back to the boat?
+**GO recorded at #969.**
 
 ## Original OceanGame Convergence
 
