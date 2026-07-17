@@ -6,14 +6,23 @@ const ScannerConeTargeting := preload("res://scripts/main/scanner_cone_targeting
 const ARTIFACT_ID := "lower_right_anomaly_survey"
 const BLUEPRINT_ID := "salvage_cutter_blueprint"
 const CUTTER_CAPABILITY_ID := "salvage_cutter"
+const SHOCK_PROD_CAPABILITY_ID := "shock_prod"
 const PAYOFF_ID := "salvage_sealed_wreck_cache"
 const BOAT_ENTRY_ID := "surface_boat_entry"
 const OPENING_LEAD := "Maintenance signal | Beyond east current"
-const NEXT_MYSTERY := "Faint maintenance signal continues deeper southeast"
+const REWARD_PENDING := "Wreck navigation data secured | Return to surface boat"
+const REWARD_COMMIT := "Navigation data logged: Southeast wreck coordinates"
+const NEXT_LEAD := "Wreck coordinates | Signal continues deep southeast"
 const ARTIFACT_ZOOM := 0.90
+const MATERIAL_ZOOM := 1.0
 const BOAT_CAMERA_ID := "production_level_boat_entry"
 const BOAT_APPROACH_CAMERA_ID := "expansion_13_pending_boat_return"
 const ARTIFACT_PARTIAL_SECONDS := 1.5
+const MATERIAL_CAPTURES := [
+	{"candidate_id": "material_titanium_entry", "material_id": "titanium_scrap", "state_id": "material_titanium"},
+	{"candidate_id": "material_rubber_entry", "material_id": "rubber_sheet", "state_id": "material_rubber"},
+	{"candidate_id": "material_coil_scanner_floor", "material_id": "conductive_coil", "state_id": "material_coil"},
+]
 
 var _artifact := {}
 var _payoff := {}
@@ -30,6 +39,12 @@ func capture_and_quit(capture_dir: String) -> void:
 	if not await _capture_artifact_sequence(capture_dir):
 		return
 	if not await _capture_return_and_commit(capture_dir):
+		return
+	if not _prepare_review_tools():
+		return
+	if not await _capture_tool_selection(capture_dir):
+		return
+	if not await _capture_material_sequence(capture_dir):
 		return
 	if not await _capture_payoff(capture_dir):
 		return
@@ -88,10 +103,7 @@ func _capture_artifact_sequence(capture_dir: String) -> bool:
 	if not await _capture_pair(capture_dir, "broad_artifact_clue", _artifact_frame):
 		return false
 
-	var miss: Dictionary = _main._anomaly_survey.scanner_action(_main._world, _main._player)
-	_main._player.show_scanner_action(miss, _main._anomaly_survey.report())
-	_main._last_status_note = str(miss.get("note", ""))
-	_main._update_status_label()
+	var miss: Dictionary = _main._use_active_tool()
 	var miss_presentation: Dictionary = _main._player.get_scanner_presentation_report()
 	if not _expect(
 		str(miss.get("reason", "")) == "ready"
@@ -104,10 +116,7 @@ func _capture_artifact_sequence(capture_dir: String) -> bool:
 		return false
 
 	_place_player(_scanner_pose)
-	var activation: Dictionary = _main._anomaly_survey.scanner_action(_main._world, _main._player)
-	_main._player.show_scanner_action(activation, _main._anomaly_survey.report())
-	_main._last_status_note = str(activation.get("note", ""))
-	_main._update_status_label()
+	var activation: Dictionary = _main._use_active_tool()
 	var acquired: Dictionary = _main._player.get_scanner_presentation_report()
 	if not _expect(
 		str(activation.get("reason", "")) == "activated"
@@ -184,26 +193,136 @@ func _capture_return_and_commit(capture_dir: String) -> bool:
 	return await _capture_pair(capture_dir, "cutter_blueprint_committed", boat_camera)
 
 
-func _capture_payoff(capture_dir: String) -> bool:
-	var built: Dictionary = ReviewProgressionFixture.complete_capability(_main, CUTTER_CAPABILITY_ID)
-	if not bool(built.get("ready", false)):
-		_fail("could not prepare the already-reviewed night cutter result: %s" % str(built))
-		return false
+func _prepare_review_tools() -> bool:
+	for capability_id in [CUTTER_CAPABILITY_ID, SHOCK_PROD_CAPABILITY_ID]:
+		var built: Dictionary = ReviewProgressionFixture.complete_capability(_main, capability_id)
+		if not bool(built.get("ready", false)):
+			_fail("could not prepare already-reviewed tool %s: %s" % [capability_id, str(built)])
+			return false
 	_main._material_project.on_map_loaded(_main._world)
 	_main._cutter_salvage.on_map_loaded(_main._world)
+	var active_report: Dictionary = _main._refresh_active_tools()
+	return _expect(
+		active_report.get("owned_tool_ids", PackedStringArray()) == PackedStringArray([
+			ScannerCorrectionProfileState.SURVEY_SCANNER_CAPABILITY_ID,
+			CUTTER_CAPABILITY_ID,
+			SHOCK_PROD_CAPABILITY_ID,
+		])
+		and active_report.get("selected_tool_id") == ScannerCorrectionProfileState.SURVEY_SCANNER_CAPABILITY_ID,
+		"review setup did not expose the ordered scanner/cutter/shock-prod catalog"
+	)
+
+
+func _capture_tool_selection(capture_dir: String) -> bool:
+	var expected_tools := [
+		{"id": CUTTER_CAPABILITY_ID, "state_id": "tool_selected_cutter"},
+		{"id": SHOCK_PROD_CAPABILITY_ID, "state_id": "tool_selected_shock_prod"},
+		{"id": ScannerCorrectionProfileState.SURVEY_SCANNER_CAPABILITY_ID, "state_id": "tool_selected_scanner"},
+	]
+	for expected in expected_tools:
+		var report: Dictionary = _main._cycle_active_tool()
+		var hud_report: Dictionary = _main._active_tool_hud.get_test_report()
+		if not _expect(
+			report.get("selected_tool_id") == expected["id"]
+			and hud_report.get("selected_tool_id") == expected["id"],
+			"tool cycle did not present %s" % expected["id"]
+		):
+			return false
+		if not await _capture_pair(capture_dir, expected["state_id"], _artifact_frame):
+			return false
+	return true
+
+
+func _capture_material_sequence(capture_dir: String) -> bool:
+	for spec in MATERIAL_CAPTURES:
+		var candidate := _material_candidate_by_id(spec["candidate_id"])
+		if candidate.is_empty() or candidate.get("material_id") != spec["material_id"]:
+			_fail("material capture source drifted: %s" % spec["candidate_id"])
+			return false
+		_main._world.configure_material_candidates([spec["candidate_id"]], [])
+		var active_ids: Array = _main._world.get_material_candidate_report().get("active_ids", [])
+		var center: Vector2 = candidate.get("center", Vector2.ZERO)
+		_place_player({"origin": center + Vector2(-48.0, 0.0), "facing_sign": 1.0})
+		_main._last_status_note = ""
+		_main._update_status_label()
+		if not _expect(active_ids == [spec["candidate_id"]], "material capture source was not isolated: %s" % spec["candidate_id"]):
+			return false
+		if not await _capture_pair(capture_dir, spec["state_id"], _frame_for_world(center, MATERIAL_ZOOM)):
+			return false
+	return true
+
+
+func _capture_payoff(capture_dir: String) -> bool:
 	_main._player.global_position = _payoff.get("center", Vector2.ZERO)
 	_main._player.reset_motion()
-	_main._cargo_collection.update(float(_payoff.get("interaction_seconds", 0.0)) + 0.05)
+	_main._cargo_collection.update(0.0)
+	_main._update_status_label()
+	if not _expect(
+		_main._active_tools.selected_tool_id() == ScannerCorrectionProfileState.SURVEY_SCANNER_CAPABILITY_ID
+		and is_zero_approx(float(_main._cutter_salvage.report().get("progress_ratio", -1.0))),
+		"sealed target proximity advanced before deliberate use"
+	):
+		return false
+	var wrong_tool: Dictionary = _main._use_active_tool()
+	if not _expect(
+		wrong_tool.get("status") == "wrong_context"
+		and _main._last_status_note.find("Tab Cutter") != -1
+		and is_zero_approx(float(_main._cutter_salvage.report().get("progress_ratio", -1.0))),
+		"wrong-tool cutter attempt progressed or lacked guidance"
+	):
+		return false
+	if not await _capture_pair(capture_dir, "sealed_target_wrong_tool", _artifact_frame):
+		return false
+
+	var selected: Dictionary = _main._cycle_active_tool()
+	var activated: Dictionary = _main._use_active_tool()
+	var interaction_seconds := float(_payoff.get("interaction_seconds", 0.0))
+	_main._cargo_collection.update(interaction_seconds * 0.5)
+	_main._update_status_label()
+	var progress := float(_main._cutter_salvage.report().get("progress_ratio", 0.0))
+	if not _expect(
+		selected.get("selected_tool_id") == CUTTER_CAPABILITY_ID
+		and activated.get("status") == "used"
+		and progress >= 0.49 and progress <= 0.51,
+		"selected cutter did not hold deliberate 50% progress"
+	):
+		return false
+	if not await _capture_pair(capture_dir, "sealed_target_cutter_progress", _artifact_frame):
+		return false
+
+	_main._cargo_collection.update(interaction_seconds * 0.5 + 0.05)
 	_main._update_status_label()
 	if not _expect(
 		_main._world.is_salvage_collected(PAYOFF_ID)
 		and _main._sortie_state.held_salvage_ids.has(PAYOFF_ID)
-		and _main._last_status_note == "Sealed wreck opened +300"
-		and _main._anomaly_survey.overlay_text(_main._world, _main._player) == NEXT_MYSTERY,
-		"post-build sealed target did not show its concrete payoff and next mystery"
+		and _main._last_status_note.find("Salvage value +300") != -1
+		and _main._last_status_note.find(REWARD_PENDING) != -1
+		and _main._anomaly_survey.has_pending_discovery(),
+		"sealed target did not separate salvage value from pending navigation data"
 	):
 		return false
-	return await _capture_pair(capture_dir, "sealed_target_payoff", _artifact_frame)
+	if not await _capture_pair(capture_dir, "sealed_target_reward_pending", _artifact_frame):
+		return false
+
+	_main._player.global_position = _main._world.get_entry_position(BOAT_ENTRY_ID)
+	_main._player.reset_motion()
+	_main._process(0.0)
+	_main._update_status_label()
+	var expected_result := "%s\n%s" % [REWARD_COMMIT, NEXT_LEAD]
+	if not _expect(
+		_main._banked_salvage_ids.has(PAYOFF_ID)
+		and _main._banked_score >= 300
+		and not _main._anomaly_survey.has_pending_discovery()
+		and _main._anomaly_survey.profile_state().has_completed_discovery(ScannerCorrectionProfileState.SOUTHEAST_WRECK_NAVIGATION_DATA_ID)
+		and _main._anomaly_survey.overlay_text(_main._world, _main._player) == expected_result,
+		"canonical boat did not commit the navigation reward and southeast lead"
+	):
+		return false
+	var boat_camera := _camera_test_by_id(BOAT_CAMERA_ID)
+	if boat_camera.is_empty():
+		_fail("canonical boat camera is missing")
+		return false
+	return await _capture_pair(capture_dir, "sealed_target_reward_committed", boat_camera)
 
 
 func _off_axis_pose() -> Dictionary:
@@ -248,6 +367,13 @@ func _camera_center(camera_test: Dictionary) -> Vector2:
 		float(camera_test.get("center_x", 0.0)),
 		float(camera_test.get("center_y", 0.0))
 	) * float(_main._world.tile_size)
+
+
+func _material_candidate_by_id(candidate_id: String) -> Dictionary:
+	for candidate in _main._world.get_material_candidates():
+		if str(candidate.get("id", "")) == candidate_id:
+			return candidate
+	return {}
 
 
 func _fail(message: String) -> void:

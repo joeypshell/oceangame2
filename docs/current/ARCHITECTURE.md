@@ -4,7 +4,7 @@
 
 The current project is a Godot 4.7 side-view ocean salvage prototype for proving the source-driven map, terrain, validation, capture, and gameplay workflow that will support a finished small diver game.
 
-The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`. Expansion 13 remains at owner HOLD after exact runtime `89371d6`. #1000-#1007 establish the active-tool correction, compact controls, named material presentation, sealed-wreck navigation reward, and deterministic correction evidence; focused capture and deployment review remain in #1008-#1009. #969 remains the owner replay gate and no next expansion is selected.
+The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`. Expansion 13 remains at owner HOLD after exact runtime `89371d6`. #1000-#1008 establish the active-tool correction, compact controls, named material presentation, sealed-wreck navigation reward, deterministic correction evidence, and focused desktop/mobile captures; final visual/Web review remains in #1009. #969 remains the owner replay gate and no next expansion is selected.
 
 ## Source Of Truth
 
