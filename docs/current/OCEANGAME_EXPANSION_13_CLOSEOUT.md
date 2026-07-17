@@ -1,6 +1,8 @@
 # OceanGame Expansion 13 Closeout
 
-Date: 2026-07-16
+Closeout attempt: 2026-07-16
+
+HOLD correction: 2026-07-17
 
 Issues: #960-#969
 
@@ -8,13 +10,16 @@ Milestone: OceanGame Expansion 13 `Southeast Wreck Return`
 
 ## Decision
 
-**GO.** The player approved exact public runtime
-`a9d143131b2a27009b7f57e49cab979016fa52ee` after the complete Southeast
-Wreck journey. No corrective issue was requested.
+**HOLD supersedes the prematurely recorded GO.** The exact public runtime
+`a9d143131b2a27009b7f57e49cab979016fa52ee` remains valid technical evidence,
+but the earlier `go` was a workflow-continuation instruction rather than player
+approval.
 
-The accepted exit answer is that the distant wreck made the existing pressure
-suit, salvage cutter, survey scanner, and far-southeast return route feel
-sufficiently tense and worthwhile to close the milestone.
+Fresh-profile review found that generic survey circles grant a hardcoded cutter
+plan without a physical artifact or explicit blueprint, scanner acquisition is
+proximity-only rather than forward-directed, and the broader objective chain
+does not provide a compelling reason to continue. Milestone #39 and #969 are
+open; #980 owns the correction plan.
 
 ## Delivered Journey
 
@@ -85,6 +90,6 @@ sufficiently tense and worthwhile to close the milestone.
 - #849 remains separate UID bookkeeping and did not block this milestone.
 - Pure oxygen-capacity progression, other regional identities, exceptional
   interiors, vehicles, and broader production content remain directional.
-- No next implementation milestone is selected here. A fresh drift audit must
-  choose one bounded direction, document its goal and exit question, and create
-  only that milestone's issue batch.
+- Resolve the bounded scanner/artifact/progression correction in
+  `OCEANGAME_EXPANSION_13_PLAYER_HOLD_CORRECTION_PLAN.md`, then return to #969.
+  Do not select or batch Expansion 14 while this HOLD is open.

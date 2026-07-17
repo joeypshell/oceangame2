@@ -4,7 +4,7 @@
 
 The current project is a Godot 4.7 side-view ocean salvage prototype for proving the source-driven map, terrain, validation, capture, and gameplay workflow that will support a finished small diver game.
 
-The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`; the latest completed milestone decision is `docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`. Expansion 13 received player GO after turning the existing pressure route, cutter, and scanner into one source-authored southeast-wreck return. #960-#969 provide the locked source/state contract, validation, authored records, durable recorder clearance, compact objective/result feedback, deterministic journey coverage, focused review captures, accepted full-level visual baseline, exact-SHA public runtime `a9d1431`, and player approval. No next implementation milestone is selected. Earlier controlled gameplay and visual passes remain implementation evidence, not the whole product direction.
+The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`; the active decision is the Expansion 13 HOLD correction in `docs/current/OCEANGAME_EXPANSION_13_PLAYER_HOLD_CORRECTION_PLAN.md`. #960-#968 provide technically verified southeast-wreck source, runtime, smoke, visual, and exact-SHA Web evidence at `a9d1431`, but player review withdrew the recorded GO because scanner acquisition is proximity-only, survey subjects are generic rings, the cutter reward is hardcoded without an explicit blueprint artifact, and the journey lacks forward drive. #980 plans the bounded correction and #969 remains open; no next expansion is selected.
 
 ## Source Of Truth
 

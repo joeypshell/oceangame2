@@ -1,6 +1,6 @@
 # Project Context
 
-Last updated: 2026-07-16
+Last updated: 2026-07-17
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
@@ -38,7 +38,7 @@ Expansion 11 is complete with player GO through #914 plus corrections #925/#927.
 
 Expansion 12 is complete with player GO through #941 plus player-HOLD corrections #951-#953. The deep-harmonic clue now reveals a durable Ti2/Rubber1/Gel1 night-built pressure suit for one scoutable lower-central pressure threshold and protected abyssal survey. Explicit `Q/SCAN` activation, full-cargo scanner feedback, pending boat-return guidance, deterministic journey coverage, and exact-SHA Web verification pass at runtime `d864a9e`.
 
-Expansion 13 Southeast Wreck Return is complete with player GO through #969. The empty farthest southeast chamber now pays off the existing pressure suit/cutter/scanner chain through a 78.7-second interaction-inclusive route demand, so the optional session oxygen upgrade improves margin without becoming a mandatory score lock. #960-#969 lock and deliver the source/state contract, validators, authored journey, durable recorder clearance, compact objective/result feedback, deterministic full-route coverage, focused desktop/mobile captures, accepted visual baseline, exact-SHA public runtime `a9d1431`, and player approval.
+Expansion 13 Southeast Wreck Return is at player HOLD. #960-#968 technically deliver the southeast journey and exact-SHA public runtime `a9d1431`, but the fresh-profile review found that proximity rectangles rendered as generic rings grant a hardcoded cutter plan without a physical artifact or explicit blueprint, while project/objective sequencing gives too little reason to continue. #980 plans the bounded scanner/artifact/progression correction; #969 and milestone #39 remain open.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -68,12 +68,12 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Completed Expansion 10 handoff: `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md` plus its linked plan, source contract, visual decision, Web verification, and correction #900
 - Completed Expansion 11 handoff: `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #925/#927, and player GO #914
 - Completed Expansion 12 handoff: `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #951-#953, and player GO #941
-- Completed Expansion 13 handoff: `docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, and player GO #969
+- Active Expansion 13 correction handoff: `docs/current/OCEANGAME_EXPANSION_13_PLAYER_HOLD_CORRECTION_PLAN.md`, with technical evidence in its original plan, source/state contract, visual decision, Web verification, and withdrawn closeout
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest completed expansion decision: `docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`
+- Latest expansion decision: player HOLD in `docs/current/OCEANGAME_EXPANSION_13_PLAYER_HOLD_CORRECTION_PLAN.md`
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_13_PLAN.md`, with ownership locked by `docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md`
 - Latest source contract: `docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md`
 - Latest visual decision: `docs/current/OCEANGAME_EXPANSION_13_VISUAL_BASELINE_DECISION.md`
@@ -146,7 +146,7 @@ Current map-loading helper:
 
 ## Web Preview Status
 
-The public preview was last verified for the player-approved Expansion 13 journey at exact build `a9d1431`:
+The public preview was last technically verified for the Expansion 13 HOLD candidate at exact build `a9d1431`; this proves deployment, not player approval:
 
 ```text
 https://joeypshell.github.io/oceangame2/
@@ -209,7 +209,7 @@ Current issue state as of 2026-07-16:
 - Closed: #880-#889 plus correction #900 via PR #901 completed the east-current regional journey, player GO, and exact-SHA Web verification.
 - Closed: #905-#914 plus corrections #925/#927 completed Expansion 11 with player GO and exact-SHA Web verification.
 - Closed: #932-#941 plus corrections #951-#953 completed Expansion 12 with player GO and exact-SHA Web verification.
-- Closed: #960-#969 completed Expansion 13 Southeast Wreck Return with player GO and exact-SHA Web verification at `a9d1431`.
+- Active: #980 plans the Expansion 13 player-HOLD scanner/artifact/progression correction; #969 and milestone #39 remain open. #960-#968 and exact-SHA runtime `a9d1431` remain technical evidence, not player approval.
 - Open bookkeeping: #849 names three UID sidecars already committed by `e825c88`; it does not block planning and should be closed separately with that evidence.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -347,7 +347,7 @@ Current issue state as of 2026-07-16:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` and `docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md` as the current handoff. Expansion 13 is closed; run a fresh drift audit before selecting one bounded next direction or creating another issue batch.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` and `docs/current/OCEANGAME_EXPANSION_13_PLAYER_HOLD_CORRECTION_PLAN.md` as the current handoff. Correct only the scanner-to-cutter causal loop, then return to #969; do not select another expansion.
 
 Accepted constraints for next work:
 
