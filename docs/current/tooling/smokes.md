@@ -93,6 +93,8 @@ The integrated Expansion 12 smoke extends that journey through the pressure-suit
 
 The integrated Expansion 13 smoke starts with an empty temporary profile, prepares only the already-earned prerequisites, and then swims the real collision-active boat-to-wreck-to-boat route once. It protects pressure crossing, base and upgraded oxygen margins, recorder and scanner timing, full-cargo behavior, explicit `Q/SCAN`, leave-range cancellation, all three failure restorations, pending return, durable clearance, exact-once discovery commitment, and profile reload. CI and release validation run it as `--smoke-expansion-13-southeast-wreck-return`.
 
+The active-tool selection smoke checks the ordered scanner/cutter/shock-prod catalog, passive-capability exclusion, first-owned selection, cycle/wrap behavior, invalid-selection normalization, single-tool dispatch, and the `Tab`/`Q` input bindings. Run it as `--smoke-active-tool-selection`.
+
 The salvage-loop smoke check loads the default production level, collects authored salvage through the same runtime methods used in play, returns to extraction, confirms completion, resets, and exits.
 
 The production-slice route smoke loads `production_slice_01`, checks open-water source routes to each authored salvage point, banks cargo at the boat whenever the held capacity fills, confirms completion, resets, and exits.

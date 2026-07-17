@@ -4,6 +4,7 @@ const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime.gd")
 const AnomalySurveyCapture := preload("res://scripts/main/captures/anomaly_survey_capture.gd")
+const ActiveToolController := preload("res://scripts/main/active_tool_controller.gd")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const CargoCollectionController := preload("res://scripts/main/cargo_collection_controller.gd")
 const BiologicalResourceController := preload("res://scripts/main/biological_resource_controller.gd")
@@ -64,6 +65,7 @@ const TimedSalvageController := preload("res://scripts/main/timed_salvage_contro
 const WorldConnectorController := preload("res://scripts/main/world_connector_controller.gd")
 const AudioCuePlayer := preload("res://scripts/main/audio_cue_player.gd")
 const SmokeFeedbackAudioChecks := preload("res://scripts/main/smoke/smoke_feedback_audio_checks.gd")
+const SmokeActiveToolChecks := preload("res://scripts/main/smoke/smoke_active_tool_checks.gd")
 const SmokeAnomalySurveyJourneyChecks := preload("res://scripts/main/smoke/smoke_anomaly_survey_journey_checks.gd")
 const SmokeFinalDiveObjectiveChecks := preload("res://scripts/main/smoke/smoke_final_dive_objective_checks.gd")
 const SmokeHazardRouteChecks := preload("res://scripts/main/smoke/smoke_hazard_route_checks.gd")
@@ -191,6 +193,7 @@ const SOUTHWEST_POCKET_DECISION_ID := "southwest_pocket_decision"
 var _world
 var _player
 var _anomaly_survey
+var _active_tools
 var _capture_controller
 var _cargo_collection
 var _biological_resources
@@ -224,6 +227,7 @@ var _timed_salvage
 var _world_connector
 var _audio_cues
 var _smoke_feedback_audio_checks
+var _smoke_active_tool_checks
 var _smoke_final_dive_objective_checks
 var _smoke_hazard_route_checks
 var _smoke_interaction_checks
@@ -277,6 +281,7 @@ var _last_status_note := ""
 
 
 func _ready() -> void:
+	_active_tools = ActiveToolController.new()
 	_capture_controller = CaptureController.new(self)
 	_current_gate = CurrentGateController.new()
 	_destination_payoff_feedback = DestinationPayoffFeedback.new()
@@ -304,6 +309,7 @@ func _ready() -> void:
 	_audio_cues = AudioCuePlayer.new()
 	add_child(_audio_cues)
 	_smoke_feedback_audio_checks = SmokeFeedbackAudioChecks.new(self)
+	_smoke_active_tool_checks = SmokeActiveToolChecks.new(self)
 	_smoke_final_dive_objective_checks = SmokeFinalDiveObjectiveChecks.new(self)
 	_smoke_hazard_route_checks = SmokeHazardRouteChecks.new(self)
 	_smoke_interaction_checks = SmokeInteractionChecks.new(self)
@@ -446,6 +452,7 @@ func _ready() -> void:
 	var smoke_expansion_12_pressure_return := _has_arg(user_args, engine_args, "--smoke-expansion-12-abyssal-pressure-return")
 	var smoke_expansion_13_southeast_wreck_return := _has_arg(user_args, engine_args, "--smoke-expansion-13-southeast-wreck-return")
 	var smoke_expansion_13_scanner_cutter_correction := _has_arg(user_args, engine_args, "--smoke-expansion-13-scanner-cutter-correction")
+	var smoke_active_tool_selection := _has_arg(user_args, engine_args, "--smoke-active-tool-selection")
 	var requested_map_path := MapCatalog.requested_map_path(user_args, engine_args)
 	var measure_map_runtime := _has_arg(user_args, engine_args, "--measure-map-runtime")
 	var parity_output_path := _arg_value(user_args, engine_args, "--parity-output")
@@ -783,6 +790,7 @@ func _ready() -> void:
 		or smoke_expansion_12_pressure_return
 		or smoke_expansion_13_southeast_wreck_return
 		or smoke_expansion_13_scanner_cutter_correction
+		or smoke_active_tool_selection
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
 		or _has_arg(user_args, engine_args, "--capture-camera-tests")
 	)
@@ -797,6 +805,7 @@ func _ready() -> void:
 	_progression_runtime.set_profile_state(_anomaly_survey.profile_state())
 	_material_runtime = MaterialRuntimeController.new(_anomaly_survey.profile_state())
 	_material_project = MaterialProjectRuntime.new(_anomaly_survey.profile_state())
+	_refresh_active_tools()
 	_cutter_salvage = CutterSalvageController.new(_anomaly_survey.profile_state())
 	_biological_resources = BiologicalResourceController.new(_anomaly_survey.profile_state())
 	_cargo_collection = CargoCollectionController.new(self)
@@ -896,6 +905,9 @@ func _ready() -> void:
 		return
 	if smoke_current_gate:
 		await _smoke_current_gate_checks._smoke_current_gate_and_quit()
+		return
+	if smoke_active_tool_selection:
+		_smoke_active_tool_checks.smoke_and_quit()
 		return
 	if smoke_moving_hazard:
 		_smoke_moving_hazard_checks._smoke_moving_hazard_and_quit()
@@ -1172,6 +1184,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_daily_conditions.sync(world.get_daily_conditions(), _expedition_day_state.day_number)
 	_material_runtime.on_map_loaded(world, _expedition_day_state, _daily_conditions.current_ids())
 	_material_project.on_map_loaded(world)
+	_refresh_active_tools()
 	_cutter_salvage.on_map_loaded(world)
 	_hostiles.on_map_loaded(world, preserve_sortie)
 	_biological_resources.on_map_loaded(world, preserve_sortie)
@@ -1394,6 +1407,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event is InputEventKey and event.pressed and not event.echo and (event as InputEventKey).keycode == KEY_R:
 			_reset_run()
 		return
+	if event.is_action_pressed("active_tool_cycle_next"):
+		_active_tools.cycle_next(_active_tool_capability_query())
+		return
 	if event.is_action_pressed("combat_attack"):
 		_try_combat_attack()
 		return
@@ -1424,6 +1440,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _reset_run() -> void:
 	if _world == null or _player == null:
 		return
+	_refresh_active_tools()
 
 	_world.reset_salvage()
 	_anomaly_survey.clear_unbanked("reset", _world)
@@ -2336,6 +2353,18 @@ func _try_progression_container_interaction() -> bool:
 	_last_status_note = str(result.get("note", "Container opened"))
 	_update_status_label()
 	return true
+
+
+func _refresh_active_tools() -> Dictionary:
+	if _active_tools == null:
+		return {}
+	return _active_tools.refresh_ownership(_active_tool_capability_query())
+
+
+func _active_tool_capability_query() -> Callable:
+	if _anomaly_survey == null or _anomaly_survey.profile_state() == null:
+		return Callable()
+	return Callable(_anomaly_survey.profile_state(), "has_capability")
 
 
 func _try_purchase_oxygen_tank_upgrade() -> bool:
