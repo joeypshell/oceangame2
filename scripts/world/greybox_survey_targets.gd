@@ -190,7 +190,7 @@ func _target_rect(target: Dictionary, tile_size: int) -> Rect2:
 
 func _scan_anchor_world(target: Dictionary, tile_size: int, fallback: Vector2) -> Vector2:
 	var anchor = target.get("scan_anchor", {})
-	if typeof(anchor) != TYPE_DICTIONARY:
+	if typeof(anchor) != TYPE_DICTIONARY or anchor.is_empty():
 		return fallback
 	return Vector2(float(anchor.get("x", 0)) + 0.5, float(anchor.get("y", 0)) + 0.5) * tile_size
 

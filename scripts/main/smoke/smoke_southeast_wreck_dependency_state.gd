@@ -7,6 +7,7 @@ const ExpansionProfileState := preload("res://scripts/main/expansion_profile_sta
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
 const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
 const ReviewProgressionFixture := preload("res://scripts/main/review_progression_fixture.gd")
+const ScannerSmokePose := preload("res://scripts/main/smoke/scanner_smoke_pose.gd")
 
 const RECORDER_ID := "southeast_wreck_recorder"
 const SURVEY_ID := "southeast_wreck_archive_survey"
@@ -49,7 +50,7 @@ func _run() -> void:
 	if recorder.is_empty() or survey.is_empty():
 		_finish(main)
 		return
-	main._player.global_position = survey.get("center", Vector2.ZERO)
+	_place_for_scan(main, survey)
 	var blocked: Dictionary = main._anomaly_survey.scanner_action(main._world, main._player)
 	_expect(blocked.get("reason") == "tool_clearance_required", "survey was not dependency-locked")
 	_expect(str(blocked.get("note", "")) == "Wreck recorder | Cutter required", "blocked survey omitted cutter guidance")
@@ -64,7 +65,7 @@ func _run() -> void:
 	main._cargo_collection.update(2.1)
 	_expect(main._world.is_salvage_collected(RECORDER_ID), "cutter did not clear recorder")
 	_expect(main._sortie_state.held_salvage_ids.has(RECORDER_ID), "recorder did not enter held cargo")
-	main._player.global_position = survey.get("center", Vector2.ZERO)
+	_place_for_scan(main, survey)
 	_expect(main._anomaly_survey.overlay_text(main._world, main._player) == "Archive exposed | Q/SCAN: Survey wreck archive", "exposed archive prompt was unclear")
 	main._sortie_state.collect_salvage("capacity_after_recorder", 0)
 	var activated: Dictionary = main._anomaly_survey.scanner_action(main._world, main._player)
@@ -76,13 +77,13 @@ func _run() -> void:
 	var canceled: Dictionary = main._anomaly_survey.update(main._world, main._player, 0.0)
 	_expect(canceled.get("state") == "canceled", "leaving archive range did not cancel progress")
 	_expect(float(main._anomaly_survey.report().get("interaction", {}).get("progress", 0.0)) == 0.0, "canceled archive survey retained progress")
-	main._player.global_position = survey.get("center", Vector2.ZERO)
+	_place_for_scan(main, survey)
 	main._anomaly_survey.scanner_action(main._world, main._player)
 	main._anomaly_survey.update(main._world, main._player, 1.0)
 
 	main._handle_hazard_hit("wreck_dependency_test")
 	_expect(not main._world.get_tool_target_near(recorder.get("center", Vector2.ZERO), main.SALVAGE_COLLECTION_RADIUS).is_empty(), "failure did not restore recorder")
-	main._player.global_position = survey.get("center", Vector2.ZERO)
+	_place_for_scan(main, survey)
 	blocked = main._anomaly_survey.scanner_action(main._world, main._player)
 	_expect(blocked.get("reason") == "tool_clearance_required", "failure retained transient recorder clearance")
 	_expect(float(main._anomaly_survey.report().get("interaction", {}).get("progress", 0.0)) == 0.0, "failure retained survey progress")
@@ -96,7 +97,7 @@ func _run() -> void:
 	main._load_playable_map(main.PRODUCTION_LEVEL_MAP_PATH, false)
 	main._player.set_physics_process(false)
 	_expect(main._world.get_tool_target_near(recorder.get("center", Vector2.ZERO), main.SALVAGE_COLLECTION_RADIUS).is_empty(), "durable recorder respawned on map reload")
-	main._player.global_position = survey.get("center", Vector2.ZERO)
+	_place_for_scan(main, survey)
 	activated = main._anomaly_survey.scanner_action(main._world, main._player)
 	_expect(activated.get("reason") == "activated", "banked recorder did not expose survey after map reload")
 	var completed: Dictionary = main._anomaly_survey.update(main._world, main._player, 3.1)
@@ -137,6 +138,11 @@ func _survey_target(main, target_id: String) -> Dictionary:
 		if str(target.get("id", "")) == target_id:
 			return target
 	return {}
+
+
+func _place_for_scan(main, target: Dictionary) -> void:
+	var pose: Dictionary = ScannerSmokePose.new().place(main._world, main._player, target)
+	_expect(bool(pose.get("found", false)), "no clear scan pose for %s" % target.get("id", "target"))
 
 
 func _finish(main) -> void:

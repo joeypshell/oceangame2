@@ -184,7 +184,12 @@ func _complete_abyssal_return() -> bool:
 	if not _require(not target.is_empty(), "abyssal survey target disappeared before the protected return"):
 		return false
 	var navigation = _navigation_for("", PASSABLE_CAPABILITIES)
-	if not await _drive_to("abyssal_failure_probe", target["center"], navigation):
+	var scan_pose: Dictionary = ScannerSmokePose.new().find_pose(_world, target)
+	if not _require(bool(scan_pose.get("found", false)), "abyssal target has no clear scan pose"):
+		return false
+	if not await _drive_to("abyssal_failure_probe", scan_pose.get("origin", Vector2.ZERO), navigation):
+		return false
+	if not _place_for_scan(target):
 		return false
 	var survey_seconds := float(target.get("interaction_seconds", 0.0))
 	_press_key(KEY_Q)
@@ -219,7 +224,10 @@ func _complete_abyssal_return() -> bool:
 	navigation = _navigation_for("", PASSABLE_CAPABILITIES)
 	var route_start := _distance_px
 	_minimum_oxygen = _oxygen_seconds
-	if not await _drive_to("abyssal_outbound", target["center"], navigation):
+	scan_pose = ScannerSmokePose.new().find_pose(_world, target)
+	if not await _drive_to("abyssal_outbound", scan_pose.get("origin", Vector2.ZERO), navigation):
+		return false
+	if not _place_for_scan(target):
 		return false
 	_press_key(KEY_Q)
 	_advance(survey_seconds + 0.01)
@@ -246,7 +254,8 @@ func _complete_abyssal_return() -> bool:
 
 	var discovery_count: int = profile.report().get("completed_discoveries", []).count(ABYSSAL_DISCOVERY_ID)
 	_main._anomaly_survey.on_map_loaded(_world)
-	_player.global_position = target["center"]
+	if not _place_for_scan(target):
+		return false
 	_advance(survey_seconds + 0.01)
 	_player.global_position = _world.get_entry_position(BOAT_ENTRY_ID)
 	_advance(0.0)

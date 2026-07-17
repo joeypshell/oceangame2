@@ -89,7 +89,12 @@ func _prove_pre_light_scouting() -> bool:
 	var navigation = _navigation_for("", PASSABLE_CAPABILITIES)
 	var oxygen_before := _oxygen_seconds
 	var daylight_before: float = _main._expedition_day_state.daylight_remaining_seconds
-	if not await _drive_to("pre_light_harmonic", target["center"], navigation):
+	var scan_pose: Dictionary = ScannerSmokePose.new().find_pose(_world, target)
+	if not _require(bool(scan_pose.get("found", false)), "pre-light target has no clear scan pose"):
+		return false
+	if not await _drive_to("pre_light_harmonic", scan_pose.get("origin", Vector2.ZERO), navigation):
+		return false
+	if not _place_for_scan(target):
 		return false
 	_pre_light_alpha = float(_visibility_zone_by_id(HARMONIC_ZONE_ID).get("overlay_alpha", 0.0))
 	_advance(0.5)
@@ -231,7 +236,12 @@ func _complete_harmonic_return() -> bool:
 	var target := _survey_by_id(HARMONIC_TARGET_ID)
 	var navigation = _navigation_for("", PASSABLE_CAPABILITIES)
 	var route_start := _distance_px
-	if not await _drive_to("harmonic_failure_probe", target["center"], navigation):
+	var scan_pose: Dictionary = ScannerSmokePose.new().find_pose(_world, target)
+	if not _require(bool(scan_pose.get("found", false)), "harmonic target has no clear scan pose"):
+		return false
+	if not await _drive_to("harmonic_failure_probe", scan_pose.get("origin", Vector2.ZERO), navigation):
+		return false
+	if not _place_for_scan(target):
 		return false
 	var seconds := float(target.get("interaction_seconds", 0.0))
 	_press_key(KEY_Q)
@@ -247,7 +257,10 @@ func _complete_harmonic_return() -> bool:
 		return false
 
 	navigation = _navigation_for("", PASSABLE_CAPABILITIES)
-	if not await _drive_to("harmonic_outbound", target["center"], navigation):
+	scan_pose = ScannerSmokePose.new().find_pose(_world, target)
+	if not await _drive_to("harmonic_outbound", scan_pose.get("origin", Vector2.ZERO), navigation):
+		return false
+	if not _place_for_scan(target):
 		return false
 	_press_key(KEY_Q)
 	_advance(seconds + 0.01)
@@ -262,7 +275,8 @@ func _complete_harmonic_return() -> bool:
 
 	var discovery_count: int = profile.report().get("completed_discoveries", []).count(HARMONIC_DISCOVERY_ID)
 	_main._anomaly_survey.on_map_loaded(_world)
-	_player.global_position = target["center"]
+	if not _place_for_scan(target):
+		return false
 	_advance(seconds + 0.01)
 	_player.global_position = _world.get_entry_position(BOAT_ENTRY_ID)
 	_advance(0.0)
