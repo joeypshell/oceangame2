@@ -347,7 +347,7 @@ Run the focused Expansion 13 scanner-to-cutter correction captures:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --capture-expansion-13-scanner-cutter-correction
 ```
 
-This writes broad artifact clue, off-axis miss, acquired artifact, 50% scan, pending boat return, committed cutter recipe, and sealed-target payoff states at 1280x720 and mobile 844x390 review sizes under ignored `visual_captures/expansion_13_scanner_cutter_correction/`. It does not accept or replace baselines.
+This writes broad artifact clue, off-axis miss, acquired artifact, 50% scan, pending boat return, committed cutter recipe, scanner/cutter/shock-prod selections, titanium/rubber/coil gameplay-scale samples, wrong-tool denial, 50% deliberate cutter progress, pending navigation data with held salvage, and canonical-boat commitment with the southeast lead. Every state is captured at 1280x720 and mobile 844x390 under ignored `visual_captures/expansion_13_scanner_cutter_correction/`; the command does not accept or replace baselines.
 
 Capture the first production slice:
 
