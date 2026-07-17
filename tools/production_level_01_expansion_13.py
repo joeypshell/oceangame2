@@ -3,8 +3,8 @@
 
 from __future__ import annotations
 
+from production_level_01_scanner_artifact import NAVIGATION_DATA_ID
 
-KNOWLEDGE_ID = "abyssal_basin_harmonic_source_discovery"
 ROUTE_ID = "southeast_wreck_archive_route"
 PRESSURE_ZONE_ID = "abyssal_basin_pressure_zone"
 PROMISE_LANDMARK_ID = "abyssal_basin_landmark"
@@ -56,15 +56,15 @@ def regional_journeys() -> list[dict]:
         "promise_gate_id": PROMISE_LANDMARK_ID,
         "entry_gate_ids": [PRESSURE_ZONE_ID],
         "required_capability_id": "pressure_suit_1",
-        "required_discovery_id": KNOWLEDGE_ID,
+        "required_discovery_id": NAVIGATION_DATA_ID,
         "landmark_zone_id": LANDMARK_ID,
         "tool_target_id": RECORDER_ID,
         "survey_target_id": SURVEY_ID,
         "commit_entry_id": BOAT_ID,
         "route_context": ROUTE_ID,
         "intent": (
-            "Reuse the pressure-protected lower route for one distant cutter and "
-            "scanner chain that returns to the canonical boat."
+            "Use committed sealed-wreck navigation data to reveal one distant cutter "
+            "and scanner chain across the pressure-protected lower route."
         ),
     }]
 
@@ -151,7 +151,7 @@ def camera_tests() -> list[dict]:
 
 def review_questions() -> list[str]:
     return [
-        "Does the prior abyssal finding create a broad southeast wreck promise?",
+        "Does committed sealed-wreck navigation data create a broad southeast wreck promise?",
         "Is the archive a distinct destination without changing terrain?",
         "Do cutter clearance and explicit scanner activation read as one chain?",
         "Does the recorder and pending finding return feel tense but base-tank viable?",

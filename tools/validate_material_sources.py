@@ -26,6 +26,7 @@ from material_source_contract import (
     TOOL_FIELDS,
 )
 from validate_research_sources import validate_research_source_schema
+from validate_tool_target_rewards import validate_tool_target_reward_schema
 
 
 def _is_int(value: Any) -> bool:
@@ -410,6 +411,7 @@ def validate_material_source_schema(map_data: dict[str, Any]) -> list[str]:
     failures.extend(pool_failures)
     failures.extend(_validate_projects(map_data, pools, selected_yields, tool_entities))
     failures.extend(validate_research_source_schema(map_data))
+    failures.extend(validate_tool_target_reward_schema(map_data))
     return failures
 
 

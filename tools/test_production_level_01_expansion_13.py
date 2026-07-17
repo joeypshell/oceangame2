@@ -12,12 +12,13 @@ from production_level_01_expansion_13 import (
     BACKGROUND_ID,
     BOAT_ID,
     DISCOVERY_ID,
-    KNOWLEDGE_ID,
     LANDMARK_ID,
+    NAVIGATION_DATA_ID,
     RECORDER_ID,
     ROUTE_ID,
     SURVEY_ID,
 )
+from production_level_01_scanner_artifact import PAYOFF_TARGET_ID
 from validate_regional_journeys import validate_regional_journey_schema
 from validate_southeast_wreck_return import (
     TERRAIN_SHA256,
@@ -74,8 +75,12 @@ class ProductionLevelExpansion13Tests(unittest.TestCase):
     def test_route_uses_existing_prerequisites_and_canonical_boat(self) -> None:
         route = next(item for item in self.map_data["regional_journeys"] if item["id"] == ROUTE_ID)
         recorder = next(item for item in self.map_data["entities"] if item["id"] == RECORDER_ID)
+        payoff = next(item for item in self.map_data["entities"] if item["id"] == PAYOFF_TARGET_ID)
         survey = next(item for item in self.map_data["survey_targets"] if item["id"] == SURVEY_ID)
-        self.assertEqual(KNOWLEDGE_ID, route["required_discovery_id"])
+        self.assertEqual(NAVIGATION_DATA_ID, route["required_discovery_id"])
+        self.assertEqual("discovery", payoff["reward_kind"])
+        self.assertEqual(NAVIGATION_DATA_ID, payoff["reward_id"])
+        self.assertEqual(BOAT_ID, payoff["reward_commit_entry_id"])
         self.assertEqual("pressure_suit_1", route["required_capability_id"])
         self.assertEqual("salvage_cutter", recorder["required_tool_id"])
         self.assertEqual("salvage_cutter_project", recorder["tool_project_id"])
