@@ -331,8 +331,9 @@ func _verify_profile_reload() -> bool:
 	var reloaded := ProfileState.new(PROFILE_PATH, true)
 	var load: Dictionary = reloaded.load_profile()
 	return _require(
-		load.get("status") == "loaded"
+		load.get("status") in ["loaded", "migrated_wreck_navigation"]
 		and reloaded.has_completed_discovery(ABYSSAL_DISCOVERY_ID)
+		and reloaded.has_completed_discovery(ProfileState.SOUTHEAST_WRECK_NAVIGATION_DATA_ID)
 		and reloaded.has_capability(PRESSURE_CAPABILITY_ID)
 		and reloaded.has_capability(ProfileState.SALVAGE_CUTTER_CAPABILITY_ID)
 		and reloaded.has_capability(ProfileState.SURVEY_SCANNER_CAPABILITY_ID)

@@ -24,6 +24,7 @@ const SIGNAL_REEF_DISCOVERY_ID := "lower_right_signal_reef_discovery"
 const DEEP_HARMONIC_DISCOVERY_ID := "signal_reef_deep_harmonic_discovery"
 const ABYSSAL_HARMONIC_DISCOVERY_ID := "abyssal_basin_harmonic_source_discovery"
 const SOUTHEAST_WRECK_DISCOVERY_ID := "southeast_wreck_archive_discovery"
+const SOUTHEAST_WRECK_NAVIGATION_DATA_ID := "southeast_wreck_navigation_data"
 const DIVE_LIGHT_CAPABILITY_ID := ProgressionContract.DIVE_LIGHT_CAPABILITY_ID
 const DIVE_LIGHT_PROJECT_ID := "dive_light_1_project"
 const DIVE_LIGHT_TARGET_ID := "signal_reef_deep_harmonic_survey"
@@ -65,7 +66,7 @@ const PROFILE_KEYS := {
 const LEGACY_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true}
 const MATERIAL_SCHEMA_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true}
 const SUPPORTED_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, PROPULSION_FINS_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true, CURRENT_STABILIZER_CAPABILITY_ID: true, SHOCK_PROD_CAPABILITY_ID: true, SHOCK_PROD_CAPACITOR_CAPABILITY_ID: true, DIVE_LIGHT_CAPABILITY_ID: true, PRESSURE_SUIT_CAPABILITY_ID: true}
-const SUPPORTED_DISCOVERY_IDS := {PROPULSION_FINS_BLUEPRINT_ID: true, SURVEY_SCANNER_BLUEPRINT_ID: true, ANOMALY_DISCOVERY_ID: true, SALVAGE_CUTTER_BLUEPRINT_ID: true, MINERAL_TRACE_RESEARCH_ID: true, SIGNAL_REEF_DISCOVERY_ID: true, DEEP_HARMONIC_DISCOVERY_ID: true, ABYSSAL_HARMONIC_DISCOVERY_ID: true, SOUTHEAST_WRECK_DISCOVERY_ID: true}
+const SUPPORTED_DISCOVERY_IDS := {PROPULSION_FINS_BLUEPRINT_ID: true, SURVEY_SCANNER_BLUEPRINT_ID: true, ANOMALY_DISCOVERY_ID: true, SALVAGE_CUTTER_BLUEPRINT_ID: true, MINERAL_TRACE_RESEARCH_ID: true, SIGNAL_REEF_DISCOVERY_ID: true, DEEP_HARMONIC_DISCOVERY_ID: true, ABYSSAL_HARMONIC_DISCOVERY_ID: true, SOUTHEAST_WRECK_DISCOVERY_ID: true, SOUTHEAST_WRECK_NAVIGATION_DATA_ID: true}
 const SUPPORTED_MATERIAL_IDS := {TITANIUM_MATERIAL_ID: true, RUBBER_MATERIAL_ID: true, COIL_MATERIAL_ID: true, INSULATING_GEL_MATERIAL_ID: true, EEL_ELECTROCYTE_MATERIAL_ID: true}
 const MATERIAL_SCHEMA_PROJECT_IDS := {SALVAGE_CUTTER_PROJECT_ID: true}
 const SUPPORTED_PROJECT_IDS := {PROPULSION_FINS_PROJECT_ID: true, SURVEY_SCANNER_PROJECT_ID: true, SALVAGE_CUTTER_PROJECT_ID: true, CURRENT_STABILIZER_PROJECT_ID: true, SHOCK_PROD_PROJECT_ID: true, SHOCK_PROD_CAPACITOR_PROJECT_ID: true, DIVE_LIGHT_PROJECT_ID: true, PRESSURE_SUIT_PROJECT_ID: true}
@@ -135,7 +136,10 @@ func load_profile() -> Dictionary:
 		status = "migrated_v3"
 	elif bool(migrations.get("scanner_purchase", false)):
 		status = "migrated_scanner_purchase"
-	if (bool(migrations.get("cutter_blueprint", false)) or bool(migrations.get("scanner_purchase", false))) and not save_profile():
+	elif bool(migrations.get("wreck_navigation", false)):
+		status = "migrated_wreck_navigation"
+	var migration_changed: bool = bool(migrations.get("cutter_blueprint", false)) or bool(migrations.get("scanner_purchase", false)) or bool(migrations.get("wreck_navigation", false))
+	if migration_changed and not save_profile():
 		_last_storage_report = _report("migration_write_error")
 		return _last_storage_report.duplicate(true)
 	_last_storage_report = _report(status)
@@ -461,6 +465,8 @@ func _migration_ids() -> Dictionary:
 		"salvage_cutter_project_id": SALVAGE_CUTTER_PROJECT_ID,
 		"salvage_cutter_blueprint_id": SALVAGE_CUTTER_BLUEPRINT_ID,
 		"anomaly_discovery_id": ANOMALY_DISCOVERY_ID,
+		"southeast_wreck_discovery_id": SOUTHEAST_WRECK_DISCOVERY_ID,
+		"southeast_wreck_navigation_data_id": SOUTHEAST_WRECK_NAVIGATION_DATA_ID,
 	}
 
 

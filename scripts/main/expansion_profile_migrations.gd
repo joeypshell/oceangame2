@@ -8,9 +8,11 @@ const SCHEMA_VERSION := 4
 static func apply(payload: Dictionary, ids: Dictionary) -> Dictionary:
 	var scanner_migrated := _migrate_scanner_purchase_payload(payload, ids)
 	var cutter_migrated := _migrate_cutter_blueprint_payload(payload, ids)
+	var wreck_navigation_migrated := _migrate_southeast_wreck_navigation_payload(payload, ids)
 	return {
 		"scanner_purchase": scanner_migrated,
 		"cutter_blueprint": cutter_migrated,
+		"wreck_navigation": wreck_navigation_migrated,
 	}
 
 
@@ -46,6 +48,18 @@ static func _migrate_cutter_blueprint_payload(payload: Dictionary, ids: Dictiona
 	if not has_old_anomaly and not has_cutter_project and not has_cutter_capability:
 		return false
 	discoveries.append(blueprint_id)
+	return true
+
+
+static func _migrate_southeast_wreck_navigation_payload(payload: Dictionary, ids: Dictionary) -> bool:
+	var discoveries = payload.get("completed_discoveries")
+	if typeof(discoveries) != TYPE_ARRAY:
+		return false
+	var archive_id := str(ids.get("southeast_wreck_discovery_id", ""))
+	var navigation_id := str(ids.get("southeast_wreck_navigation_data_id", ""))
+	if archive_id.is_empty() or navigation_id.is_empty() or not discoveries.has(archive_id) or discoveries.has(navigation_id):
+		return false
+	discoveries.append(navigation_id)
 	return true
 
 
