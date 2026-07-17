@@ -103,12 +103,14 @@ Source target: `salvage_sealed_wreck_cache`
 
 Add source-authored reward metadata:
 
-- reward kind: `discovery`
-- reward id: `southeast_wreck_navigation_data`
-- pending label: `Wreck navigation data secured | Return to surface boat`
-- commit label: `Navigation data logged: Southeast wreck coordinates`
-- next lead: `Wreck coordinates | Signal continues deep southeast`
-- commit owner: `production_level_01` / `surface_boat_entry`
+- `reward_kind`: `discovery`
+- `reward_id`: `southeast_wreck_navigation_data`
+- `reward_pending_label`: `Wreck navigation data secured | Return to surface boat`
+- `reward_commit_label`: `Navigation data logged: Southeast wreck coordinates`
+- `reward_next_lead_label`: `Wreck coordinates | Signal continues deep southeast`
+- `reward_commit_map_id`: `production_level_01`
+- `reward_commit_map_path`: `res://maps/production_level_01.greybox.json`
+- `reward_commit_entry_id`: `surface_boat_entry`
 
 Completion is atomic at the target: if cargo rules block the valuable salvage,
 the cut cannot complete and the discovery cannot be created. On success, the

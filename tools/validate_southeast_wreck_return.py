@@ -19,13 +19,15 @@ from validate_full_level_traversal import (
     shortest_path,
     solid_cells,
 )
+from validate_tool_target_rewards import discovery_reward_sources, validate_tool_target_reward_schema
 
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_MAP = ROOT / "maps" / "production_level_01.greybox.json"
 MAP_ID = "production_level_01"
 BOAT_ID = "surface_boat_entry"
-KNOWLEDGE_ID = "abyssal_basin_harmonic_source_discovery"
+NAVIGATION_DATA_ID = "southeast_wreck_navigation_data"
+PAYOFF_TARGET_ID = "salvage_sealed_wreck_cache"
 PRESSURE_ZONE_ID = "abyssal_basin_pressure_zone"
 PROMISE_LANDMARK_ID = "abyssal_basin_landmark"
 ROUTE_ID = "southeast_wreck_archive_route"
@@ -80,12 +82,22 @@ ROUTE_VALUES = {
     "promise_gate_id": PROMISE_LANDMARK_ID,
     "entry_gate_ids": [PRESSURE_ZONE_ID],
     "required_capability_id": "pressure_suit_1",
-    "required_discovery_id": KNOWLEDGE_ID,
+    "required_discovery_id": NAVIGATION_DATA_ID,
     "landmark_zone_id": LANDMARK_ID,
     "tool_target_id": RECORDER_ID,
     "survey_target_id": SURVEY_ID,
     "commit_entry_id": BOAT_ID,
     "route_context": ROUTE_ID,
+}
+PAYOFF_REWARD_VALUES = {
+    "reward_kind": "discovery",
+    "reward_id": NAVIGATION_DATA_ID,
+    "reward_pending_label": "Wreck navigation data secured | Return to surface boat",
+    "reward_commit_label": "Navigation data logged: Southeast wreck coordinates",
+    "reward_next_lead_label": "Wreck coordinates | Signal continues deep southeast",
+    "reward_commit_map_id": MAP_ID,
+    "reward_commit_map_path": "res://maps/production_level_01.greybox.json",
+    "reward_commit_entry_id": BOAT_ID,
 }
 
 
@@ -108,6 +120,8 @@ def _triggered(map_data: dict[str, Any]) -> bool:
     )
     return any(_records(map_data, field, item_id) for field, item_id in named) or any(
         item.get("discovery_id") == DISCOVERY_ID for item in _items(map_data, "survey_targets")
+    ) or any(
+        item.get("reward_id") == NAVIGATION_DATA_ID for item in _items(map_data, "entities")
     )
 
 
@@ -159,14 +173,17 @@ def validate_southeast_wreck_schema(map_data: dict[str, Any]) -> list[str]:
     landmark = _one(map_data, "zones", LANDMARK_ID, failures)
     backdrop = _one(map_data, "background", BACKGROUND_ID, failures)
     recorder = _one(map_data, "entities", RECORDER_ID, failures)
+    payoff = _one(map_data, "entities", PAYOFF_TARGET_ID, failures)
     survey = _one(map_data, "survey_targets", SURVEY_ID, failures)
     boat = _one(map_data, "entities", BOAT_ID, failures)
     pressure_zone = _one(map_data, "zones", PRESSURE_ZONE_ID, failures)
 
     failures.extend(_check_values(route, ROUTE_VALUES, ROUTE_ID))
+    failures.extend(validate_tool_target_reward_schema(map_data))
     if not isinstance(route.get("intent"), str) or not route["intent"].strip():
         failures.append(f"{ROUTE_ID} intent must be non-empty text.")
     failures.extend(_check_values(recorder, RECORDER_VALUES, RECORDER_ID))
+    failures.extend(_check_values(payoff, PAYOFF_REWARD_VALUES, PAYOFF_TARGET_ID))
     failures.extend(_check_values(survey, SURVEY_VALUES, SURVEY_ID))
     failures.extend(_check_values(
         landmark,
@@ -204,15 +221,14 @@ def validate_southeast_wreck_schema(map_data: dict[str, Any]) -> list[str]:
     if survey and ({"required_tool_target_id", "unlocks_survey_target_id"} & set(survey)):
         failures.append(f"{SURVEY_ID} must not duplicate the recorder-owned dependency.")
 
-    producers = [
-        item for item in _items(map_data, "survey_targets")
-        if item.get("discovery_id") == KNOWLEDGE_ID
-    ]
+    producers = discovery_reward_sources(map_data, NAVIGATION_DATA_ID)
     if len(producers) != 1:
-        failures.append(f"{ROUTE_ID} requires exactly one source survey for {KNOWLEDGE_ID}.")
-    elif producers[0].get("id") == SURVEY_ID or producers[0].get("required_route_id") == ROUTE_ID:
+        failures.append(f"{ROUTE_ID} requires exactly one source tool target for {NAVIGATION_DATA_ID}.")
+    elif producers[0].get("id") != PAYOFF_TARGET_ID:
+        failures.append(f"{NAVIGATION_DATA_ID} must come from {PAYOFF_TARGET_ID}.")
+    elif producers[0].get("required_route_id") == ROUTE_ID or route.get("tool_target_id") == PAYOFF_TARGET_ID:
         failures.append(f"{ROUTE_ID} prerequisite discovery must not depend on the route it unlocks.")
-    if KNOWLEDGE_ID == DISCOVERY_ID:
+    if NAVIGATION_DATA_ID == DISCOVERY_ID:
         failures.append("Expansion 13 prerequisite and result discoveries must remain distinct.")
 
     if pressure_zone:
@@ -224,7 +240,7 @@ def validate_southeast_wreck_schema(map_data: dict[str, Any]) -> list[str]:
         failures.append(f"{BOAT_ID} must remain the canonical boat_spawn.")
     if _terrain_hash(map_data) != TERRAIN_SHA256:
         failures.append("Expansion 13 must not change production_level_01 terrain topology.")
-    forbidden = sorted(RUNTIME_STATE_FIELDS & (set(route) | set(recorder) | set(survey)))
+    forbidden = sorted(RUNTIME_STATE_FIELDS & (set(route) | set(recorder) | set(payoff) | set(survey)))
     if forbidden:
         failures.append(f"Expansion 13 source must not author runtime state fields: {forbidden}.")
     return failures

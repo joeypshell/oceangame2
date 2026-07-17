@@ -10,6 +10,7 @@ TARGET_ID = "lower_right_anomaly_survey"
 PROJECT_ID = "salvage_cutter_project"
 PAYOFF_TARGET_ID = "salvage_sealed_wreck_cache"
 JOURNEY_ID = "scanner_cutter_first_return"
+NAVIGATION_DATA_ID = "southeast_wreck_navigation_data"
 
 _TARGET_OVERRIDE = {
     "interaction_label": "Scan maintenance case",
@@ -36,6 +37,14 @@ _PAYOFF_OVERRIDE = {
     "return_lead_label": "Cutter ready | Return beyond east current to sealed wreck",
     "payoff_label": "Sealed wreck opened",
     "next_mystery_label": "Faint maintenance signal continues deeper southeast",
+    "reward_kind": "discovery",
+    "reward_id": NAVIGATION_DATA_ID,
+    "reward_pending_label": "Wreck navigation data secured | Return to surface boat",
+    "reward_commit_label": "Navigation data logged: Southeast wreck coordinates",
+    "reward_next_lead_label": "Wreck coordinates | Signal continues deep southeast",
+    "reward_commit_map_id": "production_level_01",
+    "reward_commit_map_path": "res://maps/production_level_01.greybox.json",
+    "reward_commit_entry_id": "surface_boat_entry",
 }
 
 

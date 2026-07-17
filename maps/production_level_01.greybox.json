@@ -612,7 +612,15 @@
             "journey_role": "sealed_payoff",
             "return_lead_label": "Cutter ready | Return beyond east current to sealed wreck",
             "payoff_label": "Sealed wreck opened",
-            "next_mystery_label": "Faint maintenance signal continues deeper southeast"
+            "next_mystery_label": "Faint maintenance signal continues deeper southeast",
+            "reward_kind": "discovery",
+            "reward_id": "southeast_wreck_navigation_data",
+            "reward_pending_label": "Wreck navigation data secured | Return to surface boat",
+            "reward_commit_label": "Navigation data logged: Southeast wreck coordinates",
+            "reward_next_lead_label": "Wreck coordinates | Signal continues deep southeast",
+            "reward_commit_map_id": "production_level_01",
+            "reward_commit_map_path": "res://maps/production_level_01.greybox.json",
+            "reward_commit_entry_id": "surface_boat_entry"
           },
           "intent": "Full-level scanner-to-cutter journey source; slices remain unchanged."
         },
@@ -4797,13 +4805,13 @@
         "abyssal_basin_pressure_zone"
       ],
       "required_capability_id": "pressure_suit_1",
-      "required_discovery_id": "abyssal_basin_harmonic_source_discovery",
+      "required_discovery_id": "southeast_wreck_navigation_data",
       "landmark_zone_id": "southeast_wreck_archive_landmark",
       "tool_target_id": "southeast_wreck_recorder",
       "survey_target_id": "southeast_wreck_archive_survey",
       "commit_entry_id": "surface_boat_entry",
       "route_context": "southeast_wreck_archive_route",
-      "intent": "Reuse the pressure-protected lower route for one distant cutter and scanner chain that returns to the canonical boat."
+      "intent": "Use committed sealed-wreck navigation data to reveal one distant cutter and scanner chain across the pressure-protected lower route."
     }
   ],
   "daily_conditions": [
@@ -5578,7 +5586,15 @@
       "journey_role": "sealed_payoff",
       "return_lead_label": "Cutter ready | Return beyond east current to sealed wreck",
       "payoff_label": "Sealed wreck opened",
-      "next_mystery_label": "Faint maintenance signal continues deeper southeast"
+      "next_mystery_label": "Faint maintenance signal continues deeper southeast",
+      "reward_kind": "discovery",
+      "reward_id": "southeast_wreck_navigation_data",
+      "reward_pending_label": "Wreck navigation data secured | Return to surface boat",
+      "reward_commit_label": "Navigation data logged: Southeast wreck coordinates",
+      "reward_next_lead_label": "Wreck coordinates | Signal continues deep southeast",
+      "reward_commit_map_id": "production_level_01",
+      "reward_commit_map_path": "res://maps/production_level_01.greybox.json",
+      "reward_commit_entry_id": "surface_boat_entry"
     },
     {
       "id": "material_rubber_entry",
@@ -5859,7 +5875,7 @@
     "Does the pressure-suit return preserve continuous remembered geography?",
     "Is the abyssal survey clearly deeper than the known Signal Reef harmonic?",
     "Does the completed survey remain pending until the canonical boat return?",
-    "Does the prior abyssal finding create a broad southeast wreck promise?",
+    "Does committed sealed-wreck navigation data create a broad southeast wreck promise?",
     "Is the archive a distinct destination without changing terrain?",
     "Do cutter clearance and explicit scanner activation read as one chain?",
     "Does the recorder and pending finding return feel tense but base-tank viable?"

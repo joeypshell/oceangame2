@@ -27,6 +27,7 @@ from production_level_01_gameplay_transform import (
     slice_local_gameplay_sections,
     transform_gameplay_sections,
 )
+from production_level_01_scanner_artifact import NAVIGATION_DATA_ID
 
 
 def by_id(records: list[dict]) -> dict[str, dict]:
@@ -138,6 +139,11 @@ class ProductionLevelGameplayTransformTests(unittest.TestCase):
         self.assertEqual(payoff["payoff_label"], "Sealed wreck opened")
         self.assertIn("sealed wreck", payoff["return_lead_label"].lower())
         self.assertIn("deeper southeast", payoff["next_mystery_label"].lower())
+        self.assertEqual(payoff["reward_kind"], "discovery")
+        self.assertEqual(payoff["reward_id"], NAVIGATION_DATA_ID)
+        self.assertEqual(payoff["reward_commit_map_id"], CANDIDATE_MAP_ID)
+        self.assertEqual(payoff["reward_commit_map_path"], CANDIDATE_MAP_PATH)
+        self.assertEqual(payoff["reward_commit_entry_id"], "surface_boat_entry")
         self.assertEqual(survey["discovery_id"], "lower_right_anomaly_discovery")
         self.assertEqual(project["required_discovery_id"], survey["scan_reward_id"])
         self.assertEqual(
@@ -146,6 +152,7 @@ class ProductionLevelGameplayTransformTests(unittest.TestCase):
         )
         self.assertNotIn("scan_subject_id", by_id(self.source["survey_targets"])[survey["id"]])
         self.assertNotIn("journey_id", by_id(self.source["entities"])[payoff["id"]])
+        self.assertNotIn("reward_id", by_id(self.source["entities"])[payoff["id"]])
         self.assertEqual(
             by_id(self.source["material_projects"])[project["id"]]["required_discovery_id"],
             "lower_right_anomaly_discovery",

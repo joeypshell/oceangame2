@@ -47,7 +47,7 @@ Audit the cross-map progression graph whenever changing maps, objectives, connec
 python tools/audit_progression_graph.py
 ```
 
-Expansion 13 source changes must also run `python tools/test_validate_southeast_wreck_return.py` and `python tools/validate_southeast_wreck_return.py maps/production_level_01.greybox.json`; the focused validator enforces the one-way recorder/survey dependency, unchanged terrain, pressure crossing, player-footprint return, and base/optional oxygen margins.
+Expansion 13 source changes must also run `python tools/test_validate_tool_target_rewards.py`, `python tools/test_validate_southeast_wreck_return.py`, and `python tools/validate_southeast_wreck_return.py maps/production_level_01.greybox.json`; the focused validators enforce complete canonical-boat discovery rewards, no progression self-gates, the one-way recorder/survey dependency, unchanged terrain, pressure crossing, player-footprint return, and base/optional oxygen margins.
 
 The command derives the Expansion 01-07 dependency graph from production map JSON plus the minimal runtime-only `config/progression_contract.json`. It fails on stale generated constants/review docs, unresolved references, hard cycles, self-gated funding/materials, guard/counter inversions, and unreachable mandatory stages. Use `--write` only after intentional source changes to refresh `scripts/main/progression_contract.gd` and `docs/current/PROGRESSION_GRAPH.md`. The standalone `Progression audit` GitHub check runs the focused fixtures and audit on every pull request update and every push to `main`, without downloading Godot.
 

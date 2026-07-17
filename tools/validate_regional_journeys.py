@@ -18,6 +18,7 @@ from validate_full_level_traversal import (
     shortest_path,
     solid_cells,
 )
+from validate_tool_target_rewards import discovery_reward_sources
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -149,22 +150,29 @@ def validate_regional_journey_schema(map_data: dict[str, Any]) -> list[str]:
         if journey["promise_gate_id"] in gate_ids:
             failures.append(f"{label} promise gate must remain distinct from its regional entry gates.")
         required_discovery_id = str(journey.get("required_discovery_id", ""))
-        discovery_sources = [
+        survey_discovery_sources = [
             survey for survey in surveys.values()
             if survey.get("discovery_id") == required_discovery_id
         ] if required_discovery_id else []
+        discovery_sources = [
+            *survey_discovery_sources,
+            *discovery_reward_sources(map_data, required_discovery_id),
+        ]
         promise = zones.get(str(journey["promise_gate_id"]))
+        promise_route_id = str(promise.get("regional_journey_id", "")) if promise else ""
         if required_discovery_id:
             if len(discovery_sources) != 1:
-                failures.append(f"{label} required_discovery_id must resolve to exactly one survey result.")
+                failures.append(f"{label} required_discovery_id must resolve to exactly one survey or tool-target discovery reward.")
             elif discovery_sources[0].get("required_route_id") == journey["id"]:
                 failures.append(f"{label} required discovery must not depend on the journey it unlocks.")
-            promise_route_id = str(promise.get("regional_journey_id", "")) if promise else ""
             if (
                 promise is None
                 or promise.get("regional_landmark") is not True
                 or not discovery_sources
-                or discovery_sources[0].get("required_route_id") != promise_route_id
+                or (
+                    discovery_sources[0].get("reward_kind") != "discovery"
+                    and discovery_sources[0].get("required_route_id") != promise_route_id
+                )
             ):
                 failures.append(f"{label} discovery promise landmark is unresolved.")
         elif capability_id == "pressure_suit_1":
@@ -184,8 +192,10 @@ def validate_regional_journey_schema(map_data: dict[str, Any]) -> list[str]:
             if gate.get("required_capability_id") != capability_id:
                 failures.append(f"{label} gate {gate_id!r} must use the journey capability.")
             allowed_gate_contexts = {str(journey["id"])}
-            if discovery_sources:
+            if survey_discovery_sources:
                 allowed_gate_contexts.add(str(discovery_sources[0].get("required_route_id", "")))
+            elif discovery_sources and discovery_sources[0].get("reward_kind") == "discovery":
+                allowed_gate_contexts.add(promise_route_id)
             if gate.get("route_context") not in allowed_gate_contexts:
                 failures.append(f"{label} entry gate {gate_id!r} must use the journey route_context.")
 

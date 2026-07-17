@@ -47,6 +47,21 @@ def requirement_id(item: dict[str, Any]) -> str:
     return str(item.get("required_upgrade_id") or item.get("required_capability_id") or "")
 
 
+def add_discovery_reward_edges(graph: Any, source_key: str, item: dict[str, Any]) -> None:
+    reward_id = str(item.get("reward_id", ""))
+    if item.get("reward_kind") != "discovery" or not reward_id:
+        return
+    reward_key = graph.resolve(reward_id)
+    graph.add_edge(reward_key, source_key, "requires", hard=True, note="target and commit")
+    commit_map = str(item.get("reward_commit_map_id", ""))
+    if commit_map:
+        graph.add_edge(reward_key, f"map:{commit_map}", "requires", hard=True, note="commit destination")
+        commit_entry = str(item.get("reward_commit_entry_id", ""))
+        if commit_entry:
+            graph.add_edge(reward_key, graph.resolve(commit_entry, commit_map), "requires", hard=True, note="commit entry")
+    graph.add_edge(source_key, reward_key, "unlocks")
+
+
 def rects_overlap(left: dict[str, Any], right: dict[str, Any]) -> bool:
     try:
         return not (

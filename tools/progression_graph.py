@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """Build a cross-map progression dependency graph from production map data."""
-
 from __future__ import annotations
 
 import json
@@ -10,6 +9,7 @@ from typing import Any, Iterable
 
 from progression_graph_contract import CANONICAL_CHAIN_IDS
 from progression_graph_helpers import (
+    add_discovery_reward_edges as _add_discovery_reward_edges,
     as_dict as _dict,
     as_list as _list,
     display as _display,
@@ -172,8 +172,7 @@ class ProgressionGraphBuilder:
                     attrs=attrs,
                 ), raw_id)
                 self.items_by_map.setdefault(map_id, []).append((key, item))
-                if kind == "container" and item.get("reward_type") == "blueprint":
-                    discovery_id = str(item.get("reward_id", ""))
+                if (discovery_id := str(item.get("reward_id", ""))) and ((kind == "container" and item.get("reward_type") == "blueprint") or item.get("reward_kind") == "discovery"):
                     self.graph.add_node(Node(f"discovery:{discovery_id}", _display(discovery_id), "discovery", map_id), discovery_id)
                 if kind == "hostile":
                     defeat_key = f"defeat:{map_id}/{raw_id}"
@@ -407,6 +406,7 @@ class ProgressionGraphBuilder:
             survey_key = self.graph.resolve(survey_id, map_id)
             self.graph.add_edge(survey_key, key, "requires", hard=True, note="tool target clearance")
             self.graph.add_edge(key, survey_key, "unlocks")
+        _add_discovery_reward_edges(self.graph, key, item)
         self._apply_route_gate(key, item, map_id)
 
     def _apply_route_gate(self, key: str, item: dict[str, Any], map_id: str) -> None:

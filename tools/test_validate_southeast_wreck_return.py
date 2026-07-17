@@ -15,8 +15,9 @@ from validate_regional_journeys import validate_regional_journey_schema
 from validate_southeast_wreck_return import (
     BACKGROUND_ID,
     DISCOVERY_ID,
-    KNOWLEDGE_ID,
     LANDMARK_ID,
+    NAVIGATION_DATA_ID,
+    PAYOFF_TARGET_ID,
     PRESSURE_ZONE_ID,
     RECORDER_ID,
     ROUTE_ID,
@@ -48,6 +49,13 @@ def map_without_wreck_records() -> dict:
     map_data["regional_journeys"] = [
         item for item in map_data["regional_journeys"] if item.get("id") != ROUTE_ID
     ]
+    payoff = next(item for item in map_data["entities"] if item.get("id") == PAYOFF_TARGET_ID)
+    for field in (
+        "reward_kind", "reward_id", "reward_pending_label", "reward_commit_label",
+        "reward_next_lead_label", "reward_commit_map_id", "reward_commit_map_path",
+        "reward_commit_entry_id",
+    ):
+        payoff.pop(field, None)
     return map_data
 
 
@@ -122,7 +130,7 @@ def authored_fixture() -> dict:
         "promise_gate_id": "abyssal_basin_landmark",
         "entry_gate_ids": [PRESSURE_ZONE_ID],
         "required_capability_id": "pressure_suit_1",
-        "required_discovery_id": KNOWLEDGE_ID,
+        "required_discovery_id": NAVIGATION_DATA_ID,
         "landmark_zone_id": LANDMARK_ID,
         "tool_target_id": RECORDER_ID,
         "survey_target_id": SURVEY_ID,
@@ -177,25 +185,25 @@ class SoutheastWreckValidationTests(unittest.TestCase):
         route = graph.resolve(ROUTE_ID)
         recorder = graph.resolve(RECORDER_ID)
         survey = graph.resolve(SURVEY_ID)
-        knowledge = graph.resolve(KNOWLEDGE_ID)
+        navigation_data = graph.resolve(NAVIGATION_DATA_ID)
+        payoff = graph.resolve(PAYOFF_TARGET_ID)
         discovery = graph.resolve(DISCOVERY_ID)
         boat = graph.resolve("surface_boat_entry")
-        self.assertTrue(any(edge.target == knowledge for edge in graph.requirements(route)))
+        self.assertTrue(any(edge.target == navigation_data for edge in graph.requirements(route)))
+        self.assertTrue(any(edge.target == payoff for edge in graph.requirements(navigation_data)))
         self.assertTrue(any(edge.target == recorder for edge in graph.requirements(survey)))
         self.assertTrue(any(edge.target == route for edge in graph.requirements(survey)))
         self.assertTrue(any(edge.target == survey for edge in graph.requirements(discovery)))
         self.assertTrue(any(edge.target == boat for edge in graph.requirements(discovery)))
-        self.assertLess(result.stages[knowledge], result.stages[route])
+        self.assertLess(result.stages[payoff], result.stages[navigation_data])
+        self.assertLess(result.stages[navigation_data], result.stages[route])
         self.assertLess(result.stages[recorder], result.stages[survey])
 
     def test_rejects_circular_discovery_wrong_capability_and_terrain_drift(self) -> None:
         map_data = authored_fixture()
         route = next(item for item in map_data["regional_journeys"] if item["id"] == ROUTE_ID)
         survey = next(item for item in map_data["survey_targets"] if item["id"] == SURVEY_ID)
-        producer = next(
-            item for item in map_data["survey_targets"]
-            if item.get("discovery_id") == KNOWLEDGE_ID
-        )
+        producer = next(item for item in map_data["entities"] if item.get("id") == PAYOFF_TARGET_ID)
         producer["required_route_id"] = ROUTE_ID
         route["required_capability_id"] = "oxygen_tank_1"
         survey["required_pressure_capability_id"] = "wrong_suit"
