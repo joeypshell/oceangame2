@@ -8,6 +8,7 @@ const SurveyDependencyState := preload("res://scripts/main/survey_dependency_sta
 const RegionalJourneyPresentation := preload("res://scripts/main/regional_journey_presentation.gd")
 const ScannerConeTargeting := preload("res://scripts/main/scanner_cone_targeting.gd")
 const ScannerCutterJourneyPresentation := preload("res://scripts/main/scanner_cutter_journey_presentation.gd")
+const ToolTargetRewardRuntime := preload("res://scripts/main/tool_target_reward_runtime.gd")
 
 const SCANNER_CAPABILITY_ID := ProgressionContract.SCANNER_CAPABILITY_ID
 const COMMIT_NOTE := "Discovery committed at surface boat"
@@ -24,6 +25,7 @@ var _dependencies
 var _regional_presentation
 var _scanner_targeting
 var _scanner_cutter_presentation
+var _tool_target_rewards
 var _last_targeting_report := {}
 var _last_note := ""
 var _last_result := ""
@@ -41,6 +43,7 @@ func _init(progression_runtime, persist_profile := true, profile_state = null) -
 	_regional_presentation = RegionalJourneyPresentation.new()
 	_scanner_targeting = ScannerConeTargeting.new()
 	_scanner_cutter_presentation = ScannerCutterJourneyPresentation.new()
+	_tool_target_rewards = ToolTargetRewardRuntime.new(_profile, _expedition)
 
 
 func scanner_action(world, player) -> Dictionary:
@@ -274,6 +277,14 @@ func record_tool_target_clearance(target: Dictionary, world = null) -> Dictionar
 	return result
 
 
+func record_tool_target_reward(target: Dictionary, world) -> Dictionary:
+	var map_id := str(world.map_id) if world != null else ""
+	var result: Dictionary = _tool_target_rewards.record(target, map_id)
+	if result.has("note"):
+		_last_note = str(result["note"])
+	return result
+
+
 func report() -> Dictionary:
 	return {
 		"scanner_unlocked": has_scanner(),
@@ -455,6 +466,9 @@ func _pending_status_note() -> String:
 
 func _pending_return_text() -> String:
 	var metadata: Dictionary = _expedition.pending_metadata()
+	var pending_label := str(metadata.get("pending_label", "")).strip_edges()
+	if not pending_label.is_empty():
+		return pending_label
 	var regional_note: String = _regional_presentation.pending_return_text(metadata)
 	if not regional_note.is_empty():
 		return regional_note

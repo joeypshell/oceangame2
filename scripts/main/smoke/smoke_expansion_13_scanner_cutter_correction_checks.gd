@@ -13,7 +13,9 @@ const CUTTER_CAPABILITY_ID := "salvage_cutter"
 const PAYOFF_ID := "salvage_sealed_wreck_cache"
 const OPENING_LEAD := "Maintenance signal | Beyond east current"
 const RETURN_LEAD := "Cutter ready | Return beyond east current to sealed wreck"
-const NEXT_MYSTERY := "Faint maintenance signal continues deeper southeast"
+const REWARD_PENDING := "Wreck navigation data secured | Return to surface boat"
+const REWARD_COMMIT := "Navigation data logged: Southeast wreck coordinates"
+const NEXT_LEAD := "Wreck coordinates | Signal continues deep southeast"
 const REMEMBERED_PLACE_RADIUS_TILES := 9.0
 
 var _cargo_full_scan := false
@@ -59,7 +61,7 @@ func _smoke_expansion_13_scanner_cutter_correction_and_quit() -> void:
 	var profile = _main._anomaly_survey.profile_state()
 	var day: Dictionary = _main._expedition_day_state.report()
 	cleanup_profile_storage()
-	print("Expansion 13 scanner-cutter correction smoke passed: targeting=range%d_angle%d_rank_%s_cancel_%s artifact=%s subject=artifact reward=%s seconds=%.1f explicit_q=true proximity_auto=false oxygen_daylight_continue=true cargo_full_scan=%s pending_failure_cleanup=%s commit=canonical_boat_exact_once recipe=Ti2+Coil1 build=night project=%s capability=%s return_lead=remembered_wreck target=%s payoff=%d next_mystery=broad_southeast optional_preemption=false profile_reload=%s migration=%s discoveries=%d projects=%d day=%d sorties=%d oxygen=%.1f." % [
+	print("Expansion 13 scanner-cutter correction smoke passed: targeting=range%d_angle%d_rank_%s_cancel_%s artifact=%s subject=artifact reward=%s seconds=%.1f explicit_q=true proximity_auto=false oxygen_daylight_continue=true cargo_full_scan=%s pending_failure_cleanup=%s commit=canonical_boat_exact_once recipe=Ti2+Coil1 build=night project=%s capability=%s return_lead=remembered_wreck target=%s payoff=%d navigation_data=pending_then_committed next_lead=broad_southeast optional_preemption=false profile_reload=%s migration=%s discoveries=%d projects=%d day=%d sorties=%d oxygen=%.1f." % [
 		int(targeting.get("range_tiles", 0)),
 		int(targeting.get("half_angle_degrees", 0)),
 		str(targeting.get("ranking", "")),
@@ -310,11 +312,13 @@ func _open_remembered_wreck() -> bool:
 	if not _require(
 		_world.is_salvage_collected(PAYOFF_ID)
 		and _main._sortie_state.held_salvage_ids.has(PAYOFF_ID)
-		and _last_status_note == "Sealed wreck opened +%d" % _payoff_score
-		and _main._anomaly_survey.overlay_text(_world, _player) == NEXT_MYSTERY
+		and _last_status_note == "Sealed wreck opened | Salvage value +%d\n%s" % [_payoff_score, REWARD_PENDING]
+		and _main._anomaly_survey.overlay_text(_world, _player) == REWARD_PENDING
+		and _main._anomaly_survey.has_pending_discovery()
+		and not _main._anomaly_survey.profile_state().has_completed_discovery(CorrectionProfileState.SOUTHEAST_WRECK_NAVIGATION_DATA_ID)
 		and _oxygen_seconds < oxygen_before
 		and _main._expedition_day_state.daylight_remaining_seconds < daylight_before,
-		"cutter payoff did not produce concrete cargo plus one broad next mystery"
+		"cutter payoff did not separate concrete cargo from pending navigation data"
 	):
 		return false
 	_player.global_position = boat_position
@@ -323,8 +327,10 @@ func _open_remembered_wreck() -> bool:
 	return _require(
 		_banked_salvage_ids.has(PAYOFF_ID)
 		and _banked_score >= _payoff_score
-		and _main._anomaly_survey.overlay_text(_world, _player) == NEXT_MYSTERY,
-		"sealed-wreck payoff did not bank while preserving the next mystery"
+		and not _main._anomaly_survey.has_pending_discovery()
+		and _main._anomaly_survey.profile_state().has_completed_discovery(CorrectionProfileState.SOUTHEAST_WRECK_NAVIGATION_DATA_ID)
+		and _main._anomaly_survey.overlay_text(_world, _player) == "%s\n%s" % [REWARD_COMMIT, NEXT_LEAD],
+		"sealed-wreck payoff did not bank and commit its southeast lead"
 	)
 
 
@@ -334,6 +340,7 @@ func _verify_reload_and_migration() -> bool:
 	_profile_reload = (
 		str(reload.get("status", "")) == "loaded"
 		and reloaded.has_completed_discovery(BLUEPRINT_ID)
+		and reloaded.has_completed_discovery(CorrectionProfileState.SOUTHEAST_WRECK_NAVIGATION_DATA_ID)
 		and reloaded.has_completed_project(CUTTER_PROJECT_ID)
 		and reloaded.has_capability(CUTTER_CAPABILITY_ID)
 	)

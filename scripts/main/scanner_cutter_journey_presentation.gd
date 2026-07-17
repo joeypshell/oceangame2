@@ -42,12 +42,16 @@ func result_is_superseded(world, profile, result_text: String) -> bool:
 	)
 
 
-func completion_note(target: Dictionary, score: int) -> String:
+func completion_note(target: Dictionary, score: int, reward_is_pending := false) -> String:
 	if str(target.get("journey_id", "")) != JOURNEY_ID or str(target.get("journey_role", "")) != PAYOFF_ROLE:
 		return ""
 	var payoff := str(target.get("payoff_label", "")).strip_edges()
 	if payoff.is_empty():
 		return ""
+	if str(target.get("reward_kind", "")) == "discovery":
+		var pending := str(target.get("reward_pending_label", "")).strip_edges()
+		var value_note := "%s | Salvage value +%d" % [payoff, score]
+		return "%s\n%s" % [value_note, pending] if reward_is_pending and not pending.is_empty() else value_note
 	return "%s +%d" % [payoff, score]
 
 

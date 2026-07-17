@@ -76,13 +76,20 @@ func _update_tool_target(delta: float) -> bool:
 	_main._pry_salvage.update({}, delta)
 	if str(result.get("state", "")) == "complete":
 		var target_id := str(result.get("id", ""))
+		var reward: Dictionary = _main._anomaly_survey.record_tool_target_reward(target, _main._world)
+		if not bool(reward.get("allow_collection", false)):
+			_main._last_status_note = str(reward.get("note", "Wreck data unavailable"))
+			return true
 		if _main._world.collect_tool_target(target_id):
 			_main._anomaly_survey.record_tool_target_clearance(target, _main._world)
 			var score: int = int(_main._world.get_salvage_score(target_id))
-			var note: String = _scanner_cutter_presentation.completion_note(target, score)
+			var note: String = _scanner_cutter_presentation.completion_note(target, score, bool(reward.get("pending", false)))
 			if note.is_empty():
 				note = "%s opened +%d" % [_display_label(str(result.get("label", "sealed wreck"))), score]
 			_main._collect_salvage_into_cargo(target_id, note)
+		elif bool(reward.get("changed", false)):
+			_main._anomaly_survey.clear_unbanked("tool_target_collect_failed", _main._world)
+			_main._last_status_note = "Wreck data could not be secured"
 	elif str(result.get("state", "")) == "ready" and _main._active_tools.selected_tool_id() != _main.ActiveToolController.CUTTER_TOOL_ID:
 		_main._last_status_note = "%s | Tab Cutter | Q Use" % _display_label(str(result.get("label", "sealed wreck")))
 	elif result.has("note"):

@@ -195,6 +195,12 @@ def godot_gates(godot: str) -> list[Gate]:
             fail_on_godot_error=True,
         ),
         Gate(
+            "smoke: sealed wreck reward state",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_sealed_wreck_reward_state.gd"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
             "smoke: current stabilizer project state",
             [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_current_stabilizer_project_state.gd"],
             godot_backed=True,

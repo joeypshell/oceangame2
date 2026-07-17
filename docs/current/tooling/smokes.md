@@ -99,6 +99,8 @@ The integrated Expansion 13 smoke starts with an empty temporary profile, prepar
 
 The active-tool selection smoke checks the ordered scanner/cutter/shock-prod catalog, passive-capability exclusion, first-owned selection, cycle/wrap behavior, invalid-selection normalization, single-tool dispatch, and the `Tab`/`Q` input bindings. Run it as `--smoke-active-tool-selection`.
 
+The focused sealed-wreck reward state check runs directly with `--script res://scripts/main/smoke/smoke_sealed_wreck_reward_state.gd`. It protects cargo-full blocking, separate +300 salvage value and pending navigation data, failure restoration, canonical-boat exact-once commitment, southeast-lead presentation, profile reload, and completed-archive migration. Integrated route coverage remains in the Expansion 13 journey smoke.
+
 The salvage-loop smoke check loads the default production level, collects authored salvage through the same runtime methods used in play, returns to extraction, confirms completion, resets, and exits.
 
 The production-slice route smoke loads `production_slice_01`, checks open-water source routes to each authored salvage point, banks cargo at the boat whenever the held capacity fills, confirms completion, resets, and exits.
