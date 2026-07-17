@@ -12,6 +12,7 @@ const SWIM_FRAME_RATE := 8.0
 
 @onready var _body := $Body as Sprite2D
 @onready var _light_cone := $LightCone as Sprite2D
+@onready var _scanner_field := $ScannerField as Node2D
 
 var _facing_sign := 1.0
 var _light_range_scale := BASE_LIGHT_RANGE_SCALE
@@ -107,6 +108,18 @@ func get_facing_report() -> Dictionary:
 
 func get_facing_sign() -> float:
 	return _facing_sign
+
+
+func sync_scanner_presentation(runtime_report: Dictionary) -> void:
+	_scanner_field.sync(runtime_report, _facing_sign)
+
+
+func show_scanner_action(action_result: Dictionary, runtime_report: Dictionary) -> void:
+	_scanner_field.show_scanner_action(action_result, runtime_report, _facing_sign)
+
+
+func get_scanner_presentation_report() -> Dictionary:
+	return _scanner_field.get_test_report()
 
 
 func _wasd_vector() -> Vector2:
