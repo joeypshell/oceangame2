@@ -140,6 +140,12 @@ def godot_gates(godot: str) -> list[Gate]:
             fail_on_godot_error=True,
         ),
         Gate(
+            "smoke: material sprite assets",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_material_sprite_assets.gd"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
             "smoke: material project state",
             [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_material_project_state.gd"],
             godot_backed=True,

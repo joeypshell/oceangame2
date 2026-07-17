@@ -129,6 +129,9 @@ jobs:
             exit 1
           fi
 
+      - name: Run material sprite asset smoke check
+        run: godot --headless --path . --script res://scripts/main/smoke/smoke_material_sprite_assets.gd
+
       - name: Run durable light project state smoke check
         run: |
           set +e

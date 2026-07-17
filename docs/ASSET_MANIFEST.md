@@ -74,6 +74,17 @@ Review sheet:
 references/asset_reviews/prop_sprites_01_review.png
 ```
 
+### Materials
+
+Material candidates retain source-authored `material_id`, placement, and fallback `kind`. `tools/generate_material_sprites.py` deterministically generates the current individually replaceable presentation assets.
+
+| Asset | Size | Purpose | Status | Notes |
+|---|---:|---|---|---|
+| `assets/materials/titanium_scrap_01.png` | 32x32 | Titanium material source | draft | Pale overlapping scrap plates; preserves the prior metal direction. |
+| `assets/materials/rubber_sheet_01.png` | 32x32 | Rubber material source | draft | Dark rolled/folded elastomer with a distinct bundled silhouette. |
+| `assets/materials/conductive_coil_01.png` | 32x32 | Conductive-coil source | draft | Copper spring silhouette with visible wound path and terminals. |
+| `references/asset_reviews/material_sprites_01_review.png` | 720x236 | Material gameplay-scale review | draft | Compares desktop, mobile-scaled, and enlarged nearest-neighbor views. |
+
 ## Player
 
 | Asset | Size | Purpose | Status | Notes |

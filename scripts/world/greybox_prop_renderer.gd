@@ -12,14 +12,15 @@ const COLOR_HAZARD_DARK := Color(0.40, 0.04, 0.10, 1.0)
 const COLOR_HAZARD_LIGHT := Color(1.0, 0.58, 0.66, 1.0)
 
 
-func add_salvage_prop(parent: Node2D, marker_name: String, center: Vector2, kind: String, tier: String, interaction: String, asset_lookup) -> Node2D:
+func add_salvage_prop(parent: Node2D, marker_name: String, center: Vector2, kind: String, tier: String, interaction: String, asset_lookup, texture_override = null, sprite_name := "PropSprite") -> Node2D:
 	var root := Node2D.new()
 	root.name = marker_name
 	root.position = center
 	root.z_index = 8
 	parent.add_child(root)
 
-	if not _add_prop_sprite(root, "PropSprite", _prop_texture(kind, "crate", asset_lookup)):
+	var texture = texture_override if texture_override is Texture2D else _prop_texture(kind, "crate", asset_lookup)
+	if not _add_prop_sprite(root, sprite_name, texture):
 		match kind:
 			"wreck_fragment":
 				_add_wreck_fragment_prop(root)

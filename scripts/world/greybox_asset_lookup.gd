@@ -12,8 +12,14 @@ const PROP_SPRITE_TEXTURES := {
 	"mine": "res://assets/props/mine_01.png",
 	"jellyfish": "res://assets/props/jellyfish_01.png",
 }
+const MATERIAL_SPRITE_TEXTURES := {
+	"titanium_scrap": "res://assets/materials/titanium_scrap_01.png",
+	"rubber_sheet": "res://assets/materials/rubber_sheet_01.png",
+	"conductive_coil": "res://assets/materials/conductive_coil_01.png",
+}
 
 var _prop_texture_cache := {}
+var _material_texture_cache := {}
 
 
 func load_png_texture(texture_path: String) -> Texture2D:
@@ -57,6 +63,18 @@ func prop_texture(kind: String, fallback_kind: String) -> Texture2D:
 
 	var texture := load_png_texture(texture_path)
 	_prop_texture_cache[sprite_kind] = texture
+	return texture
+
+
+func material_texture(material_id: String) -> Texture2D:
+	if _material_texture_cache.has(material_id):
+		var cached = _material_texture_cache[material_id]
+		return cached if cached is Texture2D else null
+	var texture_path := str(MATERIAL_SPRITE_TEXTURES.get(material_id, ""))
+	if texture_path.is_empty():
+		return null
+	var texture := load_png_texture(texture_path)
+	_material_texture_cache[material_id] = texture
 	return texture
 
 
