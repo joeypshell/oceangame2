@@ -3,6 +3,7 @@ extends SceneTree
 const MAIN_SCENE := preload("res://scenes/main/Main.tscn")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const PlayerHealthState := preload("res://scripts/main/player_health_state.gd")
+const ScannerSmokePose := preload("res://scripts/main/smoke/scanner_smoke_pose.gd")
 
 var _failures: Array[String] = []
 
@@ -116,7 +117,8 @@ func _seed_pending_survey(main) -> void:
 	profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 1, ExpansionProfileState.COIL_MATERIAL_ID: 1}, false)
 	profile.complete_material_project(_project_by_id(main._world, ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID), false)
 	var target: Dictionary = main._world.get_survey_targets()[0]
-	main._player.global_position = target.get("center", Vector2.ZERO)
+	var pose: Dictionary = ScannerSmokePose.new().place(main._world, main._player, target)
+	_expect(bool(pose.get("found", false)), "survey setup had no clear scan pose")
 	main._anomaly_survey.scanner_action(main._world, main._player)
 	main._anomaly_survey.update(main._world, main._player, float(target.get("interaction_seconds", 1.0)) + 0.1)
 	_expect(main._anomaly_survey.has_pending_discovery(), "survey setup did not create pending state")

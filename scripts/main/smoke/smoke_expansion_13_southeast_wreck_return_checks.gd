@@ -118,7 +118,8 @@ func _verify_pre_recorder_scan_denial() -> bool:
 	var survey := _survey_by_id(SURVEY_ID_13)
 	if not _require(not survey.is_empty(), "missing southeast wreck survey"):
 		return false
-	_place_player(survey.get("center", Vector2.ZERO))
+	if not _place_for_scan(survey):
+		return false
 	var denied: Dictionary = _main._anomaly_survey.scanner_action(_world, _player)
 	var interaction: Dictionary = _main._anomaly_survey.report().get("interaction", {})
 	var valid := _require(
@@ -215,7 +216,9 @@ func _complete_real_wreck_return() -> bool:
 	):
 		return false
 
-	if not await _drive_to("southeast_wreck_recorder_to_survey", survey.get("center", Vector2.ZERO), navigation):
+	if not await _drive_to("southeast_wreck_recorder_to_survey", route.get("scan_origin", Vector2.ZERO), navigation):
+		return false
+	if not _place_for_scan(survey):
 		return false
 	_advance(0.25)
 	if not _require(is_zero_approx(float(_main._anomaly_survey.report().get("interaction", {}).get("progress", -1.0))), "survey advanced before Q/SCAN"):
@@ -227,11 +230,15 @@ func _complete_real_wreck_return() -> bool:
 	_survey_partial = float(_main._anomaly_survey.report().get("interaction", {}).get("progress", 0.0))
 	if not _require(_scanner_full_cargo and _survey_partial > 0.0 and _survey_partial < 1.0, "explicit full-cargo scan did not expose partial progress"):
 		return false
-	_place_player(survey.get("center", Vector2.ZERO) + Vector2(-48.0, 0.0))
+	var scan_position: Vector2 = _player.global_position
+	_player.swim_in_direction(Vector2(-_player.get_facing_sign(), 0.0), 0.0)
+	_player.global_position = scan_position
+	_player.reset_motion()
 	_advance(0.0)
 	if not _require(is_zero_approx(float(_main._anomaly_survey.report().get("interaction", {}).get("progress", -1.0))), "leaving survey range did not cancel progress"):
 		return false
-	_place_player(survey.get("center", Vector2.ZERO))
+	if not _place_for_scan(survey):
+		return false
 	_press_key(KEY_Q)
 	_advance(float(survey.get("interaction_seconds", 0.0)) + 0.1)
 	if not _require(
@@ -278,9 +285,13 @@ func _plan_route(recorder: Dictionary, survey: Dictionary) -> Dictionary:
 		return {}
 	var navigation = _navigation_for("", PASSABLE_CAPABILITIES)
 	var boat: Vector2 = _world.get_entry_position(BOAT_ENTRY_ID)
+	var scan_pose: Dictionary = ScannerSmokePose.new().find_pose(_world, survey)
+	if not _require(bool(scan_pose.get("found", false)), "wreck survey has no clear scan pose"):
+		return {}
+	var scan_origin: Vector2 = scan_pose.get("origin", Vector2.ZERO)
 	var outbound: PackedVector2Array = navigation.path_between(boat, recorder.get("center", Vector2.ZERO))
-	var interaction_leg: PackedVector2Array = navigation.path_between(recorder.get("center", Vector2.ZERO), survey.get("center", Vector2.ZERO))
-	var return_leg: PackedVector2Array = navigation.path_between(survey.get("center", Vector2.ZERO), boat)
+	var interaction_leg: PackedVector2Array = navigation.path_between(recorder.get("center", Vector2.ZERO), scan_origin)
+	var return_leg: PackedVector2Array = navigation.path_between(scan_origin, boat)
 	if not _require(outbound.size() > 1 and interaction_leg.size() > 1 and return_leg.size() > 1, "wreck chain lacks a collision-active boat return route"):
 		return {}
 	var zone: Dictionary = _world.get_marker_zone(PRESSURE_ZONE_ID)
@@ -299,7 +310,7 @@ func _plan_route(recorder: Dictionary, survey: Dictionary) -> Dictionary:
 		"route budget lost tight base viability or useful optional margin"
 	):
 		return {}
-	return {"navigation": navigation}
+	return {"navigation": navigation, "scan_origin": scan_origin}
 
 
 func _verify_profile_reload() -> bool:

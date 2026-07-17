@@ -4,6 +4,7 @@ const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const ProgressionRuntimeController := preload("res://scripts/main/progression_runtime_controller.gd")
 const SessionProgression := preload("res://scripts/main/session_progression.gd")
+const ScannerSmokePose := preload("res://scripts/main/smoke/scanner_smoke_pose.gd")
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 
 const ORIGIN_MAP_PATH := "res://maps/production_slice_01.greybox.json"
@@ -19,6 +20,17 @@ const TEST_PATH := "user://oceangame2_harmonic_survey_test.json"
 var _failures: Array[String] = []
 
 
+class ScannerPlayer:
+	extends Node2D
+	var scanner_facing_sign := 1.0
+
+	func get_facing_sign() -> float:
+		return scanner_facing_sign
+
+	func face_scanner_direction(sign: float) -> void:
+		scanner_facing_sign = 1.0 if sign >= 0.0 else -1.0
+
+
 func _init() -> void:
 	call_deferred("_run")
 
@@ -30,7 +42,7 @@ func _run() -> void:
 	var profile := ExpansionProfileState.new(TEST_PATH, true)
 	var runtime := AnomalySurveyRuntime.new(progression, true, profile)
 	progression.set_profile_state(profile)
-	var player := Node2D.new()
+	var player := ScannerPlayer.new()
 	get_root().add_child(player)
 
 	var origin: Node = _load_world(ORIGIN_MAP_PATH)
@@ -52,7 +64,7 @@ func _run() -> void:
 	runtime.on_map_loaded(target_world)
 	var target := _target_by_id(target_world, TARGET_ID)
 	_expect(not target.is_empty(), "source-authored survey target missing at runtime")
-	player.global_position = target.get("center", Vector2.ZERO)
+	_place_for_scan(target_world, player, target)
 	var initial: Dictionary = runtime.update(target_world, player, 1.0)
 	_expect(str(initial.get("state", "")) == "awaiting_activation", "survey advanced before Q/SCAN activation")
 	_expect(is_zero_approx(float(initial.get("survey", {}).get("progress", -1.0))), "proximity-only survey retained progress")
@@ -61,12 +73,13 @@ func _run() -> void:
 	var partial: Dictionary = runtime.update(target_world, player, 1.0)
 	var progress := float(partial.get("survey", {}).get("progress", 0.0))
 	_expect(progress > 0.0 and progress < 1.0, "survey did not report partial progress")
-	player.global_position = Vector2.ZERO
+	player.face_scanner_direction(-player.get_facing_sign())
 	var canceled: Dictionary = runtime.update(target_world, player, 0.0)
-	_expect(str(canceled.get("state", "")) == "canceled", "leaving target did not cancel survey")
+	_expect(str(canceled.get("state", "")) == "canceled", "turning away did not cancel survey")
+	_expect(runtime.report().get("targeting", {}).get("reason") == "behind", "turn cancellation did not report behind target")
 	_expect(not runtime.has_pending_discovery(), "canceled survey created pending discovery")
 
-	player.global_position = target.get("center", Vector2.ZERO)
+	_place_for_scan(target_world, player, target)
 	var retry_wait: Dictionary = runtime.update(target_world, player, 1.0)
 	_expect(str(retry_wait.get("state", "")) == "awaiting_activation", "returning to a canceled survey did not require a new Q/SCAN press")
 	_expect(is_zero_approx(float(retry_wait.get("survey", {}).get("progress", -1.0))), "canceled survey resumed from proximity")
@@ -102,7 +115,7 @@ func _run() -> void:
 	full_level_profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 1, ExpansionProfileState.COIL_MATERIAL_ID: 1}, false)
 	var full_level_unlock: Dictionary = full_level_profile.complete_material_project(_project_by_id(regional_world, ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID), false)
 	_expect(bool(full_level_unlock.get("changed", false)), "scanner project did not unlock on promoted full level")
-	player.global_position = regional_target.get("center", Vector2.ZERO)
+	_place_for_scan(regional_world, player, regional_target)
 	var regional_clue := runtime.overlay_text(regional_world, player)
 	_expect(regional_clue.find(str(regional_target.get("clue_label", ""))) != -1 and regional_clue.find("Q/SCAN: Survey Signal Reef") != -1, "regional clue or scan action did not use source text")
 	runtime.scanner_action(regional_world, player)
@@ -124,7 +137,7 @@ func _run() -> void:
 		not profile.has_completed_discovery(ExpansionProfileState.SIGNAL_REEF_DISCOVERY_ID),
 		"regional hazard cleanup committed discovery"
 	)
-	player.global_position = regional_target.get("center", Vector2.ZERO)
+	_place_for_scan(regional_world, player, regional_target)
 	runtime.scanner_action(regional_world, player)
 	regional_complete = runtime.update(
 		regional_world,
@@ -181,7 +194,7 @@ func _exercise_harmonic_return(runtime, progression, profile, world, player) -> 
 	if target.is_empty() or zone.is_empty():
 		return {}
 
-	player.global_position = target.get("center", Vector2.ZERO)
+	_place_for_scan(world, player, target)
 	progression.apply_light_profile(world, player)
 	var pre_light_alpha := float(_visibility_zone_by_id(world, HARMONIC_ZONE_ID).get("overlay_alpha", 0.0))
 	var clue := str(target.get("clue_label", ""))
@@ -214,7 +227,7 @@ func _exercise_harmonic_return(runtime, progression, profile, world, player) -> 
 	_expect(upgraded_alpha > 0.0 and upgraded_alpha < pre_light_alpha, "durable light did not improve harmonic-zone readability")
 	_expect(str(_target_by_id(world, HARMONIC_TARGET_ID).get("state", "")) == "available", "light-owned harmonic target did not become available")
 
-	player.global_position = target.get("center", Vector2.ZERO)
+	_place_for_scan(world, player, target)
 	_expect(runtime.scanner_action(world, player).get("reason") == "activated", "Q/SCAN did not activate the harmonic survey")
 	var partial: Dictionary = runtime.update(world, player, 1.0)
 	var partial_progress := float(partial.get("survey", {}).get("progress", 0.0))
@@ -225,7 +238,7 @@ func _exercise_harmonic_return(runtime, progression, profile, world, player) -> 
 	_expect(canceled.get("state") == "canceled", "leaving harmonic range did not cancel partial progress")
 
 	for reason in ["hazard", "oxygen_failure", "combat_defeat", "reset"]:
-		player.global_position = target.get("center", Vector2.ZERO)
+		_place_for_scan(world, player, target)
 		runtime.scanner_action(world, player)
 		runtime.update(world, player, 1.0)
 		runtime.clear_unbanked(reason, world)
@@ -235,7 +248,7 @@ func _exercise_harmonic_return(runtime, progression, profile, world, player) -> 
 			"%s cleanup retained harmonic progress or pending state" % reason
 		)
 
-	player.global_position = target.get("center", Vector2.ZERO)
+	_place_for_scan(world, player, target)
 	runtime.scanner_action(world, player)
 	var pending: Dictionary = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
 	_expect(bool(pending.get("pending", false)), "completed harmonic survey did not become pending")
@@ -246,7 +259,7 @@ func _exercise_harmonic_return(runtime, progression, profile, world, player) -> 
 		"failure cleanup committed or retained the pending harmonic discovery"
 	)
 
-	player.global_position = target.get("center", Vector2.ZERO)
+	_place_for_scan(world, player, target)
 	runtime.scanner_action(world, player)
 	pending = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
 	_expect(bool(pending.get("pending", false)), "harmonic survey did not restart after cleanup")
@@ -258,7 +271,7 @@ func _exercise_harmonic_return(runtime, progression, profile, world, player) -> 
 	_expect(runtime.result_text() == expected_result, "harmonic boat payoff did not use source finding and next lead")
 
 	runtime.on_map_loaded(world)
-	player.global_position = target.get("center", Vector2.ZERO)
+	_place_for_scan(world, player, target)
 	var next_day: Dictionary = runtime.update(world, player, 0.0)
 	_expect(next_day.get("reason") == "completed" and not runtime.has_pending_discovery(), "next day recreated harmonic pending state")
 
@@ -291,7 +304,7 @@ func _exercise_abyssal_return(runtime, _progression, profile, world, player) -> 
 	if target.is_empty():
 		return {}
 
-	player.global_position = target.get("center", Vector2.ZERO)
+	_place_for_scan(world, player, target)
 	var clue := str(target.get("clue_label", ""))
 	_expect(runtime.overlay_text(world, player) == clue, "pre-suit abyssal clue was not source-derived")
 	var blocked: Dictionary = runtime.update(world, player, 1.0)
@@ -319,7 +332,7 @@ func _exercise_abyssal_return(runtime, _progression, profile, world, player) -> 
 	runtime.on_map_loaded(world)
 	_expect(str(_target_by_id(world, ABYSSAL_TARGET_ID).get("state", "")) == "available", "pressure-owned abyssal target did not become available")
 
-	player.global_position = target.get("center", Vector2.ZERO)
+	_place_for_scan(world, player, target)
 	_expect(runtime.scanner_action(world, player).get("reason") == "activated", "Q/SCAN did not activate the abyssal survey")
 	var partial: Dictionary = runtime.update(world, player, 1.0)
 	var partial_progress := float(partial.get("survey", {}).get("progress", 0.0))
@@ -329,7 +342,7 @@ func _exercise_abyssal_return(runtime, _progression, profile, world, player) -> 
 	_expect(runtime.update(world, player, 0.0).get("state") == "canceled", "leaving abyssal range did not cancel progress")
 
 	for reason in ["hazard", "oxygen_failure", "combat_defeat", "reset", "nightfall"]:
-		player.global_position = target.get("center", Vector2.ZERO)
+		_place_for_scan(world, player, target)
 		runtime.scanner_action(world, player)
 		runtime.update(world, player, 1.0)
 		runtime.clear_unbanked(reason, world)
@@ -339,7 +352,7 @@ func _exercise_abyssal_return(runtime, _progression, profile, world, player) -> 
 			"%s cleanup retained abyssal progress or pending state" % reason
 		)
 
-	player.global_position = target.get("center", Vector2.ZERO)
+	_place_for_scan(world, player, target)
 	runtime.scanner_action(world, player)
 	var pending: Dictionary = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
 	_expect(bool(pending.get("pending", false)), "completed abyssal survey did not become pending")
@@ -352,7 +365,7 @@ func _exercise_abyssal_return(runtime, _progression, profile, world, player) -> 
 		"failure cleanup committed or retained the pending abyssal discovery"
 	)
 
-	player.global_position = target.get("center", Vector2.ZERO)
+	_place_for_scan(world, player, target)
 	runtime.scanner_action(world, player)
 	pending = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
 	_expect(bool(pending.get("pending", false)), "abyssal survey did not restart after cleanup")
@@ -364,7 +377,7 @@ func _exercise_abyssal_return(runtime, _progression, profile, world, player) -> 
 	_expect(runtime.result_text() == expected_result, "abyssal boat payoff did not use source finding and next lead")
 
 	runtime.on_map_loaded(world)
-	player.global_position = target.get("center", Vector2.ZERO)
+	_place_for_scan(world, player, target)
 	var next_day: Dictionary = runtime.update(world, player, 0.0)
 	_expect(next_day.get("reason") == "completed" and not runtime.has_pending_discovery(), "next day recreated abyssal pending state")
 	var reloaded_profile := ExpansionProfileState.new(TEST_PATH, true)
@@ -383,6 +396,11 @@ func _exercise_abyssal_return(runtime, _progression, profile, world, player) -> 
 		"partial": partial_progress,
 		"committed": profile.has_completed_discovery(ExpansionProfileState.ABYSSAL_HARMONIC_DISCOVERY_ID),
 	}
+
+
+func _place_for_scan(world, player, target: Dictionary) -> void:
+	var pose: Dictionary = ScannerSmokePose.new().place(world, player, target)
+	_expect(bool(pose.get("found", false)), "no clear scan pose for %s: %s" % [target.get("id", "target"), pose.get("attempts", [])])
 
 
 func _load_world(path: String):

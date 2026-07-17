@@ -133,6 +133,73 @@ func find_open_path(
 	return path
 
 
+func has_clear_terrain_line(
+	start_position: Vector2,
+	end_position: Vector2,
+	map_tile_size: Vector2i,
+	tile_size: int,
+	solid_cells: Dictionary
+) -> bool:
+	if tile_size <= 0 or map_tile_size.x <= 0 or map_tile_size.y <= 0:
+		return false
+	var map_pixel_size := Vector2(map_tile_size) * float(tile_size)
+	if not Rect2(Vector2.ZERO, map_pixel_size).has_point(start_position):
+		return false
+	if not Rect2(Vector2.ZERO, map_pixel_size).has_point(end_position):
+		return false
+
+	var start_grid := start_position / float(tile_size)
+	var end_grid := end_position / float(tile_size)
+	var ray := end_grid - start_grid
+	var cell := Vector2i(floori(start_grid.x), floori(start_grid.y))
+	var end_cell := Vector2i(floori(end_grid.x), floori(end_grid.y))
+	if solid_cells.has(cell) or solid_cells.has(end_cell):
+		return false
+	if cell == end_cell:
+		return true
+
+	var step_x := signi(int(signf(ray.x)))
+	var step_y := signi(int(signf(ray.y)))
+	var delta_x := absf(1.0 / ray.x) if not is_zero_approx(ray.x) else INF
+	var delta_y := absf(1.0 / ray.y) if not is_zero_approx(ray.y) else INF
+	var next_x := float(cell.x + 1) if step_x > 0 else float(cell.x)
+	var next_y := float(cell.y + 1) if step_y > 0 else float(cell.y)
+	var max_x := (next_x - start_grid.x) / ray.x if step_x != 0 else INF
+	var max_y := (next_y - start_grid.y) / ray.y if step_y != 0 else INF
+
+	# Traverse every touched cell; exact corner crossings inspect both neighbors.
+	while cell != end_cell:
+		if absf(max_x - max_y) <= 0.000001:
+			var horizontal := cell + Vector2i(step_x, 0)
+			var vertical := cell + Vector2i(0, step_y)
+			if not _open_line_cell(horizontal, map_tile_size, solid_cells):
+				return false
+			if not _open_line_cell(vertical, map_tile_size, solid_cells):
+				return false
+			cell += Vector2i(step_x, step_y)
+			max_x += delta_x
+			max_y += delta_y
+		elif max_x < max_y:
+			cell.x += step_x
+			max_x += delta_x
+		else:
+			cell.y += step_y
+			max_y += delta_y
+		if not _open_line_cell(cell, map_tile_size, solid_cells):
+			return false
+	return true
+
+
+func _open_line_cell(cell: Vector2i, map_tile_size: Vector2i, solid_cells: Dictionary) -> bool:
+	return (
+		cell.x >= 0
+		and cell.y >= 0
+		and cell.x < map_tile_size.x
+		and cell.y < map_tile_size.y
+		and not solid_cells.has(cell)
+	)
+
+
 func get_extraction_center(
 	extraction_zones: Array,
 	boat_entities: Array,

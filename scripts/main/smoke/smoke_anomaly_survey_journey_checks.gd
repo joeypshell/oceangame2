@@ -6,6 +6,7 @@ const ExpansionProfileState := preload("res://scripts/main/expansion_profile_sta
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
 const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
 const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
+const ScannerSmokePose := preload("res://scripts/main/smoke/scanner_smoke_pose.gd")
 
 const TEST_PROFILE_PATH := "user://oceangame2_anomaly_journey_smoke.json"
 const MAP_ID := "production_slice_01"
@@ -77,7 +78,8 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 	var empty_held: int = _held_salvage
 	_held_salvage = _held_salvage_capacity()
 	_held_salvage_ids = ["scanner_full_cargo_a", "scanner_full_cargo_b"]
-	_player.global_position = target["center"]
+	if not _place_for_scan(target):
+		return
 	_process(0.0)
 	var ready_status: String = _status_label.text
 	if not _require(
@@ -105,7 +107,8 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 		return
 	if not _complete_survey(target, _held_salvage_capacity(), wallet_after_cache):
 		return
-	_player.global_position = resource_target["center"]
+	if not _place_for_scan(resource_target):
+		return
 	_process(0.0)
 	_press_key(KEY_Q)
 	var pending_status: String = _status_label.text
@@ -167,7 +170,8 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 
 
 func _complete_survey(target: Dictionary, expected_held: int, expected_wallet: int) -> bool:
-	_player.global_position = target["center"]
+	if not _place_for_scan(target):
+		return false
 	_press_key(KEY_Q)
 	_process(float(target.get("interaction_seconds", 0.0)) + 0.1)
 	return _require(
@@ -176,6 +180,11 @@ func _complete_survey(target: Dictionary, expected_held: int, expected_wallet: i
 		and _session_wallet() == expected_wallet,
 		"survey completion changed cargo or wallet semantics"
 	)
+
+
+func _place_for_scan(target: Dictionary) -> bool:
+	var pose: Dictionary = ScannerSmokePose.new().place(_world, _player, target)
+	return _require(bool(pose.get("found", false)), "no clear scan pose for %s" % target.get("id", "target"))
 
 
 func _attach_profile(profile) -> void:

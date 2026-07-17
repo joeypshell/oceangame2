@@ -4,6 +4,7 @@ const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd"
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const FullLevelNavigation := preload("res://scripts/main/smoke/smoke_full_level_navigation.gd")
 const ScannerProjectJourney := preload("res://scripts/main/smoke/smoke_scanner_project_journey.gd")
+const ScannerSmokePose := preload("res://scripts/main/smoke/scanner_smoke_pose.gd")
 
 const MAP_ID := "production_level_01"
 const BOAT_ENTRY_ID := "surface_boat_entry"
@@ -235,7 +236,12 @@ func _complete_regional_journey() -> bool:
 	if not await _drive_to("signal_reef_landmark", landmark_center, navigation):
 		return false
 	var landmark_position: Vector2 = _player.global_position
-	if not await _drive_to("signal_reef_survey", target["center"], navigation):
+	var scan_pose: Dictionary = ScannerSmokePose.new().find_pose(_world, target)
+	if not _require(bool(scan_pose.get("found", false)), "regional destination has no clear scan pose"):
+		return false
+	if not await _drive_to("signal_reef_survey", scan_pose.get("origin", Vector2.ZERO), navigation):
+		return false
+	if not _place_for_scan(target):
 		return false
 	var survey_position: Vector2 = _player.global_position
 	_advance(0.0)
@@ -277,6 +283,11 @@ func _complete_regional_journey() -> bool:
 		_main._expedition_day_state.daylight_remaining_seconds,
 	])
 	return true
+
+
+func _place_for_scan(target: Dictionary) -> bool:
+	var pose: Dictionary = ScannerSmokePose.new().place(_world, _player, target)
+	return _require(bool(pose.get("found", false)), "no clear scan pose for %s" % target.get("id", "target"))
 
 
 func _navigation_for(material_id: String, capabilities: Array, allowed_salvage_id := ""):

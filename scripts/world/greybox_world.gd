@@ -501,6 +501,10 @@ func find_open_path(start_position: Vector2, target_position: Vector2) -> Array:
 	return _world_queries.find_open_path(start_position, target_position, map_tile_size, tile_size, _solid_cells)
 
 
+func has_clear_terrain_line(start_position: Vector2, end_position: Vector2) -> bool:
+	return _world_queries.has_clear_terrain_line(start_position, end_position, map_tile_size, tile_size, _solid_cells)
+
+
 func get_extraction_center() -> Vector2:
 	return _world_queries.get_extraction_center(_extraction_zones, _boat_entities, spawn_position, tile_size)
 

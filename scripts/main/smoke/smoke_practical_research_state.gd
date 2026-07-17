@@ -5,6 +5,7 @@ const ExpeditionDiscoveryState := preload("res://scripts/main/expedition_discove
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const ProgressionRuntimeController := preload("res://scripts/main/progression_runtime_controller.gd")
 const SessionProgression := preload("res://scripts/main/session_progression.gd")
+const ScannerSmokePose := preload("res://scripts/main/smoke/scanner_smoke_pose.gd")
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 
 const MAP_PATH := "res://maps/production_slice_01.greybox.json"
@@ -19,6 +20,17 @@ class StorageFailingProfile:
 
 	func complete_discovery(discovery_id: String, _persist := true) -> Dictionary:
 		return {"changed": false, "reason": "storage_error", "discovery_id": discovery_id}
+
+
+class ScannerPlayer:
+	extends Node2D
+	var scanner_facing_sign := 1.0
+
+	func get_facing_sign() -> float:
+		return scanner_facing_sign
+
+	func face_scanner_direction(sign: float) -> void:
+		scanner_facing_sign = 1.0 if sign >= 0.0 else -1.0
 
 
 func _init() -> void:
@@ -36,7 +48,7 @@ func _run() -> void:
 	profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 1, ExpansionProfileState.COIL_MATERIAL_ID: 1}, false)
 	profile.complete_material_project(_project_by_id(world, ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID), true)
 	var runtime := AnomalySurveyRuntime.new(ProgressionRuntimeController.new(SessionProgression.new()), true, profile)
-	var player := Node2D.new()
+	var player := ScannerPlayer.new()
 	get_root().add_child(player)
 	runtime.on_map_loaded(world)
 
@@ -44,7 +56,7 @@ func _run() -> void:
 	_expect(not target.is_empty(), "resource survey target missing")
 	_expect(str(target.get("target_type", "")) == "resource", "resource target type mismatch")
 	_expect(runtime.has_scanner(), "resource setup did not own project-built scanner")
-	player.global_position = target.get("center", Vector2.ZERO)
+	_place_for_scan(world, player, target)
 	var ready_overlay := runtime.overlay_text(world, player)
 	_expect(ready_overlay.find(str(target.get("clue_label", ""))) != -1 and ready_overlay.find("Q/SCAN: Survey mineral trace") != -1, "resource clue or scan action was not source-derived")
 	_expect(runtime.scanner_action(world, player).get("reason") == "activated", "Q/SCAN did not activate resource research")
@@ -54,7 +66,7 @@ func _run() -> void:
 	player.global_position = Vector2.ZERO
 	_expect(str(runtime.update(world, player, 0.0).get("state", "")) == "canceled", "resource leave-range did not cancel")
 
-	player.global_position = target.get("center", Vector2.ZERO)
+	_place_for_scan(world, player, target)
 	runtime.scanner_action(world, player)
 	var completed: Dictionary = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
 	_expect(bool(completed.get("pending", false)), "resource survey did not create pending finding")
@@ -130,10 +142,15 @@ func _project_by_id(world, project_id: String) -> Dictionary:
 
 
 func _complete_pending(runtime, world, player, target: Dictionary) -> void:
-	player.global_position = target.get("center", Vector2.ZERO)
+	_place_for_scan(world, player, target)
 	runtime.scanner_action(world, player)
 	var completed: Dictionary = runtime.update(world, player, float(target.get("interaction_seconds", 0.0)))
 	_expect(bool(completed.get("pending", false)) and runtime.has_pending_discovery(), "resource survey did not recreate pending finding")
+
+
+func _place_for_scan(world, player, target: Dictionary) -> void:
+	var pose: Dictionary = ScannerSmokePose.new().place(world, player, target)
+	_expect(bool(pose.get("found", false)), "no clear scan pose for %s" % target.get("id", "target"))
 
 
 func _verify_pending_owner(target: Dictionary) -> void:

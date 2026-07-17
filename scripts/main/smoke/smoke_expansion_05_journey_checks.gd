@@ -7,6 +7,7 @@ const MaterialCandidateSelector := preload("res://scripts/main/material_candidat
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
 const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
 const SmokeProfileProjectFixture := preload("res://scripts/main/smoke/smoke_profile_project_fixture.gd")
+const ScannerSmokePose := preload("res://scripts/main/smoke/scanner_smoke_pose.gd")
 
 const TEST_PROFILE_PATH := "user://oceangame2_expansion_05_journey_smoke.json"
 const MAP_ID := "production_slice_01"
@@ -44,7 +45,8 @@ func _smoke_expansion_05_practical_research_and_quit() -> void:
 	):
 		return
 
-	_player.global_position = target["center"]
+	if not _place_for_scan(target):
+		return
 	_process(0.0)
 	if not _require(_last_status_note == "Scanner required" and not _main._anomaly_survey.has_pending_discovery(), "scanner-less survey was not blocked"):
 		return
@@ -68,7 +70,8 @@ func _smoke_expansion_05_practical_research_and_quit() -> void:
 
 	var before_ids := _active_material_ids()
 	var oxygen_before := _oxygen_seconds
-	_player.global_position = target["center"]
+	if not _place_for_scan(target):
+		return
 	_press_key(KEY_Q)
 	_process(1.0)
 	var partial_progress := float(_main._anomaly_survey.report().get("interaction", {}).get("progress", 0.0))
@@ -224,10 +227,16 @@ func _seed_current_stabilizer(profile) -> bool:
 
 
 func _complete_research(target: Dictionary) -> bool:
-	_player.global_position = target["center"]
+	if not _place_for_scan(target):
+		return false
 	_press_key(KEY_Q)
 	_process(float(target.get("interaction_seconds", 0.0)) + 0.1)
 	return _require(_main._anomaly_survey.has_pending_discovery(), "resource survey did not create pending research")
+
+
+func _place_for_scan(target: Dictionary) -> bool:
+	var pose: Dictionary = ScannerSmokePose.new().place(_world, _player, target)
+	return _require(bool(pose.get("found", false)), "no clear scan pose for %s" % target.get("id", "target"))
 
 
 func _press_key(keycode: Key) -> void:

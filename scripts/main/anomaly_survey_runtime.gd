@@ -6,6 +6,7 @@ const ProgressionContract := preload("res://scripts/main/progression_contract.gd
 const SurveyInteractionController := preload("res://scripts/main/survey_interaction_controller.gd")
 const SurveyDependencyState := preload("res://scripts/main/survey_dependency_state.gd")
 const RegionalJourneyPresentation := preload("res://scripts/main/regional_journey_presentation.gd")
+const ScannerConeTargeting := preload("res://scripts/main/scanner_cone_targeting.gd")
 
 const SCANNER_CAPABILITY_ID := ProgressionContract.SCANNER_CAPABILITY_ID
 const COMMIT_NOTE := "Discovery committed at surface boat"
@@ -20,6 +21,8 @@ var _expedition
 var _interaction
 var _dependencies
 var _regional_presentation
+var _scanner_targeting
+var _last_targeting_report := {}
 var _last_note := ""
 var _last_result := ""
 
@@ -34,6 +37,7 @@ func _init(progression_runtime, persist_profile := true, profile_state = null) -
 	_interaction = SurveyInteractionController.new()
 	_dependencies = SurveyDependencyState.new(_profile)
 	_regional_presentation = RegionalJourneyPresentation.new()
+	_scanner_targeting = ScannerConeTargeting.new()
 
 
 func scanner_action(world, player) -> Dictionary:
@@ -41,7 +45,7 @@ func scanner_action(world, player) -> Dictionary:
 		if _profile.has_completed_discovery(ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID):
 			return _note_result(false, "project_required", "Scanner project | Ti 1 + Coil 1 | Build at night")
 		return _note_result(false, "blueprint_required", "Find scanner blueprint beyond east current")
-	var target := _survey_target_at(world, player.global_position) if world != null and player != null else {}
+	var target := _target_for_player(world, player)
 	if target.is_empty():
 		return _note_result(false, "ready", "Scanner ready | Approach a survey signal")
 	var target_id := str(target.get("id", ""))
@@ -90,7 +94,8 @@ func update(world, player, delta: float) -> Dictionary:
 	if bool(commit_result.get("committed", false)):
 		return commit_result
 
-	var target := _survey_target_at(world, player.global_position)
+	var active_target_id := str(_interaction.report().get("active_target_id", ""))
+	var target := _target_for_player(world, player, active_target_id)
 	if target.is_empty():
 		var canceled: Dictionary = _interaction.update({}, delta)
 		if str(canceled.get("state", "")) == "canceled":
@@ -172,7 +177,8 @@ func clear_unbanked(reason: String, world = null) -> Dictionary:
 func overlay_text(world, player) -> String:
 	if _expedition.has_pending():
 		return _pending_return_text()
-	var nearby_target := _survey_target_at(world, player.global_position) if world != null and player != null else {}
+	var active_target_id := str(_interaction.report().get("active_target_id", ""))
+	var nearby_target := _target_for_player(world, player, active_target_id)
 	if not nearby_target.is_empty():
 		var discovery_id := str(nearby_target.get("discovery_id", ""))
 		if _profile.has_completed_discovery(discovery_id):
@@ -255,6 +261,7 @@ func report() -> Dictionary:
 		"expedition": _expedition.report(),
 		"interaction": _interaction.report(),
 		"dependencies": _dependencies.report(),
+		"targeting": _last_targeting_report.duplicate(true),
 		"last_note": _last_note,
 		"result_text": _last_result,
 	}
@@ -309,10 +316,19 @@ func _refresh_world_targets(world) -> void:
 		_set_target_state(world, str(target.get("id", "")), state)
 
 
-func _survey_target_at(world, position: Vector2) -> Dictionary:
-	if world == null or not world.has_method("get_survey_target_at"):
+func _target_for_player(world, player, target_id := "") -> Dictionary:
+	if world == null or player == null:
+		_last_targeting_report = _scanner_targeting.public_report({"eligible": false, "reason": "world_unavailable"})
 		return {}
-	return world.get_survey_target_at(position)
+	var facing_sign := float(player.get_facing_sign()) if player.has_method("get_facing_sign") else 1.0
+	var targeting: Dictionary
+	if str(target_id).is_empty():
+		targeting = _scanner_targeting.acquire(world, player.global_position, facing_sign)
+	else:
+		var target: Dictionary = _scanner_targeting.target_by_id(world, str(target_id))
+		targeting = _scanner_targeting.evaluate_target(world, player.global_position, facing_sign, target)
+	_last_targeting_report = _scanner_targeting.public_report(targeting)
+	return targeting.get("target", {}) if bool(targeting.get("eligible", false)) else {}
 
 
 func _set_target_state(world, target_id: String, state: String) -> void:
