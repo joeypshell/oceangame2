@@ -38,7 +38,7 @@ Expansion 11 is complete with player GO through #914 plus corrections #925/#927.
 
 Expansion 12 is complete with player GO through #941 plus player-HOLD corrections #951-#953. The deep-harmonic clue now reveals a durable Ti2/Rubber1/Gel1 night-built pressure suit for one scoutable lower-central pressure threshold and protected abyssal survey. Explicit `Q/SCAN` activation, full-cargo scanner feedback, pending boat-return guidance, deterministic journey coverage, and exact-SHA Web verification pass at runtime `d864a9e`.
 
-Expansion 13 Southeast Wreck Return remains at owner HOLD. #986-#990 corrected scanner acquisition and cutter-blueprint causality at exact runtime `89371d6`; #1000-#1008 add deliberate shared tool controls, matching mobile presentation, named material sprites, sealed-wreck navigation data that remains pending through failure-safe held cargo until canonical-boat commitment, deterministic correction evidence, and focused desktop/mobile captures. #1009 still owns final visual/Web review; #969 remains open for owner replay.
+Expansion 13 Southeast Wreck Return remains at owner HOLD. #1000-#1009 technically complete deliberate shared tool controls, matching mobile presentation, named material sprites, sealed-wreck navigation data that remains pending through failure-safe held cargo until canonical-boat commitment, deterministic evidence, focused captures, controlled baseline acceptance, and exact-SHA Web verification at runtime `86ba106`. #969 remains open for owner replay.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -68,7 +68,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Completed Expansion 10 handoff: `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md` plus its linked plan, source contract, visual decision, Web verification, and correction #900
 - Completed Expansion 11 handoff: `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #925/#927, and player GO #914
 - Completed Expansion 12 handoff: `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #951-#953, and player GO #941
-- Active Expansion 13 owner-HOLD handoff: `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md` and `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md`
+- Active Expansion 13 owner-replay handoff: `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md`, `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md`, and `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
@@ -76,10 +76,10 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Latest expansion decision: owner HOLD with correction #1000-#1009 in `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md`
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_13_PLAN.md`, with ownership locked by `docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md`
 - Latest source contract: `docs/current/SCAN_SUBJECT_SOURCE_CONTRACT.md`, bounded by `docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md`
-- Latest visual decision: corrected full-level baseline accepted in `docs/current/OCEANGAME_EXPANSION_13_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`
+- Latest visual decision: owner-HOLD correction baseline accepted from runtime `86ba106` in `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: corrected Expansion 13 runtime `89371d6`, recorded in `docs/current/OCEANGAME_EXPANSION_13_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`.
+- Latest Web verification: owner-HOLD correction runtime `86ba106`, recorded in `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -146,7 +146,7 @@ Current map-loading helper:
 
 ## Web Preview Status
 
-The public preview was last technically verified for the corrected Expansion 13 HOLD candidate at exact build `89371d6`; this proves deployment, not player approval:
+The public preview was last technically verified for the Expansion 13 owner-HOLD correction candidate at exact build `86ba106`; this proves deployment, not player approval:
 
 ```text
 https://joeypshell.github.io/oceangame2/
@@ -210,8 +210,8 @@ Current issue state as of 2026-07-17:
 - Closed: #905-#914 plus corrections #925/#927 completed Expansion 11 with player GO and exact-SHA Web verification.
 - Closed: #932-#941 plus corrections #951-#953 completed Expansion 12 with player GO and exact-SHA Web verification.
 - Closed: #980 and #986-#990 delivered the first Expansion 13 HOLD correction and exact-SHA runtime `89371d6` verification.
-- Closed correction foundation: #1000-#1008 define and implement selected active-tool input, deliberate cutter activation, compact controls, readable named material sprites, the source/runtime sealed-wreck navigation reward through exact-once boat commitment and profile compatibility, deterministic correction evidence, and focused desktop/mobile captures.
-- Active: #1009 owns final visual/Web review; #969 and milestone #39 remain open for owner replay. No next expansion or broad economy is selected.
+- Closed correction batch: #1000-#1009 define, implement, validate, capture, accept, and deploy selected active-tool input, deliberate cutter activation, compact controls, readable named material sprites, and the source/runtime sealed-wreck navigation reward through exact-once boat commitment and profile compatibility.
+- Active: #969 and milestone #39 remain open for owner replay. No next expansion or broad economy is selected.
 - Open bookkeeping: #849 names three UID sidecars already committed by `e825c88`; it does not block planning and should be closed separately with that evidence.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -349,7 +349,7 @@ Current issue state as of 2026-07-17:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`, `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md`, and `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md` as the current handoff. Resolve only #1009 final visual/Web review, then return to #969 for owner replay; do not select another expansion or implement spendable credits first.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`, `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md`, `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md`, and `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md` as the current handoff. Complete only #969 owner replay; do not select another expansion or implement spendable credits first.
 
 Accepted constraints for next work:
 
