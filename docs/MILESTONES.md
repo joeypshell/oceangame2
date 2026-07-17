@@ -29,10 +29,12 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_13_PLAYER_HOLD_CORRECTION_PLAN.md`
 - `docs/current/OCEANGAME_EXPANSION_13_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`
+- `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md`
+- `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md`
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-12 are complete. Expansion 13 remains at player HOLD in open milestone #39, but #986-#990 have technically corrected its scanner-to-cutter journey and verified exact public runtime `89371d6`. #969 is the only remaining gate and requires at least five unfamiliar-player reviews. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
+Simple Diver Game 01-09 and OceanGame Expansions 01-12 are complete. Expansion 13 remains at owner HOLD in open milestone #39. Exact runtime `89371d6` proved the scanner-to-cutter discovery chain but exposed automatic cutter use, unclear rubber/coil visuals, and a sealed-wreck reward with no durable progression. #1000-#1009 own the bounded correction before owner replay #969. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
@@ -40,14 +42,14 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: run Expansion 13 player gate #969 before selecting another milestone.
-- Proposed: classify the unfamiliar-player findings as GO or a bounded HOLD; no Expansion 14 work.
+- Committed: resolve Expansion 13 owner-HOLD issues #1000-#1009 and return to #969.
+- Proposed: no next milestone or broad economy until the owner replay records GO/HOLD.
 - Directional: pure oxygen-capacity progression, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-1. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - correction #986-#990 is technically complete at `89371d6`; #969 remains the final unfamiliar-player gate.
+1. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - owner-HOLD correction #1000-#1009 is active; #969 remains the final replay gate.
 2. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - complete through #941 plus corrections #951-#953, with player GO and exact-SHA Web verification.
 3. [Expansion 11: Deep-Harmonic Light Return](https://github.com/joeypshell/oceangame2/milestone/37) - complete through #914 plus corrections #925/#927, with player GO and final exact-SHA Web verification.
 
@@ -89,12 +91,12 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Expansion 13 Player HOLD
 
-#960-#968 delivered the original southeast wreck journey at `a9d1431`, but the later fresh-profile review withdrew the recorded GO. #980 planned and #986-#990 delivered deliberate forward-cone scanning, a physical cutter-blueprint artifact, knowledge-gated project presentation, deterministic correction coverage, accepted full-level evidence, and exact public runtime `89371d6`. #969 remains open for at least five unfamiliar-player reviews; automation cannot declare GO.
+#960-#968 delivered the original southeast wreck journey at `a9d1431`; #980 and #986-#990 corrected its scanner-to-cutter discovery chain at `89371d6`. The owner replay then found automatic cutter use, unclear rubber/coil visuals, and a sealed-wreck payoff that ends at ordinary `+300` value. #1000-#1009 now own a bounded active-tool, material-visual, and navigation-data correction. #969 remains open for the owner replay; automation cannot declare GO.
 
 ## Roadmap Rules
 
 - Do not reopen completed expansion batches merely to keep the queue full.
-- Complete #969's unfamiliar-player GO/HOLD review before selecting another milestone.
+- Resolve #1000-#1009 and complete #969's owner GO/HOLD replay before selecting another milestone.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
 - Do not use teleports, prompted connectors, map menus, or the current stabilizer for normal traversal of the full level.

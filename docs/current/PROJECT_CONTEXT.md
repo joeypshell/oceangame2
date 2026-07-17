@@ -38,7 +38,7 @@ Expansion 11 is complete with player GO through #914 plus corrections #925/#927.
 
 Expansion 12 is complete with player GO through #941 plus player-HOLD corrections #951-#953. The deep-harmonic clue now reveals a durable Ti2/Rubber1/Gel1 night-built pressure suit for one scoutable lower-central pressure threshold and protected abyssal survey. Explicit `Q/SCAN` activation, full-cargo scanner feedback, pending boat-return guidance, deterministic journey coverage, and exact-SHA Web verification pass at runtime `d864a9e`.
 
-Expansion 13 Southeast Wreck Return remains at player HOLD, but the bounded correction is technically complete. #986-#990 replace proximity-only generic rings with a physical maintenance-case artifact, explicit `Q/SCAN` forward-cone and line-of-sight acquisition, source-authored `salvage_cutter_blueprint` knowledge, boat commitment before recipe presentation, deterministic journey coverage, focused review captures, and exact-SHA public verification at runtime `89371d6`. #969 and milestone #39 remain open for at least five unfamiliar-player reviews; automation cannot declare GO.
+Expansion 13 Southeast Wreck Return remains at owner HOLD. #986-#990 corrected scanner acquisition and cutter-blueprint causality at exact runtime `89371d6`, but the owner replay found that cutter use still starts from proximity, rubber/coil materials are visually unclear, and the first sealed wreck provides only ordinary `+300` value rather than durable southeast progress. #1000-#1009 own a bounded active-tool, material-visual, and navigation-data correction; #969 and milestone #39 remain open for owner replay.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -68,12 +68,12 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Completed Expansion 10 handoff: `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md` plus its linked plan, source contract, visual decision, Web verification, and correction #900
 - Completed Expansion 11 handoff: `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #925/#927, and player GO #914
 - Completed Expansion 12 handoff: `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #951-#953, and player GO #941
-- Active Expansion 13 player-gate handoff: `docs/current/OCEANGAME_EXPANSION_13_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`, with correction intent in `docs/current/OCEANGAME_EXPANSION_13_PLAYER_HOLD_CORRECTION_PLAN.md`
+- Active Expansion 13 owner-HOLD handoff: `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md` and `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest expansion decision: technical correction PASS with player HOLD retained in `docs/current/OCEANGAME_EXPANSION_13_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`
+- Latest expansion decision: owner HOLD with correction #1000-#1009 in `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md`
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_13_PLAN.md`, with ownership locked by `docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md`
 - Latest source contract: `docs/current/SCAN_SUBJECT_SOURCE_CONTRACT.md`, bounded by `docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md`
 - Latest visual decision: corrected full-level baseline accepted in `docs/current/OCEANGAME_EXPANSION_13_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`
@@ -209,8 +209,8 @@ Current issue state as of 2026-07-17:
 - Closed: #880-#889 plus correction #900 via PR #901 completed the east-current regional journey, player GO, and exact-SHA Web verification.
 - Closed: #905-#914 plus corrections #925/#927 completed Expansion 11 with player GO and exact-SHA Web verification.
 - Closed: #932-#941 plus corrections #951-#953 completed Expansion 12 with player GO and exact-SHA Web verification.
-- Closed: #980 planned and #986-#990 delivered the Expansion 13 player-HOLD scanner/artifact/progression correction, focused visual evidence, accepted full-level baseline, and exact-SHA runtime `89371d6` verification.
-- Active: #969 and milestone #39 remain open for at least five unfamiliar-player reviews. No next expansion is selected, and technical automation cannot close this gate.
+- Closed: #980 and #986-#990 delivered the first Expansion 13 HOLD correction and exact-SHA runtime `89371d6` verification.
+- Active: #1000-#1009 own the bounded owner-HOLD tool/material/reward correction; #969 and milestone #39 remain open for owner replay. No next expansion or broad economy is selected.
 - Open bookkeeping: #849 names three UID sidecars already committed by `e825c88`; it does not block planning and should be closed separately with that evidence.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -348,7 +348,7 @@ Current issue state as of 2026-07-17:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` and `docs/current/OCEANGAME_EXPANSION_13_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md` as the current handoff. Run #969 against exact runtime `89371d6` with at least five unfamiliar players; do not select another expansion until their findings produce an explicit GO or bounded HOLD.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`, `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md`, and `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md` as the current handoff. Resolve only #1000-#1009, then return to #969 for owner replay; do not select another expansion or implement spendable credits first.
 
 Accepted constraints for next work:
 

@@ -4,6 +4,11 @@ Date: 2026-07-17
 
 Issues: #989 focused capture, #990 visual review and Web verification
 
+Status note: this document remains the exact technical evidence for runtime
+`89371d6`. Its five-unfamiliar-player gate was superseded by the project
+owner's HOLD review and the bounded #1000-#1009 correction documented in
+`OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md`.
+
 ## Result
 
 **PASS for technical readiness. Player approval remains open in #969.**
@@ -71,9 +76,10 @@ network checks.
 
 ## Player Gate
 
-#969 and milestone #39 remain open. At least five unfamiliar players must run
-the fresh-profile journey before a GO decision. Each review should confirm
-whether the player can:
+#969 and milestone #39 remain open. Owner playtesting plus deterministic
+validation is the current prototype gate; outside playtests are encouraged but
+not a numeric blocker. The next owner replay follows #1000-#1009 and should
+confirm whether the player can:
 
 1. follow the broad maintenance clue beyond the east current
 2. deliberately face and scan the physical case with `Q/SCAN`
