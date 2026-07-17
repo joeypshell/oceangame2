@@ -580,6 +580,28 @@
           "intent": "Remove superseded relay wording without changing mechanics."
         }
       ],
+      "candidate_source_overrides": [
+        {
+          "section": "survey_targets",
+          "id": "lower_right_anomaly_survey",
+          "fields": {
+            "interaction_label": "Scan maintenance case",
+            "clue_label": "Maintenance echo | Concealed wreck case",
+            "finding_label": "Blueprint recovered: Salvage cutter",
+            "scan_subject_kind": "artifact",
+            "scan_subject_id": "salvage_cutter_maintenance_case",
+            "scan_presentation_id": "salvage_cutter_blueprint_case",
+            "scan_anchor": {
+              "x": 68,
+              "y": 44
+            },
+            "scan_reward_kind": "blueprint",
+            "scan_reward_id": "salvage_cutter_blueprint",
+            "intent": "Partially concealed wreck maintenance case beyond the existing east current; its explicit blueprint reward replaces the abstract cutter-plan signal."
+          },
+          "intent": "Full-level scanner artifact source; slices remain unchanged."
+        }
+      ],
       "coordinate_records": [
         {
           "section": "zones",
@@ -896,13 +918,21 @@
             "x": 67,
             "y": 43,
             "w": 2,
-            "h": 2
+            "h": 2,
+            "scan_anchor": {
+              "x": 68,
+              "y": 44
+            }
           },
           "full_global": {
             "x": 125,
             "y": 43,
             "w": 2,
-            "h": 2
+            "h": 2,
+            "scan_anchor": {
+              "x": 126,
+              "y": 44
+            }
           }
         },
         {
@@ -4948,13 +4978,24 @@
       "required_capability_id": "survey_scanner_1",
       "interaction": "survey",
       "interaction_seconds": 3.0,
-      "interaction_label": "Survey anomaly",
+      "interaction_label": "Scan maintenance case",
       "discovery_id": "lower_right_anomaly_discovery",
       "route_context": "upper_right_current_pocket",
       "commit_map_id": "production_level_01",
       "commit_map_path": "res://maps/production_level_01.greybox.json",
       "commit_entry_id": "surface_boat_entry",
-      "intent": "Main anomaly survey moved into the contiguous east current pocket for the scanner journey."
+      "intent": "Partially concealed wreck maintenance case beyond the existing east current; its explicit blueprint reward replaces the abstract cutter-plan signal.",
+      "clue_label": "Maintenance echo | Concealed wreck case",
+      "finding_label": "Blueprint recovered: Salvage cutter",
+      "scan_subject_kind": "artifact",
+      "scan_subject_id": "salvage_cutter_maintenance_case",
+      "scan_presentation_id": "salvage_cutter_blueprint_case",
+      "scan_anchor": {
+        "x": 126,
+        "y": 44
+      },
+      "scan_reward_kind": "blueprint",
+      "scan_reward_id": "salvage_cutter_blueprint"
     },
     {
       "id": "upper_right_mineral_trace_survey",

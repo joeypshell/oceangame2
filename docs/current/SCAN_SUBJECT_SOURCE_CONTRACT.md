@@ -27,9 +27,10 @@ When any field below is present, all six are required:
 - `scan_reward_kind`: `blueprint`, `discovery`, or `research`.
 - `scan_reward_id`: supported durable lower_snake_case knowledge identity.
 
-The reward id must equal the existing `discovery_id`; runtime/profile state
-therefore keeps one durable owner. The first explicit blueprint knowledge id is
-`salvage_cutter_blueprint`.
+Discovery and research rewards must equal the existing `discovery_id`.
+Blueprints may use a distinct reward id so a legacy survey completion can
+migrate without breaking current profiles. The first explicit blueprint
+knowledge id is `salvage_cutter_blueprint`.
 
 ```json
 {
@@ -45,7 +46,9 @@ therefore keeps one durable owner. The first explicit blueprint knowledge id is
   "scan_anchor": {"x": 0, "y": 0},
   "scan_reward_kind": "blueprint",
   "scan_reward_id": "salvage_cutter_blueprint",
-  "discovery_id": "salvage_cutter_blueprint"
+  "discovery_id": "lower_right_anomaly_discovery",
+  "clue_label": "Maintenance echo | Concealed wreck case",
+  "finding_label": "Blueprint recovered: Salvage cutter"
 }
 ```
 
@@ -55,6 +58,9 @@ validated reachable placement before generating map JSON.
 ## Validation
 
 - Blueprint rewards require `scan_subject_kind: "artifact"`.
+- Artifact subjects require compact `clue_label` and `finding_label` text.
+- Discovery/research reward ids equal `discovery_id`; blueprint rewards may use
+  a distinct knowledge id for explicit provenance and migration.
 - Anomaly targets support artifact/environment subjects and discovery or
   blueprint rewards.
 - Resource targets support resource subjects and research rewards.

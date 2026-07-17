@@ -98,9 +98,18 @@ def draw_survey_targets(draw: ImageDraw.ImageDraw, map_data: dict, scale: int) -
             outline=SURVEY,
             width=max(2, scale // 2),
         )
-        cx, cy = (x0 + x1) // 2, (y0 + y1) // 2
-        r = max(3, scale // 2)
-        draw.ellipse((cx - r, cy - r, cx + r, cy + r), outline=SURVEY, width=max(1, scale // 3))
+        if target.get("scan_presentation_id") == "salvage_cutter_blueprint_case":
+            anchor = target["scan_anchor"]
+            cx = round((float(anchor["x"]) + 0.5) * scale)
+            cy = round((float(anchor["y"]) + 0.5) * scale)
+            half_w = max(4, scale)
+            half_h = max(3, scale // 2)
+            draw.rectangle((cx - half_w, cy - half_h, cx + half_w, cy + half_h), fill=(46, 74, 82, 255), outline=(143, 184, 179, 255))
+            draw.rectangle((cx - half_w // 2, cy, cx + half_w // 2, cy + half_h - 1), fill=(31, 176, 184, 255))
+        else:
+            cx, cy = (x0 + x1) // 2, (y0 + y1) // 2
+            r = max(3, scale // 2)
+            draw.ellipse((cx - r, cy - r, cx + r, cy + r), outline=SURVEY, width=max(1, scale // 3))
 
 
 def draw_map_panel(map_data: dict, mode: str, scale: int) -> Image.Image:

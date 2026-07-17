@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from copy import deepcopy
 
+from production_level_01_scanner_artifact import source_overrides
 from production_slice_01_gameplay_source import gameplay_sections
 
 
@@ -64,7 +65,9 @@ CANDIDATE_PRESENTATION_OVERRIDES = {
         "intent": "Lower-loop rubber candidate on the non-eel western approach.",
     },
 }
+CANDIDATE_SOURCE_OVERRIDES = source_overrides()
 
+POINT_FIELDS = ("scan_anchor",)
 POINT_LIST_FIELDS = ("path", "patrol", "evade_path", "lane", "candidate_positions")
 RECT_FIELDS = ("territory", "evade_geometry")
 
@@ -90,6 +93,10 @@ def _transform_record(section: str, source_record: dict) -> dict:
     _shift_xy(transformed)
     _shift_xy(transformed, "entry_x", "entry_y")
 
+    for field in POINT_FIELDS:
+        point = transformed.get(field)
+        if isinstance(point, dict):
+            _shift_xy(point)
     for field in POINT_LIST_FIELDS:
         for point in transformed.get(field, []):
             _shift_xy(point)
@@ -114,6 +121,9 @@ def _geometry_snapshot(section: str, record: dict) -> dict:
         for key in ("x", "y", "w", "h", "entry_x", "entry_y"):
             if key in record:
                 geometry[key] = record[key]
+        for field in POINT_FIELDS:
+            if field in record:
+                geometry[field] = deepcopy(record[field])
         for field in POINT_LIST_FIELDS:
             if field in record:
                 geometry[field] = deepcopy(record[field])
@@ -144,10 +154,14 @@ def transform_gameplay_sections(source_sections: dict | None = None) -> tuple[di
             record_id = str(source_record.get("id", ""))
             if record_id in excluded:
                 continue
+            effective_source = deepcopy(source_record)
+            effective_source.update(
+                deepcopy(CANDIDATE_SOURCE_OVERRIDES.get((section, record_id), {}))
+            )
             output_record = (
-                _transform_record(section, source_record)
+                _transform_record(section, effective_source)
                 if section in SPATIAL_SECTIONS
-                else deepcopy(source_record)
+                else effective_source
             )
             output_record.update(
                 deepcopy(CANDIDATE_PRESENTATION_OVERRIDES.get((section, record_id), {}))
@@ -156,7 +170,7 @@ def transform_gameplay_sections(source_sections: dict | None = None) -> tuple[di
             if record_id:
                 output_ids.append(record_id)
 
-            local_geometry = _geometry_snapshot(section, source_record)
+            local_geometry = _geometry_snapshot(section, effective_source)
             if local_geometry:
                 coordinate_records.append(
                     {
@@ -203,6 +217,15 @@ def transform_gameplay_sections(source_sections: dict | None = None) -> tuple[di
                 "intent": "Remove superseded relay wording without changing mechanics.",
             }
             for (section, record_id), fields in CANDIDATE_PRESENTATION_OVERRIDES.items()
+        ],
+        "candidate_source_overrides": [
+            {
+                "section": section,
+                "id": record_id,
+                "fields": deepcopy(fields),
+                "intent": "Full-level scanner artifact source; slices remain unchanged.",
+            }
+            for (section, record_id), fields in CANDIDATE_SOURCE_OVERRIDES.items()
         ],
         "coordinate_records": coordinate_records,
     }

@@ -478,7 +478,10 @@
 <rect x="4000" y="1280" width="64" height="64" rx="8" fill="#d68cff" stroke="#5b236b" stroke-width="5"/>
 <text x="4008.0" y="1270.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">east_current_scanner_blueprint_chest</text>
 <rect x="4000" y="1376" width="64" height="64" rx="8" fill="#69f0dc" fill-opacity="0.28" stroke="#07584f" stroke-width="6"/>
-<circle cx="4032.0" cy="1408.0" r="14" fill="none" stroke="#69f0dc" stroke-width="6"/>
+<rect x="4024.0" y="1410.0" width="48" height="28" rx="3" fill="#2e4a52" stroke="#8fb8b3" stroke-width="4"/>
+<path d="M 4040.0 1410.0 v -6 h 16 v 6" fill="none" stroke="#5f8285" stroke-width="4"/>
+<rect x="4035.0" y="1424.0" width="26" height="10" fill="#1fb0b8"/>
+<path d="M 4039.0 1431.0 l 6 -4 h 8 l 5 4" fill="none" stroke="#ffd14d" stroke-width="3"/>
 <text x="4008.0" y="1366.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">lower_right_anomaly_survey</text>
 <rect x="4064" y="1376" width="64" height="64" rx="8" fill="#69f0dc" fill-opacity="0.28" stroke="#07584f" stroke-width="6"/>
 <circle cx="4096.0" cy="1408.0" r="14" fill="none" stroke="#69f0dc" stroke-width="6"/>
