@@ -4,7 +4,7 @@
 
 The current project is a Godot 4.7 side-view ocean salvage prototype for proving the source-driven map, terrain, validation, capture, and gameplay workflow that will support a finished small diver game.
 
-The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`. The Expansion 13 HOLD correction is technically complete at exact runtime `89371d6`: scanner acquisition is deliberate and directional, its cutter source is a physical artifact with an explicit blueprint reward, and the corrected journey has deterministic smoke, capture, baseline, and public Web evidence. #969 remains the unfamiliar-player GO/HOLD gate; no next expansion is selected.
+The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`. Expansion 13 remains at owner HOLD after exact runtime `89371d6`: scanner discovery is deliberate, but cutter activation is still proximity-driven, rubber/coil visuals are ambiguous, and the first sealed-wreck payoff does not durably advance the southeast journey. #1000-#1009 are bounded by `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md`; #969 remains the owner replay gate and no next expansion is selected.
 
 ## Source Of Truth
 
