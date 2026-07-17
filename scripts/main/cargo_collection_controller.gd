@@ -1,8 +1,10 @@
 extends RefCounted
 
 const OffloadController := preload("res://scripts/main/offload_controller.gd")
+const ScannerCutterJourneyPresentation := preload("res://scripts/main/scanner_cutter_journey_presentation.gd")
 
 var _main
+var _scanner_cutter_presentation := ScannerCutterJourneyPresentation.new()
 
 
 func _init(main) -> void:
@@ -76,10 +78,10 @@ func _update_tool_target(delta: float) -> bool:
 		var target_id := str(result.get("id", ""))
 		if _main._world.collect_tool_target(target_id):
 			_main._anomaly_survey.record_tool_target_clearance(target, _main._world)
-			var note := "%s opened +%d" % [
-				_display_label(str(result.get("label", "sealed wreck"))),
-				_main._world.get_salvage_score(target_id),
-			]
+			var score: int = int(_main._world.get_salvage_score(target_id))
+			var note: String = _scanner_cutter_presentation.completion_note(target, score)
+			if note.is_empty():
+				note = "%s opened +%d" % [_display_label(str(result.get("label", "sealed wreck"))), score]
 			_main._collect_salvage_into_cargo(target_id, note)
 	elif result.has("note"):
 		_main._last_status_note = str(result["note"])

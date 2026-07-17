@@ -122,6 +122,7 @@ class ProductionLevelGameplayTransformTests(unittest.TestCase):
 
     def test_full_level_authors_named_cutter_blueprint_artifact(self) -> None:
         survey = by_id(self.transformed["survey_targets"])["lower_right_anomaly_survey"]
+        payoff = by_id(self.transformed["entities"])["salvage_sealed_wreck_cache"]
         project = by_id(self.transformed["material_projects"])["salvage_cutter_project"]
         self.assertEqual(survey["scan_subject_kind"], "artifact")
         self.assertEqual(survey["scan_subject_id"], "salvage_cutter_maintenance_case")
@@ -129,6 +130,14 @@ class ProductionLevelGameplayTransformTests(unittest.TestCase):
         self.assertEqual(survey["scan_anchor"], {"x": 126, "y": 44})
         self.assertEqual(survey["scan_reward_kind"], "blueprint")
         self.assertEqual(survey["scan_reward_id"], "salvage_cutter_blueprint")
+        self.assertEqual(survey["journey_id"], "scanner_cutter_first_return")
+        self.assertEqual(survey["journey_role"], "blueprint_artifact")
+        self.assertEqual(survey["journey_lead_label"], "Maintenance signal | Beyond east current")
+        self.assertEqual(payoff["journey_id"], survey["journey_id"])
+        self.assertEqual(payoff["journey_role"], "sealed_payoff")
+        self.assertEqual(payoff["payoff_label"], "Sealed wreck opened")
+        self.assertIn("sealed wreck", payoff["return_lead_label"].lower())
+        self.assertIn("deeper southeast", payoff["next_mystery_label"].lower())
         self.assertEqual(survey["discovery_id"], "lower_right_anomaly_discovery")
         self.assertEqual(project["required_discovery_id"], survey["scan_reward_id"])
         self.assertEqual(
@@ -136,6 +145,7 @@ class ProductionLevelGameplayTransformTests(unittest.TestCase):
             {"x": 68, "y": 44},
         )
         self.assertNotIn("scan_subject_id", by_id(self.source["survey_targets"])[survey["id"]])
+        self.assertNotIn("journey_id", by_id(self.source["entities"])[payoff["id"]])
         self.assertEqual(
             by_id(self.source["material_projects"])[project["id"]]["required_discovery_id"],
             "lower_right_anomaly_discovery",

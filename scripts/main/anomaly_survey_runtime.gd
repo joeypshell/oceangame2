@@ -7,6 +7,7 @@ const SurveyInteractionController := preload("res://scripts/main/survey_interact
 const SurveyDependencyState := preload("res://scripts/main/survey_dependency_state.gd")
 const RegionalJourneyPresentation := preload("res://scripts/main/regional_journey_presentation.gd")
 const ScannerConeTargeting := preload("res://scripts/main/scanner_cone_targeting.gd")
+const ScannerCutterJourneyPresentation := preload("res://scripts/main/scanner_cutter_journey_presentation.gd")
 
 const SCANNER_CAPABILITY_ID := ProgressionContract.SCANNER_CAPABILITY_ID
 const COMMIT_NOTE := "Discovery committed at surface boat"
@@ -22,6 +23,7 @@ var _interaction
 var _dependencies
 var _regional_presentation
 var _scanner_targeting
+var _scanner_cutter_presentation
 var _last_targeting_report := {}
 var _last_note := ""
 var _last_result := ""
@@ -38,6 +40,7 @@ func _init(progression_runtime, persist_profile := true, profile_state = null) -
 	_dependencies = SurveyDependencyState.new(_profile)
 	_regional_presentation = RegionalJourneyPresentation.new()
 	_scanner_targeting = ScannerConeTargeting.new()
+	_scanner_cutter_presentation = ScannerCutterJourneyPresentation.new()
 
 
 func scanner_action(world, player) -> Dictionary:
@@ -193,11 +196,14 @@ func overlay_text(world, player) -> String:
 		if not _has_required_pressure_protection(nearby_target):
 			return _pressure_required_note(nearby_target)
 		return _nearby_scan_text(nearby_target, clue)
-	if not _last_result.is_empty():
+	if not _last_result.is_empty() and not _scanner_cutter_presentation.result_is_superseded(world, _profile, _last_result):
 		return _last_result
 	var journey_promise: String = _regional_presentation.promise_text(world, _profile)
 	if not journey_promise.is_empty():
 		return journey_promise
+	var scanner_cutter_lead: String = _scanner_cutter_presentation.objective_text(world, _profile)
+	if not scanner_cutter_lead.is_empty():
+		return scanner_cutter_lead
 	if _profile.has_completed_discovery(ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID):
 		return "Blueprint recovered | Salvage cutter project"
 	if not has_scanner():
