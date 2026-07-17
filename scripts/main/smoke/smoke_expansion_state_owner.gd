@@ -121,8 +121,14 @@ func _run() -> void:
 	_expect(reloaded.has_completed_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID), "profile did not record discovery")
 
 	var final_reload := ExpansionProfileState.new(TEST_PATH)
-	final_reload.load_profile()
+	var cutter_migration: Dictionary = final_reload.load_profile()
+	_expect(cutter_migration.get("status") == "loaded", "old committed anomaly profile did not remain load-compatible")
 	_expect(final_reload.has_completed_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID), "discovery did not survive reload")
+	_expect(final_reload.has_completed_discovery(ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID), "old committed anomaly did not imply cutter blueprint")
+	var migrated_reload := ExpansionProfileState.new(TEST_PATH)
+	_expect(migrated_reload.load_profile().get("status") == "loaded", "cutter-blueprint migration was not persisted exactly once")
+	_expect(migrated_reload.has_completed_discovery(ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID), "persisted cutter blueprint was lost on reload")
+	final_reload = migrated_reload
 	_create_pending(expedition)
 	var repeated_commit: Dictionary = expedition.commit_at("production_slice_01", "surface_boat_entry", final_reload)
 	_expect(repeated_commit.get("status") == "already_committed", "repeat commit was not idempotent")

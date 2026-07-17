@@ -81,7 +81,13 @@ func _smoke_expansion_06_combat_foundation_and_quit() -> void:
 
 	var reloaded := ExpansionProfileState.new(TEST_PROFILE_PATH)
 	var reload_report: Dictionary = reloaded.load_profile()
-	if not _require(reload_report.get("status") == "loaded" and reloaded.has_completed_project(PROJECT_ID) and reloaded.has_capability(CAPABILITY_ID), "profile reload lost the shock prod"):
+	if not _require(
+		reload_report.get("status") == "loaded"
+		and reloaded.has_completed_discovery(ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID)
+		and reloaded.has_completed_project(PROJECT_ID)
+		and reloaded.has_capability(CAPABILITY_ID),
+		"profile reload lost the migrated cutter knowledge or shock prod"
+	):
 		return
 	_press_key(KEY_N)
 	_prepare_current_map()
@@ -204,6 +210,7 @@ func _seed_prerequisites_and_recipe(profile) -> bool:
 	if not _require(profile.save_profile(), "could not persist pre-build profile fixture"):
 		return false
 	_main._material_project.on_map_loaded(_world)
+	_main._material_project.shock_prod_guidance()
 	return _require(_main._material_project.status() == "ready", "shock prod project did not become ready")
 
 

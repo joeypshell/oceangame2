@@ -7,6 +7,7 @@ from copy import deepcopy
 
 
 TARGET_ID = "lower_right_anomaly_survey"
+PROJECT_ID = "salvage_cutter_project"
 
 _TARGET_OVERRIDE = {
     "interaction_label": "Scan maintenance case",
@@ -26,4 +27,9 @@ _TARGET_OVERRIDE = {
 
 
 def source_overrides() -> dict[tuple[str, str], dict]:
-    return {("survey_targets", TARGET_ID): deepcopy(_TARGET_OVERRIDE)}
+    return {
+        ("survey_targets", TARGET_ID): deepcopy(_TARGET_OVERRIDE),
+        ("material_projects", PROJECT_ID): {
+            "required_discovery_id": "salvage_cutter_blueprint",
+        },
+    }

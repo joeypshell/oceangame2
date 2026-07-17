@@ -100,7 +100,13 @@ func _smoke_expansion_03_material_project_and_quit() -> void:
 
 	var reloaded := ExpansionProfileState.new(TEST_PROFILE_PATH)
 	var reload_report: Dictionary = reloaded.load_profile()
-	if not _require(reload_report.get("status") == "loaded" and reloaded.has_completed_project(ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID) and reloaded.has_capability(ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID), "profile reload lost project or cutter"):
+	if not _require(
+		reload_report.get("status") == "loaded"
+		and reloaded.has_completed_project(ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID)
+		and reloaded.has_capability(ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID)
+		and reloaded.has_completed_discovery(ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID),
+		"profile reload lost project, cutter, or implied blueprint"
+	):
 		return
 	_press_key(KEY_N)
 	_prepare_current_map()

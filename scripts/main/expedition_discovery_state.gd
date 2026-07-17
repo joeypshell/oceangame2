@@ -1,13 +1,14 @@
 extends RefCounted
 
 const ANOMALY_DISCOVERY_ID := "lower_right_anomaly_discovery"
+const SALVAGE_CUTTER_BLUEPRINT_ID := "salvage_cutter_blueprint"
 const MINERAL_TRACE_RESEARCH_ID := "upper_right_mineral_trace_research"
 const SIGNAL_REEF_DISCOVERY_ID := "lower_right_signal_reef_discovery"
 const DEEP_HARMONIC_DISCOVERY_ID := "signal_reef_deep_harmonic_discovery"
 const ABYSSAL_HARMONIC_DISCOVERY_ID := "abyssal_basin_harmonic_source_discovery"
 const SOUTHEAST_WRECK_DISCOVERY_ID := "southeast_wreck_archive_discovery"
-const SUPPORTED_DISCOVERY_IDS := {ANOMALY_DISCOVERY_ID: true, MINERAL_TRACE_RESEARCH_ID: true, SIGNAL_REEF_DISCOVERY_ID: true, DEEP_HARMONIC_DISCOVERY_ID: true, ABYSSAL_HARMONIC_DISCOVERY_ID: true, SOUTHEAST_WRECK_DISCOVERY_ID: true}
-const METADATA_FIELDS := ["target_type", "finding_label", "next_lead_label", "required_pressure_capability_id"]
+const SUPPORTED_DISCOVERY_IDS := {ANOMALY_DISCOVERY_ID: true, SALVAGE_CUTTER_BLUEPRINT_ID: true, MINERAL_TRACE_RESEARCH_ID: true, SIGNAL_REEF_DISCOVERY_ID: true, DEEP_HARMONIC_DISCOVERY_ID: true, ABYSSAL_HARMONIC_DISCOVERY_ID: true, SOUTHEAST_WRECK_DISCOVERY_ID: true}
+const METADATA_FIELDS := ["target_type", "finding_label", "next_lead_label", "required_pressure_capability_id", "scan_subject_id", "scan_reward_kind", "scan_reward_id"]
 
 var _pending := {}
 var _last_event := "idle"
@@ -63,13 +64,18 @@ func commit_at(map_id: String, entry_id: String, profile_state) -> Dictionary:
 
 	var discovery_id := str(_pending["discovery_id"])
 	var metadata: Dictionary = _pending.get("metadata", {}).duplicate(true)
-	var completion: Dictionary = profile_state.complete_discovery(discovery_id, true)
+	var reward_id := str(metadata.get("scan_reward_id", "")).strip_edges()
+	var completion: Dictionary = (
+		profile_state.complete_discovery_reward(discovery_id, reward_id, true)
+		if not reward_id.is_empty() and profile_state.has_method("complete_discovery_reward")
+		else profile_state.complete_discovery(discovery_id, true)
+	)
 	var reason := str(completion.get("reason", "storage_error"))
 	if reason == "storage_error" or reason == "unsupported_discovery":
 		return _result(reason)
 	_pending = {}
 	_last_event = "committed" if bool(completion.get("changed", false)) else "already_committed"
-	return _result(_last_event, {"committed_discovery_id": discovery_id, "metadata": metadata})
+	return _result(_last_event, {"committed_discovery_id": discovery_id, "committed_reward_id": reward_id, "metadata": metadata})
 
 
 func has_pending() -> bool:

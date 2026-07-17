@@ -73,6 +73,8 @@ class ProgressionGraphAuditTests(unittest.TestCase):
             "survey_scanner_1",
             "lower_right_anomaly_survey",
             "lower_right_anomaly_discovery",
+            "salvage_cutter_blueprint",
+            "salvage_cutter_project",
             "east_current_signal_reef_route",
             "lower_right_signal_reef_survey",
             "lower_right_signal_reef_discovery",
@@ -88,10 +90,15 @@ class ProgressionGraphAuditTests(unittest.TestCase):
         survey = level_graph.resolve("lower_right_anomaly_survey")
         scanner = level_graph.resolve("survey_scanner_1")
         discovery = level_graph.resolve("lower_right_anomaly_discovery")
+        cutter_blueprint = level_graph.resolve("salvage_cutter_blueprint")
+        cutter_project = level_graph.resolve("salvage_cutter_project")
         boat = level_graph.resolve("surface_boat_entry")
         self.assertTrue(any(edge.target == fins for edge in level_graph.requirements(gate)))
         self.assertTrue(any(edge.target == scanner for edge in level_graph.requirements(survey)))
         self.assertTrue(any(edge.target == boat for edge in level_graph.requirements(discovery)))
+        self.assertTrue(any(edge.target == survey for edge in level_graph.requirements(cutter_blueprint)))
+        self.assertTrue(any(edge.target == boat for edge in level_graph.requirements(cutter_blueprint)))
+        self.assertTrue(any(edge.target == cutter_blueprint for edge in level_graph.requirements(cutter_project)))
 
         route = level_graph.resolve("east_current_signal_reef_route")
         regional_survey = level_graph.resolve("lower_right_signal_reef_survey")

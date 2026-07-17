@@ -122,6 +122,7 @@ class ProductionLevelGameplayTransformTests(unittest.TestCase):
 
     def test_full_level_authors_named_cutter_blueprint_artifact(self) -> None:
         survey = by_id(self.transformed["survey_targets"])["lower_right_anomaly_survey"]
+        project = by_id(self.transformed["material_projects"])["salvage_cutter_project"]
         self.assertEqual(survey["scan_subject_kind"], "artifact")
         self.assertEqual(survey["scan_subject_id"], "salvage_cutter_maintenance_case")
         self.assertEqual(survey["scan_presentation_id"], "salvage_cutter_blueprint_case")
@@ -129,11 +130,16 @@ class ProductionLevelGameplayTransformTests(unittest.TestCase):
         self.assertEqual(survey["scan_reward_kind"], "blueprint")
         self.assertEqual(survey["scan_reward_id"], "salvage_cutter_blueprint")
         self.assertEqual(survey["discovery_id"], "lower_right_anomaly_discovery")
+        self.assertEqual(project["required_discovery_id"], survey["scan_reward_id"])
         self.assertEqual(
             CANDIDATE_SOURCE_OVERRIDES[("survey_targets", survey["id"])]["scan_anchor"],
             {"x": 68, "y": 44},
         )
         self.assertNotIn("scan_subject_id", by_id(self.source["survey_targets"])[survey["id"]])
+        self.assertEqual(
+            by_id(self.source["material_projects"])[project["id"]]["required_discovery_id"],
+            "lower_right_anomaly_discovery",
+        )
 
     def test_provenance_records_local_and_global_geometry(self) -> None:
         records = {

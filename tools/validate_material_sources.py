@@ -287,6 +287,11 @@ def _validate_projects(
         rules = PROJECT_RULES.get(str(project_id))
         if rules is not None:
             expected_discovery = rules.get("required_discovery_id")
+            legacy_discovery = rules.get("legacy_required_discovery_id")
+            if legacy_discovery is not None and not any(
+                target.get("scan_reward_id") == expected_discovery for target in survey_targets.values()
+            ):
+                expected_discovery = legacy_discovery
             authored_discovery = project.get("required_discovery_id")
             if expected_discovery is None:
                 if "required_discovery_id" in project:

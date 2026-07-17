@@ -99,7 +99,7 @@ func _run() -> void:
 	_expect(not runtime.has_pending_discovery(), "commit retained pending discovery")
 	var repeat_commit: Dictionary = runtime.update(origin, player, 0.0)
 	_expect(not bool(repeat_commit.get("committed", false)), "discovery committed more than once")
-	_expect(runtime.result_text().find("Cutter plan recovered:") != -1, "commit result omitted cutter-plan feedback")
+	_expect(runtime.result_text() == "Discovery logged", "legacy survey invented a hardcoded cutter result")
 
 	var regional_world: Node = _load_world(REGIONAL_MAP_PATH)
 	runtime.clear_unbanked("regional_setup", regional_world)
@@ -115,6 +115,24 @@ func _run() -> void:
 	full_level_profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 1, ExpansionProfileState.COIL_MATERIAL_ID: 1}, false)
 	var full_level_unlock: Dictionary = full_level_profile.complete_material_project(_project_by_id(regional_world, ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID), false)
 	_expect(bool(full_level_unlock.get("changed", false)), "scanner project did not unlock on promoted full level")
+	full_level_runtime.on_map_loaded(regional_world)
+	var artifact_target := _target_by_id(regional_world, TARGET_ID)
+	_expect(str(artifact_target.get("scan_reward_id", "")) == ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID, "full-level artifact omitted cutter blueprint reward")
+	_place_for_scan(regional_world, player, artifact_target)
+	full_level_runtime.scanner_action(regional_world, player)
+	var artifact_complete: Dictionary = full_level_runtime.update(
+		regional_world,
+		player,
+		float(artifact_target.get("interaction_seconds", 0.0))
+	)
+	_expect(bool(artifact_complete.get("pending", false)), "artifact scan did not create pending knowledge")
+	_expect(not full_level_profile.has_completed_discovery(ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID), "artifact blueprint committed before boat return")
+	player.global_position = regional_world.get_extraction_center()
+	var artifact_commit: Dictionary = full_level_runtime.update(regional_world, player, 0.0)
+	_expect(bool(artifact_commit.get("committed", false)), "artifact blueprint did not commit at full-level boat")
+	_expect(str(artifact_commit.get("reward_id", "")) == ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID, "artifact commit lost its source reward id")
+	_expect(full_level_profile.has_completed_discovery(ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID), "committed artifact omitted durable cutter blueprint")
+	_expect(full_level_runtime.result_text() == str(artifact_target.get("finding_label", "")), "artifact result did not use source finding text")
 	_place_for_scan(regional_world, player, regional_target)
 	var regional_clue := runtime.overlay_text(regional_world, player)
 	_expect(regional_clue.find(str(regional_target.get("clue_label", ""))) != -1 and regional_clue.find("Q/SCAN: Survey Signal Reef") != -1, "regional clue or scan action did not use source text")
