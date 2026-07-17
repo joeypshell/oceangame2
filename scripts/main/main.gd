@@ -5,6 +5,7 @@ const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime.gd")
 const AnomalySurveyCapture := preload("res://scripts/main/captures/anomaly_survey_capture.gd")
 const ActiveToolController := preload("res://scripts/main/active_tool_controller.gd")
+const ActiveToolRuntime := preload("res://scripts/main/active_tool_runtime.gd")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const CargoCollectionController := preload("res://scripts/main/cargo_collection_controller.gd")
 const BiologicalResourceController := preload("res://scripts/main/biological_resource_controller.gd")
@@ -194,6 +195,7 @@ var _world
 var _player
 var _anomaly_survey
 var _active_tools
+var _active_tool_runtime
 var _capture_controller
 var _cargo_collection
 var _biological_resources
@@ -282,6 +284,7 @@ var _last_status_note := ""
 
 func _ready() -> void:
 	_active_tools = ActiveToolController.new()
+	_active_tool_runtime = ActiveToolRuntime.new(self, _active_tools)
 	_capture_controller = CaptureController.new(self)
 	_current_gate = CurrentGateController.new()
 	_destination_payoff_feedback = DestinationPayoffFeedback.new()
@@ -1407,11 +1410,12 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event is InputEventKey and event.pressed and not event.echo and (event as InputEventKey).keycode == KEY_R:
 			_reset_run()
 		return
-	if event.is_action_pressed("active_tool_cycle_next"):
-		_active_tools.cycle_next(_active_tool_capability_query())
+	var repeated_tool_key := event is InputEventKey and (event as InputEventKey).echo
+	if event.is_action_pressed("active_tool_cycle_next") and not repeated_tool_key:
+		_cycle_active_tool()
 		return
-	if event.is_action_pressed("combat_attack"):
-		_try_combat_attack()
+	if event.is_action_pressed("active_tool_use") and not repeated_tool_key:
+		_use_active_tool()
 		return
 	if not event is InputEventKey:
 		return
@@ -1425,11 +1429,6 @@ func _unhandled_input(event: InputEvent) -> void:
 		_try_purchase_cargo_capacity_upgrade()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_P:
 		_show_project_guidance()
-	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_Q:
-		var scanner_result: Dictionary = _anomaly_survey.scanner_action(_world, _player)
-		_player.show_scanner_action(scanner_result, _anomaly_survey.report())
-		_last_status_note = str(scanner_result.get("note", _last_status_note))
-		_update_status_label()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_E:
 		if not _try_progression_container_interaction():
 			_try_world_connector_transition()
@@ -1592,24 +1591,7 @@ func _update_hostile_encounter(delta: float) -> bool:
 
 
 func _try_combat_attack() -> bool:
-	if _shock_prod == null or _hostiles == null or _world == null or _player == null or _run_complete or _sortie_state.failed:
-		return false
-	if not _material_project.has_shock_prod():
-		_last_status_note = _material_project.shock_prod_guidance()
-		_combat_feedback_seconds = COMBAT_FEEDBACK_SECONDS
-		_update_status_label()
-		return false
-	var facing_sign: float = float(_player.get_facing_sign()) if _player.has_method("get_facing_sign") else 1.0
-	var result: Dictionary = _shock_prod.try_attack(
-		_hostiles,
-		_world,
-		_player.global_position,
-		facing_sign,
-		_material_project.has_shock_prod(),
-		_material_project.has_shock_prod_capacitor()
-	)
-	_last_status_note = str(result.get("note", _last_status_note))
-	_combat_feedback_seconds = COMBAT_FEEDBACK_SECONDS
+	var result: Dictionary = _active_tool_runtime.use_shock_prod()
 	_update_status_label()
 	return bool(result.get("changed", false))
 
@@ -2356,15 +2338,15 @@ func _try_progression_container_interaction() -> bool:
 
 
 func _refresh_active_tools() -> Dictionary:
-	if _active_tools == null:
-		return {}
-	return _active_tools.refresh_ownership(_active_tool_capability_query())
+	return _active_tool_runtime.refresh() if _active_tool_runtime != null else {}
 
 
-func _active_tool_capability_query() -> Callable:
-	if _anomaly_survey == null or _anomaly_survey.profile_state() == null:
-		return Callable()
-	return Callable(_anomaly_survey.profile_state(), "has_capability")
+func _cycle_active_tool() -> Dictionary:
+	return _active_tool_runtime.cycle()
+
+
+func _use_active_tool() -> Dictionary:
+	return _active_tool_runtime.use()
 
 
 func _try_purchase_oxygen_tank_upgrade() -> bool:

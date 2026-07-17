@@ -168,6 +168,20 @@ func on_map_transition(destination_map_id: String) -> Dictionary:
 	return _expedition.on_map_transition(destination_map_id)
 
 
+func active_tool_target(world, player) -> Dictionary:
+	return _target_for_player(world, player).duplicate(true)
+
+
+func cancel_active_interaction(world) -> bool:
+	var active_target_id := str(_interaction.report().get("active_target_id", ""))
+	if active_target_id.is_empty():
+		return false
+	_interaction.reset()
+	_last_note = "Scanner interrupted"
+	_refresh_world_targets(world)
+	return true
+
+
 func clear_unbanked(reason: String, world = null) -> Dictionary:
 	_interaction.reset()
 	_dependencies.clear_unbanked()

@@ -71,7 +71,7 @@ func _smoke_expansion_06_combat_foundation_and_quit() -> void:
 	_press_key(KEY_P)
 	if not _require(profile.has_completed_project(PROJECT_ID) and profile.has_capability(CAPABILITY_ID), "debrief did not complete the shock prod transaction"):
 		return
-	if not _require(_main._result_label.text.find("Shock prod built") != -1 and _main._result_label.text.find("Space at short range") != -1 and _main._result_label.text.find("1 health damage") != -1, "debrief did not explain what P built or how the shock prod works"):
+	if not _require(_main._result_label.text.find("Shock prod built") != -1 and _main._result_label.text.find("Tab select Shock prod") != -1 and _main._result_label.text.find("Q at short range") != -1 and _main._result_label.text.find("1 health damage") != -1, "debrief did not explain what P built or how the shock prod works"):
 		return
 	if not _require(profile.material_inventory().is_empty(), "shock prod transaction did not spend the exact recipe"):
 		return
@@ -215,6 +215,8 @@ func _seed_prerequisites_and_recipe(profile) -> bool:
 
 
 func _exercise_armed_fight(profile) -> Dictionary:
+	if not _require(_select_active_tool(CAPABILITY_ID), "could not select the built shock prod"):
+		return {}
 	var instant: Array = _instant_salvage_targets()
 	if not _require(instant.size() >= 2, "armed fight needs two instant salvage fixtures"):
 		return {}
@@ -234,6 +236,10 @@ func _exercise_armed_fight(profile) -> Dictionary:
 	var home: Vector2 = _encounter_source().get("home_center", Vector2.ZERO)
 	_player.global_position = home + Vector2(-60, 0)
 	_player.swim_in_direction(Vector2.RIGHT, 0.0)
+	var health_before_legacy_action := int(_hostile_state().get("health", -1))
+	_press_legacy_attack()
+	if not _require(int(_hostile_state().get("health", -1)) == health_before_legacy_action, "legacy combat action still bypassed active-tool use"):
+		return {}
 	for expected_health in [2, 1, 0]:
 		_press_attack()
 		if not _require(int(_hostile_state().get("health", -1)) == expected_health, "shock prod hit did not apply one damage"):
@@ -349,6 +355,7 @@ func _attach_profile(profile, current_world_loaded: bool) -> void:
 		_main._material_runtime.on_map_loaded(_world, _main._expedition_day_state)
 		_main._material_project.on_map_loaded(_world)
 		_main._cutter_salvage.on_map_loaded(_world)
+	_main._refresh_active_tools()
 
 
 func _defeat_hostile_direct() -> void:
@@ -358,9 +365,28 @@ func _defeat_hostile_direct() -> void:
 
 func _press_attack() -> void:
 	var event: InputEventAction = InputEventAction.new()
+	event.action = "active_tool_use"
+	event.pressed = true
+	_main._unhandled_input(event)
+
+
+func _press_legacy_attack() -> void:
+	var event := InputEventAction.new()
 	event.action = "combat_attack"
 	event.pressed = true
 	_main._unhandled_input(event)
+
+
+func _select_active_tool(tool_id: String) -> bool:
+	_main._refresh_active_tools()
+	for _index in range(_main.ActiveToolController.ordered_tool_ids().size()):
+		if _main._active_tools.selected_tool_id() == tool_id:
+			return true
+		var event := InputEventAction.new()
+		event.action = "active_tool_cycle_next"
+		event.pressed = true
+		_main._unhandled_input(event)
+	return _main._active_tools.selected_tool_id() == tool_id
 
 
 func _press_key(keycode: Key) -> void:

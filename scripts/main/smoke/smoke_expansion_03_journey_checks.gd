@@ -125,13 +125,18 @@ func _smoke_expansion_03_material_project_and_quit() -> void:
 	_player.global_position = tool_target["center"]
 	var cutter_oxygen_before := _oxygen_seconds
 	_process(0.5)
-	if not _require(str(_main._cutter_salvage.report().get("active_id", "")) == TARGET_ID and _oxygen_seconds < cutter_oxygen_before, "cutter progress or oxygen drain did not start"):
+	if not _require(str(_main._cutter_salvage.report().get("active_id", "")).is_empty() and _oxygen_seconds < cutter_oxygen_before, "cutter proximity advanced progress or paused oxygen before use"):
+		return
+	_press_use()
+	_process(0.5)
+	if not _require(str(_main._cutter_salvage.report().get("active_id", "")) == TARGET_ID, "explicit cutter use did not start progress"):
 		return
 	_player.global_position = tool_target["center"] + Vector2(200.0, 0.0)
 	_process(0.0)
 	if not _require(_last_status_note == "Cutter interrupted", "leaving target did not cancel cutter"):
 		return
 	_player.global_position = tool_target["center"]
+	_press_use()
 	_process(1.6)
 	if not _require(not _world.is_salvage_collected(TARGET_ID), "canceled cutter progress resumed"):
 		return
@@ -145,6 +150,7 @@ func _smoke_expansion_03_material_project_and_quit() -> void:
 		return
 	_prepare_current_map()
 	_player.global_position = tool_target["center"]
+	_press_use()
 	_process(float(tool_target.get("interaction_seconds", 2.0)) + 0.1)
 	if not _require(_held_salvage == 1 and _held_salvage_score == 300, "restored cutter payoff could not be recollected"):
 		return
@@ -188,6 +194,7 @@ func _attach_profile(profile) -> void:
 	_main._material_project.on_map_loaded(_world)
 	_main._cutter_salvage = CutterSalvageController.new(profile)
 	_main._cutter_salvage.on_map_loaded(_world)
+	_main._refresh_active_tools()
 
 
 func _selected_recipe(active_ids: Array) -> Dictionary:
@@ -240,6 +247,13 @@ func _press_key(keycode: Key) -> void:
 	var event := InputEventKey.new()
 	event.pressed = true
 	event.keycode = keycode
+	_main._unhandled_input(event)
+
+
+func _press_use() -> void:
+	var event := InputEventAction.new()
+	event.action = "active_tool_use"
+	event.pressed = true
 	_main._unhandled_input(event)
 
 
