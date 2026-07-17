@@ -53,6 +53,9 @@ func target_by_id(world, target_id: String) -> Dictionary:
 
 func public_report(report: Dictionary) -> Dictionary:
 	var result := report.duplicate(true)
+	var target: Dictionary = result.get("target", {})
+	result["scan_subject_id"] = str(target.get("scan_subject_id", ""))
+	result["scan_presentation_id"] = str(target.get("scan_presentation_id", ""))
 	result.erase("target")
 	return result
 

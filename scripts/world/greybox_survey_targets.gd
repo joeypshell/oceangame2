@@ -67,36 +67,8 @@ func _add_marker(parent: Node2D, target: Dictionary, center: Vector2) -> Node2D:
 	parent.add_child(root)
 	if str(target.get("scan_presentation_id", "")) == "salvage_cutter_blueprint_case":
 		_add_salvage_cutter_blueprint_case(root)
-	else:
-		_add_signal_marker(root)
 	root.modulate = STATE_COLORS["locked"]
 	return root
-
-
-func _add_signal_marker(root: Node2D) -> void:
-	var haze := Polygon2D.new()
-	haze.name = "SurveyHaze"
-	haze.polygon = _ellipse_points(34.0, 22.0, 24)
-	haze.color = Color(0.18, 0.96, 0.88, 0.22)
-	root.add_child(haze)
-	var outer := Line2D.new()
-	outer.name = "SurveyRing"
-	outer.points = _closed_ellipse_points(30.0, 17.0, 24)
-	outer.default_color = Color.WHITE
-	outer.width = 3.0
-	root.add_child(outer)
-	var inner := Line2D.new()
-	inner.name = "SurveyCore"
-	inner.points = _closed_ellipse_points(12.0, 8.0, 20)
-	inner.default_color = Color.WHITE
-	inner.width = 2.0
-	root.add_child(inner)
-	var axis := Line2D.new()
-	axis.name = "SurveyAxis"
-	axis.points = PackedVector2Array([Vector2(-40, 0), Vector2(40, 0)])
-	axis.default_color = Color(0.85, 1.0, 0.98, 0.7)
-	axis.width = 2.0
-	root.add_child(axis)
 
 
 func _add_salvage_cutter_blueprint_case(root: Node2D) -> void:
@@ -193,17 +165,3 @@ func _scan_anchor_world(target: Dictionary, tile_size: int, fallback: Vector2) -
 	if typeof(anchor) != TYPE_DICTIONARY or anchor.is_empty():
 		return fallback
 	return Vector2(float(anchor.get("x", 0)) + 0.5, float(anchor.get("y", 0)) + 0.5) * tile_size
-
-
-func _ellipse_points(radius_x: float, radius_y: float, steps: int) -> PackedVector2Array:
-	var points := PackedVector2Array()
-	for index in range(steps):
-		var angle := TAU * float(index) / float(steps)
-		points.append(Vector2(cos(angle) * radius_x, sin(angle) * radius_y))
-	return points
-
-
-func _closed_ellipse_points(radius_x: float, radius_y: float, steps: int) -> PackedVector2Array:
-	var points := _ellipse_points(radius_x, radius_y, steps)
-	points.append(points[0])
-	return points

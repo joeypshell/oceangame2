@@ -1,7 +1,8 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_player"]
 [ext_resource type="Texture2D" path="res://assets/player/player_diver_swim_01.png" id="2_diver"]
+[ext_resource type="Script" path="res://scripts/player/scanner_field_presentation.gd" id="3_scanner_field"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
 size = Vector2(26, 18)
@@ -32,6 +33,10 @@ region_filter_clip_enabled = true
 position = Vector2(88, 0)
 modulate = Color(1, 1, 1, 0.38)
 texture = SubResource("GradientTexture2D_light")
+
+[node name="ScannerField" type="Node2D" parent="."]
+z_index = 24
+script = ExtResource("3_scanner_field")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 enabled = true

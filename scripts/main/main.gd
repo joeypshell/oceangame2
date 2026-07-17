@@ -1236,6 +1236,7 @@ func _input(event: InputEvent) -> void:
 func _process(delta: float) -> void:
 	if _world == null or _player == null:
 		return
+	_player.sync_scanner_presentation(_anomaly_survey.report())
 	_player_health.update(delta)
 	_shock_prod.update(delta)
 	_update_combat_feedback(delta)
@@ -1274,6 +1275,7 @@ func _process(delta: float) -> void:
 			_update_status_label()
 			return
 	var survey_result: Dictionary = _anomaly_survey.update(_world, _player, delta)
+	_player.sync_scanner_presentation(_anomaly_survey.report())
 	if survey_result.has("note"):
 		_last_status_note = str(survey_result["note"])
 	if bool(survey_result.get("committed", false)):
@@ -1388,6 +1390,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		_show_project_guidance()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_Q:
 		var scanner_result: Dictionary = _anomaly_survey.scanner_action(_world, _player)
+		_player.show_scanner_action(scanner_result, _anomaly_survey.report())
 		_last_status_note = str(scanner_result.get("note", _last_status_note))
 		_update_status_label()
 	elif key_event.pressed and not key_event.echo and key_event.keycode == KEY_E:
