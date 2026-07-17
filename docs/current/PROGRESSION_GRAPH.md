@@ -51,10 +51,10 @@ The table and dependency diagram below describe the promoted full-level view.
 | 8 | `Survey scanner project` | production_level_01 | Survey Scanner Blueprint, Titanium Scrap, Conductive Coil | production_level_01, Survey Scanner Blueprint, Titanium Scrap | Survey Scanner 1 | stage 8 |
 | 9 | `Survey Scanner 1` | global | Survey scanner project | Survey scanner project | state/payoff | stage 9 |
 | 10 | `Glow anemone` | production_level_01 / upper_right_current_pocket | Survey Scanner 1, Propulsion Fins | production_level_01, Survey Scanner 1, Propulsion Fins | Insulating Gel | stage 10 |
-| 10 | `Survey anomaly` | production_level_01 / upper_right_current_pocket | Survey Scanner 1, Propulsion Fins | production_level_01, Survey Scanner 1, Propulsion Fins | Lower Right Anomaly Discovery | stage 10 |
+| 10 | `Scan maintenance case` | production_level_01 / upper_right_current_pocket | Survey Scanner 1, Propulsion Fins | production_level_01, Survey Scanner 1, Propulsion Fins | Lower Right Anomaly Discovery | stage 10 |
 | 10 | `Survey Signal Reef` | production_level_01 / east_current_signal_reef_route | Survey Scanner 1, Signal Reef route | production_level_01, Survey Scanner 1, Signal Reef route | Lower Right Signal Reef Discovery | stage 10 |
 | 11 | `Insulating Gel` | global | none | Glow anemone | state/payoff | stage 11 |
-| 11 | `Lower Right Anomaly Discovery` | production_level_01 / upper_right_current_pocket | Survey anomaly, Surface Boat Entry | Survey anomaly, production_level_01, Surface Boat Entry | state/payoff | stage 11 |
+| 11 | `Lower Right Anomaly Discovery` | production_level_01 / upper_right_current_pocket | Scan maintenance case, Surface Boat Entry | Scan maintenance case, production_level_01, Surface Boat Entry | state/payoff | stage 11 |
 | 11 | `Lower Right Signal Reef Discovery` | production_level_01 / east_current_signal_reef_route | Survey Signal Reef, Surface Boat Entry | Survey Signal Reef, production_level_01, Surface Boat Entry | state/payoff | stage 11 |
 | 12 | `Dive light project` | production_level_01 | Lower Right Signal Reef Discovery, Titanium Scrap, Conductive Coil, Insulating Gel | production_level_01, Lower Right Signal Reef Discovery, Titanium Scrap | Dive Light 1 | stage 12 |
 | 12 | `Salvage Cutter Project` | production_level_01 | Lower Right Anomaly Discovery, Titanium Scrap, Conductive Coil | production_level_01, Lower Right Anomaly Discovery, Titanium Scrap | Salvage Cutter | stage 12 |
@@ -149,7 +149,7 @@ flowchart LR
     n52["Salvage Lower Loop"]
     n53["Salvage Southwest Return Cache"]
     n54["Survey abyssal source"]
-    n55["Survey anomaly"]
+    n55["Scan maintenance case"]
     n56["Survey Signal Reef"]
     n57["Survey deep harmonic"]
     n58["Survey wreck archive"]

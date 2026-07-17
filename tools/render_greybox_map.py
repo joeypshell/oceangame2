@@ -169,7 +169,19 @@ def render_svg(map_data: dict) -> str:
             f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="{COLORS["survey"]}" '
             'fill-opacity="0.28" stroke="#07584f" stroke-width="6"/>'
         )
-        parts.append(f'<circle cx="{cx}" cy="{cy}" r="14" fill="none" stroke="{COLORS["survey"]}" stroke-width="6"/>')
+        if target.get("scan_presentation_id") == "salvage_cutter_blueprint_case":
+            anchor = target["scan_anchor"]
+            cx = (float(anchor["x"]) + 0.5) * tile_size
+            cy = (float(anchor["y"]) + 0.5) * tile_size
+            parts.append(
+                f'<rect x="{cx - 24}" y="{cy - 14}" width="48" height="28" rx="3" '
+                'fill="#2e4a52" stroke="#8fb8b3" stroke-width="4"/>'
+            )
+            parts.append(f'<path d="M {cx - 8} {cy - 14} v -6 h 16 v 6" fill="none" stroke="#5f8285" stroke-width="4"/>')
+            parts.append(f'<rect x="{cx - 13}" y="{cy}" width="26" height="10" fill="#1fb0b8"/>')
+            parts.append(f'<path d="M {cx - 9} {cy + 7} l 6 -4 h 8 l 5 4" fill="none" stroke="#ffd14d" stroke-width="3"/>')
+        else:
+            parts.append(f'<circle cx="{cx}" cy="{cy}" r="14" fill="none" stroke="{COLORS["survey"]}" stroke-width="6"/>')
         parts.append(text(x + 8, y - 10, target["id"], 22))
 
     hostiles_by_id = {hostile["id"]: hostile for hostile in map_data.get("hostile_encounters", [])}

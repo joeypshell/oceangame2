@@ -19,7 +19,7 @@ SUPPORTED_INTERACTIONS = {"survey"}
 SUPPORTED_SUBJECT_KINDS = {"artifact", "creature", "environment", "resource"}
 SUPPORTED_REWARD_KINDS = {"blueprint", "discovery", "research"}
 TARGET_DISCOVERIES = {
-    "anomaly": {"lower_right_anomaly_discovery", "salvage_cutter_blueprint"},
+    "anomaly": {"lower_right_anomaly_discovery"},
     "regional": {
         "lower_right_signal_reef_discovery",
         "signal_reef_deep_harmonic_discovery",
@@ -40,7 +40,7 @@ TARGET_REWARD_KINDS = {
 }
 KNOWN_REWARD_IDS = {
     "blueprint": {"salvage_cutter_blueprint"},
-    "discovery": TARGET_DISCOVERIES["anomaly"] - {"salvage_cutter_blueprint"} | TARGET_DISCOVERIES["regional"],
+    "discovery": TARGET_DISCOVERIES["anomaly"] | TARGET_DISCOVERIES["regional"],
     "research": TARGET_DISCOVERIES["resource"],
 }
 LIGHT_GATED_TARGETS = {"signal_reef_deep_harmonic_survey": "dive_light_1"}
@@ -227,8 +227,8 @@ def _validate_scan_subject(target: dict[str, Any], item_label: str, width: int, 
         failures.append(
             f"{item_label} scan_reward_id {target.get('scan_reward_id')!r} is not supported for {reward_kind!r}."
         )
-    if target.get("scan_reward_id") != target.get("discovery_id"):
-        failures.append(f"{item_label} scan_reward_id must equal discovery_id so durable knowledge has one owner.")
+    if reward_kind != "blueprint" and target.get("scan_reward_id") != target.get("discovery_id"):
+        failures.append(f"{item_label} non-blueprint scan_reward_id must equal discovery_id.")
     if reward_kind == "blueprint" and subject_kind != "artifact":
         failures.append(f"{item_label} blueprint rewards require scan_subject_kind 'artifact'.")
 
@@ -411,7 +411,14 @@ def validate_survey_target_schema(map_path: Path, map_data: dict[str, Any]) -> l
                     f"{item_label} unsupported {target_type} metadata: {', '.join(sorted(unexpected_fields))}."
                 )
         else:
-            unexpected_resource_fields = RESOURCE_FIELDS & set(target)
+            artifact_subject = target.get("scan_subject_kind") == "artifact"
+            if artifact_subject:
+                for field in sorted(FINDING_FIELDS):
+                    if field not in target:
+                        failures.append(f"{item_label} artifact survey target is missing required field {field}.")
+                failures.extend(_validate_compact_text(target.get("clue_label"), item_label, "clue_label"))
+                failures.extend(_validate_compact_text(target.get("finding_label"), item_label, "finding_label"))
+            unexpected_resource_fields = (RESOURCE_FIELDS - FINDING_FIELDS if artifact_subject else RESOURCE_FIELDS) & set(target)
             if unexpected_resource_fields:
                 failures.append(
                     f"{item_label} resource metadata ({', '.join(sorted(unexpected_resource_fields))}) "

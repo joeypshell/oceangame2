@@ -17,8 +17,10 @@ from create_production_level_01_map import (
 from production_level_01_gameplay_transform import (
     CANDIDATE_MAP_ID,
     CANDIDATE_MAP_PATH,
+    CANDIDATE_SOURCE_OVERRIDES,
     EXCLUDED_IDS,
     LOCAL_TO_GLOBAL_OFFSET,
+    POINT_FIELDS,
     POINT_LIST_FIELDS,
     RECT_FIELDS,
     SPATIAL_SECTIONS,
@@ -58,6 +60,10 @@ class ProductionLevelGameplayTransformTests(unittest.TestCase):
                         result["x"], original["x"] + LOCAL_TO_GLOBAL_OFFSET["x"]
                     )
                     self.assertEqual(result["y"], original["y"])
+                for field in POINT_FIELDS:
+                    if field in original:
+                        self.assertEqual(result[field]["x"], original[field]["x"] + 58)
+                        self.assertEqual(result[field]["y"], original[field]["y"])
                 for field in POINT_LIST_FIELDS:
                     for local_point, global_point in zip(
                         original.get(field, []), result.get(field, [])
@@ -113,6 +119,21 @@ class ProductionLevelGameplayTransformTests(unittest.TestCase):
             self.assertEqual(survey["commit_map_id"], CANDIDATE_MAP_ID)
             self.assertEqual(survey["commit_map_path"], CANDIDATE_MAP_PATH)
             self.assertEqual(survey["commit_entry_id"], "surface_boat_entry")
+
+    def test_full_level_authors_named_cutter_blueprint_artifact(self) -> None:
+        survey = by_id(self.transformed["survey_targets"])["lower_right_anomaly_survey"]
+        self.assertEqual(survey["scan_subject_kind"], "artifact")
+        self.assertEqual(survey["scan_subject_id"], "salvage_cutter_maintenance_case")
+        self.assertEqual(survey["scan_presentation_id"], "salvage_cutter_blueprint_case")
+        self.assertEqual(survey["scan_anchor"], {"x": 126, "y": 44})
+        self.assertEqual(survey["scan_reward_kind"], "blueprint")
+        self.assertEqual(survey["scan_reward_id"], "salvage_cutter_blueprint")
+        self.assertEqual(survey["discovery_id"], "lower_right_anomaly_discovery")
+        self.assertEqual(
+            CANDIDATE_SOURCE_OVERRIDES[("survey_targets", survey["id"])]["scan_anchor"],
+            {"x": 68, "y": 44},
+        )
+        self.assertNotIn("scan_subject_id", by_id(self.source["survey_targets"])[survey["id"]])
 
     def test_provenance_records_local_and_global_geometry(self) -> None:
         records = {

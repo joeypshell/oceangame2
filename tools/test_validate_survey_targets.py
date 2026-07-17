@@ -54,7 +54,9 @@ def valid_artifact_target() -> dict:
         "scan_anchor": {"x": 2, "y": 2},
         "scan_reward_kind": "blueprint",
         "scan_reward_id": "salvage_cutter_blueprint",
-        "discovery_id": "salvage_cutter_blueprint",
+        "discovery_id": "lower_right_anomaly_discovery",
+        "clue_label": "Maintenance echo | Concealed wreck case",
+        "finding_label": "Blueprint recovered: Salvage cutter",
     })
     return target
 
@@ -146,7 +148,9 @@ class SurveyTargetValidationTests(unittest.TestCase):
         failures = validate_survey_target_schema(SOURCE_MAP, map_data)
         self.assertTrue(any("resource target does not support scan_reward_kind 'blueprint'" in failure for failure in failures), failures)
         self.assertTrue(any("scan_reward_id 'unsupported_blueprint' is not supported" in failure for failure in failures), failures)
-        self.assertTrue(any("scan_reward_id must equal discovery_id" in failure for failure in failures), failures)
+        target["scan_reward_kind"] = "research"
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertTrue(any("non-blueprint scan_reward_id must equal discovery_id" in failure for failure in failures), failures)
 
     def test_requires_unique_subject_identity_and_rejects_misplaced_metadata(self) -> None:
         map_data = valid_map()
