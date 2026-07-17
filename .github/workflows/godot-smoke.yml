@@ -324,21 +324,27 @@ jobs:
             exit 1
           fi
 
-      - name: Run Expansion 13 southeast-wreck return smoke check
+      - name: Run Expansion 13 journey smoke checks
         run: |
-          set +e
-          timeout 300s godot --headless --path . --smoke-expansion-13-southeast-wreck-return 2>&1 | tee godot-expansion-13-southeast-wreck-return.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
-
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-expansion-13-southeast-wreck-return.log; then
-            echo "Godot reported errors during Expansion 13 southeast-wreck return smoke check."
-            exit 1
-          fi
+          run_expansion_13_smoke() {
+            flag="$1"
+            label="$2"
+            timeout_seconds="$3"
+            log_path="godot-${label}.log"
+            set +e
+            timeout "${timeout_seconds}s" godot --headless --path . "${flag}" 2>&1 | tee "${log_path}"
+            godot_status=${PIPESTATUS[0]}
+            set -e
+            if [ "${godot_status}" -ne 0 ]; then
+              exit "${godot_status}"
+            fi
+            if grep -E "SCRIPT ERROR|ERROR:" "${log_path}"; then
+              echo "Godot reported errors during ${label} smoke check."
+              exit 1
+            fi
+          }
+          run_expansion_13_smoke --smoke-expansion-13-southeast-wreck-return expansion-13-southeast-wreck-return 300
+          run_expansion_13_smoke --smoke-expansion-13-scanner-cutter-correction expansion-13-scanner-cutter-correction 120
 
       - name: Measure promoted full-level default startup and camera bounds
         run: |
