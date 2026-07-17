@@ -2,6 +2,7 @@ extends RefCounted
 
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const ReviewProgressionFixture := preload("res://scripts/main/review_progression_fixture.gd")
+const ScannerPose := preload("res://scripts/main/smoke/scanner_smoke_pose.gd")
 
 const MAP_ID := "production_level_01"
 const RECORDER_ID := "southeast_wreck_recorder"
@@ -188,8 +189,10 @@ func _prepare_partial_survey() -> bool:
 	if not _main._world.is_salvage_collected(RECORDER_ID):
 		_fail("cutter did not expose the wreck archive")
 		return false
-	_main._player.global_position = survey.get("center", Vector2.ZERO)
-	_main._player.reset_motion()
+	var scanner_pose: Dictionary = ScannerPose.new().place(_main._world, _main._player, survey)
+	if not bool(scanner_pose.get("found", false)):
+		_fail("wreck archive has no collision-clear scanner pose")
+		return false
 	var activation: Dictionary = _main._anomaly_survey.scanner_action(_main._world, _main._player)
 	if str(activation.get("reason", "")) != "activated":
 		_fail("explicit scanner action did not activate the wreck survey")
