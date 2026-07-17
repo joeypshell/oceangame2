@@ -1,6 +1,7 @@
 extends RefCounted
 
 const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
+const ExpansionProfileMigrations := preload("res://scripts/main/expansion_profile_migrations.gd")
 const ExpansionProfileProjectRules := preload("res://scripts/main/expansion_profile_project_rules.gd")
 const ExpansionProfileStorage := preload("res://scripts/main/expansion_profile_storage.gd")
 const SCHEMA_VERSION := 4
@@ -17,6 +18,7 @@ const PROPULSION_FINS_BLUEPRINT_ID := "propulsion_fins_blueprint"
 const PROPULSION_FINS_GATE_ID := "upper_right_current_pocket_gate"
 const SALVAGE_CUTTER_CAPABILITY_ID := "salvage_cutter"
 const ANOMALY_DISCOVERY_ID := "lower_right_anomaly_discovery"
+const SALVAGE_CUTTER_BLUEPRINT_ID := "salvage_cutter_blueprint"
 const MINERAL_TRACE_RESEARCH_ID := "upper_right_mineral_trace_research"
 const SIGNAL_REEF_DISCOVERY_ID := "lower_right_signal_reef_discovery"
 const DEEP_HARMONIC_DISCOVERY_ID := "signal_reef_deep_harmonic_discovery"
@@ -63,7 +65,7 @@ const PROFILE_KEYS := {
 const LEGACY_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true}
 const MATERIAL_SCHEMA_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true}
 const SUPPORTED_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, PROPULSION_FINS_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true, CURRENT_STABILIZER_CAPABILITY_ID: true, SHOCK_PROD_CAPABILITY_ID: true, SHOCK_PROD_CAPACITOR_CAPABILITY_ID: true, DIVE_LIGHT_CAPABILITY_ID: true, PRESSURE_SUIT_CAPABILITY_ID: true}
-const SUPPORTED_DISCOVERY_IDS := {PROPULSION_FINS_BLUEPRINT_ID: true, SURVEY_SCANNER_BLUEPRINT_ID: true, ANOMALY_DISCOVERY_ID: true, MINERAL_TRACE_RESEARCH_ID: true, SIGNAL_REEF_DISCOVERY_ID: true, DEEP_HARMONIC_DISCOVERY_ID: true, ABYSSAL_HARMONIC_DISCOVERY_ID: true, SOUTHEAST_WRECK_DISCOVERY_ID: true}
+const SUPPORTED_DISCOVERY_IDS := {PROPULSION_FINS_BLUEPRINT_ID: true, SURVEY_SCANNER_BLUEPRINT_ID: true, ANOMALY_DISCOVERY_ID: true, SALVAGE_CUTTER_BLUEPRINT_ID: true, MINERAL_TRACE_RESEARCH_ID: true, SIGNAL_REEF_DISCOVERY_ID: true, DEEP_HARMONIC_DISCOVERY_ID: true, ABYSSAL_HARMONIC_DISCOVERY_ID: true, SOUTHEAST_WRECK_DISCOVERY_ID: true}
 const SUPPORTED_MATERIAL_IDS := {TITANIUM_MATERIAL_ID: true, RUBBER_MATERIAL_ID: true, COIL_MATERIAL_ID: true, INSULATING_GEL_MATERIAL_ID: true, EEL_ELECTROCYTE_MATERIAL_ID: true}
 const MATERIAL_SCHEMA_PROJECT_IDS := {SALVAGE_CUTTER_PROJECT_ID: true}
 const SUPPORTED_PROJECT_IDS := {PROPULSION_FINS_PROJECT_ID: true, SURVEY_SCANNER_PROJECT_ID: true, SALVAGE_CUTTER_PROJECT_ID: true, CURRENT_STABILIZER_PROJECT_ID: true, SHOCK_PROD_PROJECT_ID: true, SHOCK_PROD_CAPACITOR_PROJECT_ID: true, DIVE_LIGHT_PROJECT_ID: true, PRESSURE_SUIT_PROJECT_ID: true}
@@ -105,7 +107,7 @@ func load_profile() -> Dictionary:
 		_last_storage_report = _report("invalid_json")
 		return _last_storage_report.duplicate(true)
 	var payload := json.data as Dictionary
-	var scanner_migrated := _migrate_scanner_purchase_payload(payload)
+	var migrations: Dictionary = ExpansionProfileMigrations.apply(payload, _migration_ids())
 	var failures := _validate_payload(payload)
 	if not failures.is_empty():
 		_last_storage_report = _report("invalid_schema", {"failures": failures})
@@ -122,6 +124,8 @@ func load_profile() -> Dictionary:
 	if has_capability(SURVEY_SCANNER_CAPABILITY_ID):
 		_completed_discoveries[SURVEY_SCANNER_BLUEPRINT_ID] = true
 		_completed_projects[SURVEY_SCANNER_PROJECT_ID] = true
+	if has_capability(SALVAGE_CUTTER_CAPABILITY_ID) or has_completed_project(SALVAGE_CUTTER_PROJECT_ID):
+		_completed_discoveries[SALVAGE_CUTTER_BLUEPRINT_ID] = true
 	var status := "loaded"
 	if loaded_version == LEGACY_SCHEMA_VERSION:
 		status = "migrated_v1"
@@ -129,8 +133,11 @@ func load_profile() -> Dictionary:
 		status = "migrated_v2"
 	elif loaded_version == PROJECT_SCHEMA_VERSION:
 		status = "migrated_v3"
-	elif scanner_migrated:
+	elif bool(migrations.get("scanner_purchase", false)):
 		status = "migrated_scanner_purchase"
+	if (bool(migrations.get("cutter_blueprint", false)) or bool(migrations.get("scanner_purchase", false))) and not save_profile():
+		_last_storage_report = _report("migration_write_error")
+		return _last_storage_report.duplicate(true)
 	_last_storage_report = _report(status)
 	return _last_storage_report.duplicate(true)
 func save_profile() -> bool:
@@ -166,6 +173,31 @@ func complete_discovery(discovery_id: String, persist := true) -> Dictionary:
 	return {"changed": true, "reason": "completed", "discovery_id": discovery_id}
 
 
+func complete_discovery_reward(discovery_id: String, reward_id: String, persist := true) -> Dictionary:
+	var primary_id := str(discovery_id)
+	var secondary_id := str(reward_id).strip_edges()
+	if secondary_id.is_empty() or secondary_id == primary_id:
+		return complete_discovery(primary_id, persist)
+	if not SUPPORTED_DISCOVERY_IDS.has(primary_id):
+		return {"changed": false, "reason": "unsupported_discovery", "discovery_id": primary_id}
+	if not SUPPORTED_DISCOVERY_IDS.has(secondary_id):
+		return {"changed": false, "reason": "unsupported_discovery", "discovery_id": secondary_id}
+	var discovery_snapshot := _completed_discoveries.duplicate(true)
+	var changed := false
+	if not has_completed_discovery(primary_id):
+		_completed_discoveries[primary_id] = true
+		changed = true
+	if not has_completed_discovery(secondary_id):
+		_completed_discoveries[secondary_id] = true
+		changed = true
+	if not changed:
+		return {"changed": false, "reason": "already_completed", "discovery_id": primary_id, "reward_id": secondary_id}
+	if persist and not save_profile():
+		_completed_discoveries = discovery_snapshot
+		return {"changed": false, "reason": "storage_error", "discovery_id": primary_id, "reward_id": secondary_id}
+	return {"changed": true, "reason": "completed", "discovery_id": primary_id, "reward_id": secondary_id}
+
+
 func deposit_materials(quantities: Dictionary, persist := true) -> Dictionary:
 	var validation := _validate_material_delta(quantities)
 	if not validation.is_empty():
@@ -180,7 +212,7 @@ func deposit_materials(quantities: Dictionary, persist := true) -> Dictionary:
 
 
 func complete_material_project(project_definition: Dictionary, persist := true) -> Dictionary:
-	var failures := _validate_material_project_definition(project_definition)
+	var failures := ExpansionProfileProjectRules.validate_definition(project_definition)
 	if not failures.is_empty():
 		return {"changed": false, "reason": "invalid_project", "failures": failures}
 	var project_id := str(project_definition["id"])
@@ -403,43 +435,6 @@ func _validate_material_delta(value: Dictionary) -> Array[String]:
 	return failures
 
 
-func _validate_material_project_definition(project_definition: Dictionary) -> Array[String]:
-	var failures: Array[String] = []
-	var project_id := str(project_definition.get("id", ""))
-	var rules: Dictionary = PROJECT_RULES.get(project_id, {})
-	if rules.is_empty():
-		failures.append("unsupported project id")
-		return failures
-	if str(project_definition.get("required_discovery_id", "")) != str(rules.get("required_discovery_id", "")):
-		failures.append("unsupported project discovery")
-	if str(project_definition.get("unlocks_capability_id", "")) != str(rules["capability_id"]):
-		failures.append("unsupported project capability")
-	if str(project_definition.get("required_project_id", "")) != str(rules["required_project_id"]):
-		failures.append("unsupported project prerequisite")
-	var authored_target_fields := []
-	for target_field in ["target_id", "target_gate_id", "target_hostile_id"]:
-		if project_definition.has(target_field):
-			authored_target_fields.append(target_field)
-	if authored_target_fields.size() != 1 or str(project_definition.get(str(rules["target_field"]), "")) != str(rules["target_id"]):
-		failures.append("unsupported project target")
-	if str(project_definition.get("build_phase", "")) != "night_debrief":
-		failures.append("unsupported project build phase")
-	if str(project_definition.get("capability_effect", "")) != str(rules.get("capability_effect", "")):
-		failures.append("unsupported project capability effect")
-	var required = project_definition.get("required_materials")
-	if typeof(required) != TYPE_DICTIONARY:
-		failures.append("project required_materials must be an object")
-		return failures
-	var expected: Dictionary = rules["required_materials"]
-	if required.size() != expected.size():
-		failures.append("project recipe has unsupported materials")
-	for material_id in expected:
-		var quantity = required.get(material_id)
-		if not _is_nonnegative_integer_value(quantity) or int(quantity) != int(expected[material_id]):
-			failures.append("project recipe %s must equal %d" % [material_id, expected[material_id]])
-	return failures
-
-
 func _validate_project_capability_pair(payload: Dictionary, supported_projects: Dictionary) -> Array[String]:
 	var capabilities = payload.get("unlocked_capabilities")
 	var projects = payload.get("completed_projects")
@@ -457,16 +452,16 @@ func _validate_project_capability_pair(payload: Dictionary, supported_projects: 
 	return failures
 
 
-func _migrate_scanner_purchase_payload(payload: Dictionary) -> bool:
-	if typeof(payload.get("completed_discoveries")) != TYPE_ARRAY or typeof(payload.get("unlocked_capabilities")) != TYPE_ARRAY or typeof(payload.get("completed_projects")) != TYPE_ARRAY:
-		return false
-	var schema_version := int(payload.get("schema_version", 0))
-	if (schema_version != PROJECT_SCHEMA_VERSION and schema_version != SCHEMA_VERSION) or not payload.get("unlocked_capabilities", []).has(SURVEY_SCANNER_CAPABILITY_ID) or payload.get("completed_projects", []).has(SURVEY_SCANNER_PROJECT_ID):
-		return false
-	if not payload["completed_discoveries"].has(SURVEY_SCANNER_BLUEPRINT_ID):
-		payload["completed_discoveries"].append(SURVEY_SCANNER_BLUEPRINT_ID)
-	payload["completed_projects"].append(SURVEY_SCANNER_PROJECT_ID)
-	return true
+func _migration_ids() -> Dictionary:
+	return {
+		"survey_scanner_capability_id": SURVEY_SCANNER_CAPABILITY_ID,
+		"survey_scanner_project_id": SURVEY_SCANNER_PROJECT_ID,
+		"survey_scanner_blueprint_id": SURVEY_SCANNER_BLUEPRINT_ID,
+		"salvage_cutter_capability_id": SALVAGE_CUTTER_CAPABILITY_ID,
+		"salvage_cutter_project_id": SALVAGE_CUTTER_PROJECT_ID,
+		"salvage_cutter_blueprint_id": SALVAGE_CUTTER_BLUEPRINT_ID,
+		"anomaly_discovery_id": ANOMALY_DISCOVERY_ID,
+	}
 
 
 func _load_ids(values: Array, destination: Dictionary) -> void:

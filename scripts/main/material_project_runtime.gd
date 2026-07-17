@@ -7,6 +7,7 @@ var _profile
 var _projects: Array[Dictionary] = []
 var _source_map_id := ""
 var _last_completed_project_id := ""
+var _requested_project_id := ""
 
 
 func _init(profile_state) -> void:
@@ -17,6 +18,7 @@ func on_map_loaded(world) -> Dictionary:
 	_projects = []
 	_source_map_id = ""
 	_last_completed_project_id = ""
+	_requested_project_id = ""
 	if world == null or not world.has_method("get_material_projects"):
 		return report()
 	for candidate in world.get_material_projects():
@@ -76,6 +78,10 @@ func has_cutter() -> bool:
 	return _profile != null and _profile.has_capability(ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID)
 
 
+func has_cutter_blueprint() -> bool:
+	return _profile != null and _profile.has_completed_discovery(ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID)
+
+
 func has_propulsion_fins() -> bool:
 	return _profile != null and _profile.has_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID)
 
@@ -132,6 +138,8 @@ func propulsion_fins_guidance(map_id := "", scanner_blueprint_recovered := false
 
 func active_day_build_feedback(map_id := "", scanner_blueprint_recovered := false) -> String:
 	var project := _selected_project()
+	if project.is_empty():
+		return "Nothing to build yet"
 	if str(project.get("id", "")) == ExpansionProfileState.PROPULSION_FINS_PROJECT_ID:
 		if has_propulsion_fins():
 			var guidance := propulsion_fins_guidance(map_id, scanner_blueprint_recovered)
@@ -156,6 +164,7 @@ func _active_day_feedback_for(project: Dictionary, label: String) -> String:
 func shock_prod_guidance() -> String:
 	if has_shock_prod():
 		return "Shock prod ready"
+	request_project(ExpansionProfileState.SHOCK_PROD_PROJECT_ID)
 	var project := _next_incomplete_project_through(ExpansionProfileState.SHOCK_PROD_PROJECT_ID)
 	if project.is_empty():
 		return "Shock prod locked: project unavailable"
@@ -184,6 +193,13 @@ func project_definition_for(project_id: String) -> Dictionary:
 	return _project_by_id(project_id).duplicate(true)
 
 
+func request_project(project_id: String) -> bool:
+	if _project_by_id(project_id).is_empty():
+		return false
+	_requested_project_id = project_id
+	return true
+
+
 func report() -> Dictionary:
 	var project := _selected_project()
 	var project_id := str(project.get("id", ""))
@@ -198,6 +214,7 @@ func report() -> Dictionary:
 		"required_materials": project.get("required_materials", {}).duplicate(true),
 		"propulsion_required_materials": _project_by_id(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID).get("required_materials", {}).duplicate(true),
 		"scanner_required_materials": _project_by_id(ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID).get("required_materials", {}).duplicate(true),
+		"cutter_required_materials": _project_by_id(ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID).get("required_materials", {}).duplicate(true),
 		"titanium_banked": _profile.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID) if _profile != null else 0,
 		"rubber_banked": _profile.material_quantity(ExpansionProfileState.RUBBER_MATERIAL_ID) if _profile != null else 0,
 		"coil_banked": _profile.material_quantity(ExpansionProfileState.COIL_MATERIAL_ID) if _profile != null else 0,
@@ -208,6 +225,8 @@ func report() -> Dictionary:
 		"scanner_blueprint_recovered": has_scanner_blueprint(),
 		"scanner_status": status_for(ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID),
 		"scanner_unlocked": has_scanner(),
+		"cutter_blueprint_recovered": has_cutter_blueprint(),
+		"cutter_status": status_for(ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID),
 		"cutter_unlocked": has_cutter(),
 		"current_stabilizer_unlocked": has_current_stabilizer(),
 		"shock_prod_unlocked": has_shock_prod(),
@@ -222,12 +241,16 @@ func _selected_project() -> Dictionary:
 		return _project_by_id(_last_completed_project_id)
 	for desired_status in ["ready", "incomplete"]:
 		for project in _projects:
-			if _profile != null and not _profile.has_completed_project(str(project.get("id", ""))) and _status_for(project) == desired_status:
+			if _profile != null and not _profile.has_completed_project(str(project.get("id", ""))) and _is_project_visible(project) and _status_for(project) == desired_status:
 				return project
+	if not _requested_project_id.is_empty():
+		var requested := _project_by_id(_requested_project_id)
+		if not requested.is_empty() and (_profile == null or not _profile.has_completed_project(_requested_project_id)):
+			return requested
 	for project in _projects:
-		if _profile == null or not _profile.has_completed_project(str(project.get("id", ""))):
+		if (_profile == null or not _profile.has_completed_project(str(project.get("id", "")))) and _is_project_visible(project):
 			return project
-	return _projects[-1] if not _projects.is_empty() else {}
+	return {}
 
 
 func _project_by_id(project_id: String) -> Dictionary:
@@ -254,6 +277,23 @@ func _next_incomplete_project_through(target_project_id: String) -> Dictionary:
 		if project_id == target_project_id:
 			break
 	return {}
+
+
+func _is_project_visible(project: Dictionary) -> bool:
+	var project_id := str(project.get("id", ""))
+	if project_id in [ExpansionProfileState.SHOCK_PROD_PROJECT_ID, ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID]:
+		return project_id == _requested_project_id
+	var project_status := _status_for(project)
+	if project_status == "prerequisite_required":
+		return false
+	if project_status != "knowledge_required":
+		return true
+	if project_id in [ExpansionProfileState.PROPULSION_FINS_PROJECT_ID, ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID]:
+		return true
+	return (
+		project_id == ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID
+		and str(project.get("required_discovery_id", "")) == ExpansionProfileState.ANOMALY_DISCOVERY_ID
+	)
 
 
 func _status_for(project: Dictionary) -> String:
@@ -318,6 +358,8 @@ func _knowledge_label(project: Dictionary) -> String:
 		return "fins blueprint"
 	if str(project.get("required_discovery_id", "")) == ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID:
 		return "scanner blueprint beyond east current"
+	if str(project.get("required_discovery_id", "")) == ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID:
+		return "salvage cutter blueprint"
 	if str(project.get("required_discovery_id", "")) == ExpansionProfileState.SIGNAL_REEF_DISCOVERY_ID:
 		return "Signal Reef chart"
 	if str(project.get("required_discovery_id", "")) == ExpansionProfileState.DEEP_HARMONIC_DISCOVERY_ID:

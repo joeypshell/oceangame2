@@ -10,7 +10,7 @@ const ScannerConeTargeting := preload("res://scripts/main/scanner_cone_targeting
 
 const SCANNER_CAPABILITY_ID := ProgressionContract.SCANNER_CAPABILITY_ID
 const COMMIT_NOTE := "Discovery committed at surface boat"
-const COMMIT_RESULT := "Cutter plan recovered: Lower-right anomaly\nProject unlocked: Salvage cutter"
+const BLUEPRINT_COMMIT_NOTE := "Blueprint committed at surface boat"
 const REGIONAL_TARGET_TYPE := "regional"
 const RESOURCE_TARGET_TYPE := "resource"
 const RESOURCE_COMMIT_NOTE := "Research committed at surface boat"
@@ -198,8 +198,8 @@ func overlay_text(world, player) -> String:
 	var journey_promise: String = _regional_presentation.promise_text(world, _profile)
 	if not journey_promise.is_empty():
 		return journey_promise
-	if _profile.has_completed_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID):
-		return "Cutter plan recovered | Salvage cutter project"
+	if _profile.has_completed_discovery(ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID):
+		return "Blueprint recovered | Salvage cutter project"
 	if not has_scanner():
 		return "Scanner project | Ti 1 + Coil 1 | Build at night" if _profile.has_completed_discovery(ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID) else ""
 	return "Scanner ready | Survey lower-right anomaly"
@@ -214,6 +214,7 @@ func is_status_note(status_note: String) -> bool:
 		status_note.begins_with("Scanner")
 		or status_note.begins_with("Find scanner")
 		or status_note.begins_with("Cutter")
+		or status_note.begins_with("Blueprint")
 		or status_note.begins_with("Survey")
 		or status_note.begins_with("Discovery")
 		or status_note.begins_with("Anomaly")
@@ -280,22 +281,20 @@ func _try_commit(world, player) -> Dictionary:
 		return _note_result(false, status, "Discovery commit failed")
 	var discovery_id := str(commit.get("committed_discovery_id", ""))
 	var metadata: Dictionary = commit.get("metadata", {})
-	if discovery_id == ExpansionProfileState.ANOMALY_DISCOVERY_ID:
-		_last_note = COMMIT_NOTE
-		_last_result = COMMIT_RESULT
-	elif str(metadata.get("target_type", "")) == REGIONAL_TARGET_TYPE:
-		_last_note = COMMIT_NOTE
-		_last_result = str(metadata.get("finding_label", "Discovery logged"))
+	_last_note = BLUEPRINT_COMMIT_NOTE if str(metadata.get("scan_reward_kind", "")) == "blueprint" else COMMIT_NOTE
+	_last_result = str(metadata.get("finding_label", "Discovery logged"))
+	if str(metadata.get("target_type", "")) == REGIONAL_TARGET_TYPE:
 		var next_lead := str(metadata.get("next_lead_label", "")).strip_edges()
 		if not next_lead.is_empty():
 			_last_result += "\n%s" % next_lead
-	else:
+	elif str(metadata.get("target_type", "")) == RESOURCE_TARGET_TYPE:
 		_last_note = RESOURCE_COMMIT_NOTE
 		_last_result = str(metadata.get("finding_label", "Research finding committed"))
 	return {
 		"state": status,
 		"committed": true,
 		"discovery_id": discovery_id,
+		"reward_id": str(commit.get("committed_reward_id", "")),
 		"note": _last_note,
 		"result_text": _last_result,
 	}
@@ -405,12 +404,10 @@ func _is_finding_target(target: Dictionary) -> bool:
 
 
 func _pending_metadata(target: Dictionary) -> Dictionary:
-	return {
-		"target_type": str(target.get("target_type", "")),
-		"finding_label": str(target.get("finding_label", "")),
-		"next_lead_label": str(target.get("next_lead_label", "")),
-		"required_pressure_capability_id": str(target.get("required_pressure_capability_id", "")),
-	}
+	var metadata := {}
+	for field in ExpeditionDiscoveryState.METADATA_FIELDS:
+		metadata[field] = str(target.get(field, ""))
+	return metadata
 
 
 func _survey_complete_note(target: Dictionary) -> String:
@@ -419,15 +416,17 @@ func _survey_complete_note(target: Dictionary) -> String:
 		return regional_note
 	if not str(target.get("required_pressure_capability_id", "")).strip_edges().is_empty():
 		return "Abyssal source charted | Return to boat"
+	if str(target.get("scan_reward_kind", "")) == "blueprint":
+		return "Blueprint identified | Return to surface boat"
 	return "Research complete - return to surface boat" if _is_resource_target(target) else "Survey complete - return to surface boat"
 
 
 func _completed_note(target: Dictionary) -> String:
-	return str(target.get("finding_label", "Finding already logged")) if _is_finding_target(target) else "Salvage cutter plan already recovered"
+	return str(target.get("finding_label", "Finding already logged"))
 
 
 func _completed_overlay_text(target: Dictionary) -> String:
-	return str(target.get("finding_label", "Finding logged")) if _is_finding_target(target) else "Cutter plan recovered | Salvage cutter project"
+	return str(target.get("finding_label", "Finding logged"))
 
 
 func _pending_status_note() -> String:
@@ -441,6 +440,8 @@ func _pending_return_text() -> String:
 		return regional_note
 	if not str(metadata.get("required_pressure_capability_id", "")).is_empty():
 		return "Abyssal chart pending | Return to surface boat before another scan"
+	if str(metadata.get("scan_reward_kind", "")) == "blueprint":
+		return "Blueprint pending | Return to surface boat before another scan"
 	return "Research pending | Return to surface boat before another scan" if str(metadata.get("target_type", "")) == RESOURCE_TARGET_TYPE else "Discovery pending | Return to surface boat before another scan"
 
 

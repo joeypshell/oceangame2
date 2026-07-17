@@ -56,8 +56,8 @@ func capture_and_quit(capture_dir: String) -> void:
 	_main._process(0.0)
 	_main._update_status_label()
 	var result_text: String = _main._anomaly_survey.result_text()
-	if result_text.find("Cutter plan recovered:") == -1 or result_text.find("Project unlocked:") == -1:
-		_fail("commit feedback missing from result: %s" % result_text)
+	if result_text != "Discovery logged":
+		_fail("legacy survey result was not source-derived: %s" % result_text)
 		return
 
 	_frame_camera(_main._world.get_extraction_center() + COMMIT_CAMERA_OFFSET, COMMIT_CAMERA_ZOOM)

@@ -5,8 +5,10 @@ const ExpeditionDayDebrief := preload("res://scripts/main/expedition_day_debrief
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
+const ProgressionProjectTracker := preload("res://scripts/main/progression_project_tracker.gd")
 const TEST_PATH := "user://oceangame2_material_project_test.json"
 const SLICE_01 := "res://maps/production_slice_01.greybox.json"
+const LEVEL_01 := "res://maps/production_level_01.greybox.json"
 
 var _failures: Array[String] = []
 
@@ -18,6 +20,7 @@ func _init() -> void:
 func _run() -> void:
 	_cleanup_profile()
 	_test_inconsistent_profiles()
+	_test_cutter_blueprint_contract()
 	_write_profile({
 		"schema_version": 1,
 		"completed_discoveries": [],
@@ -115,7 +118,8 @@ func _run() -> void:
 
 	var reloaded := ExpansionProfileState.new(TEST_PATH)
 	var reload_report: Dictionary = reloaded.load_profile()
-	_expect(reload_report.get("status") == "loaded", "completed project profile did not reload")
+	_expect(reload_report.get("status") == "loaded", "legacy cutter profile did not reload cleanly")
+	_expect(reloaded.has_completed_discovery(ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID), "legacy cutter migration omitted blueprint")
 	_expect(reloaded.has_completed_project(ExpansionProfileState.PROPULSION_FINS_PROJECT_ID), "profile reload lost fins project")
 	_expect(reloaded.has_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID), "profile reload lost fins")
 	_expect(reloaded.has_completed_discovery(ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID), "profile reload lost fins blueprint")
@@ -145,9 +149,62 @@ func _run() -> void:
 	quit(0)
 
 
+func _test_cutter_blueprint_contract() -> void:
+	var profile := ExpansionProfileState.new("", false)
+	profile.load_profile()
+	var world = WORLD_SCENE.instantiate()
+	world.map_path = LEVEL_01
+	get_root().add_child(world)
+	world.load_greybox()
+	var runtime := MaterialProjectRuntime.new(profile)
+	runtime.on_map_loaded(world)
+	for project_id in [ExpansionProfileState.PROPULSION_FINS_PROJECT_ID, ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID]:
+		var project: Dictionary = runtime.project_definition_for(project_id)
+		profile.complete_discovery(str(project.get("required_discovery_id", "")), false)
+		var recipe := {}
+		for material_id in project.get("required_materials", {}):
+			recipe[str(material_id)] = int(project["required_materials"][material_id])
+		profile.deposit_materials(recipe, false)
+		var prerequisite: Dictionary = profile.complete_material_project(project, false)
+		_expect(bool(prerequisite.get("changed", false)), "blueprint fixture could not complete prerequisite %s: %s" % [project_id, str(prerequisite)])
+	runtime.on_map_loaded(world)
+	_expect(runtime.status_for(ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID) == "knowledge_required", "fresh cutter project did not require its blueprint")
+	_expect(runtime.status() == "unavailable" and runtime.debrief_lines().is_empty(), "cutter project guidance appeared before blueprint commitment")
+	_expect(runtime.active_day_build_feedback().find("Cutter") == -1, "daytime feedback named cutter before blueprint commitment")
+	var tracker := ProgressionProjectTracker.new()
+	get_root().add_child(tracker)
+	tracker.refresh(runtime.report(), {}, false)
+	_expect(not tracker.visible, "cutter recipe tracker appeared before blueprint commitment")
+	profile.complete_discovery(ExpansionProfileState.ANOMALY_DISCOVERY_ID, false)
+	_expect(runtime.status() == "unavailable" and not runtime.has_cutter_blueprint(), "generic anomaly knowledge exposed the cutter project")
+	_expect(runtime.shock_prod_guidance().find("survey lower-right anomaly first") != -1, "contextual shock guidance exposed the optional recipe before discovery")
+	_expect(runtime.debrief_lines()[0].find("required") != -1 and runtime.debrief_lines()[0].find("Ti ") == -1, "optional project exposed cutter recipe before blueprint")
+	var reward: Dictionary = profile.complete_discovery_reward(
+		ExpansionProfileState.ANOMALY_DISCOVERY_ID,
+		ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID,
+		false
+	)
+	_expect(bool(reward.get("changed", false)) and runtime.has_cutter_blueprint(), "committed artifact did not grant cutter blueprint")
+	_expect(runtime.project_definition().get("id") == ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, "optional project preempted committed cutter blueprint")
+	tracker.refresh(runtime.report(), {}, false)
+	_expect(tracker.visible and tracker.snapshot_text().find("Titanium  0/2") != -1 and tracker.snapshot_text().find("Coil  0/1") != -1, "committed blueprint did not expose Ti2/Coil1 tracker")
+	profile.deposit_materials({ExpansionProfileState.TITANIUM_MATERIAL_ID: 2, ExpansionProfileState.COIL_MATERIAL_ID: 1}, false)
+	tracker.refresh(runtime.report(), {}, false)
+	_expect(runtime.status() == "ready" and tracker.snapshot_text().find("Ready") != -1, "exact cutter recipe did not ready tracker")
+	_expect(runtime.try_build(ExpeditionDayState.PHASE_ACTIVE).get("reason") == "wrong_phase", "cutter built during active day")
+	var built: Dictionary = runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF)
+	_expect(bool(built.get("changed", false)) and runtime.has_cutter(), "blueprint-backed cutter did not build at night")
+	tracker.refresh(runtime.report(), {}, false)
+	_expect(not tracker.visible, "cutter tracker remained after exact-once build")
+	_expect(runtime.try_build(ExpeditionDayState.PHASE_DEBRIEF).get("reason") == "already_completed", "cutter repeat build was not exact-once")
+	tracker.queue_free()
+	world.queue_free()
+
+
 func _test_shock_prod_project(profile, world) -> void:
 	var shock_runtime := MaterialProjectRuntime.new(profile)
 	shock_runtime.on_map_loaded(world)
+	shock_runtime.shock_prod_guidance()
 	_expect(shock_runtime.project_definition().get("id") == ExpansionProfileState.SHOCK_PROD_PROJECT_ID, "shock prod was not next after cutter")
 	var direct_unlock: Dictionary = profile.unlock_capability(ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID, false)
 	_expect(direct_unlock.get("reason") == "project_transaction_required", "shock prod unlocked outside project transaction")

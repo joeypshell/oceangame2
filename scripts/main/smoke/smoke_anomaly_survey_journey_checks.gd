@@ -142,7 +142,7 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 	):
 		return
 	var committed_result: String = _main._anomaly_survey.result_text()
-	if not _require(committed_result.find("Cutter plan recovered:") != -1, "commit omitted cutter-plan result"):
+	if not _require(committed_result == "Discovery logged", "legacy survey invented a hardcoded cutter result"):
 		return
 
 	var reloaded := ExpansionProfileState.new(TEST_PROFILE_PATH)
@@ -150,13 +150,14 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 	if not _require(
 		reload_report.get("status") == "loaded"
 		and reloaded.has_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID)
-		and reloaded.has_completed_discovery(DISCOVERY_ID),
+		and reloaded.has_completed_discovery(DISCOVERY_ID)
+		and reloaded.has_completed_discovery(ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID),
 		"profile reload lost scanner or discovery"
 	):
 		return
 
 	_cleanup_profile()
-	print("Anomaly survey journey smoke passed: map=%s contiguous=true connectors=none fins_gate=%s payoff=%s optional_score=%d scanner_blueprint=true recipe=ti1+coil1 score_bypass=false explicit_q=true full_cargo_scan=true pending_boat_guidance=true target=%s partial=%.2f cancel_on_leave=true failure_clears_pending=true committed_at_boat=true cutter_plan=true discovery=%s profile=%s." % [
+	print("Anomaly survey journey smoke passed: map=%s contiguous=true connectors=none fins_gate=%s payoff=%s optional_score=%d scanner_blueprint=true recipe=ti1+coil1 score_bypass=false explicit_q=true full_cargo_scan=true pending_boat_guidance=true target=%s partial=%.2f cancel_on_leave=true failure_clears_pending=true committed_at_boat=true source_result=true discovery=%s profile=%s." % [
 		MAP_ID,
 		ExpansionProfileState.PROPULSION_FINS_GATE_ID,
 		PAYOFF_TARGET_ID,

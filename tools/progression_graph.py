@@ -188,10 +188,11 @@ class ProgressionGraphBuilder:
                         self.graph.add_node(Node(f"capability:{capability_id}", _display(capability_id), "capability"), capability_id)
                     for material_id in _dict(item.get("required_materials")):
                         self.graph.add_node(Node(f"material:{material_id}", _display(material_id), "material"), material_id)
-                if kind == "survey":
-                    discovery_id = str(item.get("discovery_id", ""))
-                    if discovery_id:
-                        self.graph.add_node(Node(f"discovery:{discovery_id}", _display(discovery_id), "discovery", map_id, str(item.get("route_context", ""))), discovery_id)
+                if kind == "survey" and (discovery_id := str(item.get("discovery_id", ""))):
+                    self.graph.add_node(Node(f"discovery:{discovery_id}", _display(discovery_id), "discovery", map_id, str(item.get("route_context", ""))), discovery_id)
+        for item in _items(map_data, "survey_targets"):
+            if reward_id := str(item.get("scan_reward_id", "")):
+                self.graph.add_node(Node(f"discovery:{reward_id}", _display(reward_id), "discovery", map_id, str(item.get("route_context", ""))), reward_id)
 
     def _kind_for(self, collection: str, item: dict[str, Any]) -> str:
         if collection == "entities":
@@ -333,8 +334,7 @@ class ProgressionGraphBuilder:
             self.graph.add_edge(route_key, key, "unlocks")
         else:
             self._apply_route_gate(key, item, map_id)
-        discovery_id = str(item.get("discovery_id", ""))
-        if discovery_id:
+        for discovery_id in sorted({str(item.get(field, "")) for field in ("discovery_id", "scan_reward_id")} - {""}):
             discovery_key = self.graph.resolve(discovery_id)
             self.graph.add_edge(discovery_key, key, "requires", hard=True, note="survey and commit")
             commit_map = str(item.get("commit_map_id", ""))

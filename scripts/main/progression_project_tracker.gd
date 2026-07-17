@@ -40,20 +40,26 @@ func refresh(project_report: Dictionary, held: Dictionary, in_debrief: bool) -> 
 		and not bool(project_report.get("scanner_unlocked", false))
 		and project_report.get("project_ids", []).has(ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID)
 	)
-	visible = (track_fins or track_scanner) and not in_debrief
+	var track_cutter: bool = (
+		bool(project_report.get("cutter_blueprint_recovered", false))
+		and not bool(project_report.get("cutter_unlocked", false))
+		and project_report.get("project_ids", []).has(ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID)
+	)
+	visible = (track_fins or track_scanner or track_cutter) and not in_debrief
 	if not visible:
 		return
-	var required: Dictionary = project_report.get("scanner_required_materials" if track_scanner else "propulsion_required_materials", {})
+	var required_key := "cutter_required_materials" if track_cutter else "scanner_required_materials" if track_scanner else "propulsion_required_materials"
+	var required: Dictionary = project_report.get(required_key, {})
 	var titanium_required := int(required.get("titanium_scrap", 2))
-	var secondary_id := "conductive_coil" if track_scanner else "rubber_sheet"
-	var secondary_name := "Coil" if track_scanner else "Rubber"
+	var secondary_id := "conductive_coil" if track_scanner or track_cutter else "rubber_sheet"
+	var secondary_name := "Coil" if track_scanner or track_cutter else "Rubber"
 	var secondary_required := int(required.get(secondary_id, 1))
 	var titanium_banked := int(project_report.get("titanium_banked", 0))
-	var secondary_banked := int(project_report.get("coil_banked" if track_scanner else "rubber_banked", 0))
+	var secondary_banked := int(project_report.get("coil_banked" if track_scanner or track_cutter else "rubber_banked", 0))
 	var titanium_held := int(held.get("titanium_scrap", 0))
 	var secondary_held := int(held.get(secondary_id, 0))
-	_title_label.text = "SURVEY SCANNER" if track_scanner else "PROPULSION FINS"
-	(_secondary_label.get_parent().get_child(0) as ColorRect).color = COIL_COLOR if track_scanner else RUBBER_COLOR
+	_title_label.text = "SALVAGE CUTTER" if track_cutter else "SURVEY SCANNER" if track_scanner else "PROPULSION FINS"
+	(_secondary_label.get_parent().get_child(0) as ColorRect).color = COIL_COLOR if track_scanner or track_cutter else RUBBER_COLOR
 	_set_material_row(_titanium_label, "Titanium", titanium_banked, titanium_held, titanium_required)
 	_set_material_row(_secondary_label, secondary_name, secondary_banked, secondary_held, secondary_required)
 	if titanium_banked >= titanium_required and secondary_banked >= secondary_required:

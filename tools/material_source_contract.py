@@ -53,7 +53,8 @@ PROJECT_RULES = {
     },
     "salvage_cutter_project": {
         "capability_id": "salvage_cutter",
-        "required_discovery_id": "lower_right_anomaly_discovery",
+        "required_discovery_id": "salvage_cutter_blueprint",
+        "legacy_required_discovery_id": "lower_right_anomaly_discovery",
         "required_project_id": None,
         "target_field": "target_id",
     },
