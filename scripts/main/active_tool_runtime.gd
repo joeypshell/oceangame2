@@ -23,6 +23,10 @@ func refresh() -> Dictionary:
 	return report
 
 
+func report() -> Dictionary:
+	return refresh()
+
+
 func cycle() -> Dictionary:
 	var previous_tool_id: String = _selection.selected_tool_id()
 	var report: Dictionary = _selection.cycle_next(_capability_query())

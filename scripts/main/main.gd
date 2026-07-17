@@ -5,6 +5,7 @@ const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime.gd")
 const AnomalySurveyCapture := preload("res://scripts/main/captures/anomaly_survey_capture.gd")
 const ActiveToolController := preload("res://scripts/main/active_tool_controller.gd")
+const ActiveToolHud := preload("res://scripts/main/active_tool_hud.gd")
 const ActiveToolRuntime := preload("res://scripts/main/active_tool_runtime.gd")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const CargoCollectionController := preload("res://scripts/main/cargo_collection_controller.gd")
@@ -253,6 +254,7 @@ var _smoke_expedition_day_checks
 var _smoke_release_journey_checks
 var _review_canvas: CanvasLayer
 var _review_label: Label
+var _active_tool_hud
 var _status_label: Label
 var _result_panel: PanelContainer
 var _result_label: Label
@@ -1245,6 +1247,7 @@ func _clear_loaded_review_nodes() -> void:
 	_player = null
 	_world = null
 	_review_label = null
+	_active_tool_hud = null
 	_status_label = null
 	_result_panel = null
 	_result_label = null
@@ -1826,6 +1829,12 @@ func _create_review_overlay(world: Node) -> void:
 	_status_label.add_theme_font_size_override("font_size", 14)
 	stack.add_child(_status_label)
 
+	_active_tool_hud = ActiveToolHud.new()
+	canvas.add_child(_active_tool_hud)
+	var mobile_controls = get_node_or_null("MobileTestControls")
+	if mobile_controls != null:
+		_active_tool_hud.set_mobile_controls_visible(bool(mobile_controls.get_test_report().get("enabled", false)))
+
 	_progression_project_tracker = ProgressionProjectTracker.new()
 	canvas.add_child(_progression_project_tracker)
 
@@ -1867,6 +1876,7 @@ func _update_status_label() -> void:
 		return
 	if _review_label != null:
 		_review_label.text = _review_header_text(_world)
+	_update_active_tool_hud()
 	_update_progression_project_tracker()
 
 	if _total_salvage <= 0:
@@ -2339,6 +2349,11 @@ func _try_progression_container_interaction() -> bool:
 
 func _refresh_active_tools() -> Dictionary:
 	return _active_tool_runtime.refresh() if _active_tool_runtime != null else {}
+
+
+func _update_active_tool_hud() -> void:
+	if _active_tool_hud != null and _active_tool_runtime != null:
+		_active_tool_hud.refresh(_active_tool_runtime.report())
 
 
 func _cycle_active_tool() -> Dictionary:

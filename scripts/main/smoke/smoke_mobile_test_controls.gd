@@ -1,16 +1,17 @@
 extends SceneTree
 
 const MobileTestControls := preload("res://scripts/main/mobile_test_controls.gd")
+const ActiveToolHud := preload("res://scripts/main/active_tool_hud.gd")
 
 const EXPECTED_COMMANDS := {
 	&"oxygen": KEY_U,
 	&"cargo": KEY_C,
-	&"scanner": KEY_Q,
+	&"tool": &"active_tool_cycle_next",
 	&"project": KEY_P,
 	&"day": KEY_N,
 	&"reset": KEY_R,
 	&"interact": KEY_E,
-	&"attack": &"combat_attack",
+	&"use": &"active_tool_use",
 }
 
 var _failures: Array[String] = []
@@ -47,6 +48,10 @@ func _run() -> void:
 	var stick_rect: Rect2 = report.get("stick_rect", Rect2())
 	var reachable_bottom := viewport_size.y - bottom_inset
 	_expect(stick_rect.end.y <= reachable_bottom, "stick extended into the bottom interaction inset")
+	if viewport_size == Vector2(1280, 720):
+		_expect(stick_rect == Rect2(30, 392, 224, 224), "accepted landscape stick rect drifted: %s" % stick_rect)
+		_expect(command_rects.get(&"tool", Rect2()) == Rect2(1122, 356, 128, 80), "TOOL left its accepted touch rect")
+		_expect(command_rects.get(&"use", Rect2()) == Rect2(984, 536, 128, 80), "USE left its accepted touch rect")
 	for command_id in command_rects:
 		var command_rect: Rect2 = command_rects[command_id]
 		_expect(command_rect.end.y <= reachable_bottom, "%s extended into the bottom interaction inset" % command_id)
@@ -70,7 +75,7 @@ func _run() -> void:
 	_expect(Input.get_action_strength("ui_down") > 0.8, "lower stick travel did not press down movement")
 	_expect(is_zero_approx(Input.get_action_strength("ui_up")), "lower stick travel pressed up movement")
 	controls._input(_touch(11, down_position, false))
-	for action in [&"ui_left", &"ui_right", &"ui_up", &"ui_down", &"combat_attack"]:
+	for action in [&"ui_left", &"ui_right", &"ui_up", &"ui_down", &"active_tool_cycle_next", &"active_tool_use"]:
 		_expect(not Input.is_action_pressed(action), "%s remained pressed after touch release" % action)
 
 	_expect(_dispatched.size() == EXPECTED_COMMANDS.size(), "not every command emitted an input event")
@@ -80,10 +85,33 @@ func _run() -> void:
 			continue
 		var event: InputEvent = _dispatched[command_id]
 		var expected = EXPECTED_COMMANDS[command_id]
-		if command_id == &"attack":
-			_expect(event is InputEventAction and (event as InputEventAction).action == expected, "attack did not dispatch combat_attack")
+		if expected is StringName:
+			_expect(event is InputEventAction and (event as InputEventAction).action == expected, "%s dispatched the wrong action" % command_id)
 		else:
 			_expect(event is InputEventKey and (event as InputEventKey).keycode == expected, "%s dispatched the wrong key" % command_id)
+
+	var hud := ActiveToolHud.new()
+	get_root().add_child(hud)
+	await process_frame
+	hud.refresh({"selected_tool_id": "", "selected_label": "", "owned_tool_ids": []})
+	hud.layout_for_size(Vector2(1280, 720))
+	var hud_report: Dictionary = hud.get_test_report()
+	_expect(hud_report.get("label") == "No tool" and str(hud_report.get("prompt", "")).is_empty(), "no-tool HUD showed unusable controls")
+	hud.refresh({"selected_tool_id": "survey_scanner_1", "selected_label": "Scanner", "owned_tool_ids": ["survey_scanner_1"]})
+	hud_report = hud.get_test_report()
+	_expect(hud_report.get("symbol") == "[S]" and hud_report.get("label") == "Scanner", "desktop HUD did not identify the selected scanner")
+	_expect(hud_report.get("prompt") == "Tab Tool | Q Use", "desktop HUD omitted the shared controls")
+	hud.set_mobile_controls_visible(true)
+	_expect(str(hud.get_test_report().get("prompt", "")).is_empty(), "touch HUD duplicated desktop controls beside TOOL/USE")
+	hud.set_mobile_controls_visible(false)
+	hud.refresh({"selected_tool_id": "salvage_cutter", "selected_label": "Cutter", "owned_tool_ids": ["survey_scanner_1", "salvage_cutter"]})
+	_expect(hud.get_test_report().get("label") == "Cutter", "cycling did not refresh the HUD label")
+	hud.layout_for_size(Vector2(844, 390))
+	hud_report = hud.get_test_report()
+	var compact_rect: Rect2 = hud_report.get("rect", Rect2())
+	_expect(bool(hud_report.get("compact", false)) and str(hud_report.get("prompt", "")).is_empty(), "mobile HUD did not use its compact button-backed state")
+	_expect(compact_rect.position.x >= 312.0 and compact_rect.end.x <= 410.0 and compact_rect.end.y <= 104.0, "mobile HUD left its safe upper gap: %s" % compact_rect)
+	hud.queue_free()
 
 	controls.queue_free()
 	await process_frame
@@ -92,7 +120,7 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: mobile test controls auto_hidden=headless stick=8_direction down_reachable=true bottom_inset=104 commands=8 simultaneous_input=true keyboard_events=U,C,Q,P,N,R,E attack_action=combat_attack.")
+	print("PASS: mobile test controls auto_hidden=headless stick=8_direction down_reachable=true bottom_inset=104 commands=8 simultaneous_input=true keyboard_events=U,C,P,N,R,E actions=TOOL+USE active_tool_hud=desktop+844x390.")
 	quit(0)
 
 
