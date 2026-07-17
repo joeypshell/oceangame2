@@ -283,6 +283,8 @@ func _collect_recipe_and_build_cutter() -> bool:
 
 
 func _open_remembered_wreck() -> bool:
+	if not _require(_select_active_tool_for_smoke(CUTTER_CAPABILITY_ID), "built cutter could not be selected"):
+		return false
 	var target := _tool_target_by_id(PAYOFF_ID)
 	if not _require(not target.is_empty() and not _world.is_salvage_collected(PAYOFF_ID), "remembered sealed wreck is unavailable"):
 		return false
@@ -296,6 +298,10 @@ func _open_remembered_wreck() -> bool:
 	var oxygen_before := _oxygen_seconds
 	var daylight_before: float = _main._expedition_day_state.daylight_remaining_seconds
 	var interaction_seconds := float(target.get("interaction_seconds", 0.0))
+	_advance(0.25)
+	if not _require(is_zero_approx(float(_main._cutter_salvage.report().get("progress_ratio", -1.0))), "wreck proximity advanced cutter progress before Q use"):
+		return false
+	_use_active_tool_for_smoke()
 	_advance(interaction_seconds * 0.5)
 	if not _require(not _world.is_salvage_collected(PAYOFF_ID), "sealed wreck completed before its authored cutter duration"):
 		return false

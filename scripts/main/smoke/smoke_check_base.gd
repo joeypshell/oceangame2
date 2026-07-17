@@ -254,6 +254,26 @@ func _prepare_durable_light() -> bool:
 	return true
 
 
+func _select_active_tool_for_smoke(tool_id: String) -> bool:
+	_main._refresh_active_tools()
+	for _index in range(_main.ActiveToolController.ordered_tool_ids().size()):
+		if _main._active_tools.selected_tool_id() == tool_id:
+			return true
+		_press_active_tool_action_for_smoke("active_tool_cycle_next")
+	return _main._active_tools.selected_tool_id() == tool_id
+
+
+func _use_active_tool_for_smoke() -> void:
+	_press_active_tool_action_for_smoke("active_tool_use")
+
+
+func _press_active_tool_action_for_smoke(action: StringName) -> void:
+	var event := InputEventAction.new()
+	event.action = action
+	event.pressed = true
+	_main._unhandled_input(event)
+
+
 func _reset_run() -> void:
 	_main._reset_run()
 

@@ -60,20 +60,37 @@ func _run() -> void:
 	_expect(cutter_project.get("id") == ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, "project catalog did not advance from fins to cutter")
 	var built: Dictionary = profile.complete_material_project(cutter_project, false)
 	_expect(bool(built.get("changed", false)) and main._cutter_salvage.has_cutter(), "project did not unlock cutter for target")
+	var scanner: Dictionary = ReviewProgressionFixture.complete_capability(main, ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID)
+	_expect(bool(scanner.get("ready", false)), "could not prepare scanner for wrong-tool probe")
+	main._material_project.on_map_loaded(main._world)
+	main._refresh_active_tools()
+	_expect(main._active_tools.selected_tool_id() == ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID, "ordered active tools did not select the owned scanner first")
+	main._process(0.0)
+	_press_use(main)
+	_expect(main._last_status_note.find("Tab Cutter") != -1, "wrong tool near cutter target omitted selection guidance")
+	_expect(is_zero_approx(float(main._cutter_salvage.report().get("progress_seconds", -1.0))), "wrong-tool use advanced cutter progress")
+	_press_cycle(main)
+	_expect(main._active_tools.selected_tool_id() == ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID, "cycle action did not select the cutter")
 
 	main._sortie_state.collect_salvage("capacity_fixture_a", 0)
 	main._sortie_state.collect_salvage("capacity_fixture_b", 0)
+	_press_use(main)
 	main._process(3.0)
 	_expect(main._last_status_note.find("Cargo full") != -1, "full cargo did not block cutter target")
 	_expect(not main._world.is_salvage_collected(target_id), "cargo-full cutter attempt deleted target")
 	main._sortie_state.clear_held()
 
 	main._process(0.5)
-	_expect(main._last_status_note.begins_with("Cutting "), "unlocked cutter did not show progress")
+	_expect(main._last_status_note.find("Q Use cutter") != -1, "cutter proximity did not stay ready before explicit use")
+	_expect(is_zero_approx(float(main._cutter_salvage.report().get("progress_seconds", -1.0))), "cutter proximity advanced progress before use")
+	_press_use(main)
+	main._process(0.5)
+	_expect(main._last_status_note.begins_with("Cutting "), "explicit cutter use did not show progress")
 	main._player.global_position = center + Vector2(200.0, 0.0)
 	main._process(0.0)
 	_expect(main._last_status_note == "Cutter interrupted", "leaving range did not cancel cutter progress")
 	main._player.global_position = center
+	_press_use(main)
 	main._process(1.6)
 	_expect(not main._world.is_salvage_collected(target_id), "canceled cutter progress resumed instead of restarting")
 	main._process(0.5)
@@ -86,6 +103,7 @@ func _run() -> void:
 	_expect(not main._world.get_tool_target_near(center, main.SALVAGE_COLLECTION_RADIUS).is_empty(), "hazard recovery did not restore cutter target")
 	_expect(main._cutter_salvage.has_cutter(), "hazard recovery removed durable cutter")
 	main._player.global_position = center
+	_press_use(main)
 	main._process(2.1)
 	_expect(main._world.is_salvage_collected(target_id), "restored cutter target could not be recollected")
 	_expect(not main._world.collect_tool_target(target_id), "collected cutter target duplicated")
@@ -110,10 +128,24 @@ func _finish(main) -> void:
 			push_error("Cutter salvage state smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Cutter salvage state smoke passed: target=salvage_sealed_wreck_cache locked=true oxygen_daylight_continue=true cargo_blocked=true cancel_on_leave=true seconds=2.0 payoff=valuable:300 hazard_restore=true bank_reload_guard=true reset_guard=true duplicate=false cutter_durable=true.")
+	print("Cutter salvage state smoke passed: target=salvage_sealed_wreck_cache locked=true oxygen_daylight_continue=true cargo_blocked=true wrong_tool_blocked=true proximity_progress=false explicit_use=true cancel_on_leave=true seconds=2.0 payoff=valuable:300 hazard_restore=true bank_reload_guard=true reset_guard=true duplicate=false cutter_durable=true.")
 	quit(0)
 
 
 func _expect(condition: bool, message: String) -> void:
 	if not condition:
 		_failures.append(message)
+
+
+func _press_use(main) -> void:
+	var event := InputEventAction.new()
+	event.action = "active_tool_use"
+	event.pressed = true
+	main._unhandled_input(event)
+
+
+func _press_cycle(main) -> void:
+	var event := InputEventAction.new()
+	event.action = "active_tool_cycle_next"
+	event.pressed = true
+	main._unhandled_input(event)

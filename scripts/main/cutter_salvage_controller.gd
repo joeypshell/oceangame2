@@ -77,31 +77,53 @@ func has_cutter() -> bool:
 	return _profile != null and _profile.has_capability(ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID)
 
 
+func activate(target: Dictionary, occupied_cargo: int, cargo_capacity: int) -> Dictionary:
+	var guard := _target_guard(target, occupied_cargo, cargo_capacity)
+	if not guard.is_empty():
+		return guard
+	var target_id := str(target.get("id", ""))
+	if target_id == _active_id:
+		return {
+			"state": "activated",
+			"id": _active_id,
+			"label": _label,
+			"note": _progress_note(),
+			"progress_ratio": _progress_ratio(),
+		}
+	_begin(target)
+	return {
+		"state": "activated",
+		"id": _active_id,
+		"label": _label,
+		"note": _progress_note(),
+		"progress_ratio": 0.0,
+	}
+
+
 func update(target: Dictionary, delta: float, occupied_cargo: int, cargo_capacity: int) -> Dictionary:
 	if target.is_empty() or str(target.get("interaction", "")) != CUTTER_INTERACTION:
 		var was_active := not _active_id.is_empty()
 		reset()
 		return {"state": "canceled", "note": "Cutter interrupted"} if was_active else {"state": "none"}
-	if not has_cutter():
-		reset()
-		return {"state": "locked", "id": str(target.get("id", "")), "note": "%s | Cutter required" % _title_label(_display_label(target))}
-	if occupied_cargo >= cargo_capacity:
-		reset()
-		return {"state": "blocked", "id": str(target.get("id", "")), "note": "Cargo full - bank salvage at boat"}
-
+	var guard := _target_guard(target, occupied_cargo, cargo_capacity)
+	if not guard.is_empty():
+		return guard
 	var target_id := str(target.get("id", ""))
-	if target_id.is_empty():
-		reset()
-		return {"state": "none"}
+	if _active_id.is_empty():
+		return {
+			"state": "ready",
+			"id": target_id,
+			"label": _display_label(target),
+			"note": "%s | Q Use cutter" % _title_label(_display_label(target)),
+			"progress_ratio": 0.0,
+		}
 	if target_id != _active_id:
-		_active_id = target_id
-		_progress_seconds = 0.0
-		_required_seconds = maxf(0.01, float(target.get("interaction_seconds", 0.01)))
-		_label = _display_label(target)
+		reset()
+		return {"state": "canceled", "note": "Cutter interrupted"}
 
 	_progress_seconds = minf(_required_seconds, _progress_seconds + maxf(0.0, delta))
-	var progress_ratio := clampf(_progress_seconds / _required_seconds, 0.0, 1.0)
-	var note := "Cutting %s\n%d%% %s" % [_label, int(round(progress_ratio * 100.0)), _progress_bar(progress_ratio)]
+	var progress_ratio := _progress_ratio()
+	var note := _progress_note()
 	if _progress_seconds >= _required_seconds:
 		var result := {
 			"state": "complete",
@@ -135,6 +157,37 @@ func report() -> Dictionary:
 		"banked_target_ids": banked_ids,
 		"durable_target_ids": durable_ids,
 	}
+
+
+func _target_guard(target: Dictionary, occupied_cargo: int, cargo_capacity: int) -> Dictionary:
+	if target.is_empty() or str(target.get("interaction", "")) != CUTTER_INTERACTION:
+		return {"state": "wrong_context", "note": "Cutter ready | Move near a sealed target"}
+	if not has_cutter():
+		reset()
+		return {"state": "locked", "id": str(target.get("id", "")), "note": "%s | Cutter required" % _title_label(_display_label(target))}
+	if occupied_cargo >= cargo_capacity:
+		reset()
+		return {"state": "blocked", "id": str(target.get("id", "")), "note": "Cargo full - bank salvage at boat"}
+	if str(target.get("id", "")).is_empty():
+		reset()
+		return {"state": "unavailable", "note": "Cutter target unavailable"}
+	return {}
+
+
+func _begin(target: Dictionary) -> void:
+	_active_id = str(target.get("id", ""))
+	_progress_seconds = 0.0
+	_required_seconds = maxf(0.01, float(target.get("interaction_seconds", 0.01)))
+	_label = _display_label(target)
+
+
+func _progress_ratio() -> float:
+	return clampf(_progress_seconds / _required_seconds, 0.0, 1.0) if _required_seconds > 0.0 else 0.0
+
+
+func _progress_note() -> String:
+	var progress_ratio := _progress_ratio()
+	return "Cutting %s\n%d%% %s" % [_label, int(round(progress_ratio * 100.0)), _progress_bar(progress_ratio)]
 
 
 func _display_label(target: Dictionary) -> String:

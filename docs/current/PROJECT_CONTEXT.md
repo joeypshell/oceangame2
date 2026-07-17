@@ -38,7 +38,7 @@ Expansion 11 is complete with player GO through #914 plus corrections #925/#927.
 
 Expansion 12 is complete with player GO through #941 plus player-HOLD corrections #951-#953. The deep-harmonic clue now reveals a durable Ti2/Rubber1/Gel1 night-built pressure suit for one scoutable lower-central pressure threshold and protected abyssal survey. Explicit `Q/SCAN` activation, full-cargo scanner feedback, pending boat-return guidance, deterministic journey coverage, and exact-SHA Web verification pass at runtime `d864a9e`.
 
-Expansion 13 Southeast Wreck Return remains at owner HOLD. #986-#990 corrected scanner acquisition and cutter-blueprint causality at exact runtime `89371d6`, but the owner replay found that cutter use still starts from proximity, rubber/coil materials are visually unclear, and the first sealed wreck provides only ordinary `+300` value rather than durable southeast progress. #1000-#1009 own a bounded active-tool, material-visual, and navigation-data correction; #969 and milestone #39 remain open for owner replay.
+Expansion 13 Southeast Wreck Return remains at owner HOLD. #986-#990 corrected scanner acquisition and cutter-blueprint causality at exact runtime `89371d6`; #1000-#1002 now add the bounded correction contract and selected scanner/cutter/shock-prod `Tab`/`Q` runtime, including deliberate cutter activation. #1003-#1009 still own compact HUD/mobile controls, rubber/coil readability, durable sealed-wreck navigation data, integrated evidence, and deployment review; #969 remains open for owner replay.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -210,7 +210,8 @@ Current issue state as of 2026-07-17:
 - Closed: #905-#914 plus corrections #925/#927 completed Expansion 11 with player GO and exact-SHA Web verification.
 - Closed: #932-#941 plus corrections #951-#953 completed Expansion 12 with player GO and exact-SHA Web verification.
 - Closed: #980 and #986-#990 delivered the first Expansion 13 HOLD correction and exact-SHA runtime `89371d6` verification.
-- Active: #1000-#1009 own the bounded owner-HOLD tool/material/reward correction; #969 and milestone #39 remain open for owner replay. No next expansion or broad economy is selected.
+- Closed correction foundation: #1000-#1002 define and implement selected active-tool input plus deliberate cutter activation.
+- Active: #1003-#1009 own HUD/mobile, material readability, wreck reward, evidence, and deployment review; #969 and milestone #39 remain open for owner replay. No next expansion or broad economy is selected.
 - Open bookkeeping: #849 names three UID sidecars already committed by `e825c88`; it does not block planning and should be closed separately with that evidence.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.

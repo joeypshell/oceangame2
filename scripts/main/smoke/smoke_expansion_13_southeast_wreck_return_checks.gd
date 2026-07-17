@@ -93,6 +93,7 @@ func _prepare_prerequisite_fixture() -> bool:
 	_main._material_project.on_map_loaded(_world)
 	_main._cutter_salvage.on_map_loaded(_world)
 	_main._anomaly_survey.on_map_loaded(_world)
+	_main._refresh_active_tools()
 	_prepare_controlled_movement()
 	var collision := _player.get_node_or_null("CollisionShape2D") as CollisionShape2D
 	if not _require(collision != null and collision.shape is RectangleShape2D and not collision.disabled, "player collision is unavailable"):
@@ -134,11 +135,14 @@ func _verify_pre_recorder_scan_denial() -> bool:
 
 
 func _verify_failure_restoration() -> bool:
+	if not _require(_select_active_tool_for_smoke(ProfileState.SALVAGE_CUTTER_CAPABILITY_ID), "failure probes could not select the cutter"):
+		return false
 	for failure_reason in ["hazard", "oxygen", "combat"]:
 		var recorder := _tool_target_by_id(RECORDER_ID)
 		if not _require(not recorder.is_empty(), "%s probe could not find recorder" % failure_reason):
 			return false
 		_place_player(recorder.get("center", Vector2.ZERO))
+		_use_active_tool_for_smoke()
 		_advance(float(recorder.get("interaction_seconds", 0.0)) + 0.1)
 		if not _require(
 			_world.is_salvage_collected(RECORDER_ID)
@@ -172,6 +176,8 @@ func _verify_failure_restoration() -> bool:
 func _complete_real_wreck_return() -> bool:
 	if not _require(_world.is_inside_boat(_player.global_position), "real journey did not begin at the canonical boat"):
 		return false
+	if not _require(_select_active_tool_for_smoke(ProfileState.SALVAGE_CUTTER_CAPABILITY_ID), "real journey could not select the cutter"):
+		return false
 	var recorder := _tool_target_by_id(RECORDER_ID)
 	var survey := _survey_by_id(SURVEY_ID_13)
 	var route: Dictionary = _plan_route(recorder, survey)
@@ -185,6 +191,7 @@ func _complete_real_wreck_return() -> bool:
 
 	for index in range(_held_salvage_capacity()):
 		_main._sortie_state.collect_salvage("%s%d" % [CAPACITY_CUT_PREFIX, index], 0)
+	_use_active_tool_for_smoke()
 	_advance(float(recorder.get("interaction_seconds", 0.0)) + 0.1)
 	_cargo_full_safe = (
 		not _world.is_salvage_collected(RECORDER_ID)
@@ -194,6 +201,10 @@ func _complete_real_wreck_return() -> bool:
 		return false
 	_main._sortie_state.clear_held()
 
+	_advance(float(recorder.get("interaction_seconds", 0.0)) * 0.5)
+	if not _require(is_zero_approx(float(_main._cutter_salvage.report().get("progress_ratio", -1.0))), "recorder proximity advanced before explicit use"):
+		return false
+	_use_active_tool_for_smoke()
 	_advance(float(recorder.get("interaction_seconds", 0.0)) * 0.5)
 	_cutter_partial = float(_main._cutter_salvage.report().get("progress_ratio", 0.0))
 	if not _require(_cutter_partial > 0.0 and _cutter_partial < 1.0, "recorder did not expose partial cutter progress"):
@@ -207,6 +218,7 @@ func _complete_real_wreck_return() -> bool:
 	):
 		return false
 	_place_player(recorder.get("center", Vector2.ZERO))
+	_use_active_tool_for_smoke()
 	_advance(float(recorder.get("interaction_seconds", 0.0)) + 0.1)
 	if not _require(
 		_world.is_salvage_collected(RECORDER_ID)
@@ -214,6 +226,8 @@ func _complete_real_wreck_return() -> bool:
 		and _survey_is_unlocked(),
 		"completed recorder did not enter cargo or expose the survey"
 	):
+		return false
+	if not _require(_select_active_tool_for_smoke(ProfileState.SURVEY_SCANNER_CAPABILITY_ID), "real journey could not reselect the scanner"):
 		return false
 
 	if not await _drive_to("southeast_wreck_recorder_to_survey", route.get("scan_origin", Vector2.ZERO), navigation):

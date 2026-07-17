@@ -77,7 +77,7 @@ The integrated expedition-day smoke verifies shared daylight across open-surface
 
 The integrated Expansion 03 smoke verifies deterministic recipe selection, connector-preserved material cargo, cargo pressure, canonical-boat commitment, knowledge/project gating, exact-once cutter completion, profile reload, next-day rotation, locked/unlocked sealed-wreck interaction, failure restoration, and final payoff banking. CI and release validation run it as `--smoke-expansion-03-material-project`.
 
-The integrated Expansion 06 smoke verifies source territory/timing, normal unarmed cache progress, active-eel contact/knockback interruption, health/oxygen separation, exact-once non-enemy shock-prod construction, profile reload, reward-free armed victory, guarded-cache collection/banking, connector/day persistence, and combat/hazard/oxygen restoration. CI and release validation run it as `--smoke-expansion-06-combat-foundation`.
+The integrated Expansion 06 smoke verifies source territory/timing, normal unarmed cache progress, active-eel contact/knockback interruption, health/oxygen separation, exact-once non-enemy shock-prod construction, selected-tool `Q` attacks, blocked legacy attack input, profile reload, reward-free armed victory, guarded-cache collection/banking, connector/day persistence, and combat/hazard/oxygen restoration. CI and release validation run it as `--smoke-expansion-06-combat-foundation`.
 
 The integrated Expansion 07 smoke verifies nonlethal timed sampling, explicit post-defeat harvesting, cargo-full and failure restoration, boat banking, exact-once capacitor construction/reload, and a one-damage warning interruption. CI and release validation run it as `--smoke-expansion-07-biological-progression`.
 

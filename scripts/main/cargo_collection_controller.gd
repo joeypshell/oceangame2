@@ -83,6 +83,8 @@ func _update_tool_target(delta: float) -> bool:
 			if note.is_empty():
 				note = "%s opened +%d" % [_display_label(str(result.get("label", "sealed wreck"))), score]
 			_main._collect_salvage_into_cargo(target_id, note)
+	elif str(result.get("state", "")) == "ready" and _main._active_tools.selected_tool_id() != _main.ActiveToolController.CUTTER_TOOL_ID:
+		_main._last_status_note = "%s | Tab Cutter | Q Use" % _display_label(str(result.get("label", "sealed wreck")))
 	elif result.has("note"):
 		_main._last_status_note = str(result["note"])
 	return true

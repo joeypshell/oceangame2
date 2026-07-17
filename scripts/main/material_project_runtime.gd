@@ -423,9 +423,9 @@ func _project_effect_lines(project: Dictionary) -> Array[String]:
 		ExpansionProfileState.PROPULSION_FINS_PROJECT_ID:
 			return ["Access: east current pocket | Swim through"]
 		ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID:
-			return ["Use: Q/SCAN near signal | Hold position to survey"]
+			return ["Use: Tab select Scanner | Q near signal | Hold position"]
 		ExpansionProfileState.SHOCK_PROD_PROJECT_ID:
-			return ["Use: Space at short range | 1 health damage per hit"]
+			return ["Use: Tab select Shock prod | Q at short range | 1 health damage per hit"]
 		ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID:
 			return ["Effect: hit during WARNING/LUNGE to force RECOVERY | damage stays 1"]
 		ExpansionProfileState.DIVE_LIGHT_PROJECT_ID:
