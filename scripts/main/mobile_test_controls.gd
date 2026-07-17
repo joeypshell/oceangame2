@@ -14,12 +14,12 @@ const GRID_COLUMNS := 3
 const COMMANDS := [
 	{"id": &"oxygen", "label": "O2", "keycode": KEY_U},
 	{"id": &"cargo", "label": "BAG", "keycode": KEY_C},
-	{"id": &"scanner", "label": "SCAN", "keycode": KEY_Q},
+	{"id": &"tool", "label": "TOOL", "action": &"active_tool_cycle_next"},
 	{"id": &"project", "label": "BUILD", "keycode": KEY_P},
 	{"id": &"day", "label": "DAY", "keycode": KEY_N},
 	{"id": &"reset", "label": "RESET", "keycode": KEY_R},
 	{"id": &"interact", "label": "ACT", "keycode": KEY_E},
-	{"id": &"attack", "label": "HIT", "action": &"combat_attack"},
+	{"id": &"use", "label": "USE", "action": &"active_tool_use"},
 ]
 
 @export var force_visible := false

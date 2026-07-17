@@ -79,6 +79,8 @@ The integrated Expansion 03 smoke verifies deterministic recipe selection, conne
 
 The integrated Expansion 06 smoke verifies source territory/timing, normal unarmed cache progress, active-eel contact/knockback interruption, health/oxygen separation, exact-once non-enemy shock-prod construction, selected-tool `Q` attacks, blocked legacy attack input, profile reload, reward-free armed victory, guarded-cache collection/banking, connector/day persistence, and combat/hazard/oxygen restoration. CI and release validation run it as `--smoke-expansion-06-combat-foundation`.
 
+The mobile-control smoke protects the accepted eight-region landscape layout, 104 px bottom interaction inset, simultaneous stick/command input, shared `TOOL`/`USE` actions, and non-overlapping active-tool HUD states at 1280x720 and 844x390. CI runs it directly as `smoke_mobile_test_controls.gd`.
+
 The integrated Expansion 07 smoke verifies nonlethal timed sampling, explicit post-defeat harvesting, cargo-full and failure restoration, boat banking, exact-once capacitor construction/reload, and a one-damage warning interruption. CI and release validation run it as `--smoke-expansion-07-biological-progression`.
 
 The integrated Expansion 08 smoke verifies baseline day, night-ahead forecast, southwest bloom patrol and bonus coil activation, unchanged normal pools/patrol, cargo-full, banking, connector, hazard/oxygen restoration, day-three removal, and required progression. CI and release validation run it as `--smoke-expansion-08-daily-condition-journey`.

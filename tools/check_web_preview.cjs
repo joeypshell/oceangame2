@@ -354,7 +354,7 @@ async function probeMobileControls(page, canvasRect) {
 			region: { left: 846, top: 446, width: 128, height: 80 },
 		},
 		{
-			name: "attack_button",
+			name: "use_button",
 			point: { x: 1048, y: 576 },
 			region: { left: 984, top: 536, width: 128, height: 80 },
 		},

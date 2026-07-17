@@ -124,7 +124,7 @@ The review overlay reports `Review profile fresh/isolated` and whether propulsio
 
 ## Mobile Testing Controls
 
-Touch-capable devices automatically show a testing-only overlay in normal play; rotate the phone to landscape before playing. The layout reserves a bottom interaction inset for phone gesture/home-indicator areas. The left stick swims; the command pad exposes oxygen, cargo, and light upgrades, scanner, project build/guidance, day transition, reset, connector interaction, and shock-prod attack. Capture/smoke automation keeps the overlay hidden.
+Touch-capable devices automatically show a testing-only overlay in normal play; rotate the phone to landscape before playing. The layout reserves a bottom interaction inset for phone gesture/home-indicator areas. The left stick swims; the command pad exposes oxygen, cargo, active-tool cycle/use, project build/guidance, day transition, reset, and connector interaction. Capture/smoke automation keeps the overlay hidden.
 
 Force the overlay in a local desktop run for mouse testing:
 

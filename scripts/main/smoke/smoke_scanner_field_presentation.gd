@@ -5,7 +5,7 @@ const MobileTestControls := preload("res://scripts/main/mobile_test_controls.gd"
 const GreyboxSurveyTargets := preload("res://scripts/world/greybox_survey_targets.gd")
 
 var _failures: Array[String] = []
-var _mobile_scanner_event: InputEvent
+var _mobile_use_event: InputEvent
 
 
 func _initialize() -> void:
@@ -61,7 +61,7 @@ func _run() -> void:
 	_expect(str(presentation.get("target_id", "")) == "", "cancellation left the target bracket visible")
 	_expect(is_zero_approx(float(presentation.get("progress", 1.0))), "cancellation left stale scanner progress")
 
-	await _verify_mobile_scan_command()
+	await _verify_mobile_use_command()
 	_verify_world_subject_presentation()
 	player.queue_free()
 	await process_frame
@@ -71,7 +71,7 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: scanner field range_tiles=6 half_angle=30 miss=pulse active=continuous subject=bracketed progress=compact cancel=clear mobile_scan=Q generic_rings=removed debug_outline=available.")
+	print("PASS: scanner field range_tiles=6 half_angle=30 miss=pulse active=continuous subject=bracketed progress=compact cancel=clear mobile_use=active_tool_use generic_rings=removed debug_outline=available.")
 	quit(0)
 
 
@@ -95,28 +95,28 @@ func _runtime_report(active: bool, progress: float, target_id: String, anchor: V
 	}
 
 
-func _verify_mobile_scan_command() -> void:
+func _verify_mobile_use_command() -> void:
 	var controls := MobileTestControls.new()
 	controls.force_visible = true
 	controls.command_dispatched.connect(_on_mobile_command)
 	get_root().add_child(controls)
 	await process_frame
 	var report: Dictionary = controls.get_test_report()
-	var scanner_rect: Rect2 = report.get("command_rects", {}).get(&"scanner", Rect2())
-	_expect(scanner_rect.size != Vector2.ZERO, "mobile scanner control was not laid out")
+	var use_rect: Rect2 = report.get("command_rects", {}).get(&"use", Rect2())
+	_expect(use_rect.size != Vector2.ZERO, "mobile use control was not laid out")
 	var press := InputEventScreenTouch.new()
 	press.index = 17
-	press.position = scanner_rect.get_center()
+	press.position = use_rect.get_center()
 	press.pressed = true
 	controls._input(press)
 	var release := press.duplicate() as InputEventScreenTouch
 	release.pressed = false
 	controls._input(release)
-	_expect(_mobile_scanner_event is InputEventKey, "mobile SCAN did not dispatch a keyboard event")
-	if _mobile_scanner_event is InputEventKey:
-		_expect((_mobile_scanner_event as InputEventKey).keycode == KEY_Q, "mobile SCAN did not use desktop Q semantics")
+	_expect(_mobile_use_event is InputEventAction, "mobile USE did not dispatch the shared action")
+	if _mobile_use_event is InputEventAction:
+		_expect((_mobile_use_event as InputEventAction).action == &"active_tool_use", "mobile USE did not use desktop Q action semantics")
 	var reachable_bottom := (report.get("viewport_size", Vector2.ZERO) as Vector2).y - float(report.get("bottom_inset", 0.0))
-	_expect(scanner_rect.end.y <= reachable_bottom, "mobile SCAN extended below the reachable landscape inset")
+	_expect(use_rect.end.y <= reachable_bottom, "mobile USE extended below the reachable landscape inset")
 	controls.queue_free()
 	await process_frame
 
@@ -163,8 +163,8 @@ func _facing_unchanged(before: Dictionary, after: Dictionary) -> bool:
 
 
 func _on_mobile_command(command_id: StringName, event: InputEvent) -> void:
-	if command_id == &"scanner":
-		_mobile_scanner_event = event
+	if command_id == &"use":
+		_mobile_use_event = event
 
 
 func _expect(condition: bool, message: String) -> void:

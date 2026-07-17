@@ -4,7 +4,7 @@
 
 The current project is a Godot 4.7 side-view ocean salvage prototype for proving the source-driven map, terrain, validation, capture, and gameplay workflow that will support a finished small diver game.
 
-The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`. Expansion 13 remains at owner HOLD after exact runtime `89371d6`. #1000-#1002 now establish the correction contract plus one selected-tool `Tab`/`Q` runtime with deliberate cutter activation; rubber/coil readability, compact mobile/HUD presentation, and the sealed-wreck progression reward remain in #1003-#1009. #969 remains the owner replay gate and no next expansion is selected.
+The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`. Expansion 13 remains at owner HOLD after exact runtime `89371d6`. #1000-#1003 establish the correction contract, one selected-tool `Tab`/`Q` runtime with deliberate cutter activation, a compact selected-tool HUD, and matching `TOOL`/`USE` mobile controls; rubber/coil readability and the sealed-wreck progression reward remain in #1004-#1009. #969 remains the owner replay gate and no next expansion is selected.
 
 ## Source Of Truth
 
@@ -127,6 +127,7 @@ Additional current map sources:
   - Delegates player combat health, hit invulnerability, connector preservation, canonical-boat refill, and zero-health reporting to `scripts/main/player_health_state.gd`; health remains separate from oxygen.
   - Uses `scripts/main/territorial_hostile_controller.gd` for the one source-authored warning/lunge/recovery encounter and day-local defeat state, and `scripts/main/shock_prod_controller.gd` for the capability-gated 72 px attack and 0.65-second cooldown. Neither owner grants rewards or mutates cargo/profile state.
   - Delegates the profile-derived scanner/cutter/shock-prod catalog and session selection to `scripts/main/active_tool_controller.gd`; `scripts/main/active_tool_runtime.gd` owns shared `Tab` cycle, `Q` use dispatch, wrong-context guidance, and scanner/cutter cancellation when switching away. Passive upgrades never enter this catalog.
+  - Uses `scripts/main/active_tool_hud.gd` for one responsive selected-tool badge: standard logical framing shows the shared controls, while narrow logical viewports can rely on adjacent mobile `TOOL`/`USE` buttons instead of duplicating prompt text. `mobile_test_controls.gd` keeps the existing eight-region testing layout and bottom inset while dispatching the same named actions.
   - Uses `scripts/main/biological_resource_controller.gd` for timed passive sampling, post-defeat harvest, current-day depletion/replenishment, cargo-full handling, and restoration through the existing material owner. `scripts/world/greybox_biological_resources.gd` owns source-derived biological visuals and queries without collision or terrain changes.
   - Uses `scripts/main/review_profile_mode.gd` to isolate explicit fresh-review runs from normal durable profile reads and writes; ordinary local and exported play keeps the existing profile path.
   - Keeps interaction progress in the focused timed, pry, and survey controllers as sortie-local subowners.
