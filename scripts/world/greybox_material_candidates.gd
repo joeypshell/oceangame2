@@ -2,8 +2,8 @@ extends RefCounted
 
 const MATERIAL_COLORS := {
 	"titanium_scrap": Color(0.68, 0.90, 0.94, 1.0),
-	"rubber_sheet": Color(0.96, 0.76, 0.36, 1.0),
-	"conductive_coil": Color(0.38, 0.96, 0.78, 1.0),
+	"rubber_sheet": Color(0.34, 0.52, 0.58, 1.0),
+	"conductive_coil": Color(0.96, 0.58, 0.22, 1.0),
 }
 
 var _candidates: Array[Dictionary] = []
@@ -27,6 +27,8 @@ func build(parent: Node2D, entities: Array, tile_size: int, show_debug: bool, pr
 		candidate["center"] = _center(candidate, tile_size)
 		_candidates.append(candidate)
 		var candidate_id := str(candidate.get("id", "MaterialCandidate"))
+		var material_id := str(candidate.get("material_id", ""))
+		var material_texture = asset_lookup.material_texture(material_id) if asset_lookup != null else null
 		var node: Node2D = prop_renderer.add_salvage_prop(
 			parent,
 			candidate_id,
@@ -34,9 +36,11 @@ func build(parent: Node2D, entities: Array, tile_size: int, show_debug: bool, pr
 			str(candidate.get("kind", "wreck_fragment")),
 			"common",
 			"material_collect",
-			asset_lookup
+			asset_lookup,
+			material_texture,
+			"MaterialSprite"
 		)
-		node.modulate = MATERIAL_COLORS.get(str(candidate.get("material_id", "")), Color.WHITE)
+		node.modulate = Color.WHITE if material_texture != null else MATERIAL_COLORS.get(material_id, Color.WHITE)
 		node.visible = false
 		_nodes_by_id[candidate_id] = node
 		if show_debug:

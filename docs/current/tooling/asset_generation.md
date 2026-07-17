@@ -25,6 +25,15 @@ python tools/generate_prop_sprites.py
 
 This writes the draft 32x32 prop sprites under `assets/props/` and the review sheet at `references/asset_reviews/prop_sprites_01_review.png`. Runtime prop selection still comes from JSON entity `kind` values, and the renderer keeps procedural fallback art if a sprite asset cannot be loaded.
 
+Regenerate or verify the material sprites and gameplay-scale review sheet:
+
+```bash
+python tools/generate_material_sprites.py
+python tools/generate_material_sprites.py --check
+```
+
+This writes individually named 32x32 titanium, bundled-rubber, and spring-coil sprites under `assets/materials/` plus `references/asset_reviews/material_sprites_01_review.png`. Runtime selection comes from `material_id`; candidate placement and fallback `kind` remain source-authored and unchanged.
+
 Regenerate the draft player diver sprite:
 
 ```bash

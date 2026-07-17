@@ -3,8 +3,8 @@ extends PanelContainer
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 
 const TITANIUM_COLOR := Color(0.52, 0.84, 0.92, 1.0)
-const RUBBER_COLOR := Color(0.96, 0.72, 0.28, 1.0)
-const COIL_COLOR := Color(0.42, 0.88, 0.76, 1.0)
+const RUBBER_COLOR := Color(0.34, 0.52, 0.58, 1.0)
+const COIL_COLOR := Color(0.96, 0.58, 0.22, 1.0)
 const READY_COLOR := Color(0.50, 0.94, 0.58, 1.0)
 const HELD_COLOR := Color(1.0, 0.84, 0.42, 1.0)
 const PENDING_COLOR := Color(0.86, 0.94, 0.98, 0.96)
