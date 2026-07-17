@@ -341,6 +341,14 @@ Capture the focused Expansion 13 southeast-wreck review states:
 
 This writes the broad wreck promise, arrival with cutter requirement, 50% recorder cut, 50% explicit archive survey, and pending canonical-boat return states at 1280x720 and mobile 844x390 review sizes under ignored `visual_captures/expansion_13_southeast_wreck/`. It uses the authored Expansion 13 camera tests and does not accept or replace baselines.
 
+Run the focused Expansion 13 scanner-to-cutter correction captures:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --capture-expansion-13-scanner-cutter-correction
+```
+
+This writes broad artifact clue, off-axis miss, acquired artifact, 50% scan, pending boat return, committed cutter recipe, and sealed-target payoff states at 1280x720 and mobile 844x390 review sizes under ignored `visual_captures/expansion_13_scanner_cutter_correction/`. It does not accept or replace baselines.
+
 Capture the first production slice:
 
 ```powershell
