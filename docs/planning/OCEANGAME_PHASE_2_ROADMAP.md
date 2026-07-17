@@ -1,10 +1,11 @@
 # OceanGame Phase 2 Roadmap
 
-Date: 2026-07-16
+Date: 2026-07-17
 
-Status: Expansions 01-13 are complete with player GO. Expansion 13 closed
-through #969 after exact-SHA Web review at `a9d1431`. No next implementation
-milestone is selected; a fresh drift audit must choose one bounded direction.
+Status: Expansions 01-12 are complete with player GO. Expansion 13 is at HOLD
+after review of exact-SHA runtime `a9d1431`; #980 plans a bounded correction for
+scanner physicality, cutter-blueprint causality, and forward drive before #969
+can close. No next expansion is selected.
 
 ## Decision
 
@@ -92,11 +93,12 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-None. Expansion 13 is complete and no implementation batch is active.
+Expansion 13 player-HOLD correction under #980 and final player gate #969.
 
 ### Proposed
 
-None pending a fresh drift audit and one bounded planning decision.
+The bounded scanner/artifact/progression correction defined by #980. Do not
+select Expansion 14 while #969 remains open.
 
 ### Directional
 
@@ -343,8 +345,9 @@ learned to reach, with a payoff worth carrying back to the boat?
 
 ### Expansion 13: Southeast Wreck Return
 
-Status: Complete with player GO in #969. See
-`docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`.
+Status: Player HOLD. #960-#968 remain technical evidence at exact runtime
+`a9d1431`; #980 owns the correction plan and #969 remains open. See
+`docs/current/OCEANGAME_EXPANSION_13_PLAYER_HOLD_CORRECTION_PLAN.md`.
 
 Goal: turn the empty farthest southeast chamber into one memorable wreck
 journey that pays off the existing pressure suit, cutter, and scanner while
@@ -368,7 +371,7 @@ rebalance, enemy, vehicle, inventory, or broad art pass.
 Exit question: did the distant wreck turn prior upgrades and the far southeast
 route into a tense, memorable expedition whose discovery felt worth bringing
 back to the boat?
-**GO recorded at #969.**
+**HOLD recorded at #969; the earlier GO record was withdrawn.**
 
 ## Original OceanGame Convergence
 
