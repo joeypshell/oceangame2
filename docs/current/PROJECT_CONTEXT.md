@@ -38,7 +38,7 @@ Expansion 11 is complete with player GO through #914 plus corrections #925/#927.
 
 Expansion 12 is complete with player GO through #941 plus player-HOLD corrections #951-#953. The deep-harmonic clue now reveals a durable Ti2/Rubber1/Gel1 night-built pressure suit for one scoutable lower-central pressure threshold and protected abyssal survey. Explicit `Q/SCAN` activation, full-cargo scanner feedback, pending boat-return guidance, deterministic journey coverage, and exact-SHA Web verification pass at runtime `d864a9e`.
 
-Expansion 13 Southeast Wreck Return remains at owner HOLD. #986-#990 corrected scanner acquisition and cutter-blueprint causality at exact runtime `89371d6`; #1000-#1006 add deliberate shared tool controls, matching mobile presentation, named material sprites, and sealed-wreck navigation data that remains pending through failure-safe held cargo until canonical-boat commitment. #1007-#1009 still own integrated evidence and deployment review; #969 remains open for owner replay.
+Expansion 13 Southeast Wreck Return remains at owner HOLD. #986-#990 corrected scanner acquisition and cutter-blueprint causality at exact runtime `89371d6`; #1000-#1007 add deliberate shared tool controls, matching mobile presentation, named material sprites, sealed-wreck navigation data that remains pending through failure-safe held cargo until canonical-boat commitment, and deterministic correction evidence. #1008-#1009 still own focused capture and deployment review; #969 remains open for owner replay.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -210,8 +210,8 @@ Current issue state as of 2026-07-17:
 - Closed: #905-#914 plus corrections #925/#927 completed Expansion 11 with player GO and exact-SHA Web verification.
 - Closed: #932-#941 plus corrections #951-#953 completed Expansion 12 with player GO and exact-SHA Web verification.
 - Closed: #980 and #986-#990 delivered the first Expansion 13 HOLD correction and exact-SHA runtime `89371d6` verification.
-- Closed correction foundation: #1000-#1006 define and implement selected active-tool input, deliberate cutter activation, compact controls, readable named material sprites, and the source/runtime sealed-wreck navigation reward through exact-once boat commitment and profile compatibility.
-- Active: #1007-#1009 own integrated evidence and deployment review; #969 and milestone #39 remain open for owner replay. No next expansion or broad economy is selected.
+- Closed correction foundation: #1000-#1007 define and implement selected active-tool input, deliberate cutter activation, compact controls, readable named material sprites, the source/runtime sealed-wreck navigation reward through exact-once boat commitment and profile compatibility, and deterministic correction evidence.
+- Active: #1008-#1009 own focused capture and deployment review; #969 and milestone #39 remain open for owner replay. No next expansion or broad economy is selected.
 - Open bookkeeping: #849 names three UID sidecars already committed by `e825c88`; it does not block planning and should be closed separately with that evidence.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -349,7 +349,7 @@ Current issue state as of 2026-07-17:
 
 ## Recommended Next Work
 
-Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`, `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md`, and `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md` as the current handoff. Resolve only #1000-#1009, then return to #969 for owner replay; do not select another expansion or implement spendable credits first.
+Use `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`, `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md`, and `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md` as the current handoff. Resolve only the remaining #1008-#1009 review work, then return to #969 for owner replay; do not select another expansion or implement spendable credits first.
 
 Accepted constraints for next work:
 

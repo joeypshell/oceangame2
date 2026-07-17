@@ -101,6 +101,8 @@ The active-tool selection smoke checks the ordered scanner/cutter/shock-prod cat
 
 The focused sealed-wreck reward state check runs directly with `--script res://scripts/main/smoke/smoke_sealed_wreck_reward_state.gd`. It protects cargo-full blocking, separate +300 salvage value and pending navigation data, failure restoration, canonical-boat exact-once commitment, southeast-lead presentation, profile reload, and completed-archive migration. Integrated route coverage remains in the Expansion 13 journey smoke.
 
+Expansion 13 correction coverage is intentionally distributed: active-tool selection protects ownership/order/one-tool dispatch; cutter state protects wrong-tool, proximity, cancellation, cargo, and hazard behavior; Expansion 06 protects selected shock-prod use; sealed-wreck reward state protects pending/restore/commit/reload; the scanner-cutter correction smoke joins scanner and cutter use with the reward; and the southeast-return smoke protects hazard/oxygen/combat cleanup plus durable recorder clearance. CI and release validation run this matrix without embedding the entire release suite in one smoke.
+
 The salvage-loop smoke check loads the default production level, collects authored salvage through the same runtime methods used in play, returns to extraction, confirms completion, resets, and exits.
 
 The production-slice route smoke loads `production_slice_01`, checks open-water source routes to each authored salvage point, banks cargo at the boat whenever the held capacity fills, confirms completion, resets, and exits.

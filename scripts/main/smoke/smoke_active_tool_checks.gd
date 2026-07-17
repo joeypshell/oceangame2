@@ -56,9 +56,20 @@ func smoke_and_quit() -> void:
 	if not _expect_selection(cycled, ActiveToolController.CUTTER_TOOL_ID, ActiveToolController.ordered_tool_ids()):
 		return
 
-	var use_result: Dictionary = controller.use_selected(has_capability, Callable(self, "_dispatch_tool"))
-	if str(use_result.get("status", "")) != "used" or _dispatched_tool_ids != PackedStringArray([ActiveToolController.CUTTER_TOOL_ID]):
-		_fail("Active-tool use dispatched more than the selected cutter: result=%s dispatched=%s." % [use_result, _dispatched_tool_ids])
+	if not _expect_use(controller, has_capability, ActiveToolController.CUTTER_TOOL_ID):
+		return
+	cycled = controller.cycle_next(has_capability)
+	if not _expect_selection(cycled, ActiveToolController.SHOCK_PROD_TOOL_ID, ActiveToolController.ordered_tool_ids()):
+		return
+	if not _expect_use(controller, has_capability, ActiveToolController.SHOCK_PROD_TOOL_ID):
+		return
+	cycled = controller.cycle_next(has_capability)
+	if not _expect_selection(cycled, ActiveToolController.SCANNER_TOOL_ID, ActiveToolController.ordered_tool_ids()):
+		return
+	if not _expect_use(controller, has_capability, ActiveToolController.SCANNER_TOOL_ID):
+		return
+	cycled = controller.cycle_next(has_capability)
+	if not _expect_selection(cycled, ActiveToolController.CUTTER_TOOL_ID, ActiveToolController.ordered_tool_ids()):
 		return
 
 	_owned.erase(ActiveToolController.CUTTER_TOOL_ID)
@@ -67,7 +78,7 @@ func smoke_and_quit() -> void:
 	_owned.erase(ActiveToolController.SCANNER_TOOL_ID)
 	_owned.erase(ActiveToolController.SHOCK_PROD_TOOL_ID)
 	var no_tool_result: Dictionary = controller.use_selected(has_capability, Callable(self, "_dispatch_tool"))
-	if str(no_tool_result.get("status", "")) != "no_tool" or _dispatched_tool_ids.size() != 1:
+	if str(no_tool_result.get("status", "")) != "no_tool" or _dispatched_tool_ids.size() != 3:
 		_fail("No-tool use mutated dispatch state: result=%s dispatched=%s." % [no_tool_result, _dispatched_tool_ids])
 		return
 
@@ -86,6 +97,15 @@ func _has_capability(capability_id: String) -> bool:
 func _dispatch_tool(tool_id: String) -> Dictionary:
 	_dispatched_tool_ids.append(tool_id)
 	return {"status": "used"}
+
+
+func _expect_use(controller, has_capability: Callable, expected_tool_id: String) -> bool:
+	var previous_count := _dispatched_tool_ids.size()
+	var result: Dictionary = controller.use_selected(has_capability, Callable(self, "_dispatch_tool"))
+	if str(result.get("status", "")) == "used" and _dispatched_tool_ids.size() == previous_count + 1 and _dispatched_tool_ids[-1] == expected_tool_id:
+		return true
+	_fail("Active-tool use did not dispatch only %s: result=%s dispatched=%s." % [expected_tool_id, result, _dispatched_tool_ids])
+	return false
 
 
 func _expect_selection(report: Dictionary, expected_selected: String, expected_owned) -> bool:
