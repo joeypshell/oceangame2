@@ -36,6 +36,9 @@ func cycle() -> Dictionary:
 
 func use() -> Dictionary:
 	var result: Dictionary = _selection.use_selected(_capability_query(), Callable(self, "_dispatch"))
+	if str(result.get("status", "")) == "no_tool" and _main._anomaly_survey != null:
+		var scanner_guidance: Dictionary = _main._anomaly_survey.scanner_action(_main._world, _main._player)
+		result["note"] = str(scanner_guidance.get("note", "No active tool equipped"))
 	if result.has("note"):
 		_main._last_status_note = str(result["note"])
 	elif str(result.get("status", "")) == "no_tool":
