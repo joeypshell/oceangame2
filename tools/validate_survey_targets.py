@@ -16,8 +16,10 @@ COORDINATE_PATTERN = re.compile(r"(?:\b[xy]\s*=?\s*\d+\b|\b\d+\s*,\s*\d+\b)", re
 SUPPORTED_TARGET_TYPES = {"anomaly", "regional", "resource"}
 SUPPORTED_CAPABILITIES = {"survey_scanner_1"}
 SUPPORTED_INTERACTIONS = {"survey"}
+SUPPORTED_SUBJECT_KINDS = {"artifact", "creature", "environment", "resource"}
+SUPPORTED_REWARD_KINDS = {"blueprint", "discovery", "research"}
 TARGET_DISCOVERIES = {
-    "anomaly": {"lower_right_anomaly_discovery"},
+    "anomaly": {"lower_right_anomaly_discovery", "salvage_cutter_blueprint"},
     "regional": {
         "lower_right_signal_reef_discovery",
         "signal_reef_deep_harmonic_discovery",
@@ -25,6 +27,21 @@ TARGET_DISCOVERIES = {
         "southeast_wreck_archive_discovery",
     },
     "resource": {"upper_right_mineral_trace_research"},
+}
+TARGET_SUBJECT_KINDS = {
+    "anomaly": {"artifact", "environment"},
+    "regional": {"artifact", "creature", "environment"},
+    "resource": {"resource"},
+}
+TARGET_REWARD_KINDS = {
+    "anomaly": {"blueprint", "discovery"},
+    "regional": {"discovery"},
+    "resource": {"research"},
+}
+KNOWN_REWARD_IDS = {
+    "blueprint": {"salvage_cutter_blueprint"},
+    "discovery": TARGET_DISCOVERIES["anomaly"] - {"salvage_cutter_blueprint"} | TARGET_DISCOVERIES["regional"],
+    "research": TARGET_DISCOVERIES["resource"],
 }
 LIGHT_GATED_TARGETS = {"signal_reef_deep_harmonic_survey": "dive_light_1"}
 PRESSURE_GATED_TARGETS = {
@@ -34,6 +51,14 @@ PRESSURE_GATED_TARGETS = {
 FINDING_FIELDS = {"clue_label", "finding_label"}
 RESOURCE_FIELDS = {*FINDING_FIELDS, "research_material_pool_id"}
 REGIONAL_FIELDS = {*FINDING_FIELDS, "next_lead_label", "required_route_id"}
+SCAN_SUBJECT_FIELDS = {
+    "scan_subject_kind",
+    "scan_subject_id",
+    "scan_presentation_id",
+    "scan_anchor",
+    "scan_reward_kind",
+    "scan_reward_id",
+}
 SURVEY_SPECIFIC_FIELDS = {
     "target_type",
     "required_capability_id",
@@ -43,6 +68,7 @@ SURVEY_SPECIFIC_FIELDS = {
     "commit_map_id",
     "commit_map_path",
     "commit_entry_id",
+    *SCAN_SUBJECT_FIELDS,
     *RESOURCE_FIELDS,
     *REGIONAL_FIELDS,
 }
@@ -133,6 +159,79 @@ def _validate_rect(target: dict[str, Any], item_label: str, width: int, height: 
         failures.append(f"{item_label} survey target origin must be inside map bounds.")
     if int(target["x"]) + int(target["w"]) > width or int(target["y"]) + int(target["h"]) > height:
         failures.append(f"{item_label} survey target rectangle extends outside map bounds.")
+    return failures
+
+
+def _validate_scan_subject(target: dict[str, Any], item_label: str, width: int, height: int) -> list[str]:
+    present_fields = SCAN_SUBJECT_FIELDS & set(target)
+    if not present_fields:
+        return []
+
+    failures: list[str] = []
+    missing_fields = SCAN_SUBJECT_FIELDS - set(target)
+    if missing_fields:
+        failures.append(
+            f"{item_label} scan-subject metadata is missing required fields: {', '.join(sorted(missing_fields))}."
+        )
+
+    subject_kind = target.get("scan_subject_kind")
+    if subject_kind not in SUPPORTED_SUBJECT_KINDS:
+        failures.append(
+            f"{item_label} scan_subject_kind must be one of: {', '.join(sorted(SUPPORTED_SUBJECT_KINDS))}."
+        )
+    failures.extend(_validate_id(target.get("scan_subject_id"), item_label, "scan_subject_id"))
+    failures.extend(_validate_id(target.get("scan_presentation_id"), item_label, "scan_presentation_id"))
+
+    target_type = target.get("target_type")
+    allowed_subject_kinds = TARGET_SUBJECT_KINDS.get(str(target_type), set())
+    if subject_kind in SUPPORTED_SUBJECT_KINDS and subject_kind not in allowed_subject_kinds:
+        failures.append(
+            f"{item_label} {target_type} target does not support scan_subject_kind {subject_kind!r}."
+        )
+
+    anchor = target.get("scan_anchor")
+    if not isinstance(anchor, dict):
+        failures.append(f"{item_label} scan_anchor must be an object with integer x and y fields.")
+    else:
+        unexpected_anchor_fields = set(anchor) - {"x", "y"}
+        if unexpected_anchor_fields:
+            failures.append(
+                f"{item_label} scan_anchor has unsupported fields: {', '.join(sorted(unexpected_anchor_fields))}."
+            )
+        if not _is_int(anchor.get("x")) or not _is_int(anchor.get("y")):
+            failures.append(f"{item_label} scan_anchor x and y must be integers.")
+        else:
+            anchor_x = int(anchor["x"])
+            anchor_y = int(anchor["y"])
+            if anchor_x < 0 or anchor_y < 0 or anchor_x >= width or anchor_y >= height:
+                failures.append(f"{item_label} scan_anchor must be inside map bounds.")
+            if all(field in target and _is_int(target[field]) for field in ("x", "y", "w", "h")):
+                inside_target = (
+                    int(target["x"]) <= anchor_x < int(target["x"]) + int(target["w"])
+                    and int(target["y"]) <= anchor_y < int(target["y"]) + int(target["h"])
+                )
+                if not inside_target:
+                    failures.append(f"{item_label} scan_anchor must be inside the survey target rectangle.")
+
+    reward_kind = target.get("scan_reward_kind")
+    if reward_kind not in SUPPORTED_REWARD_KINDS:
+        failures.append(
+            f"{item_label} scan_reward_kind must be one of: {', '.join(sorted(SUPPORTED_REWARD_KINDS))}."
+        )
+    failures.extend(_validate_id(target.get("scan_reward_id"), item_label, "scan_reward_id"))
+    allowed_reward_kinds = TARGET_REWARD_KINDS.get(str(target_type), set())
+    if reward_kind in SUPPORTED_REWARD_KINDS and reward_kind not in allowed_reward_kinds:
+        failures.append(f"{item_label} {target_type} target does not support scan_reward_kind {reward_kind!r}.")
+    known_reward_ids = KNOWN_REWARD_IDS.get(str(reward_kind), set())
+    if isinstance(target.get("scan_reward_id"), str) and target.get("scan_reward_id") not in known_reward_ids:
+        failures.append(
+            f"{item_label} scan_reward_id {target.get('scan_reward_id')!r} is not supported for {reward_kind!r}."
+        )
+    if target.get("scan_reward_id") != target.get("discovery_id"):
+        failures.append(f"{item_label} scan_reward_id must equal discovery_id so durable knowledge has one owner.")
+    if reward_kind == "blueprint" and subject_kind != "artifact":
+        failures.append(f"{item_label} blueprint rewards require scan_subject_kind 'artifact'.")
+
     return failures
 
 
@@ -229,6 +328,7 @@ def validate_survey_target_schema(map_path: Path, map_data: dict[str, Any]) -> l
     }
     seen_target_ids: set[str] = set()
     seen_discovery_ids: set[str] = set()
+    seen_subject_ids: set[str] = set()
 
     for index, target in enumerate(targets):
         if not isinstance(target, dict):
@@ -245,6 +345,12 @@ def validate_survey_target_schema(map_path: Path, map_data: dict[str, Any]) -> l
                 failures.append(f"Duplicate survey target id {target_id!r}.")
             seen_target_ids.add(target_id)
         failures.extend(_validate_rect(target, item_label, width, height))
+        failures.extend(_validate_scan_subject(target, item_label, width, height))
+        subject_id = target.get("scan_subject_id")
+        if isinstance(subject_id, str):
+            if subject_id in seen_subject_ids:
+                failures.append(f"Duplicate scan subject id {subject_id!r}.")
+            seen_subject_ids.add(subject_id)
 
         target_type = target.get("target_type")
         if target_type not in SUPPORTED_TARGET_TYPES:

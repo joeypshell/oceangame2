@@ -44,6 +44,21 @@ def valid_map() -> dict:
     }
 
 
+def valid_artifact_target() -> dict:
+    target = valid_target()
+    target.update({
+        "id": "salvage_cutter_blueprint_survey",
+        "scan_subject_kind": "artifact",
+        "scan_subject_id": "salvage_cutter_maintenance_case",
+        "scan_presentation_id": "salvage_cutter_blueprint_case",
+        "scan_anchor": {"x": 2, "y": 2},
+        "scan_reward_kind": "blueprint",
+        "scan_reward_id": "salvage_cutter_blueprint",
+        "discovery_id": "salvage_cutter_blueprint",
+    })
+    return target
+
+
 def valid_regional_target() -> dict:
     target = valid_target()
     target.update({
@@ -96,6 +111,57 @@ class SurveyTargetValidationTests(unittest.TestCase):
         self.assertEqual(validate_survey_target_schema(SOURCE_MAP, map_data), [])
         reachable = {(x, y) for y in range(8) for x in range(8)}
         self.assertEqual(validate_survey_target_reachability(map_data["survey_targets"], set(), reachable), [])
+
+    def test_accepts_complete_artifact_blueprint_contract(self) -> None:
+        map_data = valid_map()
+        map_data["survey_targets"] = [valid_artifact_target()]
+        self.assertEqual(validate_survey_target_schema(SOURCE_MAP, map_data), [])
+
+    def test_rejects_incomplete_or_malformed_scan_subject_metadata(self) -> None:
+        map_data = valid_map()
+        target = valid_artifact_target()
+        target.pop("scan_presentation_id")
+        target["scan_anchor"] = {"x": 8, "y": 2, "z": 1}
+        map_data["survey_targets"] = [target]
+
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertTrue(any("missing required fields: scan_presentation_id" in failure for failure in failures), failures)
+        self.assertTrue(any("scan_anchor has unsupported fields: z" in failure for failure in failures), failures)
+        self.assertTrue(any("scan_anchor must be inside map bounds" in failure for failure in failures), failures)
+        self.assertTrue(any("scan_anchor must be inside the survey target rectangle" in failure for failure in failures), failures)
+
+    def test_rejects_blueprint_reward_without_physical_artifact(self) -> None:
+        map_data = valid_map()
+        target = valid_artifact_target()
+        target["scan_subject_kind"] = "environment"
+        map_data["survey_targets"] = [target]
+
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertTrue(any("blueprint rewards require scan_subject_kind 'artifact'" in failure for failure in failures), failures)
+
+        target["target_type"] = "resource"
+        target["scan_subject_kind"] = "resource"
+        target["scan_reward_id"] = "unsupported_blueprint"
+        target["discovery_id"] = "upper_right_mineral_trace_research"
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertTrue(any("resource target does not support scan_reward_kind 'blueprint'" in failure for failure in failures), failures)
+        self.assertTrue(any("scan_reward_id 'unsupported_blueprint' is not supported" in failure for failure in failures), failures)
+        self.assertTrue(any("scan_reward_id must equal discovery_id" in failure for failure in failures), failures)
+
+    def test_requires_unique_subject_identity_and_rejects_misplaced_metadata(self) -> None:
+        map_data = valid_map()
+        first = valid_artifact_target()
+        second = valid_artifact_target()
+        second["id"] = "second_artifact_survey"
+        second["discovery_id"] = "lower_right_anomaly_discovery"
+        second["scan_reward_kind"] = "discovery"
+        second["scan_reward_id"] = "lower_right_anomaly_discovery"
+        map_data["survey_targets"] = [first, second]
+        map_data["entities"] = [{"id": "wrong_owner", "scan_subject_id": "misplaced_subject"}]
+
+        failures = validate_survey_target_schema(SOURCE_MAP, map_data)
+        self.assertTrue(any("Duplicate scan subject id" in failure for failure in failures), failures)
+        self.assertTrue(any("entities[0] survey metadata (scan_subject_id)" in failure for failure in failures), failures)
 
     def test_validates_regional_finding_and_broad_next_lead(self) -> None:
         map_data = valid_map()
