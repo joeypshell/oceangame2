@@ -1,10 +1,10 @@
 extends PanelContainer
 
-const COMPACT_VIEWPORT_WIDTH := 900.0
+const COMPACT_VIEWPORT_WIDTH := 1100.0
 const DESKTOP_SIZE := Vector2(224.0, 58.0)
 const COMPACT_SIZE := Vector2(92.0, 62.0)
 const COMPACT_LEFT := 314.0
-const TOP_OFFSET := 12.0
+const TOP_OFFSET := 90.0
 const TOOL_SYMBOLS := {
 	"survey_scanner_1": "[S]",
 	"salvage_cutter": "[C]",

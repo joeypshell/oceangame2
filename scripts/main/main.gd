@@ -7,6 +7,7 @@ const AnomalySurveyCapture := preload("res://scripts/main/captures/anomaly_surve
 const ActiveToolController := preload("res://scripts/main/active_tool_controller.gd")
 const ActiveToolHud := preload("res://scripts/main/active_tool_hud.gd")
 const ActiveToolRuntime := preload("res://scripts/main/active_tool_runtime.gd")
+const HeldCargoHud := preload("res://scripts/main/held_cargo_hud.gd")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const CargoCollectionController := preload("res://scripts/main/cargo_collection_controller.gd")
 const BiologicalResourceController := preload("res://scripts/main/biological_resource_controller.gd")
@@ -255,6 +256,7 @@ var _smoke_release_journey_checks
 var _review_canvas: CanvasLayer
 var _review_label: Label
 var _active_tool_hud
+var _held_cargo_hud
 var _status_label: Label
 var _result_panel: PanelContainer
 var _result_label: Label
@@ -1248,6 +1250,7 @@ func _clear_loaded_review_nodes() -> void:
 	_world = null
 	_review_label = null
 	_active_tool_hud = null
+	_held_cargo_hud = null
 	_status_label = null
 	_result_panel = null
 	_result_label = null
@@ -1829,6 +1832,9 @@ func _create_review_overlay(world: Node) -> void:
 	_status_label.add_theme_font_size_override("font_size", 14)
 	stack.add_child(_status_label)
 
+	_held_cargo_hud = HeldCargoHud.new()
+	canvas.add_child(_held_cargo_hud)
+
 	_active_tool_hud = ActiveToolHud.new()
 	canvas.add_child(_active_tool_hud)
 	var mobile_controls = get_node_or_null("MobileTestControls")
@@ -1876,6 +1882,7 @@ func _update_status_label() -> void:
 		return
 	if _review_label != null:
 		_review_label.text = _review_header_text(_world)
+	_update_held_cargo_hud()
 	_update_active_tool_hud()
 	_update_progression_project_tracker()
 
@@ -2354,6 +2361,11 @@ func _refresh_active_tools() -> Dictionary:
 func _update_active_tool_hud() -> void:
 	if _active_tool_hud != null and _active_tool_runtime != null:
 		_active_tool_hud.refresh(_active_tool_runtime.report())
+
+
+func _update_held_cargo_hud() -> void:
+	if _held_cargo_hud != null:
+		_held_cargo_hud.refresh(_material_runtime.report() if _material_runtime != null else {}, _sortie_state.report() if _sortie_state != null else {}, _held_salvage_capacity())
 
 
 func _cycle_active_tool() -> Dictionary:
