@@ -32,10 +32,11 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md`
 - `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md`
 - `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`
+- `docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md`
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-12 are complete. Expansion 13 remains at owner HOLD in open milestone #39, while #1000-#1009 technically complete the bounded active-tool, material-visual, and sealed-wreck navigation correction at exact runtime `86ba106`. Only owner replay #969 remains. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
+Simple Diver Game 01-09 and OceanGame Expansions 01-12 are complete. Expansion 13 remains at owner HOLD in open milestone #39, while #1000-#1009 and bounded audio interlude #1020-#1023 are technically complete at exact runtime `ede39d1`. Only owner replay #969 remains. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
@@ -43,14 +44,14 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: complete Expansion 13 owner replay #969 against exact runtime `86ba106`.
+- Committed: complete Expansion 13 owner replay #969 against exact runtime `ede39d1`.
 - Proposed: no next milestone or broad economy until the owner replay records GO/HOLD.
 - Directional: pure oxygen-capacity progression, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-1. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - owner-HOLD correction #1000-#1009 is technically complete at `86ba106`; #969 remains the final replay gate.
+1. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - owner-HOLD correction #1000-#1009 and audio interlude #1020-#1023 are technically complete at `ede39d1`; #969 remains the final replay gate.
 2. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - complete through #941 plus corrections #951-#953, with player GO and exact-SHA Web verification.
 3. [Expansion 11: Deep-Harmonic Light Return](https://github.com/joeypshell/oceangame2/milestone/37) - complete through #914 plus corrections #925/#927, with player GO and final exact-SHA Web verification.
 
@@ -92,7 +93,7 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Expansion 13 Player HOLD
 
-#960-#968 delivered the original southeast wreck journey at `a9d1431`; #980 and #986-#990 corrected its scanner-to-cutter discovery chain at `89371d6`. The owner replay then found automatic cutter use, unclear rubber/coil visuals, and a sealed-wreck payoff that ended at ordinary `+300` value. #1000-#1009 technically complete the bounded active-tool, material-visual, and navigation-data correction at `86ba106`. #969 remains open for the owner replay; automation cannot declare GO.
+#960-#968 delivered the original southeast wreck journey at `a9d1431`; #980 and #986-#990 corrected its scanner-to-cutter discovery chain at `89371d6`. The owner replay then found automatic cutter use, unclear rubber/coil visuals, a sealed-wreck payoff that ended at ordinary `+300` value, a silent first pickup, and indistinct cues. #1000-#1009 complete the active-tool/material/reward correction; #1020-#1023 technically complete the bounded audio correction at `ede39d1`. #969 remains open for the owner replay; automation cannot declare GO.
 
 ## Roadmap Rules
 
