@@ -15,3 +15,17 @@ CANONICAL_CHAIN_IDS = (
     "eel_electrocyte",
     "shock_prod_capacitor_project",
 )
+
+CANONICAL_EXTENSION_CHAINS = (
+    (
+        "upper_left_wreck_relay_route",
+        (
+            "southeast_wreck_archive_discovery",
+            "current_stabilizer_project",
+            "current_stabilizer",
+            "upper_left_wreck_relay_current",
+            "upper_left_wreck_relay_survey",
+            "upper_left_wreck_relay_discovery",
+        ),
+    ),
+)

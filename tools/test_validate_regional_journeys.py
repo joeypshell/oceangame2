@@ -61,7 +61,7 @@ class RegionalJourneyValidationTests(unittest.TestCase):
         candidate = copy.deepcopy(self.map_data)
         journey = candidate["regional_journeys"][0]
         journey["pending"] = True
-        journey["required_capability_id"] = "current_stabilizer"
+        journey["required_capability_id"] = "oxygen_tank_1"
         journey["entry_gate_ids"] = [{"id": "not_an_id"}]
         failures = validate_regional_journey_schema(candidate)
         self.assertTrue(any("runtime state" in failure for failure in failures), failures)

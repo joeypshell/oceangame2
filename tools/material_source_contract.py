@@ -60,9 +60,14 @@ PROJECT_RULES = {
     },
     "current_stabilizer_project": {
         "capability_id": "current_stabilizer",
-        "required_discovery_id": "lower_right_anomaly_discovery",
+        "required_discovery_id": "southeast_wreck_archive_discovery",
+        "legacy_required_discovery_id": "lower_right_anomaly_discovery",
         "required_project_id": "salvage_cutter_project",
         "target_field": "target_gate_id",
+        "target_id": "upper_left_wreck_relay_current",
+        "legacy_target_id": "lower_left_loop_current",
+        "canonical_map_id": "production_level_01",
+        "legacy_map_ids": ("production_slice_01", "material_fixture"),
     },
     "shock_prod_project": {
         "capability_id": "shock_prod",
@@ -107,3 +112,23 @@ RUNTIME_FIELDS = {
     "active", "banked", "capability_owned", "collected", "completed", "day_seed", "depleted", "held",
     "oxygen", "profile_state", "progress", "result_text", "save_path", "score", "selected", "wallet",
 }
+
+
+def project_rule_for_map(project_id: str, map_id: str, primary_discovery_present: bool = True) -> dict | None:
+    """Resolve one exact canonical or legacy rule without accepting mixed pairs."""
+    source = PROJECT_RULES.get(project_id)
+    if source is None:
+        return None
+    rule = dict(source)
+    canonical_map_id = str(rule.get("canonical_map_id", ""))
+    legacy_map_ids = set(rule.get("legacy_map_ids", ()))
+    use_legacy = bool(canonical_map_id and map_id in legacy_map_ids)
+    if canonical_map_id and map_id != canonical_map_id and not use_legacy:
+        rule["unsupported_map_id"] = map_id
+    if not canonical_map_id and rule.get("legacy_required_discovery_id") is not None:
+        use_legacy = not primary_discovery_present
+    if use_legacy:
+        rule["required_discovery_id"] = rule["legacy_required_discovery_id"]
+        if "legacy_target_id" in rule:
+            rule["target_id"] = rule["legacy_target_id"]
+    return rule

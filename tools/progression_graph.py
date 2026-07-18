@@ -314,7 +314,7 @@ class ProgressionGraphBuilder:
             item.get("promise_gate_id"),
             *_list(item.get("entry_gate_ids")),
             item.get("landmark_zone_id"),
-            item.get("tool_target_id"),
+            item.get("tool_target_id"), item.get("payoff_target_id"),
             item.get("commit_entry_id"),
         ]
         for raw_id in references:

@@ -8,6 +8,7 @@ from pathlib import Path
 from typing import Iterable
 
 from progression_graph import CANONICAL_CHAIN_IDS, Edge, Node, ProgressionGraph, ROOT
+from progression_graph_contract import CANONICAL_EXTENSION_CHAINS
 
 
 REVIEW_DOC_PATH = ROOT / "docs" / "current" / "PROGRESSION_GRAPH.md"
@@ -268,19 +269,29 @@ def _guard_counter_failures(graph: ProgressionGraph) -> list[str]:
 
 
 def _canonical_order_failures(graph: ProgressionGraph, stages: dict[str, int]) -> list[str]:
+    failures = _ordered_chain_failures(graph, stages, CANONICAL_CHAIN_IDS, "Canonical progression")
+    for trigger_id, raw_ids in CANONICAL_EXTENSION_CHAINS:
+        if graph.resolve(trigger_id) in graph.nodes:
+            failures.extend(_ordered_chain_failures(graph, stages, raw_ids, "Canonical extension"))
+    return failures
+
+
+def _ordered_chain_failures(
+    graph: ProgressionGraph, stages: dict[str, int], raw_ids: Iterable[str], label: str
+) -> list[str]:
     failures: list[str] = []
     ordered: list[tuple[str, int]] = []
-    for raw_id in CANONICAL_CHAIN_IDS:
+    for raw_id in raw_ids:
         key = graph.resolve(raw_id)
         if key not in graph.nodes:
-            failures.append(f"Canonical progression node {raw_id!r} is unresolved.")
+            failures.append(f"{label} node {raw_id!r} is unresolved.")
         elif key not in stages:
-            failures.append(f"Canonical progression node {_label(graph, key)} is unreachable.")
+            failures.append(f"{label} node {_label(graph, key)} is unreachable.")
         else:
             ordered.append((key, stages[key]))
     for (left, left_stage), (right, right_stage) in zip(ordered, ordered[1:]):
         if left_stage >= right_stage:
-            failures.append(f"Canonical order drift: {_label(graph, left)} (stage {left_stage}) must precede {_label(graph, right)} (stage {right_stage}).")
+            failures.append(f"{label} order drift: {_label(graph, left)} (stage {left_stage}) must precede {_label(graph, right)} (stage {right_stage}).")
     return failures
 
 

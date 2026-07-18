@@ -26,6 +26,7 @@ DEFAULT_MAP = ROOT / "maps" / "production_level_01.greybox.json"
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 DISPLAY_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,47}$")
 GATE_FIELD_BY_CAPABILITY = {
+    "current_stabilizer": "current_gate",
     "propulsion_fins": "current_gate",
     "pressure_suit_1": "pressure_zone",
 }
@@ -41,7 +42,7 @@ REQUIRED_FIELDS = (
     "route_context",
     "intent",
 )
-OPTIONAL_FIELDS = {"required_discovery_id", "tool_target_id"}
+OPTIONAL_FIELDS = {"payoff_target_id", "required_discovery_id", "tool_target_id"}
 ALLOWED_FIELDS = set(REQUIRED_FIELDS) | OPTIONAL_FIELDS
 FORBIDDEN_STATE_FIELDS = {
     "active",
@@ -226,6 +227,15 @@ def validate_regional_journey_schema(map_data: dict[str, Any]) -> list[str]:
                 failures.append(f"{label} tool target must unlock the journey survey target.")
             elif landmark is not None and not _rect_contains(landmark, tool_target):
                 failures.append(f"{label} tool target must sit inside its landmark rectangle.")
+        payoff_target_id = str(journey.get("payoff_target_id", ""))
+        if payoff_target_id:
+            payoff = entities.get(payoff_target_id)
+            if payoff is None or payoff.get("type") != "salvage" or payoff.get("tier") != "valuable":
+                failures.append(f"{label} payoff_target_id must resolve to valuable salvage.")
+            elif payoff.get("route_context") != journey["id"]:
+                failures.append(f"{label} payoff target must link back through route_context.")
+            elif landmark is not None and not _rect_contains(landmark, payoff):
+                failures.append(f"{label} payoff target must sit inside its landmark rectangle.")
         if entities.get(str(journey["commit_entry_id"]), {}).get("type") != "boat_spawn":
             failures.append(f"{label} commit_entry_id must resolve to the canonical boat.")
     return failures

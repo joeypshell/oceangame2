@@ -28,10 +28,12 @@ const RULES := {
 	},
 	"current_stabilizer_project": {
 		"capability_id": "current_stabilizer",
-		"required_discovery_id": "lower_right_anomaly_discovery",
+		"required_discovery_id": "southeast_wreck_archive_discovery",
+		"legacy_required_discovery_id": "lower_right_anomaly_discovery",
 		"required_project_id": "salvage_cutter_project",
 		"target_field": "target_gate_id",
-		"target_id": "lower_left_loop_current",
+		"target_id": "upper_left_wreck_relay_current",
+		"legacy_target_id": "lower_left_loop_current",
 		"required_materials": {"titanium_scrap": 2, "conductive_coil": 1},
 	},
 	"shock_prod_project": {
@@ -91,8 +93,20 @@ static func validate_definition(project_definition: Dictionary) -> Array[String]
 	for target_field in ["target_id", "target_gate_id", "target_hostile_id"]:
 		if project_definition.has(target_field):
 			authored_target_fields.append(target_field)
-	if authored_target_fields.size() != 1 or str(project_definition.get(str(rules["target_field"]), "")) != str(rules["target_id"]):
+	var authored_target := str(project_definition.get(str(rules["target_field"]), ""))
+	var supported_targets: Array[String] = [str(rules["target_id"])]
+	var legacy_target := str(rules.get("legacy_target_id", rules["target_id"]))
+	if not legacy_target.is_empty() and legacy_target not in supported_targets:
+		supported_targets.append(legacy_target)
+	if authored_target_fields.size() != 1 or authored_target not in supported_targets:
 		failures.append("unsupported project target")
+	elif not legacy_discovery.is_empty():
+		var supported_pairs := {
+			"%s|%s" % [str(rules["required_discovery_id"]), str(rules["target_id"])]: true,
+			"%s|%s" % [legacy_discovery, legacy_target]: true,
+		}
+		if not supported_pairs.has("%s|%s" % [authored_discovery, authored_target]):
+			failures.append("unsupported project discovery/target pairing")
 	if str(project_definition.get("build_phase", "")) != "night_debrief":
 		failures.append("unsupported project build phase")
 	if str(project_definition.get("capability_effect", "")) != str(rules.get("capability_effect", "")):

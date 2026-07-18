@@ -428,6 +428,7 @@ Expansion 07 biological inputs use the optional top-level `biological_resource_s
 Expansion 08 daily-condition metadata follows `docs/current/OCEANGAME_EXPANSION_08_SOURCE_CONTRACT.md`: one optional even-day condition may link one optional bonus material pool and one moving hazard, but never terrain or mandatory progression. Material pool guarantees use optional `guaranteed_candidate_ids` as defined by the Expansion 03 and 05 source contracts.
 Non-salvage surveys use top-level `survey_targets`; the focused physical-subject and reward block is defined in `docs/current/SCAN_SUBJECT_SOURCE_CONTRACT.md`. Existing surveys may omit that block, but any target using it must declare the complete subject, presentation, anchor, and reward contract; only an artifact may reward a blueprint.
 Expansion-specific survey dependencies remain in their source/state contracts. Survey metadata belongs only in `survey_targets` and may not author runtime/profile state; cross-map relationships are checked with `python tools/audit_progression_graph.py`.
+A `regional_journey` may use `payoff_target_id` only for valuable salvage inside its landmark whose `route_context` links back to that journey; it does not make the cargo profile-durable.
 ```json
 {
   "id": "hazard_crossing_choke",

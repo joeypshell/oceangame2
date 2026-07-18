@@ -25,6 +25,7 @@ TARGET_DISCOVERIES = {
         "signal_reef_deep_harmonic_discovery",
         "abyssal_basin_harmonic_source_discovery",
         "southeast_wreck_archive_discovery",
+        "upper_left_wreck_relay_discovery",
     },
     "resource": {"upper_right_mineral_trace_research"},
 }
