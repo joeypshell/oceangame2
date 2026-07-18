@@ -33,6 +33,14 @@ python tools/check_asset_manifest.py
 
 The checker reads table rows in `docs/ASSET_MANIFEST.md` whose asset path is the first column and whose status is `draft`, `approved`, or `locked`. It fails only for missing files under committed asset folders such as `assets/` and `references/asset_reviews/`, so planned future assets and prose examples do not block the check.
 
+Validate the reviewed feedback cue set against its deterministic generator:
+
+```bash
+python tools/check_feedback_audio_assets.py
+```
+
+The checker protects cue ids, mono 16-bit/22.05 kHz format, compact duration and peak bounds, unique fingerprints, and byte-for-byte generated PCM.
+
 Audit agent-friendly file lengths:
 
 ```bash
