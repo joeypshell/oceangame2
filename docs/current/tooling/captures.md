@@ -349,6 +349,14 @@ Run the focused Expansion 13 scanner-to-cutter correction captures:
 
 This writes broad artifact clue, off-axis miss, acquired artifact, 50% scan, pending boat return, committed cutter recipe, scanner/cutter/shock-prod selections, titanium/rubber/coil gameplay-scale samples, wrong-tool denial, 50% deliberate cutter progress, pending navigation data with held salvage, and canonical-boat commitment with the southeast lead. Every state is captured at 1280x720 and mobile 844x390 under ignored `visual_captures/expansion_13_scanner_cutter_correction/`; the command does not accept or replace baselines.
 
+Capture the focused Expansion 14 archive-current return states:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --capture-expansion-14-archive-current-return
+```
+
+This writes the committed archive result, blocked relay current, night project promise, passive post-build current, relay arrival, mixed full cargo, 50% scanner progress, and pending boat return at 1280x720 and mobile 844x390 under ignored `visual_captures/expansion_14_archive_current_return/`. Mobile gameplay frames include the test controls and fail on cargo/tool overlap; the command does not accept or replace baselines.
+
 Capture the first production slice:
 
 ```powershell
