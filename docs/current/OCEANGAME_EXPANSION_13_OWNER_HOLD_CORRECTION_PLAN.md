@@ -6,11 +6,16 @@ Planning issue: #1000
 
 Player gate: #969
 
+Status: Completed correction history. #1000-#1009 delivered this correction,
+#1020-#1023 completed the bounded audio interlude, and final owner GO is
+recorded in `OCEANGAME_EXPANSION_13_CLOSEOUT.md`.
+
 ## Decision
 
-Expansion 13 remains at **HOLD** after the project owner's review of exact
-runtime `89371d6`. The earlier scanner-to-cutter correction fixed discovery
-causality, but the playable loop still has three bounded failures:
+At the time of this plan, Expansion 13 remained at **HOLD** after the project
+owner's review of exact runtime `89371d6`. The earlier scanner-to-cutter
+correction fixed discovery causality, but the playable loop still had three
+bounded failures:
 
 - rubber and conductive-coil pickups do not read as their materials
 - cutter use starts automatically from proximity while scanner and shock prod

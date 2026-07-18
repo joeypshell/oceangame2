@@ -6,12 +6,16 @@ Planning issue: #980
 
 Player gate: #969
 
+Status: Completed correction history. #982-#990 delivered this correction; a
+later owner HOLD led to #1000-#1009 and audio interlude #1020-#1023. Final owner
+GO is recorded in `OCEANGAME_EXPANSION_13_CLOSEOUT.md`.
+
 ## Decision
 
-Expansion 13 is on **HOLD**. The earlier `go` was a workflow-continuation
-instruction, not player approval. Milestone #39 and #969 remain open while one
-bounded correction proves a believable scanner-to-cutter journey and a clearer
-reason to keep exploring.
+At the time of this plan, Expansion 13 was on **HOLD**. The earlier `go` was a
+workflow-continuation instruction, not player approval. Milestone #39 and #969
+remained open while one bounded correction proved a believable
+scanner-to-cutter journey and a clearer reason to keep exploring.
 
 Do not select Expansion 14 or add another region, tool tier, enemy, economy
 layer, or map transition during this correction.

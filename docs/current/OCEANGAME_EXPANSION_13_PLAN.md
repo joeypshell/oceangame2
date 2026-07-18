@@ -2,8 +2,10 @@
 
 Date: 2026-07-16
 
-Status: Active in milestone #39 through frozen issue batch #960-#969. The
-source/state contract is locked in
+Status: Complete with owner GO in #969 after bounded corrections
+#980/#982-#990, #1000-#1009, and audio interlude #1020-#1023. See
+`docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`. The original frozen
+implementation decision follows; its source/state contract remains locked in
 `docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md`.
 
 ## Decision
