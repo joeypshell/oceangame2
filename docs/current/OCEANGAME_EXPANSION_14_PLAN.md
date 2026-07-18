@@ -62,7 +62,8 @@ timer, or decorative wreck does not satisfy the milestone.
 
 ## Locked Journey Contract
 
-Proposed stable ids:
+Stable ids, locked in
+`docs/current/OCEANGAME_EXPANSION_14_SOURCE_STATE_CONTRACT.md`:
 
 - prerequisite discovery: `southeast_wreck_archive_discovery`
 - project: `current_stabilizer_project`
@@ -93,15 +94,17 @@ it must not redefine the canonical chain. Profiles that already own
 - `tools/create_production_level_01_map.py` composes that helper.
 - `maps/production_level_01.greybox.json`, its SVG, and review renders remain
   generated outputs.
-- The current belongs in the narrow eastern approach to the upper-left sector,
-  before `full_level_upper_left_anchor`. The source/state contract issue must
-  lock the smallest water-only bounds and push direction after player-footprint
-  route analysis.
+- Collision-aware player-footprint analysis supersedes the provisional broad
+  eastern approach, which has a second entrance. The current belongs in the
+  single interior relay-pocket throat at `x=53, y=57, w=3, h=4`, pushes left
+  at strength `3.2`, and isolates the player-clear pocket from `(56, 57)`
+  through `(60, 60)` when blocked. `full_level_upper_left_anchor` remains a
+  sector review anchor, not the capability boundary.
 - The current pushes an unequipped diver back toward the central route and
   permits ordinary two-way swimming after the capability is owned.
-- The relay landmark and payoff stay in existing open upper-left water near the
-  anchor. Do not alter terrain, collision, map bounds, boat entry, or slices
-  01-04.
+- The relay landmark and payoff stay in existing open water inside that pocket,
+  around tile `(60, 60)`. Do not alter terrain, collision, map bounds, boat
+  entry, or slices 01-04.
 - A source-authored route relationship must connect archive discovery,
   project, gate, landmark, survey, discovery, and boat commitment. Do not infer
   progression from coordinates or presentation text.
@@ -184,27 +187,23 @@ player, boat, existing landmarks, camera behavior, and slices unchanged.
 Verify the merged candidate's exact SHA on the public Web preview before the
 owner gate.
 
-## Planned Issue Batch
+## Active Issue Batch
 
-Do not create this batch from #1029. The next audit may create it in this order:
+The frozen milestone batch is:
 
-1. Lock the Expansion 14 archive-current source, state, and presentation
-   contract, including exact gate bounds.
-2. Extend validators and the progression graph for the canonical archive to
-   stabilizer chain while preserving legacy/profile compatibility.
-3. Author the project override, current route, landmark, relay core, survey,
-   cameras, and review metadata through the production-level source helper.
-4. Integrate the archive-led project, passive gate, relay payoff, failure, and
-   canonical-boat semantics in focused runtime owners.
-5. Add the bounded held-cargo strip without changing active-tool input.
-6. Add deterministic archive-current journey, cargo-strip, and lifecycle smoke
-   coverage, then run the integrated release suite.
-7. Add focused desktop and landscape-mobile review captures.
-8. Review and accept only intentional Expansion 14 baseline differences.
-9. Verify the exact merged candidate on the public Web preview.
-10. Run the owner journey and close with GO, HOLD, or one bounded correction.
+1. #1031 lock the source, state, and presentation contract
+2. #1032 validate canonical progression and legacy compatibility
+3. #1033 author the current, route, relay, survey, and review source
+4. #1034 integrate runtime journey and canonical-boat semantics
+5. #1035 add the bounded held-cargo strip
+6. #1036 add deterministic coverage and run the integrated release suite
+7. #1037 add focused desktop and landscape-mobile captures
+8. #1038 review and accept only intentional baseline changes
+9. #1039 verify the exact merged candidate on the public Web preview
+10. #1040 run the owner journey and close with GO, HOLD, or one correction
 
-Dependency order: 1 -> 2 -> 3 -> 4 -> 5 -> 6 -> 7 -> 8 -> 9 -> 10.
+Dependency order: #1031 -> #1032 -> #1033 -> #1034 -> #1035 -> #1036 ->
+#1037 -> #1038 -> #1039 -> #1040.
 
 ## Deferred Work
 
