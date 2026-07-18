@@ -39,101 +39,25 @@ def current_map() -> dict:
 
 
 def authored_fixture() -> dict:
+    return current_map()
+
+
+def without_expansion_14() -> dict:
     map_data = current_map()
-    map_data["material_projects"].append({
-        "id": PROJECT_ID,
-        "required_project_id": "salvage_cutter_project",
-        "required_discovery_id": ARCHIVE_DISCOVERY_ID,
-        "required_materials": {"titanium_scrap": 2, "conductive_coil": 1},
-        "unlocks_capability_id": CAPABILITY_ID,
-        "target_gate_id": GATE_ID,
-        "build_phase": "night_debrief",
-    })
-    map_data["zones"].extend([
-        {
-            "id": GATE_ID,
-            "type": "marker",
-            "x": 53,
-            "y": 57,
-            "w": 3,
-            "h": 4,
-            "current_gate": True,
-            "current_direction": "left",
-            "current_strength": 3.2,
-            "required_capability_id": CAPABILITY_ID,
-            "current_gate_label": "Ripping relay current",
-            "current_affordance_role": "relay",
-            "route_context": ROUTE_ID,
-        },
-        {
-            "id": LANDMARK_ID,
-            "type": "marker",
-            "x": 56,
-            "y": 57,
-            "w": 5,
-            "h": 4,
-            "regional_landmark": True,
-            "regional_journey_id": ROUTE_ID,
-            "landmark_label": "Northwest Wreck Relay",
-        },
-    ])
-    map_data["background"].append({
-        "id": "upper_left_wreck_relay_backdrop",
-        "type": "background",
-        "x": 56,
-        "y": 57,
-        "w": 5,
-        "h": 4,
-        "regional_landmark": True,
-        "regional_journey_id": ROUTE_ID,
-        "intent": "Non-collision silhouette for the isolated relay pocket.",
-    })
-    map_data["entities"].append({
-        "id": CORE_ID,
-        "type": "salvage",
-        "x": 58,
-        "y": 60,
-        "kind": "relic",
-        "tier": "valuable",
-        "route_context": ROUTE_ID,
-        "intent": "Normal valuable cargo payoff inside the earned relay pocket.",
-    })
-    map_data["survey_targets"].append({
-        "id": SURVEY_ID,
-        "target_type": "regional",
-        "x": 59,
-        "y": 58,
-        "w": 2,
-        "h": 2,
-        "required_capability_id": "survey_scanner_1",
-        "required_route_id": ROUTE_ID,
-        "route_context": ROUTE_ID,
-        "interaction": "survey",
-        "interaction_seconds": 3.0,
-        "interaction_label": "Survey wreck relay",
-        "clue_label": "Relay signal | Scanner survey available",
-        "finding_label": "Discovery logged: Northwest wreck relay",
-        "next_lead_label": "Next lead: deeper wreck relay still transmitting",
-        "discovery_id": DISCOVERY_ID,
-        "commit_map_id": "production_level_01",
-        "commit_map_path": "res://maps/production_level_01.greybox.json",
-        "commit_entry_id": "surface_boat_entry",
-        "intent": "Keep the relay finding pending until canonical boat return.",
-    })
-    map_data["regional_journeys"].append({
-        "id": ROUTE_ID,
-        "route_label": "Northwest wreck relay route",
-        "promise_gate_id": "southeast_wreck_archive_landmark",
-        "entry_gate_ids": [GATE_ID],
-        "required_capability_id": CAPABILITY_ID,
-        "required_discovery_id": ARCHIVE_DISCOVERY_ID,
-        "landmark_zone_id": LANDMARK_ID,
-        "payoff_target_id": CORE_ID,
-        "survey_target_id": SURVEY_ID,
-        "commit_entry_id": "surface_boat_entry",
-        "route_context": ROUTE_ID,
-        "intent": "Turn the archive clue and night-built stabilizer into one return journey.",
-    })
+    ids_by_collection = {
+        "material_projects": {PROJECT_ID},
+        "zones": {GATE_ID, LANDMARK_ID},
+        "regional_journeys": {ROUTE_ID},
+        "entities": {CORE_ID},
+        "survey_targets": {SURVEY_ID},
+    }
+    for collection, item_ids in ids_by_collection.items():
+        map_data[collection] = [
+            item for item in map_data[collection] if item.get("id") not in item_ids
+        ]
+    map_data["background"] = [
+        item for item in map_data["background"] if item.get("regional_journey_id") != ROUTE_ID
+    ]
     return map_data
 
 
@@ -144,7 +68,7 @@ def fixture_graph(map_data: dict):
 
 
 class Expansion14ContractTests(unittest.TestCase):
-    def test_current_generated_map_keeps_contract_dormant(self) -> None:
+    def test_current_generated_map_matches_contract(self) -> None:
         self.assertEqual([], validate_expansion_14_contract(current_map()))
 
     def test_accepts_canonical_source_relationships_and_footprint_gate(self) -> None:
@@ -219,7 +143,7 @@ class Expansion14ContractTests(unittest.TestCase):
         self.assertTrue(any(edge.target == keys[4] for edge in graph.requirements(keys[5])))
 
     def test_partial_record_requires_the_complete_contract(self) -> None:
-        map_data = current_map()
+        map_data = without_expansion_14()
         map_data["zones"].append({"id": GATE_ID})
         failures = validate_expansion_14_schema(map_data)
         self.assertTrue(any("requires exactly one material_projects" in failure for failure in failures), failures)

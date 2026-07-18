@@ -387,7 +387,7 @@
         "The canonical surface_boat_entry opening at top x=91..98 remains open.",
         "Nine adjacent top cells and the separate ten-cell top-right opening are sealed in global source coordinates.",
         "No crop seal, stitched slice terrain, connector, teleport, or stabilizer-entry metadata is imported.",
-        "Expansion 12/13 records come only from their focused source helpers.",
+        "Expansion 12-14 records come only from their focused source helpers.",
         "Twenty-nine named source-owned cells are opened only where reused gameplay requires its proven clearance.",
         "The full-sketch draft remains unchanged as conversion and provenance evidence."
       ]
@@ -1477,6 +1477,35 @@
       ],
       "terrain_changes": [],
       "intent": "Source-authored wreck return metadata in existing southeast open water."
+    },
+    "expansion_14": {
+      "source": "tools/production_level_01_expansion_14.py",
+      "project_ids": [
+        "current_stabilizer_project"
+      ],
+      "journey_ids": [
+        "upper_left_wreck_relay_route"
+      ],
+      "zone_ids": [
+        "upper_left_wreck_relay_current",
+        "upper_left_wreck_relay_landmark"
+      ],
+      "entity_ids": [
+        "upper_left_wreck_relay_core"
+      ],
+      "survey_target_ids": [
+        "upper_left_wreck_relay_survey"
+      ],
+      "camera_test_ids": [
+        "expansion_14_archive_project_promise",
+        "expansion_14_pre_stabilizer_current",
+        "expansion_14_post_stabilizer_current",
+        "expansion_14_wreck_relay_arrival",
+        "expansion_14_relay_survey",
+        "expansion_14_pending_boat_return"
+      ],
+      "terrain_changes": [],
+      "intent": "Source-authored archive-current return metadata in existing open water."
     },
     "review_artifact": "references/greybox/production_level_01_source_render_collision_review.png"
   },
@@ -4765,6 +4794,32 @@
       "regional_landmark": true,
       "regional_journey_id": "southeast_wreck_archive_route",
       "landmark_label": "Southeast Wreck Archive"
+    },
+    {
+      "id": "upper_left_wreck_relay_current",
+      "type": "marker",
+      "x": 53,
+      "y": 57,
+      "w": 3,
+      "h": 4,
+      "current_gate": true,
+      "current_direction": "left",
+      "current_strength": 3.2,
+      "required_capability_id": "current_stabilizer",
+      "current_gate_label": "Ripping relay current",
+      "current_affordance_role": "relay",
+      "route_context": "upper_left_wreck_relay_route"
+    },
+    {
+      "id": "upper_left_wreck_relay_landmark",
+      "type": "marker",
+      "x": 56,
+      "y": 57,
+      "w": 5,
+      "h": 4,
+      "regional_landmark": true,
+      "regional_journey_id": "upper_left_wreck_relay_route",
+      "landmark_label": "Northwest Wreck Relay"
     }
   ],
   "regional_journeys": [
@@ -4812,6 +4867,22 @@
       "commit_entry_id": "surface_boat_entry",
       "route_context": "southeast_wreck_archive_route",
       "intent": "Use committed sealed-wreck navigation data to reveal one distant cutter and scanner chain across the pressure-protected lower route."
+    },
+    {
+      "id": "upper_left_wreck_relay_route",
+      "route_label": "Northwest wreck relay route",
+      "promise_gate_id": "southeast_wreck_archive_landmark",
+      "entry_gate_ids": [
+        "upper_left_wreck_relay_current"
+      ],
+      "required_capability_id": "current_stabilizer",
+      "required_discovery_id": "southeast_wreck_archive_discovery",
+      "landmark_zone_id": "upper_left_wreck_relay_landmark",
+      "payoff_target_id": "upper_left_wreck_relay_core",
+      "survey_target_id": "upper_left_wreck_relay_survey",
+      "commit_entry_id": "surface_boat_entry",
+      "route_context": "upper_left_wreck_relay_route",
+      "intent": "Turn the archive clue and night-built stabilizer into one return journey."
     }
   ],
   "daily_conditions": [
@@ -5142,6 +5213,28 @@
       "commit_map_path": "res://maps/production_level_01.greybox.json",
       "commit_entry_id": "surface_boat_entry",
       "intent": "Keep the archive finding pending until the canonical boat return."
+    },
+    {
+      "id": "upper_left_wreck_relay_survey",
+      "target_type": "regional",
+      "x": 59,
+      "y": 58,
+      "w": 2,
+      "h": 2,
+      "required_capability_id": "survey_scanner_1",
+      "required_route_id": "upper_left_wreck_relay_route",
+      "route_context": "upper_left_wreck_relay_route",
+      "interaction": "survey",
+      "interaction_seconds": 3.0,
+      "interaction_label": "Survey wreck relay",
+      "clue_label": "Relay signal | Scanner survey available",
+      "finding_label": "Discovery logged: Northwest wreck relay",
+      "next_lead_label": "Next lead: deeper wreck relay still transmitting",
+      "discovery_id": "upper_left_wreck_relay_discovery",
+      "commit_map_id": "production_level_01",
+      "commit_map_path": "res://maps/production_level_01.greybox.json",
+      "commit_entry_id": "surface_boat_entry",
+      "intent": "Keep the relay finding pending until canonical boat return."
     }
   ],
   "material_candidate_pools": [
@@ -5293,6 +5386,18 @@
       "build_phase": "night_debrief",
       "project_label": "Pressure suit project",
       "completion_label": "Pressure suit built"
+    },
+    {
+      "id": "current_stabilizer_project",
+      "required_project_id": "salvage_cutter_project",
+      "required_discovery_id": "southeast_wreck_archive_discovery",
+      "required_materials": {
+        "titanium_scrap": 2,
+        "conductive_coil": 1
+      },
+      "unlocks_capability_id": "current_stabilizer",
+      "target_gate_id": "upper_left_wreck_relay_current",
+      "build_phase": "night_debrief"
     }
   ],
   "background": [
@@ -5350,6 +5455,17 @@
       "regional_landmark": true,
       "regional_journey_id": "southeast_wreck_archive_route",
       "intent": "Distinct non-collision archive silhouette in the far southeast chamber."
+    },
+    {
+      "id": "upper_left_wreck_relay_backdrop",
+      "type": "background",
+      "x": 56,
+      "y": 57,
+      "w": 5,
+      "h": 4,
+      "regional_landmark": true,
+      "regional_journey_id": "upper_left_wreck_relay_route",
+      "intent": "Non-collision silhouette for the isolated relay pocket."
     }
   ],
   "entities": [
@@ -5658,6 +5774,16 @@
       "unlocks_survey_target_id": "southeast_wreck_archive_survey",
       "durable_clearance": true,
       "intent": "Cutter-opened recorder whose clearance exposes the archive survey."
+    },
+    {
+      "id": "upper_left_wreck_relay_core",
+      "type": "salvage",
+      "x": 58,
+      "y": 60,
+      "kind": "relic",
+      "tier": "valuable",
+      "route_context": "upper_left_wreck_relay_route",
+      "intent": "Normal valuable cargo payoff inside the earned relay pocket."
     }
   ],
   "camera_tests": [
@@ -5863,6 +5989,48 @@
       "center_y": 12.0,
       "zoom": 0.55,
       "intent": "Recorder cargo and pending archive finding returning to the boat."
+    },
+    {
+      "id": "expansion_14_archive_project_promise",
+      "center_x": 95.0,
+      "center_y": 12.0,
+      "zoom": 0.55,
+      "intent": "Archive result and Current Stabilizer night-project promise at the boat."
+    },
+    {
+      "id": "expansion_14_pre_stabilizer_current",
+      "center_x": 54.5,
+      "center_y": 59.0,
+      "zoom": 0.72,
+      "intent": "Visible upper-left relay current blocking an unequipped diver."
+    },
+    {
+      "id": "expansion_14_post_stabilizer_current",
+      "center_x": 54.5,
+      "center_y": 59.0,
+      "zoom": 0.72,
+      "intent": "The same current boundary during passive equipped traversal."
+    },
+    {
+      "id": "expansion_14_wreck_relay_arrival",
+      "center_x": 58.5,
+      "center_y": 59.0,
+      "zoom": 0.72,
+      "intent": "Relay landmark, valuable core, survey, and held-cargo context."
+    },
+    {
+      "id": "expansion_14_relay_survey",
+      "center_x": 59.5,
+      "center_y": 59.0,
+      "zoom": 0.78,
+      "intent": "Explicit scanner progress at the Northwest Wreck Relay."
+    },
+    {
+      "id": "expansion_14_pending_boat_return",
+      "center_x": 95.0,
+      "center_y": 12.0,
+      "zoom": 0.55,
+      "intent": "Held relay cargo and pending discovery returning to the canonical boat."
     }
   ],
   "review_questions": [
@@ -5878,6 +6046,10 @@
     "Does committed sealed-wreck navigation data create a broad southeast wreck promise?",
     "Is the archive a distinct destination without changing terrain?",
     "Do cutter clearance and explicit scanner activation read as one chain?",
-    "Does the recorder and pending finding return feel tense but base-tank viable?"
+    "Does the recorder and pending finding return feel tense but base-tank viable?",
+    "Does the archive clearly promise one night-built Current Stabilizer return?",
+    "Does the same visible current read as blocked before and swimmable after ownership?",
+    "Is the Northwest Wreck Relay recognizable without terrain or collision changes?",
+    "Do the valuable core and scanner finding justify the direct return to the boat?"
   ]
 }
