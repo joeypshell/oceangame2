@@ -135,7 +135,7 @@ The oxygen-pressure smoke loads `production_slice_01`, collects one salvage item
 
 The cargo-capacity smoke loads `production_slice_01`, fills the current two-pickup held capacity, confirms held score is not banked before extraction, confirms a third pickup remains available and visibly uncollected while cargo is full, confirms the status says to return to extraction, banks held cargo/score at extraction, then confirms the blocked pickup can be collected after capacity frees up.
 
-The feedback-cue smoke loads `production_slice_01`, triggers pickup, banking, oxygen warning/failure, and hazard warning/contact paths, then reports deterministic audio cue event counts without requiring audio hardware. Use `docs/current/FIRST_FEEDBACK_AUDIO_REVIEW.md` as the focused review artifact.
+The feedback-cue smoke loads `production_slice_01` and protects the complete first-pickup lifecycle without requiring audio hardware. It verifies locked-Web handling without stale replay, first and later material/salvage pickup events across two sorties, one bank cue per offload, cargo-full silence, canceled timed/pry silence, oxygen and hazard cues, exact event counts, and cue priority ownership. Pair it with `python tools/check_feedback_audio_assets.py` for deterministic WAV validation and use `docs/current/FIRST_FEEDBACK_AUDIO_REVIEW.md` as the focused review artifact.
 
 The salvage-feedback smoke loads `production_slice_01`, collects one common pickup and one valuable pickup in separate reset runs, and confirms the status text reports the correct tier and score for each pickup.
 

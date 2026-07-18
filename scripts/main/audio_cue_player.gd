@@ -152,6 +152,10 @@ func has_cue(cue_id: String) -> bool:
 	return not _playback_available or _streams.has(cue_id)
 
 
+func priority_for(cue_id: String) -> String:
+	return str(CUE_PRIORITIES.get(cue_id, "normal"))
+
+
 func event_log() -> Array[Dictionary]:
 	return _event_log.duplicate(true)
 
