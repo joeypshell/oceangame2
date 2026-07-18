@@ -110,7 +110,7 @@ func _run() -> void:
 	hud_report = hud.get_test_report()
 	var compact_rect: Rect2 = hud_report.get("rect", Rect2())
 	_expect(bool(hud_report.get("compact", false)) and str(hud_report.get("prompt", "")).is_empty(), "mobile HUD did not use its compact button-backed state")
-	_expect(compact_rect.position.x >= 312.0 and compact_rect.end.x <= 410.0 and compact_rect.end.y <= 104.0, "mobile HUD left its safe upper gap: %s" % compact_rect)
+	_expect(compact_rect.position.x >= 312.0 and compact_rect.end.x <= 410.0 and compact_rect.position.y >= 88.0, "mobile HUD left its safe cargo-adjacent column: %s" % compact_rect)
 	hud.queue_free()
 
 	controls.queue_free()
