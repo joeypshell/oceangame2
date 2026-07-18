@@ -34,31 +34,34 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`
 - `docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md`
 - `docs/current/OCEANGAME_EXPANSION_14_PLAN.md`
+- `docs/current/OCEANGAME_EXPANSION_14_SOURCE_STATE_CONTRACT.md`
+- `docs/current/OCEANGAME_EXPANSION_14_VISUAL_BASELINE_DECISION.md`
+- `docs/current/OCEANGAME_EXPANSION_14_WEB_PREVIEW_VERIFICATION.md`
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-13 are complete with player GO. Expansion 13 closed after #1000-#1009 and bounded audio interlude #1020-#1023 were reviewed at exact runtime `ede39d1`. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
+Simple Diver Game 01-09 and OceanGame Expansions 01-13 are complete with player GO. Expansion 14 is technically complete through #1039 and exact-SHA Web candidate `739ffd5`; #1040 remains open for the owner GO/HOLD decision. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
-Planning issue #1029 selects **Expansion 14: Archive Current Return** as the next bounded direction. It turns the southeast archive discovery into the existing Ti2/Coil1 stabilizer project, one continuous upper-left current return, a wreck-relay payoff, and a small held-cargo strip. No Expansion 14 GitHub milestone or implementation issues exist yet.
+**Expansion 14: Archive Current Return** turns the southeast archive discovery into the existing Ti2/Coil1 stabilizer project, one continuous upper-left current return, a wreck-relay payoff, and a small held-cargo strip. Milestone #40 is 9/10 complete; technical evidence is green and only the owner gate remains.
 
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
-- Committed: the Expansion 14 planning contract is selected; the next audit may create its single bounded implementation milestone and issue batch.
-- Proposed: Archive Current Return must preserve the existing loop and pass its owner GO/HOLD gate before any later expansion is selected.
+- Committed: finish the Expansion 14 owner GO/HOLD gate in #1040 without prejudging player experience.
+- Proposed: no later expansion is selected; a HOLD may create only one bounded correction batch.
 - Directional: pure oxygen-capacity progression, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-There is no open implementation milestone. The next audit may create Expansion 14 from `docs/current/OCEANGAME_EXPANSION_14_PLAN.md`.
+Milestone #40 is the only open implementation milestone. Issues #1031-#1039 are closed; #1040 remains open for owner review.
 
-1. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - complete with owner GO after corrections #980/#982-#990, #1000-#1009, and audio interlude #1020-#1023; exact reviewed runtime `ede39d1`.
-2. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - complete through #941 plus corrections #951-#953, with player GO and exact-SHA Web verification.
-3. [Expansion 11: Deep-Harmonic Light Return](https://github.com/joeypshell/oceangame2/milestone/37) - complete through #914 plus corrections #925/#927, with player GO and final exact-SHA Web verification.
+1. [Expansion 14: Archive Current Return](https://github.com/joeypshell/oceangame2/milestone/40) - 9/10 complete; technical PASS at public candidate `739ffd5`, awaiting owner gate #1040.
+2. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - complete with owner GO after corrections #980/#982-#990, #1000-#1009, and audio interlude #1020-#1023; exact reviewed runtime `ede39d1`.
+3. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - complete through #941 plus corrections #951-#953, with player GO and exact-SHA Web verification.
 
 ## Completed Expansion 04
 
@@ -100,12 +103,16 @@ There is no open implementation milestone. The next audit may create Expansion 1
 
 #960-#968 delivered the original southeast wreck journey at `a9d1431`; #980/#982-#990 corrected its scanner-to-cutter discovery chain at `89371d6`. A second owner HOLD identified automatic cutter use, unclear rubber/coil visuals, a sealed-wreck payoff that ended at ordinary `+300` value, a silent first pickup, and indistinct cues. #1000-#1009 completed the active-tool/material/reward correction, and #1020-#1023 completed the bounded audio correction. The owner reviewed exact runtime `ede39d1`, reported the corrected experience was fine, and gave GO through #969.
 
+## Active Expansion 14
+
+#1031-#1039 lock, implement, validate, capture, accept, and deploy the archive-led Current Stabilizer return. The current remains a passive boundary in contiguous geography; the relay core uses existing cargo/failure/banking owners; the explicit scanner finding commits only at the canonical boat; and the held-cargo strip remains separate from active tools. Automation establishes technical PASS only. #1040 and milestone #40 stay open until the owner reports GO or HOLD.
+
 ## Roadmap Rules
 
 - Do not reopen completed expansion batches merely to keep the queue full.
-- Create only the Expansion 14 milestone and frozen issue batch at the next direction audit; do not begin a later expansion in the same run.
+- Do not select or begin Expansion 15 while #1040 is open.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
-- Do not use teleports, prompted connectors, or map menus for normal traversal. Expansion 14 may use one source-authored stabilizer current as a regional capability boundary inside the continuous full level, never as its entry requirement or a transition mechanism.
+- Do not use teleports, prompted connectors, or map menus for normal traversal. Expansion 14 uses one source-authored stabilizer current as a regional capability boundary inside the continuous full level, never as its entry requirement or a transition mechanism.
 - Preserve source-authored maps, reachability, parity, focused captures, and public Web verification in every milestone.
 - Keep #52/#53 deferred optional slice-03 polish unless slice-03 presentation becomes the selected goal.
