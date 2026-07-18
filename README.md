@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-12 are complete with player GO. Expansion 13 remains at owner HOLD, but correction issues #1000-#1009 are technically complete and deployed at exact runtime `86ba106`: tools now use one deliberate control model, named material sprites are readable, and sealed-wreck navigation data commits at the boat. Player gate #969 remains open inside milestone #39. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
+The compact diver foundation and OceanGame Expansions 01-12 are complete with player GO. Expansion 13 remains at owner HOLD, but correction issues #1000-#1009 plus bounded audio interlude #1020-#1023 are technically complete and deployed at exact runtime `ede39d1`: tools use one deliberate control model, named material sprites are readable, sealed-wreck navigation data commits at the boat, first material pickup has a dedicated cue event, and semantic cues are individually generated. Player gate #969 remains open inside milestone #39. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Current handoff is owner replay #969 against the technically verified Expansion 13 correction at `86ba106`. Test deliberate active-tool use, material readability, and the progression-bearing sealed-wreck reward before recording GO/HOLD. A broad credits economy, Expansion 14, teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
+Current handoff is owner replay #969 against technically verified runtime `ede39d1`. Test first-pickup and cue distinction alongside deliberate active-tool use, material readability, and the progression-bearing sealed-wreck reward before recording GO/HOLD. A broad credits economy, Expansion 14, teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
 
 Core sources and operating docs:
 
@@ -121,6 +121,7 @@ Current release and expansion handoff:
 - [Expansion 13 Owner-HOLD Correction Plan](docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md)
 - [Active Tool And Wreck Reward Contract](docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md)
 - [Expansion 13 Owner-HOLD Correction Visual And Web Verification](docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md)
+- [Feedback Audio Correction Technical Review And Web Verification](docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -254,4 +255,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-12 meet that condition through the player-approved full cave, regional, light, and pressure returns. Expansion 13 is technically complete through #1000-#1009 but does not meet the player-experience condition until #969 records the owner replay.
+The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-12 meet that condition through the player-approved full cave, regional, light, and pressure returns. Expansion 13 is technically complete through #1000-#1009 and audio interlude #1020-#1023 but does not meet the player-experience condition until #969 records the owner replay.
