@@ -13,9 +13,23 @@ func _smoke_feedback_cues_and_quit() -> void:
 	_player.set_physics_process(false)
 
 	var salvage := _first_instant_salvage()
+	var material := _first_active_material()
 	var hazard := _first_static_hazard()
-	if salvage.is_empty() or hazard.is_empty():
-		_fail("Feedback cue smoke requires one instant salvage target and one static hazard.")
+	if salvage.is_empty() or material.is_empty() or hazard.is_empty():
+		_fail("Feedback cue smoke requires one material, one instant salvage target, and one static hazard.")
+		return
+
+	var material_id := str(material.get("id", "material"))
+	_player.global_position = material["center"]
+	_process(0.0)
+	if _main._material_runtime.held_count() != 1:
+		_fail("Feedback cue smoke could not collect setup material %s." % material_id)
+		return
+
+	_player.global_position = _world.get_extraction_center()
+	_process(0.0)
+	if _main._material_runtime.held_count() != 0:
+		_fail("Feedback cue smoke could not bank setup material %s." % material_id)
 		return
 
 	var salvage_id := str(salvage.get("id", "salvage"))
@@ -66,6 +80,7 @@ func _smoke_feedback_cues_and_quit() -> void:
 
 	var counts := _cue_counts()
 	var required := [
+		"material_pickup",
 		"salvage_pickup",
 		"salvage_bank",
 		"oxygen_low",
@@ -79,7 +94,8 @@ func _smoke_feedback_cues_and_quit() -> void:
 			_fail("Feedback cue smoke missing cue %s; counts=%s." % [cue_id, counts])
 			return
 
-	print("Feedback cue smoke passed: target=%s hazard=%s cue_counts=%s." % [
+	print("Feedback cue smoke passed: material=%s target=%s hazard=%s cue_counts=%s." % [
+		material_id,
 		salvage_id,
 		str(warning_hazard.get("id", "hazard")),
 		counts,
@@ -101,6 +117,14 @@ func _first_instant_salvage() -> Dictionary:
 	for salvage in _world.get_salvage_centers():
 		if str(salvage.get("interaction", "instant")) == "instant":
 			return salvage
+	return {}
+
+
+func _first_active_material() -> Dictionary:
+	var active_ids: Array = _world.get_material_candidate_report().get("active_ids", [])
+	for candidate in _world.get_material_candidates():
+		if active_ids.has(str(candidate.get("id", ""))):
+			return candidate
 	return {}
 
 
