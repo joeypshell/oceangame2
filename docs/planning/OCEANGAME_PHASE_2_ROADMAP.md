@@ -2,10 +2,9 @@
 
 Date: 2026-07-17
 
-Status: Expansions 01-12 are complete with player GO. Expansion 13 is at HOLD
-after review of exact-SHA runtime `a9d1431`; #980 plans a bounded correction for
-scanner physicality, cutter-blueprint causality, and forward drive before #969
-can close. No next expansion is selected.
+Status: Expansions 01-13 are complete with player GO. Expansion 13 closed after
+two bounded HOLD corrections and owner review of exact-SHA runtime `ede39d1`.
+No next expansion is selected by that closeout.
 
 ## Decision
 
@@ -93,12 +92,14 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 13 player-HOLD correction under #980 and final player gate #969.
+No active implementation milestone. Run a separate direction audit before
+selecting the next bounded expansion.
 
 ### Proposed
 
-The bounded scanner/artifact/progression correction defined by #980. Do not
-select Expansion 14 while #969 remains open.
+Evaluate the next player-facing promise against the north star before creating
+a milestone or issue batch. Do not default to a broad economy or production HUD
+replacement merely to keep the queue full.
 
 ### Directional
 
@@ -345,9 +346,11 @@ learned to reach, with a payoff worth carrying back to the boat?
 
 ### Expansion 13: Southeast Wreck Return
 
-Status: Player HOLD. #960-#968 remain technical evidence at exact runtime
-`a9d1431`; #980 owns the correction plan and #969 remains open. See
-`docs/current/OCEANGAME_EXPANSION_13_PLAYER_HOLD_CORRECTION_PLAN.md`.
+Status: Complete with player GO. #960-#968 delivered the original journey;
+#980/#982-#990 and #1000-#1009 resolved two bounded HOLD reviews; #1020-#1023
+resolved the audio interlude. The owner reviewed exact runtime `ede39d1` and
+reported the corrected experience was fine. See
+`docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`.
 
 Goal: turn the empty farthest southeast chamber into one memorable wreck
 journey that pays off the existing pressure suit, cutter, and scanner while
@@ -371,7 +374,7 @@ rebalance, enemy, vehicle, inventory, or broad art pass.
 Exit question: did the distant wreck turn prior upgrades and the far southeast
 route into a tense, memorable expedition whose discovery felt worth bringing
 back to the boat?
-**HOLD recorded at #969; the earlier GO record was withdrawn.**
+**GO recorded at #969 after the bounded corrections and exact-runtime owner replay.**
 
 ## Original OceanGame Convergence
 

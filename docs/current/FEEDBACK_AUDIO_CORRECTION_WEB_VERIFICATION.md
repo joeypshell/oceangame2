@@ -8,8 +8,8 @@ Runtime candidate: `ede39d1b2d8ceec2b446df3f385ad06519481016`
 
 ## Result
 
-**Technical PASS. Expansion 13 remains at owner HOLD until #969 records the
-player replay.**
+**Technical PASS. Player GO was later recorded in #969 after owner review of
+this exact candidate.**
 
 The bounded #1020-#1023 interlude fixes the previously silent first material
 pickup path, gives the existing semantic events individually generated cue
@@ -98,19 +98,12 @@ The public checker independently verified deployed runtime `ede39d1`:
 
 Chromium emitted only allowed WebGL `ReadPixels` performance warnings.
 
-## Owner Replay
+## Player Gate Outcome
 
-#969 and milestone #39 remain open. On the fresh URL, confirm:
-
-1. The first collected cargo item on a fresh page/sortie is audible.
-2. Banking has a distinct payoff cue, and the first pickup after leaving for a
-   second sortie is audible again.
-3. Material, valuable salvage, oxygen pressure, danger warning, damage/contact,
-   and banking are distinguishable during play.
-4. The existing active-tool and sealed-wreck replay still feels deliberate,
-   clear, and worth completing.
-
-Reply with GO or a concrete HOLD finding. Do not select Expansion 14 first.
+The owner later reviewed this exact fresh runtime, reported the corrected
+experience was fine, and gave GO through #969. The final decision and full HOLD
+history are recorded in `OCEANGAME_EXPANSION_13_CLOSEOUT.md`; this document
+remains the exact technical audio and Web evidence.
 
 ## Verification
 

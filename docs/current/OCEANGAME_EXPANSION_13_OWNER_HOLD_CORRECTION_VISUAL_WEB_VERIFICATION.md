@@ -8,8 +8,8 @@ Runtime candidate: `86ba106eff4c703d9b0d5e4ac6f93735af49857e`
 
 ## Result
 
-**Technical PASS. Expansion 13 remains at owner HOLD until #969 records the
-player replay.**
+**Technical PASS. Player GO was later recorded in #969 after the bounded audio
+interlude and owner review of the final exact runtime.**
 
 Issues #1000-#1009 now provide deliberate shared tool use, compact desktop and
 mobile tool presentation, named material sprites, a separate +300 sealed-wreck
@@ -73,22 +73,13 @@ overlap them, and the expected aspect-preserving side bars remain inside the
 canvas. Chromium emitted only allowed software-WebGL fallback and `ReadPixels`
 performance warnings.
 
-## Owner Replay
+## Player Gate Outcome
 
-#969 and milestone #39 remain open. Use the fresh owner-review URL and check:
-
-1. Rubber and coil are recognizable without relying on their old generic art.
-2. `Tab`/`TOOL` cycles scanner, cutter, and shock prod in a predictable order.
-3. `Q`/`USE` activates only the selected tool; cutter proximity alone does not
-   progress, and a wrong tool gives useful selection guidance.
-4. Opening the sealed wreck grants valuable salvage and pending navigation
-   data as separate outcomes.
-5. Returning to the canonical boat commits that data and reveals the broad
-   southeast lead.
-6. The corrected journey provides enough clarity and payoff for GO; otherwise
-   record a concrete HOLD finding on #969.
-
-Do not select Expansion 14 until that owner decision is recorded.
+The owner later reviewed final exact runtime `ede39d1`, which includes this
+accepted visual correction plus the bounded audio interlude, reported the
+corrected experience was fine, and gave GO through #969. The final decision is
+recorded in `OCEANGAME_EXPANSION_13_CLOSEOUT.md`; this document remains the
+exact visual-baseline and Web evidence for runtime `86ba106`.
 
 ## Verification
 

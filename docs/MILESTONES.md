@@ -36,7 +36,7 @@ This is the compact milestone index. Detailed direction lives in:
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-12 are complete. Expansion 13 remains at owner HOLD in open milestone #39, while #1000-#1009 and bounded audio interlude #1020-#1023 are technically complete at exact runtime `ede39d1`. Only owner replay #969 remains. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
+Simple Diver Game 01-09 and OceanGame Expansions 01-13 are complete with player GO. Expansion 13 closed after #1000-#1009 and bounded audio interlude #1020-#1023 were reviewed at exact runtime `ede39d1`. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
@@ -44,14 +44,14 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: complete Expansion 13 owner replay #969 against exact runtime `ede39d1`.
-- Proposed: no next milestone or broad economy until the owner replay records GO/HOLD.
+- Committed: no active implementation milestone; run a separate direction audit before selecting the next bounded expansion.
+- Proposed: preserve the existing loop and evaluate the next player-facing promise before creating another issue batch.
 - Directional: pure oxygen-capacity progression, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-1. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - owner-HOLD correction #1000-#1009 and audio interlude #1020-#1023 are technically complete at `ede39d1`; #969 remains the final replay gate.
+1. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - complete with owner GO after corrections #980/#982-#990, #1000-#1009, and audio interlude #1020-#1023; exact reviewed runtime `ede39d1`.
 2. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - complete through #941 plus corrections #951-#953, with player GO and exact-SHA Web verification.
 3. [Expansion 11: Deep-Harmonic Light Return](https://github.com/joeypshell/oceangame2/milestone/37) - complete through #914 plus corrections #925/#927, with player GO and final exact-SHA Web verification.
 
@@ -91,14 +91,14 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 #932-#941 plus player-HOLD corrections #951-#953 are complete with GO. The deep-harmonic clue now leads to a durable Ti2/Rubber1/Gel1 night-built pressure suit, one scoutable pressure threshold, and one protected abyssal survey with canonical-boat commitment. Surveys require explicit `Q/SCAN`, work at full cargo, and explain pending boat return. Final exact-SHA Web verification passed at `d864a9e`.
 
-## Expansion 13 Player HOLD
+## Completed Expansion 13
 
-#960-#968 delivered the original southeast wreck journey at `a9d1431`; #980 and #986-#990 corrected its scanner-to-cutter discovery chain at `89371d6`. The owner replay then found automatic cutter use, unclear rubber/coil visuals, a sealed-wreck payoff that ended at ordinary `+300` value, a silent first pickup, and indistinct cues. #1000-#1009 complete the active-tool/material/reward correction; #1020-#1023 technically complete the bounded audio correction at `ede39d1`. #969 remains open for the owner replay; automation cannot declare GO.
+#960-#968 delivered the original southeast wreck journey at `a9d1431`; #980/#982-#990 corrected its scanner-to-cutter discovery chain at `89371d6`. A second owner HOLD identified automatic cutter use, unclear rubber/coil visuals, a sealed-wreck payoff that ended at ordinary `+300` value, a silent first pickup, and indistinct cues. #1000-#1009 completed the active-tool/material/reward correction, and #1020-#1023 completed the bounded audio correction. The owner reviewed exact runtime `ede39d1`, reported the corrected experience was fine, and gave GO through #969.
 
 ## Roadmap Rules
 
 - Do not reopen completed expansion batches merely to keep the queue full.
-- Complete #969's owner GO/HOLD replay before selecting another milestone.
+- Select the next milestone only through a separate roadmap/direction evaluation after the Expansion 13 closeout.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
 - Do not use teleports, prompted connectors, map menus, or the current stabilizer for normal traversal of the full level.
