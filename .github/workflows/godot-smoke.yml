@@ -327,10 +327,9 @@ jobs:
             echo "Godot reported errors during Expansion 12 pressure-return smoke check."
             exit 1
           fi
-
-      - name: Run Expansion 13 journey smoke checks
+      - name: Run Expansion 13-14 journey smoke checks
         run: |
-          run_expansion_13_smoke() {
+          run_expansion_smoke() {
             label="$1"
             timeout_seconds="$2"
             shift 2
@@ -347,19 +346,20 @@ jobs:
               exit 1
             fi
           }
-          run_expansion_13_smoke expansion-13-southeast-wreck-return 300 --smoke-expansion-13-southeast-wreck-return
-          run_expansion_13_smoke expansion-13-scanner-cutter-correction 120 --smoke-expansion-13-scanner-cutter-correction
-          run_expansion_13_smoke active-tool-selection 60 --smoke-active-tool-selection
-          run_expansion_13_smoke cutter-salvage-state 60 --script res://scripts/main/smoke/smoke_cutter_salvage_state.gd
-          run_expansion_13_smoke sealed-wreck-reward-state 60 --script res://scripts/main/smoke/smoke_sealed_wreck_reward_state.gd
-
+          run_expansion_smoke expansion-13-southeast-wreck-return 300 --smoke-expansion-13-southeast-wreck-return
+          run_expansion_smoke expansion-13-scanner-cutter-correction 120 --smoke-expansion-13-scanner-cutter-correction
+          run_expansion_smoke active-tool-selection 60 --smoke-active-tool-selection
+          run_expansion_smoke cutter-salvage-state 60 --script res://scripts/main/smoke/smoke_cutter_salvage_state.gd
+          run_expansion_smoke sealed-wreck-reward-state 60 --script res://scripts/main/smoke/smoke_sealed_wreck_reward_state.gd
+          run_expansion_smoke expansion-14-archive-current-return 60 --smoke-expansion-14-archive-current-return
+          run_expansion_smoke expansion-14-runtime-owners 60 --script res://scripts/main/smoke/smoke_expansion_14_runtime_owners.gd
+          run_expansion_smoke held-cargo-hud 60 --script res://scripts/main/smoke/smoke_held_cargo_hud.gd
       - name: Measure promoted full-level default startup and camera bounds
         run: |
           set +e
           godot --headless --path . --measure-map-runtime 2>&1 | tee godot-full-level-runtime.log
           godot_status=${PIPESTATUS[0]}
           set -e
-
           if [ "${godot_status}" -ne 0 ]; then
             exit "${godot_status}"
           fi
