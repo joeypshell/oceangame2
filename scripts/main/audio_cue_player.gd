@@ -8,7 +8,7 @@ const HIGH_COOLDOWN_SECONDS := 0.12
 
 const CUE_PATHS := {
 	"salvage_pickup": "res://assets/audio/cues/salvage_pickup.wav",
-	"material_pickup": "res://assets/audio/cues/salvage_pickup.wav",
+	"material_pickup": "res://assets/audio/cues/material_pickup.wav",
 	"salvage_bank": "res://assets/audio/cues/salvage_bank.wav",
 	"oxygen_low": "res://assets/audio/cues/oxygen_low.wav",
 	"oxygen_critical": "res://assets/audio/cues/oxygen_critical.wav",
