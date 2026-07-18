@@ -2,6 +2,7 @@ extends RefCounted
 
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+const RELAY_CURRENT_GATE_ID := "upper_left_wreck_relay_current"
 
 var _profile
 var _projects: Array[Dictionary] = []
@@ -194,7 +195,10 @@ func project_definition_for(project_id: String) -> Dictionary:
 
 
 func request_project(project_id: String) -> bool:
-	if _project_by_id(project_id).is_empty():
+	var project := _project_by_id(project_id)
+	if project.is_empty():
+		return false
+	if _is_canonical_stabilizer_project(project) and (_profile == null or not _profile.has_completed_discovery(ExpansionProfileState.SOUTHEAST_WRECK_DISCOVERY_ID)):
 		return false
 	_requested_project_id = project_id
 	return true
@@ -281,8 +285,14 @@ func _next_incomplete_project_through(target_project_id: String) -> Dictionary:
 
 func _is_project_visible(project: Dictionary) -> bool:
 	var project_id := str(project.get("id", ""))
-	if project_id in [ExpansionProfileState.SHOCK_PROD_PROJECT_ID, ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID]:
+	if project_id == ExpansionProfileState.SHOCK_PROD_PROJECT_ID:
 		return project_id == _requested_project_id
+	if project_id == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID:
+		return (
+			_profile != null and _profile.has_completed_discovery(ExpansionProfileState.SOUTHEAST_WRECK_DISCOVERY_ID)
+			if _is_canonical_stabilizer_project(project)
+			else project_id == _requested_project_id
+		)
 	var project_status := _status_for(project)
 	if project_status == "prerequisite_required":
 		return false
@@ -293,6 +303,14 @@ func _is_project_visible(project: Dictionary) -> bool:
 	return (
 		project_id == ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID
 		and str(project.get("required_discovery_id", "")) == ExpansionProfileState.ANOMALY_DISCOVERY_ID
+	)
+
+
+func _is_canonical_stabilizer_project(project: Dictionary) -> bool:
+	return (
+		str(project.get("id", "")) == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID
+		and str(project.get("required_discovery_id", "")) == ExpansionProfileState.SOUTHEAST_WRECK_DISCOVERY_ID
+		and str(project.get("target_gate_id", "")) == RELAY_CURRENT_GATE_ID
 	)
 
 
@@ -430,6 +448,9 @@ func _project_effect_lines(project: Dictionary) -> Array[String]:
 			return ["Effect: hit during WARNING/LUNGE to force RECOVERY | damage stays 1"]
 		ExpansionProfileState.DIVE_LIGHT_PROJECT_ID:
 			return ["Effect: improved visibility in dark water"]
+		ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID:
+			if str(project.get("target_gate_id", "")) == RELAY_CURRENT_GATE_ID:
+				return ["Access: Northwest wreck relay | Swim through current"]
 	return []
 
 

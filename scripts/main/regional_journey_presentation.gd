@@ -4,6 +4,10 @@ const SOUTHEAST_WRECK_SURVEY_ID := "southeast_wreck_archive_survey"
 const SOUTHEAST_WRECK_DISCOVERY_ID := "southeast_wreck_archive_discovery"
 const SOUTHEAST_WRECK_PENDING := "Wreck archive charted | Return to surface boat"
 const SOUTHEAST_WRECK_SCAN_PROMPT := "Archive exposed | Q/SCAN: Survey wreck archive"
+const WRECK_RELAY_SURVEY_ID := "upper_left_wreck_relay_survey"
+const WRECK_RELAY_DISCOVERY_ID := "upper_left_wreck_relay_discovery"
+const WRECK_RELAY_PENDING := "Wreck relay charted | Return to surface boat"
+const WRECK_RELAY_SCAN_PROMPT := "Relay signal | Q/SCAN: Survey wreck relay"
 
 
 func promise_text(world, profile) -> String:
@@ -27,25 +31,39 @@ func promise_text(world, profile) -> String:
 
 
 func nearby_scan_text(target: Dictionary) -> String:
-	return SOUTHEAST_WRECK_SCAN_PROMPT if _is_wreck_target(target) else ""
+	if _is_wreck_target(target):
+		return SOUTHEAST_WRECK_SCAN_PROMPT
+	return WRECK_RELAY_SCAN_PROMPT if _is_relay_target(target) else ""
 
 
 func survey_complete_note(target: Dictionary) -> String:
-	return SOUTHEAST_WRECK_PENDING if _is_wreck_target(target) else ""
+	if _is_wreck_target(target):
+		return SOUTHEAST_WRECK_PENDING
+	return WRECK_RELAY_PENDING if _is_relay_target(target) else ""
 
 
 func pending_return_text(metadata: Dictionary) -> String:
-	return SOUTHEAST_WRECK_PENDING if str(metadata.get("finding_label", "")).find("Southeast wreck archive") != -1 else ""
+	var finding_label := str(metadata.get("finding_label", ""))
+	if finding_label.find("Southeast wreck archive") != -1:
+		return SOUTHEAST_WRECK_PENDING
+	return WRECK_RELAY_PENDING if finding_label.find("Northwest wreck relay") != -1 else ""
 
 
 func is_feedback_note(status_note: String) -> bool:
-	return status_note.begins_with("Wreck") or status_note.begins_with("Archive")
+	return status_note.begins_with("Wreck") or status_note.begins_with("Archive") or status_note.begins_with("Relay")
 
 
 func _is_wreck_target(target: Dictionary) -> bool:
 	return (
 		str(target.get("id", "")) == SOUTHEAST_WRECK_SURVEY_ID
 		or str(target.get("discovery_id", "")) == SOUTHEAST_WRECK_DISCOVERY_ID
+	)
+
+
+func _is_relay_target(target: Dictionary) -> bool:
+	return (
+		str(target.get("id", "")) == WRECK_RELAY_SURVEY_ID
+		or str(target.get("discovery_id", "")) == WRECK_RELAY_DISCOVERY_ID
 	)
 
 

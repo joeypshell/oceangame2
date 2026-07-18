@@ -8,7 +8,8 @@ const DEEP_HARMONIC_DISCOVERY_ID := "signal_reef_deep_harmonic_discovery"
 const ABYSSAL_HARMONIC_DISCOVERY_ID := "abyssal_basin_harmonic_source_discovery"
 const SOUTHEAST_WRECK_DISCOVERY_ID := "southeast_wreck_archive_discovery"
 const SOUTHEAST_WRECK_NAVIGATION_DATA_ID := "southeast_wreck_navigation_data"
-const SUPPORTED_DISCOVERY_IDS := {ANOMALY_DISCOVERY_ID: true, SALVAGE_CUTTER_BLUEPRINT_ID: true, MINERAL_TRACE_RESEARCH_ID: true, SIGNAL_REEF_DISCOVERY_ID: true, DEEP_HARMONIC_DISCOVERY_ID: true, ABYSSAL_HARMONIC_DISCOVERY_ID: true, SOUTHEAST_WRECK_DISCOVERY_ID: true, SOUTHEAST_WRECK_NAVIGATION_DATA_ID: true}
+const UPPER_LEFT_WRECK_RELAY_DISCOVERY_ID := "upper_left_wreck_relay_discovery"
+const SUPPORTED_DISCOVERY_IDS := {ANOMALY_DISCOVERY_ID: true, SALVAGE_CUTTER_BLUEPRINT_ID: true, MINERAL_TRACE_RESEARCH_ID: true, SIGNAL_REEF_DISCOVERY_ID: true, DEEP_HARMONIC_DISCOVERY_ID: true, ABYSSAL_HARMONIC_DISCOVERY_ID: true, SOUTHEAST_WRECK_DISCOVERY_ID: true, SOUTHEAST_WRECK_NAVIGATION_DATA_ID: true, UPPER_LEFT_WRECK_RELAY_DISCOVERY_ID: true}
 const METADATA_FIELDS := ["target_type", "pending_label", "finding_label", "next_lead_label", "required_pressure_capability_id", "scan_subject_id", "scan_reward_kind", "scan_reward_id"]
 
 var _pending := {}
