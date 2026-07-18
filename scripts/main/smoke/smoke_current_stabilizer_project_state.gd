@@ -3,6 +3,7 @@ extends SceneTree
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+const ExpansionProfileProjectRules := preload("res://scripts/main/expansion_profile_project_rules.gd")
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
 const TEST_PATH := "user://oceangame2_current_stabilizer_project_test.json"
 const SLICE_01 := "res://maps/production_slice_01.greybox.json"
@@ -16,6 +17,7 @@ func _init() -> void:
 
 func _run() -> void:
 	_cleanup_profile()
+	_test_source_rule_pairs()
 	_test_invalid_schema_v3_profiles()
 	_write_profile(_schema_v2_cutter_profile())
 	var profile := ExpansionProfileState.new(TEST_PATH)
@@ -102,6 +104,33 @@ func _run() -> void:
 		return
 	print("Current stabilizer project state smoke passed: schema=v2_to_v4 selection=status_aware mandatory=fins>scanner>cutter>shock_prod>capacitor optional_last=current_stabilizer migrated_fins=Ti2+Rubber1 scanner=Ti1+Coil1 prerequisite=true recipe=2_titanium+1_coil night_only=true exact_once=true profile_reload=true.")
 	quit(0)
+
+
+func _test_source_rule_pairs() -> void:
+	var base := {
+		"id": ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID,
+		"required_project_id": ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID,
+		"required_materials": {
+			ExpansionProfileState.TITANIUM_MATERIAL_ID: 2,
+			ExpansionProfileState.COIL_MATERIAL_ID: 1,
+		},
+		"unlocks_capability_id": ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID,
+		"build_phase": "night_debrief",
+	}
+	var canonical := base.merged({
+		"required_discovery_id": ExpansionProfileState.SOUTHEAST_WRECK_DISCOVERY_ID,
+		"target_gate_id": "upper_left_wreck_relay_current",
+	})
+	var legacy := base.merged({
+		"required_discovery_id": ExpansionProfileState.ANOMALY_DISCOVERY_ID,
+		"target_gate_id": ExpansionProfileState.CURRENT_STABILIZER_GATE_ID,
+	})
+	_expect(ExpansionProfileProjectRules.validate_definition(canonical).is_empty(), "canonical archive/stabilizer rule pair was rejected")
+	_expect(ExpansionProfileProjectRules.validate_definition(legacy).is_empty(), "legacy anomaly/stabilizer rule pair was rejected")
+	canonical["target_gate_id"] = ExpansionProfileState.CURRENT_STABILIZER_GATE_ID
+	legacy["target_gate_id"] = "upper_left_wreck_relay_current"
+	_expect("unsupported project discovery/target pairing" in ExpansionProfileProjectRules.validate_definition(canonical), "mixed canonical discovery/legacy gate pair was accepted")
+	_expect("unsupported project discovery/target pairing" in ExpansionProfileProjectRules.validate_definition(legacy), "mixed legacy discovery/canonical gate pair was accepted")
 
 
 func _test_invalid_schema_v3_profiles() -> void:

@@ -24,6 +24,7 @@ from material_source_contract import (
     SUPPORTED_PROJECTS,
     SUPPORTED_STRATEGIES,
     TOOL_FIELDS,
+    project_rule_for_map,
 )
 from validate_research_sources import validate_research_source_schema
 from validate_tool_target_rewards import validate_tool_target_reward_schema
@@ -260,7 +261,6 @@ def _validate_projects(
             seen_ids.add(project_id)
             projects[project_id] = project
             project_order.append(project_id)
-
     for index, project in enumerate(raw_projects):
         if not isinstance(project, dict):
             continue
@@ -285,14 +285,15 @@ def _validate_projects(
                 if not isinstance(value, str) or not DISPLAY_LABEL_PATTERN.match(value):
                     failures.append(f"{label} {label_field} must be short display-safe text.")
 
-        rules = PROJECT_RULES.get(str(project_id))
+        raw_rules = PROJECT_RULES.get(str(project_id), {})
+        primary_discovery_present = any(
+            target.get("scan_reward_id") == raw_rules.get("required_discovery_id") for target in survey_targets.values()
+        )
+        rules = project_rule_for_map(str(project_id), str(map_data.get("id", "")), primary_discovery_present)
+        if rules is not None and rules.get("unsupported_map_id") is not None:
+            failures.append(f"{label} is not supported on map {rules['unsupported_map_id']!r}.")
         if rules is not None:
             expected_discovery = rules.get("required_discovery_id")
-            legacy_discovery = rules.get("legacy_required_discovery_id")
-            if legacy_discovery is not None and not any(
-                target.get("scan_reward_id") == expected_discovery for target in survey_targets.values()
-            ):
-                expected_discovery = legacy_discovery
             authored_discovery = project.get("required_discovery_id")
             if expected_discovery is None:
                 if "required_discovery_id" in project:
@@ -336,6 +337,8 @@ def _validate_projects(
             failures.extend(_validate_id(target_id, label, target_field))
             if rules is not None and target_field != rules["target_field"]:
                 failures.append(f"{label} must use {rules['target_field']}.")
+            if rules is not None and rules.get("target_id") and target_id != rules["target_id"]:
+                failures.append(f"{label} {target_field} must be {rules['target_id']!r}.")
             if target_field == "target_id" and isinstance(target_id, str):
                 referenced_targets.add(target_id)
                 if rules is not None and rules.get("target_collection") == "survey_targets":
