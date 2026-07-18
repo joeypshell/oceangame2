@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-13 are complete with player GO. Expansion 13 closed after two bounded HOLD corrections and the audio interlude #1020-#1023. At exact reviewed runtime `ede39d1`, tools use one deliberate control model, named material sprites are readable, sealed-wreck navigation data commits at the boat, the first material pickup has a dedicated cue event, and semantic cues are individually generated. Expansion 14 is selected at planning level as an archive-led advanced-current return; no implementation milestone or issue batch exists yet. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
+The compact diver foundation and OceanGame Expansions 01-13 are complete with player GO. Expansion 14 Archive Current Return is technically complete through #1039: the archive now leads to the existing Ti2/Coil1 stabilizer project, a passive upper-left advanced-current return, Northwest Wreck Relay cargo and survey payoffs, and a bounded held-cargo strip. Exact-SHA Web verification passed at `739ffd5`; #1040 and milestone #40 remain open for the owner GO/HOLD decision. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Expansion 13 closed with owner GO after review of exact runtime `ede39d1`. Planning issue #1029 selects Archive Current Return as the proposed Expansion 14: archive knowledge, the existing Ti2/Coil1 stabilizer project, one continuous upper-left current route, a wreck-relay payoff, and a bounded held-cargo strip. The next audit may create only that implementation milestone and issue batch. A broad credits economy, teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
+Expansion 13 closed with owner GO after review of exact runtime `ede39d1`. Expansion 14 implementation and technical evidence are merged through #1039; its only remaining issue is the real owner journey in #1040. Do not close the milestone or select Expansion 15 until that review records GO or a bounded HOLD correction. A broad credits economy, teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
 
 Core sources and operating docs:
 
@@ -123,6 +123,9 @@ Current release and expansion handoff:
 - [Expansion 13 Owner-HOLD Correction Visual And Web Verification](docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md)
 - [Feedback Audio Correction Technical Review And Web Verification](docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md)
 - [OceanGame Expansion 14 Archive Current Return Plan](docs/current/OCEANGAME_EXPANSION_14_PLAN.md)
+- [Expansion 14 Source/State Contract](docs/current/OCEANGAME_EXPANSION_14_SOURCE_STATE_CONTRACT.md)
+- [Expansion 14 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_14_VISUAL_BASELINE_DECISION.md)
+- [Expansion 14 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_14_WEB_PREVIEW_VERIFICATION.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 

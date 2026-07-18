@@ -1,12 +1,12 @@
 # Project Context
 
-Last updated: 2026-07-17
+Last updated: 2026-07-18
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
 ## Current Goal
 
-`oceangame2` has a GO release candidate and thirteen completed bounded Phase 2 expansions. OceanGame Expansion 01 proved:
+`oceangame2` has a GO release candidate, thirteen completed bounded Phase 2 expansions, and an Expansion 14 technical candidate awaiting owner review. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -40,7 +40,7 @@ Expansion 12 is complete with player GO through #941 plus player-HOLD correction
 
 Expansion 13 Southeast Wreck Return is complete with owner GO. After two bounded HOLD corrections, #1000-#1009 established deliberate shared tool controls, matching mobile presentation, named material sprites, and failure-safe sealed-wreck navigation data through canonical-boat commitment. Bounded audio interlude #1020-#1023 added first-material pickup ownership, individually generated semantic cues, deterministic lifecycle/asset coverage, and exact-SHA Web verification. The owner reviewed runtime `ede39d1`, reported the corrected experience was fine, and closed the player gate through #969.
 
-Planning issue #1029 selects **Expansion 14: Archive Current Return** without starting implementation. The proposed journey turns `southeast_wreck_archive_discovery` into the existing Ti2/Coil1 Current Stabilizer project, one passive advanced-current return to a Northwest Wreck Relay in the underused upper-left sector, a valuable cargo plus scanner payoff, and the first bounded held-cargo strip. The next audit may create only this milestone and its frozen issue batch.
+Expansion 14 Archive Current Return is implemented and technically verified through #1039. The committed archive now reveals the existing Ti2/Coil1 Current Stabilizer project; ownership passively opens one advanced-current return to the Northwest Wreck Relay, where a valuable core and explicit scanner finding remain governed by existing cargo, failure, survey, and canonical-boat commit semantics. The bounded held-cargo strip stays separate from active-tool selection. Exact-SHA Web verification passed at `739ffd5`; #1040 and milestone #40 remain open for owner GO/HOLD.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -71,20 +71,21 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Completed Expansion 11 handoff: `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #925/#927, and player GO #914
 - Completed Expansion 12 handoff: `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #951-#953, and player GO #941
 - Completed Expansion 13 handoff: `docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`, with correction history in `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md`, `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md`, and `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`
-- Proposed Expansion 14 plan: `docs/current/OCEANGAME_EXPANSION_14_PLAN.md`; no implementation milestone or issues exist yet
+- Active Expansion 14 handoff: `docs/current/OCEANGAME_EXPANSION_14_PLAN.md`, `docs/current/OCEANGAME_EXPANSION_14_SOURCE_STATE_CONTRACT.md`, `docs/current/OCEANGAME_EXPANSION_14_VISUAL_BASELINE_DECISION.md`, and `docs/current/OCEANGAME_EXPANSION_14_WEB_PREVIEW_VERIFICATION.md`; owner gate #1040 remains open
 - Latest audio/Web handoff: `docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest expansion decision: owner GO in `docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md` after corrections #1000-#1009 and audio interlude #1020-#1023
-- Latest selected planning direction: `docs/current/OCEANGAME_EXPANSION_14_PLAN.md`
+- Latest owner decision: Expansion 13 GO in `docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`; Expansion 14 has technical PASS only
+- Active player gate: #1040 for the exact Expansion 14 candidate documented in `docs/current/OCEANGAME_EXPANSION_14_WEB_PREVIEW_VERIFICATION.md`
+- Latest selected planning direction: `docs/current/OCEANGAME_EXPANSION_14_PLAN.md`; no later expansion is selected
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_13_PLAN.md`, with ownership locked by `docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md`
-- Latest source contract: `docs/current/SCAN_SUBJECT_SOURCE_CONTRACT.md`, bounded by `docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md`
-- Latest visual decision: owner-HOLD correction baseline accepted from runtime `86ba106` in `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`
+- Latest source contract: `docs/current/OCEANGAME_EXPANSION_14_SOURCE_STATE_CONTRACT.md`
+- Latest visual decision: Expansion 14 full-level baseline accepted from runtime source `0098085` in `docs/current/OCEANGAME_EXPANSION_14_VISUAL_BASELINE_DECISION.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: feedback-audio correction runtime `ede39d1`, recorded in `docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md`.
+- Latest Web verification: Expansion 14 candidate `739ffd5`, recorded in `docs/current/OCEANGAME_EXPANSION_14_WEB_PREVIEW_VERIFICATION.md`.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -218,8 +219,9 @@ Current issue state as of 2026-07-18:
 - Closed correction batch: #1000-#1009 define, implement, validate, capture, accept, and deploy selected active-tool input, deliberate cutter activation, compact controls, readable named material sprites, and the source/runtime sealed-wreck navigation reward through exact-once boat commitment and profile compatibility.
 - Closed audio interlude: #1020-#1023 fix the first material-pickup cue path, separate semantic cue assets, add deterministic lifecycle/asset coverage, and verify public runtime `ede39d1`.
 - Closed: #969 records owner GO for exact reviewed runtime `ede39d1`; milestone #39 is complete.
-- Planning gate: #1029 selects Archive Current Return as proposed Expansion 14; it creates no implementation milestone or issue batch.
-- Open bookkeeping: #849 names three UID sidecars already committed by `e825c88`; it does not block planning and should be closed separately with that evidence.
+- Technical PASS: #1031-#1039 implement and verify Expansion 14; milestone #40 is 9/10 complete.
+- Open player gate: #1040 requires owner GO/HOLD before closeout or later-expansion selection.
+- Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
 
@@ -356,18 +358,18 @@ Current issue state as of 2026-07-18:
 
 ## Recommended Next Work
 
-Use `docs/current/OCEANGAME_EXPANSION_14_PLAN.md`, `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`, `docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`, and `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md` as the current handoff. Expansion 13 is closed with owner GO at `ede39d1`; the next direction audit may create the single Expansion 14 milestone and frozen issue batch.
+Use the Expansion 14 plan, source/state contract, visual decision, Web verification, and #1040 as the current handoff. Technical readiness is complete; the next product decision is the owner's Archive Current Return GO/HOLD. Do not create a closeout or select Expansion 15 before that decision.
 
 Accepted constraints for next work:
 
-- Keep held cargo, selectable active tools, persistent vitals/objectives, and temporary prompts as distinct HUD responsibilities. Expansion 14 may add only the bounded current-sortie cargo strip defined by its plan; a broad production HUD replacement remains directional.
+- Keep the implemented held-cargo strip, selectable active tools, persistent vitals/objectives, and temporary prompts as distinct HUD responsibilities; a broad production HUD replacement remains directional.
 - Keep `production_level_01` as the default preview map unless a separate reviewed decision changes it.
 - Preserve `maps/full_cave_sketch_01.greybox.json` as the generated topology draft and source for a separately named `production_level_01` output.
 - Preserve the complete full-sketch topology as one contiguous level. Do not stitch crop JSONs together or import their artificial edge seals.
 - Keep map topology, collision, spawn, extraction, and camera tests source-driven.
 - Transform the proven slice-01 gameplay overlay through shared source data; do not copy generated JSON by hand.
 - Preserve the blueprint-and-material scanner project, same-map east-pocket anomaly, explicit returned cutter plan, daylight, surface oxygen, repeated sorties, boat return, night transition, seeded material ownership, canonical-boat commitment, and mandatory fins/cutter/weapon chain.
-- Omit prompted connectors and map transitions from normal full-level traversal. Expansion 14 may add one source-authored advanced stabilizer current as a passive regional boundary inside continuous water; legacy slice behavior remains a protected reference surface, not the canonical prerequisite owner.
+- Omit prompted connectors and map transitions from normal full-level traversal. Preserve Expansion 14's source-authored advanced stabilizer current as a passive regional boundary inside continuous water; legacy slice behavior remains a protected reference surface, not the canonical prerequisite owner.
 - Keep standard capability gates inside contiguous authored geography and traversable through movement; reserve `E` connectors for explicit exceptional entrances/interiors.
 - Preserve the completed mineral research, fresh-day selection, and broad habitat-lead behavior as the practical-knowledge regression surface.
 - Preserve separate health, the source-authored eel territory, viable unarmed evasion, non-circular shock-prod project, day-local defeat, and no-reward combat semantics.
