@@ -17,7 +17,7 @@ The contract is intentionally narrow: future runtime work should emit cue events
 | Cue id | Event | Intent | Priority | Cooldown/dedupe |
 | --- | --- | --- | --- | --- |
 | `salvage_pickup` | Salvage enters held cargo after instant, timed, or pry completion. | Short warm pickup tick. | Normal | Once per salvage id per collection event. Do not replay every frame while in range. |
-| `material_pickup` | A standard or biological recipe material enters held cargo. | Immediate pickup confirmation; it may reuse the salvage asset until the focused sound-language pass. | Normal | Once per material candidate or biological source after successful collection. Cargo-full and canceled attempts stay silent. |
+| `material_pickup` | A standard or biological recipe material enters held cargo. | Short tactile clink distinct from valuable salvage. | Normal | Once per material candidate or biological source after successful collection. Cargo-full and canceled attempts stay silent. |
 | `salvage_bank` | Held salvage is banked at extraction and score/wallet changes. | Warmer confirm/payoff. | Normal | Once per banking event, even if multiple held items bank together. |
 | `oxygen_low` | Oxygen crosses the existing low-pressure threshold from above. | Soft warning ping. | Medium | Once per expedition until oxygen refills/resets above the threshold. |
 | `oxygen_critical` | Oxygen crosses the existing critical/failure-warning threshold from above. | Sharper warning ping. | High | Once per expedition until oxygen refills/resets above the threshold. |
@@ -25,6 +25,15 @@ The contract is intentionally narrow: future runtime work should emit cue events
 | `hazard_warning` | Existing hazard warning state begins for a specific hazard. | Brief caution ping that supports the overlay. | Medium | At most once per hazard id per warning window, with a short global cooldown around 1 second. |
 | `hazard_contact` | Existing hazard contact applies penalty/reset behavior. | Impact/error cue. | High | Once per accepted contact event after existing hazard contact cooldowns. |
 | `upgrade_purchase` | Existing session upgrade purchase succeeds. | Positive confirm. | Normal | Once per purchase. May be deferred if it would broaden the first runtime pass. |
+
+## Sound Language
+
+- Collection is bright and short. Valuable salvage rises like a compact find; recipe material uses a dry click and descending clink so the two cargo types do not blur together.
+- Banking is longer and resolves upward after a low confirmation beat. It should read as payoff rather than another pickup.
+- Oxygen uses an airy low-frequency tank/breath family. Low oxygen is a slow double pulse, critical oxygen is a faster three-pulse escalation, and failure becomes one longer descending vent.
+- Danger uses a dry, high metallic alternating alarm. It must not share the airy pulse rhythm or low register of oxygen.
+- Contact/damage begins with a noise transient and falls into a low impact. It should read as something already happened, not as advance warning.
+- Upgrade purchase remains a compact bright arpeggio. Music, ambience, enemy/tool foley, and broad mixer work remain outside this contract.
 
 ## Priority Rules
 
