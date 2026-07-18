@@ -24,6 +24,8 @@ func update(delta: float) -> void:
 	)
 	if biological_result.has("note") and not str(biological_result.get("note", "")).is_empty():
 		_main._last_status_note = str(biological_result["note"])
+	if bool(biological_result.get("collected", false)):
+		_main._play_feedback_cue("material_pickup", str(biological_result.get("id", "biological_material")))
 	if bool(biological_result.get("handled", false)):
 		_main._cutter_salvage.reset()
 		_main._timed_salvage.reset()
@@ -50,6 +52,9 @@ func _update_non_biological_collection(delta: float) -> void:
 	)
 	if material_result.has("note"):
 		_main._last_status_note = str(material_result["note"])
+	if bool(material_result.get("changed", false)):
+		var candidate: Dictionary = material_result.get("candidate", {})
+		_main._play_feedback_cue("material_pickup", str(candidate.get("id", "material")))
 	if bool(material_result.get("changed", false)) or bool(material_result.get("blocked", false)):
 		_main._cutter_salvage.reset()
 	elif not _update_tool_target(delta):

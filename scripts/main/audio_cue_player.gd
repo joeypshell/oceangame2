@@ -8,6 +8,7 @@ const HIGH_COOLDOWN_SECONDS := 0.12
 
 const CUE_PATHS := {
 	"salvage_pickup": "res://assets/audio/cues/salvage_pickup.wav",
+	"material_pickup": "res://assets/audio/cues/salvage_pickup.wav",
 	"salvage_bank": "res://assets/audio/cues/salvage_bank.wav",
 	"oxygen_low": "res://assets/audio/cues/oxygen_low.wav",
 	"oxygen_critical": "res://assets/audio/cues/oxygen_critical.wav",
@@ -19,6 +20,7 @@ const CUE_PATHS := {
 
 const CUE_PRIORITIES := {
 	"salvage_pickup": "normal",
+	"material_pickup": "normal",
 	"salvage_bank": "normal",
 	"oxygen_low": "medium",
 	"oxygen_critical": "high",

@@ -17,6 +17,7 @@ The contract is intentionally narrow: future runtime work should emit cue events
 | Cue id | Event | Intent | Priority | Cooldown/dedupe |
 | --- | --- | --- | --- | --- |
 | `salvage_pickup` | Salvage enters held cargo after instant, timed, or pry completion. | Short warm pickup tick. | Normal | Once per salvage id per collection event. Do not replay every frame while in range. |
+| `material_pickup` | A standard or biological recipe material enters held cargo. | Immediate pickup confirmation; it may reuse the salvage asset until the focused sound-language pass. | Normal | Once per material candidate or biological source after successful collection. Cargo-full and canceled attempts stay silent. |
 | `salvage_bank` | Held salvage is banked at extraction and score/wallet changes. | Warmer confirm/payoff. | Normal | Once per banking event, even if multiple held items bank together. |
 | `oxygen_low` | Oxygen crosses the existing low-pressure threshold from above. | Soft warning ping. | Medium | Once per expedition until oxygen refills/resets above the threshold. |
 | `oxygen_critical` | Oxygen crosses the existing critical/failure-warning threshold from above. | Sharper warning ping. | High | Once per expedition until oxygen refills/resets above the threshold. |
@@ -45,13 +46,14 @@ The contract is intentionally narrow: future runtime work should emit cue events
 - Runtime audio must tolerate locked Web audio before the first user gesture.
 - Startup should never show autoplay errors, missing asset errors, or script errors if cues cannot play yet.
 - The first player input may unlock/resume audio, but this pass should not add an options screen or persistent mute preference.
+- Playback remains unlocked across sorties. Normal keyboard, touch, mouse, or controller movement therefore unlocks Web audio before proximity collection; do not queue stale gameplay cues for replay after a later gesture.
 - If audio remains unavailable, gameplay continues silently and deterministic smokes still pass through event-log verification.
 
 ## Smoke/Test Contract
 
 Future smoke coverage should verify cue emission through a deterministic event log or lightweight test hook, not through an audio device:
 
-- pickup and banking emit the expected cue ids in order
+- material pickup, salvage pickup, and banking emit the expected cue ids in order
 - oxygen low, critical, and failure cues emit on threshold/result transitions only
 - hazard warning and contact cues emit without per-frame spam
 - Web-safe startup does not require audio playback to pass
