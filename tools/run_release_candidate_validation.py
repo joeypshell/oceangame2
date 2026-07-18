@@ -117,6 +117,7 @@ def godot_gates(godot: str) -> list[Gate]:
         ("smoke: expansion 12 pressure return", ["--smoke-expansion-12-abyssal-pressure-return"]),
         ("smoke: expansion 13 southeast wreck return", ["--smoke-expansion-13-southeast-wreck-return"]),
         ("smoke: expansion 13 scanner-cutter correction", ["--smoke-expansion-13-scanner-cutter-correction"]),
+        ("smoke: expansion 14 archive-current return", ["--smoke-expansion-14-archive-current-return"]),
         ("smoke: active-tool selection", ["--smoke-active-tool-selection"]),
         ("smoke: pass 18 progression", ["--quit-after", "1", "--smoke-pass-18-progression"]),
         ("smoke: pass 19 cargo upgrade", ["--quit-after", "1", "--smoke-pass-19-cargo-upgrade"]),
@@ -200,6 +201,18 @@ def godot_gates(godot: str) -> list[Gate]:
         Gate(
             "smoke: sealed wreck reward state",
             [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_sealed_wreck_reward_state.gd"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
+            "smoke: Expansion 14 runtime owners",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_expansion_14_runtime_owners.gd"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
+            "smoke: held cargo HUD",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_held_cargo_hud.gd"],
             godot_backed=True,
             fail_on_godot_error=True,
         ),

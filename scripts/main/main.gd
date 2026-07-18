@@ -102,6 +102,7 @@ const SmokeExpansion11LightReturnChecks := preload("res://scripts/main/smoke/smo
 const SmokeExpansion12PressureReturnChecks := preload("res://scripts/main/smoke/smoke_expansion_12_pressure_return_checks.gd")
 const SmokeExpansion13SoutheastWreckReturnChecks := preload("res://scripts/main/smoke/smoke_expansion_13_southeast_wreck_return_checks.gd")
 const SmokeExpansion13ScannerCutterCorrectionChecks := preload("res://scripts/main/smoke/smoke_expansion_13_scanner_cutter_correction_checks.gd")
+const SmokeExpansion14ArchiveCurrentReturnChecks := preload("res://scripts/main/smoke/smoke_expansion_14_archive_current_return_checks.gd")
 const SmokeReleaseJourneyChecks := preload("res://scripts/main/smoke/smoke_release_journey_checks.gd")
 const UpgradeChestCapture := preload("res://scripts/main/captures/upgrade_chest_capture.gd")
 const DEFAULT_MAP_PATH := MapCatalog.DEFAULT_MAP_PATH
@@ -459,6 +460,7 @@ func _ready() -> void:
 	var smoke_expansion_12_pressure_return := _has_arg(user_args, engine_args, "--smoke-expansion-12-abyssal-pressure-return")
 	var smoke_expansion_13_southeast_wreck_return := _has_arg(user_args, engine_args, "--smoke-expansion-13-southeast-wreck-return")
 	var smoke_expansion_13_scanner_cutter_correction := _has_arg(user_args, engine_args, "--smoke-expansion-13-scanner-cutter-correction")
+	var smoke_expansion_14_archive_current_return := _has_arg(user_args, engine_args, "--smoke-expansion-14-archive-current-return")
 	var smoke_active_tool_selection := _has_arg(user_args, engine_args, "--smoke-active-tool-selection")
 	var requested_map_path := MapCatalog.requested_map_path(user_args, engine_args)
 	var measure_map_runtime := _has_arg(user_args, engine_args, "--measure-map-runtime")
@@ -667,6 +669,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
 	elif smoke_expansion_13_scanner_cutter_correction:
 		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
+	elif smoke_expansion_14_archive_current_return:
+		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
 	elif not requested_map_path.is_empty():
 		selected_map_path = requested_map_path
 
@@ -797,6 +801,7 @@ func _ready() -> void:
 		or smoke_expansion_12_pressure_return
 		or smoke_expansion_13_southeast_wreck_return
 		or smoke_expansion_13_scanner_cutter_correction
+		or smoke_expansion_14_archive_current_return
 		or smoke_active_tool_selection
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
 		or _has_arg(user_args, engine_args, "--capture-camera-tests")
@@ -805,7 +810,7 @@ func _ready() -> void:
 	var profile_state = null
 	if smoke_expansion_13_scanner_cutter_correction:
 		profile_state = SmokeExpansion13ScannerCutterCorrectionChecks.create_clean_profile()
-	elif smoke_expansion_11_light_return or smoke_expansion_12_pressure_return or smoke_expansion_13_southeast_wreck_return:
+	elif smoke_expansion_11_light_return or smoke_expansion_12_pressure_return or smoke_expansion_13_southeast_wreck_return or smoke_expansion_14_archive_current_return:
 		profile_state = SmokeExpansion11LightReturnChecks.create_clean_profile()
 	_anomaly_survey = AnomalySurveyRuntime.new(_progression_runtime, profile_persistence_enabled, profile_state)
 	_pressure_zone = PressureZoneController.new()
@@ -974,6 +979,9 @@ func _ready() -> void:
 		return
 	if smoke_expansion_13_scanner_cutter_correction:
 		await SmokeExpansion13ScannerCutterCorrectionChecks.new(self)._smoke_expansion_13_scanner_cutter_correction_and_quit()
+		return
+	if smoke_expansion_14_archive_current_return:
+		await SmokeExpansion14ArchiveCurrentReturnChecks.new(self)._smoke_expansion_14_archive_current_return_and_quit()
 		return
 	if smoke_oxygen_pressure:
 		_smoke_interaction_checks._smoke_oxygen_pressure_and_quit()

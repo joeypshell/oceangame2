@@ -206,7 +206,7 @@ func _test_cutter_blueprint_contract() -> void:
 	_expect(bool(built.get("changed", false)) and runtime.has_cutter(), "blueprint-backed cutter did not build at night")
 	_expect(survey_runtime.overlay_text(world, null) == "Cutter ready | Return beyond east current to sealed wreck", "night build did not replace the stale blueprint result with the remembered wreck")
 	var payoff_target: Dictionary = world.get_tool_targets().filter(func(target): return str(target.get("id", "")) == ExpansionProfileState.SALVAGE_CUTTER_TARGET_ID)[0]
-	_expect(journey_presentation.completion_note(payoff_target, 300) == "Sealed wreck opened +300", "source-authored cutter payoff did not name the concrete result")
+	_expect(journey_presentation.completion_note(payoff_target, 300) == "Sealed wreck opened | Salvage value +300", "source-authored cutter payoff did not name the concrete result")
 	world.collect_tool_target(ExpansionProfileState.SALVAGE_CUTTER_TARGET_ID)
 	_expect(survey_runtime.overlay_text(world, null) == "Faint maintenance signal continues deeper southeast", "collected wreck did not leave one broad next mystery")
 	tracker.refresh(runtime.report(), {}, false)
