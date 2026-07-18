@@ -1,6 +1,6 @@
 # Milestones
 
-Last updated: 2026-07-17
+Last updated: 2026-07-18
 
 This is the compact milestone index. Detailed direction lives in:
 
@@ -33,6 +33,7 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md`
 - `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`
 - `docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md`
+- `docs/current/OCEANGAME_EXPANSION_14_PLAN.md`
 
 ## Current State
 
@@ -40,16 +41,20 @@ Simple Diver Game 01-09 and OceanGame Expansions 01-13 are complete with player 
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
+Planning issue #1029 selects **Expansion 14: Archive Current Return** as the next bounded direction. It turns the southeast archive discovery into the existing Ti2/Coil1 stabilizer project, one continuous upper-left current return, a wreck-relay payoff, and a small held-cargo strip. No Expansion 14 GitHub milestone or implementation issues exist yet.
+
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
-- Committed: no active implementation milestone; run a separate direction audit before selecting the next bounded expansion.
-- Proposed: preserve the existing loop and evaluate the next player-facing promise before creating another issue batch.
+- Committed: the Expansion 14 planning contract is selected; the next audit may create its single bounded implementation milestone and issue batch.
+- Proposed: Archive Current Return must preserve the existing loop and pass its owner GO/HOLD gate before any later expansion is selected.
 - Directional: pure oxygen-capacity progression, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
+
+There is no open implementation milestone. The next audit may create Expansion 14 from `docs/current/OCEANGAME_EXPANSION_14_PLAN.md`.
 
 1. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - complete with owner GO after corrections #980/#982-#990, #1000-#1009, and audio interlude #1020-#1023; exact reviewed runtime `ede39d1`.
 2. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - complete through #941 plus corrections #951-#953, with player GO and exact-SHA Web verification.
@@ -98,9 +103,9 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 ## Roadmap Rules
 
 - Do not reopen completed expansion batches merely to keep the queue full.
-- Select the next milestone only through a separate roadmap/direction evaluation after the Expansion 13 closeout.
+- Create only the Expansion 14 milestone and frozen issue batch at the next direction audit; do not begin a later expansion in the same run.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
-- Do not use teleports, prompted connectors, map menus, or the current stabilizer for normal traversal of the full level.
+- Do not use teleports, prompted connectors, or map menus for normal traversal. Expansion 14 may use one source-authored stabilizer current as a regional capability boundary inside the continuous full level, never as its entry requirement or a transition mechanism.
 - Preserve source-authored maps, reachability, parity, focused captures, and public Web verification in every milestone.
 - Keep #52/#53 deferred optional slice-03 polish unless slice-03 presentation becomes the selected goal.

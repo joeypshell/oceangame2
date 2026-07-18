@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-13 are complete with player GO. Expansion 13 closed after two bounded HOLD corrections and the audio interlude #1020-#1023. At exact reviewed runtime `ede39d1`, tools use one deliberate control model, named material sprites are readable, sealed-wreck navigation data commits at the boat, the first material pickup has a dedicated cue event, and semantic cues are individually generated. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
+The compact diver foundation and OceanGame Expansions 01-13 are complete with player GO. Expansion 13 closed after two bounded HOLD corrections and the audio interlude #1020-#1023. At exact reviewed runtime `ede39d1`, tools use one deliberate control model, named material sprites are readable, sealed-wreck navigation data commits at the boat, the first material pickup has a dedicated cue event, and semantic cues are individually generated. Expansion 14 is selected at planning level as an archive-led advanced-current return; no implementation milestone or issue batch exists yet. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Expansion 13 closed with owner GO after review of exact runtime `ede39d1`. No next expansion is selected by that closeout; the next planning pass should evaluate the roadmap before creating a bounded milestone. A broad credits economy, teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
+Expansion 13 closed with owner GO after review of exact runtime `ede39d1`. Planning issue #1029 selects Archive Current Return as the proposed Expansion 14: archive knowledge, the existing Ti2/Coil1 stabilizer project, one continuous upper-left current route, a wreck-relay payoff, and a bounded held-cargo strip. The next audit may create only that implementation milestone and issue batch. A broad credits economy, teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
 
 Core sources and operating docs:
 
@@ -122,6 +122,7 @@ Current release and expansion handoff:
 - [Active Tool And Wreck Reward Contract](docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md)
 - [Expansion 13 Owner-HOLD Correction Visual And Web Verification](docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md)
 - [Feedback Audio Correction Technical Review And Web Verification](docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md)
+- [OceanGame Expansion 14 Archive Current Return Plan](docs/current/OCEANGAME_EXPANSION_14_PLAN.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 

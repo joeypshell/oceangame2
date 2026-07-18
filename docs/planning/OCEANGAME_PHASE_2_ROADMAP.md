@@ -1,10 +1,11 @@
 # OceanGame Phase 2 Roadmap
 
-Date: 2026-07-17
+Date: 2026-07-18
 
 Status: Expansions 01-13 are complete with player GO. Expansion 13 closed after
 two bounded HOLD corrections and owner review of exact-SHA runtime `ede39d1`.
-No next expansion is selected by that closeout.
+Planning issue #1029 selects Archive Current Return as the proposed Expansion
+14; no implementation milestone or issue batch exists yet.
 
 ## Decision
 
@@ -92,14 +93,15 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-No active implementation milestone. Run a separate direction audit before
-selecting the next bounded expansion.
+The Expansion 14 planning contract is selected. The next direction audit may
+create its single bounded implementation milestone and issue batch.
 
 ### Proposed
 
-Evaluate the next player-facing promise against the north star before creating
-a milestone or issue batch. Do not default to a broad economy or production HUD
-replacement merely to keep the queue full.
+Archive Current Return must prove that committed archive knowledge, one exact
+night project, and a visible current can turn underused contiguous geography
+into a remembered-place payoff. Do not widen it into an economy or production
+HUD replacement.
 
 ### Directional
 
@@ -375,6 +377,40 @@ Exit question: did the distant wreck turn prior upgrades and the far southeast
 route into a tense, memorable expedition whose discovery felt worth bringing
 back to the boat?
 **GO recorded at #969 after the bounded corrections and exact-runtime owner replay.**
+
+### Expansion 14: Archive Current Return
+
+Status: Planning selected through #1029. See
+`docs/current/OCEANGAME_EXPANSION_14_PLAN.md`. No GitHub milestone or
+implementation issues have been created.
+
+Goal: turn the committed southeast archive's unresolved wreck-network lead into
+the existing Ti2/Coil1 Current Stabilizer project and one return through a
+source-authored advanced current to a Northwest Wreck Relay in the underused
+upper-left sector of continuous `production_level_01`.
+
+Prove:
+
+- archive knowledge, guaranteed base materials, and one exact night build form
+  a non-circular capability chain
+- the current visibly blocks normal inward swimming before the stabilizer and
+  permits ordinary two-way swimming after it, without `E` or a transition
+- the route, landmark, valuable relay core, survey, and canonical-boat result
+  are source-authored and represented in the executable progression graph
+- existing failure, cargo-full, pending discovery, reload, and exact-once
+  profile semantics remain stable
+- one bounded held-cargo strip clarifies current-sortie risk while active tools,
+  vitals/objectives, and contextual prompts retain separate responsibilities
+- focused source, smoke, visual, mobile, player, and exact-SHA Web evidence
+  agree before closeout
+
+Non-goals include terrain expansion, connector travel, teleport, a new
+capability or material, score-gated progression, broad economy/inventory/HUD
+work, another enemy, vehicle, or slice-03 polish.
+
+Exit question: did the archive clue, night-built stabilizer, visible current,
+and Northwest Wreck Relay feel like one place the player earned access to, with
+a payoff clear enough to motivate and complete another expedition?
 
 ## Original OceanGame Convergence
 
