@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+git diff --check
+
+python tools/test_validate_progression_containers.py
+python tools/test_validate_regional_journeys.py
+python tools/test_validate_expansion_14_contract.py
+python tools/test_validate_southeast_wreck_return.py
+python tools/test_validate_tool_target_rewards.py
+python tools/validate_regional_journeys.py maps/production_level_01.greybox.json
+python tools/validate_expansion_14_contract.py maps/production_level_01.greybox.json
+python tools/validate_southeast_wreck_return.py maps/production_level_01.greybox.json
+python tools/validate_greybox_map.py maps/production_level_01.greybox.json
+python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
+python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
+python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
+python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
+python tools/check_production_slice_captures.py
+python tools/check_feedback_audio_assets.py
+python tools/check_map_parity.py
+
+bash tools/ci/check_tracked_clean.sh

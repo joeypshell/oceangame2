@@ -61,6 +61,8 @@ Run the Godot headless launch smoke check on this Windows setup:
 
 The import command is important on a fresh clone or CI checkout because `.godot/` and `*.import` files are intentionally untracked. The headless command can exit `0` even when script errors appear in output, so treat `SCRIPT ERROR` or `ERROR:` lines as failures.
 
+GitHub Actions preserves the complete smoke suite in three concurrent lanes: source/map validation, core runtime checks, and the longer regional-journey/route checks. The lanes share checked helpers under `tools/ci/`; they do not skip tests based on changed paths, and every Godot invocation fails on a nonzero exit or logged script/error line. Superseded runs on the same ref are canceled so only the newest cumulative change continues consuming CI time.
+
 The standalone daylight runtime smoke uses a five-second deterministic override to verify countdown, connector preservation, one exact nightfall event, and clean next-day reset without waiting on wall-clock time.
 
 The standalone surface/boat smoke derives an open top-row water cell outside the authored boat, verifies oxygen refill without cargo/profile/wallet mutation, then confirms the canonical boat banks the held cargo.
