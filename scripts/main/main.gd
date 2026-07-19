@@ -48,6 +48,7 @@ const PrimaryDiveObjective := preload("res://scripts/main/primary_dive_objective
 const ProgressionContainerController := preload("res://scripts/main/progression_container_controller.gd")
 const ProgressionProjectTracker := preload("res://scripts/main/progression_project_tracker.gd")
 const ProgressionRuntimeController := preload("res://scripts/main/progression_runtime_controller.gd")
+const ReviewCheckpointFixture := preload("res://scripts/main/review_checkpoint_fixture.gd")
 const ReviewProfileMode := preload("res://scripts/main/review_profile_mode.gd")
 const PrySalvageController := preload("res://scripts/main/pry_salvage_controller.gd")
 const RelayFollowThroughFeedback := preload("res://scripts/main/relay_follow_through_feedback.gd")
@@ -266,6 +267,8 @@ var _result_label: Label
 var _map_selector: OptionButton
 var _map_selector_enabled := false
 var _fresh_review_profile_enabled := false
+var _review_checkpoint_id := ""
+var _review_checkpoint_report := {}
 var _debug_overlay_enabled := false
 var _banked_salvage := 0
 var _total_salvage := 0
@@ -343,6 +346,7 @@ func _ready() -> void:
 	_smoke_release_journey_checks = SmokeReleaseJourneyChecks.new(self)
 	var user_args := OS.get_cmdline_user_args()
 	var engine_args := OS.get_cmdline_args()
+	_review_checkpoint_id = ReviewProfileMode.checkpoint_id(user_args, engine_args)
 	_fresh_review_profile_enabled = ReviewProfileMode.requested(user_args, engine_args)
 	var capture_original_map := _has_arg(user_args, engine_args, "--capture-original-map")
 	var capture_tileset_test := _has_arg(user_args, engine_args, "--capture-tileset-test")
@@ -678,6 +682,9 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
 	elif not requested_map_path.is_empty():
 		selected_map_path = requested_map_path
+	var checkpoint_map_path := ReviewCheckpointFixture.required_map_path(_review_checkpoint_id)
+	if not checkpoint_map_path.is_empty():
+		selected_map_path = checkpoint_map_path
 
 	_debug_overlay_enabled = (
 		_has_arg(user_args, engine_args, "--show-debug-overlay")
@@ -819,6 +826,8 @@ func _ready() -> void:
 	elif smoke_expansion_11_light_return or smoke_expansion_12_pressure_return or smoke_expansion_13_southeast_wreck_return or smoke_expansion_14_archive_current_return:
 		profile_state = SmokeExpansion11LightReturnChecks.create_clean_profile()
 	_anomaly_survey = AnomalySurveyRuntime.new(_progression_runtime, profile_persistence_enabled, profile_state)
+	if not _review_checkpoint_id.is_empty():
+		_review_checkpoint_report = ReviewCheckpointFixture.apply(_review_checkpoint_id, _anomaly_survey.profile_state())
 	_pressure_zone = PressureZoneController.new()
 	_progression_runtime.set_profile_state(_anomaly_survey.profile_state())
 	_material_runtime = MaterialRuntimeController.new(_anomaly_survey.profile_state())
@@ -829,7 +838,7 @@ func _ready() -> void:
 	_cargo_collection = CargoCollectionController.new(self)
 	_map_selector_enabled = (not automated_review) and _review_map_selector_allowed(user_args, engine_args)
 	if _fresh_review_profile_enabled:
-		print(ReviewProfileMode.startup_report(_has_propulsion_upgrade()))
+		print(ReviewProfileMode.startup_report(_has_propulsion_upgrade(), _review_checkpoint_id, bool(_review_checkpoint_report.get("ready", false))))
 
 	if check_map_parity:
 		var world := _create_world(selected_map_path, _debug_overlay_enabled)
@@ -2013,7 +2022,7 @@ func _update_status_label() -> void:
 func _review_header_text(world) -> String:
 	var text := "Map %s\nBuild %s" % [world.get_map_label(), _build_label()]
 	if _fresh_review_profile_enabled:
-		text += "\n%s" % ReviewProfileMode.overlay_line(_has_propulsion_upgrade())
+		text += "\n%s" % ReviewProfileMode.overlay_line(_has_propulsion_upgrade(), _review_checkpoint_id, bool(_review_checkpoint_report.get("ready", false)))
 	return text
 
 
