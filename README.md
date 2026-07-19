@@ -40,6 +40,7 @@ Core sources and operating docs:
 - [Executable Cross-Map Progression Graph](docs/current/PROGRESSION_GRAPH.md)
 - [Current Architecture](docs/current/ARCHITECTURE.md)
 - [Tooling](docs/current/TOOLING.md)
+- [Playtest Checkpoints](docs/current/PLAYTEST_CHECKPOINTS.md)
 - [Production Slice Index](docs/current/PRODUCTION_SLICE_INDEX.md)
 
 Current release and expansion handoff:

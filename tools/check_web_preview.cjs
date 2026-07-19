@@ -41,6 +41,7 @@ const framingThreshold = 18;
 const canvasPositionTolerance = 1;
 const mobileTouchThreshold = 2;
 const logicalGameSize = { width: 1280, height: 720 };
+const expansion14Checkpoint = "expansion_14_start";
 
 const failurePatterns = [
 	/SCRIPT ERROR/i,
@@ -90,6 +91,8 @@ async function main() {
 		const wide = await inspectPreview(browser, targetUrl, wideViewport, "");
 		const freshReviewUrl = buildFreshReviewUrl(targetUrl);
 		const freshReview = await inspectPreview(browser, freshReviewUrl, primaryViewport, "");
+		const checkpointReviewUrl = buildCheckpointReviewUrl(targetUrl);
+		const checkpointReview = await inspectPreview(browser, checkpointReviewUrl, primaryViewport, "");
 		const referenceSliceUrl = buildReferenceSliceReviewUrl(targetUrl);
 		const referenceDesktop = await inspectPreview(browser, referenceSliceUrl, primaryViewport, "");
 		const referenceMobile = await inspectPreview(
@@ -113,6 +116,7 @@ async function main() {
 		const allMessages = primary.messages.concat(
 			wide.messages,
 			freshReview.messages,
+			checkpointReview.messages,
 			referenceDesktop.messages,
 			referenceMobile.messages,
 			mobile.messages
@@ -120,6 +124,7 @@ async function main() {
 		const allFailedRequests = primary.failedRequests.concat(
 			wide.failedRequests,
 			freshReview.failedRequests,
+			checkpointReview.failedRequests,
 			referenceDesktop.failedRequests,
 			referenceMobile.failedRequests,
 			mobile.failedRequests
@@ -130,10 +135,16 @@ async function main() {
 		const freshReviewMarker = freshReview.messages.find((message) =>
 			message.text.includes("Fresh review profile active: persistence=false propulsion_fins=false.")
 		);
+		const checkpointMarker = checkpointReview.messages.find((message) =>
+			message.text.includes(`Review checkpoint active: id=${expansion14Checkpoint} persistence=false propulsion_fins=true.`)
+		);
 		const defaultMapMarker = primary.messages.find((message) =>
 			message.text.includes("Web map active: map=production_level_01 review=false.")
 		);
 		const freshReviewMapMarker = freshReview.messages.find((message) =>
+			message.text.includes("Web map active: map=production_level_01 review=true.")
+		);
+		const checkpointMapMarker = checkpointReview.messages.find((message) =>
 			message.text.includes("Web map active: map=production_level_01 review=true.")
 		);
 		const referenceDesktopMarker = referenceDesktop.messages.find((message) =>
@@ -148,6 +159,7 @@ async function main() {
 
 		console.log(`Checked ${targetUrl}`);
 		console.log(`Fresh-profile review ${freshReviewUrl}`);
+		console.log(`Checkpoint review ${checkpointReviewUrl}`);
 		console.log(`Reference slice review ${referenceSliceUrl}`);
 		console.log(
 			`Canvas ${primary.canvasSize.width}x${primary.canvasSize.height} (${primary.canvasSize.clientWidth}x${primary.canvasSize.clientHeight} CSS)`
@@ -191,8 +203,14 @@ async function main() {
 		if (freshReview.canvasSize.width <= 0 || freshReview.canvasSize.height <= 0) {
 			throw new Error("Godot canvas did not initialize in fresh-profile review mode.");
 		}
+		if (checkpointReview.canvasSize.width <= 0 || checkpointReview.canvasSize.height <= 0) {
+			throw new Error("Godot canvas did not initialize in checkpoint review mode.");
+		}
 		if (!freshReviewMarker) {
 			throw new Error("Fresh-profile review URL did not report isolated state with propulsion fins unowned.");
+		}
+		if (!checkpointMarker || !checkpointMapMarker) {
+			throw new Error("Expansion 14 checkpoint URL did not report its isolated seeded state on production_level_01.");
 		}
 		if (!defaultMapMarker || !freshReviewMapMarker) {
 			throw new Error("The Web root or map-unspecified review URL did not load production_level_01.");
@@ -254,6 +272,12 @@ async function main() {
 function buildFreshReviewUrl(url) {
 	const reviewUrl = new URL(url);
 	reviewUrl.searchParams.set("review", expectedSha || "fresh");
+	return reviewUrl.toString();
+}
+
+function buildCheckpointReviewUrl(url) {
+	const reviewUrl = new URL(buildFreshReviewUrl(url));
+	reviewUrl.searchParams.set("checkpoint", expansion14Checkpoint);
 	return reviewUrl.toString();
 }
 
