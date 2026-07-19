@@ -50,6 +50,12 @@ jobs:
         with:
           python-version: "3.x"
 
+      - name: Install Godot
+        run: bash tools/ci/install_godot.sh
+
+      - name: Import Godot assets
+        run: bash tools/ci/run_godot_checked.sh asset-import 300 --headless --path . --import
+
       - name: Run source and map validation
         run: bash tools/ci/run_source_validation.sh
 
