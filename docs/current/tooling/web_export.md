@@ -44,4 +44,12 @@ The public export uses the project stretch policy to keep a 1280x720 logical gam
 
 For an isolated player-review run, open `https://joeypshell.github.io/oceangame2/?review=<sha>`. The `review` query starts with a fresh in-memory profile without reading, deleting, or writing the normal durable profile; the overlay reports `Review profile fresh/isolated` and whether fins are owned. The Web checker exercises this URL and requires the startup marker before passing.
 
+For focused Expansion 14 review, use
+`https://joeypshell.github.io/oceangame2/?review=<sha>&checkpoint=expansion_14_start`.
+This named checkpoint remains isolated but starts after the archive commit with
+prior projects complete, the Current Stabilizer unbuilt, and Ti2 + Coil1
+banked. The Web checker requires the checkpoint marker and full-level map
+marker. Unsupported checkpoint ids fall back to an empty isolated profile;
+there is no arbitrary profile-state injection.
+
 The public root and `https://joeypshell.github.io/oceangame2/?review=<sha>` now load `production_level_01`; the review query still isolates profile state. To review a retained slice fixture, add an explicit supported map, for example `?review=<sha>&map=production_slice_01`. A bare `map` query without `review` does not override the default. The Web checker verifies the full-level default and explicit slice-01 fallback at desktop and mobile browser sizes.

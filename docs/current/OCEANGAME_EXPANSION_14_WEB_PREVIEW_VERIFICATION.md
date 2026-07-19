@@ -69,6 +69,12 @@ proves exact deployment, startup, HUD separation, and touch behavior but does
 not skip directly to the relay. The live current-to-relay journey remains the
 owner GO/HOLD gate in #1040.
 
+Post-verification note (2026-07-19): #1056 subsequently added the bounded
+`expansion_14_start` review checkpoint. It seeds a named in-memory boundary,
+not arbitrary profile data; #1057 owns exact-SHA deployment verification for
+that newer review path. The historical `739ffd5` result above remains valid
+for the candidate it tested.
+
 ## Verification
 
 ```powershell

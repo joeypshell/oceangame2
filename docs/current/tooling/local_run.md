@@ -122,6 +122,18 @@ Start an isolated local player-review run without reading or changing the normal
 
 The review overlay reports `Review profile fresh/isolated` and whether propulsion fins are currently owned.
 
+For a focused Expansion 14 playtest, start from the committed archive with
+all earlier projects complete, the Current Stabilizer still unbuilt, and its
+exact Ti2 + Coil1 recipe already banked:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=expansion_14_start
+```
+
+Named checkpoints are isolated in memory and do not read or write the normal
+profile. Use the fresh-profile command above when the whole journey, rather
+than the current feature boundary, is what needs review.
+
 ## Mobile Testing Controls
 
 Touch-capable devices automatically show a testing-only overlay in normal play; rotate the phone to landscape before playing. The layout reserves a bottom interaction inset for phone gesture/home-indicator areas. The left stick swims; the command pad exposes oxygen, cargo, active-tool cycle/use, project build/guidance, day transition, reset, and connector interaction. Capture/smoke automation keeps the overlay hidden.
