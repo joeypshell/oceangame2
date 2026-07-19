@@ -28,13 +28,17 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: "godot-smoke-${{ github.ref }}"
+  cancel-in-progress: true
+
 env:
   GODOT_VERSION: "4.7"
   GODOT_STATUS: stable
 
 jobs:
-  smoke:
-    name: Headless smoke
+  source-validation:
+    name: Source and map validation
     runs-on: ubuntu-latest
 
     steps:
@@ -46,455 +50,45 @@ jobs:
         with:
           python-version: "3.x"
 
-      - name: Install archive tools
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y unzip
-
       - name: Install Godot
-        run: |
-          curl -L -o godot.zip "https://github.com/godotengine/godot/releases/download/${GODOT_VERSION}-${GODOT_STATUS}/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64.zip"
-          unzip -q godot.zip -d godot-bin
-          chmod +x "godot-bin/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64"
-          sudo mv "godot-bin/Godot_v${GODOT_VERSION}-${GODOT_STATUS}_linux.x86_64" /usr/local/bin/godot
-          godot --headless --version
+        run: bash tools/ci/install_godot.sh
 
       - name: Import Godot assets
-        run: |
-          set +e
-          godot --headless --path . --import 2>&1 | tee godot-import.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
+        run: bash tools/ci/run_godot_checked.sh asset-import 300 --headless --path . --import
 
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
+      - name: Run source and map validation
+        run: bash tools/ci/run_source_validation.sh
 
-          if grep -E "SCRIPT ERROR|ERROR:" godot-import.log; then
-            echo "Godot reported errors during asset import."
-            exit 1
-          fi
+  core-runtime:
+    name: Core runtime smoke
+    runs-on: ubuntu-latest
 
-      - name: Check whitespace
-        run: git diff --check
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-      - name: Validate greybox maps
-        run: |
-          python tools/test_validate_progression_containers.py
-          python tools/test_validate_regional_journeys.py && python tools/test_validate_expansion_14_contract.py
-          python tools/test_validate_southeast_wreck_return.py
-          python tools/test_validate_tool_target_rewards.py
-          python tools/validate_regional_journeys.py maps/production_level_01.greybox.json && python tools/validate_expansion_14_contract.py maps/production_level_01.greybox.json
-          python tools/validate_southeast_wreck_return.py maps/production_level_01.greybox.json
-          python tools/validate_greybox_map.py maps/production_level_01.greybox.json
-          python tools/validate_greybox_map.py maps/cave_salvage_test_01.greybox.json
-          python tools/validate_greybox_map.py maps/cave_salvage_organic_01.greybox.json
-          python tools/validate_greybox_map.py maps/cave_tileset_test_01.greybox.json
-          python tools/validate_greybox_map.py maps/full_cave_sketch_01.greybox.json
+      - name: Install Godot
+        run: bash tools/ci/install_godot.sh
 
-      - name: Check generated review assets
-        run: python tools/check_production_slice_captures.py && python tools/check_feedback_audio_assets.py
+      - name: Import Godot assets
+        run: bash tools/ci/run_godot_checked.sh asset-import 300 --headless --path . --import
 
-      - name: Check Godot map parity
-        run: python tools/check_map_parity.py
+      - name: Run core runtime smoke checks
+        run: bash tools/ci/run_core_smokes.sh
 
-      - name: Run Godot headless smoke check
-        run: |
-          set +e
-          godot --headless --path . --quit-after 1 2>&1 | tee godot-smoke.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
+  regional-journeys:
+    name: Regional journey smoke
+    runs-on: ubuntu-latest
 
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
 
-          if grep -E "SCRIPT ERROR|ERROR:" godot-smoke.log; then
-            echo "Godot reported errors during headless smoke check."
-            exit 1
-          fi
+      - name: Install Godot
+        run: bash tools/ci/install_godot.sh
 
-      - name: Run mobile test controls smoke check
-        run: |
-          set +e
-          godot --headless --path . --script res://scripts/main/smoke/smoke_mobile_test_controls.gd 2>&1 | tee godot-mobile-test-controls.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
+      - name: Import Godot assets
+        run: bash tools/ci/run_godot_checked.sh asset-import 300 --headless --path . --import
 
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-mobile-test-controls.log; then
-            echo "Godot reported errors during mobile test controls smoke check."
-            exit 1
-          fi
-
-      - name: Run material sprite asset smoke check
-        run: godot --headless --path . --script res://scripts/main/smoke/smoke_material_sprite_assets.gd
-
-      - name: Run durable light project state smoke check
-        run: |
-          set +e
-          godot --headless --path . --script res://scripts/main/smoke/smoke_durable_light_project_state.gd 2>&1 | tee godot-durable-light-project-state.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
-
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-durable-light-project-state.log; then
-            echo "Godot reported errors during durable light project state smoke check."
-            exit 1
-          fi
-
-      - name: Run pressure suit project state smoke check
-        run: |
-          set +e
-          godot --headless --path . --script res://scripts/main/smoke/smoke_pressure_suit_project_state.gd 2>&1 | tee godot-pressure-suit-project-state.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
-
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-pressure-suit-project-state.log; then
-            echo "Godot reported errors during pressure suit project state smoke check."
-            exit 1
-          fi
-
-      - name: Run pressure zone state smoke check
-        run: |
-          set +e
-          godot --headless --path . --script res://scripts/main/smoke/smoke_pressure_zone_state.gd 2>&1 | tee godot-pressure-zone-state.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
-
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-pressure-zone-state.log; then
-            echo "Godot reported errors during pressure zone state smoke check."
-            exit 1
-          fi
-
-      - name: Run salvage loop smoke check
-        run: |
-          set +e
-          godot --headless --path . --quit-after 1 --smoke-salvage-loop 2>&1 | tee godot-salvage-loop.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
-
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-salvage-loop.log; then
-            echo "Godot reported errors during salvage loop smoke check."
-            exit 1
-          fi
-
-      - name: Run scoring and cargo smoke check
-        run: |
-          run_score_smoke() {
-            flag="$1"
-            label="$2"
-            shift 2
-            log_path="godot-${label}.log"
-
-            set +e
-            godot --headless --path . --quit-after 1 "${flag}" "$@" 2>&1 | tee "${log_path}"
-            godot_status=${PIPESTATUS[0]}
-            set -e
-
-            if [ "${godot_status}" -ne 0 ]; then
-              exit "${godot_status}"
-            fi
-
-            if grep -E "SCRIPT ERROR|ERROR:" "${log_path}"; then
-              echo "Godot reported errors during ${label} smoke check."
-              exit 1
-            fi
-          }
-
-          run_score_smoke --smoke-cargo-capacity cargo-capacity
-          run_score_smoke --smoke-feedback-cues feedback-cues
-          run_score_smoke --smoke-salvage-feedback salvage-feedback
-          run_score_smoke --smoke-session-best-score session-best-score
-          run_score_smoke --smoke-oxygen-bonus-score oxygen-bonus-score
-          run_score_smoke --smoke-route-outcome-result route-outcome-result
-          run_score_smoke --smoke-pass-18-progression pass-18-progression
-          run_score_smoke --smoke-pass-19-cargo-upgrade pass-19-cargo-upgrade
-          run_score_smoke --smoke-pass-20-light-upgrade pass-20-light-upgrade
-          run_score_smoke --smoke-pass-21-world-connector pass-21-world-connector
-          run_score_smoke --smoke-pass-22-destination-payoff pass-22-destination-payoff
-          run_score_smoke --smoke-pass-24-relay-follow-through pass-24-relay-follow-through
-          run_score_smoke --smoke-pass-25-final-dive-objective pass-25-final-dive-objective
-          run_score_smoke --smoke-pass-26-result-presentation pass-26-result-presentation
-          run_score_smoke --smoke-release-journey release-journey
-          run_score_smoke --smoke-anomaly-survey-journey anomaly-survey-journey
-          run_score_smoke --smoke-expedition-day expedition-day
-          run_score_smoke --smoke-expansion-03-material-project expansion-03-material-project
-          run_score_smoke --smoke-expansion-04-current-pocket expansion-04-current-pocket
-          run_score_smoke --smoke-expansion-05-practical-research expansion-05-practical-research
-          run_score_smoke --smoke-expansion-06-combat-foundation expansion-06-combat-foundation
-          run_score_smoke --smoke-expansion-07-biological-progression expansion-07-biological-progression
-          run_score_smoke --smoke-expansion-08-daily-condition-journey expansion-08-daily-condition-journey
-          run_score_smoke --smoke-current-gate current-gate --fresh-review-profile
-          run_score_smoke --smoke-upgrade-chest upgrade-chest
-          run_score_smoke --smoke-moving-hazard moving-hazard
-          run_score_smoke --smoke-darkness-light-gate darkness-light-gate
-
-      - name: Run map selector smoke check
-        run: |
-          set +e
-          godot --headless --path . --smoke-map-selector 2>&1 | tee godot-map-selector.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
-
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-map-selector.log; then
-            echo "Godot reported errors during map selector smoke check."
-            exit 1
-          fi
-
-      - name: Run Expansion 09 full-level journey smoke check
-        run: |
-          set +e
-          timeout 240s godot --headless --path . --smoke-expansion-09-full-level-journey 2>&1 | tee godot-expansion-09-full-level-journey.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
-
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-expansion-09-full-level-journey.log; then
-            echo "Godot reported errors during Expansion 09 full-level journey smoke check."
-            exit 1
-          fi
-
-      - name: Run Expansion 10 regional journey smoke check
-        run: |
-          set +e
-          timeout 300s godot --headless --path . --smoke-expansion-10-regional-journey 2>&1 | tee godot-expansion-10-regional-journey.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
-
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-expansion-10-regional-journey.log; then
-            echo "Godot reported errors during Expansion 10 regional journey smoke check."
-            exit 1
-          fi
-
-      - name: Run Expansion 11 deep-harmonic light-return smoke check
-        run: |
-          set +e
-          timeout 420s godot --headless --path . --smoke-expansion-11-deep-harmonic-light-return 2>&1 | tee godot-expansion-11-light-return.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
-
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-expansion-11-light-return.log; then
-            echo "Godot reported errors during Expansion 11 light-return smoke check."
-            exit 1
-          fi
-
-      - name: Run Expansion 12 abyssal pressure-return smoke check
-        run: |
-          set +e
-          timeout 540s godot --headless --path . --smoke-expansion-12-abyssal-pressure-return 2>&1 | tee godot-expansion-12-pressure-return.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
-
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-expansion-12-pressure-return.log; then
-            echo "Godot reported errors during Expansion 12 pressure-return smoke check."
-            exit 1
-          fi
-      - name: Run Expansion 13-14 journey smoke checks
-        run: |
-          run_expansion_smoke() {
-            label="$1"
-            timeout_seconds="$2"
-            shift 2
-            log_path="godot-${label}.log"
-            set +e
-            timeout "${timeout_seconds}s" godot --headless --path . "$@" 2>&1 | tee "${log_path}"
-            godot_status=${PIPESTATUS[0]}
-            set -e
-            if [ "${godot_status}" -ne 0 ]; then
-              exit "${godot_status}"
-            fi
-            if grep -E "SCRIPT ERROR|ERROR:" "${log_path}"; then
-              echo "Godot reported errors during ${label} smoke check."
-              exit 1
-            fi
-          }
-          run_expansion_smoke expansion-13-southeast-wreck-return 300 --smoke-expansion-13-southeast-wreck-return
-          run_expansion_smoke expansion-13-scanner-cutter-correction 120 --smoke-expansion-13-scanner-cutter-correction
-          run_expansion_smoke active-tool-selection 60 --smoke-active-tool-selection
-          run_expansion_smoke cutter-salvage-state 60 --script res://scripts/main/smoke/smoke_cutter_salvage_state.gd
-          run_expansion_smoke sealed-wreck-reward-state 60 --script res://scripts/main/smoke/smoke_sealed_wreck_reward_state.gd
-          run_expansion_smoke expansion-14-archive-current-return 60 --smoke-expansion-14-archive-current-return
-          run_expansion_smoke expansion-14-runtime-owners 60 --script res://scripts/main/smoke/smoke_expansion_14_runtime_owners.gd
-          run_expansion_smoke held-cargo-hud 60 --script res://scripts/main/smoke/smoke_held_cargo_hud.gd
-      - name: Measure promoted full-level default startup and camera bounds
-        run: |
-          set +e
-          godot --headless --path . --measure-map-runtime 2>&1 | tee godot-full-level-runtime.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-full-level-runtime.log; then
-            echo "Godot reported errors during full-level runtime measurement."
-            exit 1
-          fi
-
-      - name: Run hazard pressure smoke check
-        run: |
-          set +e
-          godot --headless --path . --smoke-hazard-pressure 2>&1 | tee godot-hazard-pressure.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
-
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-hazard-pressure.log; then
-            echo "Godot reported errors during hazard pressure smoke check."
-            exit 1
-          fi
-
-      - name: Run timed salvage smoke check
-        run: |
-          set +e
-          godot --headless --path . --smoke-timed-salvage 2>&1 | tee godot-timed-salvage.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
-
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-timed-salvage.log; then
-            echo "Godot reported errors during timed salvage smoke check."
-            exit 1
-          fi
-
-      - name: Run pry salvage smoke check
-        run: |
-          set +e
-          godot --headless --path . --smoke-pry-salvage 2>&1 | tee godot-pry-salvage.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
-
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-pry-salvage.log; then
-            echo "Godot reported errors during pry salvage smoke check."
-            exit 1
-          fi
-
-      - name: Run player-facing smoke check
-        run: |
-          set +e
-          godot --headless --path . --smoke-player-facing 2>&1 | tee godot-player-facing.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
-
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-player-facing.log; then
-            echo "Godot reported errors during player-facing smoke check."
-            exit 1
-          fi
-
-      - name: Run Pass 27 facing transition smoke check
-        run: |
-          set +e
-          godot --headless --path . --smoke-pass-27-facing-transitions 2>&1 | tee godot-pass-27-facing-transitions.log
-          godot_status=${PIPESTATUS[0]}
-          set -e
-
-          if [ "${godot_status}" -ne 0 ]; then
-            exit "${godot_status}"
-          fi
-
-          if grep -E "SCRIPT ERROR|ERROR:" godot-pass-27-facing-transitions.log; then
-            echo "Godot reported errors during Pass 27 facing transition smoke check."
-            exit 1
-          fi
-
-      - name: Run production slice route smoke checks
-        run: |
-          run_route_smoke() {
-            flag="$1"
-            label="$2"
-            log_path="godot-${label}.log"
-
-            set +e
-            godot --headless --path . "${flag}" 2>&1 | tee "${log_path}"
-            godot_status=${PIPESTATUS[0]}
-            set -e
-
-            if [ "${godot_status}" -ne 0 ]; then
-              exit "${godot_status}"
-            fi
-
-            if grep -E "SCRIPT ERROR|ERROR:" "${log_path}"; then
-              echo "Godot reported errors during ${label} smoke check."
-              exit 1
-            fi
-          }
-
-          run_route_smoke --smoke-production-slice-route production-slice-01-route
-          run_route_smoke --smoke-route-choice production-slice-01-route-choice
-          run_route_smoke --smoke-route-choice-metadata production-slice-01-route-choice-metadata
-          run_route_smoke --smoke-expanded-route-choice production-slice-01-expanded-route-choice
-          run_route_smoke --smoke-safe-deep-route-choice production-slice-01-safe-deep-route-choice
-          run_route_smoke --smoke-pass-07-hazard-route-pressure pass-07-hazard-route-pressure
-          run_route_smoke --smoke-pass-08-route-extension pass-08-route-extension
-          run_route_smoke --smoke-pass-09-southwest-pocket-decision pass-09-southwest-pocket-decision
-          run_route_smoke --smoke-pass-10-return-pressure pass-10-return-pressure
-          run_route_smoke --smoke-pass-11-pre-pickup-route-cue pass-11-pre-pickup-route-cue
-          run_route_smoke --smoke-pass-12-oxygen-rest-pressure pass-12-oxygen-rest-pressure
-          run_route_smoke --smoke-pass-13-route-commitment pass-13-route-commitment
-          run_route_smoke --smoke-pass-14-objective-cue pass-14-objective-cue
-          run_route_smoke --smoke-pass-15-objective-follow-through pass-15-objective-follow-through
-          run_route_smoke --smoke-primary-dive-completion primary-dive-completion
-          run_route_smoke --smoke-pass-23-next-dive-objective pass-23-next-dive-objective
-          run_route_smoke --smoke-production-slice-02-route production-slice-02-route
-          run_route_smoke --smoke-production-slice-03-route production-slice-03-route
-          run_route_smoke --smoke-production-slice-04-route production-slice-04-route
-
-      - name: Confirm no source files changed
-        run: |
-          status="$(git status --short --untracked-files=no)"
-          if [ -n "${status}" ]; then
-            echo "${status}"
-            exit 1
-          fi
+      - name: Run regional journey smoke checks
+        run: bash tools/ci/run_journey_smokes.sh
