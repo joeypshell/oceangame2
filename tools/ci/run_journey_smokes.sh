@@ -16,6 +16,7 @@ run_godot cutter-salvage-state 60 --headless --path . --script res://scripts/mai
 run_godot sealed-wreck-reward-state 60 --headless --path . --script res://scripts/main/smoke/smoke_sealed_wreck_reward_state.gd
 run_godot expansion-14-archive-current-return 60 --headless --path . --smoke-expansion-14-archive-current-return
 run_godot expansion-14-runtime-owners 60 --headless --path . --script res://scripts/main/smoke/smoke_expansion_14_runtime_owners.gd
+run_godot review-checkpoint-fixture 60 --headless --path . --script res://scripts/main/smoke/smoke_review_checkpoint_fixture.gd
 run_godot held-cargo-hud 60 --headless --path . --script res://scripts/main/smoke/smoke_held_cargo_hud.gd
 
 route_smokes=(
