@@ -1,10 +1,31 @@
 # OceanGame Expansion 14 Web Preview Verification
 
-Date: 2026-07-18
+Date: 2026-07-19
 
-Issue: #1039 `Verify the exact Expansion 14 public Web candidate`
+Issues: #1039 `Verify the exact Expansion 14 public Web candidate`, #1057 `Verify Expansion 14 checkpoint Web review path`
 
-## Result
+## Current Checkpoint Result
+
+**PASS for exact deployment and focused review startup. Player GO remains open
+in #1040.** The current public build is:
+
+- exact SHA: `626ab23a4d38cc44d17d7c136311a1308ea2ebd3`
+- build version: `626ab23`
+- [Godot Web Export run 29693647371](https://github.com/joeypshell/oceangame2/actions/runs/29693647371): success, including Pages deploy and checkpoint-aware browser verification
+- checkpoint URL:
+  `https://joeypshell.github.io/oceangame2/?review=626ab23a4d38cc44d17d7c136311a1308ea2ebd3&checkpoint=expansion_14_start`
+
+The named checkpoint starts from an isolated in-memory profile after the
+southeast archive commit. Earlier projects are complete, Ti2 + Coil1 is
+banked, and the Current Stabilizer, advanced-current crossing, relay core, and
+relay survey remain incomplete. It changes no normal save or default launch.
+
+The independent public checker confirmed the checkpoint marker and
+`production_level_01`, the empty fresh-profile path, retained slice-01
+fallback, 1280x720 and 1920x1080 framing, iPhone-landscape touch alignment,
+matching build metadata, no failed requests, and no Godot error output.
+
+## Original Candidate Result
 
 **PASS for technical deployment. Player GO remains open in #1040.** The public
 GitHub Pages preview serves the post-baseline Expansion 14 candidate at:
@@ -69,18 +90,12 @@ proves exact deployment, startup, HUD separation, and touch behavior but does
 not skip directly to the relay. The live current-to-relay journey remains the
 owner GO/HOLD gate in #1040.
 
-Post-verification note (2026-07-19): #1056 subsequently added the bounded
-`expansion_14_start` review checkpoint. It seeds a named in-memory boundary,
-not arbitrary profile data; #1057 owns exact-SHA deployment verification for
-that newer review path. The historical `739ffd5` result above remains valid
-for the candidate it tested.
-
 ## Verification
 
 ```powershell
 gh workflow run godot-web-export.yml --repo joeypshell/oceangame2 --ref main
 $env:NODE_PATH = "$env:TEMP\oceangame2-web-preview-check\node_modules"
-node tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha 739ffd59fa37d40c9dc1d909facc5de17a3c05dd
+node tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha 626ab23a4d38cc44d17d7c136311a1308ea2ebd3
 python tools/check_file_lengths.py
 git diff --check
 ```

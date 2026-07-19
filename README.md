@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-13 are complete with player GO. Expansion 14 Archive Current Return is technically complete through #1039: the archive now leads to the existing Ti2/Coil1 stabilizer project, a passive upper-left advanced-current return, Northwest Wreck Relay cargo and survey payoffs, and a bounded held-cargo strip. Exact-SHA Web verification passed at `739ffd5`; #1040 and milestone #40 remain open for the owner GO/HOLD decision. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
+The compact diver foundation and OceanGame Expansions 01-13 are complete with player GO. Expansion 14 Archive Current Return is technically complete through #1039: the archive now leads to the existing Ti2/Coil1 stabilizer project, a passive upper-left advanced-current return, Northwest Wreck Relay cargo and survey payoffs, and a bounded held-cargo strip. Exact-SHA Web and focused-checkpoint verification passed at `626ab23`; #1040 and milestone #40 remain open for the owner GO/HOLD decision. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
 
 ## Project Goal
 

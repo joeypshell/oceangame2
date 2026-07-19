@@ -25,15 +25,21 @@ Local:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=expansion_14_start
 ```
 
-Public Web candidate:
+Verified public Web candidate:
 
 ```text
-https://joeypshell.github.io/oceangame2/?review=<sha>&checkpoint=expansion_14_start
+https://joeypshell.github.io/oceangame2/?review=626ab23a4d38cc44d17d7c136311a1308ea2ebd3&checkpoint=expansion_14_start
 ```
 
 The checkpoint forces `production_level_01` and identifies itself in the
 review overlay. The ordinary `?review=<sha>` URL remains a completely empty,
 isolated profile.
+
+Public verification passed for exact SHA `626ab23a4d38cc44d17d7c136311a1308ea2ebd3`
+in [Godot Web Export run 29693647371](https://github.com/joeypshell/oceangame2/actions/runs/29693647371).
+The independent checker confirmed the checkpoint marker, full-level map,
+fresh-profile fallback, retained slice fallback, viewport framing, mobile touch
+alignment, and clean browser/resource startup.
 
 ## Guardrails
 

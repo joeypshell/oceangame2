@@ -40,7 +40,7 @@ Expansion 12 is complete with player GO through #941 plus player-HOLD correction
 
 Expansion 13 Southeast Wreck Return is complete with owner GO. After two bounded HOLD corrections, #1000-#1009 established deliberate shared tool controls, matching mobile presentation, named material sprites, and failure-safe sealed-wreck navigation data through canonical-boat commitment. Bounded audio interlude #1020-#1023 added first-material pickup ownership, individually generated semantic cues, deterministic lifecycle/asset coverage, and exact-SHA Web verification. The owner reviewed runtime `ede39d1`, reported the corrected experience was fine, and closed the player gate through #969.
 
-Expansion 14 Archive Current Return is implemented and technically verified through #1039. The committed archive now reveals the existing Ti2/Coil1 Current Stabilizer project; ownership passively opens one advanced-current return to the Northwest Wreck Relay, where a valuable core and explicit scanner finding remain governed by existing cargo, failure, survey, and canonical-boat commit semantics. The bounded held-cargo strip stays separate from active-tool selection. Exact-SHA Web verification passed at `739ffd5`; #1040 and milestone #40 remain open for owner GO/HOLD. #1056 added the isolated `expansion_14_start` checkpoint so focused review can begin after the archive commit without replaying earlier expansions; the full fresh-profile journey remains the milestone regression gate.
+Expansion 14 Archive Current Return is implemented and technically verified through #1039. The committed archive now reveals the existing Ti2/Coil1 Current Stabilizer project; ownership passively opens one advanced-current return to the Northwest Wreck Relay, where a valuable core and explicit scanner finding remain governed by existing cargo, failure, survey, and canonical-boat commit semantics. The bounded held-cargo strip stays separate from active-tool selection. Exact-SHA Web and focused-checkpoint verification passed at `626ab23`; #1040 and milestone #40 remain open for owner GO/HOLD. #1056 added the isolated `expansion_14_start` checkpoint so focused review can begin after the archive commit without replaying earlier expansions; the full fresh-profile journey remains the milestone regression gate.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -86,7 +86,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Latest visual decision: Expansion 14 full-level baseline accepted from runtime source `0098085` in `docs/current/OCEANGAME_EXPANSION_14_VISUAL_BASELINE_DECISION.md`
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: Expansion 14 candidate `739ffd5`, recorded in `docs/current/OCEANGAME_EXPANSION_14_WEB_PREVIEW_VERIFICATION.md`.
+- Latest Web verification: Expansion 14 checkpoint candidate `626ab23`, recorded in `docs/current/OCEANGAME_EXPANSION_14_WEB_PREVIEW_VERIFICATION.md`.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
