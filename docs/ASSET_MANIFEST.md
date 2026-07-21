@@ -118,6 +118,9 @@ references/asset_reviews/boat_spawn_01_review.png
 
 | Asset | Size | Purpose | Status | Notes |
 |---|---:|---|---|---|
+| `assets/ui/tool_icons/scanner_01.svg` | 64x64 | Scanner hotbar icon | draft | Handheld sonar screen; selected through the shared active-tool runtime. |
+| `assets/ui/tool_icons/cutter_01.svg` | 64x64 | Cutter hotbar icon | draft | Warm metal rotary-cutter silhouette. |
+| `assets/ui/tool_icons/shock_prod_01.svg` | 64x64 | Shock Prod hotbar icon | draft | Conductive baton with a compact amber discharge mark. |
 | `salvage_icon_01.png` | 32x32 | Score icon | planned | Simple and readable. |
 | `hazard_icon_01.png` | 32x32 | Damage or warning icon | planned | Optional. |
 
