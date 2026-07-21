@@ -27,6 +27,24 @@ func report() -> Dictionary:
 	return refresh()
 
 
+func combat_prompt() -> String:
+	var hostile_prompt := str(_main._hostiles.prompt()) if _main._hostiles != null else ""
+	if (
+		_selection == null
+		or _main._material_project == null
+		or not _main._material_project.has_shock_prod()
+		or _main._hostiles == null
+		or hostile_prompt.is_empty()
+		or hostile_prompt.begins_with("Territory clear")
+	):
+		return ""
+	if _selection.selected_tool_id() != ActiveToolController.SHOCK_PROD_TOOL_ID:
+		return "Eel active | Tab/TOOL select Shock prod | Q/USE"
+	if _hostile_target().is_empty():
+		return "Shock prod selected | move close and face eel | Q/USE"
+	return "Eel in Shock prod range | Q/USE discharge"
+
+
 func cycle() -> Dictionary:
 	var previous_tool_id: String = _selection.selected_tool_id()
 	var report: Dictionary = _selection.cycle_next(_capability_query())

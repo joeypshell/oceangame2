@@ -83,6 +83,16 @@ The integrated Expansion 06 smoke verifies source territory/timing, normal unarm
 
 The mobile-control smoke protects the accepted eight-region landscape layout, 104 px bottom interaction inset, simultaneous stick/command input, shared `TOOL`/`USE` actions, and non-overlapping active-tool HUD states at 1280x720 and 844x390. CI runs it directly as `smoke_mobile_test_controls.gd`.
 
+The named-checkpoint Shock Prod path is covered with:
+
+```powershell
+& $godot --headless --path . --review-checkpoint=expansion_14_start --smoke-checkpoint-shock-prod
+```
+
+It verifies checkpoint ownership, Scanner-first selection, `Tab`/`TOOL` cycling,
+`Q`/`USE` dispatch, in-range facing, capacitor interruption, and honest
+owned-versus-selected HUD text against the full-level eel.
+
 The material-sprite smoke loads the named 32x32 titanium, bundled-rubber, and spring-coil textures, verifies `material_id` selection replaces the generic prop without tint, and confirms candidate identity plus fallback `kind` remain unchanged. CI and release validation run it directly as `smoke_material_sprite_assets.gd`.
 
 The integrated Expansion 07 smoke verifies nonlethal timed sampling, explicit post-defeat harvesting, cargo-full and failure restoration, boat banking, exact-once capacitor construction/reload, and a one-damage warning interruption. CI and release validation run it as `--smoke-expansion-07-biological-progression`.

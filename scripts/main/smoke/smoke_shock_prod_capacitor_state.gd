@@ -24,6 +24,7 @@ func _run() -> void:
 	_test_capacitor_warning_interrupt(world)
 	_test_capacitor_lunge_interrupt(world)
 	_test_range_window_and_lethal_precedence(world)
+	_test_selection_overlay()
 
 	world.queue_free()
 	if not _failures.is_empty():
@@ -81,7 +82,7 @@ func _test_range_window_and_lethal_precedence(world) -> void:
 	_expect(not bool(home_hit.get("interrupted", false)) and hostiles.state_for(HOSTILE_ID).get("phase") == "home", "capacitor interrupted outside warning/lunge")
 	weapon.reset()
 	var miss: Dictionary = weapon.try_attack(hostiles, world, home + Vector2(-100, 0), 1.0, true, true)
-	_expect(miss.get("reason") == "miss" and int(hostiles.state_for(HOSTILE_ID).get("health", 0)) == 2, "capacitor changed range or miss damage")
+	_expect(miss.get("reason") == "miss" and str(miss.get("note", "")).find("move closer and face eel") != -1 and int(hostiles.state_for(HOSTILE_ID).get("health", 0)) == 2, "capacitor changed range, miss guidance, or miss damage")
 
 	hostiles.reset_for_failure(world)
 	hostiles.apply_weapon_hit(world, HOSTILE_ID, 2)
@@ -92,6 +93,12 @@ func _test_range_window_and_lethal_precedence(world) -> void:
 	var lethal: Dictionary = weapon.try_attack(hostiles, world, player, 1.0, true, true)
 	_expect(bool(lethal.get("defeated", false)) and not bool(lethal.get("interrupted", true)), "lethal capacitor hit did not preserve defeat precedence")
 	_expect(hostiles.state_for(HOSTILE_ID).get("phase") == "defeated", "lethal capacitor hit entered recovery")
+
+
+func _test_selection_overlay() -> void:
+	var weapon := ShockProdController.new()
+	_expect(weapon.overlay_text(true, true, false) == "Shock prod owned | select active tool", "unselected weapon claimed readiness")
+	_expect(weapon.overlay_text(true, true, true).find("+capacitor ready") != -1, "selected weapon omitted capacitor readiness")
 
 
 func _warning_fixture(world) -> Dictionary:
