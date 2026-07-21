@@ -1,28 +1,36 @@
 extends PanelContainer
 
-const COMPACT_VIEWPORT_WIDTH := 1100.0
-const DESKTOP_SIZE := Vector2(224.0, 58.0)
-const COMPACT_SIZE := Vector2(92.0, 62.0)
-const COMPACT_LEFT := 314.0
-const TOP_OFFSET := 90.0
-const TOOL_SYMBOLS := {
-	"survey_scanner_1": "[S]",
-	"salvage_cutter": "[C]",
-	"shock_prod": "[Z]",
-}
+const ActiveToolController := preload("res://scripts/main/active_tool_controller.gd")
+const SCANNER_ICON := preload("res://assets/ui/tool_icons/scanner_01.svg")
+const CUTTER_ICON := preload("res://assets/ui/tool_icons/cutter_01.svg")
+const SHOCK_PROD_ICON := preload("res://assets/ui/tool_icons/shock_prod_01.svg")
 
-var _symbol_label: Label
-var _name_label: Label
-var _prompt_label: Label
+const COMPACT_VIEWPORT_WIDTH := 1100.0
+const DESKTOP_SLOT_SIZE := 56.0
+const COMPACT_SLOT_SIZE := 44.0
+const DESKTOP_GAP := 6
+const COMPACT_GAP := 5
+const DESKTOP_MARGIN := 6
+const COMPACT_MARGIN := 5
+const DESKTOP_BOTTOM_GAP := 18.0
+const COMPACT_BOTTOM_GAP := 12.0
+
+var _row: HBoxContainer
+var _margin: MarginContainer
+var _slot_panels := {}
+var _slot_icons := {}
 var _selected_tool_id := ""
+var _owned_tool_ids := PackedStringArray()
 var _compact := false
 var _mobile_controls_visible := false
+var _last_viewport_size := Vector2(1280, 720)
 
 
 func _init() -> void:
-	name = "ActiveToolHud"
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	name = "ActiveToolHotbar"
+	mouse_filter = Control.MOUSE_FILTER_PASS
 	_build_ui()
+	visible = false
 
 
 func _ready() -> void:
@@ -32,97 +40,156 @@ func _ready() -> void:
 
 func refresh(report: Dictionary) -> void:
 	_selected_tool_id = str(report.get("selected_tool_id", ""))
-	var selected_label := str(report.get("selected_label", ""))
-	if _selected_tool_id.is_empty():
-		_symbol_label.text = "[-]"
-		_name_label.text = "No tool"
-	else:
-		_symbol_label.text = str(TOOL_SYMBOLS.get(_selected_tool_id, "[?]"))
-		_name_label.text = selected_label if not selected_label.is_empty() else "Active tool"
-	_refresh_prompt_visibility()
+	_owned_tool_ids = _ordered_owned_ids(report.get("owned_tool_ids", []))
+	for tool_id in ActiveToolController.ordered_tool_ids():
+		var panel := _slot_panels.get(tool_id) as PanelContainer
+		var icon := _slot_icons.get(tool_id) as TextureRect
+		var owned := _owned_tool_ids.has(tool_id)
+		var selected := owned and tool_id == _selected_tool_id
+		panel.visible = owned
+		panel.add_theme_stylebox_override("panel", _slot_style(selected))
+		icon.modulate = Color.WHITE if selected else Color(0.60, 0.72, 0.76, 0.86)
+	visible = not _owned_tool_ids.is_empty()
+	layout_for_size(_last_viewport_size)
 
 
 func set_mobile_controls_visible(value: bool) -> void:
 	_mobile_controls_visible = value
-	_refresh_prompt_visibility()
 
 
 func layout_for_size(viewport_size: Vector2) -> void:
+	_last_viewport_size = viewport_size
 	_compact = viewport_size.x <= COMPACT_VIEWPORT_WIDTH
-	var target_size := COMPACT_SIZE if _compact else DESKTOP_SIZE
-	_refresh_prompt_visibility()
+	var slot_size := COMPACT_SLOT_SIZE if _compact else DESKTOP_SLOT_SIZE
+	var gap := COMPACT_GAP if _compact else DESKTOP_GAP
+	var margin_size := COMPACT_MARGIN if _compact else DESKTOP_MARGIN
+	var bottom_gap := COMPACT_BOTTOM_GAP if _compact else DESKTOP_BOTTOM_GAP
+	_row.add_theme_constant_override("separation", gap)
+	_set_margin(margin_size)
+	for tool_id in _slot_panels:
+		var panel := _slot_panels[tool_id] as PanelContainer
+		panel.custom_minimum_size = Vector2(slot_size, slot_size)
+
+	var owned_count := _owned_tool_ids.size()
+	var target_size := Vector2.ZERO
+	if owned_count > 0:
+		target_size = Vector2(
+			slot_size * owned_count + gap * maxi(0, owned_count - 1) + margin_size * 2,
+			slot_size + margin_size * 2
+		)
 	custom_minimum_size = target_size
 	size = target_size
 	position = Vector2(
-		COMPACT_LEFT if _compact else floor((viewport_size.x - target_size.x) * 0.5),
-		TOP_OFFSET
+		floor((viewport_size.x - target_size.x) * 0.5),
+		floor(viewport_size.y - target_size.y - bottom_gap)
 	)
 
 
 func get_test_report() -> Dictionary:
+	var slots := []
+	for tool_id in ActiveToolController.ordered_tool_ids():
+		if not _owned_tool_ids.has(tool_id):
+			continue
+		var icon := _slot_icons.get(tool_id) as TextureRect
+		var panel := _slot_panels.get(tool_id) as PanelContainer
+		slots.append({
+			"id": tool_id,
+			"label": ActiveToolController.tool_label(tool_id),
+			"selected": tool_id == _selected_tool_id,
+			"has_texture": icon.texture != null,
+			"texture_path": icon.texture.resource_path if icon.texture != null else "",
+			"tooltip": panel.tooltip_text,
+		})
 	return {
 		"rect": Rect2(position, size),
+		"visible": visible,
 		"compact": _compact,
 		"selected_tool_id": _selected_tool_id,
-		"symbol": _symbol_label.text,
-		"label": _name_label.text,
-		"prompt": _prompt_label.text if _prompt_label.visible else "",
+		"selected_label": ActiveToolController.tool_label(_selected_tool_id),
+		"owned_tool_ids": _owned_tool_ids.duplicate(),
+		"slots": slots,
+		"prompt": "",
+		"mobile_controls_visible": _mobile_controls_visible,
+		"bottom_gap": _last_viewport_size.y - position.y - size.y,
 	}
 
 
 func _layout() -> void:
-	if not is_inside_tree():
-		return
-	layout_for_size(get_viewport_rect().size)
+	if is_inside_tree():
+		layout_for_size(get_viewport_rect().size)
 
 
-func _refresh_prompt_visibility() -> void:
-	if _prompt_label != null:
-		_prompt_label.visible = not _compact and not _mobile_controls_visible and not _selected_tool_id.is_empty()
+func _ordered_owned_ids(raw_ids) -> PackedStringArray:
+	var result := PackedStringArray()
+	for tool_id in ActiveToolController.ordered_tool_ids():
+		if raw_ids.has(tool_id):
+			result.append(tool_id)
+	return result
 
 
 func _build_ui() -> void:
+	var panel_style := StyleBoxFlat.new()
+	panel_style.bg_color = Color(0.015, 0.055, 0.075, 0.88)
+	panel_style.border_color = Color(0.48, 0.82, 0.88, 0.44)
+	panel_style.set_border_width_all(1)
+	panel_style.set_corner_radius_all(6)
+	panel_style.content_margin_left = 0.0
+	panel_style.content_margin_top = 0.0
+	panel_style.content_margin_right = 0.0
+	panel_style.content_margin_bottom = 0.0
+	add_theme_stylebox_override("panel", panel_style)
+
+	_margin = MarginContainer.new()
+	add_child(_margin)
+	_row = HBoxContainer.new()
+	_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	_margin.add_child(_row)
+
+	for tool_id in ActiveToolController.ordered_tool_ids():
+		var slot := PanelContainer.new()
+		slot.name = "%sSlot" % ActiveToolController.tool_label(tool_id).replace(" ", "")
+		slot.mouse_filter = Control.MOUSE_FILTER_STOP
+		slot.tooltip_text = ActiveToolController.tool_label(tool_id)
+		_row.add_child(slot)
+
+		var icon := TextureRect.new()
+		icon.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		icon.texture_filter = CanvasItem.TEXTURE_FILTER_LINEAR
+		icon.texture = _icon_for(tool_id)
+		slot.add_child(icon)
+		_slot_panels[tool_id] = slot
+		_slot_icons[tool_id] = icon
+
+
+func _set_margin(value: int) -> void:
+	for side in ["margin_left", "margin_top", "margin_right", "margin_bottom"]:
+		_margin.add_theme_constant_override(side, value)
+
+
+func _slot_style(selected: bool) -> StyleBoxFlat:
 	var style := StyleBoxFlat.new()
-	style.bg_color = Color(0.02, 0.07, 0.10, 0.82)
-	style.border_color = Color(0.72, 0.92, 1.0, 0.36)
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(6)
-	add_theme_stylebox_override("panel", style)
+	style.bg_color = Color(0.04, 0.15, 0.19, 0.96) if selected else Color(0.025, 0.085, 0.11, 0.82)
+	style.border_color = Color(1.0, 0.73, 0.24, 1.0) if selected else Color(0.38, 0.65, 0.70, 0.58)
+	style.set_border_width_all(2 if selected else 1)
+	style.set_corner_radius_all(5)
+	style.content_margin_left = 6.0
+	style.content_margin_top = 6.0
+	style.content_margin_right = 6.0
+	style.content_margin_bottom = 6.0
+	if selected:
+		style.shadow_color = Color(1.0, 0.67, 0.18, 0.22)
+		style.shadow_size = 3
+	return style
 
-	var margin := MarginContainer.new()
-	margin.add_theme_constant_override("margin_left", 8)
-	margin.add_theme_constant_override("margin_top", 6)
-	margin.add_theme_constant_override("margin_right", 8)
-	margin.add_theme_constant_override("margin_bottom", 6)
-	add_child(margin)
 
-	var row := HBoxContainer.new()
-	row.add_theme_constant_override("separation", 7)
-	margin.add_child(row)
-
-	_symbol_label = Label.new()
-	_symbol_label.custom_minimum_size = Vector2(30, 0)
-	_symbol_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_symbol_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
-	_symbol_label.add_theme_color_override("font_color", Color(0.48, 0.92, 1.0, 1.0))
-	_symbol_label.add_theme_font_size_override("font_size", 15)
-	row.add_child(_symbol_label)
-
-	var text_stack := VBoxContainer.new()
-	text_stack.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	text_stack.add_theme_constant_override("separation", 0)
-	row.add_child(text_stack)
-
-	_name_label = Label.new()
-	_name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_name_label.add_theme_color_override("font_color", Color(0.94, 0.98, 1.0, 1.0))
-	_name_label.add_theme_font_size_override("font_size", 13)
-	text_stack.add_child(_name_label)
-
-	_prompt_label = Label.new()
-	_prompt_label.text = "Tab Tool | Q Use"
-	_prompt_label.add_theme_color_override("font_color", Color(1.0, 0.84, 0.42, 0.96))
-	_prompt_label.add_theme_font_size_override("font_size", 11)
-	text_stack.add_child(_prompt_label)
-
-	refresh({})
+func _icon_for(tool_id: String) -> Texture2D:
+	match tool_id:
+		ActiveToolController.SCANNER_TOOL_ID:
+			return SCANNER_ICON
+		ActiveToolController.CUTTER_TOOL_ID:
+			return CUTTER_ICON
+		ActiveToolController.SHOCK_PROD_TOOL_ID:
+			return SHOCK_PROD_ICON
+	return null

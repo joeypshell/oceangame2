@@ -19,6 +19,10 @@ func _run() -> void:
 	get_root().add_child(active_tool)
 	await process_frame
 
+	active_tool.refresh({
+		"selected_tool_id": "survey_scanner_1",
+		"owned_tool_ids": ["survey_scanner_1", "salvage_cutter", "shock_prod"],
+	})
 	cargo.layout_for_size(Vector2(1280, 720))
 	active_tool.layout_for_size(Vector2(1280, 720))
 	cargo.refresh({}, {}, 2)
@@ -28,6 +32,7 @@ func _run() -> void:
 	_expect(report.get("items", []).is_empty(), "empty cargo rendered an item")
 	_expect(not desktop_rect.intersects(active_tool.get_test_report().get("rect", Rect2())), "desktop cargo overlapped active tool")
 	_expect(desktop_rect.position.x >= 312.0 and desktop_rect.end.x <= 976.0, "desktop cargo overlapped an edge HUD owner")
+	_expect(active_tool.get_test_report().get("bottom_gap") == 18.0, "desktop active-tool hotbar left the bottom band")
 
 	var materials := MaterialCargoState.new()
 	materials.collect(_candidate("titanium_a", "titanium_scrap"), "production_level_01")
@@ -69,7 +74,7 @@ func _run() -> void:
 	var tool_rect: Rect2 = active_tool.get_test_report().get("rect", Rect2())
 	_expect(bool(report.get("compact", false)) and cargo_rect == Rect2(315, 12, 92, 72), "landscape cargo left its stable safe column: %s" % cargo_rect)
 	_expect(cargo_rect.end.x <= 410.0 and cargo_rect.position.x >= 312.0, "landscape cargo overlapped edge HUD or touch buttons")
-	_expect(not cargo_rect.intersects(tool_rect) and tool_rect.position.y >= cargo_rect.end.y, "landscape cargo overlapped active tool")
+	_expect(not cargo_rect.intersects(tool_rect) and tool_rect.position.y >= 286.0 and tool_rect.end.y <= 390.0, "landscape hotbar left its reserved bottom band: %s" % tool_rect)
 	_expect(report.get("displayed_items", []).size() == 3 and report.get("displayed_items", [])[2].get("id") == "overflow", "compact cargo did not bound overflow types")
 	_expect(not bool(_item_by_id(report, "insulating_gel").get("has_texture", true)), "gel fallback unexpectedly claimed an asset")
 	cargo.layout_for_size(Vector2(932, 430))
@@ -87,7 +92,7 @@ func _run() -> void:
 			push_error("Held cargo HUD smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Held cargo HUD smoke passed: owner=read_only slots=6 compact_slots=3 named_assets=Ti+Rubber+Coil+Relic fallbacks=Gel+Electro capacity=used+free banked_excluded=true states=empty+material+salvage+mixed+full+cleared layouts=1280x720+844x390 active_tool_separate=true.")
+	print("Held cargo HUD smoke passed: owner=read_only slots=6 compact_slots=3 named_assets=Ti+Rubber+Coil+Relic fallbacks=Gel+Electro capacity=used+free banked_excluded=true states=empty+material+salvage+mixed+full+cleared layouts=1280x720+844x390 active_tool_bottom_separate=true.")
 	quit(0)
 
 
