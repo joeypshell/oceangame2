@@ -39,8 +39,8 @@ func capture_and_quit(capture_dir: String) -> void:
 	_main._player.swim_in_direction(Vector2.RIGHT, 0.0)
 	_main._process(0.0)
 	_main._update_status_label()
-	if _hostile_phase() != "warning" or not _status_contains("Territorial eel - watch the lunge") or not _status_contains("Shock prod locked"):
-		_fail("unarmed warning state was not readable")
+	if _hostile_phase() != "warning" or not _status_contains("Territorial eel - watch the lunge"):
+		_fail("unarmed warning state was not readable: %s" % _main._status_label.text)
 		return
 	if not await _capture_pair(capture_dir, "unarmed_warning", camera_position):
 		return
@@ -48,8 +48,8 @@ func capture_and_quit(capture_dir: String) -> void:
 	_main._process(float(encounter.get("warning_seconds", 0.75)) + 0.01)
 	_main._player.global_position = Vector2(60.5, 78.5) * float(_main._world.tile_size)
 	_main._update_status_label()
-	if _hostile_phase() != "lunge" or not _status_contains("Eel territory - retreat or evade"):
-		_fail("unarmed lunge/evade state was not readable")
+	if _hostile_phase() != "lunge" or not _status_contains("LUNGE - Eel guarding cache"):
+		_fail("unarmed lunge/evade state was not readable: phase=%s status=%s" % [_hostile_phase(), _main._status_label.text])
 		return
 	if not await _capture_pair(capture_dir, "unarmed_lunge", camera_position):
 		return
@@ -60,6 +60,7 @@ func capture_and_quit(capture_dir: String) -> void:
 	_main._shock_prod.reset()
 	_main._player_health.reset()
 	_main._last_status_note = ""
+	_select_shock_prod()
 	_main._player.global_position = home + Vector2(-60, 0)
 	_main._player.swim_in_direction(Vector2.RIGHT, 0.0)
 	_main._process(0.0)
@@ -73,7 +74,11 @@ func capture_and_quit(capture_dir: String) -> void:
 	if _hostile_phase() != "warning" or not _status_contains("Shock prod hit: eel health 1/3 (-1)") or not _status_contains("Health 3/3"):
 		_fail("armed damage state was not readable")
 		return
-	if not await _capture_pair(capture_dir, "armed_damage", camera_position):
+	var discharge: Dictionary = _main._player.get_shock_prod_presentation_report()
+	if not bool(discharge.get("visible", false)) or not bool(discharge.get("connected", false)):
+		_fail("armed damage capture omitted the connected Shock Prod discharge")
+		return
+	if not await _capture_pair(capture_dir, "armed_damage", camera_position, true):
 		return
 
 	print("Saved Expansion 06 combat-foundation review captures under: %s" % ProjectSettings.globalize_path(capture_dir))
@@ -89,6 +94,13 @@ func _prepare_capture() -> bool:
 	_main._hazard_interactions_enabled = false
 	_main._combat_interactions_enabled = true
 	return true
+
+
+func _select_shock_prod() -> void:
+	for _step in range(3):
+		if _main._active_tools.selected_tool_id() == ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID:
+			return
+		_main._cycle_active_tool()
 
 
 func _unlock_shock_prod() -> bool:
@@ -153,12 +165,14 @@ func _create_camera() -> Camera2D:
 	return camera
 
 
-func _capture_pair(capture_dir: String, state_id: String, camera_position: Vector2) -> bool:
+func _capture_pair(capture_dir: String, state_id: String, camera_position: Vector2, replay_discharge := false) -> bool:
 	_frame_camera(camera_position)
 	for capture_spec in CAPTURE_SIZES:
 		var expected_size: Vector2i = capture_spec["size"]
 		_main.get_window().size = expected_size
 		_camera.force_update_scroll()
+		if replay_discharge:
+			_show_capture_discharge()
 		await _settle_frames()
 		var image: Image = _main.get_viewport().get_texture().get_image()
 		if not _image_is_usable(image, expected_size):
@@ -174,6 +188,18 @@ func _capture_pair(capture_dir: String, state_id: String, camera_position: Vecto
 		if not _save_capture(capture_dir, filename, image):
 			return false
 	return true
+
+
+func _show_capture_discharge() -> void:
+	var state := _hostile_state()
+	_main._player.show_shock_prod_action({
+		"discharged": true,
+		"connected": true,
+		"reason": "damaged",
+		"id": HOSTILE_ID,
+		"target_position": state.get("position", Vector2.ZERO),
+		"attack_range_px": ShockProdController.ATTACK_RANGE_PX,
+	}, _main._player.get_facing_sign())
 
 
 func _frame_camera(position: Vector2) -> void:

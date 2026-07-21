@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/player/player_controller.gd" id="1_player"]
 [ext_resource type="Texture2D" path="res://assets/player/player_diver_swim_01.png" id="2_diver"]
 [ext_resource type="Script" path="res://scripts/player/scanner_field_presentation.gd" id="3_scanner_field"]
+[ext_resource type="Script" path="res://scripts/player/shock_prod_presentation.gd" id="4_shock_prod"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_player"]
 size = Vector2(26, 18)
@@ -37,6 +38,10 @@ texture = SubResource("GradientTexture2D_light")
 [node name="ScannerField" type="Node2D" parent="."]
 z_index = 24
 script = ExtResource("3_scanner_field")
+
+[node name="ShockProdField" type="Node2D" parent="."]
+z_index = 25
+script = ExtResource("4_shock_prod")
 
 [node name="Camera2D" type="Camera2D" parent="."]
 enabled = true

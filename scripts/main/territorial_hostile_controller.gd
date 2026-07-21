@@ -58,7 +58,12 @@ func attack_target(player_position: Vector2, facing_sign: float, range_px: float
 		if distance > range_px or offset.x * facing < -8.0:
 			continue
 		if nearest.is_empty() or distance < nearest_distance:
-			nearest = {"id": hostile_id, "distance": distance, "phase": state.get("phase", PHASE_HOME)}
+			nearest = {
+				"id": hostile_id,
+				"distance": distance,
+				"phase": state.get("phase", PHASE_HOME),
+				"position": state.get("position", Vector2.ZERO),
+			}
 			nearest_distance = distance
 	return nearest
 

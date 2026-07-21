@@ -13,6 +13,7 @@ const SWIM_FRAME_RATE := 8.0
 @onready var _body := $Body as Sprite2D
 @onready var _light_cone := $LightCone as Sprite2D
 @onready var _scanner_field := $ScannerField as Node2D
+@onready var _shock_prod_field := $ShockProdField as Node2D
 
 var _facing_sign := 1.0
 var _light_range_scale := BASE_LIGHT_RANGE_SCALE
@@ -120,6 +121,14 @@ func show_scanner_action(action_result: Dictionary, runtime_report: Dictionary) 
 
 func get_scanner_presentation_report() -> Dictionary:
 	return _scanner_field.get_test_report()
+
+
+func show_shock_prod_action(action_result: Dictionary, facing_sign: float) -> bool:
+	return bool(_shock_prod_field.show_discharge(action_result, facing_sign))
+
+
+func get_shock_prod_presentation_report() -> Dictionary:
+	return _shock_prod_field.get_test_report()
 
 
 func _wasd_vector() -> Vector2:
