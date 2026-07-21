@@ -3,6 +3,7 @@ extends RefCounted
 const ActiveToolController := preload("res://scripts/main/active_tool_controller.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const ReviewCheckpointFixture := preload("res://scripts/main/review_checkpoint_fixture.gd")
+const ShockProdController := preload("res://scripts/main/shock_prod_controller.gd")
 const HOSTILE_ID := "deep_cache_territorial_eel"
 const PASSIVE_CAPABILITY_IDS := [
 	"propulsion_fins",
@@ -146,8 +147,17 @@ func smoke_checkpoint_shock_prod_and_quit() -> void:
 	if int(hit_state.get("health", -1)) != 2 or str(hit_state.get("phase", "")) != "recovery" or not _main._last_status_note.begins_with("Shock prod capacitor hit"):
 		_fail("Real Q/USE dispatch did not interrupt the eel: state=%s note=%s." % [hit_state, _main._last_status_note])
 		return
+	var discharge: Dictionary = _main._player.get_shock_prod_presentation_report()
+	if (
+		not bool(discharge.get("visible", false))
+		or not bool(discharge.get("connected", false))
+		or str(discharge.get("target_id", "")) != HOSTILE_ID
+		or not is_equal_approx(float(discharge.get("range_pixels", 0.0)), ShockProdController.ATTACK_RANGE_PX)
+	):
+		_fail("Real Q/USE hit did not produce authoritative range/target feedback: %s." % discharge)
+		return
 
-	print("Checkpoint Shock Prod smoke passed: checkpoint=expansion_14_start default=Scanner owned_not_ready=true prompt=Tab/TOOL+Q/USE selected=Shock_prod range=72 facing=right hit=1 health=2/3 phase=recovery capacitor=true.")
+	print("Checkpoint Shock Prod smoke passed: checkpoint=expansion_14_start default=Scanner owned_not_ready=true prompt=Tab/TOOL+Q/USE selected=Shock_prod range=72 facing=right discharge=visible_connected hit=1 health=2/3 phase=recovery capacitor=true.")
 	_main.get_tree().quit()
 
 

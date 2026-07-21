@@ -85,6 +85,8 @@ func use_shock_prod() -> Dictionary:
 		_main._material_project.has_shock_prod(),
 		_main._material_project.has_shock_prod_capacitor()
 	)
+	if _main._player.has_method("show_shock_prod_action"):
+		_main._player.show_shock_prod_action(result, facing_sign)
 	_main._last_status_note = str(result.get("note", _main._last_status_note))
 	_main._combat_feedback_seconds = _main.COMBAT_FEEDBACK_SECONDS
 	result["status"] = "unavailable" if str(result.get("reason", "")) == "cooldown" else "used"
