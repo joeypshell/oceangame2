@@ -1,6 +1,9 @@
 extends RefCounted
 
 const ActiveToolController := preload("res://scripts/main/active_tool_controller.gd")
+const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+const ReviewCheckpointFixture := preload("res://scripts/main/review_checkpoint_fixture.gd")
+const HOSTILE_ID := "deep_cache_territorial_eel"
 const PASSIVE_CAPABILITY_IDS := [
 	"propulsion_fins",
 	"oxygen_tank_1",
@@ -88,6 +91,71 @@ func smoke_and_quit() -> void:
 		controller.selected_tool_id(),
 	])
 	_main.get_tree().quit()
+
+
+func smoke_checkpoint_shock_prod_and_quit() -> void:
+	var checkpoint_report: Dictionary = _main._review_checkpoint_report
+	if not bool(checkpoint_report.get("ready", false)) or str(checkpoint_report.get("checkpoint_id", "")) != ReviewCheckpointFixture.EXPANSION_14_START:
+		_fail("Named checkpoint was not ready: %s." % checkpoint_report)
+		return
+	var profile = _main._anomaly_survey.profile_state()
+	if not (
+		profile.has_capability(ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID)
+		and profile.has_capability(ExpansionProfileState.SHOCK_PROD_CAPACITOR_CAPABILITY_ID)
+	):
+		_fail("Checkpoint omitted the Shock Prod or capacitor capability.")
+		return
+	var initial: Dictionary = _main._refresh_active_tools()
+	if str(initial.get("selected_tool_id", "")) != ActiveToolController.SCANNER_TOOL_ID:
+		_fail("Checkpoint did not begin with Scanner selected: %s." % initial)
+		return
+	var unselected_overlay: String = _main._combat_overlay_text()
+	if unselected_overlay.find("Shock prod owned") == -1 or unselected_overlay.find("Shock prod +capacitor ready") != -1:
+		_fail("Unselected Shock Prod was described as ready: %s." % unselected_overlay)
+		return
+
+	var state: Dictionary = _main._hostiles.state_for(HOSTILE_ID)
+	if state.is_empty():
+		_fail("Full-level checkpoint omitted %s." % HOSTILE_ID)
+		return
+	_main._player.global_position = state.get("home_center", Vector2.ZERO) + Vector2(-60, 0)
+	_main._player.swim_in_direction(Vector2.RIGHT, 0.0)
+	_main._hostiles.update(_main._world, _main._player.global_position, 0.0)
+	var wrong_tool_prompt: String = _main._active_tool_runtime.combat_prompt()
+	if wrong_tool_prompt.find("Tab/TOOL select Shock prod") == -1 or wrong_tool_prompt.find("Q/USE") == -1:
+		_fail("Encounter did not explain selected-tool use: %s." % wrong_tool_prompt)
+		return
+	_main._update_status_label()
+	if _main._status_label.text.find(wrong_tool_prompt) == -1:
+		_fail("Selected-tool encounter guidance did not reach the status overlay: %s." % _main._status_label.text)
+		return
+	_press_action("active_tool_cycle_next")
+	_press_action("active_tool_cycle_next")
+	if _main._active_tools.selected_tool_id() != ActiveToolController.SHOCK_PROD_TOOL_ID:
+		_fail("Real cycle input did not select Shock Prod: %s." % _main._active_tools.report(Callable(profile, "has_capability")))
+		return
+	var ready_prompt: String = _main._active_tool_runtime.combat_prompt()
+	if ready_prompt.find("in Shock prod range") == -1 or _main._combat_overlay_text().find("Shock prod +capacitor ready") == -1:
+		_fail("Selected in-range Shock Prod was not clearly ready: %s | %s." % [ready_prompt, _main._combat_overlay_text()])
+		return
+	if _main._status_label.text.find(ready_prompt) == -1:
+		_fail("In-range discharge guidance did not reach the status overlay: %s." % _main._status_label.text)
+		return
+	_press_action("active_tool_use")
+	var hit_state: Dictionary = _main._hostiles.state_for(HOSTILE_ID)
+	if int(hit_state.get("health", -1)) != 2 or str(hit_state.get("phase", "")) != "recovery" or not _main._last_status_note.begins_with("Shock prod capacitor hit"):
+		_fail("Real Q/USE dispatch did not interrupt the eel: state=%s note=%s." % [hit_state, _main._last_status_note])
+		return
+
+	print("Checkpoint Shock Prod smoke passed: checkpoint=expansion_14_start default=Scanner owned_not_ready=true prompt=Tab/TOOL+Q/USE selected=Shock_prod range=72 facing=right hit=1 health=2/3 phase=recovery capacitor=true.")
+	_main.get_tree().quit()
+
+
+func _press_action(action: StringName) -> void:
+	var event := InputEventAction.new()
+	event.action = action
+	event.pressed = true
+	_main._unhandled_input(event)
 
 
 func _has_capability(capability_id: String) -> bool:

@@ -26,7 +26,7 @@ func try_attack(hostiles, world, player_position: Vector2, facing_sign: float, u
 	cooldown_seconds = ATTACK_COOLDOWN_SECONDS
 	var target: Dictionary = hostiles.attack_target(player_position, facing_sign, ATTACK_RANGE_PX)
 	if target.is_empty():
-		return _result(false, "miss", "Shock prod discharged")
+		return _result(false, "miss", "Shock prod miss - move closer and face eel")
 	var hit: Dictionary = hostiles.apply_weapon_hit(world, str(target.get("id", "")), ATTACK_DAMAGE, capacitor_unlocked)
 	if bool(hit.get("defeated", false)):
 		var victory := _result(true, "defeated", "Territory clear for today")
@@ -40,9 +40,11 @@ func try_attack(hostiles, world, player_position: Vector2, facing_sign: float, u
 	return result
 
 
-func overlay_text(unlocked: bool, capacitor_unlocked := false) -> String:
+func overlay_text(unlocked: bool, capacitor_unlocked := false, selected := true) -> String:
 	if not unlocked:
 		return "Shock prod locked"
+	if not selected:
+		return "Shock prod owned | select active tool"
 	if cooldown_seconds > 0.0:
 		return "Shock prod +capacitor %.1fs | interrupts warning/lunge" % cooldown_seconds if capacitor_unlocked else "Shock prod %.1fs" % cooldown_seconds
 	return "Shock prod +capacitor ready | hit warning/lunge to force recovery" if capacitor_unlocked else "Shock prod ready"

@@ -93,7 +93,7 @@ func _smoke_expansion_06_combat_foundation_and_quit() -> void:
 	_prepare_current_map()
 	_attach_profile(reloaded, true)
 	_update_status_label()
-	if not _require(_status_text().find("Shock prod ready") != -1, "armed next day omitted weapon readiness"):
+	if not _require(_status_text().find("Shock prod owned | select active tool") != -1, "armed next day did not distinguish owned from selected Shock Prod"):
 		return
 	if not guard_checks.verify_behavioral_cache_guard():
 		return

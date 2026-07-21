@@ -17,6 +17,7 @@ run_godot sealed-wreck-reward-state 60 --headless --path . --script res://script
 run_godot expansion-14-archive-current-return 60 --headless --path . --smoke-expansion-14-archive-current-return
 run_godot expansion-14-runtime-owners 60 --headless --path . --script res://scripts/main/smoke/smoke_expansion_14_runtime_owners.gd
 run_godot review-checkpoint-fixture 60 --headless --path . --script res://scripts/main/smoke/smoke_review_checkpoint_fixture.gd
+run_godot checkpoint-shock-prod 60 --headless --path . --review-checkpoint=expansion_14_start --smoke-checkpoint-shock-prod
 run_godot held-cargo-hud 60 --headless --path . --script res://scripts/main/smoke/smoke_held_cargo_hud.gd
 
 route_smokes=(

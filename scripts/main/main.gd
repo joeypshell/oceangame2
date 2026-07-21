@@ -469,6 +469,7 @@ func _ready() -> void:
 	var smoke_expansion_13_scanner_cutter_correction := _has_arg(user_args, engine_args, "--smoke-expansion-13-scanner-cutter-correction")
 	var smoke_expansion_14_archive_current_return := _has_arg(user_args, engine_args, "--smoke-expansion-14-archive-current-return")
 	var smoke_active_tool_selection := _has_arg(user_args, engine_args, "--smoke-active-tool-selection")
+	var smoke_checkpoint_shock_prod := _has_arg(user_args, engine_args, "--smoke-checkpoint-shock-prod")
 	var requested_map_path := MapCatalog.requested_map_path(user_args, engine_args)
 	var measure_map_runtime := _has_arg(user_args, engine_args, "--measure-map-runtime")
 	var parity_output_path := _arg_value(user_args, engine_args, "--parity-output")
@@ -816,6 +817,7 @@ func _ready() -> void:
 		or smoke_expansion_13_scanner_cutter_correction
 		or smoke_expansion_14_archive_current_return
 		or smoke_active_tool_selection
+		or smoke_checkpoint_shock_prod
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
 		or _has_arg(user_args, engine_args, "--capture-camera-tests")
 	)
@@ -935,6 +937,9 @@ func _ready() -> void:
 		return
 	if smoke_active_tool_selection:
 		_smoke_active_tool_checks.smoke_and_quit()
+		return
+	if smoke_checkpoint_shock_prod:
+		_smoke_active_tool_checks.smoke_checkpoint_shock_prod_and_quit()
 		return
 	if smoke_moving_hazard:
 		_smoke_moving_hazard_checks._smoke_moving_hazard_and_quit()
@@ -1978,6 +1983,9 @@ func _update_status_label() -> void:
 	elif _held_cargo_count() > 0:
 		prompt = "Return to extraction"
 	var hostile_prompt: String = str(_hostiles.prompt()) if _hostiles != null else ""
+	var combat_tool_prompt: String = _active_tool_runtime.combat_prompt() if _active_tool_runtime != null else ""
+	if not combat_tool_prompt.is_empty():
+		hostile_prompt = "%s\n%s" % [hostile_prompt, combat_tool_prompt] if not hostile_prompt.is_empty() else combat_tool_prompt
 	if not hostile_prompt.is_empty() and not _run_complete and not _sortie_state.failed and not _last_status_note.begins_with("Eel hit"):
 		if prompt.is_empty():
 			prompt = hostile_prompt
@@ -2032,7 +2040,8 @@ func _failure_retry_prompt() -> String:
 
 func _combat_overlay_text() -> String:
 	if _shock_prod != null and _material_project != null and _material_project.has_shock_prod():
-		return "%s | %s" % [_player_health.overlay_text(), _shock_prod.overlay_text(true, _material_project.has_shock_prod_capacitor())]
+		var selected: bool = _active_tools != null and _active_tools.selected_tool_id() == ActiveToolController.SHOCK_PROD_TOOL_ID
+		return "%s | %s" % [_player_health.overlay_text(), _shock_prod.overlay_text(true, _material_project.has_shock_prod_capacitor(), selected)]
 	return _player_health.overlay_text()
 
 
