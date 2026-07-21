@@ -1,11 +1,12 @@
 # OceanGame Phase 2 Roadmap
 
-Date: 2026-07-18
+Date: 2026-07-21
 
-Status: Expansions 01-13 are complete with player GO. Expansion 13 closed after
-two bounded HOLD corrections and owner review of exact-SHA runtime `ede39d1`.
-Planning issue #1029 selects Archive Current Return as the proposed Expansion
-14; no implementation milestone or issue batch exists yet.
+Status: Expansions 01-13 are complete with player GO. Expansion 14 is
+implemented and technically verified through its base batch, named checkpoint,
+and bounded owner-HOLD corrections #1061/#1063/#1065. Exact public candidate
+`f2f2750` passes; #1040 remains the owner GO/HOLD gate. No Expansion 15 is
+selected.
 
 ## Decision
 
@@ -93,15 +94,14 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-The Expansion 14 planning contract is selected. The next direction audit may
-create its single bounded implementation milestone and issue batch.
+Finish the Expansion 14 owner GO/HOLD gate in #1040. Its implementation,
+checkpoint, and bounded correction work are merged and technically verified.
 
 ### Proposed
 
-Archive Current Return must prove that committed archive knowledge, one exact
-night project, and a visible current can turn underused contiguous geography
-into a remembered-place payoff. Do not widen it into an economy or production
-HUD replacement.
+No later expansion is selected. A HOLD may create only another bounded
+correction tied directly to the #1040 journey; do not widen it into an economy
+or broad production HUD replacement.
 
 ### Directional
 
@@ -380,9 +380,10 @@ back to the boat?
 
 ### Expansion 14: Archive Current Return
 
-Status: Planning selected through #1029. See
-`docs/current/OCEANGAME_EXPANSION_14_PLAN.md`. No GitHub milestone or
-implementation issues have been created.
+Status: Implemented and technically verified in milestone #40 through base
+issues #1031-#1039, checkpoint work #1056/#1057, and bounded corrections
+#1061/#1063/#1065. Exact public candidate `f2f2750` awaits the owner GO/HOLD
+decision in #1040; no later expansion is selected.
 
 Goal: turn the committed southeast archive's unresolved wreck-network lead into
 the existing Ti2/Coil1 Current Stabilizer project and one return through a

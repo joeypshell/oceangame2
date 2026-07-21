@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-13 are complete with player GO. Expansion 14 Archive Current Return is technically complete through #1039: the archive now leads to the existing Ti2/Coil1 stabilizer project, a passive upper-left advanced-current return, Northwest Wreck Relay cargo and survey payoffs, and a bounded held-cargo strip. Exact-SHA Web and focused-checkpoint verification passed at `626ab23`; #1040 and milestone #40 remain open for the owner GO/HOLD decision. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
+The compact diver foundation and OceanGame Expansions 01-13 are complete with player GO. Expansion 14 Archive Current Return is technically complete through its base batch #1031-#1039, checkpoint work #1056/#1057, and bounded owner-HOLD corrections #1061/#1063/#1065. The corrections align real Shock Prod selection and guidance, replace the active-tool debug panel with a bottom icon hotbar, and show the authoritative 72px discharge. Exact-SHA Web and focused-checkpoint verification pass at `f2f2750`; #1040 and milestone #40 remain open for the owner GO/HOLD decision. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Expansion 13 closed with owner GO after review of exact runtime `ede39d1`. Expansion 14 implementation and technical evidence are merged through #1039; its only remaining issue is the real owner journey in #1040. Do not close the milestone or select Expansion 15 until that review records GO or a bounded HOLD correction. A broad credits economy, teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
+Expansion 13 closed with owner GO after review of exact runtime `ede39d1`. Expansion 14 implementation, checkpoint support, and bounded correction evidence are merged through #1065; its only product gate is the real owner journey in #1040. Do not close the milestone or select Expansion 15 until that review records GO or another bounded HOLD correction. A broad credits economy, teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
 
 Core sources and operating docs:
 

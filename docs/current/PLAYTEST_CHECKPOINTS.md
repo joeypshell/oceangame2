@@ -1,6 +1,6 @@
 # Playtest Checkpoints
 
-Last updated: 2026-07-19
+Last updated: 2026-07-21
 
 ## Purpose
 
@@ -28,15 +28,18 @@ Local:
 Verified public Web candidate:
 
 ```text
-https://joeypshell.github.io/oceangame2/?review=626ab23a4d38cc44d17d7c136311a1308ea2ebd3&checkpoint=expansion_14_start
+https://joeypshell.github.io/oceangame2/?review=f2f27508a07687a480b8a4ac2d9fdaa79556b257&checkpoint=expansion_14_start
 ```
 
 The checkpoint forces `production_level_01` and identifies itself in the
 review overlay. The ordinary `?review=<sha>` URL remains a completely empty,
 isolated profile.
 
-Public verification passed for exact SHA `626ab23a4d38cc44d17d7c136311a1308ea2ebd3`
-in [Godot Web Export run 29693647371](https://github.com/joeypshell/oceangame2/actions/runs/29693647371).
+The current candidate includes the bottom icon tool hotbar and visible Shock
+Prod discharge; checkpoint progression semantics are unchanged.
+
+Public verification passed for exact SHA `f2f27508a07687a480b8a4ac2d9fdaa79556b257`
+in [Godot Web Export run 29832768641](https://github.com/joeypshell/oceangame2/actions/runs/29832768641).
 The independent checker confirmed the checkpoint marker, full-level map,
 fresh-profile fallback, retained slice fallback, viewport framing, mobile touch
 alignment, and clean browser/resource startup.
