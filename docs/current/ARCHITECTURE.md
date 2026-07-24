@@ -4,7 +4,7 @@
 
 The current project is a Godot 4.7 side-view ocean salvage prototype for proving the source-driven map, terrain, validation, capture, and gameplay workflow that will support a finished small diver game.
 
-The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`. Expansion 13 is complete with owner GO at `ede39d1`. Expansion 14 Archive Current Return is implemented and technically verified through base issues #1031-#1039, checkpoint work #1056/#1057, and bounded owner-HOLD corrections #1061/#1063/#1065. The archive-led Current Stabilizer project passively opens an upper-left wreck-relay return with valuable cargo, an explicit pending survey, canonical-boat commitment, a held-cargo strip, a bottom icon tool hotbar, and visible Shock Prod discharge feedback. Exact-SHA Web candidate `f2f2750` passes; #1040 remains the owner GO/HOLD gate, so no closeout or later expansion is selected.
+The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`. Expansion 13 is complete with owner GO at `ede39d1`. Expansion 14 reached technical PASS at `f2f2750`, but owner review recorded HOLD for combat readability/control, scanner interaction, relay identity, and passive-equipment presentation. The bounded correction contract is `docs/current/OCEANGAME_EXPANSION_14_OWNER_HOLD_CORRECTION_PLAN.md`, implemented only through #1069-#1077 before returning to #1040. Existing progression, cargo, failure, boat-commit, topology, and active-tool ownership remain authoritative; no closeout or later expansion is selected.
 
 ## Source Of Truth
 

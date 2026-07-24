@@ -1,6 +1,6 @@
 # Milestones
 
-Last updated: 2026-07-21
+Last updated: 2026-07-24
 
 This is the compact milestone index. Detailed direction lives in:
 
@@ -40,26 +40,26 @@ This is the compact milestone index. Detailed direction lives in:
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-13 are complete with player GO. Expansion 14 is technically complete through base issues #1031-#1039, checkpoint work #1056/#1057, and bounded owner-HOLD corrections #1061/#1063/#1065. Exact-SHA Web candidate `f2f2750` passes; #1040 remains open for the owner GO/HOLD decision. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
+Simple Diver Game 01-09 and OceanGame Expansions 01-13 are complete with player GO. Expansion 14 reached technical PASS at exact candidate `f2f2750`, but owner review recorded HOLD. Bounded correction #1069-#1077 addresses combat readability/control, coherent scanner use, relay identity, and passive-equipment HUD placement before returning to #1040. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
-**Expansion 14: Archive Current Return** turns the southeast archive discovery into the existing Ti2/Coil1 stabilizer project, one continuous upper-left current return, a wreck-relay payoff, and a small held-cargo strip. Technical and public-Web evidence is green; milestone #40 remains open only for the owner gate.
+**Expansion 14: Archive Current Return** turns the southeast archive discovery into the existing Ti2/Coil1 stabilizer project, one continuous upper-left current return, a wreck-relay payoff, and a small held-cargo strip. Milestone #40 remains open for the bounded HOLD correction and owner replay.
 
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
-- Committed: finish the Expansion 14 owner GO/HOLD gate in #1040 without prejudging player experience.
+- Committed: resolve bounded Expansion 14 correction #1069-#1077, then return to owner gate #1040 without prejudging player experience.
 - Proposed: no later expansion is selected; a HOLD may create only one bounded correction batch.
 - Directional: pure oxygen-capacity progression, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-Milestone #40 is the only open implementation milestone. Base issues #1031-#1039, checkpoint work #1056/#1057, and corrections #1061/#1063/#1065 are closed; #1040 remains open for owner review.
+Milestone #40 is the only open implementation milestone. Base work and earlier corrections are closed; bounded correction #1069-#1077 is active, followed by owner review in #1040.
 
-1. [Expansion 14: Archive Current Return](https://github.com/joeypshell/oceangame2/milestone/40) - technical PASS at corrected public candidate `f2f2750`, awaiting owner gate #1040.
+1. [Expansion 14: Archive Current Return](https://github.com/joeypshell/oceangame2/milestone/40) - owner HOLD at technical candidate `f2f2750`; correction #1069-#1077 active before #1040 replay.
 2. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - complete with owner GO after corrections #980/#982-#990, #1000-#1009, and audio interlude #1020-#1023; exact reviewed runtime `ede39d1`.
 3. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - complete through #941 plus corrections #951-#953, with player GO and exact-SHA Web verification.
 
@@ -105,7 +105,7 @@ Milestone #40 is the only open implementation milestone. Base issues #1031-#1039
 
 ## Active Expansion 14
 
-#1031-#1039 lock, implement, validate, capture, accept, and deploy the archive-led Current Stabilizer return. #1056/#1057 add and verify a focused checkpoint without replacing the fresh-profile journey. #1061/#1063/#1065 correct Shock Prod selection/guidance, active-tool hotbar presentation, and visible discharge feedback. The current remains a passive boundary in contiguous geography; the relay core uses existing cargo/failure/banking owners; and the survey commits only at the canonical boat. Automation establishes technical PASS only. #1040 and milestone #40 stay open until the owner reports GO or HOLD.
+#1031-#1039 implement the archive-led Current Stabilizer return; #1056/#1057 add the focused checkpoint; #1061/#1063/#1065 correct initial tool selection and presentation. Owner review at `f2f2750` then recorded HOLD. #1069-#1077 now lock and implement one coherent correction for combat feel, scanner inspection/held progress, visible relay identity, passive equipment, integrated coverage, focused visual review, and exact Web handoff. #1040 and milestone #40 stay open until the owner reports GO.
 
 ## Roadmap Rules
 

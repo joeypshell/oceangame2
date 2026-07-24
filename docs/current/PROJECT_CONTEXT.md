@@ -1,6 +1,6 @@
 # Project Context
 
-Last updated: 2026-07-21
+Last updated: 2026-07-24
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
@@ -40,7 +40,7 @@ Expansion 12 is complete with player GO through #941 plus player-HOLD correction
 
 Expansion 13 Southeast Wreck Return is complete with owner GO. After two bounded HOLD corrections, #1000-#1009 established deliberate shared tool controls, matching mobile presentation, named material sprites, and failure-safe sealed-wreck navigation data through canonical-boat commitment. Bounded audio interlude #1020-#1023 added first-material pickup ownership, individually generated semantic cues, deterministic lifecycle/asset coverage, and exact-SHA Web verification. The owner reviewed runtime `ede39d1`, reported the corrected experience was fine, and closed the player gate through #969.
 
-Expansion 14 Archive Current Return is implemented and technically verified through base issues #1031-#1039, checkpoint work #1056/#1057, and bounded owner-HOLD corrections #1061/#1063/#1065. The committed archive reveals the existing Ti2/Coil1 Current Stabilizer project; ownership passively opens one advanced-current return to the Northwest Wreck Relay, where a valuable core and explicit scanner finding remain governed by existing cargo, failure, survey, and canonical-boat commit semantics. The held-cargo strip stays separate from the corrected bottom icon tool hotbar, and real Shock Prod use now shows its authoritative 72px discharge. Exact-SHA Web and focused-checkpoint verification pass at `f2f2750`; #1040 and milestone #40 remain open for owner GO/HOLD. The isolated `expansion_14_start` checkpoint begins after the archive commit without replaying earlier expansions; the full fresh-profile journey remains the milestone regression gate.
+Expansion 14 Archive Current Return reached technical PASS at exact checkpoint `f2f2750`, but owner review recorded HOLD. Combat lacked readable eel health/recoil/cadence, scanner use did not distinguish ordinary identification from held progression scans, the intended Northwest Wreck Relay target was not identifiable, and passive equipment had no stable top-HUD home. One bounded correction #1069-#1077 is locked in `docs/current/OCEANGAME_EXPANSION_14_OWNER_HOLD_CORRECTION_PLAN.md`; #1040 and milestone #40 remain open for the corrected owner GO/HOLD replay. The archive, Ti2/Coil1 Current Stabilizer, passive current, relay core, survey pending state, cargo/failure behavior, canonical-boat commitment, contiguous map, and checkpoint boundary remain unchanged.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -71,14 +71,14 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Completed Expansion 11 handoff: `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #925/#927, and player GO #914
 - Completed Expansion 12 handoff: `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #951-#953, and player GO #941
 - Completed Expansion 13 handoff: `docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`, with correction history in `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md`, `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md`, and `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`
-- Active Expansion 14 handoff: `docs/current/OCEANGAME_EXPANSION_14_PLAN.md`, `docs/current/OCEANGAME_EXPANSION_14_SOURCE_STATE_CONTRACT.md`, `docs/current/OCEANGAME_EXPANSION_14_VISUAL_BASELINE_DECISION.md`, and `docs/current/OCEANGAME_EXPANSION_14_WEB_PREVIEW_VERIFICATION.md`; owner gate #1040 remains open
+- Active Expansion 14 handoff: `docs/current/OCEANGAME_EXPANSION_14_OWNER_HOLD_CORRECTION_PLAN.md` plus the base plan, source/state contract, visual decision, and Web verification; correction #1069-#1077 is active and owner gate #1040 remains open
 - Latest audio/Web handoff: `docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Focused player-review workflow: `docs/current/PLAYTEST_CHECKPOINTS.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest owner decision: Expansion 13 GO in `docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`; Expansion 14 has technical PASS only
+- Latest owner decision: Expansion 14 HOLD on exact technical candidate `f2f2750`; correction contract is `docs/current/OCEANGAME_EXPANSION_14_OWNER_HOLD_CORRECTION_PLAN.md`
 - Active player gate: #1040 for the exact Expansion 14 candidate documented in `docs/current/OCEANGAME_EXPANSION_14_WEB_PREVIEW_VERIFICATION.md`
 - Latest selected planning direction: `docs/current/OCEANGAME_EXPANSION_14_PLAN.md`; no later expansion is selected
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_13_PLAN.md`, with ownership locked by `docs/current/OCEANGAME_EXPANSION_13_SOURCE_STATE_CONTRACT.md`
@@ -202,7 +202,7 @@ For map changes, run the relevant generator, SVG renderer, validator, parity che
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Each issue needs acceptance criteria, relevant files, implementation notes, and verification steps.
 
-Current issue state as of 2026-07-21:
+Current issue state as of 2026-07-24:
 
 - Closed: #662-#671 completed Expansion 01 with a GO.
 - Closed: #685-#694 completed Expansion 02 with a GO.
@@ -220,8 +220,9 @@ Current issue state as of 2026-07-21:
 - Closed correction batch: #1000-#1009 define, implement, validate, capture, accept, and deploy selected active-tool input, deliberate cutter activation, compact controls, readable named material sprites, and the source/runtime sealed-wreck navigation reward through exact-once boat commitment and profile compatibility.
 - Closed audio interlude: #1020-#1023 fix the first material-pickup cue path, separate semantic cue assets, add deterministic lifecycle/asset coverage, and verify public runtime `ede39d1`.
 - Closed: #969 records owner GO for exact reviewed runtime `ede39d1`; milestone #39 is complete.
-- Technical PASS: #1031-#1039 implement Expansion 14, #1056/#1057 add and verify the focused checkpoint, and #1061/#1063/#1065 complete the bounded tool-selection, hotbar, and Shock Prod feedback corrections.
-- Open player gate: #1040 requires owner GO/HOLD before closeout or later-expansion selection.
+- Owner HOLD: exact checkpoint `f2f2750` exposed combat, scanner, relay-identity, and passive-equipment clarity failures.
+- Active correction: #1069-#1077 is the only bounded implementation set.
+- Open player gate: #1040 requires corrected owner GO/HOLD before closeout or later-expansion selection.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -359,7 +360,7 @@ Current issue state as of 2026-07-21:
 
 ## Recommended Next Work
 
-Use the Expansion 14 plan, source/state contract, visual decision, Web verification, and #1040 as the current handoff. Technical readiness is complete; the next product decision is the owner's Archive Current Return GO/HOLD. Do not create a closeout or select Expansion 15 before that decision.
+Use the Expansion 14 owner-HOLD correction plan and frozen #1069-#1077 set as the current implementation handoff. After exact-SHA Web verification, return to #1040 for owner GO/HOLD. Do not create a closeout or select Expansion 15 before owner GO.
 
 Accepted constraints for next work:
 
