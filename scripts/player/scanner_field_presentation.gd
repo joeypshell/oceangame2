@@ -19,6 +19,7 @@ const CARD_TEXT_COLOR := Color(0.86, 0.96, 0.98, 0.96)
 
 var _scanner_unlocked := false
 var _active := false
+var _held := false
 var _pulse_remaining := 0.0
 var _facing_sign := 1.0
 var _range_pixels := DEFAULT_RANGE_PIXELS
@@ -41,7 +42,7 @@ func _process(delta: float) -> void:
 	if _pulse_remaining <= 0.0:
 		return
 	_pulse_remaining = maxf(0.0, _pulse_remaining - maxf(0.0, delta))
-	if _pulse_remaining <= 0.0 and not _active:
+	if _pulse_remaining <= 0.0 and not _active and not _held:
 		_clear_target()
 	_refresh_visibility()
 
@@ -53,7 +54,8 @@ func show_scanner_action(action_result: Dictionary, runtime_report: Dictionary, 
 	var reason := str(action_result.get("reason", ""))
 	if reason in ["blueprint_required", "project_required", "scanner_required"]:
 		return
-	_pulse_remaining = MISS_PULSE_SECONDS
+	if not _active and not _held:
+		_pulse_remaining = MISS_PULSE_SECONDS
 	if not _active:
 		_apply_targeting(runtime_report.get("targeting", {}))
 	_refresh_visibility()
@@ -68,11 +70,13 @@ func sync(runtime_report: Dictionary, facing_sign: float) -> void:
 
 	var interaction: Dictionary = runtime_report.get("interaction", {})
 	var was_active := _active
+	var was_held := _held
 	_active = bool(interaction.get("activated", false))
-	if _active:
+	_held = bool(runtime_report.get("scanner_use_held", false))
+	if _active or _held:
 		_progress = clampf(float(interaction.get("progress", 0.0)), 0.0, 1.0)
 		_apply_targeting(runtime_report.get("targeting", {}))
-	elif was_active:
+	elif was_active or was_held:
 		_pulse_remaining = 0.0
 		_clear_target()
 	elif _pulse_remaining <= 0.0:
@@ -83,6 +87,7 @@ func sync(runtime_report: Dictionary, facing_sign: float) -> void:
 func clear() -> void:
 	_scanner_unlocked = false
 	_active = false
+	_held = false
 	_pulse_remaining = 0.0
 	_clear_target()
 	_refresh_visibility()
@@ -92,6 +97,7 @@ func get_test_report() -> Dictionary:
 	return {
 		"visible": visible,
 		"active": _active,
+		"held": _held,
 		"pulse_remaining": _pulse_remaining,
 		"facing_sign": _facing_sign,
 		"range_pixels": _range_pixels,
@@ -217,5 +223,5 @@ func _fit_text(value: String, max_characters: int) -> String:
 
 
 func _refresh_visibility() -> void:
-	visible = _scanner_unlocked and (_active or _pulse_remaining > 0.0)
+	visible = _scanner_unlocked and (_active or _held or _pulse_remaining > 0.0)
 	queue_redraw()

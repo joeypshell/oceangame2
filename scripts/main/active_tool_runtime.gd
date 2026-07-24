@@ -73,9 +73,9 @@ func release_use() -> Dictionary:
 	if _selection == null or _selection.selected_tool_id() != ActiveToolController.SCANNER_TOOL_ID or _main._anomaly_survey == null:
 		return {"changed": false, "reason": "idle"}
 	var result: Dictionary = _main._anomaly_survey.scanner_release(_main._world)
+	_main._player.sync_scanner_presentation(_main._anomaly_survey.report())
 	if bool(result.get("changed", false)):
 		_main._last_status_note = str(result.get("note", "Scanner interrupted"))
-		_main._player.sync_scanner_presentation(_main._anomaly_survey.report())
 		_main._update_status_label()
 	return result
 
