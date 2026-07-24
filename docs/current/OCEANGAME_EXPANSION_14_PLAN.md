@@ -1,10 +1,12 @@
 # OceanGame Expansion 14 Plan
 
-Date: 2026-07-18
+Date: 2026-07-24
 
-Status: Selected planning direction through #1029. This document does not
-create an implementation milestone or issue batch. A later direction audit may
-create one bounded batch from the order below.
+Status: Base implementation #1031-#1039 and checkpoint/corrections through
+#1065 reached technical PASS, but owner review at `f2f2750` recorded HOLD.
+Bounded correction #1069-#1077 is locked in
+`docs/current/OCEANGAME_EXPANSION_14_OWNER_HOLD_CORRECTION_PLAN.md`; #1040
+remains the final owner GO/HOLD gate.
 
 ## Decision
 
