@@ -199,7 +199,11 @@ Capture the Expansion 06 combat-foundation review states:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --quit-after 40 --capture-expansion-06-combat-foundation
 ```
 
-This writes locked warning, unarmed lunge/evade, and armed 1/3-health damage states at 1280x720 and 1920x1080 under `visual_captures/expansion_06_combat_foundation/`. The command verifies dimensions and rejects blank or black-region output; it does not accept or replace production-slice baselines.
+This writes warning, lunge/evade, directional Shock Prod miss, and connected
+1/3-health damage states at 1280x720, 1920x1080, and 844x390 under
+`visual_captures/expansion_06_combat_foundation/`. The command verifies
+dimensions and rejects blank or black-region output; it does not accept or
+replace production-slice baselines.
 
 Capture the Expansion 07 biological-progression review states:
 
@@ -355,7 +359,13 @@ Capture the focused Expansion 14 archive-current return states:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --capture-expansion-14-archive-current-return
 ```
 
-This writes the committed archive result, blocked relay current, night project promise, passive post-build current, relay arrival, mixed full cargo, 50% scanner progress, and pending boat return at 1280x720 and mobile 844x390 under ignored `visual_captures/expansion_14_archive_current_return/`. Mobile gameplay frames include the test controls and fail on cargo/tool overlap; the command does not accept or replace baselines.
+This writes the committed archive result, blocked relay current, night project
+promise, passive post-build current, ordinary current identification, relay
+arrival, mixed full cargo/equipment, 50% held scanner progress, and pending
+boat return at 1280x720 and mobile 844x390 under ignored
+`visual_captures/expansion_14_archive_current_return/`. Mobile gameplay frames
+include the test controls and fail on cargo/tool overlap; the command does not
+accept or replace baselines.
 
 Capture the first production slice:
 
