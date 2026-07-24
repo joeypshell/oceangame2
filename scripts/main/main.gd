@@ -1674,6 +1674,7 @@ func _handle_oxygen_depleted() -> void:
 	_expedition_day_state.record_failure("oxygen_depleted")
 	_hazard_cooldown_seconds = HAZARD_COOLDOWN_SECONDS
 	_player.global_position = _world.spawn_position
+	_player.set_physics_process(false)
 	if _player.has_method("reset_motion"):
 		_player.reset_motion()
 	if _player.has_method("snap_camera"):
