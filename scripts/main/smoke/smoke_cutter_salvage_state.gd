@@ -65,10 +65,15 @@ func _run() -> void:
 	main._material_project.on_map_loaded(main._world)
 	main._refresh_active_tools()
 	_expect(main._active_tools.selected_tool_id() == ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID, "ordered active tools did not select the owned scanner first")
+	main._player.global_position = center - Vector2(48.0, 0.0)
 	main._process(0.0)
 	_press_use(main)
-	_expect(main._last_status_note.find("Tab Cutter") != -1, "wrong tool near cutter target omitted selection guidance")
+	_expect(
+		main._last_status_note.find("Tab Cutter") != -1,
+		"wrong tool near cutter target omitted selection guidance: %s" % main._last_status_note
+	)
 	_expect(is_zero_approx(float(main._cutter_salvage.report().get("progress_seconds", -1.0))), "wrong-tool use advanced cutter progress")
+	main._player.global_position = center
 	_press_cycle(main)
 	_expect(main._active_tools.selected_tool_id() == ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID, "cycle action did not select the cutter")
 

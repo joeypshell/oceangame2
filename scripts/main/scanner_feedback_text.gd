@@ -13,7 +13,10 @@ func _init(regional_presentation) -> void:
 func identification_note(target: Dictionary) -> String:
 	var label := str(target.get("scan_subject_label", "Unknown subject")).strip_edges()
 	var description := str(target.get("scan_subject_description", "")).strip_edges()
-	return "Identified: %s | %s" % [label, description] if not description.is_empty() else "Identified: %s" % label
+	var note := "Identified: %s | %s" % [label, description] if not description.is_empty() else "Identified: %s" % label
+	if str(target.get("source_type", "")) == "tool_target":
+		note += " | Tab Cutter | Q/USE"
+	return note
 
 
 func survey_complete_note(target: Dictionary) -> String:

@@ -16,9 +16,9 @@ func subjects(world, required_mode := "") -> Array[Dictionary]:
 		_append_progression_subjects(values, seen, world)
 	if str(required_mode) == "progression":
 		return values
+	_append_tool_targets(values, seen, world)
 	_append_salvage(values, seen, world)
 	_append_materials(values, seen, world)
-	_append_tool_targets(values, seen, world)
 	_append_hostiles(values, seen, world)
 	_append_biological_sources(values, seen, world)
 	_append_static_hazards(values, seen, world)
@@ -102,7 +102,7 @@ func _append_tool_targets(values: Array[Dictionary], seen: Dictionary, world) ->
 			"tool_target",
 			source,
 			_first_label(source, ["interaction_label"], str(source.get("kind", ""))),
-			"Sealed salvage target",
+			"Sealed salvage target | Cutter required",
 			"artifact"
 		)
 

@@ -126,6 +126,11 @@ func _init() -> void:
 			_expect(not subject.has(forbidden_field), "%s ordinary identification exposed reward field %s" % [subject.get("id"), forbidden_field])
 	identify_ids.sort()
 	_expect(identify_ids == EXPECTED_IDENTIFY_IDS, "scanner identification catalog drifted: %s" % [identify_ids])
+	var sealed_wreck := _subject_by_id(subjects, "identify_tool_target_sealed_wreck")
+	_expect(
+		str(sealed_wreck.get("scan_subject_description", "")).find("Cutter required") != -1,
+		"sealed tool target identification omitted cutter guidance"
+	)
 
 	var targeting := ScannerConeTargeting.new()
 	var acquired: Dictionary = targeting.acquire(world, Vector2.ZERO, 1.0)
