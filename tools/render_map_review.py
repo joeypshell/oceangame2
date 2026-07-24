@@ -98,7 +98,8 @@ def draw_survey_targets(draw: ImageDraw.ImageDraw, map_data: dict, scale: int) -
             outline=SURVEY,
             width=max(2, scale // 2),
         )
-        if target.get("scan_presentation_id") == "salvage_cutter_blueprint_case":
+        presentation_id = target.get("scan_presentation_id")
+        if presentation_id == "salvage_cutter_blueprint_case":
             anchor = target["scan_anchor"]
             cx = round((float(anchor["x"]) + 0.5) * scale)
             cy = round((float(anchor["y"]) + 0.5) * scale)
@@ -106,6 +107,17 @@ def draw_survey_targets(draw: ImageDraw.ImageDraw, map_data: dict, scale: int) -
             half_h = max(3, scale // 2)
             draw.rectangle((cx - half_w, cy - half_h, cx + half_w, cy + half_h), fill=(46, 74, 82, 255), outline=(143, 184, 179, 255))
             draw.rectangle((cx - half_w // 2, cy, cx + half_w // 2, cy + half_h - 1), fill=(31, 176, 184, 255))
+        elif presentation_id == "northwest_wreck_relay_console":
+            anchor = target["scan_anchor"]
+            cx = round((float(anchor["x"]) + 0.5) * scale)
+            cy = round((float(anchor["y"]) + 0.5) * scale)
+            half_w = max(5, scale)
+            half_h = max(4, scale * 3 // 4)
+            draw.rectangle((cx - half_w, cy - half_h, cx + half_w, cy + half_h), fill=(26, 59, 66, 255), outline=(133, 189, 184, 255))
+            draw.rectangle((cx - half_w + 2, cy - half_h + 2, cx + 1, cy + 1), fill=(10, 122, 135, 255))
+            draw.line((cx + half_w // 2, cy - half_h, cx + half_w // 2, cy - half_h - scale), fill=(133, 189, 184, 255), width=max(1, scale // 3))
+            r = max(2, scale // 3)
+            draw.polygon([(cx + half_w // 2, cy - half_h - scale - r), (cx + half_w // 2 + r, cy - half_h - scale), (cx + half_w // 2, cy - half_h - scale + r), (cx + half_w // 2 - r, cy - half_h - scale)], fill=(255, 184, 61, 255))
         else:
             cx, cy = (x0 + x1) // 2, (y0 + y1) // 2
             r = max(3, scale // 2)

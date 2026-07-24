@@ -1,5 +1,7 @@
 extends RefCounted
 
+const CUTTER_BLUEPRINT_PRESENTATION_ID := "salvage_cutter_blueprint_case"
+const WRECK_RELAY_PRESENTATION_ID := "northwest_wreck_relay_console"
 const STATE_COLORS := {
 	"locked": Color(0.28, 0.72, 0.76, 0.46),
 	"available": Color(0.18, 0.96, 0.88, 0.92),
@@ -65,10 +67,91 @@ func _add_marker(parent: Node2D, target: Dictionary, center: Vector2) -> Node2D:
 	root.position = center
 	root.z_index = 15
 	parent.add_child(root)
-	if str(target.get("scan_presentation_id", "")) == "salvage_cutter_blueprint_case":
-		_add_salvage_cutter_blueprint_case(root)
+	match str(target.get("scan_presentation_id", "")):
+		CUTTER_BLUEPRINT_PRESENTATION_ID:
+			_add_salvage_cutter_blueprint_case(root)
+		WRECK_RELAY_PRESENTATION_ID:
+			_add_northwest_wreck_relay_console(root)
 	root.modulate = STATE_COLORS["locked"]
 	return root
+
+
+func _add_northwest_wreck_relay_console(root: Node2D) -> void:
+	var shadow := Polygon2D.new()
+	shadow.name = "RelayShadow"
+	shadow.polygon = PackedVector2Array([
+		Vector2(-28, -19), Vector2(25, -19), Vector2(29, -14),
+		Vector2(29, 19), Vector2(-28, 19),
+	])
+	shadow.position = Vector2(3, 4)
+	shadow.color = Color(0.01, 0.06, 0.08, 0.58)
+	root.add_child(shadow)
+
+	var body := Polygon2D.new()
+	body.name = "RelayConsole"
+	body.polygon = PackedVector2Array([
+		Vector2(-28, -15), Vector2(-23, -20), Vector2(22, -20),
+		Vector2(28, -14), Vector2(28, 18), Vector2(-28, 18),
+	])
+	body.color = Color(0.10, 0.23, 0.26, 1.0)
+	root.add_child(body)
+
+	var outline := Line2D.new()
+	outline.name = "RelayFrame"
+	outline.points = PackedVector2Array([
+		Vector2(-28, -15), Vector2(-23, -20), Vector2(22, -20),
+		Vector2(28, -14), Vector2(28, 18), Vector2(-28, 18),
+		Vector2(-28, -15),
+	])
+	outline.default_color = Color(0.52, 0.74, 0.72, 1.0)
+	outline.width = 2.0
+	root.add_child(outline)
+
+	var screen := Polygon2D.new()
+	screen.name = "RelaySignalScreen"
+	screen.polygon = PackedVector2Array([
+		Vector2(-18, -11), Vector2(12, -11), Vector2(12, 7), Vector2(-18, 7),
+	])
+	screen.color = Color(0.04, 0.48, 0.53, 0.98)
+	root.add_child(screen)
+
+	var signal_trace := Line2D.new()
+	signal_trace.name = "RelaySignalTrace"
+	signal_trace.points = PackedVector2Array([
+		Vector2(-14, 1), Vector2(-9, 1), Vector2(-6, -5),
+		Vector2(-2, 5), Vector2(2, -2), Vector2(8, -2),
+	])
+	signal_trace.default_color = Color(1.0, 0.83, 0.28, 1.0)
+	signal_trace.width = 2.0
+	root.add_child(signal_trace)
+
+	var antenna := Line2D.new()
+	antenna.name = "RelayAntenna"
+	antenna.points = PackedVector2Array([
+		Vector2(15, -20), Vector2(15, -29), Vector2(22, -35),
+	])
+	antenna.default_color = Color(0.52, 0.74, 0.72, 1.0)
+	antenna.width = 3.0
+	root.add_child(antenna)
+
+	var beacon := Polygon2D.new()
+	beacon.name = "RelayBeacon"
+	beacon.polygon = PackedVector2Array([
+		Vector2(22, -40), Vector2(27, -35), Vector2(22, -30), Vector2(17, -35),
+	])
+	beacon.color = Color(1.0, 0.72, 0.24, 1.0)
+	root.add_child(beacon)
+
+	var feet := Line2D.new()
+	feet.name = "RelayFeet"
+	feet.points = PackedVector2Array([
+		Vector2(-18, 18), Vector2(-18, 23), Vector2(-25, 23),
+		Vector2(-18, 23), Vector2(18, 23), Vector2(18, 18),
+		Vector2(18, 23), Vector2(25, 23),
+	])
+	feet.default_color = Color(0.26, 0.42, 0.43, 1.0)
+	feet.width = 3.0
+	root.add_child(feet)
 
 
 func _add_salvage_cutter_blueprint_case(root: Node2D) -> void:

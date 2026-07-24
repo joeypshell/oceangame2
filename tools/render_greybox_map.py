@@ -169,7 +169,8 @@ def render_svg(map_data: dict) -> str:
             f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="8" fill="{COLORS["survey"]}" '
             'fill-opacity="0.28" stroke="#07584f" stroke-width="6"/>'
         )
-        if target.get("scan_presentation_id") == "salvage_cutter_blueprint_case":
+        presentation_id = target.get("scan_presentation_id")
+        if presentation_id == "salvage_cutter_blueprint_case":
             anchor = target["scan_anchor"]
             cx = (float(anchor["x"]) + 0.5) * tile_size
             cy = (float(anchor["y"]) + 0.5) * tile_size
@@ -180,6 +181,24 @@ def render_svg(map_data: dict) -> str:
             parts.append(f'<path d="M {cx - 8} {cy - 14} v -6 h 16 v 6" fill="none" stroke="#5f8285" stroke-width="4"/>')
             parts.append(f'<rect x="{cx - 13}" y="{cy}" width="26" height="10" fill="#1fb0b8"/>')
             parts.append(f'<path d="M {cx - 9} {cy + 7} l 6 -4 h 8 l 5 4" fill="none" stroke="#ffd14d" stroke-width="3"/>')
+        elif presentation_id == "northwest_wreck_relay_console":
+            anchor = target["scan_anchor"]
+            cx = (float(anchor["x"]) + 0.5) * tile_size
+            cy = (float(anchor["y"]) + 0.5) * tile_size
+            parts.append(
+                f'<path d="M {cx - 28} {cy - 15} l 5 -5 h 45 l 6 6 v 32 h -56 z" '
+                'fill="#1a3b42" stroke="#85bdb8" stroke-width="4"/>'
+            )
+            parts.append(f'<rect x="{cx - 18}" y="{cy - 11}" width="30" height="18" fill="#0a7a87"/>')
+            parts.append(
+                f'<path d="M {cx - 14} {cy + 1} h 5 l 3 -6 l 4 10 l 4 -7 h 6" '
+                'fill="none" stroke="#ffd447" stroke-width="3"/>'
+            )
+            parts.append(f'<path d="M {cx + 15} {cy - 20} v -9 l 7 -6" fill="none" stroke="#85bdb8" stroke-width="4"/>')
+            parts.append(
+                f'<polygon points="{cx + 22},{cy - 40} {cx + 27},{cy - 35} '
+                f'{cx + 22},{cy - 30} {cx + 17},{cy - 35}" fill="#ffb83d"/>'
+            )
         else:
             parts.append(f'<circle cx="{cx}" cy="{cy}" r="14" fill="none" stroke="{COLORS["survey"]}" stroke-width="6"/>')
         parts.append(text(x + 8, y - 10, target["id"], 22))
