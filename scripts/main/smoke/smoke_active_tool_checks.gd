@@ -153,11 +153,12 @@ func smoke_checkpoint_shock_prod_and_quit() -> void:
 		or not bool(discharge.get("connected", false))
 		or str(discharge.get("target_id", "")) != HOSTILE_ID
 		or not is_equal_approx(float(discharge.get("range_pixels", 0.0)), ShockProdController.ATTACK_RANGE_PX)
+		or not is_equal_approx(float(discharge.get("arc_half_angle_degrees", 0.0)), ShockProdController.ATTACK_HALF_ANGLE_DEGREES)
 	):
 		_fail("Real Q/USE hit did not produce authoritative range/target feedback: %s." % discharge)
 		return
 
-	print("Checkpoint Shock Prod smoke passed: checkpoint=expansion_14_start default=Scanner owned_not_ready=true prompt=Tab/TOOL+Q/USE selected=Shock_prod range=72 facing=right discharge=visible_connected hit=1 health=2/3 phase=recovery capacitor=true.")
+	print("Checkpoint Shock Prod smoke passed: checkpoint=expansion_14_start default=Scanner selected=Shock_prod range=72 cone=35 discharge=visible_connected hit=1 recoil=44 health=2/3 phase=recovery capacitor=true.")
 	_main.get_tree().quit()
 
 

@@ -32,7 +32,7 @@ func _run() -> void:
 			push_error("Shock-prod capacitor state smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Shock-prod capacitor state smoke passed: base_warning_preserved=true capacitor_warning_interrupt=true capacitor_lunge_interrupt=true damage=1 recovery=1.25 range=72 cooldown=0.65 non_window_preserved=true lethal_defeat_precedence=true.")
+	print("Shock-prod capacitor state smoke passed: base_recoil_reaction=0.35 capacitor_warning_interrupt=true capacitor_lunge_interrupt=true damage=1 recovery=1.25 recoil=44 range=72 cone=35 cooldown=0.65 lethal_defeat_precedence=true.")
 	quit(0)
 
 
@@ -42,8 +42,10 @@ func _test_base_warning_hit(world) -> void:
 	var weapon := ShockProdController.new()
 	var result: Dictionary = weapon.try_attack(hostiles, world, fixture["player"], 1.0, true, false)
 	var state: Dictionary = hostiles.state_for(HOSTILE_ID)
-	_expect(bool(result.get("changed", false)) and not bool(result.get("interrupted", false)), "base shock prod unexpectedly interrupted warning")
-	_expect(int(state.get("health", 0)) == 2 and state.get("phase") == "warning", "base warning hit changed damage or phase")
+	_expect(bool(result.get("changed", false)) and not bool(result.get("interrupted", false)), "base shock prod unexpectedly used the capacitor interrupt")
+	_expect(int(state.get("health", 0)) == 2 and state.get("phase") == "recovery", "base warning hit missed damage or reaction opening")
+	_expect(is_equal_approx(float(state.get("phase_seconds", 0.0)), TerritorialHostileController.WEAPON_HIT_REACTION_SECONDS), "base hit did not use the short reaction timing")
+	_expect(is_equal_approx(float(result.get("recoil_distance", 0.0)), TerritorialHostileController.WEAPON_HIT_RECOIL_PX), "base hit did not apply the full recoil")
 
 
 func _test_capacitor_warning_interrupt(world) -> void:
@@ -79,7 +81,7 @@ func _test_range_window_and_lethal_precedence(world) -> void:
 	var home: Vector2 = hostiles.state_for(HOSTILE_ID).get("home_center", Vector2.ZERO)
 	var weapon := ShockProdController.new()
 	var home_hit: Dictionary = weapon.try_attack(hostiles, world, home + Vector2(-60, 0), 1.0, true, true)
-	_expect(not bool(home_hit.get("interrupted", false)) and hostiles.state_for(HOSTILE_ID).get("phase") == "home", "capacitor interrupted outside warning/lunge")
+	_expect(not bool(home_hit.get("interrupted", false)) and hostiles.state_for(HOSTILE_ID).get("phase") == "recovery", "base hit outside warning/lunge missed its short reaction")
 	weapon.reset()
 	var miss: Dictionary = weapon.try_attack(hostiles, world, home + Vector2(-100, 0), 1.0, true, true)
 	_expect(miss.get("reason") == "miss" and str(miss.get("note", "")).find("move closer and face eel") != -1 and int(hostiles.state_for(HOSTILE_ID).get("health", 0)) == 2, "capacitor changed range, miss guidance, or miss damage")

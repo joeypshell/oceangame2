@@ -241,6 +241,8 @@ func _exercise_armed_fight(profile) -> Dictionary:
 	if not _require(int(_hostile_state().get("health", -1)) == health_before_legacy_action, "legacy combat action still bypassed active-tool use"):
 		return {}
 	for expected_health in [2, 1, 0]:
+		_player.global_position = (_hostile_state().get("position", home) as Vector2) + Vector2(-60, 0)
+		_player.swim_in_direction(Vector2.RIGHT, 0.0)
 		_press_attack()
 		if not _require(int(_hostile_state().get("health", -1)) == expected_health, "shock prod hit did not apply one damage"):
 			return {}

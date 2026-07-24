@@ -2,6 +2,7 @@ extends SceneTree
 
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
+const GreyboxHostileRenderer := preload("res://scripts/world/greybox_hostile_renderer.gd")
 const TerritorialHostileController := preload("res://scripts/main/territorial_hostile_controller.gd")
 const ShockProdController := preload("res://scripts/main/shock_prod_controller.gd")
 const MAP_PATH := "res://maps/production_slice_01.greybox.json"
@@ -23,7 +24,7 @@ func _run() -> void:
 	_test_input_boundary()
 	_test_world_boundary(world)
 	_test_warning_retreat_and_contact(world)
-	_test_weapon_and_day_state(world)
+	await _test_weapon_and_day_state(world)
 	await _test_player_knockback_collision()
 
 	world.queue_free()
@@ -32,7 +33,7 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: combat runtime state source=deep_cache_territorial_eel warning=true unarmed_retreat=true territorial_reacquire=true contact_damage=1 knockback=325 disruption=0.45 collision_safe=true repeated_damage=false weapon_locked=true hits=3 defeated=true rewards=none connector_persisted=true new_day_restored=true.")
+	print("PASS: combat runtime state source=deep_cache_territorial_eel warning=true health_bar=3/3 recoil=44 reaction=0.35 contact_damage=1 player_knockback=325 collision_safe=true weapon_cone=35 hits=3 zero_before_hide=true rewards=none new_day_restored=true.")
 	quit(0)
 
 
@@ -69,6 +70,8 @@ func _test_warning_retreat_and_contact(world) -> void:
 	_expect(str(warning.get("kind", "")) == "warning", "approach did not start the warning phase")
 	_expect(str(hostiles.state_for(HOSTILE_ID).get("phase", "")) == "warning", "warning phase was not retained")
 	_expect(hostiles.prompt().find("WARNING") != -1 and hostiles.prompt().find("watch the lunge") != -1, "warning prompt omitted phase or source label")
+	var warning_bar: Dictionary = world.get_hostile_visual_report().get("health_bars", {}).get(HOSTILE_ID, {})
+	_expect(bool(warning_bar.get("visible", false)) and int(warning_bar.get("health", 0)) == 3, "warning did not reveal a full world-local health bar")
 
 	var lower_evade_lane := Vector2(60.5, 78.5) * 32.0
 	var retreat: Dictionary = hostiles.update(world, lower_evade_lane, 0.1)
@@ -110,11 +113,23 @@ func _test_weapon_and_day_state(world) -> void:
 	_expect(str(wrong_facing.get("reason", "")) == "miss", "weapon ignored player facing")
 	_expect(int(hostiles.state_for(HOSTILE_ID).get("health", 0)) == 3, "wrong-facing attack changed hostile health")
 	weapon.reset()
+	var off_axis: Dictionary = weapon.try_attack(hostiles, world, home + Vector2(-50, -50), 1.0, true)
+	_expect(str(off_axis.get("reason", "")) == "miss", "weapon targeting retained the broad semicircle")
+	weapon.reset()
 
 	for expected_health in [2, 1, 0]:
+		var before: Dictionary = hostiles.state_for(HOSTILE_ID)
+		attack_position = (before.get("position", home) as Vector2) + Vector2(-60, 0)
 		var hit: Dictionary = weapon.try_attack(hostiles, world, attack_position, 1.0, true)
 		_expect(bool(hit.get("changed", false)), "unlocked in-range weapon did not hit")
-		_expect(int(hostiles.state_for(HOSTILE_ID).get("health", -1)) == expected_health, "weapon hit did not apply one damage")
+		var after: Dictionary = hostiles.state_for(HOSTILE_ID)
+		_expect(int(after.get("health", -1)) == expected_health, "weapon hit did not apply one damage")
+		_expect(float(hit.get("recoil_distance", 0.0)) > 0.0, "weapon hit did not move the eel away from the player")
+		if expected_health > 0:
+			_expect(str(after.get("phase", "")) == "recovery", "nonlethal hit did not create a reaction opening")
+			_expect(is_equal_approx(float(after.get("phase_seconds", 0.0)), TerritorialHostileController.WEAPON_HIT_REACTION_SECONDS), "base hit reaction timing drifted")
+			var hit_bar: Dictionary = world.get_hostile_visual_report().get("health_bars", {}).get(HOSTILE_ID, {})
+			_expect(bool(hit_bar.get("visible", false)) and int(hit_bar.get("health", -1)) == expected_health, "damaged eel health bar did not update")
 		_expect(not _contains_reward_key(hit), "hostile defeat result introduced a forbidden reward")
 		if expected_health == 2:
 			var blocked: Dictionary = weapon.try_attack(hostiles, world, attack_position, 1.0, true)
@@ -122,6 +137,15 @@ func _test_weapon_and_day_state(world) -> void:
 			_expect(int(hostiles.state_for(HOSTILE_ID).get("health", -1)) == 2, "cooldown-blocked attack changed hostile health")
 		weapon.update(ShockProdController.ATTACK_COOLDOWN_SECONDS)
 	_expect(str(hostiles.state_for(HOSTILE_ID).get("phase", "")) == "defeated", "third hit did not defeat the encounter")
+	var zero_bar: Dictionary = world.get_hostile_visual_report().get("health_bars", {}).get(HOSTILE_ID, {})
+	_expect(bool(zero_bar.get("root_visible", false)) and int(zero_bar.get("health", -1)) == 0, "defeat hid the eel before the health bar reached zero")
+	await create_timer(GreyboxHostileRenderer.DEFEAT_LINGER_SECONDS + 0.02).timeout
+	var hidden_bar: Dictionary = world.get_hostile_visual_report().get("health_bars", {}).get(HOSTILE_ID, {})
+	_expect(
+		not bool(hidden_bar.get("root_visible", true))
+		and bool(hidden_bar.get("defeat_linger_complete", false)),
+		"defeated eel did not hide after the zero-health linger"
+	)
 
 	hostiles.on_map_loaded(world, true)
 	_expect(str(hostiles.state_for(HOSTILE_ID).get("phase", "")) == "defeated", "connector-style reload did not preserve current-day defeat")

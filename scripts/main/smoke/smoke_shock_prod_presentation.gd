@@ -34,13 +34,16 @@ func _run() -> void:
 		"reason": "miss",
 		"target_position": miss_endpoint,
 		"attack_range_px": ShockProdController.ATTACK_RANGE_PX,
+		"attack_half_angle_degrees": ShockProdController.ATTACK_HALF_ANGLE_DEGREES,
 	}
 	_expect(player.show_shock_prod_action(miss_result, 1.0), "ready miss did not show a discharge")
 	report = player.get_shock_prod_presentation_report()
 	_expect(bool(report.get("visible", false)), "miss discharge was not visible")
 	_expect(not bool(report.get("connected", true)), "miss discharge reported a connection")
 	_expect(is_equal_approx(float(report.get("range_pixels", 0.0)), ShockProdController.ATTACK_RANGE_PX), "presentation range drifted from controller")
-	_expect(is_equal_approx(float(report.get("arc_half_angle_degrees", 0.0)), 90.0), "presentation did not show the forward attack semicircle")
+	_expect(is_equal_approx(float(report.get("arc_half_angle_degrees", 0.0)), ShockProdController.ATTACK_HALF_ANGLE_DEGREES), "presentation cone drifted from controller targeting")
+	_expect(str(report.get("range_shape", "")) == "forward_cone", "presentation did not report a forward cone")
+	_expect(str(report.get("miss_feedback", "")) == "directional_fizzle", "miss did not report directional fizzle feedback")
 	_expect((report.get("endpoint_local", Vector2.ZERO) as Vector2).is_equal_approx(Vector2(ShockProdController.ATTACK_RANGE_PX, 0.0)), "miss did not reach the range edge")
 	_expect(int(report.get("bolt_count", 0)) >= 2 and int(report.get("bolt_segments", 0)) >= 5, "electrical bolt was not meaningfully segmented")
 
@@ -56,6 +59,7 @@ func _run() -> void:
 		"id": "deep_cache_territorial_eel",
 		"target_position": target_position,
 		"attack_range_px": ShockProdController.ATTACK_RANGE_PX,
+		"attack_half_angle_degrees": ShockProdController.ATTACK_HALF_ANGLE_DEGREES,
 	}
 	_expect(player.show_shock_prod_action(hit_result, 1.0), "hit did not show a discharge")
 	report = player.get_shock_prod_presentation_report()
@@ -79,7 +83,7 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: Shock Prod presentation range=72 forward_semicircle=true miss=edge hit=target electrical_bolts=3 cooldown=no_fake_discharge facing=both.")
+	print("PASS: Shock Prod presentation range=72 forward_cone=35deg miss=edge_fizzle hit=target electrical_bolts=3 cooldown=no_fake_discharge facing=both.")
 	quit(0)
 
 
