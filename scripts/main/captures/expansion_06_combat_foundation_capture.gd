@@ -1,11 +1,13 @@
 extends RefCounted
 
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+const MobileTestControls := preload("res://scripts/main/mobile_test_controls.gd")
 const ShockProdController := preload("res://scripts/main/shock_prod_controller.gd")
 
 const CAPTURE_SIZES := [
-	{"suffix": "1280x720", "size": Vector2i(1280, 720)},
-	{"suffix": "1920x1080", "size": Vector2i(1920, 1080)},
+	{"suffix": "1280x720", "window_size": Vector2i(1280, 720), "canvas_size": Vector2i(1280, 720), "touch": false},
+	{"suffix": "1920x1080", "window_size": Vector2i(1920, 1080), "canvas_size": Vector2i(1920, 1080), "touch": false},
+	{"suffix": "mobile_844x390", "window_size": Vector2i(844, 390), "canvas_size": Vector2i(693, 390), "touch": true},
 ]
 const HOSTILE_ID := ExpansionProfileState.SHOCK_PROD_TARGET_ID
 const CAMERA_ZOOM := Vector2(1.05, 1.05)
@@ -17,6 +19,7 @@ const RECIPE := {
 
 var _main
 var _camera: Camera2D
+var _mobile_controls
 
 
 func _init(main_node) -> void:
@@ -62,6 +65,15 @@ func capture_and_quit(capture_dir: String) -> void:
 	_main._last_status_note = ""
 	_select_shock_prod()
 	_main._player.global_position = home + Vector2(-60, 0)
+	_main._player.swim_in_direction(Vector2.LEFT, 0.0)
+	var miss: Dictionary = _main._active_tool_runtime.use_shock_prod()
+	_main._update_status_label()
+	if str(miss.get("reason", "")) != "miss" or not _status_contains("Shock prod miss - move closer and face eel"):
+		_fail("armed directional miss state was not readable: %s" % str(miss))
+		return
+	if not await _capture_pair(capture_dir, "armed_directional_miss", camera_position, "miss"):
+		return
+	_main._shock_prod.update(ShockProdController.ATTACK_COOLDOWN_SECONDS)
 	_main._player.swim_in_direction(Vector2.RIGHT, 0.0)
 	_main._process(0.0)
 	for expected_health in [2, 1]:
@@ -82,7 +94,7 @@ func capture_and_quit(capture_dir: String) -> void:
 	if not bool(discharge.get("visible", false)) or not bool(discharge.get("connected", false)):
 		_fail("armed damage capture omitted the connected Shock Prod discharge")
 		return
-	if not await _capture_pair(capture_dir, "armed_damage", camera_position, true):
+	if not await _capture_pair(capture_dir, "armed_damage", camera_position, "hit"):
 		return
 
 	print("Saved Expansion 06 combat-foundation review captures under: %s" % ProjectSettings.globalize_path(capture_dir))
@@ -97,6 +109,11 @@ func _prepare_capture() -> bool:
 	_main._player.set_physics_process(false)
 	_main._hazard_interactions_enabled = false
 	_main._combat_interactions_enabled = true
+	_mobile_controls = MobileTestControls.new()
+	_mobile_controls.name = "Expansion06CaptureMobileControls"
+	_mobile_controls.force_visible = true
+	_main.add_child(_mobile_controls)
+	_mobile_controls.visible = false
 	return true
 
 
@@ -169,15 +186,22 @@ func _create_camera() -> Camera2D:
 	return camera
 
 
-func _capture_pair(capture_dir: String, state_id: String, camera_position: Vector2, replay_discharge := false) -> bool:
-	_frame_camera(camera_position)
+func _capture_pair(capture_dir: String, state_id: String, camera_position: Vector2, replay_discharge := "") -> bool:
 	for capture_spec in CAPTURE_SIZES:
-		var expected_size: Vector2i = capture_spec["size"]
-		_main.get_window().size = expected_size
-		_camera.force_update_scroll()
-		if replay_discharge:
-			_show_capture_discharge()
+		var expected_size: Vector2i = capture_spec["canvas_size"]
+		var show_touch := bool(capture_spec["touch"])
+		_main.get_window().size = capture_spec["window_size"]
+		_mobile_controls.visible = show_touch
+		_frame_camera(
+			camera_position + Vector2(300.0, 0.0) if show_touch else camera_position,
+			360.0 if show_touch else 0.0
+		)
+		if not str(replay_discharge).is_empty():
+			_show_capture_discharge(str(replay_discharge))
 		await _settle_frames()
+		if show_touch and not bool(_mobile_controls.get_test_report().get("enabled", false)):
+			_fail("mobile combat capture omitted the touch controls")
+			return false
 		var image: Image = _main.get_viewport().get_texture().get_image()
 		if not _image_is_usable(image, expected_size):
 			await _settle_frames()
@@ -194,24 +218,29 @@ func _capture_pair(capture_dir: String, state_id: String, camera_position: Vecto
 	return true
 
 
-func _show_capture_discharge() -> void:
+func _show_capture_discharge(discharge_kind: String) -> void:
 	var state := _hostile_state()
+	var connected := discharge_kind == "hit"
+	var target_position: Vector2 = state.get("position", Vector2.ZERO) if connected else (
+		_main._player.global_position
+		+ Vector2(ShockProdController.ATTACK_RANGE_PX * _main._player.get_facing_sign(), 0.0)
+	)
 	_main._player.show_shock_prod_action({
 		"discharged": true,
-		"connected": true,
-		"reason": "damaged",
-		"id": HOSTILE_ID,
-		"target_position": state.get("position", Vector2.ZERO),
+		"connected": connected,
+		"reason": "damaged" if connected else "miss",
+		"id": HOSTILE_ID if connected else "",
+		"target_position": target_position,
 		"attack_range_px": ShockProdController.ATTACK_RANGE_PX,
 		"attack_half_angle_degrees": ShockProdController.ATTACK_HALF_ANGLE_DEGREES,
 	}, _main._player.get_facing_sign())
 
 
-func _frame_camera(position: Vector2) -> void:
+func _frame_camera(position: Vector2, right_edge_padding := 0.0) -> void:
 	_camera.zoom = CAMERA_ZOOM
 	_camera.limit_left = 0
 	_camera.limit_top = 0
-	_camera.limit_right = int(_main._world.map_pixel_size.x)
+	_camera.limit_right = int(_main._world.map_pixel_size.x + right_edge_padding)
 	_camera.limit_bottom = int(_main._world.map_pixel_size.y)
 	_camera.position = position
 	_camera.make_current()

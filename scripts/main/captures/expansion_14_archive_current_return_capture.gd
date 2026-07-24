@@ -5,6 +5,7 @@ const Expansion14CaptureRenderer := preload("res://scripts/main/captures/expansi
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const ReviewProgressionFixture := preload("res://scripts/main/review_progression_fixture.gd")
 const ScannerPose := preload("res://scripts/main/smoke/scanner_smoke_pose.gd")
+const ScannerSubjectCatalog := preload("res://scripts/main/scanner_subject_catalog.gd")
 
 const MAP_ID := "production_level_01"
 const BOAT_ENTRY_ID := "surface_boat_entry"
@@ -62,6 +63,11 @@ func capture_and_quit(capture_dir: String) -> void:
 		return
 	if not await _renderer.capture_pair(capture_dir, "post_stabilizer_current", camera_tests[CAMERA_IDS["post_current"]]):
 		return
+	if not _prepare_current_identification():
+		return
+	if not await _renderer.capture_pair(capture_dir, "current_identification", camera_tests[CAMERA_IDS["post_current"]]):
+		return
+	_main._player.sync_scanner_presentation({"scanner_unlocked": false})
 	if not _prepare_relay_arrival():
 		return
 	if not await _renderer.capture_pair(capture_dir, "wreck_relay_arrival", camera_tests[CAMERA_IDS["arrival"]]):
@@ -287,6 +293,33 @@ func _prepare_traversable_current() -> bool:
 		and _main._player.global_position == before
 		and _status_text().find("Current stabilizer built") != -1,
 		"equipped relay current did not remain passive and readable"
+	)
+
+
+func _prepare_current_identification() -> bool:
+	var subject := {}
+	for candidate in ScannerSubjectCatalog.new().subjects(_main._world, "identify"):
+		if str(candidate.get("source_type", "")) == "current" and str(candidate.get("source_id", "")) == GATE_ID:
+			subject = candidate
+			break
+	if subject.is_empty() or not bool(ScannerPose.new().place(_main._world, _main._player, subject).get("found", false)):
+		_fail("relay current has no ordinary scanner-identification pose")
+		return false
+	for _step in range(3):
+		if _main._active_tools.selected_tool_id() == ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID:
+			break
+		_main._cycle_active_tool()
+	var result: Dictionary = _main._active_tool_runtime.use()
+	_main._last_status_note = str(result.get("note", ""))
+	_main._update_status_label()
+	var presentation: Dictionary = _main._player.get_scanner_presentation_report()
+	return _expect(
+		str(result.get("reason", "")) == "identified"
+		and str(presentation.get("target_id", "")) == str(subject.get("id", ""))
+		and str(presentation.get("target_mode", "")) == "identify"
+		and str(presentation.get("target_label", "")) == "Ripping relay current"
+		and _status_text().find("Identified: Ripping relay current") != -1,
+		"ordinary relay-current identification was not readable"
 	)
 
 
