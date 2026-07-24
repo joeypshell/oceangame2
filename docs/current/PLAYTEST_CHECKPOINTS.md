@@ -28,7 +28,7 @@ Local:
 Verified public Web candidate:
 
 ```text
-https://joeypshell.github.io/oceangame2/?review=ddbf5f776b61daef3cfff29040cf40b3cb1c417b&checkpoint=expansion_14_start
+https://joeypshell.github.io/oceangame2/?review=1f148ebd9766ae18be48f0c14368c83d62375d05&checkpoint=expansion_14_start
 ```
 
 The checkpoint forces `production_level_01` and identifies itself in the
@@ -40,8 +40,8 @@ equipment strip, visible Northwest Wreck Relay, held scanner progression with
 a target-local readout, and readable Shock Prod hit/miss feedback. Checkpoint
 progression semantics are unchanged.
 
-Public verification passed for exact SHA `ddbf5f776b61daef3cfff29040cf40b3cb1c417b`
-in [Godot Web Export run 30127311508](https://github.com/joeypshell/oceangame2/actions/runs/30127311508).
+Public verification passed for exact SHA `1f148ebd9766ae18be48f0c14368c83d62375d05`
+in [Godot Web Export run 30129321057](https://github.com/joeypshell/oceangame2/actions/runs/30129321057).
 The independent checker confirmed the checkpoint marker, full-level map,
 fresh-profile fallback, retained slice fallback, viewport framing, mobile touch
 alignment, and clean browser/resource startup.
@@ -51,13 +51,16 @@ alignment, and clean browser/resource startup.
 1. Build the Current Stabilizer and pass through the left advanced current by
    swimming; no `E` interaction is expected.
 2. Find the visible Northwest Wreck Relay, equip Scanner, and hold `Q/USE`.
-   Releasing the input or switching tools must cancel partial progress.
+   The field must remain visible for the full hold; releasing the input or
+   switching tools must clear it and cancel partial progress.
 3. Aim the Scanner at ordinary subjects and confirm the temporary local card
    identifies them without awarding progression.
 4. Use the Shock Prod against the eel and confirm forward miss/fizzle feedback,
    connected-hit bolt, eel health, recoil separation, cadence, and defeat.
 5. Confirm passive upgrades appear under top `EQUIPPED` slots while Scanner,
    Cutter, and Shock Prod remain in the bottom active-tool hotbar.
+6. Allow oxygen to deplete and confirm movement is frozen behind the retry
+   result, then use `R/RESET` and confirm movement returns.
 
 ## Guardrails
 
