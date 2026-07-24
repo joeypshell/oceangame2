@@ -1,6 +1,6 @@
 # Playtest Checkpoints
 
-Last updated: 2026-07-21
+Last updated: 2026-07-24
 
 ## Purpose
 
@@ -28,21 +28,36 @@ Local:
 Verified public Web candidate:
 
 ```text
-https://joeypshell.github.io/oceangame2/?review=f2f27508a07687a480b8a4ac2d9fdaa79556b257&checkpoint=expansion_14_start
+https://joeypshell.github.io/oceangame2/?review=ddbf5f776b61daef3cfff29040cf40b3cb1c417b&checkpoint=expansion_14_start
 ```
 
 The checkpoint forces `production_level_01` and identifies itself in the
 review overlay. The ordinary `?review=<sha>` URL remains a completely empty,
 isolated profile.
 
-The current candidate includes the bottom icon tool hotbar and visible Shock
-Prod discharge; checkpoint progression semantics are unchanged.
+The current candidate includes the bottom active-tool hotbar, top passive
+equipment strip, visible Northwest Wreck Relay, held scanner progression with
+a target-local readout, and readable Shock Prod hit/miss feedback. Checkpoint
+progression semantics are unchanged.
 
-Public verification passed for exact SHA `f2f27508a07687a480b8a4ac2d9fdaa79556b257`
-in [Godot Web Export run 29832768641](https://github.com/joeypshell/oceangame2/actions/runs/29832768641).
+Public verification passed for exact SHA `ddbf5f776b61daef3cfff29040cf40b3cb1c417b`
+in [Godot Web Export run 30127311508](https://github.com/joeypshell/oceangame2/actions/runs/30127311508).
 The independent checker confirmed the checkpoint marker, full-level map,
 fresh-profile fallback, retained slice fallback, viewport framing, mobile touch
 alignment, and clean browser/resource startup.
+
+## Current Owner Replay
+
+1. Build the Current Stabilizer and pass through the left advanced current by
+   swimming; no `E` interaction is expected.
+2. Find the visible Northwest Wreck Relay, equip Scanner, and hold `Q/USE`.
+   Releasing the input or switching tools must cancel partial progress.
+3. Aim the Scanner at ordinary subjects and confirm the temporary local card
+   identifies them without awarding progression.
+4. Use the Shock Prod against the eel and confirm forward miss/fizzle feedback,
+   connected-hit bolt, eel health, recoil separation, cadence, and defeat.
+5. Confirm passive upgrades appear under top `EQUIPPED` slots while Scanner,
+   Cutter, and Shock Prod remain in the bottom active-tool hotbar.
 
 ## Guardrails
 

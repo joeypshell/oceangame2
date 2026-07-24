@@ -1,19 +1,24 @@
 # OceanGame Expansion 14 Web Preview Verification
 
-Date: 2026-07-21
+Date: 2026-07-24
 
-Issues: #1039 `Verify the exact Expansion 14 public Web candidate`, #1057 `Verify Expansion 14 checkpoint Web review path`, and bounded corrections #1061/#1063/#1065
+Issues: #1039 `Verify the exact Expansion 14 public Web candidate`, #1057
+`Verify Expansion 14 checkpoint Web review path`, bounded corrections
+#1061/#1063/#1065, and owner-HOLD correction closeout #1077
 
 ## Current Checkpoint Result
 
 **PASS for exact deployment and focused review startup. Player GO remains open
 in #1040.** The current public build is:
 
-- exact SHA: `f2f27508a07687a480b8a4ac2d9fdaa79556b257`
-- build version: `f2f2750`
-- [Godot Web Export run 29832768641](https://github.com/joeypshell/oceangame2/actions/runs/29832768641): success, including Pages deploy and checkpoint-aware browser verification
+- exact SHA: `ddbf5f776b61daef3cfff29040cf40b3cb1c417b`
+- build version: `ddbf5f7`
+- `git_ref`: `main`
+- `dirty`: `false`
+- [Godot Web Export run 30127311508](https://github.com/joeypshell/oceangame2/actions/runs/30127311508):
+  success, including Pages deploy and checkpoint-aware browser verification
 - checkpoint URL:
-  `https://joeypshell.github.io/oceangame2/?review=f2f27508a07687a480b8a4ac2d9fdaa79556b257&checkpoint=expansion_14_start`
+  `https://joeypshell.github.io/oceangame2/?review=ddbf5f776b61daef3cfff29040cf40b3cb1c417b&checkpoint=expansion_14_start`
 
 The named checkpoint starts from an isolated in-memory profile after the
 southeast archive commit. Earlier projects are complete, Ti2 + Coil1 is
@@ -27,15 +32,23 @@ matching build metadata, no failed requests, and no Godot error output.
 
 ## Bounded Owner-HOLD Corrections
 
-- #1061 makes checkpoint Shock Prod selection, input, and guidance use the real
-  active-tool path.
-- #1063 replaces active-tool debug text with the bottom-center icon hotbar.
-- #1065 shows a brief forward semicircle, electrical bolt, and hit/miss feedback
-  from the authoritative 72px Shock Prod discharge.
+- #1069 locks the correction contract without changing Expansion 14 ownership.
+- #1070/#1071 make scanner subjects and the Northwest Wreck Relay explicit in
+  source metadata and rendering.
+- #1072 requires held `Q/USE` for progression scans, cancels on release or tool
+  switch, gives ordinary subjects reward-free identification, and presents a
+  temporary target-local readout.
+- #1073 adds world-local eel health, authoritative hit recoil, explicit cadence,
+  a connected electrical bolt, and a directional endpoint fizzle on misses.
+- #1074 keeps passive equipment in the top cargo strip while active tools remain
+  in the bottom hotbar.
+- #1075 adds one bounded deterministic correction matrix.
+- #1076 records a focused desktop/wide/mobile visual PASS with no new baseline;
+  all 35 accepted full-level and slice PNGs remained byte-identical.
 
-These corrections passed focused technical and public-Web checks. They do not
-claim owner GO, alter map topology or progression ownership, or accept a new
-visual baseline.
+The correction implementation and technical/Web checks are complete. They do
+not claim owner GO, alter map topology or progression ownership, or accept a
+new visual baseline.
 
 ## Original Candidate Result
 
@@ -73,11 +86,11 @@ runtime-source deployment.
   `(0, 0)` over an 844x390 visual viewport with zero offset
 - touch probes: move-down `8.60`, oxygen `4.91`, project `5.60`, use `5.10`;
   all exceed the required `2`
-- framing mean difference: `1.30`, below the maximum `18`
+- framing mean difference: `1.32`, below the maximum `18`
 - no failed requests, missing resources, `SCRIPT ERROR`, or Godot `ERROR:`
   output
 
-The corrected artifact identifies build `f2f2750`, preserves the fresh isolated
+The corrected artifact identifies build `ddbf5f7`, preserves the fresh isolated
 profile marker and full-level boat entry, and keeps the held-cargo strip clear
 of the bottom-center active-tool hotbar. The touch-enabled mobile check keeps
 the canvas top anchored and MOVE/O2/BAG/TOOL/BUILD/DAY/RESET/ACT/USE controls
@@ -91,12 +104,12 @@ network checks.
 
 The original Expansion 14 journey source is
 `00980855b4dfb3defd79b488592ee610f189f667`. Later checkpoint and correction
-work changes focused review startup, tool selection/guidance integration,
-active-tool HUD presentation, and Shock Prod feedback without changing map
-topology, progression ownership, cargo semantics, or accepted baselines.
-Focused evidence still confirms the blocked current, stabilizer promise,
-enabled crossing, Northwest Wreck Relay and core, mixed cargo strip, 50%
-scanner survey, pending boat return, and archive result.
+work changes focused review startup, tool/scanner presentation, relay
+readability, passive-equipment presentation, and Shock Prod feedback without
+changing map topology, progression ownership, cargo semantics, or accepted
+baselines. Focused evidence still confirms the blocked current, stabilizer
+promise, passive crossing, Northwest Wreck Relay and core, held scanner survey,
+pending boat return, and archive result.
 
 The public query contract deliberately supports fresh profiles and map choice,
 not profile-state injection or capture flags. Browser automation therefore
@@ -109,7 +122,7 @@ owner GO/HOLD gate in #1040.
 ```powershell
 gh workflow run godot-web-export.yml --repo joeypshell/oceangame2 --ref main
 $env:NODE_PATH = "$env:TEMP\oceangame2-web-preview-check\node_modules"
-node tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha f2f27508a07687a480b8a4ac2d9fdaa79556b257
+node tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha ddbf5f776b61daef3cfff29040cf40b3cb1c417b
 python tools/check_file_lengths.py
 git diff --check
 ```
