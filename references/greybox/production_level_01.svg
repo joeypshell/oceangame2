@@ -505,7 +505,11 @@
 <circle cx="4800.0" cy="4800.0" r="14" fill="none" stroke="#69f0dc" stroke-width="6"/>
 <text x="4776.0" y="4758.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">southeast_wreck_archive_survey</text>
 <rect x="1888" y="1856" width="64" height="64" rx="8" fill="#69f0dc" fill-opacity="0.28" stroke="#07584f" stroke-width="6"/>
-<circle cx="1920.0" cy="1888.0" r="14" fill="none" stroke="#69f0dc" stroke-width="6"/>
+<path d="M 1876.0 1857.0 l 5 -5 h 45 l 6 6 v 32 h -56 z" fill="#1a3b42" stroke="#85bdb8" stroke-width="4"/>
+<rect x="1886.0" y="1861.0" width="30" height="18" fill="#0a7a87"/>
+<path d="M 1890.0 1873.0 h 5 l 3 -6 l 4 10 l 4 -7 h 6" fill="none" stroke="#ffd447" stroke-width="3"/>
+<path d="M 1919.0 1852.0 v -9 l 7 -6" fill="none" stroke="#85bdb8" stroke-width="4"/>
+<polygon points="1926.0,1832.0 1931.0,1837.0 1926.0,1842.0 1921.0,1837.0" fill="#ffb83d"/>
 <text x="1896.0" y="1846.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">upper_left_wreck_relay_survey</text>
 <circle cx="4048.0" cy="1488.0" r="17" fill="#b8f36b" stroke="#3f6619" stroke-width="5"/>
 <circle cx="4036.0" cy="1496.0" r="8" fill="#b8f36b" stroke="#3f6619" stroke-width="4"/>

@@ -132,6 +132,17 @@ func _verify_world_subject_presentation() -> void:
 			"h": 2,
 			"scan_presentation_id": "salvage_cutter_blueprint_case",
 		},
+		{
+			"id": "relay_subject",
+			"x": 10,
+			"y": 2,
+			"w": 2,
+			"h": 2,
+			"scan_subject_id": "northwest_wreck_relay_console",
+			"scan_subject_label": "Wreck relay console",
+			"scan_presentation_id": "northwest_wreck_relay_console",
+			"scan_anchor": {"x": 10, "y": 2},
+		},
 	]
 	var normal_parent := Node2D.new()
 	get_root().add_child(normal_parent)
@@ -142,6 +153,11 @@ func _verify_world_subject_presentation() -> void:
 	_expect(normal_parent.get_node_or_null("generic_signal/SurveyCore") == null, "normal play still rendered a generic survey core")
 	_expect(normal_parent.get_node_or_null("generic_signal/SurveyAxis") == null, "normal play still rendered a generic survey axis")
 	_expect(normal_parent.get_node_or_null("artifact_subject/MaintenanceCase") != null, "authored physical scan subject was removed")
+	_expect(normal_parent.get_node_or_null("relay_subject/RelayConsole") != null, "authored wreck relay console was not rendered")
+	_expect(normal_parent.get_node_or_null("relay_subject/RelaySignalScreen") != null, "wreck relay console lacked a readable signal screen")
+	var relay_target: Dictionary = normal_renderer.get_targets()[2]
+	_expect(relay_target.get("scan_subject_label") == "Wreck relay console", "wreck relay target lost its source-authored name")
+	_expect(relay_target.get("scan_anchor_world") == Vector2(336, 80), "wreck relay bracket anchor drifted from the physical console")
 	_expect(normal_parent.get_node_or_null("generic_signalDebugOutline") == null, "debug outline leaked into normal play")
 
 	var debug_parent := Node2D.new()
