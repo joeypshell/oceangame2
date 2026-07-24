@@ -61,7 +61,7 @@ func _smoke_expansion_13_scanner_cutter_correction_and_quit() -> void:
 	var profile = _main._anomaly_survey.profile_state()
 	var day: Dictionary = _main._expedition_day_state.report()
 	cleanup_profile_storage()
-	print("Expansion 13 scanner-cutter correction smoke passed: targeting=range%d_angle%d_rank_%s_cancel_%s artifact=%s subject=artifact reward=%s seconds=%.1f explicit_q=true proximity_auto=false oxygen_daylight_continue=true cargo_full_scan=%s pending_failure_cleanup=%s commit=canonical_boat_exact_once recipe=Ti2+Coil1 build=night project=%s capability=%s return_lead=remembered_wreck target=%s payoff=%d navigation_data=pending_then_committed next_lead=broad_southeast optional_preemption=false profile_reload=%s migration=%s discoveries=%d projects=%d day=%d sorties=%d oxygen=%.1f." % [
+	print("Expansion 13 scanner-cutter correction smoke passed: targeting=range%d_angle%d_rank_%s_cancel_%s artifact=%s subject=artifact reward=%s seconds=%.1f held_q=true release_cancel=true proximity_auto=false oxygen_daylight_continue=true cargo_full_scan=%s pending_failure_cleanup=%s commit=canonical_boat_exact_once recipe=Ti2+Coil1 build=night project=%s capability=%s return_lead=remembered_wreck target=%s payoff=%d navigation_data=pending_then_committed next_lead=broad_southeast optional_preemption=false profile_reload=%s migration=%s discoveries=%d projects=%d day=%d sorties=%d oxygen=%.1f." % [
 		int(targeting.get("range_tiles", 0)),
 		int(targeting.get("half_angle_degrees", 0)),
 		str(targeting.get("ranking", "")),
@@ -171,6 +171,17 @@ func _complete_artifact_commit() -> bool:
 		"explicit artifact scan did not expose partial progress under oxygen/daylight pressure"
 	):
 		return false
+	_release_action(&"active_tool_use")
+	if not _require(
+		_last_status_note == "Scanner interrupted"
+		and not bool(_main._anomaly_survey.report().get("interaction", {}).get("activated", false))
+		and is_zero_approx(float(_main._anomaly_survey.report().get("interaction", {}).get("progress", -1.0))),
+		"releasing Q did not cancel and clear held scan progress"
+	):
+		return false
+	ScannerPose.new().place(_world, _player, artifact)
+	_press_key(KEY_Q)
+	_advance(_artifact_seconds / 3.0)
 	var scan_position: Vector2 = _player.global_position
 	_player.swim_in_direction(Vector2(-float(pose.get("facing_sign", 1.0)), 0.0), 0.0)
 	_player.global_position = scan_position
@@ -371,6 +382,13 @@ func _tool_target_by_id(target_id: String) -> Dictionary:
 		if str(target.get("id", "")) == target_id:
 			return target
 	return {}
+
+
+func _release_action(action: StringName) -> void:
+	var event := InputEventAction.new()
+	event.pressed = false
+	event.action = action
+	_main._unhandled_input(event)
 
 
 func _require(condition: bool, message: String) -> bool:

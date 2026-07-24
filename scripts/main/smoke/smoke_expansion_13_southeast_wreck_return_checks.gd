@@ -235,7 +235,7 @@ func _complete_real_wreck_return() -> bool:
 	if not _place_for_scan(survey):
 		return false
 	_advance(0.25)
-	if not _require(is_zero_approx(float(_main._anomaly_survey.report().get("interaction", {}).get("progress", -1.0))), "survey advanced before Q/SCAN"):
+	if not _require(is_zero_approx(float(_main._anomaly_survey.report().get("interaction", {}).get("progress", -1.0))), "survey advanced before held Q/USE"):
 		return false
 	_main._sortie_state.collect_salvage(CAPACITY_SCAN_ID, 0)
 	_scanner_full_cargo = _main._held_cargo_count() == _held_salvage_capacity()

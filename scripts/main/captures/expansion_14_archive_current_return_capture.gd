@@ -302,7 +302,7 @@ func _prepare_relay_arrival() -> bool:
 	_main._update_status_label()
 	return _expect(
 		not _main._world.is_salvage_collected(CORE_ID)
-		and _status_text().find("Relay signal | Q/SCAN: Survey wreck relay") != -1,
+		and _status_text().find("Relay signal | Hold Q/USE to scan wreck relay") != -1,
 		"relay arrival omitted its core or explicit scanner affordance"
 	)
 
@@ -338,6 +338,7 @@ func _prepare_partial_survey() -> bool:
 		_fail("explicit tool use did not activate the relay survey")
 		return false
 	var partial: Dictionary = _main._anomaly_survey.update(_main._world, _main._player, PARTIAL_SECONDS)
+	_main._player.sync_scanner_presentation(_main._anomaly_survey.report())
 	_main._last_status_note = str(partial.get("note", ""))
 	_main._update_status_label()
 	var progress := float(_main._anomaly_survey.report().get("interaction", {}).get("progress", 0.0))
@@ -359,6 +360,7 @@ func _prepare_pending_return() -> bool:
 	if str(result.get("reason", "")) != "pending_created":
 		_fail("completed relay survey did not become pending")
 		return false
+	_main._player.sync_scanner_presentation(_main._anomaly_survey.report())
 	var camera_test: Dictionary = _camera_tests_by_id().get(CAMERA_IDS["pending"], {})
 	_set_player_to_camera_center(camera_test)
 	_main._last_status_note = str(result.get("note", ""))

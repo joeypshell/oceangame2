@@ -8,6 +8,7 @@ const SurveyDependencyState := preload("res://scripts/main/survey_dependency_sta
 const RegionalJourneyPresentation := preload("res://scripts/main/regional_journey_presentation.gd")
 const ScannerConeTargeting := preload("res://scripts/main/scanner_cone_targeting.gd")
 const ScannerCutterJourneyPresentation := preload("res://scripts/main/scanner_cutter_journey_presentation.gd")
+const ScannerFeedbackText := preload("res://scripts/main/scanner_feedback_text.gd")
 const ToolTargetRewardRuntime := preload("res://scripts/main/tool_target_reward_runtime.gd")
 
 const SCANNER_CAPABILITY_ID := ProgressionContract.SCANNER_CAPABILITY_ID
@@ -25,8 +26,10 @@ var _dependencies
 var _regional_presentation
 var _scanner_targeting
 var _scanner_cutter_presentation
+var _scanner_feedback
 var _tool_target_rewards
 var _last_targeting_report := {}
+var _scanner_use_held := false
 var _last_note := ""
 var _last_result := ""
 
@@ -43,10 +46,12 @@ func _init(progression_runtime, persist_profile := true, profile_state = null) -
 	_regional_presentation = RegionalJourneyPresentation.new()
 	_scanner_targeting = ScannerConeTargeting.new()
 	_scanner_cutter_presentation = ScannerCutterJourneyPresentation.new()
+	_scanner_feedback = ScannerFeedbackText.new(_regional_presentation)
 	_tool_target_rewards = ToolTargetRewardRuntime.new(_profile, _expedition)
 
 
 func scanner_action(world, player) -> Dictionary:
+	_scanner_use_held = false
 	if not has_scanner():
 		if _profile.has_completed_discovery(ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID):
 			return _note_result(false, "project_required", "Scanner project | Ti 1 + Coil 1 | Build at night")
@@ -55,16 +60,24 @@ func scanner_action(world, player) -> Dictionary:
 	if target.is_empty():
 		return _note_result(false, "ready", "Scanner ready | Approach a survey signal")
 	var target_id := str(target.get("id", ""))
+	if str(target.get("scanner_subject_mode", "")) == "identify":
+		_interaction.reset()
+		return _note_result(
+			false,
+			"identified",
+			_scanner_feedback.identification_note(target),
+			{"target_id": target_id, "identified": true}
+		)
 	var discovery_id := str(target.get("discovery_id", ""))
 	if _profile.has_completed_discovery(discovery_id):
 		_interaction.reset()
 		_set_target_state(world, target_id, "completed")
-		return _note_result(false, "completed", _completed_note(target))
+		return _note_result(false, "completed", _scanner_feedback.completed_note(target))
 	if _expedition.has_pending():
 		_interaction.reset()
 		var same_pending: bool = _expedition.pending_discovery_id() == discovery_id
 		_set_target_state(world, target_id, "pending" if same_pending else "locked")
-		return _note_result(false, "pending" if same_pending else "pending_exists", _pending_status_note())
+		return _note_result(false, "pending" if same_pending else "pending_exists", _scanner_feedback.pending_return_text(_expedition.pending_metadata()))
 	if not _dependencies.is_survey_unlocked(target_id):
 		_interaction.reset()
 		_set_target_state(world, target_id, "locked")
@@ -84,11 +97,12 @@ func scanner_action(world, player) -> Dictionary:
 	var activation: Dictionary = _interaction.activate(target)
 	if str(activation.get("state", "")) != "activated":
 		return _note_result(false, "invalid", "Survey signal unavailable")
+	_scanner_use_held = true
 	_set_target_state(world, target_id, "active")
 	return _note_result(
 		bool(activation.get("changed", false)),
 		"activated",
-		str(activation.get("note", "Scanner active | Hold position")),
+		str(activation.get("note", "Scanner active | Hold Q/USE and position")),
 		{"target_id": target_id}
 	)
 
@@ -101,10 +115,14 @@ func update(world, player, delta: float) -> Dictionary:
 		return commit_result
 
 	var active_target_id := str(_interaction.report().get("active_target_id", ""))
-	var target := _target_for_player(world, player, active_target_id)
+	if not active_target_id.is_empty() and not _scanner_use_held:
+		cancel_active_interaction(world)
+		return {"state": "canceled", "note": _last_note}
+	var target := _target_for_player(world, player, active_target_id, "progression" if active_target_id.is_empty() else "")
 	if target.is_empty():
 		var canceled: Dictionary = _interaction.update({}, delta)
 		if str(canceled.get("state", "")) == "canceled":
+			_scanner_use_held = false
 			_last_note = str(canceled.get("note", "Survey interrupted"))
 			_refresh_world_targets(world)
 			return {"state": "canceled", "note": _last_note}
@@ -115,12 +133,12 @@ func update(world, player, delta: float) -> Dictionary:
 	if _profile.has_completed_discovery(discovery_id):
 		_interaction.reset()
 		_set_target_state(world, target_id, "completed")
-		return _note_result(false, "completed", _completed_note(target))
+		return _note_result(false, "completed", _scanner_feedback.completed_note(target))
 	if _expedition.has_pending():
 		_interaction.reset()
 		var same_pending: bool = _expedition.pending_discovery_id() == discovery_id
 		_set_target_state(world, target_id, "pending" if same_pending else "locked")
-		return _note_result(false, "pending" if same_pending else "pending_exists", _pending_status_note())
+		return _note_result(false, "pending" if same_pending else "pending_exists", _scanner_feedback.pending_return_text(_expedition.pending_metadata()))
 	if not _dependencies.is_survey_unlocked(target_id):
 		_interaction.reset()
 		_set_target_state(world, target_id, "locked")
@@ -145,6 +163,7 @@ func update(world, player, delta: float) -> Dictionary:
 		_last_note = str(survey_result.get("note", "Survey anomaly"))
 		return {"state": survey_result.get("state", "progress"), "note": _last_note, "survey": survey_result}
 
+	_scanner_use_held = false
 	var pending: Dictionary = _expedition.create_pending(
 		discovery_id,
 		str(world.map_id),
@@ -157,16 +176,18 @@ func update(world, player, delta: float) -> Dictionary:
 		_set_target_state(world, target_id, "available")
 		return _note_result(false, str(pending.get("status", "pending_error")), "Survey could not be recorded")
 	_set_target_state(world, target_id, "pending")
-	return _note_result(true, "pending_created", _survey_complete_note(target), {"pending": true})
+	return _note_result(true, "pending_created", _scanner_feedback.survey_complete_note(target), {"pending": true})
 
 
 func on_map_loaded(world) -> void:
+	_scanner_use_held = false
 	_interaction.reset()
 	_dependencies.on_map_loaded(world)
 	_refresh_world_targets(world)
 
 
 func on_map_transition(destination_map_id: String) -> Dictionary:
+	_scanner_use_held = false
 	_interaction.reset()
 	return _expedition.on_map_transition(destination_map_id)
 
@@ -175,7 +196,15 @@ func active_tool_target(world, player) -> Dictionary:
 	return _target_for_player(world, player).duplicate(true)
 
 
+func scanner_release(world) -> Dictionary:
+	_scanner_use_held = false
+	if not cancel_active_interaction(world):
+		return {"changed": false, "reason": "idle"}
+	return {"changed": true, "reason": "released", "note": _last_note}
+
+
 func cancel_active_interaction(world) -> bool:
+	_scanner_use_held = false
 	var active_target_id := str(_interaction.report().get("active_target_id", ""))
 	if active_target_id.is_empty():
 		return false
@@ -186,6 +215,7 @@ func cancel_active_interaction(world) -> bool:
 
 
 func clear_unbanked(reason: String, world = null) -> Dictionary:
+	_scanner_use_held = false
 	_interaction.reset()
 	_dependencies.clear_unbanked()
 	_last_result = ""
@@ -196,13 +226,13 @@ func clear_unbanked(reason: String, world = null) -> Dictionary:
 
 func overlay_text(world, player) -> String:
 	if _expedition.has_pending():
-		return _pending_return_text()
+		return _scanner_feedback.pending_return_text(_expedition.pending_metadata())
 	var active_target_id := str(_interaction.report().get("active_target_id", ""))
-	var nearby_target := _target_for_player(world, player, active_target_id)
+	var nearby_target := _target_for_player(world, player, active_target_id, "progression")
 	if not nearby_target.is_empty():
 		var discovery_id := str(nearby_target.get("discovery_id", ""))
 		if _profile.has_completed_discovery(discovery_id):
-			return _completed_overlay_text(nearby_target)
+			return _scanner_feedback.completed_overlay_text(nearby_target)
 		var clue := str(nearby_target.get("clue_label", "")).strip_edges()
 		if not _dependencies.is_survey_unlocked(str(nearby_target.get("id", ""))):
 			return _dependencies.requirement_note(str(nearby_target.get("id", "")))
@@ -212,7 +242,12 @@ func overlay_text(world, player) -> String:
 			return _light_required_note(nearby_target)
 		if not _has_required_pressure_protection(nearby_target):
 			return _pressure_required_note(nearby_target)
-		return _nearby_scan_text(nearby_target, clue)
+		return _scanner_feedback.nearby_scan_text(
+			nearby_target,
+			clue,
+			active_target_id,
+			_last_note
+		)
 	if not _last_result.is_empty() and not _scanner_cutter_presentation.result_is_superseded(world, _profile, _last_result):
 		return _last_result
 	var journey_promise: String = _regional_presentation.promise_text(world, _profile)
@@ -242,6 +277,7 @@ func is_status_note(status_note: String) -> bool:
 		or status_note.begins_with("Discovery")
 		or status_note.begins_with("Anomaly")
 		or status_note.begins_with("Research")
+		or status_note.begins_with("Identified")
 		or status_note.begins_with("Mineral")
 		or status_note.begins_with("Pressure")
 		or status_note.begins_with("Abyssal")
@@ -292,6 +328,7 @@ func report() -> Dictionary:
 		"profile": _profile.report(),
 		"expedition": _expedition.report(),
 		"interaction": _interaction.report(),
+		"scanner_use_held": _scanner_use_held,
 		"dependencies": _dependencies.report(),
 		"targeting": _last_targeting_report.duplicate(true),
 		"last_note": _last_note,
@@ -346,14 +383,14 @@ func _refresh_world_targets(world) -> void:
 		_set_target_state(world, str(target.get("id", "")), state)
 
 
-func _target_for_player(world, player, target_id := "") -> Dictionary:
+func _target_for_player(world, player, target_id := "", required_mode := "") -> Dictionary:
 	if world == null or player == null:
 		_last_targeting_report = _scanner_targeting.public_report({"eligible": false, "reason": "world_unavailable"})
 		return {}
 	var facing_sign := float(player.get_facing_sign()) if player.has_method("get_facing_sign") else 1.0
 	var targeting: Dictionary
 	if str(target_id).is_empty():
-		targeting = _scanner_targeting.acquire(world, player.global_position, facing_sign)
+		targeting = _scanner_targeting.acquire(world, player.global_position, facing_sign, required_mode)
 	else:
 		var target: Dictionary = _scanner_targeting.target_by_id(world, str(target_id))
 		targeting = _scanner_targeting.evaluate_target(world, player.global_position, facing_sign, target)
@@ -439,53 +476,3 @@ func _pending_metadata(target: Dictionary) -> Dictionary:
 	for field in ExpeditionDiscoveryState.METADATA_FIELDS:
 		metadata[field] = str(target.get(field, ""))
 	return metadata
-
-
-func _survey_complete_note(target: Dictionary) -> String:
-	var regional_note: String = _regional_presentation.survey_complete_note(target)
-	if not regional_note.is_empty():
-		return regional_note
-	if not str(target.get("required_pressure_capability_id", "")).strip_edges().is_empty():
-		return "Abyssal source charted | Return to boat"
-	if str(target.get("scan_reward_kind", "")) == "blueprint":
-		return "Blueprint identified | Return to surface boat"
-	return "Research complete - return to surface boat" if _is_resource_target(target) else "Survey complete - return to surface boat"
-
-
-func _completed_note(target: Dictionary) -> String:
-	return str(target.get("finding_label", "Finding already logged"))
-
-
-func _completed_overlay_text(target: Dictionary) -> String:
-	return str(target.get("finding_label", "Finding logged"))
-
-
-func _pending_status_note() -> String:
-	return _pending_return_text()
-
-
-func _pending_return_text() -> String:
-	var metadata: Dictionary = _expedition.pending_metadata()
-	var pending_label := str(metadata.get("pending_label", "")).strip_edges()
-	if not pending_label.is_empty():
-		return pending_label
-	var regional_note: String = _regional_presentation.pending_return_text(metadata)
-	if not regional_note.is_empty():
-		return regional_note
-	if not str(metadata.get("required_pressure_capability_id", "")).is_empty():
-		return "Abyssal chart pending | Return to surface boat before another scan"
-	if str(metadata.get("scan_reward_kind", "")) == "blueprint":
-		return "Blueprint pending | Return to surface boat before another scan"
-	return "Research pending | Return to surface boat before another scan" if str(metadata.get("target_type", "")) == RESOURCE_TARGET_TYPE else "Discovery pending | Return to surface boat before another scan"
-
-
-func _nearby_scan_text(target: Dictionary, clue: String) -> String:
-	var interaction: Dictionary = _interaction.report()
-	if str(interaction.get("active_target_id", "")) == str(target.get("id", "")):
-		return _last_note
-	var regional_prompt: String = _regional_presentation.nearby_scan_text(target)
-	if not regional_prompt.is_empty():
-		return regional_prompt
-	var label := str(target.get("interaction_label", "Survey signal")).strip_edges()
-	var prompt := "Q/SCAN: %s" % (label if not label.is_empty() else "Survey signal")
-	return "%s\n%s" % [clue, prompt] if not clue.is_empty() else prompt

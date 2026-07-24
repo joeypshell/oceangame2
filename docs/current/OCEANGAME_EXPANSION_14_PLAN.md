@@ -39,7 +39,7 @@ into one remembered-place return using a capability owner that already exists.
 5. The stabilizer works passively. The player swims through normally; no
    `E` prompt, connector, teleport, or map load is involved.
 6. A distinct wreck relay landmark makes the upper-left destination readable.
-7. A valuable relay core uses normal cargo rules, while `Q/SCAN` records the
+7. A valuable relay core uses normal cargo rules, while held `Q`/`USE` records the
    relay finding even when cargo is full.
 8. Unbanked cargo and pending knowledge survive only according to established
    failure rules. The canonical boat banks and commits each result exactly once.
@@ -126,7 +126,7 @@ it must not redefine the canonical chain. Profiles that already own
   system.
 - The relay core uses normal valuable-cargo capacity and restoration semantics.
   Cargo-full feedback must not delete or complete it.
-- The scanner keeps explicit `Q/SCAN`, leave-range cancellation, full-cargo
+- The scanner uses explicit held `Q`/`USE`, release/leave-range cancellation, full-cargo
   operation, pending feedback, and exact-once boat commitment.
 - Hazard, oxygen, combat defeat, reload, and day transitions must not duplicate
   the core, discovery, project, or capability.

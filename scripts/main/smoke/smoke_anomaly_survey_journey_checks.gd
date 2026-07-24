@@ -83,7 +83,7 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 	_process(0.0)
 	var ready_status: String = _status_label.text
 	if not _require(
-		ready_status.find("Q/SCAN: Survey anomaly") != -1
+		ready_status.find("Hold Q/USE to scan: Survey anomaly") != -1
 		and ready_status.find("Cargo full") != -1,
 		"full cargo hid the scanner activation prompt: %s" % ready_status
 	):

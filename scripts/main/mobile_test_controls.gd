@@ -19,7 +19,7 @@ const COMMANDS := [
 	{"id": &"day", "label": "DAY", "keycode": KEY_N},
 	{"id": &"reset", "label": "RESET", "keycode": KEY_R},
 	{"id": &"interact", "label": "ACT", "keycode": KEY_E},
-	{"id": &"use", "label": "USE", "action": &"active_tool_use"},
+	{"id": &"use", "label": "USE", "action": &"active_tool_use", "hold": true},
 ]
 
 @export var force_visible := false
@@ -53,6 +53,14 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
+	for role_value in _touch_roles.values():
+		var role := StringName(role_value)
+		if role == &"stick":
+			continue
+		var command := _command_by_id(role)
+		if command.has("action") and bool(command.get("hold", false)):
+			_dispatch_command(command, false)
+	_touch_roles.clear()
 	_release_stick()
 
 
@@ -170,7 +178,9 @@ func _begin_pointer(index: int, position: Vector2) -> void:
 			continue
 		_touch_roles[index] = command_id
 		_set_command_pressed(command_id, true)
-		_dispatch_command(command)
+		_dispatch_command(command, true)
+		if command.has("action") and not bool(command.get("hold", false)):
+			_dispatch_command(command, false)
 		get_viewport().set_input_as_handled()
 		return
 
@@ -191,6 +201,9 @@ func _end_pointer(index: int) -> void:
 		_release_stick()
 	else:
 		_set_command_pressed(role, false)
+		var command := _command_by_id(role)
+		if command.has("action") and bool(command.get("hold", false)):
+			_dispatch_command(command, false)
 	get_viewport().set_input_as_handled()
 
 
@@ -234,16 +247,16 @@ func _center_stick_knob(direction: Vector2) -> void:
 	_stick_knob.size = Vector2.ONE * STICK_KNOB_SIZE
 
 
-func _dispatch_command(command: Dictionary) -> void:
+func _dispatch_command(command: Dictionary, pressed: bool) -> void:
 	if command.has("action"):
 		var action_event := InputEventAction.new()
 		action_event.action = StringName(command["action"])
-		action_event.pressed = true
+		action_event.pressed = pressed
 		Input.parse_input_event(action_event)
-		command_dispatched.emit(StringName(command["id"]), action_event)
-		var release_event := action_event.duplicate() as InputEventAction
-		release_event.pressed = false
-		Input.parse_input_event(release_event)
+		if pressed:
+			command_dispatched.emit(StringName(command["id"]), action_event)
+		return
+	if not pressed:
 		return
 
 	var key_event := InputEventKey.new()
@@ -255,6 +268,13 @@ func _dispatch_command(command: Dictionary) -> void:
 	var release_event := key_event.duplicate() as InputEventKey
 	release_event.pressed = false
 	Input.parse_input_event(release_event)
+
+
+func _command_by_id(command_id: StringName) -> Dictionary:
+	for command in COMMANDS:
+		if StringName(command["id"]) == command_id:
+			return command
+	return {}
 
 
 func _set_command_pressed(command_id: StringName, pressed: bool) -> void:

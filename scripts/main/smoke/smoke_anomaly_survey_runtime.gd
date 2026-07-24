@@ -3,6 +3,7 @@ extends SceneTree
 const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const ProgressionRuntimeController := preload("res://scripts/main/progression_runtime_controller.gd")
+const ScannerSubjectCatalog := preload("res://scripts/main/scanner_subject_catalog.gd")
 const SessionProgression := preload("res://scripts/main/session_progression.gd")
 const ScannerSmokePose := preload("res://scripts/main/smoke/scanner_smoke_pose.gd")
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
@@ -58,6 +59,16 @@ func _run() -> void:
 	var repeated: Dictionary = runtime.scanner_action(origin, player)
 	_expect(repeated.get("reason") == "ready", "scanner action did not become contextual after build")
 	_expect(progression.wallet() == 0, "scanner project changed wallet")
+	var boat_subject := _subject_by_source_type(ScannerSubjectCatalog.new().subjects(origin), "boat")
+	_expect(not boat_subject.is_empty(), "ordinary scanner catalog omitted the surface boat")
+	_place_for_scan(origin, player, boat_subject)
+	var profile_before_identify: Dictionary = profile.report()
+	var identified: Dictionary = runtime.scanner_action(origin, player)
+	_expect(identified.get("reason") == "identified", "ordinary subject did not return identification feedback")
+	_expect(identified.get("target_id") == "identify_boat_surface_boat", "ordinary identification selected the wrong subject")
+	_expect(runtime.report().get("targeting", {}).get("scan_subject_label") == "Surface boat", "ordinary identification omitted its subject label")
+	_expect(profile.report() == profile_before_identify, "ordinary identification mutated durable profile state")
+	_expect(progression.wallet() == 0 and not runtime.has_pending_discovery(), "ordinary identification granted score or pending progression")
 
 	var target_world: Node = _load_world(TARGET_MAP_PATH)
 	runtime.on_map_transition(target_world.map_id)
@@ -66,13 +77,19 @@ func _run() -> void:
 	_expect(not target.is_empty(), "source-authored survey target missing at runtime")
 	_place_for_scan(target_world, player, target)
 	var initial: Dictionary = runtime.update(target_world, player, 1.0)
-	_expect(str(initial.get("state", "")) == "awaiting_activation", "survey advanced before Q/SCAN activation")
+	_expect(str(initial.get("state", "")) == "awaiting_activation", "survey advanced before held Q/USE activation")
 	_expect(is_zero_approx(float(initial.get("survey", {}).get("progress", -1.0))), "proximity-only survey retained progress")
 	var activated: Dictionary = runtime.scanner_action(target_world, player)
-	_expect(activated.get("reason") == "activated", "Q/SCAN did not activate the nearby survey")
+	_expect(activated.get("reason") == "activated", "held Q/USE did not activate the nearby survey")
 	var partial: Dictionary = runtime.update(target_world, player, 1.0)
 	var progress := float(partial.get("survey", {}).get("progress", 0.0))
 	_expect(progress > 0.0 and progress < 1.0, "survey did not report partial progress")
+	var released: Dictionary = runtime.scanner_release(target_world)
+	_expect(released.get("reason") == "released", "Q/USE release did not cancel the active survey")
+	_expect(is_zero_approx(float(runtime.report().get("interaction", {}).get("progress", -1.0))), "Q/USE release retained partial progress")
+	_place_for_scan(target_world, player, target)
+	runtime.scanner_action(target_world, player)
+	runtime.update(target_world, player, 1.0)
 	player.face_scanner_direction(-player.get_facing_sign())
 	var canceled: Dictionary = runtime.update(target_world, player, 0.0)
 	_expect(str(canceled.get("state", "")) == "canceled", "turning away did not cancel survey")
@@ -81,7 +98,7 @@ func _run() -> void:
 
 	_place_for_scan(target_world, player, target)
 	var retry_wait: Dictionary = runtime.update(target_world, player, 1.0)
-	_expect(str(retry_wait.get("state", "")) == "awaiting_activation", "returning to a canceled survey did not require a new Q/SCAN press")
+	_expect(str(retry_wait.get("state", "")) == "awaiting_activation", "returning to a canceled survey did not require a new held Q/USE")
 	_expect(is_zero_approx(float(retry_wait.get("survey", {}).get("progress", -1.0))), "canceled survey resumed from proximity")
 	runtime.scanner_action(target_world, player)
 	var completed: Dictionary = runtime.update(target_world, player, float(target.get("interaction_seconds", 0.0)))
@@ -135,7 +152,7 @@ func _run() -> void:
 	_expect(full_level_runtime.result_text() == str(artifact_target.get("finding_label", "")), "artifact result did not use source finding text")
 	_place_for_scan(regional_world, player, regional_target)
 	var regional_clue := runtime.overlay_text(regional_world, player)
-	_expect(regional_clue.find(str(regional_target.get("clue_label", ""))) != -1 and regional_clue.find("Q/SCAN: Survey Signal Reef") != -1, "regional clue or scan action did not use source text")
+	_expect(regional_clue.find(str(regional_target.get("clue_label", ""))) != -1 and regional_clue.find("Hold Q/USE to scan") != -1, "regional clue or held scan action did not use source text")
 	runtime.scanner_action(regional_world, player)
 	var regional_complete: Dictionary = runtime.update(
 		regional_world,
@@ -246,7 +263,7 @@ func _exercise_harmonic_return(runtime, progression, profile, world, player) -> 
 	_expect(str(_target_by_id(world, HARMONIC_TARGET_ID).get("state", "")) == "available", "light-owned harmonic target did not become available")
 
 	_place_for_scan(world, player, target)
-	_expect(runtime.scanner_action(world, player).get("reason") == "activated", "Q/SCAN did not activate the harmonic survey")
+	_expect(runtime.scanner_action(world, player).get("reason") == "activated", "held Q/USE did not activate the harmonic survey")
 	var partial: Dictionary = runtime.update(world, player, 1.0)
 	var partial_progress := float(partial.get("survey", {}).get("progress", 0.0))
 	_expect(partial_progress > 0.0 and partial_progress < 1.0, "light-owned harmonic survey did not report partial progress")
@@ -351,7 +368,7 @@ func _exercise_abyssal_return(runtime, _progression, profile, world, player) -> 
 	_expect(str(_target_by_id(world, ABYSSAL_TARGET_ID).get("state", "")) == "available", "pressure-owned abyssal target did not become available")
 
 	_place_for_scan(world, player, target)
-	_expect(runtime.scanner_action(world, player).get("reason") == "activated", "Q/SCAN did not activate the abyssal survey")
+	_expect(runtime.scanner_action(world, player).get("reason") == "activated", "held Q/USE did not activate the abyssal survey")
 	var partial: Dictionary = runtime.update(world, player, 1.0)
 	var partial_progress := float(partial.get("survey", {}).get("progress", 0.0))
 	_expect(partial_progress > 0.0 and partial_progress < 1.0, "protected abyssal survey did not report partial progress")
@@ -432,6 +449,13 @@ func _target_by_id(world, target_id: String) -> Dictionary:
 	for target in world.get_survey_targets():
 		if str(target.get("id", "")) == target_id:
 			return target
+	return {}
+
+
+func _subject_by_source_type(subjects: Array[Dictionary], source_type: String) -> Dictionary:
+	for subject in subjects:
+		if str(subject.get("source_type", "")) == source_type:
+			return subject
 	return {}
 
 
