@@ -14,12 +14,7 @@ run_godot expansion-13-scanner-cutter-correction 120 --headless --path . --smoke
 run_godot active-tool-selection 60 --headless --path . --smoke-active-tool-selection
 run_godot cutter-salvage-state 60 --headless --path . --script res://scripts/main/smoke/smoke_cutter_salvage_state.gd
 run_godot sealed-wreck-reward-state 60 --headless --path . --script res://scripts/main/smoke/smoke_sealed_wreck_reward_state.gd
-run_godot expansion-14-archive-current-return 60 --headless --path . --smoke-expansion-14-archive-current-return
-run_godot expansion-14-runtime-owners 60 --headless --path . --script res://scripts/main/smoke/smoke_expansion_14_runtime_owners.gd
-run_godot review-checkpoint-fixture 60 --headless --path . --script res://scripts/main/smoke/smoke_review_checkpoint_fixture.gd
-run_godot shock-prod-presentation 60 --headless --path . --script res://scripts/main/smoke/smoke_shock_prod_presentation.gd
-run_godot checkpoint-shock-prod 60 --headless --path . --review-checkpoint=expansion_14_start --smoke-checkpoint-shock-prod
-run_godot held-cargo-hud 60 --headless --path . --script res://scripts/main/smoke/smoke_held_cargo_hud.gd
+bash tools/ci/run_expansion_14_hold_correction.sh
 
 route_smokes=(
   --smoke-production-slice-route
