@@ -56,6 +56,7 @@ func scanner_action(world, player) -> Dictionary:
 		if _profile.has_completed_discovery(ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID):
 			return _note_result(false, "project_required", "Scanner project | Ti 1 + Coil 1 | Build at night")
 		return _note_result(false, "blueprint_required", "Find scanner blueprint beyond east current")
+	_scanner_use_held = true
 	var target := _target_for_player(world, player)
 	if target.is_empty():
 		return _note_result(false, "ready", "Scanner ready | Approach a survey signal")
@@ -118,17 +119,24 @@ func update(world, player, delta: float) -> Dictionary:
 	if not active_target_id.is_empty() and not _scanner_use_held:
 		cancel_active_interaction(world)
 		return {"state": "canceled", "note": _last_note}
-	var target := _target_for_player(world, player, active_target_id, "progression" if active_target_id.is_empty() else "")
+	var required_mode := "progression" if active_target_id.is_empty() and not _scanner_use_held else ""
+	var target := _target_for_player(world, player, active_target_id, required_mode)
 	if target.is_empty():
 		var canceled: Dictionary = _interaction.update({}, delta)
 		if str(canceled.get("state", "")) == "canceled":
-			_scanner_use_held = false
 			_last_note = str(canceled.get("note", "Survey interrupted"))
 			_refresh_world_targets(world)
 			return {"state": "canceled", "note": _last_note}
 		return {}
 
 	var target_id := str(target.get("id", ""))
+	if str(target.get("scanner_subject_mode", "")) == "identify":
+		return _note_result(
+			false,
+			"identified",
+			_scanner_feedback.identification_note(target),
+			{"target_id": target_id, "identified": true}
+		)
 	var discovery_id := str(target.get("discovery_id", ""))
 	if _profile.has_completed_discovery(discovery_id):
 		_interaction.reset()
@@ -163,7 +171,6 @@ func update(world, player, delta: float) -> Dictionary:
 		_last_note = str(survey_result.get("note", "Survey anomaly"))
 		return {"state": survey_result.get("state", "progress"), "note": _last_note, "survey": survey_result}
 
-	_scanner_use_held = false
 	var pending: Dictionary = _expedition.create_pending(
 		discovery_id,
 		str(world.map_id),

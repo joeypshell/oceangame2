@@ -20,19 +20,23 @@ func _run() -> void:
 	player.global_position = Vector2(400.0, 300.0)
 
 	var original_facing: Dictionary = player.get_facing_report()
-	var miss_report := _runtime_report(false, 0.0, "", Vector2.ZERO)
+	var miss_report := _runtime_report(false, 0.0, "", Vector2.ZERO, "progression", true)
 	player.show_scanner_action({"reason": "ready"}, miss_report)
 	var presentation: Dictionary = player.get_scanner_presentation_report()
-	_expect(bool(presentation.get("visible", false)), "missed pulse did not show the scanner field")
-	_expect(not bool(presentation.get("active", true)), "missed pulse incorrectly reported an active scan")
-	_expect(not bool(presentation.get("target_visible", true)), "missed pulse highlighted a nonexistent target")
+	_expect(bool(presentation.get("visible", false)), "held empty scan did not show the scanner field")
+	_expect(bool(presentation.get("held", false)), "scanner presentation omitted the held input state")
+	_expect(not bool(presentation.get("active", true)), "held empty scan incorrectly reported progression")
+	_expect(not bool(presentation.get("target_visible", true)), "held empty scan highlighted a nonexistent target")
 	_expect(is_equal_approx(float(presentation.get("range_pixels", 0.0)), 192.0), "scanner field was not six 32px tiles long")
 	_expect(is_equal_approx(float(presentation.get("half_angle_degrees", 0.0)), 30.0), "scanner field was not 30 degrees wide per side")
 
 	var scanner_field := player.get_node("ScannerField")
 	scanner_field._process(1.0)
 	presentation = player.get_scanner_presentation_report()
-	_expect(not bool(presentation.get("visible", true)), "missed pulse did not clear after its brief display")
+	_expect(bool(presentation.get("visible", false)), "held scanner field expired before input release")
+	player.sync_scanner_presentation(_runtime_report(false, 0.0, "", Vector2.ZERO, "progression", false))
+	presentation = player.get_scanner_presentation_report()
+	_expect(not bool(presentation.get("visible", true)), "scanner field remained visible after input release")
 
 	var right_anchor: Vector2 = player.global_position + Vector2(120.0, 18.0)
 	var active_report := _runtime_report(true, 0.42, "artifact_subject", right_anchor)
@@ -60,22 +64,25 @@ func _run() -> void:
 	_expect(is_equal_approx(float(presentation.get("facing_sign", 0.0)), -1.0), "scanner field did not follow left-facing state")
 	_expect((presentation.get("target_local_position", Vector2.ZERO) as Vector2).x < 0.0, "left-facing target bracket remained on the right")
 
-	player.sync_scanner_presentation(_runtime_report(false, 0.0, "", Vector2.ZERO))
+	player.sync_scanner_presentation(_runtime_report(false, 0.0, "", Vector2.ZERO, "progression", false))
 	presentation = player.get_scanner_presentation_report()
 	_expect(not bool(presentation.get("visible", true)), "cancellation left the scanner cone visible")
 	_expect(str(presentation.get("target_id", "")) == "", "cancellation left the target bracket visible")
 	_expect(is_zero_approx(float(presentation.get("progress", 1.0))), "cancellation left stale scanner progress")
 
 	var identify_anchor: Vector2 = player.global_position + Vector2(-96.0, 8.0)
-	var identify_report := _runtime_report(false, 0.0, "identify_current_gate", identify_anchor, "identify")
+	var identify_report := _runtime_report(false, 0.0, "identify_current_gate", identify_anchor, "identify", true)
 	player.show_scanner_action({"reason": "identified", "target_id": "identify_current_gate"}, identify_report)
 	presentation = player.get_scanner_presentation_report()
 	_expect(bool(presentation.get("card_visible", false)), "ordinary identification omitted its temporary target-local card")
+	_expect(bool(presentation.get("held", false)), "ordinary identification did not retain held scanner state")
 	_expect(str(presentation.get("target_mode", "")) == "identify", "ordinary identification was presented as progression")
 	_expect(str(presentation.get("target_label", "")) == "Northwest archive current", "ordinary identification omitted its source label")
 	_expect(not bool(presentation.get("requires_hold", true)), "ordinary identification incorrectly requested held progression")
 	scanner_field._process(1.0)
-	_expect(not bool(player.get_scanner_presentation_report().get("visible", true)), "ordinary identification card did not clear after its pulse")
+	_expect(bool(player.get_scanner_presentation_report().get("visible", false)), "ordinary identification expired while USE remained held")
+	player.sync_scanner_presentation(_runtime_report(false, 0.0, "", Vector2.ZERO, "identify", false))
+	_expect(not bool(player.get_scanner_presentation_report().get("visible", true)), "ordinary identification remained after USE release")
 
 	await _verify_mobile_use_command()
 	_verify_world_subject_presentation()
@@ -87,14 +94,15 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: scanner field range_tiles=6 half_angle=30 miss=pulse active=continuous subject=bracketed card=name+type+hold progress=compact identify=temporary cancel=clear mobile_use=held_action generic_rings=removed debug_outline=available.")
+	print("PASS: scanner field range_tiles=6 half_angle=30 held=continuous release=clear active=progression subject=bracketed card=name+type+hold progress=compact identify=held_no_reward mobile_use=held_action generic_rings=removed debug_outline=available.")
 	quit(0)
 
 
-func _runtime_report(active: bool, progress: float, target_id: String, anchor: Vector2, mode := "progression") -> Dictionary:
+func _runtime_report(active: bool, progress: float, target_id: String, anchor: Vector2, mode := "progression", held := true) -> Dictionary:
 	var identify := str(mode) == "identify"
 	return {
 		"scanner_unlocked": true,
+		"scanner_use_held": held,
 		"interaction": {
 			"activated": active,
 			"active_target_id": target_id if active else "",

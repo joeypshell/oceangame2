@@ -69,7 +69,8 @@ payoff in remembered geography. It is not a tutorial checklist.
 
 ### Acquisition
 
-- A `Q/SCAN` press emits the scanner pulse. Mobile `SCAN` uses the same action.
+- Held `Q/USE` emits and maintains the scanner field. Mobile `USE` uses the
+  same held action.
 - The initial proof uses a runtime-owned cone six source tiles long with a
   30-degree half-angle, projected horizontally from the diver's facing sign.
 - A target is eligible only when its scan anchor is in front of the diver,
@@ -77,22 +78,25 @@ payoff in remembered geography. It is not a tutorial checklist.
   line-of-sight query.
 - If multiple subjects qualify, choose deterministically by smallest angular
   difference, then distance, then stable source id.
-- A missed pulse briefly shows the field and reports no return. It does not
-  activate the nearest off-axis or behind-player target.
+- An empty held scan shows the field until release and reports no return. It
+  does not activate the nearest off-axis or behind-player target.
 
 ### Progress And Cancellation
 
-- One press activates the eligible subject; no continuous key hold is required.
-- The cone remains visible while timed progress is active.
+- Held input activates an eligible progression subject and must remain held for
+  authored timed progress.
+- The cone remains visible for the full held input, including ordinary
+  reward-free identification and empty scans.
 - Progress continues only while the same subject remains eligible. Moving out
-  of range, turning away, terrain occlusion, failure, or reset cancels to zero.
+  of range, turning away, terrain occlusion, releasing input, switching tools,
+  failure, or reset cancels to zero.
 - Oxygen, daylight, hazards, cargo, and movement continue under their existing
   owners. Scanning remains independent of cargo capacity.
 - Completed pending knowledge still commits only at the canonical boat.
 
 ### Presentation
 
-- Show a restrained wireframe cone boundary during a pulse or active scan.
+- Show a restrained wireframe cone boundary for the full held scan.
 - Highlight/bracket only the acquired physical subject and show compact
   progress. Do not leave a permanent glowing scan volume in the world.
 - Artifact, resource, environment, and creature subjects must have readable
