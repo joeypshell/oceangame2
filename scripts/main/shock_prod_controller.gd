@@ -1,6 +1,7 @@
 extends RefCounted
 
 const ATTACK_RANGE_PX := 72.0
+const ATTACK_HALF_ANGLE_DEGREES := 35.0
 const ATTACK_COOLDOWN_SECONDS := 0.65
 const ATTACK_DAMAGE := 1
 
@@ -25,7 +26,12 @@ func try_attack(hostiles, world, player_position: Vector2, facing_sign: float, u
 
 	var facing := 1.0 if facing_sign >= 0.0 else -1.0
 	cooldown_seconds = ATTACK_COOLDOWN_SECONDS
-	var target: Dictionary = hostiles.attack_target(player_position, facing_sign, ATTACK_RANGE_PX)
+	var target: Dictionary = hostiles.attack_target(
+		player_position,
+		facing_sign,
+		ATTACK_RANGE_PX,
+		ATTACK_HALF_ANGLE_DEGREES
+	)
 	if target.is_empty():
 		return _discharge_result(
 			_result(false, "miss", "Shock prod miss - move closer and face eel"),
@@ -34,12 +40,21 @@ func try_attack(hostiles, world, player_position: Vector2, facing_sign: float, u
 			false
 		)
 	var target_position: Vector2 = target.get("position", player_position + Vector2(ATTACK_RANGE_PX * facing, 0.0))
-	var hit: Dictionary = hostiles.apply_weapon_hit(world, str(target.get("id", "")), ATTACK_DAMAGE, capacitor_unlocked)
+	var hit: Dictionary = hostiles.apply_weapon_hit(
+		world,
+		str(target.get("id", "")),
+		ATTACK_DAMAGE,
+		capacitor_unlocked,
+		player_position
+	)
 	if bool(hit.get("defeated", false)):
 		var victory := _result(true, "defeated", "Territory clear for today")
 		victory.merge(hit, true)
 		return _discharge_result(victory, target_position, facing, true)
-	var note := "Shock prod hit: eel health %d/3 (-1)" % int(hit.get("health", 0))
+	var note := "Shock prod hit: eel health %d/3 | recoil opening %.2fs" % [
+		int(hit.get("health", 0)),
+		float(hit.get("reaction_seconds", 0.0)),
+	]
 	if bool(hit.get("interrupted", false)):
 		note = "Shock prod capacitor hit: eel health %d/3 (-1), recovery %.1fs" % [int(hit.get("health", 0)), float(hit.get("recovery_seconds", 0.0))]
 	var result := _result(bool(hit.get("changed", false)), str(hit.get("reason", "hit")), note)
@@ -63,6 +78,7 @@ func report(unlocked: bool, capacitor_unlocked := false) -> Dictionary:
 		"capacitor_unlocked": capacitor_unlocked,
 		"cooldown_seconds": cooldown_seconds,
 		"attack_range_px": ATTACK_RANGE_PX,
+		"attack_half_angle_degrees": ATTACK_HALF_ANGLE_DEGREES,
 		"attack_damage": ATTACK_DAMAGE,
 	}
 
@@ -84,4 +100,5 @@ func _discharge_result(result: Dictionary, target_position: Vector2, facing_sign
 	result["target_position"] = target_position
 	result["facing_sign"] = facing_sign
 	result["attack_range_px"] = ATTACK_RANGE_PX
+	result["attack_half_angle_degrees"] = ATTACK_HALF_ANGLE_DEGREES
 	return result

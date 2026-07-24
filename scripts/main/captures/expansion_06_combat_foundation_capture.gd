@@ -65,13 +65,17 @@ func capture_and_quit(capture_dir: String) -> void:
 	_main._player.swim_in_direction(Vector2.RIGHT, 0.0)
 	_main._process(0.0)
 	for expected_health in [2, 1]:
+		_main._player.global_position = (_hostile_state().get("position", home) as Vector2) + Vector2(-60, 0)
+		_main._player.swim_in_direction(Vector2.RIGHT, 0.0)
 		if not _main._try_combat_attack() or int(_hostile_state().get("health", -1)) != expected_health:
 			_fail("armed damage setup did not reach health %d" % expected_health)
 			return
 		if expected_health > 1:
 			_main._shock_prod.update(ShockProdController.ATTACK_COOLDOWN_SECONDS)
+	_main._player.global_position = (_hostile_state().get("position", home) as Vector2) + Vector2(-60, 0)
+	_main._player.swim_in_direction(Vector2.RIGHT, 0.0)
 	_main._update_status_label()
-	if _hostile_phase() != "warning" or not _status_contains("Shock prod hit: eel health 1/3 (-1)") or not _status_contains("Health 3/3"):
+	if _hostile_phase() != "recovery" or not _status_contains("Shock prod hit: eel health 1/3 | recoil opening") or not _status_contains("Health 3/3"):
 		_fail("armed damage state was not readable")
 		return
 	var discharge: Dictionary = _main._player.get_shock_prod_presentation_report()
@@ -199,6 +203,7 @@ func _show_capture_discharge() -> void:
 		"id": HOSTILE_ID,
 		"target_position": state.get("position", Vector2.ZERO),
 		"attack_range_px": ShockProdController.ATTACK_RANGE_PX,
+		"attack_half_angle_degrees": ShockProdController.ATTACK_HALF_ANGLE_DEGREES,
 	}, _main._player.get_facing_sign())
 
 

@@ -9,6 +9,8 @@ const PHASE_DEFEATED := "defeated"
 const RETURN_SPEED_FACTOR := 0.75
 const CONTACT_KNOCKBACK_FORCE := 325.0
 const CONTACT_DISRUPTION_SECONDS := 0.45
+const WEAPON_HIT_RECOIL_PX := 44.0
+const WEAPON_HIT_REACTION_SECONDS := 0.35
 
 var _states := {}
 var _defeated_ids := {}
@@ -45,17 +47,25 @@ func prompt() -> String:
 	return _current_prompt
 
 
-func attack_target(player_position: Vector2, facing_sign: float, range_px: float) -> Dictionary:
+func attack_target(
+	player_position: Vector2,
+	facing_sign: float,
+	range_px: float,
+	half_angle_degrees := 35.0
+) -> Dictionary:
 	var nearest := {}
 	var nearest_distance := maxf(0.0, range_px)
 	var facing := 1.0 if facing_sign >= 0.0 else -1.0
+	var minimum_forward_dot := cos(deg_to_rad(clampf(half_angle_degrees, 0.0, 90.0)))
 	for hostile_id in _sorted_state_ids():
 		var state: Dictionary = _states[hostile_id]
 		if str(state.get("phase", "")) == PHASE_DEFEATED:
 			continue
 		var offset: Vector2 = state.get("position", Vector2.ZERO) - player_position
 		var distance := offset.length()
-		if distance > range_px or offset.x * facing < -8.0:
+		if distance > range_px:
+			continue
+		if distance > 0.01 and offset.normalized().dot(Vector2(facing, 0.0)) < minimum_forward_dot:
 			continue
 		if nearest.is_empty() or distance < nearest_distance:
 			nearest = {
@@ -68,16 +78,32 @@ func attack_target(player_position: Vector2, facing_sign: float, range_px: float
 	return nearest
 
 
-func apply_weapon_hit(world, hostile_id: String, damage: int, interrupt_requested := false) -> Dictionary:
+func apply_weapon_hit(
+	world,
+	hostile_id: String,
+	damage: int,
+	interrupt_requested := false,
+	attacker_position = null
+) -> Dictionary:
 	if damage <= 0 or not _states.has(hostile_id):
 		return {"changed": false, "reason": "invalid_target", "defeated": false}
 	var state: Dictionary = _states[hostile_id]
 	if str(state.get("phase", "")) == PHASE_DEFEATED:
 		return {"changed": false, "reason": "already_defeated", "defeated": true}
 	var pre_hit_phase := str(state.get("phase", PHASE_HOME))
+	var pre_hit_position: Vector2 = state.get("position", Vector2.ZERO)
 	state["health"] = maxi(0, int(state.get("health", 0)) - damage)
+	if attacker_position is Vector2:
+		var recoil_direction := pre_hit_position - (attacker_position as Vector2)
+		if recoil_direction.length_squared() <= 0.01:
+			recoil_direction = Vector2.RIGHT
+		state["position"] = _clamp_to_territory(
+			pre_hit_position + recoil_direction.normalized() * WEAPON_HIT_RECOIL_PX,
+			state.get("territory_rect", Rect2())
+		)
 	var defeated := int(state["health"]) == 0
 	var interrupted := false
+	var reaction_seconds := 0.0
 	if defeated:
 		state["phase"] = PHASE_DEFEATED
 		state["phase_seconds"] = 0.0
@@ -88,7 +114,14 @@ func apply_weapon_hit(world, hostile_id: String, damage: int, interrupt_requeste
 		state["phase_seconds"] = float(state.get("recovery_seconds", 1.25))
 		state["contact_consumed"] = true
 		interrupted = true
+		reaction_seconds = float(state["phase_seconds"])
 		_current_prompt = "Capacitor interrupt - recovery opening"
+	else:
+		state["phase"] = PHASE_RECOVERY
+		state["phase_seconds"] = WEAPON_HIT_REACTION_SECONDS
+		state["contact_consumed"] = true
+		reaction_seconds = WEAPON_HIT_REACTION_SECONDS
+		_current_prompt = "Shock recoil - brief opening"
 	_states[hostile_id] = state
 	_sync_visual(world, state)
 	return {
@@ -99,6 +132,10 @@ func apply_weapon_hit(world, hostile_id: String, damage: int, interrupt_requeste
 		"defeated": defeated,
 		"interrupted": interrupted,
 		"pre_hit_phase": pre_hit_phase,
+		"pre_hit_position": pre_hit_position,
+		"recoil_position": state.get("position", pre_hit_position),
+		"recoil_distance": pre_hit_position.distance_to(state.get("position", pre_hit_position)),
+		"reaction_seconds": reaction_seconds,
 		"recovery_seconds": float(state.get("recovery_seconds", 0.0)) if interrupted else 0.0,
 	}
 

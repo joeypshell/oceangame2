@@ -234,6 +234,8 @@ func _defeat_with_runtime_weapon() -> bool:
 	_player.swim_in_direction(Vector2.RIGHT, 0.0)
 	_process(0.0)
 	for expected_health in [2, 1, 0]:
+		_player.global_position = (_hostile_state().get("position", home) as Vector2) + Vector2(-60, 0)
+		_player.swim_in_direction(Vector2.RIGHT, 0.0)
 		if not _require(_main._try_combat_attack(), "base shock prod did not hit eel at health %d" % expected_health):
 			return false
 		if not _require(int(_hostile_state().get("health", -1)) == expected_health, "base shock prod damage drifted"):

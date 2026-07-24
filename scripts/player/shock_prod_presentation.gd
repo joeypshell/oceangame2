@@ -1,7 +1,7 @@
 extends Node2D
 
 const EFFECT_SECONDS := 0.42
-const ARC_HALF_ANGLE_DEGREES := 90.0
+const DEFAULT_ARC_HALF_ANGLE_DEGREES := 35.0
 const BOLT_COUNT := 3
 const BOLT_SEGMENTS := 7
 const BOLT_ORIGIN_OFFSET := 12.0
@@ -10,10 +10,12 @@ const RANGE_INNER_COLOR := Color(0.25, 0.93, 1.0, 0.30)
 const BOLT_GLOW_COLOR := Color(0.12, 0.78, 1.0, 0.42)
 const BOLT_COLOR := Color(0.82, 0.98, 1.0, 1.0)
 const IMPACT_COLOR := Color(1.0, 0.83, 0.25, 1.0)
+const MISS_COLOR := Color(1.0, 0.48, 0.20, 1.0)
 
 var _remaining_seconds := 0.0
 var _elapsed_seconds := 0.0
 var _range_pixels := 0.0
+var _arc_half_angle_degrees := DEFAULT_ARC_HALF_ANGLE_DEGREES
 var _facing_sign := 1.0
 var _endpoint_local := Vector2.ZERO
 var _connected := false
@@ -42,6 +44,11 @@ func show_discharge(action_result: Dictionary, facing_sign: float) -> bool:
 	if not bool(action_result.get("discharged", false)):
 		return false
 	_range_pixels = maxf(1.0, float(action_result.get("attack_range_px", 0.0)))
+	_arc_half_angle_degrees = clampf(
+		float(action_result.get("attack_half_angle_degrees", DEFAULT_ARC_HALF_ANGLE_DEGREES)),
+		1.0,
+		90.0
+	)
 	_facing_sign = 1.0 if facing_sign >= 0.0 else -1.0
 	_connected = bool(action_result.get("connected", false))
 	_reason = str(action_result.get("reason", ""))
@@ -78,7 +85,9 @@ func get_test_report() -> Dictionary:
 		"remaining_seconds": _remaining_seconds,
 		"range_pixels": _range_pixels,
 		"facing_sign": _facing_sign,
-		"arc_half_angle_degrees": ARC_HALF_ANGLE_DEGREES,
+		"arc_half_angle_degrees": _arc_half_angle_degrees,
+		"range_shape": "forward_cone",
+		"miss_feedback": "directional_fizzle" if not _connected else "",
 		"endpoint_local": _endpoint_local,
 		"connected": _connected,
 		"reason": _reason,
@@ -94,7 +103,7 @@ func _draw() -> void:
 		return
 	var life := clampf(_remaining_seconds / EFFECT_SECONDS, 0.0, 1.0)
 	var flash := clampf(sin((1.0 - life) * PI) * 1.35, 0.35, 1.0)
-	_draw_range_flash(life * flash)
+	_draw_range_flash(life * flash * (1.0 if _connected else 0.35))
 	var origin := Vector2(BOLT_ORIGIN_OFFSET * _facing_sign, 0.0)
 	var frame := int(floor(_elapsed_seconds * 48.0))
 	for branch in range(BOLT_COUNT):
@@ -106,7 +115,7 @@ func _draw() -> void:
 
 func _draw_range_flash(alpha: float) -> void:
 	var center_angle := 0.0 if _facing_sign > 0.0 else PI
-	var half_angle := deg_to_rad(ARC_HALF_ANGLE_DEGREES)
+	var half_angle := deg_to_rad(_arc_half_angle_degrees)
 	var start_angle := center_angle - half_angle
 	var end_angle := center_angle + half_angle
 	var start_point := Vector2.from_angle(start_angle) * _range_pixels
@@ -114,7 +123,6 @@ func _draw_range_flash(alpha: float) -> void:
 	draw_line(Vector2.ZERO, start_point, _with_alpha(RANGE_INNER_COLOR, alpha), 1.5, true)
 	draw_line(Vector2.ZERO, end_point, _with_alpha(RANGE_INNER_COLOR, alpha), 1.5, true)
 	draw_arc(Vector2.ZERO, _range_pixels, start_angle, end_angle, 24, _with_alpha(RANGE_COLOR, alpha), 3.0, true)
-	draw_arc(Vector2.ZERO, _range_pixels * 0.55, start_angle, end_angle, 18, _with_alpha(RANGE_INNER_COLOR, alpha), 1.5, true)
 
 
 func _bolt_points(origin: Vector2, endpoint: Vector2, branch: int, frame: int) -> PackedVector2Array:
@@ -143,7 +151,7 @@ func _draw_impact(life: float, flash: float, frame: int) -> void:
 		draw_line(
 			_endpoint_local - direction * 2.0,
 			_endpoint_local + direction * (6.0 + float(index)),
-			_with_alpha(IMPACT_COLOR, life),
+			_with_alpha(MISS_COLOR, life),
 			2.0,
 			true
 		)

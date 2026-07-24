@@ -158,7 +158,12 @@ func _cutter_target() -> Dictionary:
 
 func _hostile_target() -> Dictionary:
 	var facing_sign: float = float(_main._player.get_facing_sign()) if _main._player.has_method("get_facing_sign") else 1.0
-	return _main._hostiles.attack_target(_main._player.global_position, facing_sign, ShockProdController.ATTACK_RANGE_PX)
+	return _main._hostiles.attack_target(
+		_main._player.global_position,
+		facing_sign,
+		ShockProdController.ATTACK_RANGE_PX,
+		ShockProdController.ATTACK_HALF_ANGLE_DEGREES
+	)
 
 
 func _target_label(target: Dictionary, fallback: String) -> String:
