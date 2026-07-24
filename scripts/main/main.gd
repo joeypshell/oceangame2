@@ -2400,7 +2400,15 @@ func _update_active_tool_hud() -> void:
 
 func _update_held_cargo_hud() -> void:
 	if _held_cargo_hud != null:
-		_held_cargo_hud.refresh(_material_runtime.report() if _material_runtime != null else {}, _sortie_state.report() if _sortie_state != null else {}, _held_salvage_capacity())
+		var owned_capability_ids := []
+		if _anomaly_survey != null and _anomaly_survey.profile_state() != null:
+			owned_capability_ids = _anomaly_survey.profile_state().report().get("unlocked_capabilities", [])
+		_held_cargo_hud.refresh(
+			_material_runtime.report() if _material_runtime != null else {},
+			_sortie_state.report() if _sortie_state != null else {},
+			_held_salvage_capacity(),
+			owned_capability_ids
+		)
 
 
 func _cycle_active_tool() -> Dictionary:
