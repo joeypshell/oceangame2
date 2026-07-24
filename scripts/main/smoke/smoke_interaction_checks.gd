@@ -169,8 +169,8 @@ func _smoke_oxygen_pressure_and_quit() -> void:
 		push_error("Oxygen pressure smoke did not show failed expedition result panel: %s" % _result_label.text)
 		get_tree().quit(1)
 		return
-	if _player.global_position.distance_to(_world.spawn_position) > 2.0:
-		push_error("Oxygen pressure smoke did not return player to spawn.")
+	if _player.global_position.distance_to(_world.spawn_position) > 2.0 or _player.is_physics_processing():
+		push_error("Oxygen pressure smoke did not surface and freeze the player.")
 		get_tree().quit(1)
 		return
 	if not is_equal_approx(_oxygen_seconds, OXYGEN_MAX_SECONDS):
@@ -179,8 +179,8 @@ func _smoke_oxygen_pressure_and_quit() -> void:
 		return
 
 	_reset_run()
-	if _run_failed or _held_salvage != 0 or _banked_salvage != 0 or _banked_score != 0:
-		push_error("Oxygen pressure smoke reset did not clear failed run state.")
+	if _run_failed or _held_salvage != 0 or _banked_salvage != 0 or _banked_score != 0 or not _player.is_physics_processing():
+		push_error("Oxygen pressure smoke reset did not clear failure and restore movement.")
 		get_tree().quit(1)
 		return
 
