@@ -50,6 +50,8 @@ def valid_artifact_target() -> dict:
         "id": "salvage_cutter_blueprint_survey",
         "scan_subject_kind": "artifact",
         "scan_subject_id": "salvage_cutter_maintenance_case",
+        "scan_subject_label": "Maintenance case",
+        "scan_subject_description": "Sealed case with a cutter service diagram",
         "scan_presentation_id": "salvage_cutter_blueprint_case",
         "scan_anchor": {"x": 2, "y": 2},
         "scan_reward_kind": "blueprint",
@@ -123,11 +125,15 @@ class SurveyTargetValidationTests(unittest.TestCase):
         map_data = valid_map()
         target = valid_artifact_target()
         target.pop("scan_presentation_id")
+        target["scan_subject_label"] = ""
+        target["scan_subject_description"] = "Hidden at x=8"
         target["scan_anchor"] = {"x": 8, "y": 2, "z": 1}
         map_data["survey_targets"] = [target]
 
         failures = validate_survey_target_schema(SOURCE_MAP, map_data)
         self.assertTrue(any("missing required fields: scan_presentation_id" in failure for failure in failures), failures)
+        self.assertTrue(any("scan_subject_label must be a non-empty string" in failure for failure in failures), failures)
+        self.assertTrue(any("scan_subject_description must not contain coordinates" in failure for failure in failures), failures)
         self.assertTrue(any("scan_anchor has unsupported fields: z" in failure for failure in failures), failures)
         self.assertTrue(any("scan_anchor must be inside map bounds" in failure for failure in failures), failures)
         self.assertTrue(any("scan_anchor must be inside the survey target rectangle" in failure for failure in failures), failures)

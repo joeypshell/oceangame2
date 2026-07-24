@@ -17,10 +17,12 @@ small reviewed passes.
 
 ## Focused Shape
 
-When any field below is present, all six are required:
+When any field below is present, all eight are required:
 
 - `scan_subject_kind`: `artifact`, `creature`, `environment`, or `resource`.
 - `scan_subject_id`: stable lower_snake_case identity for the world subject.
+- `scan_subject_label`: short display-safe subject name.
+- `scan_subject_description`: compact display-safe identification text.
 - `scan_presentation_id`: stable lower_snake_case renderer/asset identity.
 - `scan_anchor`: integer tile-space `{ "x": ..., "y": ... }` inside both the
   map and the survey rectangle.
@@ -42,6 +44,8 @@ knowledge id is `salvage_cutter_blueprint`.
   "h": 2,
   "scan_subject_kind": "artifact",
   "scan_subject_id": "salvage_cutter_maintenance_case",
+  "scan_subject_label": "Maintenance case",
+  "scan_subject_description": "Sealed case with a cutter service diagram",
   "scan_presentation_id": "salvage_cutter_blueprint_case",
   "scan_anchor": {"x": 0, "y": 0},
   "scan_reward_kind": "blueprint",
@@ -67,6 +71,8 @@ validated reachable placement before generating map JSON.
 - Regional targets support artifact/creature/environment subjects and
   discovery rewards.
 - Subject ids are unique among explicit scan subjects.
+- Subject labels and descriptions are compact, non-empty, single-line, and do
+  not expose source coordinates.
 - Presentation and reward ids are lower_snake_case and non-empty.
 - Anchors use only integer `x`/`y`, remain in bounds, and lie inside the survey
   rectangle; normal reachability validation keeps that rectangle non-solid and
@@ -80,6 +86,14 @@ Source owns subject identity, physical presentation identity, anchor, reward,
 timing, clue/finding text, and canonical commit destination. Runtime owns the
 scanner cone, line of sight, selection, progress, pending/committed state,
 profile persistence, feedback, and rendering state.
+
+Gameplay-relevant records without an explicit scan-subject block use
+deterministic informational fallbacks from their existing source id, type,
+kind, tier, and label fields. This applies to salvage, materials, tool targets,
+hostiles, current gates, regional landmarks, and boat/extraction records.
+Fallback identification never grants cargo, discoveries, blueprints,
+capabilities, score, or profile state. Terrain and decorative background are
+not scanner subjects.
 
 Cone length and angle are runtime constants. They must not become per-target
 map tuning. Generated map JSON remains derived from focused source helpers.

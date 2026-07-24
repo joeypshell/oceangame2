@@ -18,6 +18,8 @@ _TARGET_OVERRIDE = {
     "finding_label": "Blueprint recovered: Salvage cutter",
     "scan_subject_kind": "artifact",
     "scan_subject_id": "salvage_cutter_maintenance_case",
+    "scan_subject_label": "Maintenance case",
+    "scan_subject_description": "Sealed case with a cutter service diagram",
     "scan_presentation_id": "salvage_cutter_blueprint_case",
     "scan_anchor": {"x": 68, "y": 44},
     "scan_reward_kind": "blueprint",
