@@ -3,8 +3,10 @@ extends RefCounted
 const ActiveToolController := preload("res://scripts/main/active_tool_controller.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const ReviewCheckpointFixture := preload("res://scripts/main/review_checkpoint_fixture.gd")
+const ScannerSmokePose := preload("res://scripts/main/smoke/scanner_smoke_pose.gd")
 const ShockProdController := preload("res://scripts/main/shock_prod_controller.gd")
 const HOSTILE_ID := "deep_cache_territorial_eel"
+const RELAY_SURVEY_ID := "upper_left_wreck_relay_survey"
 const PASSIVE_CAPABILITY_IDS := [
 	"propulsion_fins",
 	"oxygen_tank_1",
@@ -115,6 +117,29 @@ func smoke_checkpoint_shock_prod_and_quit() -> void:
 		_fail("Unselected Shock Prod was described as ready: %s." % unselected_overlay)
 		return
 
+	var relay_target := _record_by_id(_main._world.get_survey_targets(), RELAY_SURVEY_ID)
+	if relay_target.is_empty() or not bool(ScannerSmokePose.new().place(_main._world, _main._player, relay_target).get("found", false)):
+		_fail("Checkpoint could not pose the Scanner at the wreck relay.")
+		return
+	_press_action("active_tool_use")
+	var partial_scan: Dictionary = _main._anomaly_survey.update(_main._world, _main._player, 0.75)
+	var partial_progress := float(partial_scan.get("survey", {}).get("progress", 0.0))
+	if partial_progress <= 0.0 or partial_progress >= 1.0:
+		_fail("Held Scanner input did not create partial relay progress: %s." % partial_scan)
+		return
+	_press_action("active_tool_cycle_next")
+	if (
+		_main._active_tools.selected_tool_id() != ActiveToolController.CUTTER_TOOL_ID
+		or not is_zero_approx(float(_main._anomaly_survey.report().get("interaction", {}).get("progress", -1.0)))
+	):
+		_fail("Switching away from Scanner did not cancel relay progress.")
+		return
+	_press_action("active_tool_cycle_next")
+	_press_action("active_tool_cycle_next")
+	if _main._active_tools.selected_tool_id() != ActiveToolController.SCANNER_TOOL_ID:
+		_fail("Scanner cancellation fixture did not restore the checkpoint selection.")
+		return
+
 	var state: Dictionary = _main._hostiles.state_for(HOSTILE_ID)
 	if state.is_empty():
 		_fail("Full-level checkpoint omitted %s." % HOSTILE_ID)
@@ -158,7 +183,7 @@ func smoke_checkpoint_shock_prod_and_quit() -> void:
 		_fail("Real Q/USE hit did not produce authoritative range/target feedback: %s." % discharge)
 		return
 
-	print("Checkpoint Shock Prod smoke passed: checkpoint=expansion_14_start default=Scanner selected=Shock_prod range=72 cone=35 discharge=visible_connected hit=1 recoil=44 health=2/3 phase=recovery capacitor=true.")
+	print("Checkpoint Shock Prod smoke passed: checkpoint=expansion_14_start scanner_switch_cancel=true default=Scanner selected=Shock_prod range=72 cone=35 discharge=visible_connected hit=1 recoil=44 health=2/3 phase=recovery capacitor=true.")
 	_main.get_tree().quit()
 
 
@@ -213,6 +238,13 @@ func _action_has_key(action: StringName, expected_key: Key) -> bool:
 			if key_event.keycode == expected_key or key_event.physical_keycode == expected_key:
 				return true
 	return false
+
+
+func _record_by_id(records: Array, record_id: String) -> Dictionary:
+	for record in records:
+		if str(record.get("id", "")) == record_id:
+			return record
+	return {}
 
 
 func _fail(message: String) -> void:

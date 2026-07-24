@@ -91,7 +91,18 @@ The named-checkpoint Shock Prod path is covered with:
 
 It verifies checkpoint ownership, Scanner-first selection, `Tab`/`TOOL` cycling,
 `Q`/`USE` dispatch, in-range facing, capacitor interruption, and honest
-owned-versus-selected HUD text against the full-level eel.
+owned-versus-selected HUD text against the full-level eel. It also verifies
+that switching away from Scanner cancels partial relay progress.
+
+Run the complete bounded owner-HOLD correction matrix with:
+
+```bash
+bash tools/ci/run_expansion_14_hold_correction.sh
+```
+
+The matrix composes the focused combat, scanner, relay, checkpoint, passive
+equipment, mobile-control, and Expansion 14 journey checks. CI runs it once in
+the regional-journey lane after the correction owners merge.
 
 The material-sprite smoke loads the named 32x32 titanium, bundled-rubber, and spring-coil textures, verifies `material_id` selection replaces the generic prop without tint, and confirms candidate identity plus fallback `kind` remain unchanged. CI and release validation run it directly as `smoke_material_sprite_assets.gd`.
 
