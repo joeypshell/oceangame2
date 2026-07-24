@@ -3,11 +3,11 @@ extends RefCounted
 const SOUTHEAST_WRECK_SURVEY_ID := "southeast_wreck_archive_survey"
 const SOUTHEAST_WRECK_DISCOVERY_ID := "southeast_wreck_archive_discovery"
 const SOUTHEAST_WRECK_PENDING := "Wreck archive charted | Return to surface boat"
-const SOUTHEAST_WRECK_SCAN_PROMPT := "Archive exposed | Q/SCAN: Survey wreck archive"
+const SOUTHEAST_WRECK_SCAN_PROMPT := "Archive exposed | Hold Q/USE to scan wreck archive"
 const WRECK_RELAY_SURVEY_ID := "upper_left_wreck_relay_survey"
 const WRECK_RELAY_DISCOVERY_ID := "upper_left_wreck_relay_discovery"
 const WRECK_RELAY_PENDING := "Wreck relay charted | Return to surface boat"
-const WRECK_RELAY_SCAN_PROMPT := "Relay signal | Q/SCAN: Survey wreck relay"
+const WRECK_RELAY_SCAN_PROMPT := "Relay signal | Hold Q/USE to scan wreck relay"
 
 
 func promise_text(world, profile) -> String:

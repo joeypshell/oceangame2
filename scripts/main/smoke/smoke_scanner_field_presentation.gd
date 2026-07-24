@@ -42,10 +42,15 @@ func _run() -> void:
 	_expect(bool(presentation.get("visible", false)), "active scan did not keep the scanner field visible")
 	_expect(bool(presentation.get("active", false)), "active scan was not reported as active")
 	_expect(bool(presentation.get("target_visible", false)), "acquired physical subject was not bracketed")
+	_expect(bool(presentation.get("card_visible", false)), "active progression scan omitted its target-local card")
 	_expect(str(presentation.get("target_id", "")) == "artifact_subject", "scanner bracket selected the wrong subject")
+	_expect(str(presentation.get("target_label", "")) == "Wreck relay console", "target-local card omitted the authored subject name")
+	_expect(str(presentation.get("target_kind", "")) == "artifact", "target-local card omitted the authored subject type")
+	_expect(bool(presentation.get("requires_hold", false)), "progression target did not advertise held scanning")
 	_expect((presentation.get("target_local_position", Vector2.ZERO) as Vector2).is_equal_approx(Vector2(120.0, 18.0)), "scanner bracket did not use the authored scan anchor")
 	_expect(is_equal_approx(float(presentation.get("progress", 0.0)), 0.42), "scanner progress did not match runtime progress")
 	_expect((presentation.get("progress_size", Vector2.ZERO) as Vector2) == Vector2(40.0, 4.0), "scanner progress dimensions drifted")
+	_expect((presentation.get("card_size", Vector2.ZERO) as Vector2) == Vector2(244.0, 76.0), "target-local card dimensions drifted")
 	_expect(_facing_unchanged(original_facing, player.get_facing_report()), "scanner presentation changed player sprite or light facing")
 
 	player.swim_in_direction(Vector2.LEFT, 0.0)
@@ -61,6 +66,17 @@ func _run() -> void:
 	_expect(str(presentation.get("target_id", "")) == "", "cancellation left the target bracket visible")
 	_expect(is_zero_approx(float(presentation.get("progress", 1.0))), "cancellation left stale scanner progress")
 
+	var identify_anchor: Vector2 = player.global_position + Vector2(-96.0, 8.0)
+	var identify_report := _runtime_report(false, 0.0, "identify_current_gate", identify_anchor, "identify")
+	player.show_scanner_action({"reason": "identified", "target_id": "identify_current_gate"}, identify_report)
+	presentation = player.get_scanner_presentation_report()
+	_expect(bool(presentation.get("card_visible", false)), "ordinary identification omitted its temporary target-local card")
+	_expect(str(presentation.get("target_mode", "")) == "identify", "ordinary identification was presented as progression")
+	_expect(str(presentation.get("target_label", "")) == "Northwest archive current", "ordinary identification omitted its source label")
+	_expect(not bool(presentation.get("requires_hold", true)), "ordinary identification incorrectly requested held progression")
+	scanner_field._process(1.0)
+	_expect(not bool(player.get_scanner_presentation_report().get("visible", true)), "ordinary identification card did not clear after its pulse")
+
 	await _verify_mobile_use_command()
 	_verify_world_subject_presentation()
 	player.queue_free()
@@ -71,11 +87,12 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: scanner field range_tiles=6 half_angle=30 miss=pulse active=continuous subject=bracketed progress=compact cancel=clear mobile_use=active_tool_use generic_rings=removed debug_outline=available.")
+	print("PASS: scanner field range_tiles=6 half_angle=30 miss=pulse active=continuous subject=bracketed card=name+type+hold progress=compact identify=temporary cancel=clear mobile_use=held_action generic_rings=removed debug_outline=available.")
 	quit(0)
 
 
-func _runtime_report(active: bool, progress: float, target_id: String, anchor: Vector2) -> Dictionary:
+func _runtime_report(active: bool, progress: float, target_id: String, anchor: Vector2, mode := "progression") -> Dictionary:
+	var identify := str(mode) == "identify"
 	return {
 		"scanner_unlocked": true,
 		"interaction": {
@@ -88,7 +105,12 @@ func _runtime_report(active: bool, progress: float, target_id: String, anchor: V
 			"reason": "eligible" if not target_id.is_empty() else "no_target",
 			"target_id": target_id,
 			"scan_subject_id": "maintenance_case" if not target_id.is_empty() else "",
+			"scanner_subject_mode": mode,
+			"scan_subject_kind": "environment" if identify else "artifact",
+			"scan_subject_label": "Northwest archive current" if identify else "Wreck relay console",
+			"scan_subject_description": "Strong current" if identify else "Progression survey target",
 			"scan_presentation_id": "salvage_cutter_blueprint_case" if not target_id.is_empty() else "",
+			"requires_hold": not identify,
 			"anchor": anchor,
 			"range_pixels": 192.0,
 		},
@@ -109,9 +131,13 @@ func _verify_mobile_use_command() -> void:
 	press.position = use_rect.get_center()
 	press.pressed = true
 	controls._input(press)
+	await process_frame
+	_expect(Input.is_action_pressed("active_tool_use"), "mobile USE released before the touch ended")
 	var release := press.duplicate() as InputEventScreenTouch
 	release.pressed = false
 	controls._input(release)
+	await process_frame
+	_expect(not Input.is_action_pressed("active_tool_use"), "mobile USE remained held after touch release")
 	_expect(_mobile_use_event is InputEventAction, "mobile USE did not dispatch the shared action")
 	if _mobile_use_event is InputEventAction:
 		_expect((_mobile_use_event as InputEventAction).action == &"active_tool_use", "mobile USE did not use desktop Q action semantics")

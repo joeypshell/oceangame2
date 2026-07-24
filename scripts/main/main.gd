@@ -1438,6 +1438,9 @@ func _pry_salvage_completion_feedback(salvage_id: String, label: String) -> Stri
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_released("active_tool_use"):
+		_release_active_tool()
+		return
 	if _expedition_day_state.phase == ExpeditionDayState.PHASE_DEBRIEF:
 		if event is InputEventKey and event.pressed and not event.echo:
 			var key_event := event as InputEventKey
@@ -2417,6 +2420,10 @@ func _cycle_active_tool() -> Dictionary:
 
 func _use_active_tool() -> Dictionary:
 	return _active_tool_runtime.use()
+
+
+func _release_active_tool() -> Dictionary:
+	return _active_tool_runtime.release_use() if _active_tool_runtime != null else {"changed": false, "reason": "idle"}
 
 
 func _try_purchase_oxygen_tank_upgrade() -> bool:

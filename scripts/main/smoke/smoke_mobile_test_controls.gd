@@ -67,7 +67,13 @@ func _run() -> void:
 		var rect: Rect2 = command_rects.get(command_id, Rect2())
 		controls._input(_touch(20, rect.get_center(), true))
 		_expect(Input.get_action_strength("ui_right") > 0.5, "command touch released simultaneous movement")
+		if bool(command.get("hold", false)):
+			await process_frame
+			_expect(Input.is_action_pressed(StringName(command["action"])), "%s action did not remain held with its touch" % command_id)
 		controls._input(_touch(20, rect.get_center(), false))
+		if bool(command.get("hold", false)):
+			await process_frame
+			_expect(not Input.is_action_pressed(StringName(command["action"])), "%s action remained held after touch release" % command_id)
 
 	controls._input(_touch(10, stick_position, false))
 	var down_position := stick_rect.get_center() + Vector2.DOWN * stick_rect.size.y * 0.45
@@ -133,7 +139,7 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: mobile test controls auto_hidden=headless stick=8_direction down_reachable=true bottom_inset=104 commands=8 simultaneous_input=true keyboard_events=U,C,P,N,R,E actions=TOOL+USE active_tool_hotbar=bottom_icons+desktop+844x390.")
+	print("PASS: mobile test controls auto_hidden=headless stick=8_direction down_reachable=true bottom_inset=104 commands=8 simultaneous_input=true keyboard_events=U,C,P,N,R,E actions=TOOL+USE hold_until_release=true active_tool_hotbar=bottom_icons+desktop+844x390.")
 	quit(0)
 
 

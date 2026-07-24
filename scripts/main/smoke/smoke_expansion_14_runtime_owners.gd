@@ -82,7 +82,7 @@ func _run() -> void:
 	var survey := _record_by_id(world.get_survey_targets(), SURVEY_ID)
 	_expect(not survey.is_empty(), "canonical relay survey was missing")
 	var presentation := RegionalJourneyPresentation.new()
-	_expect(presentation.nearby_scan_text(survey) == "Relay signal | Q/SCAN: Survey wreck relay", "relay scan feedback omitted explicit Q/SCAN")
+	_expect(presentation.nearby_scan_text(survey) == "Relay signal | Hold Q/USE to scan wreck relay", "relay scan feedback omitted explicit held Q/USE")
 	_expect(presentation.survey_complete_note(survey) == "Wreck relay charted | Return to surface boat", "relay pending feedback omitted boat return")
 	var expedition := ExpeditionDiscoveryState.new()
 	var metadata := _pending_metadata(survey)

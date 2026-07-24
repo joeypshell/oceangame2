@@ -23,7 +23,7 @@ func activate(target: Dictionary) -> Dictionary:
 		"elapsed_seconds": _elapsed_seconds,
 		"interaction_seconds": _required_seconds,
 		"progress": _elapsed_seconds / _required_seconds,
-		"note": "Scanner active | Hold position",
+		"note": "Scanner active | Hold Q/USE and position",
 	}
 
 
@@ -47,7 +47,7 @@ func update(target: Dictionary, delta: float) -> Dictionary:
 			"elapsed_seconds": 0.0,
 			"interaction_seconds": required_seconds,
 			"progress": 0.0,
-			"note": "Q/SCAN: %s" % _display_label(target),
+			"note": "Hold Q/USE to scan: %s" % _display_label(target),
 		}
 
 	_elapsed_seconds = minf(_required_seconds, _elapsed_seconds + maxf(0.0, delta))
@@ -58,7 +58,7 @@ func update(target: Dictionary, delta: float) -> Dictionary:
 		"elapsed_seconds": _elapsed_seconds,
 		"interaction_seconds": _required_seconds,
 		"progress": progress,
-		"note": "%s %d%%" % [_display_label(target), int(floor(progress * 100.0))],
+		"note": "%s %d%% | Hold Q/USE" % [_display_label(target), int(floor(progress * 100.0))],
 	}
 	if _elapsed_seconds >= _required_seconds:
 		result["state"] = "complete"

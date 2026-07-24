@@ -1,15 +1,20 @@
 extends RefCounted
 
+const ScannerSubjectCatalog := preload("res://scripts/main/scanner_subject_catalog.gd")
 const RANGE_TILES := 6.0
 const HALF_ANGLE_DEGREES := 30.0
 const COMPARISON_EPSILON := 0.0001
 
+var _catalog := ScannerSubjectCatalog.new()
 
-func acquire(world, origin: Vector2, facing_sign: float) -> Dictionary:
+
+func acquire(world, origin: Vector2, facing_sign: float, required_mode := "") -> Dictionary:
 	if world == null or not world.has_method("get_survey_targets"):
 		return _empty_report("world_unavailable")
 	var best := {}
-	for target in world.get_survey_targets():
+	for target in _catalog.subjects(world, required_mode):
+		if not str(required_mode).is_empty() and str(target.get("scanner_subject_mode", "")) != str(required_mode):
+			continue
 		var report := evaluate_target(world, origin, facing_sign, target)
 		if bool(report.get("eligible", false)) and (best.is_empty() or _precedes(report, best)):
 			best = report
@@ -45,7 +50,7 @@ func evaluate_target(world, origin: Vector2, facing_sign: float, target: Diction
 func target_by_id(world, target_id: String) -> Dictionary:
 	if world == null or not world.has_method("get_survey_targets"):
 		return {}
-	for target in world.get_survey_targets():
+	for target in _catalog.subjects(world):
 		if str(target.get("id", "")) == target_id:
 			return target
 	return {}
@@ -54,13 +59,24 @@ func target_by_id(world, target_id: String) -> Dictionary:
 func public_report(report: Dictionary) -> Dictionary:
 	var result := report.duplicate(true)
 	var target: Dictionary = result.get("target", {})
+	result["scanner_subject_mode"] = str(target.get("scanner_subject_mode", "progression"))
 	result["scan_subject_id"] = str(target.get("scan_subject_id", ""))
+	result["scan_subject_kind"] = str(target.get("scan_subject_kind", ""))
+	result["scan_subject_label"] = str(target.get("scan_subject_label", ""))
+	result["scan_subject_description"] = str(target.get("scan_subject_description", ""))
 	result["scan_presentation_id"] = str(target.get("scan_presentation_id", ""))
+	result["source_id"] = str(target.get("source_id", ""))
+	result["source_type"] = str(target.get("source_type", "survey"))
+	result["requires_hold"] = str(target.get("scanner_subject_mode", "progression")) == "progression"
 	result.erase("target")
 	return result
 
 
 func _precedes(candidate: Dictionary, incumbent: Dictionary) -> bool:
+	var candidate_priority := int(candidate.get("scan_priority", 0))
+	var incumbent_priority := int(incumbent.get("scan_priority", 0))
+	if candidate_priority != incumbent_priority:
+		return candidate_priority < incumbent_priority
 	var candidate_angle := float(candidate.get("angle_degrees", 180.0))
 	var incumbent_angle := float(incumbent.get("angle_degrees", 180.0))
 	if absf(candidate_angle - incumbent_angle) > COMPARISON_EPSILON:
@@ -94,6 +110,7 @@ func _target_report(
 		"angle_degrees": angle_degrees,
 		"distance_pixels": distance_pixels,
 		"range_pixels": range_pixels,
+		"scan_priority": int(target.get("scan_priority", 0)),
 		"target": target,
 	}
 

@@ -6,10 +6,16 @@ const MISS_PULSE_SECONDS := 0.42
 const TARGET_HALF_SIZE := Vector2(18.0, 13.0)
 const TARGET_CORNER_LENGTH := 7.0
 const PROGRESS_SIZE := Vector2(40.0, 4.0)
+const CARD_SIZE := Vector2(244.0, 76.0)
+const CARD_MARGIN := 8.0
+const CARD_TITLE_SIZE := 15
+const CARD_TEXT_SIZE := 12
 const FIELD_COLOR := Color(0.50, 0.95, 0.96, 0.72)
 const FIELD_INNER_COLOR := Color(0.50, 0.95, 0.96, 0.30)
 const TARGET_COLOR := Color(1.0, 0.88, 0.36, 0.96)
 const PROGRESS_BACK_COLOR := Color(0.02, 0.08, 0.11, 0.78)
+const CARD_BACK_COLOR := Color(0.02, 0.08, 0.11, 0.90)
+const CARD_TEXT_COLOR := Color(0.86, 0.96, 0.98, 0.96)
 
 var _scanner_unlocked := false
 var _active := false
@@ -18,6 +24,11 @@ var _facing_sign := 1.0
 var _range_pixels := DEFAULT_RANGE_PIXELS
 var _target_id := ""
 var _target_local_position := Vector2.ZERO
+var _target_mode := ""
+var _target_kind := ""
+var _target_label := ""
+var _target_description := ""
+var _requires_hold := false
 var _progress := 0.0
 
 
@@ -88,6 +99,13 @@ func get_test_report() -> Dictionary:
 		"target_visible": visible and not _target_id.is_empty(),
 		"target_id": _target_id,
 		"target_local_position": _target_local_position,
+		"target_mode": _target_mode,
+		"target_kind": _target_kind,
+		"target_label": _target_label,
+		"target_description": _target_description,
+		"requires_hold": _requires_hold,
+		"card_visible": visible and not _target_id.is_empty(),
+		"card_size": CARD_SIZE,
 		"progress": _progress,
 		"progress_size": PROGRESS_SIZE,
 	}
@@ -99,6 +117,7 @@ func _draw() -> void:
 	_draw_field()
 	if not _target_id.is_empty():
 		_draw_target_bracket()
+		_draw_target_card()
 
 
 func _draw_field() -> void:
@@ -136,6 +155,23 @@ func _draw_corner(origin: Vector2, horizontal: Vector2, vertical: Vector2) -> vo
 	draw_line(origin, origin + vertical * TARGET_CORNER_LENGTH, TARGET_COLOR, 2.0, true)
 
 
+func _draw_target_card() -> void:
+	var card_position := _target_local_position + Vector2(-CARD_SIZE.x * 0.5, -TARGET_HALF_SIZE.y - CARD_SIZE.y - 10.0)
+	var card_rect := Rect2(card_position, CARD_SIZE)
+	draw_rect(card_rect, CARD_BACK_COLOR, true)
+	draw_rect(card_rect, TARGET_COLOR, false, 1.0)
+	var font := ThemeDB.fallback_font
+	var text_width := CARD_SIZE.x - CARD_MARGIN * 2.0
+	var title_position := card_position + Vector2(CARD_MARGIN, 20.0)
+	draw_string(font, title_position, _fit_text(_target_label, 34), HORIZONTAL_ALIGNMENT_LEFT, text_width, CARD_TITLE_SIZE, TARGET_COLOR)
+	var detail := _target_kind.capitalize()
+	if not _target_description.is_empty():
+		detail += " | %s" % _target_description
+	draw_string(font, title_position + Vector2(0.0, 20.0), _fit_text(detail, 40), HORIZONTAL_ALIGNMENT_LEFT, text_width, CARD_TEXT_SIZE, CARD_TEXT_COLOR)
+	var instruction := "Hold Q/USE | %d%%" % int(floor(_progress * 100.0)) if _requires_hold else "Identified"
+	draw_string(font, title_position + Vector2(0.0, 40.0), instruction, HORIZONTAL_ALIGNMENT_LEFT, text_width, CARD_TEXT_SIZE, CARD_TEXT_COLOR)
+
+
 func _apply_targeting(targeting_value) -> void:
 	if typeof(targeting_value) != TYPE_DICTIONARY:
 		_clear_target()
@@ -155,12 +191,29 @@ func _apply_targeting(targeting_value) -> void:
 		return
 	_target_id = target_id
 	_target_local_position = to_local(anchor)
+	_target_mode = str(targeting.get("scanner_subject_mode", "progression"))
+	_target_kind = str(targeting.get("scan_subject_kind", "subject"))
+	_target_label = str(targeting.get("scan_subject_label", "Unknown subject"))
+	_target_description = str(targeting.get("scan_subject_description", ""))
+	_requires_hold = bool(targeting.get("requires_hold", _target_mode == "progression"))
 
 
 func _clear_target() -> void:
 	_target_id = ""
 	_target_local_position = Vector2.ZERO
+	_target_mode = ""
+	_target_kind = ""
+	_target_label = ""
+	_target_description = ""
+	_requires_hold = false
 	_progress = 0.0
+
+
+func _fit_text(value: String, max_characters: int) -> String:
+	var text := value.strip_edges()
+	if text.length() <= max_characters:
+		return text
+	return "%s..." % text.left(max_characters - 3)
 
 
 func _refresh_visibility() -> void:

@@ -69,6 +69,17 @@ func use() -> Dictionary:
 	return result
 
 
+func release_use() -> Dictionary:
+	if _selection == null or _selection.selected_tool_id() != ActiveToolController.SCANNER_TOOL_ID or _main._anomaly_survey == null:
+		return {"changed": false, "reason": "idle"}
+	var result: Dictionary = _main._anomaly_survey.scanner_release(_main._world)
+	if bool(result.get("changed", false)):
+		_main._last_status_note = str(result.get("note", "Scanner interrupted"))
+		_main._player.sync_scanner_presentation(_main._anomaly_survey.report())
+		_main._update_status_label()
+	return result
+
+
 func use_shock_prod() -> Dictionary:
 	if _main._shock_prod == null or _main._hostiles == null or _main._world == null or _main._player == null or _main._run_complete or _main._sortie_state.failed:
 		return {"status": "unavailable", "note": "Shock prod unavailable", "changed": false}
@@ -123,7 +134,7 @@ func _use_scanner() -> Dictionary:
 	var result: Dictionary = _main._anomaly_survey.scanner_action(_main._world, _main._player)
 	_main._player.show_scanner_action(result, _main._anomaly_survey.report())
 	var reason := str(result.get("reason", ""))
-	result["status"] = "used" if reason == "activated" else "wrong_context" if reason == "ready" else "unavailable"
+	result["status"] = "used" if reason in ["activated", "identified"] else "wrong_context" if reason == "ready" else "unavailable"
 	return result
 
 
@@ -148,7 +159,7 @@ func _wrong_context(tool_id: String) -> Dictionary:
 
 	var survey_target: Dictionary = _main._anomaly_survey.active_tool_target(_main._world, _main._player)
 	if not survey_target.is_empty() and tool_id != ActiveToolController.SCANNER_TOOL_ID and _main._anomaly_survey.has_scanner():
-		return {"status": "wrong_context", "note": "%s | Tab Scanner | Q Use" % _target_label(survey_target, "Survey signal")}
+		return {"status": "wrong_context", "note": "%s | Tab Scanner | Hold Q/USE" % _target_label(survey_target, "Survey signal")}
 	return {}
 
 
@@ -167,7 +178,7 @@ func _hostile_target() -> Dictionary:
 
 
 func _target_label(target: Dictionary, fallback: String) -> String:
-	var label := str(target.get("interaction_label", target.get("clue_label", ""))).replace("_", " ").strip_edges()
+	var label := str(target.get("scan_subject_label", target.get("interaction_label", target.get("clue_label", "")))).replace("_", " ").strip_edges()
 	if label.is_empty():
 		return fallback
 	return label.substr(0, 1).to_upper() + label.substr(1)
