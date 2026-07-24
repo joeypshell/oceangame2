@@ -55,6 +55,8 @@ REGIONAL_FIELDS = {*FINDING_FIELDS, "next_lead_label", "required_route_id"}
 SCAN_SUBJECT_FIELDS = {
     "scan_subject_kind",
     "scan_subject_id",
+    "scan_subject_label",
+    "scan_subject_description",
     "scan_presentation_id",
     "scan_anchor",
     "scan_reward_kind",
@@ -181,6 +183,10 @@ def _validate_scan_subject(target: dict[str, Any], item_label: str, width: int, 
             f"{item_label} scan_subject_kind must be one of: {', '.join(sorted(SUPPORTED_SUBJECT_KINDS))}."
         )
     failures.extend(_validate_id(target.get("scan_subject_id"), item_label, "scan_subject_id"))
+    failures.extend(_validate_compact_text(target.get("scan_subject_label"), item_label, "scan_subject_label"))
+    failures.extend(
+        _validate_compact_text(target.get("scan_subject_description"), item_label, "scan_subject_description")
+    )
     failures.extend(_validate_id(target.get("scan_presentation_id"), item_label, "scan_presentation_id"))
 
     target_type = target.get("target_type")

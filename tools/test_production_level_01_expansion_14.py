@@ -14,6 +14,7 @@ from production_level_01_expansion_14 import (
     BOAT_ID,
     CAPABILITY_ID,
     CORE_ID,
+    DISCOVERY_ID,
     GATE_ID,
     LANDMARK_ID,
     PROJECT_ID,
@@ -55,6 +56,12 @@ class ProductionLevelExpansion14Tests(unittest.TestCase):
         self.assertEqual(CORE_ID, route["payoff_target_id"])
         self.assertEqual(BOAT_ID, route["commit_entry_id"])
         self.assertEqual(BOAT_ID, survey["commit_entry_id"])
+        self.assertEqual("environment", survey["scan_subject_kind"])
+        self.assertEqual("northwest_wreck_relay_console", survey["scan_subject_id"])
+        self.assertEqual("Wreck relay console", survey["scan_subject_label"])
+        self.assertEqual("Damaged relay still transmitting", survey["scan_subject_description"])
+        self.assertEqual({"x": 59, "y": 58}, survey["scan_anchor"])
+        self.assertEqual(DISCOVERY_ID, survey["scan_reward_id"])
 
     def test_relay_records_are_distinct_and_source_owned(self) -> None:
         gate = next(item for item in self.map_data["zones"] if item["id"] == GATE_ID)
