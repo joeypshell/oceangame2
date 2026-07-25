@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Expansion 14 closed with owner GO after review of exact runtime `1f148eb`. Expansion 15 now selects one night expedition-planning choice between source-derived leads; its implementation milestone and issue batch follow the committed plan. A broad credits economy, teleport, connector-based normal traversal, pure oxygen-capacity gating, and broad pressure progression remain deferred.
+Expansion 14 closed with owner GO after review of exact runtime `1f148eb`. [Expansion 15 milestone #41](https://github.com/joeypshell/oceangame2/milestone/41) now tracks #1095-#1104 for one night expedition-planning choice between source-derived leads. A broad credits economy, teleport, connector-based normal traversal, pure oxygen-capacity gating, and broad pressure progression remain deferred.
 
 Core sources and operating docs:
 

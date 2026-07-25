@@ -54,18 +54,19 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 ## Planning Horizons
 
-- Committed: Expansion 15 Expedition Planning And Choice; create its milestone and bounded implementation batch after the plan commit.
+- Committed: [Expansion 15 milestone #41](https://github.com/joeypshell/oceangame2/milestone/41), issues #1095-#1104.
 - Proposed: no later expansion is selected.
 - Directional: durable oxygen-route progression, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-The Expansion 15 milestone is pending creation after its plan commit.
+Expansion 15 is open with one bounded ten-issue implementation/review batch.
 
-1. [Expansion 14: Archive Current Return](https://github.com/joeypshell/oceangame2/milestone/40) - complete with owner GO after bounded corrections; exact reviewed runtime `1f148eb`.
-2. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - complete with owner GO after corrections #980/#982-#990, #1000-#1009, and audio interlude #1020-#1023; exact reviewed runtime `ede39d1`.
-3. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - complete through #941 plus corrections #951-#953, with player GO and exact-SHA Web verification.
+1. [Expansion 15: Expedition Planning And Choice](https://github.com/joeypshell/oceangame2/milestone/41) - open as #1095-#1104; contract through owner gate.
+2. [Expansion 14: Archive Current Return](https://github.com/joeypshell/oceangame2/milestone/40) - complete with owner GO after bounded corrections; exact reviewed runtime `1f148eb`.
+3. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - complete with owner GO after corrections #980/#982-#990, #1000-#1009, and audio interlude #1020-#1023; exact reviewed runtime `ede39d1`.
+4. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - complete through #941 plus corrections #951-#953, with player GO and exact-SHA Web verification.
 
 ## Completed Expansion 04
 
@@ -111,9 +112,9 @@ The Expansion 15 milestone is pending creation after its plan commit.
 
 #1031-#1039 implement the archive-led Current Stabilizer return; #1056/#1057 add the focused checkpoint; #1061/#1063/#1065 and #1069-#1077 correct tool selection, combat feel, scanner inspection/held progress, relay identity, passive equipment, coverage, visual review, and Web handoff. #1087/#1088 close the final scanner-hold and oxygen-failure replay gaps. #1040 records owner GO for exact runtime `1f148eb`; milestone #40 is complete.
 
-## Planned Expansion 15
+## Active Expansion 15
 
-#1094 selects Expedition Planning And Choice. The committed plan reuses the unresolved Northwest Wreck Relay journey and forecasted Southwest jellyfish bloom as two distinct source-derived options, stores only a session/day-scoped selected lead, and preserves existing objective, project, profile, map, and HUD ownership. The implementation milestone and issue range are recorded after this plan is committed.
+#1094 selects Expedition Planning And Choice. Milestone #41 tracks #1095-#1104 in contract-to-owner order. The plan reuses the unresolved Northwest Wreck Relay journey and forecasted Southwest jellyfish bloom as two distinct source-derived options, stores only a session/day-scoped selected lead, and preserves existing objective, project, profile, map, and HUD ownership.
 
 ## Roadmap Rules
 

@@ -59,8 +59,8 @@ the normal world or separate campaign areas.
 
 ## Current Committed Direction
 
-Expansions 01-14 are complete with player GO. Expansion 15 selects one bounded
-**Expedition Planning And Choice** pass:
+Expansions 01-14 are complete with player GO. Expansion 15 milestone #41
+tracks #1095-#1104 for one bounded **Expedition Planning And Choice** pass:
 
 - derive available plans from existing source-authored regional journeys and
   daily conditions

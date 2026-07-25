@@ -3,8 +3,8 @@
 Date: 2026-07-25
 
 Status: Expansions 01-14 are complete with player GO. Expansion 15 Expedition
-Planning And Choice is selected by #1094; its implementation milestone and
-bounded issue batch follow the committed plan. No later expansion is selected.
+Planning And Choice is active as milestone #41, issues #1095-#1104. No later
+expansion is selected.
 
 ## Decision
 
@@ -92,8 +92,8 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 15 Expedition Planning And Choice. Commit its plan, then create only
-the bounded source/state/runtime/review batch defined there.
+Expansion 15 Expedition Planning And Choice, milestone #41 and bounded issues
+#1095-#1104.
 
 ### Proposed
 
@@ -413,8 +413,7 @@ replay.**
 
 ### Expansion 15: Expedition Planning And Choice
 
-Status: Selected by #1094. The implementation milestone and issue batch are
-created after `docs/current/OCEANGAME_EXPANSION_15_PLAN.md` is committed.
+Status: Selected by #1094 and active as milestone #41, issues #1095-#1104.
 
 Goal: turn existing source-authored regional leads and daily opportunities into
 one deliberate plan for the following expedition day.

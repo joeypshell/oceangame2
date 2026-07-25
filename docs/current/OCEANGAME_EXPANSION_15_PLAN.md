@@ -2,8 +2,8 @@
 
 Date: 2026-07-25
 
-Status: Selected by planning gate #1094. The implementation milestone and
-issue batch are created only after this plan is committed.
+Status: Selected by planning gate #1094 and scheduled as milestone #41,
+issues #1095-#1104.
 
 ## Decision
 
@@ -146,23 +146,22 @@ During active play, no second panel or always-visible quest journal is added.
 
 ## Planned Issue Batch
 
-1. Lock the Expedition 15 source, state, input, and presentation contract.
-2. Add expedition-lead metadata validation to the map source format.
-3. Author the relay-versus-bloom choice through the production-level generator.
-4. Implement session-scoped plan state and deterministic lead resolution.
-5. Add the night planning surface, shared controls, and compact active guidance.
-6. Add deterministic planning-choice journey smoke and CI coverage.
-7. Add focused desktop/mobile planning-choice captures.
-8. Review and accept only intentional visual differences.
-9. Verify the exact public Web candidate and isolated review behavior.
-10. Run the owner journey and close with GO, HOLD, or one bounded correction.
+1. #1095 locks the source, state, input, and presentation contract.
+2. #1096 adds expedition-lead metadata validation.
+3. #1097 authors the relay-versus-bloom source choice.
+4. #1098 implements session-scoped state and deterministic lead resolution.
+5. #1099 adds the night surface, shared controls, and active guidance.
+6. #1100 adds deterministic journey smoke and CI coverage.
+7. #1101 adds focused desktop/mobile review captures.
+8. #1102 reviews and accepts only intentional visual differences.
+9. #1103 verifies the exact public Web candidate and review isolation.
+10. #1104 runs the owner journey and closes with GO, HOLD, or one correction.
 
 Dependency order:
 
 ```text
-contract -> schema/validation -> source authoring -> state/resolver
--> UI/input -> integrated smoke -> capture -> visual decision
--> exact Web verification -> owner gate
+#1095 -> #1096 -> #1097 -> #1098 -> #1099 -> #1100
+-> #1101 -> #1102 -> #1103 -> #1104
 ```
 
 ## Validation And Smoke Plan

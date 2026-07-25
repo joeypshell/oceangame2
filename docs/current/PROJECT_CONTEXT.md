@@ -74,7 +74,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Completed Expansion 12 handoff: `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #951-#953, and player GO #941
 - Completed Expansion 13 handoff: `docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`, with correction history in `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md`, `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md`, and `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`
 - Completed Expansion 14 handoff: `docs/current/OCEANGAME_EXPANSION_14_CLOSEOUT.md`, with correction history in `docs/current/OCEANGAME_EXPANSION_14_OWNER_HOLD_CORRECTION_PLAN.md`, focused visual review, and exact Web verification
-- Active Expansion 15 handoff: `docs/current/OCEANGAME_EXPANSION_15_PLAN.md`; implementation milestone and issue batch follow the committed plan
+- Active Expansion 15 handoff: `docs/current/OCEANGAME_EXPANSION_15_PLAN.md`; milestone #41 tracks #1095-#1104
 - Latest audio/Web handoff: `docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
@@ -224,7 +224,7 @@ Current issue state as of 2026-07-25:
 - Closed: #969 records owner GO for exact reviewed runtime `ede39d1`; milestone #39 is complete.
 - Closed: #1069-#1077 and #1087/#1088 resolve the Expansion 14 owner-HOLD findings and late replay gaps.
 - Closed: #1040 records owner GO for exact runtime `1f148eb`; milestone #40 is complete.
-- Active planning gate: #1094 selects and bounds Expansion 15 before its implementation milestone and issue batch are created.
+- Planning decision: #1094 selects and bounds Expansion 15; active milestone #41 tracks #1095-#1104.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -362,7 +362,7 @@ Current issue state as of 2026-07-25:
 
 ## Recommended Next Work
 
-Resolve #1094 by committing the Expansion 15 Expedition Planning And Choice plan, then create only its bounded milestone batch. The pass must produce a real two-lead night decision and distinct next-day guidance rather than another objective-text panel.
+Begin Expansion 15 with contract issue #1095, then follow #1096-#1104 in dependency order. The pass must produce a real two-lead night decision and distinct next-day guidance rather than another objective-text panel.
 
 Accepted constraints for next work:
 

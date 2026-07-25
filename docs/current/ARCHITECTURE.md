@@ -4,7 +4,7 @@
 
 The current project is a Godot 4.7 side-view ocean salvage prototype for proving the source-driven map, terrain, validation, capture, and gameplay workflow that will support a finished small diver game.
 
-The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`. Expansions 13 and 14 are complete with owner GO at exact runtimes `ede39d1` and `1f148eb`. Expansion 15 Expedition Planning And Choice is selected but not implemented: its plan composes existing source journeys, daily conditions, profile/project facts, and night/day state into one session-scoped choice without duplicating those owners. No later expansion is selected.
+The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`. Expansions 13 and 14 are complete with owner GO at exact runtimes `ede39d1` and `1f148eb`. Expansion 15 Expedition Planning And Choice is scheduled as milestone #41 (#1095-#1104) but not implemented: its plan composes existing source journeys, daily conditions, profile/project facts, and night/day state into one session-scoped choice without duplicating those owners. No later expansion is selected.
 
 ## Source Of Truth
 
