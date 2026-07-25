@@ -8,8 +8,8 @@ Issues: #1039 `Verify the exact Expansion 14 public Web candidate`, #1057
 
 ## Current Checkpoint Result
 
-**PASS for exact deployment and focused review startup. Player GO remains open
-in #1040.** The current public build is:
+**PASS for exact deployment and focused review startup. Owner GO is recorded
+in #1040.** The reviewed public build is:
 
 - exact SHA: `1f148ebd9766ae18be48f0c14368c83d62375d05`
 - build version: `1f148eb`
@@ -50,14 +50,15 @@ matching build metadata, no failed requests, and no Godot error output.
 - #1088 freezes player movement behind oxygen-failure retry and restores it
   through the existing reset path.
 
-The correction implementation and technical/Web checks are complete. They do
-not claim owner GO, alter map topology or progression ownership, or accept a
-new visual baseline.
+The correction implementation and technical/Web checks are complete. Owner GO
+was recorded separately after player review; the checks do not alter map
+topology or progression ownership or accept a new visual baseline.
 
 ## Original Candidate Result
 
-**PASS for technical deployment. Player GO remains open in #1040.** The public
-GitHub Pages preview serves the post-baseline Expansion 14 candidate at:
+**PASS for technical deployment. Player GO was still open at this historical
+candidate.** The public GitHub Pages preview served the post-baseline Expansion
+14 candidate at:
 
 ```text
 https://joeypshell.github.io/oceangame2/
@@ -118,8 +119,8 @@ pending boat return, and archive result.
 The public query contract deliberately supports fresh profiles and map choice,
 not profile-state injection or capture flags. Browser automation therefore
 proves exact deployment, startup, HUD separation, and touch behavior but does
-not skip directly to the relay. The live current-to-relay journey remains the
-owner GO/HOLD gate in #1040.
+not skip directly to the relay. The live current-to-relay journey later
+received owner GO in #1040.
 
 ## Verification
 
