@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-14 are complete with player GO. Expansion 14 Archive Current Return closed after bounded corrections and owner review of exact runtime `1f148eb`. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
+The compact diver foundation and OceanGame Expansions 01-14 are complete with player GO. Expansion 15 Expedition Planning And Choice is selected to turn existing regional leads and daily opportunities into one deliberate next-day plan. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
 
 ## Project Goal
 
@@ -18,13 +18,13 @@ Build a small side-view salvage game that proves:
 
 - Genre: side-view 2D ocean salvage game
 - Engine: Godot
-- First map: small hand-authored modular underwater cave test map
-- Core loop: leave boat/base, collect salvage, return to extraction, complete the run, restart
-- Primary risks being tested: visual consistency, source-driven map production, expedition pressure, and small-game progression shape
+- Current map: one contiguous source-authored production cave
+- Core loop: choose and prepare, make multiple oxygen sorties under daylight, bank and learn at the boat, build at night, and return changed
+- Primary risks being tested: source-driven world production, expedition motivation, meaningful route choice, readable progression, and controlled visual growth
 
 ## Planning Docs
 
-Expansion 14 closed with owner GO after review of exact runtime `1f148eb`. No later expansion is selected; use a separate roadmap/direction evaluation before creating the next milestone batch. A broad credits economy, teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
+Expansion 14 closed with owner GO after review of exact runtime `1f148eb`. Expansion 15 now selects one night expedition-planning choice between source-derived leads; its implementation milestone and issue batch follow the committed plan. A broad credits economy, teleport, connector-based normal traversal, pure oxygen-capacity gating, and broad pressure progression remain deferred.
 
 Core sources and operating docs:
 
@@ -129,6 +129,7 @@ Current release and expansion handoff:
 - [Expansion 14 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_14_VISUAL_BASELINE_DECISION.md)
 - [Expansion 14 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_14_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 14 Closeout](docs/current/OCEANGAME_EXPANSION_14_CLOSEOUT.md)
+- [OceanGame Expansion 15 Expedition Planning And Choice Plan](docs/current/OCEANGAME_EXPANSION_15_PLAN.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 

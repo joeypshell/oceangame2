@@ -2,10 +2,9 @@
 
 Date: 2026-07-25
 
-Status: Expansions 01-14 are complete with player GO. Expansion 14 closed after
-its base batch, named checkpoint, bounded owner-HOLD corrections, late replay
-fixes, and owner review of exact public runtime `1f148eb`. No Expansion 15 is
-selected.
+Status: Expansions 01-14 are complete with player GO. Expansion 15 Expedition
+Planning And Choice is selected by #1094; its implementation milestone and
+bounded issue batch follow the committed plan. No later expansion is selected.
 
 ## Decision
 
@@ -93,18 +92,16 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-No implementation milestone is selected. Run a separate direction evaluation
-before committing the next bounded expansion.
+Expansion 15 Expedition Planning And Choice. Commit its plan, then create only
+the bounded source/state/runtime/review batch defined there.
 
 ### Proposed
 
-No later expansion is selected. The next evaluation should choose one
-player-facing journey from the existing directional map instead of extending
-the queue by inertia.
+No later expansion is selected.
 
 ### Directional
 
-Pure oxygen-capacity progression, other regional identities, and exceptional
+Durable oxygen-route progression, other regional identities, and exceptional
 interiors remain directional. Broad pressure simulation and later pressure
 tiers remain outside the completed bounded Expansion 12 implementation.
 
@@ -382,7 +379,7 @@ back to the boat?
 Status: Complete with owner GO in #1040. Milestone #40 includes base issues
 #1031-#1039, checkpoint work #1056/#1057, bounded corrections
 #1061/#1063/#1065 and #1069-#1077, replay fixes #1087/#1088, and exact public
-runtime `1f148eb`. No later expansion is selected.
+runtime `1f148eb`. At that closeout, no later expansion had been selected.
 
 Goal: turn the committed southeast archive's unresolved wreck-network lead into
 the existing Ti2/Coil1 Current Stabilizer project and one return through a
@@ -413,6 +410,34 @@ and Northwest Wreck Relay feel like one place the player earned access to, with
 a payoff clear enough to motivate and complete another expedition?
 **GO recorded at #1040 after bounded corrections and exact-runtime owner
 replay.**
+
+### Expansion 15: Expedition Planning And Choice
+
+Status: Selected by #1094. The implementation milestone and issue batch are
+created after `docs/current/OCEANGAME_EXPANSION_15_PLAN.md` is committed.
+
+Goal: turn existing source-authored regional leads and daily opportunities into
+one deliberate plan for the following expedition day.
+
+Prove:
+
+- exactly two valid choices in the focused night state: Northwest Wreck Relay
+  and the forecasted Southwest jellyfish bloom
+- one session/day-scoped selected lead with no profile migration
+- shared desktop/mobile input for cycle, pin, build, and next-day start
+- distinct next-day guidance without exact markers or automatic navigation
+- unchanged discovery, project, capability, objective, condition, map, reward,
+  failure, and boat-commit ownership
+- deterministic journey, focused visual, exact Web, and owner evidence
+
+Non-goals include a quest journal, mission list, map screen, new region,
+interior, topology, reward, project, capability, tool, enemy, economy,
+inventory, profile schema, or broad HUD replacement.
+
+Exit question: does choosing a concrete expedition lead at the boat make the
+player understand what they are preparing for, choose between meaningful
+destinations, and want to begin the next day without turning exploration into
+checklist-following?
 
 ## Original OceanGame Convergence
 
