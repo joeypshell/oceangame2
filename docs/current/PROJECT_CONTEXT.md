@@ -1,12 +1,12 @@
 # Project Context
 
-Last updated: 2026-07-24
+Last updated: 2026-07-25
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
 ## Current Goal
 
-`oceangame2` has a GO release candidate and fourteen completed bounded Phase 2 expansions. OceanGame Expansion 01 proved:
+`oceangame2` has a GO release candidate, fourteen completed bounded Phase 2 expansions, and a selected Expansion 15 planning-choice pass. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -42,6 +42,8 @@ Expansion 13 Southeast Wreck Return is complete with owner GO. After two bounded
 
 Expansion 14 Archive Current Return is complete with owner GO at exact Web runtime `1f148eb`. Bounded correction #1069-#1077 plus replay fixes #1087/#1088 establish readable eel health/recoil/cadence and directional hit/miss feedback, continuous held scanner use, reward-free ordinary identification, visible Northwest Wreck Relay identity, separate passive-equipment presentation, and movement lock after oxygen failure. The archive, Ti2/Coil1 Current Stabilizer, passive current, relay core, survey pending state, cargo/failure behavior, canonical-boat commitment, contiguous map, and checkpoint boundary remain unchanged.
 
+Expansion 15 Expedition Planning And Choice is selected by #1094. It will present exactly two source-derived choices in the focused night state: the unresolved Northwest Wreck Relay journey and the forecasted Southwest jellyfish bloom. One session/day-scoped selection carries compact guidance through the following day's sorties without changing profile schema, map topology, rewards, or underlying progression ownership.
+
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
 Controlled gameplay/visual passes are now a validation lane inside the roadmap, not the whole roadmap. New work should serve curiosity, pressure, payoff, remembered-place progress, meaningful route choice, or a reason to try another expedition.
@@ -72,6 +74,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Completed Expansion 12 handoff: `docs/current/OCEANGAME_EXPANSION_12_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #951-#953, and player GO #941
 - Completed Expansion 13 handoff: `docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`, with correction history in `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md`, `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md`, and `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`
 - Completed Expansion 14 handoff: `docs/current/OCEANGAME_EXPANSION_14_CLOSEOUT.md`, with correction history in `docs/current/OCEANGAME_EXPANSION_14_OWNER_HOLD_CORRECTION_PLAN.md`, focused visual review, and exact Web verification
+- Active Expansion 15 handoff: `docs/current/OCEANGAME_EXPANSION_15_PLAN.md`; milestone #41 tracks #1095-#1104
 - Latest audio/Web handoff: `docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
@@ -79,7 +82,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Focused player-review workflow: `docs/current/PLAYTEST_CHECKPOINTS.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
 - Latest owner decision: Expansion 14 GO on exact reviewed runtime `1f148eb`; #1040 and milestone #40 are complete
-- Latest selected planning direction: `docs/current/OCEANGAME_EXPANSION_14_PLAN.md`; no later expansion is selected
+- Latest selected planning direction: `docs/current/OCEANGAME_EXPANSION_15_PLAN.md`; no later expansion is selected
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_14_PLAN.md`, with ownership locked by `docs/current/OCEANGAME_EXPANSION_14_SOURCE_STATE_CONTRACT.md`
 - Latest source contract: `docs/current/OCEANGAME_EXPANSION_14_SOURCE_STATE_CONTRACT.md`
 - Latest visual decision: Expansion 14 full-level baseline accepted from runtime source `0098085` in `docs/current/OCEANGAME_EXPANSION_14_VISUAL_BASELINE_DECISION.md`
@@ -221,6 +224,7 @@ Current issue state as of 2026-07-25:
 - Closed: #969 records owner GO for exact reviewed runtime `ede39d1`; milestone #39 is complete.
 - Closed: #1069-#1077 and #1087/#1088 resolve the Expansion 14 owner-HOLD findings and late replay gaps.
 - Closed: #1040 records owner GO for exact runtime `1f148eb`; milestone #40 is complete.
+- Planning decision: #1094 selects and bounds Expansion 15; active milestone #41 tracks #1095-#1104.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -358,7 +362,7 @@ Current issue state as of 2026-07-25:
 
 ## Recommended Next Work
 
-Expansion 14 is complete with owner GO at exact runtime `1f148eb`. No later expansion is selected. Run a separate roadmap/direction evaluation, then create only the selected milestone's bounded issue batch.
+Begin Expansion 15 with contract issue #1095, then follow #1096-#1104 in dependency order. The pass must produce a real two-lead night decision and distinct next-day guidance rather than another objective-text panel.
 
 Accepted constraints for next work:
 

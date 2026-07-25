@@ -2,91 +2,119 @@
 
 ## Working Title
 
-Salvage POC
+OceanGame
 
 ## Purpose
 
-This is a visual-first prototype for a small ocean salvage game. The gameplay is intentionally simple so the project can focus on proving the map, art, and asset workflow that a larger OceanGame-style project would need.
+`oceangame2` is the production foundation for a side-view ocean expedition
+game. The project uses a compact playable scope to prove the larger OceanGame
+loop without treating the current work as disposable.
+
+The game combines authored exploration, oxygen and daylight pressure,
+materials and blueprints, night projects, practical research, capability-gated
+returns, limited combat, and reasons to begin another expedition day.
 
 ## Player Fantasy
 
-The player controls a diver and/or small research sub through a compact side-view underwater cave area, collects salvage, avoids hazards, and returns to a safe base or extraction point with rewards.
+The player is a researcher-diver operating from a surface boat above a
+dangerous cave network. They learn the water, investigate signals and wildlife,
+recover useful materials, build equipment, and return through remembered
+places with capabilities that change what can be reached or survived.
 
 ## Core Loop
 
-1. Start at the base or extraction point.
-2. Move into the underwater cave map.
-3. Collect salvage objects.
-4. Avoid hazards.
-5. Return to the base or extraction point.
-6. Bank score.
-7. Restart or repeat.
-
-## Minimum Playable Version
-
-The first playable version must include:
-
-- Player movement.
-- Camera following the player.
-- One small side-view cave map.
-- Salvage collectibles.
-- Hazards.
-- Base, boat, sub, or extraction return zone.
-- Score display.
-- Restart flow.
-
-## Excluded From First Version
-
-These are intentionally out of scope until the visual workflow is proven:
-
-- Procedural generation.
-- Large world maps.
-- Complex economy.
-- Upgrade trees.
-- Inventory depth.
-- Weather systems.
-- Dialogue.
-- Multiple biomes.
-- Final OceanGame mechanics.
-- Complex terrain generation.
-
-## Design Constraint
-
-Every gameplay feature must support the visual proof-of-concept. If a feature does not help test map readability, asset consistency, or scene composition, it waits.
-
-## Current Production Slice Constraints
-
-The current focused production source is:
-
 ```text
-maps/production_slice_01.greybox.json
+see a promise -> choose and prepare -> dive under daylight
+-> manage oxygen, health, cargo, tools, and route pressure
+-> return to the boat -> bank cargo and commit discoveries
+-> end the day -> review, build, and plan -> return changed
 ```
 
-It is a bounded top-center entry hub slice from `maps/full_cave_sketch_01.greybox.json`, not an attempt to produce the whole full sketch at once.
+One day supports multiple oxygen sorties. Open surface water refills oxygen;
+only the canonical boat banks cargo, commits discoveries, supports night
+projects, and ends the day.
 
-Accepted constraints for the next phase:
+## Current Playable Foundation
 
-- The player enters and extracts through the authored `boat_spawn` entity.
-- The first loop remains movement, salvage collection, hazard interaction, return to extraction, completion, and reset.
-- The first expedition-pressure mechanic is a scoped oxygen timer: oxygen drains while away from extraction, refills at the boat/extraction area, and depletion surfaces the player while restoring held salvage to the map.
-- Terrain and collision remain generated from JSON source data.
-- Supplied sketch icons are ignored by terrain conversion until intentionally reauthored as JSON entities.
-- Visual changes should target individual assets, source map data, or renderer rules; do not regenerate the whole scene to fix one visual problem.
-- Additional gameplay pressure should stay scoped until the production-slice visual workflow is accepted.
+- One contiguous source-authored production cave:
+  `maps/production_level_01.greybox.json`.
+- A canonical top-water boat, direct continuous swimming, and no normal
+  teleport, prompted connector, or fast-travel route.
+- Oxygen as the tactical sortie budget and daylight as the strategic day
+  budget.
+- Held cargo, boat-only offload, typed materials, deterministic authored
+  candidate pools, and compact night projects.
+- Durable blueprint knowledge and equipment including propulsion fins,
+  scanner, cutter, dive light, pressure suit, Current Stabilizer, and Shock
+  Prod progression.
+- Remembered current, darkness, pressure, wreck, and tool interactions whose
+  prerequisites are validated as one progression graph.
+- Practical scanner findings, pending boat commitment, daily opportunities,
+  one territorial enemy, separate health, and bounded biological resources.
+- Desktop, landscape-mobile, local Godot, deterministic smoke, focused capture,
+  accepted baseline, and public Web review workflows.
 
-## Current Expansion Direction
+Production slices 01-04 remain regression and provenance fixtures. They are not
+the normal world or separate campaign areas.
 
-The compact diver game and OceanGame Expansions 01-07 have completed technical closeouts. Phase 2 now grows toward the larger OceanGame in dependency order:
+## Current Committed Direction
 
-- add daylight, open-surface oxygen refill, boat-only banking, multiple sorties, and a compact night transition
-- introduce minimal typed materials, controlled authored candidate pools, one blueprint/project, and one active tool
-- plan remembered map promises around oxygen, darkness, current, pressure, and tool capabilities
-- expand scanner knowledge into practical resource, environment, and creature research
-- add health, enemies, weapons, and later biological materials used by equipment progression
-- next, plan one bounded daily-condition and enemy-ecology proof; broaden regions only after that deterministic authored loop works
-- place hard-guarded payoffs only after their required counter is obtainable; the first eel cache requires both the durable shock prod and current-day eel defeat
-- validate map travel, objectives, rewards, gates, discoveries, materials, projects, and capabilities as one cross-map dependency graph
+Expansions 01-14 are complete with player GO. Expansion 15 milestone #41
+tracks #1095-#1104 for one bounded **Expedition Planning And Choice** pass:
 
-Night does not consume Food, Water, or Power; Emergency Week is not part of the new direction. Stable authored geography remains important, and no shortcut or fast-travel network is planned. Maps, collision, connectors, gates, habitats, resource candidates, and encounter candidates stay source-authored and validated.
+- derive available plans from existing source-authored regional journeys and
+  daily conditions
+- present exactly two meaningful choices in the focused night review state
+- let the player pin one plan for the following day
+- show compact active guidance without an exact map marker or route line
+- preserve all underlying discovery, project, capability, objective, and map
+  owners
 
-Detailed direction: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md` and `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`.
+Detailed direction:
+
+- `docs/current/OCEANGAME_EXPANSION_15_PLAN.md`
+- `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
+- `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
+
+## Design Principles
+
+- Stable geography should become more legible and useful as the player learns
+  it; progression should not erase travel with shortcuts.
+- Meaningful equipment combines knowledge, guaranteed base materials, and an
+  appropriate special component.
+- Upgrades should change a verb, route, threat response, information surface,
+  or reachable payoff. Pure percentages are secondary.
+- Required progression cannot depend on an unlucky daily seed, inaccessible
+  material, or circular enemy/tool dependency.
+- Scanner results should identify the world or create practical knowledge, not
+  award unrelated blueprints from abstract markers.
+- Fighting should cost time, oxygen, health, position, or preparation; killing
+  everything is not the automatic best route.
+- Every expedition day should leave a project, opportunity, unresolved signal,
+  remembered gate, or mystery worth returning for.
+
+## Source And Validation Rules
+
+- JSON and generator helpers own terrain, collision-facing topology, entities,
+  gates, landmarks, habitats, resource candidates, encounter candidates,
+  journeys, and planning relationships.
+- Runtime derives presentation and mutable state from source; it does not
+  invent progression dependencies.
+- Map changes update the generator/source path first, then regenerate, validate,
+  audit reachability/parity, and verify final Godot/Web rendering.
+- Visual revisions target named assets or renderer rules and compare focused
+  captures before baseline acceptance.
+
+## Current Non-Goals
+
+- Procedural geography.
+- Emergency Week or Food/Water/Power overnight survival taxes.
+- Broad economy, crafting tree, or inventory grid.
+- Shortcut or fast-travel networks.
+- Full ecosystem simulation.
+- Vehicles, large-scale production content, final art/audio, broad
+  accessibility/input work, balance, and save hardening before their own
+  selected milestones.
+
+Exceptional interiors, additional regions, durable oxygen-route progression,
+and broader wildlife remain directional. They are not part of Expansion 15.
