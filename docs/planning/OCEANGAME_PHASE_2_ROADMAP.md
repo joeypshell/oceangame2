@@ -1,11 +1,10 @@
 # OceanGame Phase 2 Roadmap
 
-Date: 2026-07-21
+Date: 2026-07-25
 
-Status: Expansions 01-13 are complete with player GO. Expansion 14 is
-implemented and technically verified through its base batch, named checkpoint,
-and bounded owner-HOLD corrections #1061/#1063/#1065. Exact public candidate
-`f2f2750` passes; #1040 remains the owner GO/HOLD gate. No Expansion 15 is
+Status: Expansions 01-14 are complete with player GO. Expansion 14 closed after
+its base batch, named checkpoint, bounded owner-HOLD corrections, late replay
+fixes, and owner review of exact public runtime `1f148eb`. No Expansion 15 is
 selected.
 
 ## Decision
@@ -94,14 +93,14 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Finish the Expansion 14 owner GO/HOLD gate in #1040. Its implementation,
-checkpoint, and bounded correction work are merged and technically verified.
+No implementation milestone is selected. Run a separate direction evaluation
+before committing the next bounded expansion.
 
 ### Proposed
 
-No later expansion is selected. A HOLD may create only another bounded
-correction tied directly to the #1040 journey; do not widen it into an economy
-or broad production HUD replacement.
+No later expansion is selected. The next evaluation should choose one
+player-facing journey from the existing directional map instead of extending
+the queue by inertia.
 
 ### Directional
 
@@ -380,10 +379,10 @@ back to the boat?
 
 ### Expansion 14: Archive Current Return
 
-Status: Implemented and technically verified in milestone #40 through base
-issues #1031-#1039, checkpoint work #1056/#1057, and bounded corrections
-#1061/#1063/#1065. Exact public candidate `f2f2750` awaits the owner GO/HOLD
-decision in #1040; no later expansion is selected.
+Status: Complete with owner GO in #1040. Milestone #40 includes base issues
+#1031-#1039, checkpoint work #1056/#1057, bounded corrections
+#1061/#1063/#1065 and #1069-#1077, replay fixes #1087/#1088, and exact public
+runtime `1f148eb`. No later expansion is selected.
 
 Goal: turn the committed southeast archive's unresolved wreck-network lead into
 the existing Ti2/Coil1 Current Stabilizer project and one return through a
@@ -412,6 +411,8 @@ work, another enemy, vehicle, or slice-03 polish.
 Exit question: did the archive clue, night-built stabilizer, visible current,
 and Northwest Wreck Relay feel like one place the player earned access to, with
 a payoff clear enough to motivate and complete another expedition?
+**GO recorded at #1040 after bounded corrections and exact-runtime owner
+replay.**
 
 ## Original OceanGame Convergence
 

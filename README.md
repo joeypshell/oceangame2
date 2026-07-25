@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-13 are complete with player GO. Expansion 14 Archive Current Return reached technical PASS at `f2f2750`, but owner review recorded HOLD for combat feel, scanner interaction, relay identity, and passive-equipment presentation. One bounded correction batch #1069-#1077 is active; #1040 and milestone #40 remain open for the next owner GO/HOLD decision. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
+The compact diver foundation and OceanGame Expansions 01-14 are complete with player GO. Expansion 14 Archive Current Return closed after bounded corrections and owner review of exact runtime `1f148eb`. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Expansion 13 closed with owner GO after review of exact runtime `ede39d1`. Expansion 14 owner-HOLD correction #1069-#1077 is the only active implementation batch and returns to #1040 after exact-SHA Web verification. Do not close the milestone or select Expansion 15 before owner GO. A broad credits economy, teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
+Expansion 14 closed with owner GO after review of exact runtime `1f148eb`. No later expansion is selected; use a separate roadmap/direction evaluation before creating the next milestone batch. A broad credits economy, teleport, connector-based normal traversal, stabilizer entry requirements, pure oxygen-capacity gating, and broad pressure progression remain deferred.
 
 Core sources and operating docs:
 
@@ -128,6 +128,7 @@ Current release and expansion handoff:
 - [Expansion 14 Source/State Contract](docs/current/OCEANGAME_EXPANSION_14_SOURCE_STATE_CONTRACT.md)
 - [Expansion 14 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_14_VISUAL_BASELINE_DECISION.md)
 - [Expansion 14 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_14_WEB_PREVIEW_VERIFICATION.md)
+- [Expansion 14 Closeout](docs/current/OCEANGAME_EXPANSION_14_CLOSEOUT.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -261,4 +262,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-13 meet that condition through the player-approved full cave, regional, light, pressure, and southeast-wreck returns.
+The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-14 meet that condition through the player-approved full cave, regional, light, pressure, southeast-wreck, and archive-current returns.
