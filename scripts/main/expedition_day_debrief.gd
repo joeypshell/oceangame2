@@ -65,6 +65,8 @@ static func handle_debrief_key(main, keycode: Key) -> Dictionary:
 	if keycode != KEY_P or main._material_project == null:
 		return {"changed": false, "reason": "ignored"}
 	var result: Dictionary = main._material_project.try_build(main._expedition_day_state.phase)
+	if main.has_method("_refresh_expedition_plan"):
+		main._refresh_expedition_plan()
 	main._last_status_note = str(result.get("note", main._last_status_note))
 	main._update_status_label()
 	return result
@@ -159,6 +161,8 @@ static func _enter_debrief(main, reason: String) -> void:
 	if reason == "voluntary" and main._world != null and main._player != null and main._world.is_inside_boat(main._player.global_position):
 		_commit_boat_materials(main)
 	main._expedition_day_state.end_day(reason)
+	if main.has_method("_refresh_expedition_plan"):
+		main._refresh_expedition_plan()
 	main._run_complete = false
 	main._sortie_state.failed = false
 	main._sortie_state.failure_reason = ""
