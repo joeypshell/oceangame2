@@ -183,6 +183,14 @@ func _build_stabilizer_and_reload() -> bool:
 		"profile reload lost archive-led stabilizer state"
 	):
 		return false
+	var plan_report: Dictionary = _main._refresh_expedition_plan()
+	if str(plan_report.get("status", "")) == "choice_ready":
+		_press_key(KEY_E)
+		if not _require(
+			_main._expedition_plan_state.has_selection(),
+			"night fixture did not pin an expedition plan before day start"
+		):
+			return false
 	_press_key(KEY_N)
 	_advance(0.0)
 	_refresh_controlled_world()

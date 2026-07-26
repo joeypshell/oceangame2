@@ -36,6 +36,15 @@ static func handle_day_key(main) -> Dictionary:
 		return {"changed": false, "reason": "unavailable"}
 	if main._expedition_day_state.phase != ExpeditionDayState.PHASE_DEBRIEF:
 		return ExpeditionDayPresentation.try_request_voluntary_end(main)
+	var plan_report: Dictionary = main._refresh_expedition_plan()
+	if _planner_requires_selection(main, plan_report):
+		main._last_status_note = "Pin an expedition plan before starting the next day"
+		main._update_status_label()
+		return {
+			"changed": false,
+			"reason": "plan_required",
+			"note": main._last_status_note,
+		}
 
 	var restart_map_path := _restart_map_path(main)
 	main._expedition_day_state.begin_next_day()
@@ -55,11 +64,30 @@ static func handle_day_key(main) -> Dictionary:
 	}
 
 
+static func handle_debrief_input(main, event: InputEvent) -> Dictionary:
+	if main == null or main._expedition_day_state == null:
+		return {"changed": false, "reason": "unavailable"}
+	if main._expedition_day_state.phase != ExpeditionDayState.PHASE_DEBRIEF:
+		return {"changed": false, "reason": "wrong_phase"}
+	var repeated_key := event is InputEventKey and (event as InputEventKey).echo
+	if event.is_action_pressed("active_tool_cycle_next") and not repeated_key:
+		return _cycle_plan_highlight(main)
+	if event is InputEventKey:
+		var key_event := event as InputEventKey
+		if key_event.pressed and not key_event.echo:
+			return handle_debrief_key(main, key_event.keycode)
+	return {"changed": false, "reason": "ignored"}
+
+
 static func handle_debrief_key(main, keycode: Key) -> Dictionary:
 	if main == null or main._expedition_day_state == null:
 		return {"changed": false, "reason": "unavailable"}
 	if main._expedition_day_state.phase != ExpeditionDayState.PHASE_DEBRIEF:
 		return {"changed": false, "reason": "wrong_phase"}
+	if keycode == KEY_TAB:
+		return _cycle_plan_highlight(main)
+	if keycode == KEY_E:
+		return _pin_highlighted_plan(main)
 	if keycode == KEY_N:
 		return handle_day_key(main)
 	if keycode != KEY_P or main._material_project == null:
@@ -70,6 +98,83 @@ static func handle_debrief_key(main, keycode: Key) -> Dictionary:
 	main._last_status_note = str(result.get("note", main._last_status_note))
 	main._update_status_label()
 	return result
+
+
+static func _cycle_plan_highlight(main) -> Dictionary:
+	var plan_report: Dictionary = main._refresh_expedition_plan()
+	if main._expedition_plan_panel == null:
+		return {"changed": false, "reason": "planner_unavailable"}
+	var selection: Dictionary = (
+		main._expedition_plan_state.report()
+		if main._expedition_plan_state != null
+		else {}
+	)
+	var result: Dictionary = main._expedition_plan_panel.cycle_highlight(
+		plan_report,
+		selection,
+		str(main._expedition_day_state.phase)
+	)
+	main._update_status_label()
+	return result
+
+
+static func _pin_highlighted_plan(main) -> Dictionary:
+	var plan_report: Dictionary = main._refresh_expedition_plan()
+	if (
+		main._expedition_plan_panel == null
+		or main._expedition_plan_state == null
+		or str(plan_report.get("status", "")) != "choice_ready"
+	):
+		return {"changed": false, "reason": "planner_inactive"}
+	main._expedition_plan_panel.refresh(
+		plan_report,
+		main._expedition_plan_state.report(),
+		str(main._expedition_day_state.phase)
+	)
+	var lead_id: String = main._expedition_plan_panel.highlighted_lead_id()
+	var eligible_ids: Array = plan_report.get("eligible_ids", [])
+	var result: Dictionary
+	if main._expedition_plan_state.has_selection():
+		result = main._expedition_plan_state.replace(
+			lead_id,
+			eligible_ids,
+			str(main._expedition_day_state.phase)
+		)
+	else:
+		result = main._expedition_plan_state.select(
+			lead_id,
+			eligible_ids,
+			str(main._expedition_day_state.phase)
+		)
+	main._refresh_expedition_plan()
+	var label := _lead_label(plan_report, lead_id)
+	main._last_status_note = "Plan pinned: %s" % label
+	main._update_status_label()
+	result["lead_id"] = lead_id
+	result["label"] = label
+	return result
+
+
+static func _planner_requires_selection(main, plan_report: Dictionary) -> bool:
+	if str(plan_report.get("status", "")) != "choice_ready":
+		return false
+	if main._expedition_plan_state == null:
+		return true
+	var selected_id := str(main._expedition_plan_state.selected_lead_id())
+	return (
+		selected_id.is_empty()
+		or not plan_report.get("eligible_ids", []).has(selected_id)
+	)
+
+
+static func _lead_label(plan_report: Dictionary, lead_id: String) -> String:
+	for value in plan_report.get("eligible_leads", []):
+		if (
+			typeof(value) == TYPE_DICTIONARY
+			and str(value.get("lead_id", "")) == lead_id
+		):
+			return str(value.get("label", lead_id))
+	return lead_id
 
 
 static func apply_result_panel(main) -> bool:

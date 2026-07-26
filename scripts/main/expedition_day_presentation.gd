@@ -14,9 +14,34 @@ static func decorate_status(main, status_text: String) -> String:
 	var condition_line := DailyConditionPresentation.active_line(main._daily_conditions if main != null else null)
 	if not condition_line.is_empty():
 		lines.append(condition_line)
+	var plan_line := selected_plan_line(main)
+	if not plan_line.is_empty():
+		lines.append(plan_line)
 	if not status_text.is_empty():
 		lines.append(status_text)
 	return "\n".join(lines)
+
+
+static func selected_plan_line(main) -> String:
+	if (
+		main == null
+		or main._expedition_day_state == null
+		or str(main._expedition_day_state.phase) != ExpeditionDayState.PHASE_ACTIVE
+		or main._expedition_plan_state == null
+		or bool(main._run_complete)
+		or (main._sortie_state != null and bool(main._sortie_state.failed))
+	):
+		return ""
+	var selected_id := str(main._expedition_plan_state.selected_lead_id())
+	if selected_id.is_empty():
+		return ""
+	for value in main._expedition_plan_report.get("eligible_leads", []):
+		if (
+			typeof(value) == TYPE_DICTIONARY
+			and str(value.get("lead_id", "")) == selected_id
+		):
+			return str(value.get("active_guidance", "")).strip_edges()
+	return ""
 
 
 static func overlay_line(main) -> String:
