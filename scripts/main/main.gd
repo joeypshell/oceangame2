@@ -57,6 +57,8 @@ const ResultPresentationBuilder := preload("res://scripts/main/result_presentati
 const RouteCommitmentFeedback := preload("res://scripts/main/route_commitment_feedback.gd")
 const SessionProgression := preload("res://scripts/main/session_progression.gd")
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
+const ExpeditionLeadResolver := preload("res://scripts/main/expedition_lead_resolver.gd")
+const ExpeditionPlanState := preload("res://scripts/main/expedition_plan_state.gd")
 const ExpeditionDayPresentation := preload("res://scripts/main/expedition_day_presentation.gd")
 const ExpeditionDayDebrief := preload("res://scripts/main/expedition_day_debrief.gd")
 const DailyConditionState := preload("res://scripts/main/daily_condition_state.gd")
@@ -113,6 +115,7 @@ const TILESET_TEST_MAP_PATH := MapCatalog.TILESET_TEST_MAP_PATH
 const ORGANIC_MAP_PATH := MapCatalog.ORGANIC_MAP_PATH
 const FULL_SKETCH_MAP_PATH := MapCatalog.FULL_SKETCH_MAP_PATH
 const PRODUCTION_LEVEL_MAP_PATH := MapCatalog.PRODUCTION_LEVEL_MAP_PATH
+const PRODUCTION_LEVEL_MAP_ID := "production_level_01"
 const PRODUCTION_SLICE_MAP_PATH := MapCatalog.PRODUCTION_SLICE_MAP_PATH
 const PRODUCTION_SLICE_02_MAP_PATH := MapCatalog.PRODUCTION_SLICE_02_MAP_PATH
 const PRODUCTION_SLICE_03_MAP_PATH := MapCatalog.PRODUCTION_SLICE_03_MAP_PATH
@@ -231,6 +234,8 @@ var _session_progression
 var _player_health
 var _sortie_state
 var _expedition_day_state
+var _expedition_plan_state
+var _expedition_plan_report := {}
 var _timed_salvage
 var _world_connector
 var _audio_cues
@@ -315,6 +320,7 @@ func _ready() -> void:
 	_player_health = PlayerHealthState.new()
 	_sortie_state = SortieState.new(OXYGEN_MAX_SECONDS)
 	_expedition_day_state = ExpeditionDayState.new()
+	_expedition_plan_state = ExpeditionPlanState.new()
 	_daily_conditions = DailyConditionState.new()
 	_progression_runtime = ProgressionRuntimeController.new(_session_progression)
 	_timed_salvage = TimedSalvageController.new()
@@ -1222,6 +1228,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_daily_conditions.sync(world.get_daily_conditions(), _expedition_day_state.day_number)
 	_material_runtime.on_map_loaded(world, _expedition_day_state, _daily_conditions.current_ids())
 	_material_project.on_map_loaded(world)
+	_refresh_expedition_plan()
 	_refresh_active_tools()
 	_cutter_salvage.on_map_loaded(world)
 	_hostiles.on_map_loaded(world, preserve_sortie)
@@ -1354,6 +1361,7 @@ func _process(delta: float) -> void:
 		_last_status_note = str(survey_result["note"])
 	if bool(survey_result.get("committed", false)):
 		_expedition_day_state.record_discovery(str(survey_result.get("discovery_id", "")))
+		_refresh_expedition_plan()
 	_update_hazard_warning(delta)
 
 	_cargo_collection.update(delta)
@@ -2507,6 +2515,26 @@ func _update_progression_project_tracker() -> void:
 		_material_runtime.held_quantities(),
 		_expedition_day_state != null and _expedition_day_state.phase == ExpeditionDayState.PHASE_DEBRIEF
 	)
+
+
+func _refresh_expedition_plan() -> Dictionary:
+	if _world == null or _anomaly_survey == null or _material_project == null:
+		_expedition_plan_report = {"status": "unavailable", "source_lead_count": 0}
+		return _expedition_plan_report.duplicate(true)
+	_expedition_plan_report = ExpeditionLeadResolver.resolve(
+		_world,
+		_anomaly_survey.profile_state(),
+		_material_project,
+		_expedition_day_state,
+		_daily_conditions
+	)
+	var source_is_authoritative: bool = (
+		int(_expedition_plan_report.get("source_lead_count", 0)) > 0
+		or str(_world.map_id) == PRODUCTION_LEVEL_MAP_ID
+	)
+	if _expedition_plan_state != null and source_is_authoritative:
+		_expedition_plan_state.reconcile(_expedition_plan_report.get("eligible_ids", []))
+	return _expedition_plan_report.duplicate(true)
 
 
 func _current_map_id() -> String:
