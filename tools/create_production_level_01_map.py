@@ -9,6 +9,7 @@ from pathlib import Path
 import production_level_01_expansion_12 as expansion_12
 import production_level_01_expansion_13 as expansion_13
 import production_level_01_expansion_14 as expansion_14
+from production_level_01_expansion_15 import author_expedition_leads
 
 from production_level_01_gameplay_transform import (
     LOCAL_TO_GLOBAL_OFFSET,
@@ -327,7 +328,7 @@ def build_map_data(source_map: dict) -> dict:
 
     gameplay, gameplay_provenance = transform_gameplay_sections()
 
-    return {
+    return author_expedition_leads({
         "id": "production_level_01",
         "version": 1,
         "purpose": (
@@ -478,7 +479,7 @@ def build_map_data(source_map: dict) -> dict:
             *expansion_13.review_questions(),
             *expansion_14.review_questions(),
         ],
-    }
+    })
 
 
 def main() -> int:
