@@ -29,6 +29,7 @@ const Expansion12PressureReturnCapture := preload("res://scripts/main/captures/e
 const Expansion13SoutheastWreckCapture := preload("res://scripts/main/captures/expansion_13_southeast_wreck_capture.gd")
 const Expansion13ScannerCutterCorrectionCapture := preload("res://scripts/main/captures/expansion_13_scanner_cutter_correction_capture.gd")
 const Expansion14ArchiveCurrentReturnCapture := preload("res://scripts/main/captures/expansion_14_archive_current_return_capture.gd")
+const Expansion15ExpeditionPlanningCapture := preload("res://scripts/main/captures/expansion_15_expedition_planning_capture.gd")
 const FinalDiveObjectiveSeed := preload("res://scripts/main/final_dive_objective_seed.gd")
 const MovingHazardCapture := preload("res://scripts/main/captures/moving_hazard_capture.gd")
 const MovingHazardController := preload("res://scripts/main/moving_hazard_controller.gd")
@@ -174,6 +175,7 @@ const EXPANSION_12_PRESSURE_RETURN_CAPTURE_DIR := "res://visual_captures/expansi
 const EXPANSION_13_SOUTHEAST_WRECK_CAPTURE_DIR := "res://visual_captures/expansion_13_southeast_wreck"
 const EXPANSION_13_SCANNER_CUTTER_CORRECTION_CAPTURE_DIR := "res://visual_captures/expansion_13_scanner_cutter_correction"
 const EXPANSION_14_ARCHIVE_CURRENT_RETURN_CAPTURE_DIR := "res://visual_captures/expansion_14_archive_current_return"
+const EXPANSION_15_EXPEDITION_PLANNING_CAPTURE_DIR := "res://visual_captures/expansion_15_expedition_planning"
 const DARKNESS_LIGHT_CAPTURE_DIR := "res://visual_captures/darkness_light_gate"
 const CURRENT_GATE_CAPTURE_DIR := "res://visual_captures/current_gate"
 const MOVING_HAZARD_CAPTURE_DIR := "res://visual_captures/moving_hazard"
@@ -408,6 +410,7 @@ func _ready() -> void:
 	var capture_expansion_13_southeast_wreck := _has_arg(user_args, engine_args, "--capture-expansion-13-southeast-wreck")
 	var capture_expansion_13_scanner_cutter_correction := _has_arg(user_args, engine_args, "--capture-expansion-13-scanner-cutter-correction")
 	var capture_expansion_14_archive_current_return := _has_arg(user_args, engine_args, "--capture-expansion-14-archive-current-return")
+	var capture_expansion_15_expedition_planning := _has_arg(user_args, engine_args, "--capture-expansion-15-expedition-planning")
 	var capture_darkness_light_gate := _has_arg(user_args, engine_args, "--capture-darkness-light-gate")
 	var capture_current_gate := _has_arg(user_args, engine_args, "--capture-current-gate")
 	var capture_moving_hazard := _has_arg(user_args, engine_args, "--capture-moving-hazard")
@@ -589,6 +592,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
 	elif capture_expansion_14_archive_current_return:
 		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
+	elif capture_expansion_15_expedition_planning:
+		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
 	elif smoke_production_slice_route:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_02_route:
@@ -760,6 +765,7 @@ func _ready() -> void:
 		or capture_expansion_13_southeast_wreck
 		or capture_expansion_13_scanner_cutter_correction
 		or capture_expansion_14_archive_current_return
+		or capture_expansion_15_expedition_planning
 		or capture_darkness_light_gate
 		or capture_current_gate
 		or capture_moving_hazard
@@ -1195,6 +1201,9 @@ func _ready() -> void:
 	elif capture_expansion_14_archive_current_return:
 		var capture := Expansion14ArchiveCurrentReturnCapture.new(self)
 		await capture.capture_and_quit(EXPANSION_14_ARCHIVE_CURRENT_RETURN_CAPTURE_DIR)
+	elif capture_expansion_15_expedition_planning:
+		var capture := Expansion15ExpeditionPlanningCapture.new(self)
+		await capture.capture_and_quit(EXPANSION_15_EXPEDITION_PLANNING_CAPTURE_DIR)
 	elif capture_darkness_light_gate:
 		_capture_controller.capture_darkness_light_gate_and_quit(DARKNESS_LIGHT_CAPTURE_DIR)
 	elif capture_current_gate:
