@@ -4884,7 +4884,14 @@
       "survey_target_id": "upper_left_wreck_relay_survey",
       "commit_entry_id": "surface_boat_entry",
       "route_context": "upper_left_wreck_relay_route",
-      "intent": "Turn the archive clue and night-built stabilizer into one return journey."
+      "intent": "Turn the archive clue and night-built stabilizer into one return journey.",
+      "expedition_lead": {
+        "lead_type": "regional_journey",
+        "label": "Northwest Wreck Relay",
+        "summary": "Use the Current Stabilizer to survey the transmitting wreck",
+        "active_guidance": "Plan: Follow the archive signal northwest",
+        "order": 10
+      }
     }
   ],
   "daily_conditions": [
@@ -4894,7 +4901,14 @@
       "forecast_label": "Tomorrow: Southwest jellyfish bloom",
       "active_label": "Southwest bloom: jellyfish + coil trace",
       "route_context": "southwest_pocket_decision",
-      "intent": "Forecast one optional southwest risk-reward opportunity."
+      "intent": "Forecast one optional southwest risk-reward opportunity.",
+      "expedition_lead": {
+        "lead_type": "daily_condition",
+        "label": "Southwest Jellyfish Bloom",
+        "summary": "Risk the migration lane for an optional conductive-coil trace",
+        "active_guidance": "Plan: Search the southwest migration lane",
+        "order": 20
+      }
     }
   ],
   "progression_containers": [
