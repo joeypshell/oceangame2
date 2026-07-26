@@ -58,6 +58,7 @@ const RouteCommitmentFeedback := preload("res://scripts/main/route_commitment_fe
 const SessionProgression := preload("res://scripts/main/session_progression.gd")
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpeditionLeadResolver := preload("res://scripts/main/expedition_lead_resolver.gd")
+const ExpeditionPlanPanel := preload("res://scripts/main/expedition_plan_panel.gd")
 const ExpeditionPlanState := preload("res://scripts/main/expedition_plan_state.gd")
 const ExpeditionDayPresentation := preload("res://scripts/main/expedition_day_presentation.gd")
 const ExpeditionDayDebrief := preload("res://scripts/main/expedition_day_debrief.gd")
@@ -236,6 +237,7 @@ var _sortie_state
 var _expedition_day_state
 var _expedition_plan_state
 var _expedition_plan_report := {}
+var _expedition_plan_panel
 var _timed_salvage
 var _world_connector
 var _audio_cues
@@ -1292,6 +1294,7 @@ func _clear_loaded_review_nodes() -> void:
 	_status_label = null
 	_result_panel = null
 	_result_label = null
+	_expedition_plan_panel = null
 	_map_selector = null
 	_progression_project_tracker = null
 
@@ -1446,13 +1449,13 @@ func _pry_salvage_completion_feedback(salvage_id: String, label: String) -> Stri
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _expedition_day_state.phase == ExpeditionDayState.PHASE_DEBRIEF:
+		if event.is_action_released("active_tool_use"):
+			_release_active_tool()
+		ExpeditionDayDebrief.handle_debrief_input(self, event)
+		return
 	if event.is_action_released("active_tool_use"):
 		_release_active_tool()
-		return
-	if _expedition_day_state.phase == ExpeditionDayState.PHASE_DEBRIEF:
-		if event is InputEventKey and event.pressed and not event.echo:
-			var key_event := event as InputEventKey
-			ExpeditionDayDebrief.handle_debrief_key(self, key_event.keycode)
 		return
 	if _sortie_state.failed:
 		if event is InputEventKey and event.pressed and not event.echo and (event as InputEventKey).keycode == KEY_R:
@@ -1888,6 +1891,9 @@ func _create_review_overlay(world: Node) -> void:
 	canvas.add_child(_progression_project_tracker)
 
 	_create_result_panel(canvas)
+	_expedition_plan_panel = ExpeditionPlanPanel.new()
+	canvas.add_child(_expedition_plan_panel)
+	_update_expedition_plan_panel()
 
 
 func _create_result_panel(canvas: CanvasLayer) -> void:
@@ -2534,7 +2540,18 @@ func _refresh_expedition_plan() -> Dictionary:
 	)
 	if _expedition_plan_state != null and source_is_authoritative:
 		_expedition_plan_state.reconcile(_expedition_plan_report.get("eligible_ids", []))
+	_update_expedition_plan_panel()
 	return _expedition_plan_report.duplicate(true)
+
+
+func _update_expedition_plan_panel() -> void:
+	if _expedition_plan_panel == null or _expedition_plan_state == null:
+		return
+	_expedition_plan_panel.refresh(
+		_expedition_plan_report,
+		_expedition_plan_state.report(),
+		str(_expedition_day_state.phase)
+	)
 
 
 func _current_map_id() -> String:
