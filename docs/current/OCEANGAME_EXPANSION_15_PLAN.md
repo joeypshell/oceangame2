@@ -5,6 +5,8 @@ Date: 2026-07-25
 Status: Selected by planning gate #1094 and scheduled as milestone #41,
 issues #1095-#1104.
 
+Contract: `docs/current/OCEANGAME_EXPANSION_15_SOURCE_STATE_CONTRACT.md`
+
 ## Decision
 
 OceanGame Expansion 15 is **Expedition Planning And Choice**.
