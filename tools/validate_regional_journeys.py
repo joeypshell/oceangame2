@@ -42,7 +42,8 @@ REQUIRED_FIELDS = (
     "route_context",
     "intent",
 )
-OPTIONAL_FIELDS = {"payoff_target_id", "required_discovery_id", "tool_target_id"}
+OPTIONAL_ID_FIELDS = {"payoff_target_id", "required_discovery_id", "tool_target_id"}
+OPTIONAL_FIELDS = OPTIONAL_ID_FIELDS | {"expedition_lead"}
 ALLOWED_FIELDS = set(REQUIRED_FIELDS) | OPTIONAL_FIELDS
 FORBIDDEN_STATE_FIELDS = {
     "active",
@@ -125,7 +126,7 @@ def validate_regional_journey_schema(map_data: dict[str, Any]) -> list[str]:
             "commit_entry_id",
             "route_context",
         )
-        id_fields += tuple(field for field in sorted(OPTIONAL_FIELDS) if field in journey)
+        id_fields += tuple(field for field in sorted(OPTIONAL_ID_FIELDS) if field in journey)
         for field in id_fields:
             if not _valid_id(journey[field]):
                 failures.append(f"{label} {field} must use lower_snake_case.")

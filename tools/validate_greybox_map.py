@@ -8,7 +8,7 @@ from collections import deque
 from pathlib import Path
 from validate_biological_resources import validate_biological_resource_reachability, validate_biological_resource_schema
 from validate_current_gates import validate_current_gate_reachability, validate_current_gate_schema
-from validate_daily_conditions import validate_daily_condition_schema
+from validate_expedition_leads import validate_expedition_planning_schema
 from validate_expansion_14_contract import validate_expansion_14_contract
 from validate_destination_payoffs import validate_destination_payoff_schema
 from validate_final_dive_objective_seeds import validate_final_dive_objective_seed_reachability, validate_final_dive_objective_seed_schema
@@ -385,7 +385,7 @@ def main() -> int:
     failures.extend(validate_zone_schema(zones, width, height))
     failures.extend(validate_biological_resource_schema(map_data))
     failures.extend(validate_current_gate_schema(map_data))
-    failures.extend(validate_daily_condition_schema(map_data))
+    failures.extend(validate_expedition_planning_schema(map_data))
     failures.extend(validate_expansion_14_contract(map_data))
     failures.extend(validate_destination_payoff_schema(args.map_json, map_data))
     failures.extend(validate_final_dive_objective_seed_schema(map_data, entities))

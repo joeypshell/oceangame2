@@ -15,7 +15,8 @@ BONUS_CANDIDATE_ID = "material_coil_southwest_bloom"
 MIGRATION_HAZARD_ID = "southwest_bloom_jellyfish_patrol"
 FORECAST_LABEL = "Tomorrow: Southwest jellyfish bloom"
 ACTIVE_LABEL = "Southwest bloom: jellyfish + coil trace"
-CONDITION_FIELDS = {"id", "schedule", "forecast_label", "active_label", "route_context", "intent"}
+REQUIRED_CONDITION_FIELDS = {"id", "schedule", "forecast_label", "active_label", "route_context", "intent"}
+CONDITION_FIELDS = REQUIRED_CONDITION_FIELDS | {"expedition_lead"}
 LINK_FIELDS = {"daily_condition_id", "pool_role"}
 RUNTIME_FIELDS = {
     "active", "cargo", "current_day", "depleted", "next_condition", "profile_state", "selected",
@@ -97,7 +98,7 @@ def validate_daily_condition_schema(map_data: dict[str, Any]) -> list[str]:
 
     condition = raw_conditions[0]
     label = str(condition.get("id", "daily_conditions[0]"))
-    missing = CONDITION_FIELDS - set(condition)
+    missing = REQUIRED_CONDITION_FIELDS - set(condition)
     if missing:
         failures.append(f"{label} daily condition is missing: {', '.join(sorted(missing))}.")
     unsupported = set(condition) - CONDITION_FIELDS
