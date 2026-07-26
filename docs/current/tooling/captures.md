@@ -367,6 +367,17 @@ boat return at 1280x720 and mobile 844x390 under ignored
 include the test controls and fail on cargo/tool overlap; the command does not
 accept or replace baselines.
 
+Capture the focused Expansion 15 expedition-planning states:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --capture-expansion-15-expedition-planning
+```
+
+This writes the alternate-highlighted night choice, build-ready pinned relay,
+and next-day relay guidance at 1280x720 and mobile 844x390 review sizes under
+ignored `visual_captures/expansion_15_expedition_planning/`. It does not accept
+or replace baselines.
+
 Capture the first production slice:
 
 ```powershell
