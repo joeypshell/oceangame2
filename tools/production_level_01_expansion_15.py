@@ -13,7 +13,10 @@ EXPEDITION_LEADS = (
         {
             "lead_type": "regional_journey",
             "label": "Northwest Wreck Relay",
-            "summary": "Use the Current Stabilizer to survey the transmitting wreck",
+            "summary": (
+                "MAIN PROGRESSION | Stabilizer required | "
+                "Deeper-wreck lead + valuable core"
+            ),
             "active_guidance": "Plan: Follow the archive signal northwest",
             "order": 10,
         },
@@ -24,7 +27,10 @@ EXPEDITION_LEADS = (
         {
             "lead_type": "daily_condition",
             "label": "Southwest Jellyfish Bloom",
-            "summary": "Risk the migration lane for an optional conductive-coil trace",
+            "summary": (
+                "OPTIONAL RESOURCE | No build | Jellyfish patrol | "
+                "1 conductive coil"
+            ),
             "active_guidance": "Plan: Search the southwest migration lane",
             "order": 20,
         },
