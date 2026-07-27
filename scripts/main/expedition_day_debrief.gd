@@ -75,8 +75,15 @@ static func handle_debrief_input(main, event: InputEvent) -> Dictionary:
 	if event is InputEventKey:
 		var key_event := event as InputEventKey
 		if key_event.pressed and not key_event.echo:
-			return handle_debrief_key(main, key_event.keycode)
+			return handle_debrief_key(main, _supported_keycode(key_event))
 	return {"changed": false, "reason": "ignored"}
+
+
+static func _supported_keycode(event: InputEventKey) -> Key:
+	for candidate in [KEY_TAB, KEY_E, KEY_N, KEY_P]:
+		if event.keycode == candidate or event.physical_keycode == candidate:
+			return candidate
+	return event.keycode
 
 
 static func handle_debrief_key(main, keycode: Key) -> Dictionary:
@@ -192,11 +199,21 @@ static func apply_result_panel(main) -> bool:
 		review_panel.visible = false
 	main._result_panel.position = DEBRIEF_PANEL_POSITION
 	main._result_panel.visible = true
-	main._result_label.text = build_text(main._expedition_day_state, main._material_project, main._daily_conditions)
+	main._result_label.text = build_text(
+		main._expedition_day_state,
+		main._material_project,
+		main._daily_conditions,
+		main._last_status_note
+	)
 	return true
 
 
-static func build_text(day, material_project = null, daily_conditions = null) -> String:
+static func build_text(
+	day,
+	material_project = null,
+	daily_conditions = null,
+	debrief_feedback := ""
+) -> String:
 	var reason_text := "Day ended at boat"
 	if day.end_reason == "nightfall":
 		reason_text = "Returned at nightfall"
@@ -216,6 +233,14 @@ static func build_text(day, material_project = null, daily_conditions = null) ->
 	if material_project != null and material_project.has_method("debrief_lines"):
 		for line in material_project.debrief_lines():
 			lines.append(str(line))
+	var feedback := str(debrief_feedback).strip_edges()
+	if (
+		not feedback.is_empty()
+		and feedback != "Day complete"
+		and not feedback.begins_with("Plan pinned:")
+		and not lines.has(feedback)
+	):
+		lines.append(feedback)
 	var forecast_line := DailyConditionPresentation.forecast_line(daily_conditions)
 	if not forecast_line.is_empty():
 		lines.append(forecast_line)
