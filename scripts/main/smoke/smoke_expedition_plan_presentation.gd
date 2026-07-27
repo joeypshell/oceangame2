@@ -143,9 +143,17 @@ func _run() -> void:
 		Rect2()
 	)
 	var debrief_rect := Rect2(main._result_panel.position, main._result_panel.size)
+	var cargo_rect: Rect2 = main._held_cargo_hud.get_test_report().get(
+		"rect",
+		Rect2()
+	)
 	_expect(
 		not planner_rect.intersects(debrief_rect),
 		"planner covered the existing debrief summary"
+	)
+	_expect(
+		not planner_rect.intersects(cargo_rect),
+		"planner covered the cargo or equipment strip"
 	)
 	for rect in controls_report.get("command_rects", {}).values():
 		_expect(

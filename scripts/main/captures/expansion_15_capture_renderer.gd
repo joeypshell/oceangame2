@@ -2,6 +2,7 @@ extends RefCounted
 
 const MobileTestControls := preload("res://scripts/main/mobile_test_controls.gd")
 const MAP_ID := "production_level_01"
+const RESULT_LABEL_CONTENT_WIDTH := 238.0
 const CAPTURE_SIZES := [
 	{
 		"suffix": "1280x720",
@@ -48,6 +49,7 @@ func capture_pair(
 		_main.get_window().size = spec["window_size"]
 		_mobile_controls.visible = show_touch
 		_frame_camera(camera_test)
+		await _refresh_result_panel_layout()
 		await _settle_frames()
 		if not _verify_layout(show_touch, expect_planner):
 			return false
@@ -78,7 +80,18 @@ func _verify_layout(touch_visible: bool, expect_planner: bool) -> bool:
 	var tool_rect: Rect2 = _main._active_tool_hud.get_test_report().get("rect", Rect2())
 	var planner_report: Dictionary = _main._expedition_plan_panel.get_test_report()
 	var planner_rect: Rect2 = planner_report.get("rect", Rect2())
-	var result_rect := Rect2(_main._result_panel.position, _main._result_panel.size)
+	var result_rect := Rect2(
+		_main._result_panel.global_position,
+		_main._result_panel.size
+	)
+	var result_label_rect := Rect2(
+		_main._result_label.global_position,
+		_main._result_label.size
+	)
+	var viewport_rect := Rect2(
+		Vector2.ZERO,
+		_main.get_viewport().get_visible_rect().size
+	)
 	if cargo_rect.intersects(tool_rect):
 		_fail("held cargo overlaps the active-tool HUD")
 		return false
@@ -87,6 +100,21 @@ func _verify_layout(touch_visible: bool, expect_planner: bool) -> bool:
 		return false
 	if expect_planner and planner_rect.intersects(result_rect):
 		_fail("planner overlaps the debrief summary")
+		return false
+	if expect_planner and planner_rect.intersects(cargo_rect):
+		_fail("planner overlaps the cargo or equipment strip")
+		return false
+	if expect_planner and (
+		not _main._result_label.is_visible_in_tree()
+		or _main._result_label.text.strip_edges().is_empty()
+		or not viewport_rect.grow(1.0).encloses(result_rect)
+		or not result_rect.grow(1.0).encloses(result_label_rect)
+	):
+		_fail("debrief summary text is hidden or outside its panel: viewport=%s panel=%s label=%s" % [
+			str(viewport_rect),
+			str(result_rect),
+			str(result_label_rect),
+		])
 		return false
 	if not touch_visible:
 		return true
@@ -123,6 +151,35 @@ func _frame_camera(camera_test: Dictionary) -> void:
 	)
 	_camera.make_current()
 	_camera.force_update_scroll()
+
+
+func _refresh_result_panel_layout() -> void:
+	_main._result_label.custom_minimum_size = Vector2(
+		RESULT_LABEL_CONTENT_WIDTH,
+		0.0
+	)
+	_main._result_label.size.x = RESULT_LABEL_CONTENT_WIDTH
+	_main._result_label.update_minimum_size()
+	await _main.get_tree().process_frame
+
+	var margin := _main._result_label.get_parent() as Control
+	if margin != null:
+		margin.update_minimum_size()
+		if margin is Container:
+			(margin as Container).queue_sort()
+	await _main.get_tree().process_frame
+
+	_main._result_panel.update_minimum_size()
+	_queue_container_sort(_main._result_panel)
+	_main._result_panel.reset_size()
+	await _main.get_tree().process_frame
+
+
+func _queue_container_sort(node: Node) -> void:
+	if node is Container:
+		(node as Container).queue_sort()
+	for child in node.get_children():
+		_queue_container_sort(child)
 
 
 func _settle_frames() -> void:
