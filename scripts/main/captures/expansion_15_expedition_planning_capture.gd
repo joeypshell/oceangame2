@@ -228,8 +228,15 @@ func _rows_show_both_leads(rows: Array) -> bool:
 	return (
 		rows.size() == 2
 		and str(rows[0]).find("Northwest Wreck Relay") != -1
+		and str(rows[0]).find("MAIN PROGRESSION") != -1
+		and str(rows[0]).find("Stabilizer required") != -1
+		and str(rows[0]).find("Deeper-wreck lead + valuable core") != -1
 		and str(rows[0]).find("ready to build") != -1
 		and str(rows[1]).find("Southwest Jellyfish Bloom") != -1
+		and str(rows[1]).find("OPTIONAL RESOURCE") != -1
+		and str(rows[1]).find("No build") != -1
+		and str(rows[1]).find("Jellyfish patrol") != -1
+		and str(rows[1]).find("1 conductive coil") != -1
 		and str(rows[1]).find("Forecast opportunity") != -1
 	)
 
