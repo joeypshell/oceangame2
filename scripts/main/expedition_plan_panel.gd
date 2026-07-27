@@ -2,7 +2,7 @@ extends PanelContainer
 
 const PHASE_DEBRIEF := "debrief"
 const REQUIRED_CHOICE_COUNT := 2
-const PANEL_POSITION := Vector2(288, 12)
+const PANEL_POSITION := Vector2(288, 88)
 const PANEL_WIDTH := 532.0
 const CONTENT_WIDTH := 500.0
 
