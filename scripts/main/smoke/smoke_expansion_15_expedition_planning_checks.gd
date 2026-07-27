@@ -298,7 +298,7 @@ func _exercise_relay_plan_build_and_resolution() -> bool:
 	):
 		return false
 	var owners_before := _owner_snapshot()
-	_press_key(KEY_E)
+	_press_physical_key(KEY_E)
 	if not _require(
 		_main._expedition_plan_state.selected_lead_id() == RELAY_ID
 		and _owner_snapshot() == owners_before
@@ -306,12 +306,18 @@ func _exercise_relay_plan_build_and_resolution() -> bool:
 		"pinning the relay mutated progression or the unselected bloom"
 	):
 		return false
-	var build: Dictionary = ExpeditionDayDebrief.handle_debrief_key(_main, KEY_P)
+	_press_physical_key(KEY_P)
 	if not _require(
-		bool(build.get("changed", false))
-		and profile.has_completed_project(ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID)
+		profile.has_completed_project(ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID)
 		and profile.has_capability(ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID),
-		"night build did not complete the source-owned stabilizer"
+		"physical-only P did not complete the source-owned stabilizer"
+	):
+		return false
+	_press_logical_key(KEY_P)
+	if not _require(
+		_main._last_status_note.find("already built") != -1
+		and _main._result_label.text.find("already built") != -1,
+		"logical P did not reach visible debrief build feedback"
 	):
 		return false
 	if not _preserved(RELAY_ID, "project_build"):
@@ -447,6 +453,20 @@ func _press_key(keycode: Key) -> void:
 	var event := InputEventKey.new()
 	event.keycode = keycode
 	event.physical_keycode = keycode
+	event.pressed = true
+	_main._unhandled_input(event)
+
+
+func _press_physical_key(keycode: Key) -> void:
+	var event := InputEventKey.new()
+	event.physical_keycode = keycode
+	event.pressed = true
+	_main._unhandled_input(event)
+
+
+func _press_logical_key(keycode: Key) -> void:
+	var event := InputEventKey.new()
+	event.keycode = keycode
 	event.pressed = true
 	_main._unhandled_input(event)
 
