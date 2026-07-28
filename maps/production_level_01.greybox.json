@@ -1509,7 +1509,43 @@
       "terrain_changes": [],
       "intent": "Source-authored archive-current return metadata in existing open water."
     },
-    "review_artifact": "references/greybox/production_level_01_source_render_collision_review.png"
+    "review_artifact": "references/greybox/production_level_01_source_render_collision_review.png",
+    "expansion_16": {
+      "source": "tools/production_level_01_expansion_16.py",
+      "project_ids": [
+        "closed_circuit_rebreather_project"
+      ],
+      "journey_ids": [
+        "far_west_deeper_wreck_route"
+      ],
+      "zone_ids": [
+        "far_west_confined_wreck_oxygen_zone",
+        "far_west_deeper_wreck_landmark"
+      ],
+      "entity_ids": [
+        "far_west_wreck_data_recorder"
+      ],
+      "survey_target_ids": [
+        "far_west_deeper_wreck_survey"
+      ],
+      "camera_test_ids": [
+        "expansion_16_rebreather_project",
+        "expansion_16_oxygen_threshold",
+        "expansion_16_unprotected_retreat",
+        "expansion_16_deeper_wreck_arrival",
+        "expansion_16_recorder_cut",
+        "expansion_16_recorder_survey",
+        "expansion_16_pending_boat_return"
+      ],
+      "terrain_changes": [],
+      "review_bounds": {
+        "x": 12,
+        "y": 90,
+        "w": 21,
+        "h": 32
+      },
+      "intent": "Source-authored oxygen return metadata in existing continuous water."
+    }
   },
   "units": {
     "tile_size_px": 32,
@@ -4822,6 +4858,32 @@
       "regional_landmark": true,
       "regional_journey_id": "upper_left_wreck_relay_route",
       "landmark_label": "Northwest Wreck Relay"
+    },
+    {
+      "id": "far_west_confined_wreck_oxygen_zone",
+      "type": "marker",
+      "x": 12,
+      "y": 90,
+      "w": 21,
+      "h": 16,
+      "oxygen_consumption_zone": true,
+      "oxygen_consumption_label": "Confined wreck air",
+      "required_capability_id": "closed_circuit_rebreather",
+      "warning_grace_seconds": 1.0,
+      "unprotected_oxygen_drain_multiplier": 8.0,
+      "route_context": "far_west_deeper_wreck_route",
+      "intent": "Accelerate oxygen only inside the far-west confined-wreck approach while preserving ordinary swimming and retreat."
+    },
+    {
+      "id": "far_west_deeper_wreck_landmark",
+      "type": "marker",
+      "x": 15,
+      "y": 93,
+      "w": 7,
+      "h": 5,
+      "regional_landmark": true,
+      "regional_journey_id": "far_west_deeper_wreck_route",
+      "landmark_label": "Far-West Deeper Wreck"
     }
   ],
   "regional_journeys": [
@@ -4892,6 +4954,22 @@
         "active_guidance": "Plan: Follow the archive signal northwest",
         "order": 10
       }
+    },
+    {
+      "id": "far_west_deeper_wreck_route",
+      "route_label": "Far-west deeper wreck route",
+      "promise_gate_id": "upper_left_wreck_relay_landmark",
+      "entry_gate_ids": [
+        "far_west_confined_wreck_oxygen_zone"
+      ],
+      "required_capability_id": "closed_circuit_rebreather",
+      "required_discovery_id": "upper_left_wreck_relay_discovery",
+      "landmark_zone_id": "far_west_deeper_wreck_landmark",
+      "tool_target_id": "far_west_wreck_data_recorder",
+      "survey_target_id": "far_west_deeper_wreck_survey",
+      "commit_entry_id": "surface_boat_entry",
+      "route_context": "far_west_deeper_wreck_route",
+      "intent": "Turn the committed relay signal and night-built rebreather into one continuous far-west wreck operation and canonical-boat return."
     }
   ],
   "daily_conditions": [
@@ -5264,6 +5342,39 @@
       "commit_map_path": "res://maps/production_level_01.greybox.json",
       "commit_entry_id": "surface_boat_entry",
       "intent": "Keep the relay finding pending until canonical boat return."
+    },
+    {
+      "id": "far_west_deeper_wreck_survey",
+      "target_type": "regional",
+      "x": 15,
+      "y": 95,
+      "w": 2,
+      "h": 2,
+      "required_capability_id": "survey_scanner_1",
+      "required_route_id": "far_west_deeper_wreck_route",
+      "route_context": "far_west_deeper_wreck_route",
+      "interaction": "survey",
+      "interaction_seconds": 3.0,
+      "interaction_label": "Survey deeper wreck recorder",
+      "clue_label": "Deeper wreck recorder | Cutter access required",
+      "finding_label": "Discovery logged: Far-west wreck network",
+      "next_lead_label": "Next lead: deeper wreck network unresolved",
+      "discovery_id": "far_west_deeper_wreck_discovery",
+      "commit_map_id": "production_level_01",
+      "commit_map_path": "res://maps/production_level_01.greybox.json",
+      "commit_entry_id": "surface_boat_entry",
+      "scan_subject_kind": "artifact",
+      "scan_subject_id": "far_west_wreck_network_recorder",
+      "scan_subject_label": "Deep-wreck network recorder",
+      "scan_subject_description": "Pressure-damaged route index",
+      "scan_presentation_id": "far_west_wreck_data_recorder",
+      "scan_anchor": {
+        "x": 16,
+        "y": 96
+      },
+      "scan_reward_kind": "discovery",
+      "scan_reward_id": "far_west_deeper_wreck_discovery",
+      "intent": "Keep the recorder finding pending until the canonical boat return."
     }
   ],
   "material_candidate_pools": [
@@ -5427,6 +5538,21 @@
       "unlocks_capability_id": "current_stabilizer",
       "target_gate_id": "upper_left_wreck_relay_current",
       "build_phase": "night_debrief"
+    },
+    {
+      "id": "closed_circuit_rebreather_project",
+      "required_discovery_id": "upper_left_wreck_relay_discovery",
+      "required_materials": {
+        "titanium_scrap": 1,
+        "rubber_sheet": 1,
+        "conductive_coil": 1,
+        "insulating_gel": 1
+      },
+      "unlocks_capability_id": "closed_circuit_rebreather",
+      "target_id": "far_west_confined_wreck_oxygen_zone",
+      "build_phase": "night_debrief",
+      "project_label": "Closed-circuit rebreather",
+      "completion_label": "Rebreather built"
     }
   ],
   "background": [
@@ -5495,6 +5621,17 @@
       "regional_landmark": true,
       "regional_journey_id": "upper_left_wreck_relay_route",
       "intent": "Non-collision silhouette for the isolated relay pocket."
+    },
+    {
+      "id": "far_west_deeper_wreck_backdrop",
+      "type": "background",
+      "x": 15,
+      "y": 93,
+      "w": 7,
+      "h": 5,
+      "regional_landmark": true,
+      "regional_journey_id": "far_west_deeper_wreck_route",
+      "intent": "Distinct non-collision wreck silhouette in the existing far-west chamber."
     }
   ],
   "entities": [
@@ -5813,6 +5950,22 @@
       "tier": "valuable",
       "route_context": "upper_left_wreck_relay_route",
       "intent": "Normal valuable cargo payoff inside the earned relay pocket."
+    },
+    {
+      "id": "far_west_wreck_data_recorder",
+      "type": "tool_target",
+      "x": 16,
+      "y": 96,
+      "kind": "crate",
+      "tier": "valuable",
+      "interaction": "cutter_salvage",
+      "interaction_seconds": 2.0,
+      "interaction_label": "wreck data recorder",
+      "required_tool_id": "salvage_cutter",
+      "tool_project_id": "salvage_cutter_project",
+      "unlocks_survey_target_id": "far_west_deeper_wreck_survey",
+      "durable_clearance": true,
+      "intent": "Cutter-opened recorder whose clearance exposes the deeper-wreck survey."
     }
   ],
   "camera_tests": [
@@ -6060,6 +6213,55 @@
       "center_y": 12.0,
       "zoom": 0.55,
       "intent": "Held relay cargo and pending discovery returning to the canonical boat."
+    },
+    {
+      "id": "expansion_16_rebreather_project",
+      "center_x": 95.0,
+      "center_y": 12.0,
+      "zoom": 0.55,
+      "intent": "Canonical-boat night project and ingredient review."
+    },
+    {
+      "id": "expansion_16_oxygen_threshold",
+      "center_x": 30.0,
+      "center_y": 96.0,
+      "zoom": 0.42,
+      "intent": "Scoutable confined-wreck threshold and continuous retreat route."
+    },
+    {
+      "id": "expansion_16_unprotected_retreat",
+      "center_x": 25.0,
+      "center_y": 96.0,
+      "zoom": 0.48,
+      "intent": "Readable accelerated oxygen pressure before rebreather ownership."
+    },
+    {
+      "id": "expansion_16_deeper_wreck_arrival",
+      "center_x": 16.0,
+      "center_y": 96.0,
+      "zoom": 0.55,
+      "intent": "Rebreather-protected arrival at the far-west wreck landmark."
+    },
+    {
+      "id": "expansion_16_recorder_cut",
+      "center_x": 16.0,
+      "center_y": 96.0,
+      "zoom": 0.72,
+      "intent": "Explicit selected-cutter interaction at the data recorder."
+    },
+    {
+      "id": "expansion_16_recorder_survey",
+      "center_x": 16.0,
+      "center_y": 96.0,
+      "zoom": 0.72,
+      "intent": "Held scanner progress after durable recorder clearance."
+    },
+    {
+      "id": "expansion_16_pending_boat_return",
+      "center_x": 95.0,
+      "center_y": 12.0,
+      "zoom": 0.55,
+      "intent": "Pending far-west discovery returning to the canonical boat."
     }
   ],
   "review_questions": [
@@ -6079,6 +6281,10 @@
     "Does the archive clearly promise one night-built Current Stabilizer return?",
     "Does the same visible current read as blocked before and swimmable after ownership?",
     "Is the Northwest Wreck Relay recognizable without terrain or collision changes?",
-    "Do the valuable core and scanner finding justify the direct return to the boat?"
+    "Do the valuable core and scanner finding justify the direct return to the boat?",
+    "Can the confined-wreck threshold be scouted and safely retreated from before the rebreather?",
+    "Does the night recipe clearly answer the relay's far-west oxygen limitation?",
+    "Does protected travel preserve ordinary oxygen pressure and remembered geography?",
+    "Are cutter, scanner, pending finding, and canonical-boat commitment each distinct?"
   ]
 }

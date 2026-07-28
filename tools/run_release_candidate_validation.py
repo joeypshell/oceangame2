@@ -69,6 +69,7 @@ def base_gates() -> list[Gate]:
         Gate("maps: progression container validator tests", python_command("tools/test_validate_progression_containers.py")),
         Gate("maps: regional journey validator tests", python_command("tools/test_validate_regional_journeys.py")),
         Gate("maps: deeper wreck validator tests", python_command("tools/test_validate_deeper_wreck_return.py")),
+        Gate("maps: Expansion 16 source tests", python_command("tools/test_production_level_01_expansion_16.py")),
         Gate("maps: Expansion 14 contract validator tests", python_command("tools/test_validate_expansion_14_contract.py")),
         Gate("maps: pressure return validator tests", python_command("tools/test_validate_pressure_return.py")),
         Gate("maps: southeast wreck validator tests", python_command("tools/test_validate_southeast_wreck_return.py")),
