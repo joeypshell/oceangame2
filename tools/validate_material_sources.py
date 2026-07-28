@@ -32,25 +32,17 @@ from validate_tool_target_rewards import validate_tool_target_reward_schema
 
 def _is_int(value: Any) -> bool:
     return isinstance(value, int) and not isinstance(value, bool)
-
-
 def _is_number(value: Any) -> bool:
     return isinstance(value, (int, float)) and not isinstance(value, bool)
-
-
 def _validate_id(value: Any, label: str, field: str) -> list[str]:
     if not isinstance(value, str) or not value:
         return [f"{label} {field} must be a non-empty string."]
     if not ID_PATTERN.match(value):
         return [f"{label} {field} {value!r} must use lower_snake_case."]
     return []
-
-
 def _items(map_data: dict[str, Any], collection: str) -> list[dict[str, Any]]:
     value = map_data.get(collection, [])
     return [item for item in value if isinstance(item, dict)] if isinstance(value, list) else []
-
-
 def _reserved_ids(map_data: dict[str, Any]) -> set[str]:
     return {
         item["id"]
@@ -230,11 +222,8 @@ def _validate_projects(
         quantity = source.get("material_quantity")
         if material_id in SUPPORTED_MATERIALS and _is_int(quantity) and int(quantity) > 0:
             guaranteed_yields[str(material_id)] = guaranteed_yields.get(str(material_id), 0) + int(quantity)
-    current_gates = {
-        str(zone.get("id")): zone
-        for zone in _items(map_data, "zones")
-        if zone.get("current_gate") is True and isinstance(zone.get("id"), str)
-    }
+    project_zones = {str(zone["id"]): zone for zone in _items(map_data, "zones") if isinstance(zone.get("id"), str)}
+    current_gates = {zone_id: zone for zone_id, zone in project_zones.items() if zone.get("current_gate") is True}
     hostile_encounters = {
         str(hostile.get("id")): hostile
         for hostile in _items(map_data, "hostile_encounters")
@@ -278,7 +267,7 @@ def _validate_projects(
         if project.get("build_phase") not in SUPPORTED_BUILD_PHASES:
             failures.append(f"{label} build_phase must be one of: {', '.join(sorted(SUPPORTED_BUILD_PHASES))}.")
         for label_field in ("project_label", "completion_label"):
-            if project_id in {"propulsion_fins_project", "survey_scanner_project", "shock_prod_project", "shock_prod_capacitor_project", "dive_light_1_project"} and label_field not in project:
+            if project_id in {"propulsion_fins_project", "survey_scanner_project", "shock_prod_project", "shock_prod_capacitor_project", "dive_light_1_project", "closed_circuit_rebreather_project"} and label_field not in project:
                 failures.append(f"{label} requires {label_field}.")
             elif label_field in project:
                 value = project[label_field]
@@ -348,6 +337,13 @@ def _validate_projects(
                         failures.append(f"{label} target_id {target_id!r} does not reference a survey target.")
                     elif target.get(capability_field) != project.get("unlocks_capability_id"):
                         failures.append(f"{label} target survey does not link back to the project capability.")
+                elif rules is not None and rules.get("target_collection") == "zones":
+                    target = project_zones.get(target_id)
+                    capability_field = str(rules.get("target_capability_field", "required_capability_id"))
+                    if target is None:
+                        failures.append(f"{label} target_id {target_id!r} does not reference a marker zone.")
+                    elif target.get(capability_field) != project.get("unlocks_capability_id"):
+                        failures.append(f"{label} target zone does not link back to the project capability.")
                 else:
                     target = tool_entities.get(target_id)
                     if target is None:

@@ -26,6 +26,7 @@ TARGET_DISCOVERIES = {
         "abyssal_basin_harmonic_source_discovery",
         "southeast_wreck_archive_discovery",
         "upper_left_wreck_relay_discovery",
+        "far_west_deeper_wreck_discovery",
     },
     "resource": {"upper_right_mineral_trace_research"},
 }
@@ -313,6 +314,8 @@ def validate_survey_target_schema(map_path: Path, map_data: dict[str, Any]) -> l
             if collection_name == "zones" and item.get("type") == "marker" and item.get("current_gate") is True:
                 fields.discard("required_capability_id")
             if collection_name == "zones" and item.get("type") == "marker" and item.get("pressure_zone") is True:
+                fields.discard("required_capability_id")
+            if collection_name == "zones" and item.get("type") == "marker" and item.get("oxygen_consumption_zone") is True:
                 fields.discard("required_capability_id")
             if collection_name == "entities" and item.get("type") == "salvage" and isinstance(item.get("guarded_by_hostile_id"), str):
                 fields.discard("required_capability_id")

@@ -26,6 +26,7 @@ DEFAULT_MAP = ROOT / "maps" / "production_level_01.greybox.json"
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 DISPLAY_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,47}$")
 GATE_FIELD_BY_CAPABILITY = {
+    "closed_circuit_rebreather": "oxygen_consumption_zone",
     "current_stabilizer": "current_gate",
     "propulsion_fins": "current_gate",
     "pressure_suit_1": "pressure_zone",

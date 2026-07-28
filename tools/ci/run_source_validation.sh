@@ -5,10 +5,12 @@ git diff --check
 
 python tools/test_validate_progression_containers.py
 python tools/test_validate_regional_journeys.py
+python tools/test_validate_deeper_wreck_return.py
 python tools/test_validate_expansion_14_contract.py
 python tools/test_validate_southeast_wreck_return.py
 python tools/test_validate_tool_target_rewards.py
 python tools/validate_regional_journeys.py maps/production_level_01.greybox.json
+python tools/validate_deeper_wreck_return.py maps/production_level_01.greybox.json
 python tools/validate_expansion_14_contract.py maps/production_level_01.greybox.json
 python tools/validate_southeast_wreck_return.py maps/production_level_01.greybox.json
 python tools/validate_greybox_map.py maps/production_level_01.greybox.json

@@ -13,10 +13,11 @@ SUPPORTED_MATERIALS = {
 SUPPORTED_PROJECTS = {
     "propulsion_fins_project", "survey_scanner_project", "salvage_cutter_project", "current_stabilizer_project",
     "shock_prod_project", "shock_prod_capacitor_project", "dive_light_1_project", "pressure_suit_1_project",
+    "closed_circuit_rebreather_project",
 }
 SUPPORTED_CAPABILITIES = {
     "propulsion_fins", "survey_scanner_1", "salvage_cutter", "current_stabilizer", "shock_prod", "shock_prod_capacitor",
-    "dive_light_1", "pressure_suit_1",
+    "dive_light_1", "pressure_suit_1", "closed_circuit_rebreather",
 }
 SUPPORTED_STRATEGIES = {"day_rotation_v1"}
 SUPPORTED_BUILD_PHASES = {"night_debrief"}
@@ -35,6 +36,9 @@ EXPECTED_RECIPES = {
     },
     "pressure_suit_1_project": {
         "titanium_scrap": 2, "rubber_sheet": 1, "insulating_gel": 1,
+    },
+    "closed_circuit_rebreather_project": {
+        "titanium_scrap": 1, "rubber_sheet": 1, "conductive_coil": 1, "insulating_gel": 1,
     },
 }
 PROJECT_RULES = {
@@ -99,6 +103,15 @@ PROJECT_RULES = {
         "target_field": "target_id",
         "target_collection": "survey_targets",
         "target_capability_field": "required_pressure_capability_id",
+    },
+    "closed_circuit_rebreather_project": {
+        "capability_id": "closed_circuit_rebreather",
+        "required_discovery_id": "upper_left_wreck_relay_discovery",
+        "required_project_id": None,
+        "target_field": "target_id",
+        "target_id": "far_west_confined_wreck_oxygen_zone",
+        "target_collection": "zones",
+        "target_capability_field": "required_capability_id",
     },
 }
 MATERIAL_FIELDS = {"material_id", "material_quantity", "candidate_pool_id"}
