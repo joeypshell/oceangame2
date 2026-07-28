@@ -378,6 +378,19 @@ and next-day relay guidance at 1280x720 and mobile 844x390 review sizes under
 ignored `visual_captures/expansion_15_expedition_planning/`. It does not accept
 or replace baselines.
 
+Capture the focused Expansion 16 deeper-wreck states:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --capture-expansion-16-deeper-wreck
+```
+
+This writes matched pre-rebreather warning and protected threshold views plus
+50% explicit cutter and held-scanner recorder interactions at 1280x720 and
+mobile 844x390 review sizes under ignored
+`visual_captures/expansion_16_deeper_wreck/`. It uses source camera and target
+ids, checks HUD/touch-control separation, and does not accept or replace
+baselines.
+
 Capture the first production slice:
 
 ```powershell
