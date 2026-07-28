@@ -1,10 +1,10 @@
 # OceanGame Phase 2 Roadmap
 
-Date: 2026-07-25
+Date: 2026-07-28
 
-Status: Expansions 01-14 are complete with player GO. Expansion 15 Expedition
-Planning And Choice is active as milestone #41, issues #1095-#1104. No later
-expansion is selected.
+Status: Expansions 01-15 are complete with player GO. Expansion 15 Expedition
+Planning And Choice closed on exact runtime `23f4172`. No later expansion is
+selected.
 
 ## Decision
 
@@ -92,8 +92,7 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 15 Expedition Planning And Choice, milestone #41 and bounded issues
-#1095-#1104.
+No implementation milestone is currently selected.
 
 ### Proposed
 
@@ -413,7 +412,9 @@ replay.**
 
 ### Expansion 15: Expedition Planning And Choice
 
-Status: Selected by #1094 and active as milestone #41, issues #1095-#1104.
+Status: Complete with owner GO in #1104. Milestone #41 includes planning
+#1094, issues #1095-#1104, and bounded corrections #1113/#1117/#1119. The
+exact reviewed runtime is `23f4172`.
 
 Goal: turn existing source-authored regional leads and daily opportunities into
 one deliberate plan for the following expedition day.
@@ -436,7 +437,8 @@ inventory, profile schema, or broad HUD replacement.
 Exit question: does choosing a concrete expedition lead at the boat make the
 player understand what they are preparing for, choose between meaningful
 destinations, and want to begin the next day without turning exploration into
-checklist-following?
+checklist-following? **GO recorded at #1104 after bounded corrections and
+exact-runtime owner replay.**
 
 ## Original OceanGame Convergence
 
