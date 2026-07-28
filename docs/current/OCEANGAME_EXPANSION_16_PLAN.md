@@ -2,8 +2,8 @@
 
 Date: 2026-07-28
 
-Status: Selected by planning gate #1122. Implementation issues are not yet
-created.
+Status: Active in GitHub milestone #42. The frozen implementation batch is
+#1124-#1133; #1133 is the owner GO/HOLD closeout gate.
 
 ## Decision
 
@@ -72,7 +72,7 @@ by ordinary score.
 
 ## Capability And Project Contract
 
-Provisional durable capability:
+Locked durable capability:
 
 ```text
 closed_circuit_rebreather
@@ -90,8 +90,8 @@ Project shape:
 | Build phase | exact-once night debrief |
 | Changed behavior | normalize route-local accelerated oxygen drain |
 
-The source contract issue may refine the display name, but it must preserve
-this dependency shape unless progression auditing proves a blocker.
+The locked source/state contract preserves this dependency shape. Validation
+may report HOLD if source authoring cannot satisfy it without circularity.
 
 Safeguards:
 
@@ -106,7 +106,7 @@ Safeguards:
 
 ## Route And Payoff Contract
 
-The future source helper should own one bounded journey in the existing
+The Expansion 16 source helper will own one bounded journey in the existing
 far-west/lower-left review region:
 
 ```text
@@ -193,20 +193,24 @@ Ownership remains:
 HUD work is limited to compact contextual oxygen-pressure, project, pending,
 and result text through existing surfaces. No new persistent panel is added.
 
-## Recommended Implementation Batch
+## Frozen Implementation Batch
 
-Create this batch in a later audit, not in #1122:
+Milestone #42 contains exactly:
 
-1. Lock the Expansion 16 source, state, route-margin, and presentation contract.
-2. Add rebreather/oxygen-pressure schema validation and progression auditing.
-3. Author the rebreather project and far-west deeper-wreck journey in source.
-4. Implement focused oxygen-pressure and durable rebreather runtime behavior.
-5. Integrate cutter, scanner, pending finding, and canonical-boat payoff.
-6. Add deterministic full-journey smoke and CI coverage.
-7. Add focused desktop/mobile review captures.
-8. Review and accept only intentional visual differences.
-9. Verify the exact public Web candidate and isolated checkpoint.
-10. Run the owner journey and close with GO, HOLD, or one bounded correction.
+1. #1124 lock the source, state, route-margin, and presentation contract
+2. #1125 add schema validation and progression auditing
+3. #1126 author the project and far-west deeper-wreck journey in source
+4. #1127 implement focused oxygen-zone and rebreather runtime behavior
+5. #1128 integrate cutter, scanner, pending finding, and boat payoff
+6. #1129 add deterministic full-journey smoke and CI coverage
+7. #1130 add focused desktop/mobile review captures
+8. #1131 review and accept only intentional visual differences
+9. #1132 verify the exact public Web candidate and isolated checkpoint
+10. #1133 run the owner journey and close with GO or HOLD
+
+Issues #1124-#1132 are the bounded technical cycle. #1133 intentionally
+remains open until the owner reviews the exact Web candidate. Do not refill
+the queue or select Expansion 17 during this milestone.
 
 Dependency order:
 
