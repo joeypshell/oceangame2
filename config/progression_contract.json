@@ -37,6 +37,11 @@
       "id": "pressure_suit_1",
       "constant_name": "PRESSURE_SUIT",
       "mandatory": false
+    },
+    {
+      "id": "closed_circuit_rebreather",
+      "constant_name": "CLOSED_CIRCUIT_REBREATHER",
+      "mandatory": false
     }
   ],
   "durable_purchases": []

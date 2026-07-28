@@ -8,6 +8,7 @@ from collections import deque
 from pathlib import Path
 from validate_biological_resources import validate_biological_resource_reachability, validate_biological_resource_schema
 from validate_current_gates import validate_current_gate_reachability, validate_current_gate_schema
+from validate_deeper_wreck_return import validate_deeper_wreck_return
 from validate_expedition_leads import validate_expedition_planning_schema
 from validate_expansion_14_contract import validate_expansion_14_contract
 from validate_destination_payoffs import validate_destination_payoff_schema
@@ -78,7 +79,6 @@ def validate_id(value, item_label: str) -> list[str]:
     if not ID_PATTERN.match(value):
         return [f"{item_label} id {value!r} must use lower_snake_case."]
     return []
-
 def validate_kind(value, item_label: str) -> list[str]:
     if not isinstance(value, str) or not value:
         return [f"{item_label} kind must be a non-empty string."]
@@ -92,7 +92,6 @@ def validate_salvage_tier(value, item_label: str) -> list[str]:
         allowed = ", ".join(sorted(SALVAGE_VALUE_TIERS))
         return [f"{item_label} tier {value!r} must be one of: {allowed}."]
     return []
-
 
 def validate_route_choice_metadata(entity: dict, item_label: str) -> list[str]:
     failures: list[str] = []
@@ -487,6 +486,7 @@ def main() -> int:
     failures.extend(validate_survey_target_reachability(map_data.get("survey_targets", []), solid, reachable))
     failures.extend(validate_visibility_zone_reachability(zones, solid, reachable))
     failures.extend(validate_world_connector_reachability(zones, solid, reachable))
+    failures.extend(validate_deeper_wreck_return(args.map_json, map_data))
     failures.extend(validate_light_return(args.map_json, map_data, solid, reachable))
     failures.extend(validate_pressure_return(args.map_json, map_data))
     failures.extend(validate_southeast_wreck_return(map_data))

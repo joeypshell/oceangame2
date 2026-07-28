@@ -208,7 +208,7 @@ class ProgressionGraphBuilder:
                 return "connector"
             if item.get("current_gate") is True:
                 return "gate"
-            if item.get("pressure_zone") is True or item.get("visibility_zone") is True:
+            if item.get("pressure_zone") is True or item.get("visibility_zone") is True or item.get("oxygen_consumption_zone") is True:
                 return "pressure"
             if item.get("regional_landmark") is True:
                 return "landmark"
