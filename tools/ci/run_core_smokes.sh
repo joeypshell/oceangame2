@@ -12,6 +12,7 @@ run_godot durable-light-project-state 120 --headless --path . --script res://scr
 run_godot pressure-suit-project-state 120 --headless --path . --script res://scripts/main/smoke/smoke_pressure_suit_project_state.gd
 run_godot pressure-zone-state 120 --headless --path . --script res://scripts/main/smoke/smoke_pressure_zone_state.gd
 run_godot oxygen-consumption-zone-state 120 --headless --path . --script res://scripts/main/smoke/smoke_oxygen_consumption_zone_state.gd
+run_godot expansion-16-integration-state 180 --headless --path . --script res://scripts/main/smoke/smoke_expansion_16_integration_state.gd
 run_godot salvage-loop 120 --headless --path . --quit-after 1 --smoke-salvage-loop
 
 score_smokes=(
