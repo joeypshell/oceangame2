@@ -179,6 +179,12 @@ def godot_gates(godot: str) -> list[Gate]:
             fail_on_godot_error=True,
         ),
         Gate(
+            "smoke: oxygen consumption zone state",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_oxygen_consumption_zone_state.gd"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
             "smoke: player health state",
             [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_player_health_state.gd"],
             godot_backed=True,

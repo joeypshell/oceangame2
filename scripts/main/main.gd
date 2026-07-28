@@ -36,6 +36,7 @@ const MovingHazardController := preload("res://scripts/main/moving_hazard_contro
 const ShockProdController := preload("res://scripts/main/shock_prod_controller.gd")
 const TerritorialHostileController := preload("res://scripts/main/territorial_hostile_controller.gd")
 const OxygenRestPocketFeedback := preload("res://scripts/main/oxygen_rest_pocket_feedback.gd")
+const OxygenConsumptionZoneController := preload("res://scripts/main/oxygen_consumption_zone_controller.gd")
 const Pass22DestinationPayoffCapture := preload("res://scripts/main/captures/pass_22_destination_payoff_capture.gd")
 const Pass23NextDiveObjectiveCapture := preload("res://scripts/main/captures/pass_23_next_dive_objective_capture.gd")
 const Pass24RelayFollowThroughCapture := preload("res://scripts/main/captures/pass_24_relay_follow_through_capture.gd")
@@ -224,6 +225,7 @@ var _daily_conditions
 var _material_project
 var _next_dive_objective_prompt
 var _oxygen_rest_feedback
+var _oxygen_consumption_zone
 var _pre_pickup_route_cue_feedback
 var _pressure_zone
 var _primary_dive_objective
@@ -314,6 +316,7 @@ func _ready() -> void:
 	_hostiles = TerritorialHostileController.new()
 	_next_dive_objective_prompt = NextDiveObjectivePrompt.new()
 	_oxygen_rest_feedback = OxygenRestPocketFeedback.new()
+	_oxygen_consumption_zone = OxygenConsumptionZoneController.new()
 	_pre_pickup_route_cue_feedback = PrePickupRouteCueFeedback.new()
 	_primary_dive_objective = PrimaryDiveObjective.new()
 	_progression_containers = ProgressionContainerController.new()
@@ -1243,6 +1246,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_player = player
 	_anomaly_survey.on_map_loaded(world)
 	_pressure_zone.on_map_loaded(world)
+	_oxygen_consumption_zone.on_map_loaded(world)
 	_expedition_day_state.on_map_loaded(str(world.map_id))
 	_daily_conditions.sync(world.get_daily_conditions(), _expedition_day_state.day_number)
 	_material_runtime.on_map_loaded(world, _expedition_day_state, _daily_conditions.current_ids())
@@ -1512,6 +1516,7 @@ func _reset_run() -> void:
 	_world.reset_salvage()
 	_anomaly_survey.clear_unbanked("reset", _world)
 	_pressure_zone.reset()
+	_oxygen_consumption_zone.reset()
 	_biological_resources.restore_material_cargo(_material_runtime, _world, _expedition_day_state, _hostiles, "reset")
 	_oxygen_rest_feedback.reset()
 	_current_gate.reset()
@@ -1581,6 +1586,7 @@ func _try_world_connector_transition() -> bool:
 func _update_oxygen(delta: float) -> bool:
 	var previous_oxygen: float = _sortie_state.oxygen_seconds
 	_pressure_zone.update(_player.global_position, Callable(_anomaly_survey.profile_state(), "has_capability"), delta)
+	_oxygen_consumption_zone.update(_player.global_position, Callable(_anomaly_survey.profile_state(), "has_capability"), delta)
 	if _world.is_at_open_surface(_player.global_position) or _world.is_inside_extraction(_player.global_position):
 		_oxygen_rest_feedback.reset()
 		_sortie_state.oxygen_seconds = minf(_oxygen_capacity_seconds(), _sortie_state.oxygen_seconds + OXYGEN_REFILL_SECONDS_PER_SECOND * delta)
@@ -1596,7 +1602,8 @@ func _update_oxygen(delta: float) -> bool:
 		_handle_oxygen_depleted()
 		return true
 
-	if not _sortie_state.drain_oxygen(delta, _pressure_zone.drain_multiplier()):
+	var drain_multiplier: float = _pressure_zone.drain_multiplier() * _oxygen_consumption_zone.drain_multiplier()
+	if not _sortie_state.drain_oxygen(delta, drain_multiplier):
 		_update_oxygen_feedback_cues(previous_oxygen)
 		return false
 
@@ -1681,6 +1688,7 @@ func _handle_oxygen_depleted() -> void:
 		return
 	_anomaly_survey.clear_unbanked("oxygen_failure", _world)
 	_pressure_zone.reset()
+	_oxygen_consumption_zone.reset()
 	_play_feedback_cue("oxygen_failure", "oxygen_failure")
 	_oxygen_rest_feedback.reset()
 	_current_gate.reset()
@@ -1726,6 +1734,7 @@ func _apply_combat_damage(amount: int, source_id: String) -> Dictionary:
 func _handle_combat_defeat(_source_id: String) -> void:
 	_anomaly_survey.clear_unbanked("combat_defeat", _world)
 	_pressure_zone.reset()
+	_oxygen_consumption_zone.reset()
 	_oxygen_rest_feedback.reset()
 	_current_gate.reset()
 	_moving_hazards.reset(_world)
@@ -1763,6 +1772,7 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 	_combat_feedback_seconds = 0.0
 	_anomaly_survey.clear_unbanked("hazard", _world)
 	_pressure_zone.reset()
+	_oxygen_consumption_zone.reset()
 	var material_drop: Dictionary = _biological_resources.restore_material_cargo(_material_runtime, _world, _expedition_day_state, _hostiles, "hazard")
 	var oxygen_depleted := _apply_hazard_oxygen_penalty()
 	if oxygen_depleted:
@@ -1962,6 +1972,7 @@ func _update_status_label() -> void:
 	var oxygen_feedback := _oxygen_feedback_label()
 	var oxygen_rest_prompt := _oxygen_rest_prompt()
 	var pressure_prompt: String = _pressure_zone.overlay_text()
+	var oxygen_zone_prompt: String = _oxygen_consumption_zone.overlay_text()
 	var current_gate_prompt := _current_gate_prompt()
 	var progression_container_prompt := _progression_container_prompt()
 	var pre_pickup_route_cue := _pre_pickup_route_cue_prompt()
@@ -1980,6 +1991,9 @@ func _update_status_label() -> void:
 		objective_step_cue_blocked = true
 	elif not pressure_prompt.is_empty():
 		prompt = pressure_prompt
+		objective_step_cue_blocked = true
+	elif not oxygen_zone_prompt.is_empty():
+		prompt = oxygen_zone_prompt
 		objective_step_cue_blocked = true
 	elif not oxygen_rest_prompt.is_empty():
 		prompt = oxygen_rest_prompt
