@@ -2,9 +2,9 @@
 
 Date: 2026-07-28
 
-Status: Expansions 01-15 are complete with player GO. Expansion 15 Expedition
-Planning And Choice closed on exact runtime `23f4172`. No later expansion is
-selected.
+Status: Expansions 01-15 are complete with player GO. Expansion 16 Deeper Wreck
+Oxygen Return is selected by planning gate #1122; its implementation milestone
+and issue batch are not yet created.
 
 ## Decision
 
@@ -92,17 +92,18 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-No implementation milestone is currently selected.
+Expansion 16 Deeper Wreck Oxygen Return. The next audit may create only its
+dependency-ordered implementation batch from the current plan.
 
 ### Proposed
 
-No later expansion is selected.
+No Expansion 17 direction is selected.
 
 ### Directional
 
-Durable oxygen-route progression, other regional identities, and exceptional
-interiors remain directional. Broad pressure simulation and later pressure
-tiers remain outside the completed bounded Expansion 12 implementation.
+Other regional identities and exceptional interiors remain directional. Broad
+oxygen or pressure simulation and later equipment tiers remain outside the
+selected bounded Expansion 16 plan.
 
 ### Vision
 
@@ -416,29 +417,32 @@ Status: Complete with owner GO in #1104. Milestone #41 includes planning
 #1094, issues #1095-#1104, and bounded corrections #1113/#1117/#1119. The
 exact reviewed runtime is `23f4172`.
 
-Goal: turn existing source-authored regional leads and daily opportunities into
-one deliberate plan for the following expedition day.
+It proves two source-derived night choices, session/day-scoped selection,
+shared desktop/mobile controls, and distinct next-day guidance without markers,
+automatic navigation, profile mutation, or reward ownership. **GO recorded at
+#1104 after bounded corrections and exact-runtime owner replay.**
+
+### Expansion 16: Deeper Wreck Oxygen Return
+
+Status: Selected in `docs/current/OCEANGAME_EXPANSION_16_PLAN.md` through
+planning gate #1122. Implementation remains unbatched.
+
+Goal: turn the committed Northwest relay signal into one prepared far-west
+wreck return through existing continuous geography.
 
 Prove:
 
-- exactly two valid choices in the focused night state: Northwest Wreck Relay
-  and the forecasted Southwest jellyfish bloom
-- one session/day-scoped selected lead with no profile migration
-- shared desktop/mobile input for cycle, pin, build, and next-day start
-- distinct next-day guidance without exact markers or automatic navigation
-- unchanged discovery, project, capability, objective, condition, map, reward,
-  failure, and boat-commit ownership
-- deterministic journey, focused visual, exact Web, and owner evidence
+- a Ti1/Rubber1/Coil1/Gel1 night project grounded in relay knowledge
+- one durable closed-circuit rebreather capability
+- a visible route-local oxygen-pressure zone that is scoutable before the build
+- deterministic evidence that the session tank cannot substitute for the build
+- existing cutter and held scanner use at one recognizable wreck
+- pending failure cleanup and exact-once canonical-boat discovery commitment
+- no terrain, connector, teleport, new material, enemy, or global oxygen change
 
-Non-goals include a quest journal, mission list, map screen, new region,
-interior, topology, reward, project, capability, tool, enemy, economy,
-inventory, profile schema, or broad HUD replacement.
-
-Exit question: does choosing a concrete expedition lead at the boat make the
-player understand what they are preparing for, choose between meaningful
-destinations, and want to begin the next day without turning exploration into
-checklist-following? **GO recorded at #1104 after bounded corrections and
-exact-runtime owner replay.**
+Exit question: did the relay clue, material project, and rebreather turn the
+far-west wreck into a place the player could first scout and later complete
+safely, with a discovery worth returning to the boat?
 
 ## Original OceanGame Convergence
 

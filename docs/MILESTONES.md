@@ -43,6 +43,7 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_15_VISUAL_BASELINE_DECISION.md`
 - `docs/current/OCEANGAME_EXPANSION_15_WEB_PREVIEW_VERIFICATION.md`
 - `docs/current/OCEANGAME_EXPANSION_15_CLOSEOUT.md`
+- `docs/current/OCEANGAME_EXPANSION_16_PLAN.md`
 
 ## Current State
 
@@ -54,18 +55,20 @@ Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen so
 
 **Expansion 15: Expedition Planning And Choice** derives exactly two valid plans in the focused night state, lets the player pin one for the following day, and reduces it to compact active guidance without adding a quest log, map marker, reward, or new content chain. Milestone #41 is complete with owner GO.
 
+**Expansion 16: Deeper Wreck Oxygen Return** is selected by planning gate #1122. It will turn the committed Northwest relay signal into one far-west return through existing contiguous geography, with a recipe-built rebreather that normalizes a source-authored confined-wreck high-consumption oxygen zone. No implementation issue batch or milestone exists yet.
+
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
-- Committed: no implementation milestone is currently selected.
-- Proposed: no later expansion is selected.
-- Directional: durable oxygen-route progression, other regional identities, and exceptional interiors remain uncommitted.
+- Committed: Expansion 16 Deeper Wreck Oxygen Return; implementation batching is the next audit boundary.
+- Proposed: no Expansion 17 direction is selected.
+- Directional: other regional identities and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-Expansion 15 is complete. No later implementation milestone is open.
+Expansion 15 is complete. Expansion 16 is selected in planning, but no later implementation milestone is open yet.
 
 1. [Expansion 15: Expedition Planning And Choice](https://github.com/joeypshell/oceangame2/milestone/41) - complete with owner GO after corrections #1113/#1117/#1119; exact reviewed runtime `23f4172`.
 2. [Expansion 14: Archive Current Return](https://github.com/joeypshell/oceangame2/milestone/40) - complete with owner GO after bounded corrections; exact reviewed runtime `1f148eb`.
