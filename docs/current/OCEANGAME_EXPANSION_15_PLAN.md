@@ -2,10 +2,12 @@
 
 Date: 2026-07-25
 
-Status: Selected by planning gate #1094 and scheduled as milestone #41,
-issues #1095-#1104.
+Status: Complete with owner GO in #1104 after issues #1095-#1103 and bounded
+corrections #1113/#1117/#1119. Exact reviewed runtime: `23f4172`.
 
 Contract: `docs/current/OCEANGAME_EXPANSION_15_SOURCE_STATE_CONTRACT.md`
+
+Closeout: `docs/current/OCEANGAME_EXPANSION_15_CLOSEOUT.md`
 
 ## Decision
 

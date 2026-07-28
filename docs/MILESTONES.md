@@ -1,6 +1,6 @@
 # Milestones
 
-Last updated: 2026-07-25
+Last updated: 2026-07-28
 
 This is the compact milestone index. Detailed direction lives in:
 
@@ -39,31 +39,35 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_14_WEB_PREVIEW_VERIFICATION.md`
 - `docs/current/OCEANGAME_EXPANSION_14_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_15_PLAN.md`
+- `docs/current/OCEANGAME_EXPANSION_15_SOURCE_STATE_CONTRACT.md`
+- `docs/current/OCEANGAME_EXPANSION_15_VISUAL_BASELINE_DECISION.md`
+- `docs/current/OCEANGAME_EXPANSION_15_WEB_PREVIEW_VERIFICATION.md`
+- `docs/current/OCEANGAME_EXPANSION_15_CLOSEOUT.md`
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-14 are complete with player GO. Expansion 15 Expedition Planning And Choice is selected to create one real night decision between existing regional and daily-opportunity leads. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
+Simple Diver Game 01-09 and OceanGame Expansions 01-15 are complete with player GO. Expansion 15 creates one real night decision between existing regional and daily-opportunity leads. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
 **Expansion 14: Archive Current Return** turns the southeast archive discovery into the existing Ti2/Coil1 stabilizer project, one continuous upper-left current return, a wreck-relay payoff, and a small held-cargo/equipment presentation. Milestone #40 is complete with owner GO.
 
-**Expansion 15: Expedition Planning And Choice** will derive exactly two valid plans in the focused night state, let the player pin one for the following day, and reduce it to compact active guidance without adding a quest log, map marker, reward, or new content chain.
+**Expansion 15: Expedition Planning And Choice** derives exactly two valid plans in the focused night state, lets the player pin one for the following day, and reduces it to compact active guidance without adding a quest log, map marker, reward, or new content chain. Milestone #41 is complete with owner GO.
 
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
-- Committed: [Expansion 15 milestone #41](https://github.com/joeypshell/oceangame2/milestone/41), issues #1095-#1104.
+- Committed: no implementation milestone is currently selected.
 - Proposed: no later expansion is selected.
 - Directional: durable oxygen-route progression, other regional identities, and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-Expansion 15 is open with one bounded ten-issue implementation/review batch.
+Expansion 15 is complete. No later implementation milestone is open.
 
-1. [Expansion 15: Expedition Planning And Choice](https://github.com/joeypshell/oceangame2/milestone/41) - open as #1095-#1104; contract through owner gate.
+1. [Expansion 15: Expedition Planning And Choice](https://github.com/joeypshell/oceangame2/milestone/41) - complete with owner GO after corrections #1113/#1117/#1119; exact reviewed runtime `23f4172`.
 2. [Expansion 14: Archive Current Return](https://github.com/joeypshell/oceangame2/milestone/40) - complete with owner GO after bounded corrections; exact reviewed runtime `1f148eb`.
 3. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - complete with owner GO after corrections #980/#982-#990, #1000-#1009, and audio interlude #1020-#1023; exact reviewed runtime `ede39d1`.
 4. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - complete through #941 plus corrections #951-#953, with player GO and exact-SHA Web verification.
@@ -112,14 +116,14 @@ Expansion 15 is open with one bounded ten-issue implementation/review batch.
 
 #1031-#1039 implement the archive-led Current Stabilizer return; #1056/#1057 add the focused checkpoint; #1061/#1063/#1065 and #1069-#1077 correct tool selection, combat feel, scanner inspection/held progress, relay identity, passive equipment, coverage, visual review, and Web handoff. #1087/#1088 close the final scanner-hold and oxygen-failure replay gaps. #1040 records owner GO for exact runtime `1f148eb`; milestone #40 is complete.
 
-## Active Expansion 15
+## Completed Expansion 15
 
-#1094 selects Expedition Planning And Choice. Milestone #41 tracks #1095-#1104 in contract-to-owner order. The plan reuses the unresolved Northwest Wreck Relay journey and forecasted Southwest jellyfish bloom as two distinct source-derived options, stores only a session/day-scoped selected lead, and preserves existing objective, project, profile, map, and HUD ownership.
+#1094 selected Expedition Planning And Choice. #1095-#1104 plus bounded corrections #1113/#1117/#1119 delivered two distinct source-derived options, session/day-scoped selection, compact next-day guidance, reliable build feedback, and directly comparable choice stakes. #1104 records owner GO on exact runtime `23f4172`; milestone #41 is complete.
 
 ## Roadmap Rules
 
 - Do not reopen completed expansion batches merely to keep the queue full.
-- Keep Expansion 15 inside its selected two-lead planning decision; do not absorb a new region, oxygen upgrade, quest journal, or map marker.
+- Run a separate direction audit before selecting or batching the next expansion.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
 - Do not use teleports, prompted connectors, or map menus for normal traversal. Expansion 14 uses one source-authored stabilizer current as a regional capability boundary inside the continuous full level, never as its entry requirement or a transition mechanism.

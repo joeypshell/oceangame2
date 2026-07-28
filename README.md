@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-14 are complete with player GO. Expansion 15 Expedition Planning And Choice is selected to turn existing regional leads and daily opportunities into one deliberate next-day plan. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
+The compact diver foundation and OceanGame Expansions 01-15 are complete with player GO. Expansion 15 turns existing regional leads and daily opportunities into one deliberate next-day plan without changing their underlying progression ownership. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Expansion 14 closed with owner GO after review of exact runtime `1f148eb`. [Expansion 15 milestone #41](https://github.com/joeypshell/oceangame2/milestone/41) now tracks #1095-#1104 for one night expedition-planning choice between source-derived leads. A broad credits economy, teleport, connector-based normal traversal, pure oxygen-capacity gating, and broad pressure progression remain deferred.
+Expansion 15 closed with owner GO after bounded input and choice-clarity corrections on exact runtime `23f4172`. [Milestone #41](https://github.com/joeypshell/oceangame2/milestone/41) is complete; no later expansion is selected. A broad credits economy, teleport, connector-based normal traversal, pure oxygen-capacity gating, and broad pressure progression remain deferred.
 
 Core sources and operating docs:
 
@@ -130,6 +130,10 @@ Current release and expansion handoff:
 - [Expansion 14 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_14_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 14 Closeout](docs/current/OCEANGAME_EXPANSION_14_CLOSEOUT.md)
 - [OceanGame Expansion 15 Expedition Planning And Choice Plan](docs/current/OCEANGAME_EXPANSION_15_PLAN.md)
+- [Expansion 15 Source/State Contract](docs/current/OCEANGAME_EXPANSION_15_SOURCE_STATE_CONTRACT.md)
+- [Expansion 15 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_15_VISUAL_BASELINE_DECISION.md)
+- [Expansion 15 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_15_WEB_PREVIEW_VERIFICATION.md)
+- [Expansion 15 Closeout](docs/current/OCEANGAME_EXPANSION_15_CLOSEOUT.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -263,4 +267,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, react to a forecasted daily opportunity, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-14 meet that condition through the player-approved full cave, regional, light, pressure, southeast-wreck, and archive-current returns.
+The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, choose between known next-day opportunities, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-15 meet that condition through the player-approved full cave, regional, light, pressure, southeast-wreck, archive-current, and expedition-planning returns.

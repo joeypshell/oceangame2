@@ -4,10 +4,31 @@ Date: 2026-07-27
 
 Issue: #1103 `Verify the exact Expansion 15 public Web candidate`
 
+Final update: 2026-07-28
+
+## Final Owner Candidate
+
+The initial #1103 candidate below passed its technical gate. Owner review then
+produced bounded corrections #1117 and #1119 for build-input feedback and
+choice clarity. The final accepted public candidate is:
+
+- exact SHA: `23f4172a9cb169273c129a3ccf1ceb8aeb00a06f`
+- build version: `23f4172`
+- [Godot Web Export run 30283772918](https://github.com/joeypshell/oceangame2/actions/runs/30283772918):
+  success, including GitHub Pages deployment
+- focused checkpoint:
+  `https://joeypshell.github.io/oceangame2/?review=23f4172a9cb169273c129a3ccf1ceb8aeb00a06f&checkpoint=expansion_14_start`
+
+The independent public checker matched the exact final SHA, initialized root,
+fresh-review, checkpoint, and reference-slice modes, verified desktop, wide,
+and iPhone-landscape framing plus touch alignment, and reported no Godot,
+script, resource, request, or browser-console errors. The owner reviewed that
+candidate and gave GO in #1104.
+
 ## Result
 
-**PASS for exact deployment, focused browser controls, and responsive
-framing.** The verified public candidate is:
+**PASS for the initial exact deployment, focused browser controls, and
+responsive framing.** The originally verified #1103 candidate is:
 
 - exact SHA: `28752d7c7cca4d0eecaac9e0b679072428abda07`
 - build version: `28752d7`
@@ -76,7 +97,7 @@ not reset or contaminated.
 
 This verification changes no gameplay, map source, topology, assets, profile
 schema, accepted baselines, workflow, or generated capture. Owner experience
-review and milestone closeout remain scoped to #1104.
+review and milestone closeout completed through #1104.
 
 ## Verification
 
