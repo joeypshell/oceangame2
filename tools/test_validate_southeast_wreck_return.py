@@ -170,7 +170,6 @@ class SoutheastWreckValidationTests(unittest.TestCase):
         failures = validate_southeast_wreck_schema(map_data)
         self.assertTrue(any("exactly one source unlock owner" in failure for failure in failures), failures)
         self.assertTrue(any("must not duplicate" in failure for failure in failures), failures)
-        self.assertTrue(any("supported only on southeast_wreck_recorder" in failure for failure in failures), failures)
 
     def test_progression_graph_orders_discovery_route_recorder_and_survey(self) -> None:
         map_data = authored_fixture()

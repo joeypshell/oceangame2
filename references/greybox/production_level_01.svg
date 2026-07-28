@@ -18,6 +18,7 @@
 <rect x="2592" y="4512" width="1056" height="480" rx="64" fill="#237fad" opacity="0.22"/>
 <rect x="4672" y="4576" width="160" height="288" rx="64" fill="#237fad" opacity="0.22"/>
 <rect x="1792" y="1824" width="160" height="128" rx="64" fill="#237fad" opacity="0.22"/>
+<rect x="480" y="2976" width="224" height="160" rx="64" fill="#237fad" opacity="0.22"/>
 <rect x="0" y="0" width="5056" height="5152" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
 <text x="12.0" y="34.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">production_level_bounds</text>
 <rect x="1216" y="1568" width="32" height="32" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
@@ -66,6 +67,10 @@
 <text x="1708.0" y="1858.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">upper_left_wreck_relay_current</text>
 <rect x="1792" y="1824" width="160" height="128" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
 <text x="1804.0" y="1858.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">upper_left_wreck_relay_landmark</text>
+<rect x="384" y="2880" width="672" height="512" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="396.0" y="2914.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">far_west_confined_wreck_oxygen_zone</text>
+<rect x="480" y="2976" width="224" height="160" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="492.0" y="3010.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">far_west_deeper_wreck_landmark</text>
 <rect x="3456" y="0" width="1056" height="256" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="0" y="0" width="2912" height="320" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="0" y="320" width="2880" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
@@ -479,6 +484,7 @@
 <circle cx="2128.0" cy="2576.0" r="15" fill="#5ce1c8" stroke="#07584f" stroke-width="5"/>
 <rect x="4703.0" y="4767.0" width="34" height="34" fill="#ffad42" stroke="#6e4210" stroke-width="5"/>
 <polygon points="1872.0,1919.0 1889.0,1936.0 1872.0,1953.0 1855.0,1936.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
+<rect x="511.0" y="3071.0" width="34" height="34" fill="#ffad42" stroke="#6e4210" stroke-width="5"/>
 <rect x="2432" y="2304" width="64" height="64" rx="8" fill="#d68cff" stroke="#5b236b" stroke-width="5"/>
 <text x="2440.0" y="2294.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">lower_loop_upgrade_chest</text>
 <rect x="4000" y="1280" width="64" height="64" rx="8" fill="#d68cff" stroke="#5b236b" stroke-width="5"/>
@@ -511,6 +517,9 @@
 <path d="M 1919.0 1852.0 v -9 l 7 -6" fill="none" stroke="#85bdb8" stroke-width="4"/>
 <polygon points="1926.0,1832.0 1931.0,1837.0 1926.0,1842.0 1921.0,1837.0" fill="#ffb83d"/>
 <text x="1896.0" y="1846.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">upper_left_wreck_relay_survey</text>
+<rect x="480" y="3040" width="64" height="64" rx="8" fill="#69f0dc" fill-opacity="0.28" stroke="#07584f" stroke-width="6"/>
+<circle cx="512.0" cy="3072.0" r="14" fill="none" stroke="#69f0dc" stroke-width="6"/>
+<text x="488.0" y="3030.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">far_west_deeper_wreck_survey</text>
 <circle cx="4048.0" cy="1488.0" r="17" fill="#b8f36b" stroke="#3f6619" stroke-width="5"/>
 <circle cx="4036.0" cy="1496.0" r="8" fill="#b8f36b" stroke="#3f6619" stroke-width="4"/>
 <text x="4072.0" y="1522.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="20" paint-order="stroke" stroke="#10384a" stroke-width="4">upper_right_glow_anemone_sample</text>

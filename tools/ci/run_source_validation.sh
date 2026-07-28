@@ -6,6 +6,7 @@ git diff --check
 python tools/test_validate_progression_containers.py
 python tools/test_validate_regional_journeys.py
 python tools/test_validate_deeper_wreck_return.py
+python tools/test_production_level_01_expansion_16.py
 python tools/test_validate_expansion_14_contract.py
 python tools/test_validate_southeast_wreck_return.py
 python tools/test_validate_tool_target_rewards.py

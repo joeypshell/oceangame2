@@ -52,8 +52,29 @@ def contract_with_rebreather() -> dict:
     return contract
 
 
-def authored_fixture() -> dict:
+def map_without_records() -> dict:
     map_data = json.loads(MAP_PATH.read_text(encoding="utf-8"))
+    ids_by_collection = {
+        "material_projects": {PROJECT_ID},
+        "zones": {ZONE_ID, LANDMARK_ID},
+        "background": {BACKGROUND_ID},
+        "entities": {TOOL_TARGET_ID},
+        "regional_journeys": {ROUTE_ID},
+        "survey_targets": {SURVEY_ID},
+    }
+    for collection, record_ids in ids_by_collection.items():
+        map_data[collection] = [
+            item for item in map_data.get(collection, [])
+            if item.get("id") not in record_ids
+        ]
+    source = map_data.get("source")
+    if isinstance(source, dict):
+        source.pop("expansion_16", None)
+    return map_data
+
+
+def authored_fixture() -> dict:
+    map_data = map_without_records()
     map_data["material_projects"].append({
         "id": PROJECT_ID,
         **copy.deepcopy(PROJECT_VALUES),
@@ -70,10 +91,10 @@ def authored_fixture() -> dict:
         {
             "id": LANDMARK_ID,
             "type": "marker",
-            "x": 12,
-            "y": 90,
-            "w": 21,
-            "h": 16,
+            "x": 15,
+            "y": 93,
+            "w": 7,
+            "h": 5,
             "regional_landmark": True,
             "regional_journey_id": ROUTE_ID,
             "landmark_label": "Far-West Deeper Wreck",
@@ -82,10 +103,10 @@ def authored_fixture() -> dict:
     map_data["background"].append({
         "id": BACKGROUND_ID,
         "type": "background",
-        "x": 12,
-        "y": 90,
-        "w": 21,
-        "h": 16,
+        "x": 15,
+        "y": 93,
+        "w": 7,
+        "h": 5,
         "regional_landmark": True,
         "regional_journey_id": ROUTE_ID,
     })
@@ -109,12 +130,6 @@ def authored_fixture() -> dict:
         **copy.deepcopy(SURVEY_VALUES),
     })
     return map_data
-
-
-def map_without_records() -> dict:
-    return json.loads(MAP_PATH.read_text(encoding="utf-8"))
-
-
 class DeeperWreckValidationTests(unittest.TestCase):
     def test_accepts_exact_chain_and_route_equations(self) -> None:
         map_data = authored_fixture()

@@ -28,4 +28,15 @@ CANONICAL_EXTENSION_CHAINS = (
             "upper_left_wreck_relay_discovery",
         ),
     ),
+    (
+        "far_west_deeper_wreck_route",
+        (
+            "upper_left_wreck_relay_discovery",
+            "closed_circuit_rebreather_project",
+            "closed_circuit_rebreather",
+            "far_west_deeper_wreck_route",
+            "far_west_deeper_wreck_survey",
+            "far_west_deeper_wreck_discovery",
+        ),
+    ),
 )

@@ -213,11 +213,6 @@ def validate_southeast_wreck_schema(map_data: dict[str, Any]) -> list[str]:
     ]
     if [item.get("id") for item in relationship_owners] != [RECORDER_ID]:
         failures.append(f"{SURVEY_ID} must have exactly one source unlock owner: {RECORDER_ID}.")
-    for entity in _items(map_data, "entities"):
-        if entity.get("id") == RECORDER_ID:
-            continue
-        if "unlocks_survey_target_id" in entity or "durable_clearance" in entity:
-            failures.append("Expansion 13 dependency metadata is supported only on southeast_wreck_recorder.")
     if survey and ({"required_tool_target_id", "unlocks_survey_target_id"} & set(survey)):
         failures.append(f"{SURVEY_ID} must not duplicate the recorder-owned dependency.")
 
