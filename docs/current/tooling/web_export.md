@@ -8,7 +8,7 @@ python tools/write_build_info.py
 
 This writes ignored `build_info.json`. The web export workflow generates that file from `GITHUB_SHA` before export, so the public preview can identify the deployed commit.
 
-The latest exact-SHA Pages and checkpoint verification is recorded in [OceanGame Expansion 14 Web Preview Verification](../OCEANGAME_EXPANSION_14_WEB_PREVIEW_VERIFICATION.md). The [OceanGame Expansion 14 Visual Baseline Decision](../OCEANGAME_EXPANSION_14_VISUAL_BASELINE_DECISION.md) remains the latest visual-baseline decision, and the older [Simple Diver Game 08 Web Export Handoff](../SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md) remains the release-candidate foundation.
+The latest exact-SHA Pages and checkpoint verification is recorded in [OceanGame Expansion 16 Web Preview Verification](../OCEANGAME_EXPANSION_16_WEB_PREVIEW_VERIFICATION.md). The [OceanGame Expansion 16 Visual Baseline Decision](../OCEANGAME_EXPANSION_16_VISUAL_BASELINE_DECISION.md) is the latest visual-baseline decision, and the older [Simple Diver Game 08 Web Export Handoff](../SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md) remains the release-candidate foundation.
 
 Build a local Web export preview:
 
@@ -51,5 +51,11 @@ prior projects complete, the Current Stabilizer unbuilt, and Ti2 + Coil1
 banked. The Web checker requires the checkpoint marker and full-level map
 marker. Unsupported checkpoint ids fall back to an empty isolated profile;
 there is no arbitrary profile-state injection.
+
+For focused Expansion 16 review, use
+`https://joeypshell.github.io/oceangame2/?review=<sha>&checkpoint=expansion_16_start`.
+This isolated checkpoint starts at the boat with prior required tools and
+discoveries complete, Ti1 + Rubber1 + Coil1 + Gel1 banked, and the
+closed-circuit rebreather plus far-west discovery unresolved.
 
 The public root and `https://joeypshell.github.io/oceangame2/?review=<sha>` now load `production_level_01`; the review query still isolates profile state. To review a retained slice fixture, add an explicit supported map, for example `?review=<sha>&map=production_slice_01`. A bare `map` query without `review` does not override the default. The Web checker verifies the full-level default and explicit slice-01 fallback at desktop and mobile browser sizes.
