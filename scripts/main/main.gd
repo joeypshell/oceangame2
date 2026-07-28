@@ -111,6 +111,7 @@ const SmokeExpansion13SoutheastWreckReturnChecks := preload("res://scripts/main/
 const SmokeExpansion13ScannerCutterCorrectionChecks := preload("res://scripts/main/smoke/smoke_expansion_13_scanner_cutter_correction_checks.gd")
 const SmokeExpansion14ArchiveCurrentReturnChecks := preload("res://scripts/main/smoke/smoke_expansion_14_archive_current_return_checks.gd")
 const SmokeExpansion15ExpeditionPlanningChecks := preload("res://scripts/main/smoke/smoke_expansion_15_expedition_planning_checks.gd")
+const SmokeExpansion16DeeperWreckChecks := preload("res://scripts/main/smoke/smoke_expansion_16_deeper_wreck_checks.gd")
 const SmokeReleaseJourneyChecks := preload("res://scripts/main/smoke/smoke_release_journey_checks.gd")
 const UpgradeChestCapture := preload("res://scripts/main/captures/upgrade_chest_capture.gd")
 const DEFAULT_MAP_PATH := MapCatalog.DEFAULT_MAP_PATH
@@ -484,6 +485,7 @@ func _ready() -> void:
 	var smoke_expansion_13_scanner_cutter_correction := _has_arg(user_args, engine_args, "--smoke-expansion-13-scanner-cutter-correction")
 	var smoke_expansion_14_archive_current_return := _has_arg(user_args, engine_args, "--smoke-expansion-14-archive-current-return")
 	var smoke_expansion_15_expedition_planning := _has_arg(user_args, engine_args, "--smoke-expansion-15-expedition-planning")
+	var smoke_expansion_16_deeper_wreck := _has_arg(user_args, engine_args, "--smoke-expansion-16-deeper-wreck")
 	var smoke_active_tool_selection := _has_arg(user_args, engine_args, "--smoke-active-tool-selection")
 	var smoke_checkpoint_shock_prod := _has_arg(user_args, engine_args, "--smoke-checkpoint-shock-prod")
 	var requested_map_path := MapCatalog.requested_map_path(user_args, engine_args)
@@ -701,6 +703,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
 	elif smoke_expansion_15_expedition_planning:
 		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
+	elif smoke_expansion_16_deeper_wreck:
+		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
 	elif not requested_map_path.is_empty():
 		selected_map_path = requested_map_path
 	var checkpoint_map_path := ReviewCheckpointFixture.required_map_path(_review_checkpoint_id)
@@ -838,6 +842,7 @@ func _ready() -> void:
 		or smoke_expansion_13_scanner_cutter_correction
 		or smoke_expansion_14_archive_current_return
 		or smoke_expansion_15_expedition_planning
+		or smoke_expansion_16_deeper_wreck
 		or smoke_active_tool_selection
 		or smoke_checkpoint_shock_prod
 		or _has_arg(user_args, engine_args, "--capture-greybox-screenshot")
@@ -847,7 +852,7 @@ func _ready() -> void:
 	var profile_state = null
 	if smoke_expansion_13_scanner_cutter_correction:
 		profile_state = SmokeExpansion13ScannerCutterCorrectionChecks.create_clean_profile()
-	elif smoke_expansion_11_light_return or smoke_expansion_12_pressure_return or smoke_expansion_13_southeast_wreck_return or smoke_expansion_14_archive_current_return:
+	elif smoke_expansion_11_light_return or smoke_expansion_12_pressure_return or smoke_expansion_13_southeast_wreck_return or smoke_expansion_14_archive_current_return or smoke_expansion_16_deeper_wreck:
 		profile_state = SmokeExpansion11LightReturnChecks.create_clean_profile()
 	_anomaly_survey = AnomalySurveyRuntime.new(_progression_runtime, profile_persistence_enabled, profile_state)
 	if not _review_checkpoint_id.is_empty():
@@ -1027,6 +1032,9 @@ func _ready() -> void:
 		return
 	if smoke_expansion_15_expedition_planning:
 		SmokeExpansion15ExpeditionPlanningChecks.new(self)._smoke_expansion_15_expedition_planning_and_quit()
+		return
+	if smoke_expansion_16_deeper_wreck:
+		await SmokeExpansion16DeeperWreckChecks.new(self)._smoke_expansion_16_deeper_wreck_and_quit()
 		return
 	if smoke_oxygen_pressure:
 		_smoke_interaction_checks._smoke_oxygen_pressure_and_quit()
