@@ -382,6 +382,8 @@ func _knowledge_label(project: Dictionary) -> String:
 		return "Signal Reef chart"
 	if str(project.get("required_discovery_id", "")) == ExpansionProfileState.DEEP_HARMONIC_DISCOVERY_ID:
 		return "deep harmonic chart"
+	if str(project.get("required_discovery_id", "")) == ExpansionProfileState.UPPER_LEFT_WRECK_RELAY_DISCOVERY_ID:
+		return "Northwest wreck relay finding"
 	return "salvage cutter plan"
 
 
@@ -428,6 +430,17 @@ func _material_progress_text(project: Dictionary) -> String:
 			_profile.material_quantity(ExpansionProfileState.INSULATING_GEL_MATERIAL_ID),
 			int(required.get(ExpansionProfileState.INSULATING_GEL_MATERIAL_ID, 0)),
 		]
+	if str(project.get("id", "")) == ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_PROJECT_ID:
+		return "Ti %d/%d | Rubber %d/%d | Coil %d/%d | Gel %d/%d" % [
+			_profile.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.TITANIUM_MATERIAL_ID, 0)),
+			_profile.material_quantity(ExpansionProfileState.RUBBER_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.RUBBER_MATERIAL_ID, 0)),
+			_profile.material_quantity(ExpansionProfileState.COIL_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.COIL_MATERIAL_ID, 0)),
+			_profile.material_quantity(ExpansionProfileState.INSULATING_GEL_MATERIAL_ID),
+			int(required.get(ExpansionProfileState.INSULATING_GEL_MATERIAL_ID, 0)),
+		]
 	return "Ti %d/%d | Coil %d/%d" % [
 		_profile.material_quantity(ExpansionProfileState.TITANIUM_MATERIAL_ID),
 		int(required.get(ExpansionProfileState.TITANIUM_MATERIAL_ID, 0)),
@@ -451,6 +464,8 @@ func _project_effect_lines(project: Dictionary) -> Array[String]:
 		ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID:
 			if str(project.get("target_gate_id", "")) == RELAY_CURRENT_GATE_ID:
 				return ["Access: Northwest wreck relay | Swim through current"]
+		ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_PROJECT_ID:
+			return ["Effect: normal oxygen drain in confined wreck air"]
 	return []
 
 

@@ -11,6 +11,7 @@ run_godot material-sprite-assets 120 --headless --path . --script res://scripts/
 run_godot durable-light-project-state 120 --headless --path . --script res://scripts/main/smoke/smoke_durable_light_project_state.gd
 run_godot pressure-suit-project-state 120 --headless --path . --script res://scripts/main/smoke/smoke_pressure_suit_project_state.gd
 run_godot pressure-zone-state 120 --headless --path . --script res://scripts/main/smoke/smoke_pressure_zone_state.gd
+run_godot oxygen-consumption-zone-state 120 --headless --path . --script res://scripts/main/smoke/smoke_oxygen_consumption_zone_state.gd
 run_godot salvage-loop 120 --headless --path . --quit-after 1 --smoke-salvage-loop
 
 score_smokes=(

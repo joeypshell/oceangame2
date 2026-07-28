@@ -70,6 +70,19 @@ const RULES := {
 		"target_id": "abyssal_basin_harmonic_source_survey",
 		"required_materials": {"titanium_scrap": 2, "rubber_sheet": 1, "insulating_gel": 1},
 	},
+	"closed_circuit_rebreather_project": {
+		"capability_id": "closed_circuit_rebreather",
+		"required_discovery_id": "upper_left_wreck_relay_discovery",
+		"required_project_id": "",
+		"target_field": "target_id",
+		"target_id": "far_west_confined_wreck_oxygen_zone",
+		"required_materials": {
+			"titanium_scrap": 1,
+			"rubber_sheet": 1,
+			"conductive_coil": 1,
+			"insulating_gel": 1,
+		},
+	},
 }
 
 
