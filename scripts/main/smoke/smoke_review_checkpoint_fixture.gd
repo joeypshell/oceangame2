@@ -16,13 +16,14 @@ func _init() -> void:
 func _run() -> void:
 	_test_argument_contract()
 	_test_expansion_14_boundary()
+	_test_expansion_16_boundary()
 	_test_unknown_checkpoint_fallback()
 	if not _failures.is_empty():
 		for failure in _failures:
 			push_error("Review checkpoint smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Review checkpoint smoke passed: id=expansion_14_start persistence=false prior_projects=7 archive=true recipe=Ti2+Coil1 stabilizer=false relay=false unknown=fresh.")
+	print("Review checkpoint smoke passed: expansion14=Ti2+Coil1 expansion16=Ti1+Rubber1+Coil1+Gel1 persistence=false unknown=fresh.")
 	quit(0)
 
 
@@ -32,6 +33,8 @@ func _test_argument_contract() -> void:
 	_expect(ReviewProfileMode.checkpoint_id(local_args, PackedStringArray()) == ReviewCheckpointFixture.EXPANSION_14_START, "equals-form local checkpoint was not parsed")
 	_expect(ReviewProfileMode.checkpoint_id(split_args, PackedStringArray()) == ReviewCheckpointFixture.EXPANSION_14_START, "split-form local checkpoint was not parsed")
 	_expect(ReviewProfileMode.checkpoint_from_web_query("?review=abc&checkpoint=EXPANSION_14_START") == ReviewCheckpointFixture.EXPANSION_14_START, "Web checkpoint was not normalized")
+	_expect(ReviewProfileMode.checkpoint_id(PackedStringArray(["--review-checkpoint=expansion_16_start"]), PackedStringArray()) == ReviewCheckpointFixture.EXPANSION_16_START, "Expansion 16 local checkpoint was not parsed")
+	_expect(ReviewProfileMode.checkpoint_from_web_query("?checkpoint=EXPANSION_16_START") == ReviewCheckpointFixture.EXPANSION_16_START, "Expansion 16 Web checkpoint was not normalized")
 	_expect(ReviewProfileMode.requested(local_args, PackedStringArray()), "checkpoint did not imply isolated review mode")
 	_expect(not ReviewProfileMode.persistence_enabled(false, true), "isolated review mode enabled persistence")
 
@@ -61,6 +64,34 @@ func _test_expansion_14_boundary() -> void:
 	var project_report: Dictionary = project_runtime.on_map_loaded(world)
 	_expect(project_report.get("project_id") == ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID, "checkpoint did not select the Current Stabilizer project")
 	_expect(project_runtime.status() == "ready", "checkpoint did not make the exact stabilizer recipe ready")
+	world.queue_free()
+
+
+func _test_expansion_16_boundary() -> void:
+	var profile := ExpansionProfileState.new("", false)
+	profile.load_profile()
+	var applied: Dictionary = ReviewCheckpointFixture.apply(ReviewCheckpointFixture.EXPANSION_16_START, profile)
+	var report: Dictionary = profile.report()
+	_expect(bool(applied.get("ready", false)), "Expansion 16 checkpoint did not apply: %s" % applied)
+	_expect(applied.get("map_path") == ReviewCheckpointFixture.EXPANSION_16_MAP_PATH, "Expansion 16 checkpoint did not require the full production level")
+	_expect(report.get("completed_projects", []).size() == ReviewCheckpointFixture.EXPANSION_16_PRIOR_PROJECT_IDS.size(), "Expansion 16 checkpoint did not complete exactly the prior project set")
+	for project_id in ReviewCheckpointFixture.EXPANSION_16_PRIOR_PROJECT_IDS:
+		_expect(profile.has_completed_project(project_id), "Expansion 16 checkpoint omitted prior project %s" % project_id)
+	_expect(profile.has_completed_discovery(ExpansionProfileState.UPPER_LEFT_WRECK_RELAY_DISCOVERY_ID), "Expansion 16 checkpoint omitted the relay discovery")
+	_expect(profile.has_banked_tool_target(ExpansionProfileState.SOUTHEAST_WRECK_RECORDER_ID), "Expansion 16 checkpoint omitted the banked archive recorder")
+	_expect(profile.material_inventory() == ReviewCheckpointFixture.REBREATHER_RECIPE, "Expansion 16 recipe was not exactly Ti1 + Rubber1 + Coil1 + Gel1")
+	_expect(not profile.has_completed_project(ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_PROJECT_ID), "Expansion 16 checkpoint prebuilt the rebreather")
+	_expect(not profile.has_capability(ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_CAPABILITY_ID), "Expansion 16 checkpoint granted the rebreather capability")
+	_expect(not profile.has_completed_discovery(ExpansionProfileState.FAR_WEST_WRECK_DISCOVERY_ID), "Expansion 16 checkpoint pre-completed the far-west payoff")
+	_expect(not profile.has_banked_tool_target(ExpansionProfileState.FAR_WEST_WRECK_RECORDER_ID), "Expansion 16 checkpoint pre-cleared the far-west recorder")
+	var world = WORLD_SCENE.instantiate()
+	world.map_path = ReviewCheckpointFixture.EXPANSION_16_MAP_PATH
+	get_root().add_child(world)
+	world.load_greybox()
+	var project_runtime := MaterialProjectRuntime.new(profile)
+	var project_report: Dictionary = project_runtime.on_map_loaded(world)
+	_expect(project_report.get("project_id") == ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_PROJECT_ID, "checkpoint did not select the rebreather project")
+	_expect(project_runtime.status() == "ready", "checkpoint did not make the exact rebreather recipe ready")
 	world.queue_free()
 
 
