@@ -69,6 +69,16 @@
 <text x="1804.0" y="1858.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">upper_left_wreck_relay_landmark</text>
 <rect x="384" y="2880" width="672" height="512" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
 <text x="396.0" y="2914.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">far_west_confined_wreck_oxygen_zone</text>
+<rect x="3136" y="3264" width="32" height="64" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="3148.0" y="3298.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">far_west_route_beacon_01</text>
+<rect x="2496" y="3488" width="32" height="64" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="2508.0" y="3522.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">far_west_route_beacon_02</text>
+<rect x="1920" y="3040" width="32" height="64" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="1932.0" y="3074.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">far_west_route_beacon_03</text>
+<rect x="1472" y="3008" width="32" height="64" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="1484.0" y="3042.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">far_west_route_beacon_04</text>
+<rect x="1056" y="2976" width="160" height="96" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="1068.0" y="3010.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">far_west_confined_wreck_warning</text>
 <rect x="480" y="2976" width="224" height="160" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
 <text x="492.0" y="3010.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">far_west_deeper_wreck_landmark</text>
 <rect x="3456" y="0" width="1056" height="256" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>

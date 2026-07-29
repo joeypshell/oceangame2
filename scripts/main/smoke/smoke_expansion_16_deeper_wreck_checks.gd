@@ -1,10 +1,12 @@
 extends "res://scripts/main/smoke/smoke_expansion_14_archive_current_return_checks.gd"
 
 const ReviewCheckpointFixture := preload("res://scripts/main/review_checkpoint_fixture.gd")
+const RegionalJourneyPresentation16 := preload("res://scripts/main/regional_journey_presentation.gd")
 const SessionProgression16 := preload("res://scripts/main/session_progression.gd")
 
 const ROUTE_ID_16 := "far_west_deeper_wreck_route"
 const ZONE_ID_16 := "far_west_confined_wreck_oxygen_zone"
+const WARNING_ZONE_ID_16 := "far_west_confined_wreck_warning"
 const RECORDER_ID_16 := "far_west_wreck_data_recorder"
 const SURVEY_ID_16 := "far_west_deeper_wreck_survey"
 const DISCOVERY_ID_16 := "far_west_deeper_wreck_discovery"
@@ -24,6 +26,7 @@ var _actual_minimum_oxygen := 0.0
 var _zone_multiplier := 1.0
 var _actual_distance := 0.0
 var _boat_result_16 := ""
+var _route_guidance := ""
 
 
 func _smoke_expansion_16_deeper_wreck_and_quit() -> void:
@@ -72,6 +75,11 @@ func _smoke_expansion_16_deeper_wreck_and_quit() -> void:
 
 func _prepare_checkpoint() -> bool:
 	var profile = _main._anomaly_survey.profile_state()
+	var presentation := RegionalJourneyPresentation16.new()
+	var empty_profile := ProfileState.new("", false)
+	var hidden_before_prerequisite: String = presentation.promise_text(_world, empty_profile)
+	presentation.sync_route_guidance(_world, empty_profile)
+	var markers_hidden_before_prerequisite: bool = not _world.is_route_guidance_visible(ROUTE_ID_16)
 	var applied: Dictionary = ReviewCheckpointFixture.apply(
 		ReviewCheckpointFixture.EXPANSION_16_START,
 		profile
@@ -88,6 +96,8 @@ func _prepare_checkpoint() -> bool:
 	_starting_health = int(_main._player_health.current_health)
 	_prepare_controlled_movement()
 	_minimum_oxygen = _oxygen_seconds
+	_route_guidance = presentation.promise_text(_world, profile)
+	presentation.sync_route_guidance(_world, profile)
 	return _require(
 		bool(applied.get("ready", false))
 		and _world.map_id == MAP_ID
@@ -97,6 +107,14 @@ func _prepare_checkpoint() -> bool:
 		and not profile.has_capability(ProfileState.CLOSED_CIRCUIT_REBREATHER_CAPABILITY_ID)
 		and _main._material_project.status_for(ProfileState.CLOSED_CIRCUIT_REBREATHER_PROJECT_ID) == "ready",
 		"Expansion 16 checkpoint boundary drifted: %s" % applied
+	) and _require(
+		hidden_before_prerequisite.is_empty()
+		and markers_hidden_before_prerequisite
+		and _route_guidance == "Far-west wreck | Follow cyan relay beacons west",
+		"Expansion 16 route guidance was mistimed: before=%s after=%s" % [
+			hidden_before_prerequisite,
+			_route_guidance,
+		]
 	)
 
 
@@ -104,7 +122,8 @@ func _route_contract() -> Dictionary:
 	var recorder := _tool_target_by_id(RECORDER_ID_16)
 	var survey := _survey_by_id(SURVEY_ID_16)
 	var zone: Dictionary = _world.get_marker_zone(ZONE_ID_16)
-	if not _require(not recorder.is_empty() and not survey.is_empty() and not zone.is_empty(), "deeper-wreck route records are missing"):
+	var warning: Dictionary = _world.get_marker_zone(WARNING_ZONE_ID_16)
+	if not _require(not recorder.is_empty() and not survey.is_empty() and not zone.is_empty() and not warning.is_empty(), "deeper-wreck route records are missing"):
 		return {}
 	var navigation = _navigation_for("", PASSABLE_CAPABILITIES_16, RECORDER_ID_16)
 	var boat: Vector2 = _world.get_entry_position(BOAT_ENTRY_ID)
@@ -134,6 +153,7 @@ func _route_contract() -> Dictionary:
 		"recorder": recorder,
 		"survey": survey,
 		"probe": probe,
+		"warning": warning,
 	} if _require(
 		probe != Vector2.INF
 		and _protected_demand + RETURN_RESERVE_SECONDS <= base + 0.01
@@ -147,6 +167,18 @@ func _prove_unprotected_scout(route: Dictionary) -> bool:
 	var navigation = route["navigation"]
 	var probe: Vector2 = route["probe"]
 	_minimum_oxygen = _oxygen_seconds
+	var warning: Dictionary = route["warning"]
+	if not await _drive_to("expansion_16_approach_warning", _source_rect(warning).get_center(), navigation):
+		return false
+	var warning_report: Dictionary = _main._oxygen_consumption_zone.report()
+	if not _require(
+		bool(warning_report.get("near_threshold", false))
+		and not bool(warning_report.get("inside", true))
+		and is_equal_approx(float(warning_report.get("drain_multiplier", 0.0)), 1.0)
+		and str(warning_report.get("note", "")).find("Oxygen x8") != -1,
+		"approach did not warn before accelerated oxygen began"
+	):
+		return false
 	if not await _drive_to("expansion_16_unprotected_scout", probe, navigation):
 		return false
 	var grace := float(_world.get_marker_zone(ZONE_ID_16).get("warning_grace_seconds", 0.0))
@@ -176,6 +208,13 @@ func _build_rebreather() -> bool:
 	var recipe_after_wrong_phase: Dictionary = profile.material_inventory()
 	var built: Dictionary = _main._material_project.try_build(ExpeditionDayState.PHASE_DEBRIEF)
 	var repeated: Dictionary = _main._material_project.try_build(ExpeditionDayState.PHASE_DEBRIEF)
+	var warning: Dictionary = _world.get_marker_zone(WARNING_ZONE_ID_16)
+	_main._oxygen_consumption_zone.reset()
+	var threshold_report: Dictionary = _main._oxygen_consumption_zone.update(
+		_source_rect(warning).get_center(),
+		Callable(profile, "has_capability"),
+		0.0
+	)
 	return _require(
 		wrong_phase.get("reason") == "wrong_phase"
 		and recipe_after_wrong_phase == recipe_before
@@ -186,6 +225,11 @@ func _build_rebreather() -> bool:
 		and profile.has_capability(ProfileState.CLOSED_CIRCUIT_REBREATHER_CAPABILITY_ID)
 		and profile.report().get("completed_projects", []).count(ProfileState.CLOSED_CIRCUIT_REBREATHER_PROJECT_ID) == 1,
 		"night project did not consume the exact recipe and grant one durable rebreather"
+	) and _require(
+		bool(threshold_report.get("near_threshold", false))
+		and bool(threshold_report.get("protected", false))
+		and str(threshold_report.get("note", "")).begins_with("Rebreather ready"),
+		"protected threshold did not confirm the rebreather"
 	)
 
 
@@ -228,12 +272,17 @@ func _complete_protected_journey(route: Dictionary) -> bool:
 	_actual_minimum_oxygen = _minimum_oxygen
 	_boat_result_16 = _main._anomaly_survey.result_text()
 	var profile = _main._anomaly_survey.profile_state()
+	var presentation := RegionalJourneyPresentation16.new()
+	var guidance_after_finding: String = presentation.promise_text(_world, profile)
+	presentation.sync_route_guidance(_world, profile)
 	return _require(
 		_actual_minimum_oxygen > 0.0
 		and profile.has_banked_tool_target(RECORDER_ID_16)
 		and profile.has_completed_discovery(DISCOVERY_ID_16)
 		and not _main._anomaly_survey.has_pending_discovery()
-		and _boat_result_16 == "%s\n%s" % [survey.get("finding_label", ""), survey.get("next_lead_label", "")],
+		and _boat_result_16 == "%s\n%s" % [survey.get("finding_label", ""), survey.get("next_lead_label", "")]
+		and guidance_after_finding.is_empty()
+		and _world.is_route_guidance_visible(ROUTE_ID_16),
 		"protected operation did not return and commit at the canonical boat"
 	)
 

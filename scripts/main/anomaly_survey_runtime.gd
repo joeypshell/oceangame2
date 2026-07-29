@@ -232,6 +232,7 @@ func clear_unbanked(reason: String, world = null) -> Dictionary:
 
 
 func overlay_text(world, player) -> String:
+	_regional_presentation.sync_route_guidance(world, _profile)
 	if _expedition.has_pending():
 		return _scanner_feedback.pending_return_text(_expedition.pending_metadata())
 	var active_target_id := str(_interaction.report().get("active_target_id", ""))

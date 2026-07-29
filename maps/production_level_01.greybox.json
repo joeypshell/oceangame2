@@ -1520,6 +1520,11 @@
       ],
       "zone_ids": [
         "far_west_confined_wreck_oxygen_zone",
+        "far_west_route_beacon_01",
+        "far_west_route_beacon_02",
+        "far_west_route_beacon_03",
+        "far_west_route_beacon_04",
+        "far_west_confined_wreck_warning",
         "far_west_deeper_wreck_landmark"
       ],
       "entity_ids": [
@@ -1529,6 +1534,7 @@
         "far_west_deeper_wreck_survey"
       ],
       "camera_test_ids": [
+        "expansion_16_route_guidance",
         "expansion_16_rebreather_project",
         "expansion_16_oxygen_threshold",
         "expansion_16_unprotected_retreat",
@@ -1541,10 +1547,10 @@
       "review_bounds": {
         "x": 12,
         "y": 90,
-        "w": 21,
-        "h": 32
+        "w": 87,
+        "h": 21
       },
-      "intent": "Source-authored oxygen return metadata in existing continuous water."
+      "intent": "Source-authored oxygen return and guidance metadata in existing continuous water."
     }
   },
   "units": {
@@ -4875,6 +4881,69 @@
       "intent": "Accelerate oxygen only inside the far-west confined-wreck approach while preserving ordinary swimming and retreat."
     },
     {
+      "id": "far_west_route_beacon_01",
+      "type": "marker",
+      "x": 98,
+      "y": 102,
+      "w": 1,
+      "h": 2,
+      "route_guidance_marker": true,
+      "guidance_kind": "relay_beacon",
+      "route_context": "far_west_deeper_wreck_route",
+      "intent": "First cyan relay breadcrumb on the continuous lower route from the boat."
+    },
+    {
+      "id": "far_west_route_beacon_02",
+      "type": "marker",
+      "x": 78,
+      "y": 109,
+      "w": 1,
+      "h": 2,
+      "route_guidance_marker": true,
+      "guidance_kind": "relay_beacon",
+      "route_context": "far_west_deeper_wreck_route",
+      "intent": "Second cyan relay breadcrumb through the lower route."
+    },
+    {
+      "id": "far_west_route_beacon_03",
+      "type": "marker",
+      "x": 60,
+      "y": 95,
+      "w": 1,
+      "h": 2,
+      "route_guidance_marker": true,
+      "guidance_kind": "relay_beacon",
+      "route_context": "far_west_deeper_wreck_route",
+      "intent": "Third cyan relay breadcrumb at the far-west approach."
+    },
+    {
+      "id": "far_west_route_beacon_04",
+      "type": "marker",
+      "x": 46,
+      "y": 94,
+      "w": 1,
+      "h": 2,
+      "route_guidance_marker": true,
+      "guidance_kind": "relay_beacon",
+      "route_context": "far_west_deeper_wreck_route",
+      "intent": "Final cyan relay breadcrumb before the confined-wreck threshold."
+    },
+    {
+      "id": "far_west_confined_wreck_warning",
+      "type": "marker",
+      "x": 33,
+      "y": 93,
+      "w": 5,
+      "h": 3,
+      "route_guidance_marker": true,
+      "guidance_kind": "oxygen_threshold",
+      "oxygen_warning_for_zone_id": "far_west_confined_wreck_oxygen_zone",
+      "oxygen_warning_label": "Confined wreck ahead | Oxygen x8 | Retreat",
+      "protected_warning_label": "Rebreather ready | Confined wreck ahead",
+      "route_context": "far_west_deeper_wreck_route",
+      "intent": "Warn in open water immediately before accelerated oxygen consumption."
+    },
+    {
       "id": "far_west_deeper_wreck_landmark",
       "type": "marker",
       "x": 15,
@@ -4969,6 +5038,7 @@
       "survey_target_id": "far_west_deeper_wreck_survey",
       "commit_entry_id": "surface_boat_entry",
       "route_context": "far_west_deeper_wreck_route",
+      "approach_guidance": "Far-west wreck | Follow cyan relay beacons west",
       "intent": "Turn the committed relay signal and night-built rebreather into one continuous far-west wreck operation and canonical-boat return."
     }
   ],
@@ -6213,6 +6283,13 @@
       "center_y": 12.0,
       "zoom": 0.55,
       "intent": "Held relay cargo and pending discovery returning to the canonical boat."
+    },
+    {
+      "id": "expansion_16_route_guidance",
+      "center_x": 46.0,
+      "center_y": 95.0,
+      "zoom": 0.48,
+      "intent": "Cyan route breadcrumb and concise far-west approach guidance."
     },
     {
       "id": "expansion_16_rebreather_project",

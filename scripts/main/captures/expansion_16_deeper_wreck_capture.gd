@@ -11,6 +11,7 @@ const ZONE_ID := "far_west_confined_wreck_oxygen_zone"
 const RECORDER_ID := "far_west_wreck_data_recorder"
 const SURVEY_ID := "far_west_deeper_wreck_survey"
 const CAMERA_IDS := {
+	"route": "expansion_16_route_guidance",
 	"threshold": "expansion_16_oxygen_threshold",
 	"cut": "expansion_16_recorder_cut",
 	"survey": "expansion_16_recorder_survey",
@@ -31,6 +32,10 @@ func capture_and_quit(capture_dir: String) -> void:
 	var camera_tests := _camera_tests_by_id()
 	if camera_tests.size() != CAMERA_IDS.size():
 		_fail("authored Expansion 16 camera tests are incomplete: %s" % str(camera_tests.keys()))
+		return
+	if not _prepare_route_guidance(camera_tests[CAMERA_IDS["route"]]):
+		return
+	if not await _renderer.capture_pair(capture_dir, "route_guidance", camera_tests[CAMERA_IDS["route"]]):
 		return
 	if not _prepare_unprotected_warning(camera_tests[CAMERA_IDS["threshold"]]):
 		return
@@ -94,6 +99,17 @@ func _refresh_runtime_sources() -> void:
 	_main._cutter_salvage.on_map_loaded(_main._world)
 	_main._oxygen_consumption_zone.on_map_loaded(_main._world)
 	_main._refresh_active_tools()
+
+
+func _prepare_route_guidance(camera_test: Dictionary) -> bool:
+	_main._oxygen_consumption_zone.reset()
+	_place_at_camera_center(camera_test)
+	_main._last_status_note = ""
+	_main._update_status_label()
+	return _expect(
+		_status_text().find("Far-west wreck | Follow cyan relay beacons west") != -1,
+		"route guidance was not visible from the Expansion 16 checkpoint"
+	)
 
 
 func _prepare_unprotected_warning(camera_test: Dictionary) -> bool:
