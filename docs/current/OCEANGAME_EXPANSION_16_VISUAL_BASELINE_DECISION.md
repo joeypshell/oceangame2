@@ -6,6 +6,9 @@ Issue: #1131 `Review and accept intentional Expansion 16 visual differences`
 
 Runtime source: `edc4f71abb9226d5d601a0f32573efb5a4936727`
 
+Owner-HOLD correction: superseded for current baseline state by
+`docs/current/OCEANGAME_EXPANSION_16_HOLD_CORRECTION_VISUAL_REVIEW.md`.
+
 ## Decision
 
 **Accepted** the current 14-image `production_level_01` baseline as one

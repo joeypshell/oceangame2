@@ -1,9 +1,9 @@
 {
   "baseline_id": "production_level_01_accepted",
   "slice_id": "production_level_01",
-  "accepted_at_utc": "2026-07-28T06:08:30+00:00",
+  "accepted_at_utc": "2026-07-29T01:16:26+00:00",
   "source_capture_dir": "visual_captures/expansion_09_full_level",
-  "accepted_from_commit": "edc4f71",
+  "accepted_from_commit": "4902b8e",
   "view_ids": [
     "production_level_overview_1280x720",
     "production_level_overview_mobile_844x390",
