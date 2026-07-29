@@ -10,6 +10,17 @@ const WRECK_RELAY_PENDING := "Wreck relay charted | Return to surface boat"
 const WRECK_RELAY_SCAN_PROMPT := "Relay signal | Hold Q/USE to scan wreck relay"
 
 
+func sync_route_guidance(world, profile) -> void:
+	if world == null or profile == null or not world.has_method("set_route_guidance_visible"):
+		return
+	for journey in world.get_regional_journeys():
+		var required_discovery_id := str(journey.get("required_discovery_id", "")).strip_edges()
+		world.set_route_guidance_visible(
+			str(journey.get("id", "")),
+			required_discovery_id.is_empty() or profile.has_completed_discovery(required_discovery_id)
+		)
+
+
 func promise_text(world, profile) -> String:
 	if world == null or profile == null or not world.has_method("get_regional_journeys") or not world.has_method("get_survey_targets") or not world.has_method("get_tool_targets"):
 		return ""
@@ -24,6 +35,9 @@ func promise_text(world, profile) -> String:
 			continue
 		if not profile.has_completed_discovery(required_discovery_id) or profile.has_completed_discovery(discovery_id):
 			continue
+		var approach_guidance := str(journey.get("approach_guidance", "")).strip_edges()
+		if not approach_guidance.is_empty():
+			return approach_guidance
 		var promise := str(prerequisite.get("reward_next_lead_label", prerequisite.get("next_lead_label", ""))).strip_edges()
 		if not promise.is_empty():
 			return promise

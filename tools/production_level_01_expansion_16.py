@@ -12,12 +12,20 @@ PROJECT_ID = "closed_circuit_rebreather_project"
 CAPABILITY_ID = "closed_circuit_rebreather"
 ROUTE_ID = "far_west_deeper_wreck_route"
 ZONE_ID = "far_west_confined_wreck_oxygen_zone"
+WARNING_ZONE_ID = "far_west_confined_wreck_warning"
+ROUTE_BEACON_IDS = (
+    "far_west_route_beacon_01",
+    "far_west_route_beacon_02",
+    "far_west_route_beacon_03",
+    "far_west_route_beacon_04",
+)
 LANDMARK_ID = "far_west_deeper_wreck_landmark"
 BACKGROUND_ID = "far_west_deeper_wreck_backdrop"
 TOOL_TARGET_ID = "far_west_wreck_data_recorder"
 SURVEY_ID = "far_west_deeper_wreck_survey"
 DISCOVERY_ID = "far_west_deeper_wreck_discovery"
 BOAT_ID = "surface_boat_entry"
+APPROACH_GUIDANCE = "Far-west wreck | Follow cyan relay beacons west"
 
 
 def material_projects() -> list[dict]:
@@ -57,6 +65,69 @@ def zones() -> list[dict]:
                 "Accelerate oxygen only inside the far-west confined-wreck approach "
                 "while preserving ordinary swimming and retreat."
             ),
+        },
+        {
+            "id": ROUTE_BEACON_IDS[0],
+            "type": "marker",
+            "x": 98,
+            "y": 102,
+            "w": 1,
+            "h": 2,
+            "route_guidance_marker": True,
+            "guidance_kind": "relay_beacon",
+            "route_context": ROUTE_ID,
+            "intent": "First cyan relay breadcrumb on the continuous lower route from the boat.",
+        },
+        {
+            "id": ROUTE_BEACON_IDS[1],
+            "type": "marker",
+            "x": 78,
+            "y": 109,
+            "w": 1,
+            "h": 2,
+            "route_guidance_marker": True,
+            "guidance_kind": "relay_beacon",
+            "route_context": ROUTE_ID,
+            "intent": "Second cyan relay breadcrumb through the lower route.",
+        },
+        {
+            "id": ROUTE_BEACON_IDS[2],
+            "type": "marker",
+            "x": 60,
+            "y": 95,
+            "w": 1,
+            "h": 2,
+            "route_guidance_marker": True,
+            "guidance_kind": "relay_beacon",
+            "route_context": ROUTE_ID,
+            "intent": "Third cyan relay breadcrumb at the far-west approach.",
+        },
+        {
+            "id": ROUTE_BEACON_IDS[3],
+            "type": "marker",
+            "x": 46,
+            "y": 94,
+            "w": 1,
+            "h": 2,
+            "route_guidance_marker": True,
+            "guidance_kind": "relay_beacon",
+            "route_context": ROUTE_ID,
+            "intent": "Final cyan relay breadcrumb before the confined-wreck threshold.",
+        },
+        {
+            "id": WARNING_ZONE_ID,
+            "type": "marker",
+            "x": 33,
+            "y": 93,
+            "w": 5,
+            "h": 3,
+            "route_guidance_marker": True,
+            "guidance_kind": "oxygen_threshold",
+            "oxygen_warning_for_zone_id": ZONE_ID,
+            "oxygen_warning_label": "Confined wreck ahead | Oxygen x8 | Retreat",
+            "protected_warning_label": "Rebreather ready | Confined wreck ahead",
+            "route_context": ROUTE_ID,
+            "intent": "Warn in open water immediately before accelerated oxygen consumption.",
         },
         {
             "id": LANDMARK_ID,
@@ -104,6 +175,7 @@ def regional_journeys() -> list[dict]:
         "survey_target_id": SURVEY_ID,
         "commit_entry_id": BOAT_ID,
         "route_context": ROUTE_ID,
+        "approach_guidance": APPROACH_GUIDANCE,
         "intent": (
             "Turn the committed relay signal and night-built rebreather into one "
             "continuous far-west wreck operation and canonical-boat return."
@@ -160,6 +232,13 @@ def background() -> list[dict]:
 
 def camera_tests() -> list[dict]:
     return [
+        {
+            "id": "expansion_16_route_guidance",
+            "center_x": 46.0,
+            "center_y": 95.0,
+            "zoom": 0.48,
+            "intent": "Cyan route breadcrumb and concise far-west approach guidance.",
+        },
         {
             "id": "expansion_16_rebreather_project",
             "center_x": 95.0,
@@ -226,13 +305,13 @@ def source_provenance() -> dict:
         "source": "tools/production_level_01_expansion_16.py",
         "project_ids": [PROJECT_ID],
         "journey_ids": [ROUTE_ID],
-        "zone_ids": [ZONE_ID, LANDMARK_ID],
+        "zone_ids": [ZONE_ID, *ROUTE_BEACON_IDS, WARNING_ZONE_ID, LANDMARK_ID],
         "entity_ids": [TOOL_TARGET_ID],
         "survey_target_ids": [SURVEY_ID],
         "camera_test_ids": [item["id"] for item in camera_tests()],
         "terrain_changes": [],
-        "review_bounds": {"x": 12, "y": 90, "w": 21, "h": 32},
-        "intent": "Source-authored oxygen return metadata in existing continuous water.",
+        "review_bounds": {"x": 12, "y": 90, "w": 87, "h": 21},
+        "intent": "Source-authored oxygen return and guidance metadata in existing continuous water.",
     }
 
 

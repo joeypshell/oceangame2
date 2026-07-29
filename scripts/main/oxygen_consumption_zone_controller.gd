@@ -1,11 +1,15 @@
 extends RefCounted
 
 const ZONE_ID := "far_west_confined_wreck_oxygen_zone"
+const WARNING_ZONE_ID := "far_west_confined_wreck_warning"
 const PROTECTED_ENTRY_FEEDBACK_SECONDS := 1.5
 
 var _zone := {}
 var _zone_rect := Rect2()
+var _warning_zone := {}
+var _warning_rect := Rect2()
 var _inside_zone := false
+var _near_threshold := false
 var _protected := false
 var _exposure_seconds := 0.0
 var _drain_multiplier := 1.0
@@ -16,6 +20,8 @@ var _protected_feedback_seconds := 0.0
 func on_map_loaded(world) -> void:
 	_zone = {}
 	_zone_rect = Rect2()
+	_warning_zone = {}
+	_warning_rect = Rect2()
 	reset()
 	if world == null or not world.has_method("get_marker_zone"):
 		return
@@ -28,10 +34,20 @@ func on_map_loaded(world) -> void:
 		Vector2(float(_zone.get("x", 0)), float(_zone.get("y", 0))) * tile_size,
 		Vector2(float(_zone.get("w", 0)), float(_zone.get("h", 0))) * tile_size
 	)
+	var warning_source: Dictionary = world.get_marker_zone(WARNING_ZONE_ID)
+	if (
+		not warning_source.is_empty()
+		and str(warning_source.get("oxygen_warning_for_zone_id", "")) == ZONE_ID
+	):
+		_warning_zone = warning_source.duplicate(true)
+		_warning_rect = Rect2(
+			Vector2(float(_warning_zone.get("x", 0)), float(_warning_zone.get("y", 0))) * tile_size,
+			Vector2(float(_warning_zone.get("w", 0)), float(_warning_zone.get("h", 0))) * tile_size
+		)
 
 
 func update(position: Vector2, has_capability: Callable, delta: float) -> Dictionary:
-	if _zone.is_empty() or not _zone_rect.has_point(position):
+	if _zone.is_empty():
 		_clear_exposure()
 		return report()
 
@@ -40,8 +56,20 @@ func update(position: Vector2, has_capability: Callable, delta: float) -> Dictio
 		capability_id.is_empty()
 		or (has_capability.is_valid() and bool(has_capability.call(capability_id)))
 	)
+	if not _zone_rect.has_point(position):
+		_clear_exposure()
+		if not _warning_zone.is_empty() and _warning_rect.has_point(position):
+			_near_threshold = true
+			_protected = has_protection
+			_note = str(_warning_zone.get(
+				"protected_warning_label" if has_protection else "oxygen_warning_label",
+				"Rebreather ready" if has_protection else "Confined wreck ahead"
+			))
+		return report()
+
 	var entered := not _inside_zone or _protected != has_protection
 	_inside_zone = true
+	_near_threshold = false
 	_protected = has_protection
 
 	if has_protection:
@@ -101,6 +129,7 @@ func report() -> Dictionary:
 	return {
 		"zone_id": str(_zone.get("id", "")),
 		"inside": _inside_zone,
+		"near_threshold": _near_threshold,
 		"protected": _protected,
 		"exposure_seconds": _exposure_seconds,
 		"drain_multiplier": _drain_multiplier,
@@ -110,6 +139,7 @@ func report() -> Dictionary:
 
 func _clear_exposure() -> void:
 	_inside_zone = false
+	_near_threshold = false
 	_protected = false
 	_exposure_seconds = 0.0
 	_drain_multiplier = 1.0

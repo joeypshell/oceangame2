@@ -44,7 +44,7 @@ REQUIRED_FIELDS = (
     "intent",
 )
 OPTIONAL_ID_FIELDS = {"payoff_target_id", "required_discovery_id", "tool_target_id"}
-OPTIONAL_FIELDS = OPTIONAL_ID_FIELDS | {"expedition_lead"}
+OPTIONAL_FIELDS = OPTIONAL_ID_FIELDS | {"approach_guidance", "expedition_lead"}
 ALLOWED_FIELDS = set(REQUIRED_FIELDS) | OPTIONAL_FIELDS
 FORBIDDEN_STATE_FIELDS = {
     "active",
@@ -112,6 +112,14 @@ def validate_regional_journey_schema(map_data: dict[str, Any]) -> list[str]:
             failures.append(f"{label} route_label must be short display-safe text.")
         if not isinstance(journey["intent"], str) or not journey["intent"].strip():
             failures.append(f"{label} intent must be non-empty text.")
+        guidance = journey.get("approach_guidance")
+        if guidance is not None and (
+            not isinstance(guidance, str)
+            or not guidance.strip()
+            or len(guidance) > 80
+            or "\n" in guidance
+        ):
+            failures.append(f"{label} approach_guidance must be one compact display-safe line.")
         present_state = sorted(FORBIDDEN_STATE_FIELDS & set(journey))
         if present_state:
             failures.append(f"{label} contains runtime state fields: {present_state}.")

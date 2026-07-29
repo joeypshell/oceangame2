@@ -14,10 +14,13 @@ from production_level_01_expansion_16 import (
     CAPABILITY_ID,
     DISCOVERY_ID,
     LANDMARK_ID,
+    APPROACH_GUIDANCE,
     PROJECT_ID,
+    ROUTE_BEACON_IDS,
     ROUTE_ID,
     SURVEY_ID,
     TOOL_TARGET_ID,
+    WARNING_ZONE_ID,
     ZONE_ID,
 )
 from validate_deeper_wreck_return import (
@@ -60,12 +63,36 @@ class ProductionLevelExpansion16Tests(unittest.TestCase):
         self.assertEqual((12, 90, 21, 16), tuple(zone[field] for field in ("x", "y", "w", "h")))
         self.assertEqual(8.0, zone["unprotected_oxygen_drain_multiplier"])
         self.assertEqual(TOOL_TARGET_ID, route["tool_target_id"])
+        self.assertEqual(APPROACH_GUIDANCE, route["approach_guidance"])
         self.assertEqual(SURVEY_ID, target["unlocks_survey_target_id"])
         self.assertEqual("salvage_cutter", target["required_tool_id"])
         self.assertEqual("survey_scanner_1", survey["required_capability_id"])
         self.assertNotIn("required_pressure_capability_id", survey)
         self.assertEqual(DISCOVERY_ID, survey["discovery_id"])
         self.assertEqual(BOAT_ID, survey["commit_entry_id"])
+
+    def test_route_guidance_chain_is_source_authored_and_non_solid(self) -> None:
+        zones = {item["id"]: item for item in self.map_data["zones"]}
+        expected_rects = ((98, 102, 1, 2), (78, 109, 1, 2), (60, 95, 1, 2), (46, 94, 1, 2))
+        solids = {
+            (x, y)
+            for terrain in self.map_data["terrain"]
+            if terrain["type"] == "solid"
+            for y in range(terrain["y"], terrain["y"] + terrain["h"])
+            for x in range(terrain["x"], terrain["x"] + terrain["w"])
+        }
+        for beacon_id, expected_rect in zip(ROUTE_BEACON_IDS, expected_rects):
+            beacon = zones[beacon_id]
+            self.assertEqual(expected_rect, tuple(beacon[field] for field in ("x", "y", "w", "h")))
+            self.assertEqual("relay_beacon", beacon["guidance_kind"])
+            self.assertFalse({
+                (x, y)
+                for y in range(beacon["y"], beacon["y"] + beacon["h"])
+                for x in range(beacon["x"], beacon["x"] + beacon["w"])
+            } & solids)
+        warning = zones[WARNING_ZONE_ID]
+        self.assertEqual((33, 93, 5, 3), tuple(warning[field] for field in ("x", "y", "w", "h")))
+        self.assertEqual(ZONE_ID, warning["oxygen_warning_for_zone_id"])
 
     def test_route_budget_distinguishes_project_from_optional_tank(self) -> None:
         protected = float(self.budget["protected_demand_seconds"])
@@ -81,7 +108,10 @@ class ProductionLevelExpansion16Tests(unittest.TestCase):
         self.assertEqual([], provenance["terrain_changes"])
         self.assertEqual([PROJECT_ID], provenance["project_ids"])
         self.assertEqual([ROUTE_ID], provenance["journey_ids"])
-        self.assertEqual([ZONE_ID, LANDMARK_ID], provenance["zone_ids"])
+        self.assertEqual(
+            [ZONE_ID, *ROUTE_BEACON_IDS, WARNING_ZONE_ID, LANDMARK_ID],
+            provenance["zone_ids"],
+        )
         self.assertEqual([TOOL_TARGET_ID], provenance["entity_ids"])
         self.assertEqual([SURVEY_ID], provenance["survey_target_ids"])
         backdrop = next(

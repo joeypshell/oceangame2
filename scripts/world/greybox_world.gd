@@ -63,6 +63,7 @@ var _moving_hazard_aux_nodes_by_id := {}
 var _active_daily_condition_ids := {}
 var _visibility_zone_nodes_by_id := {}
 var _visibility_zone_upgrade_states := {}
+var _route_guidance_nodes_by_context := {}
 var _background_root: Node2D
 var _solid_layer: TileMapLayer
 var _terrain_layer: TileMapLayer
@@ -143,6 +144,7 @@ func load_greybox() -> void:
 	_active_daily_condition_ids = {}
 	_visibility_zone_nodes_by_id = {}
 	_visibility_zone_upgrade_states = {}
+	_route_guidance_nodes_by_context = {}
 
 	_background_root = Node2D.new()
 	_background_root.name = "BackgroundArt"
@@ -343,6 +345,17 @@ func get_hazard_centers() -> Array:
 
 func get_marker_zone(marker_id: String) -> Dictionary:
 	return _world_queries.get_marker_zone(_map_data, marker_id)
+
+
+func set_route_guidance_visible(route_context: String, visible: bool) -> void:
+	for node in _route_guidance_nodes_by_context.get(route_context, []):
+		if is_instance_valid(node):
+			(node as CanvasItem).visible = visible
+
+
+func is_route_guidance_visible(route_context: String) -> bool:
+	var nodes: Array = _route_guidance_nodes_by_context.get(route_context, [])
+	return not nodes.is_empty() and nodes.all(func(node): return is_instance_valid(node) and (node as CanvasItem).visible)
 
 
 func get_world_connectors() -> Array:
@@ -826,7 +839,12 @@ func _build_zones(zones: Array) -> void:
 				var visibility_node: Polygon2D = _visibility_zone_renderer_helper().add_visibility_zone(_marker_root, zone, tile_size, show_debug_overlay, _debug_renderer_helper())
 				_visibility_zone_nodes_by_id[str(zone.get("id", "visibility_zone"))] = visibility_node
 			else:
-				_route_marker_renderer_helper().add_route_marker(_marker_root, zone, tile_size, show_debug_overlay, _debug_renderer_helper())
+				var marker_node: Polygon2D = _route_marker_renderer_helper().add_route_marker(_marker_root, zone, tile_size, show_debug_overlay, _debug_renderer_helper())
+				if bool(zone.get("route_guidance_marker", false)):
+					var route_context := str(zone.get("route_context", ""))
+					if not _route_guidance_nodes_by_context.has(route_context):
+						_route_guidance_nodes_by_context[route_context] = []
+					(_route_guidance_nodes_by_context[route_context] as Array).append(marker_node)
 
 
 func _build_progression_containers(containers: Array) -> void:

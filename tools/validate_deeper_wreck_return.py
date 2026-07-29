@@ -74,6 +74,7 @@ ROUTE_VALUES = {
     "survey_target_id": SURVEY_ID,
     "commit_entry_id": BOAT_ID,
     "route_context": ROUTE_ID,
+    "approach_guidance": "Far-west wreck | Follow cyan relay beacons west",
 }
 TOOL_TARGET_VALUES = {
     "type": "tool_target",
