@@ -4,6 +4,9 @@ Date: 2026-07-28
 
 Issue: #1132 `Verify the exact Expansion 16 public Web candidate`
 
+Owner-HOLD correction: superseded for current deployed-candidate state by
+`docs/current/OCEANGAME_EXPANSION_16_HOLD_CORRECTION_WEB_VERIFICATION.md`.
+
 ## Result
 
 **PASS for exact deployment, browser initialization, responsive framing, and
