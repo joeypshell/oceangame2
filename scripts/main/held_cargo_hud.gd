@@ -76,10 +76,11 @@ func refresh(
 	material_report: Dictionary,
 	sortie_report: Dictionary,
 	capacity: int,
-	owned_capability_ids = []
+	owned_capability_ids = [],
+	equipment_context := {}
 ) -> void:
 	_items = _snapshot_items(material_report, sortie_report)
-	_equipment_strip.refresh(owned_capability_ids)
+	_equipment_strip.refresh(owned_capability_ids, equipment_context)
 	_capacity = maxi(0, capacity)
 	_used = maxi(0, int(material_report.get("held_count", 0))) + maxi(0, int(sortie_report.get("held_salvage", 0)))
 	_available = maxi(0, _capacity - _used)
@@ -135,7 +136,7 @@ func get_test_report() -> Dictionary:
 func _layout() -> void:
 	if not is_inside_tree():
 		return
-	layout_for_size(get_viewport_rect().size)
+	layout_for_size(Vector2(get_window().size))
 
 
 func _refresh_capacity_text() -> void:

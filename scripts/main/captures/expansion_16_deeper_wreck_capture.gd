@@ -157,11 +157,21 @@ func _prepare_rebreather_active(camera_test: Dictionary) -> bool:
 	)
 	_main._update_status_label()
 	var report: Dictionary = _main._oxygen_consumption_zone.report()
+	var equipment: Dictionary = _main._held_cargo_hud.get_test_report().get("equipment", {})
+	var active_gear_ids: Array = equipment.get("active_capability_ids", [])
+	var gear_slots: Array = equipment.get("slots", [])
 	return _expect(
 		bool(report.get("protected", false))
 		and is_equal_approx(float(report.get("drain_multiplier", 0.0)), 1.0)
 		and _status_text().find("Rebreather active") != -1,
 		"protected threshold did not show normalized oxygen state"
+	) and _expect(
+		not active_gear_ids.is_empty()
+		and active_gear_ids[0] == ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_CAPABILITY_ID
+		and not gear_slots.is_empty()
+		and bool(gear_slots[0].get("active", false))
+		and str(gear_slots[0].get("texture_path", "")).find("closed_circuit_rebreather") != -1,
+		"protected threshold did not surface active rebreather gear: %s" % str(equipment)
 	)
 
 
