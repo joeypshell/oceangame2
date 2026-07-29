@@ -43,6 +43,7 @@ func capture_pair(capture_dir: String, state_id: String, camera_test: Dictionary
 		var show_touch := bool(spec["touch"])
 		_main.get_window().size = spec["window_size"]
 		_mobile_controls.visible = show_touch
+		_main._held_cargo_hud.layout_for_size(Vector2(spec["window_size"]))
 		_frame_camera(camera_test)
 		await _settle_frames()
 		if not _verify_layout(show_touch):
@@ -74,6 +75,11 @@ func _verify_layout(touch_visible: bool) -> bool:
 	var cargo_rect: Rect2 = _main._held_cargo_hud.get_test_report().get("rect", Rect2())
 	var tool_rect: Rect2 = _main._active_tool_hud.get_test_report().get("rect", Rect2())
 	var status_rect := Rect2(_main._status_label.global_position, _main._status_label.size)
+	var equipment: Dictionary = _main._held_cargo_hud.get_test_report().get("equipment", {})
+	var expected_gear_slots := 1 if touch_visible else 5
+	if bool(equipment.get("compact", false)) != touch_visible or equipment.get("slots", []).size() != expected_gear_slots:
+		_fail("gear layout did not match capture mode: %s" % str(equipment))
+		return false
 	for rect in [cargo_rect, tool_rect, status_rect]:
 		if not viewport_rect.grow(1.0).encloses(rect):
 			_fail("HUD escaped the capture canvas: %s" % str(rect))

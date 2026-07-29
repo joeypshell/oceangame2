@@ -3,6 +3,7 @@ extends SceneTree
 const ActiveToolHud := preload("res://scripts/main/active_tool_hud.gd")
 const HeldCargoHud := preload("res://scripts/main/held_cargo_hud.gd")
 const MaterialCargoState := preload("res://scripts/main/material_cargo_state.gd")
+const PassiveEquipmentContext := preload("res://scripts/main/passive_equipment_context.gd")
 const SortieState := preload("res://scripts/main/sortie_state.gd")
 const OWNED_CAPABILITIES := [
 	"survey_scanner_1",
@@ -21,6 +22,44 @@ const PASSIVE_CAPABILITIES := [
 	"current_stabilizer",
 	"shock_prod_capacitor",
 ]
+const SCALABLE_PASSIVES := [
+	"closed_circuit_rebreather",
+	"propulsion_fins",
+	"dive_light_1",
+	"pressure_suit_1",
+	"current_stabilizer",
+	"shock_prod_capacitor",
+	"thermal_lining",
+	"sonar_dampener",
+]
+const SCALABLE_OWNED := [
+	"survey_scanner_1",
+	"salvage_cutter",
+	"shock_prod",
+	"propulsion_fins",
+	"dive_light_1",
+	"pressure_suit_1",
+	"current_stabilizer",
+	"shock_prod_capacitor",
+	"closed_circuit_rebreather",
+	"thermal_lining",
+	"sonar_dampener",
+]
+
+
+class EquipmentContextWorld:
+	var current_gate := {}
+	var visibility_zone := {}
+	var marker_zones := {}
+
+	func get_current_gate_at(_position: Vector2) -> Dictionary:
+		return current_gate
+
+	func get_visibility_zone_at(_position: Vector2) -> Dictionary:
+		return visibility_zone
+
+	func get_marker_zone(zone_id: String) -> Dictionary:
+		return marker_zones.get(zone_id, {})
 
 var _failures: Array[String] = []
 
@@ -42,16 +81,23 @@ func _run() -> void:
 	})
 	cargo.layout_for_size(Vector2(1280, 720))
 	active_tool.layout_for_size(Vector2(1280, 720))
+	cargo.refresh({}, {}, 2, [])
+	var empty_report: Dictionary = cargo.get_test_report()
+	var empty_rect: Rect2 = empty_report.get("rect", Rect2())
+	var empty_equipment: Dictionary = empty_report.get("equipment", {})
+	_expect(empty_equipment.get("displayed_items", []).is_empty(), "zero-gear fixture rendered an owned item")
+	_expect(empty_equipment.get("slots", []).size() == 5, "zero-gear fixture changed the fixed desktop footprint")
 	cargo.refresh({}, {}, 2, OWNED_CAPABILITIES)
 	var report: Dictionary = cargo.get_test_report()
 	var desktop_rect: Rect2 = report.get("rect", Rect2())
+	_expect(desktop_rect == empty_rect, "five owned passives resized the cargo/gear panel")
 	_expect(report.get("used") == 0 and report.get("available") == 2, "empty cargo capacity was wrong")
 	_expect(report.get("items", []).is_empty(), "empty cargo rendered an item")
 	_expect(not desktop_rect.intersects(active_tool.get_test_report().get("rect", Rect2())), "desktop cargo overlapped active tool")
 	_expect(desktop_rect.position.x >= 312.0 and desktop_rect.end.x <= 976.0, "desktop cargo overlapped an edge HUD owner")
 	_expect(active_tool.get_test_report().get("bottom_gap") == 18.0, "desktop active-tool hotbar left the bottom band")
 	var equipment: Dictionary = report.get("equipment", {})
-	_expect(equipment.get("title") == "EQUIPPED", "desktop passive strip title drifted")
+	_expect(equipment.get("title") == "GEAR", "desktop passive strip title drifted")
 	_expect(_equipment_ids(equipment) == PASSIVE_CAPABILITIES, "desktop passive equipment order/filter drifted: %s" % str(equipment.get("owned_items", [])))
 	_expect(equipment.get("displayed_items", []).size() == 5 and equipment.get("slots", []).size() == 5, "desktop passive strip did not show five stable slots")
 	for slot in equipment.get("slots", []):
@@ -59,6 +105,32 @@ func _run() -> void:
 		_expect(not str(slot.get("tooltip", "")).is_empty(), "desktop passive equipment slot lacked a tooltip")
 	for active_tool_id in ["survey_scanner_1", "salvage_cutter", "shock_prod"]:
 		_expect(not _equipment_ids(equipment).has(active_tool_id), "active tool leaked into passive equipment: %s" % active_tool_id)
+
+	var context_world := EquipmentContextWorld.new()
+	context_world.current_gate = {"required_capability_id": "current_stabilizer"}
+	_expect_context_priority(cargo, context_world, {}, {}, "", "current_stabilizer")
+	context_world.current_gate = {}
+	context_world.visibility_zone = {"required_upgrade_id": "dive_light_1"}
+	_expect_context_priority(cargo, context_world, {}, {}, "", "dive_light_1")
+	context_world.visibility_zone = {}
+	context_world.marker_zones["pressure_fixture"] = {"required_capability_id": "pressure_suit_1"}
+	_expect_context_priority(cargo, context_world, {"inside": true, "zone_id": "pressure_fixture"}, {}, "", "pressure_suit_1")
+	context_world.marker_zones["oxygen_fixture"] = {"required_capability_id": "closed_circuit_rebreather"}
+	var rebreather_context: Dictionary = _expect_context_priority(
+		cargo,
+		context_world,
+		{},
+		{"inside": true, "zone_id": "oxygen_fixture"},
+		"",
+		"closed_circuit_rebreather"
+	)
+	_expect_context_priority(cargo, context_world, {}, {}, "shock_prod", "shock_prod_capacitor")
+	report = cargo.get_test_report()
+	_expect(report.get("rect", Rect2()) == desktop_rect, "eight owned passives resized the fixed desktop panel")
+	equipment = report.get("equipment", {})
+	_expect(_equipment_ids(equipment) == SCALABLE_PASSIVES, "eight-passive fixture lost or reordered future gear")
+	_expect(equipment.get("displayed_items", []).size() == 5 and equipment.get("slots", []).size() == 5, "desktop overflow changed the five-cell footprint")
+	_expect(equipment.get("displayed_items", [])[-1].get("id") == "equipment_overflow", "eight-passive fixture omitted overflow summary")
 
 	var materials := MaterialCargoState.new()
 	materials.collect(_candidate("titanium_a", "titanium_scrap"), "production_level_01")
@@ -92,7 +164,7 @@ func _run() -> void:
 		_candidate("electro_b", "eel_electrocyte"),
 	]:
 		biological.collect(entry, "production_level_01")
-	cargo.refresh(biological.report(), {}, 6, OWNED_CAPABILITIES)
+	cargo.refresh(biological.report(), {}, 6, SCALABLE_OWNED, rebreather_context)
 	cargo.layout_for_size(Vector2(844, 390))
 	active_tool.layout_for_size(Vector2(844, 390))
 	report = cargo.get_test_report()
@@ -104,12 +176,13 @@ func _run() -> void:
 	_expect(report.get("displayed_items", []).size() == 2 and report.get("displayed_items", [])[1].get("id") == "overflow", "compact cargo did not bound overflow types")
 	_expect(not bool(_item_by_id(report, "insulating_gel").get("has_texture", true)), "gel fallback unexpectedly claimed an asset")
 	equipment = report.get("equipment", {})
-	_expect(equipment.get("title") == "EQ" and bool(equipment.get("compact", false)), "compact passive equipment mode drifted")
+	_expect(equipment.get("title") == "G" and bool(equipment.get("compact", false)), "compact passive equipment mode drifted")
 	_expect(equipment.get("displayed_items", []).size() == 1 and equipment.get("slots", []).size() == 1, "compact equipment did not collapse to one summary")
 	if not equipment.get("slots", []).is_empty():
 		var compact_slot: Dictionary = equipment.get("slots", [])[0]
-		_expect(compact_slot.get("badge") == "5", "compact equipment summary count was wrong")
-		_expect(str(compact_slot.get("tooltip", "")).find("Current Stabilizer") != -1, "compact equipment tooltip omitted owned passives")
+		_expect(compact_slot.get("badge") == "8", "compact equipment summary count was wrong")
+		_expect(bool(compact_slot.get("active", false)), "compact equipment did not highlight active rebreather")
+		_expect(str(compact_slot.get("tooltip", "")).find("Active | Closed-circuit rebreather") != -1, "compact equipment omitted active rebreather")
 	cargo.layout_for_size(Vector2(932, 430))
 	active_tool.layout_for_size(Vector2(932, 430))
 	cargo_rect = cargo.get_test_report().get("rect", Rect2())
@@ -125,7 +198,7 @@ func _run() -> void:
 			push_error("Held cargo HUD smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Held cargo HUD smoke passed: owner=read_only cargo_slots=6 compact_cargo_slots=2 passive_equipment=5 compact_equipment=summary named_assets=Ti+Rubber+Coil+Relic fallbacks=Gel+Electro capacity=used+free banked_excluded=true active_tools_excluded=true layouts=1280x720+844x390 active_tool_bottom_separate=true.")
+	print("Held cargo HUD smoke passed: owner=read_only cargo_slots=6 compact_cargo_slots=2 gear_slots=5 fixtures=0+5+8 overflow=true contexts=current+darkness+pressure+rebreather+capacitor compact_active=rebreather named_assets=Ti+Rubber+Coil+Relic+Rebreather active_tools_excluded=true layouts=1280x720+844x390 active_tool_bottom_separate=true.")
 	quit(0)
 
 
@@ -146,6 +219,33 @@ func _item_by_id(report: Dictionary, item_id: String) -> Dictionary:
 
 func _equipment_ids(report: Dictionary) -> Array:
 	return report.get("owned_items", []).map(func(item): return str(item.get("id", "")))
+
+
+func _expect_context_priority(
+	cargo,
+	world,
+	pressure_report: Dictionary,
+	oxygen_report: Dictionary,
+	selected_tool_id: String,
+	expected_capability_id: String
+) -> Dictionary:
+	var context: Dictionary = PassiveEquipmentContext.snapshot(
+		world,
+		Vector2.ZERO,
+		pressure_report,
+		oxygen_report,
+		selected_tool_id
+	)
+	cargo.refresh({}, {}, 8, SCALABLE_OWNED, context)
+	var equipment: Dictionary = cargo.get_test_report().get("equipment", {})
+	var displayed: Array = equipment.get("displayed_items", [])
+	_expect(
+		not displayed.is_empty()
+		and displayed[0].get("id") == expected_capability_id
+		and bool(displayed[0].get("active", false)),
+		"%s was not first and active in its context: %s" % [expected_capability_id, displayed]
+	)
+	return context
 
 
 func _expect(condition: bool, message: String) -> void:

@@ -8,6 +8,7 @@ const ActiveToolController := preload("res://scripts/main/active_tool_controller
 const ActiveToolHud := preload("res://scripts/main/active_tool_hud.gd")
 const ActiveToolRuntime := preload("res://scripts/main/active_tool_runtime.gd")
 const HeldCargoHud := preload("res://scripts/main/held_cargo_hud.gd")
+const PassiveEquipmentContext := preload("res://scripts/main/passive_equipment_context.gd")
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const CargoCollectionController := preload("res://scripts/main/cargo_collection_controller.gd")
 const BiologicalResourceController := preload("res://scripts/main/biological_resource_controller.gd")
@@ -2469,11 +2470,19 @@ func _update_held_cargo_hud() -> void:
 		var owned_capability_ids := []
 		if _anomaly_survey != null and _anomaly_survey.profile_state() != null:
 			owned_capability_ids = _anomaly_survey.profile_state().report().get("unlocked_capabilities", [])
+		var equipment_context := PassiveEquipmentContext.snapshot(
+			_world,
+			_player.global_position if _player != null else Vector2.ZERO,
+			_pressure_zone.report() if _pressure_zone != null else {},
+			_oxygen_consumption_zone.report() if _oxygen_consumption_zone != null else {},
+			str(_active_tool_runtime.report().get("selected_tool_id", "")) if _active_tool_runtime != null else ""
+		)
 		_held_cargo_hud.refresh(
 			_material_runtime.report() if _material_runtime != null else {},
 			_sortie_state.report() if _sortie_state != null else {},
 			_held_salvage_capacity(),
-			owned_capability_ids
+			owned_capability_ids,
+			equipment_context
 		)
 
 
