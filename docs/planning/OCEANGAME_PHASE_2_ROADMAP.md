@@ -2,9 +2,8 @@
 
 Date: 2026-07-31
 
-Status: Expansions 01-16 are complete with player GO. Expansion 16 Deeper Wreck
-Oxygen Return closed on exact reviewed runtime `05b482e`. No Expansion 17
-direction or implementation milestone is selected.
+Status: Expansions 01-16 are complete with player GO. Planning gate #1156
+selects Expansion 17 Wreck Network Triangulation; implementation is unbatched.
 
 ## Decision
 
@@ -92,17 +91,16 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-No new implementation milestone. The next audit must evaluate project
-direction before selecting and batching Expansion 17.
+Expansion 17 Wreck Network Triangulation; the next audit may create only its dependency-ordered implementation batch.
 
 ### Proposed
 
-No Expansion 17 direction is selected.
+No Expansion 18 direction is selected.
 
 ### Directional
 
-Other regional identities and exceptional interiors remain directional. Broad
-oxygen or pressure simulation and later equipment tiers remain uncommitted.
+The triangulated destination, exceptional interiors, other regional identities,
+and later equipment tiers remain directional.
 
 ### Vision
 
@@ -427,24 +425,30 @@ Status: Complete with owner GO through #1133. Milestone #42 includes planning
 #1122, issues #1124-#1133, and bounded corrections #1143-#1146/#1151/#1153.
 The exact reviewed runtime is `05b482e`.
 
-Goal: turn the committed Northwest relay signal into one prepared far-west
-wreck return through existing continuous geography.
+It proves a relay-grounded rebreather project, scoutable route-local oxygen pressure,
+existing tool use, and exact-once boat commitment without terrain or global-system changes.
+**GO recorded at #1133 after bounded discoverability and HUD corrections.**
+
+### Expansion 17: Wreck Network Triangulation
+
+Status: Selected in `docs/current/OCEANGAME_EXPANSION_17_PLAN.md` through
+planning gate #1156. Implementation remains unbatched.
+
+Goal: turn the far-west network discovery into a two-lead, multi-return investigation
+that makes the existing capability set feel like a useful expedition toolkit.
 
 Prove:
 
-- a Ti1/Rubber1/Coil1/Gel1 night project grounded in relay knowledge
-- one durable closed-circuit rebreather capability
-- a visible route-local oxygen-pressure zone that is scoutable before the build
-- deterministic evidence that the session tank cannot substitute for the build
-- existing cutter and held scanner use at one recognizable wreck
-- pending failure cleanup and exact-once canonical-boat discovery commitment
-- no terrain, connector, teleport, new material, enemy, or global oxygen change
+- two distinct physical relay artifacts in existing underused regions
+- source-derived parallel leads with day-scoped guidance, not interaction locks
+- different prior-capability combinations and no new recipe or capability
+- deliberate scanner use and separate exact-once canonical-boat commits
+- one explicit two-fragment night analysis and a broad destination promise
+- no terrain, transition, teleport, score reward, economy, or new enemy
 
-Exit question: did the relay clue, material project, and rebreather turn the
-far-west wreck into a place the player could first scout and later complete
-safely, with a discovery worth returning to the boat?
-
-**GO recorded at #1133 after bounded discoverability and HUD corrections.**
+Exit question: did following two physical wreck-network leads, returning each
+fragment, and triangulating them at night make the existing ocean feel like a
+connected mystery worth planning another expedition around?
 
 ## Original OceanGame Convergence
 
