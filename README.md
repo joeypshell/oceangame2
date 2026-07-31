@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-16 are complete with player GO. Expansion 16 adds a prepared deeper-wreck oxygen return through underused contiguous geography; no Expansion 17 direction is selected yet. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
+The compact diver foundation and OceanGame Expansions 01-16 are complete with player GO. Expansion 17 is selected in planning as a two-lead wreck-network triangulation through existing contiguous geography; implementation has not started. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-Expansion 16 closed with owner GO after bounded route-discoverability and scalable-HUD corrections on exact runtime `05b482e`. [Milestone #42](https://github.com/joeypshell/oceangame2/milestone/42) is complete. Run a separate roadmap/direction audit before selecting Expansion 17. Teleport, connector-based normal traversal, a global oxygen rebalance, and broad pressure progression remain deferred.
+Expansion 16 closed with owner GO after bounded route-discoverability and scalable-HUD corrections on exact runtime `05b482e`. [Milestone #42](https://github.com/joeypshell/oceangame2/milestone/42) is complete. Planning gate #1156 selects Expansion 17 `Wreck Network Triangulation`; its implementation milestone and issue batch remain uncreated. Teleport, connector-based normal traversal, broad economy, and another isolated upgrade remain deferred.
 
 Core sources and operating docs:
 
@@ -139,6 +139,7 @@ Current release and expansion handoff:
 - [Expansion 16 Visual Baseline Decision](docs/current/OCEANGAME_EXPANSION_16_VISUAL_BASELINE_DECISION.md)
 - [Expansion 16 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_16_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 16 Closeout](docs/current/OCEANGAME_EXPANSION_16_CLOSEOUT.md)
+- [OceanGame Expansion 17 Wreck Network Triangulation Plan](docs/current/OCEANGAME_EXPANSION_17_PLAN.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 

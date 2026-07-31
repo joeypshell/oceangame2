@@ -48,10 +48,11 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_16_VISUAL_BASELINE_DECISION.md`
 - `docs/current/OCEANGAME_EXPANSION_16_WEB_PREVIEW_VERIFICATION.md`
 - `docs/current/OCEANGAME_EXPANSION_16_CLOSEOUT.md`
+- `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-16 are complete with player GO. Expansion 16 turns the Northwest relay lead into a prepared far-west wreck return. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
+Simple Diver Game 01-09 and OceanGame Expansions 01-16 are complete with player GO. Expansion 17 is selected in planning to turn the far-west network finding into a two-lead investigation using existing capabilities and geography. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
@@ -61,18 +62,20 @@ Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen so
 
 **Expansion 16: Deeper Wreck Oxygen Return** turns the committed Northwest relay signal into one far-west return through existing contiguous geography, with a recipe-built rebreather that normalizes a source-authored confined-wreck high-consumption oxygen zone. Milestone #42 is complete with owner GO on exact runtime `05b482e` after bounded discoverability and HUD corrections.
 
+**Expansion 17: Wreck Network Triangulation** will decode two physical relay-artifact leads in distinct existing regions, reuse already-earned capabilities, commit each fragment at the boat, and combine both through one explicit night analysis. Planning gate #1156 selects the direction; implementation remains unbatched.
+
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
-- Committed: no new implementation milestone; run a separate direction audit before batching work.
-- Proposed: no Expansion 17 direction is selected.
-- Directional: other regional identities and exceptional interiors remain uncommitted.
+- Committed: Expansion 17 Wreck Network Triangulation; implementation batching is the next audit boundary.
+- Proposed: no Expansion 18 direction is selected.
+- Directional: the triangulated destination, exceptional interiors, and other regional identities remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-Expansion 16 is complete. No later implementation milestone is open yet.
+Expansion 16 is complete. Expansion 17 is selected in planning, but no later implementation milestone is open yet.
 
 1. [Expansion 16: Deeper Wreck Oxygen Return](https://github.com/joeypshell/oceangame2/milestone/42) - complete with owner GO after corrections #1143/#1144/#1151/#1153; exact reviewed runtime `05b482e`.
 2. [Expansion 15: Expedition Planning And Choice](https://github.com/joeypshell/oceangame2/milestone/41) - complete with owner GO after corrections #1113/#1117/#1119; exact reviewed runtime `23f4172`.
