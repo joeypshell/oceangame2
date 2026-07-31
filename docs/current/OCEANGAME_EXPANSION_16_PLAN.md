@@ -2,8 +2,9 @@
 
 Date: 2026-07-28
 
-Status: Active in GitHub milestone #42. The frozen implementation batch is
-#1124-#1133; #1133 is the owner GO/HOLD closeout gate.
+Status: Complete with owner GO on exact Web runtime `05b482e`. GitHub milestone
+#42 and its frozen batch #1124-#1133 are closed. See
+`docs/current/OCEANGAME_EXPANSION_16_CLOSEOUT.md`.
 
 ## Decision
 

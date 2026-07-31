@@ -1,10 +1,10 @@
 # OceanGame Phase 2 Roadmap
 
-Date: 2026-07-28
+Date: 2026-07-31
 
-Status: Expansions 01-15 are complete with player GO. Expansion 16 Deeper Wreck
-Oxygen Return is selected by planning gate #1122; its implementation milestone
-and issue batch are not yet created.
+Status: Expansions 01-16 are complete with player GO. Expansion 16 Deeper Wreck
+Oxygen Return closed on exact reviewed runtime `05b482e`. No Expansion 17
+direction or implementation milestone is selected.
 
 ## Decision
 
@@ -92,8 +92,8 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 16 Deeper Wreck Oxygen Return. The next audit may create only its
-dependency-ordered implementation batch from the current plan.
+No new implementation milestone. The next audit must evaluate project
+direction before selecting and batching Expansion 17.
 
 ### Proposed
 
@@ -102,8 +102,7 @@ No Expansion 17 direction is selected.
 ### Directional
 
 Other regional identities and exceptional interiors remain directional. Broad
-oxygen or pressure simulation and later equipment tiers remain outside the
-selected bounded Expansion 16 plan.
+oxygen or pressure simulation and later equipment tiers remain uncommitted.
 
 ### Vision
 
@@ -424,8 +423,9 @@ automatic navigation, profile mutation, or reward ownership. **GO recorded at
 
 ### Expansion 16: Deeper Wreck Oxygen Return
 
-Status: Selected in `docs/current/OCEANGAME_EXPANSION_16_PLAN.md` through
-planning gate #1122. Implementation remains unbatched.
+Status: Complete with owner GO through #1133. Milestone #42 includes planning
+#1122, issues #1124-#1133, and bounded corrections #1143-#1146/#1151/#1153.
+The exact reviewed runtime is `05b482e`.
 
 Goal: turn the committed Northwest relay signal into one prepared far-west
 wreck return through existing continuous geography.
@@ -443,6 +443,8 @@ Prove:
 Exit question: did the relay clue, material project, and rebreather turn the
 far-west wreck into a place the player could first scout and later complete
 safely, with a discovery worth returning to the boat?
+
+**GO recorded at #1133 after bounded discoverability and HUD corrections.**
 
 ## Original OceanGame Convergence
 
