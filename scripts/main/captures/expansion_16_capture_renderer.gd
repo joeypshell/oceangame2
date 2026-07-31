@@ -76,7 +76,7 @@ func _verify_layout(touch_visible: bool) -> bool:
 	var tool_rect: Rect2 = _main._active_tool_hud.get_test_report().get("rect", Rect2())
 	var status_rect := Rect2(_main._status_label.global_position, _main._status_label.size)
 	var equipment: Dictionary = _main._held_cargo_hud.get_test_report().get("equipment", {})
-	var expected_gear_slots := 1 if touch_visible else 5
+	var expected_gear_slots := 3 if touch_visible else 6
 	if bool(equipment.get("compact", false)) != touch_visible or equipment.get("slots", []).size() != expected_gear_slots:
 		_fail("gear layout did not match capture mode: %s" % str(equipment))
 		return false
@@ -86,6 +86,9 @@ func _verify_layout(touch_visible: bool) -> bool:
 			return false
 	if cargo_rect.intersects(tool_rect):
 		_fail("held cargo overlaps the active-tool HUD")
+		return false
+	if cargo_rect.intersects(status_rect):
+		_fail("held cargo/gear overlaps the status HUD: cargo=%s status=%s" % [cargo_rect, status_rect])
 		return false
 	if not touch_visible:
 		return true

@@ -86,7 +86,7 @@ func _run() -> void:
 	var empty_rect: Rect2 = empty_report.get("rect", Rect2())
 	var empty_equipment: Dictionary = empty_report.get("equipment", {})
 	_expect(empty_equipment.get("displayed_items", []).is_empty(), "zero-gear fixture rendered an owned item")
-	_expect(empty_equipment.get("slots", []).size() == 5, "zero-gear fixture changed the fixed desktop footprint")
+	_expect(empty_equipment.get("slots", []).size() == 6, "zero-gear fixture changed the fixed desktop footprint")
 	cargo.refresh({}, {}, 2, OWNED_CAPABILITIES)
 	var report: Dictionary = cargo.get_test_report()
 	var desktop_rect: Rect2 = report.get("rect", Rect2())
@@ -99,8 +99,9 @@ func _run() -> void:
 	var equipment: Dictionary = report.get("equipment", {})
 	_expect(equipment.get("title") == "GEAR", "desktop passive strip title drifted")
 	_expect(_equipment_ids(equipment) == PASSIVE_CAPABILITIES, "desktop passive equipment order/filter drifted: %s" % str(equipment.get("owned_items", [])))
-	_expect(equipment.get("displayed_items", []).size() == 5 and equipment.get("slots", []).size() == 5, "desktop passive strip did not show five stable slots")
-	for slot in equipment.get("slots", []):
+	_expect(equipment.get("displayed_items", []).size() == 5 and equipment.get("slots", []).size() == 6, "desktop passive strip did not preserve six stable slots")
+	for index in range(equipment.get("displayed_items", []).size()):
+		var slot: Dictionary = equipment.get("slots", [])[index]
 		_expect(bool(slot.get("has_texture", false)), "desktop passive equipment slot lacked a named icon: %s" % slot)
 		_expect(not str(slot.get("tooltip", "")).is_empty(), "desktop passive equipment slot lacked a tooltip")
 	for active_tool_id in ["survey_scanner_1", "salvage_cutter", "shock_prod"]:
@@ -129,7 +130,7 @@ func _run() -> void:
 	_expect(report.get("rect", Rect2()) == desktop_rect, "eight owned passives resized the fixed desktop panel")
 	equipment = report.get("equipment", {})
 	_expect(_equipment_ids(equipment) == SCALABLE_PASSIVES, "eight-passive fixture lost or reordered future gear")
-	_expect(equipment.get("displayed_items", []).size() == 5 and equipment.get("slots", []).size() == 5, "desktop overflow changed the five-cell footprint")
+	_expect(equipment.get("displayed_items", []).size() == 6 and equipment.get("slots", []).size() == 6, "desktop overflow changed the six-cell footprint")
 	_expect(equipment.get("displayed_items", [])[-1].get("id") == "equipment_overflow", "eight-passive fixture omitted overflow summary")
 
 	var materials := MaterialCargoState.new()
@@ -170,24 +171,25 @@ func _run() -> void:
 	report = cargo.get_test_report()
 	var cargo_rect: Rect2 = report.get("rect", Rect2())
 	var tool_rect: Rect2 = active_tool.get_test_report().get("rect", Rect2())
-	_expect(bool(report.get("compact", false)) and cargo_rect == Rect2(313, 12, 96, 72), "landscape cargo left its stable safe column: %s" % cargo_rect)
-	_expect(cargo_rect.end.x <= 410.0 and cargo_rect.position.x >= 312.0, "landscape cargo overlapped edge HUD or touch buttons")
+	_expect(bool(report.get("compact", false)) and cargo_rect == Rect2(372, 12, 148, 72), "landscape cargo left its stable safe column: %s" % cargo_rect)
+	_expect(cargo_rect.end.x <= 592.0 and cargo_rect.position.x >= 372.0, "landscape cargo overlapped edge HUD or touch buttons")
 	_expect(not cargo_rect.intersects(tool_rect) and tool_rect.position.y >= 286.0 and tool_rect.end.y <= 390.0, "landscape hotbar left its reserved bottom band: %s" % tool_rect)
 	_expect(report.get("displayed_items", []).size() == 2 and report.get("displayed_items", [])[1].get("id") == "overflow", "compact cargo did not bound overflow types")
 	_expect(not bool(_item_by_id(report, "insulating_gel").get("has_texture", true)), "gel fallback unexpectedly claimed an asset")
 	equipment = report.get("equipment", {})
-	_expect(equipment.get("title") == "G" and bool(equipment.get("compact", false)), "compact passive equipment mode drifted")
-	_expect(equipment.get("displayed_items", []).size() == 1 and equipment.get("slots", []).size() == 1, "compact equipment did not collapse to one summary")
+	_expect(equipment.get("title") == "GEAR" and bool(equipment.get("compact", false)), "compact passive equipment mode drifted")
+	_expect(equipment.get("displayed_items", []).size() == 3 and equipment.get("slots", []).size() == 3, "compact equipment did not preserve two visible items plus overflow")
 	if not equipment.get("slots", []).is_empty():
-		var compact_slot: Dictionary = equipment.get("slots", [])[0]
-		_expect(compact_slot.get("badge") == "8", "compact equipment summary count was wrong")
-		_expect(bool(compact_slot.get("active", false)), "compact equipment did not highlight active rebreather")
-		_expect(str(compact_slot.get("tooltip", "")).find("Active | Closed-circuit rebreather") != -1, "compact equipment omitted active rebreather")
+		var compact_slots: Array = equipment.get("slots", [])
+		_expect(bool(compact_slots[0].get("active", false)), "compact equipment did not highlight active rebreather")
+		_expect(str(compact_slots[0].get("tooltip", "")).find("Active | Closed-circuit rebreather") != -1, "compact equipment omitted active rebreather")
+		_expect(bool(compact_slots[0].get("has_texture", false)) and bool(compact_slots[1].get("has_texture", false)), "compact equipment hid all recognizable owned gear")
+		_expect(compact_slots[2].get("id") == "equipment_overflow" and compact_slots[2].get("badge") == "6", "compact equipment overflow count was wrong")
 	cargo.layout_for_size(Vector2(932, 430))
 	active_tool.layout_for_size(Vector2(932, 430))
 	cargo_rect = cargo.get_test_report().get("rect", Rect2())
 	tool_rect = active_tool.get_test_report().get("rect", Rect2())
-	_expect(cargo_rect.end.x <= 498.0 and not cargo_rect.intersects(tool_rect), "wide-mobile HUDs entered the touch-button region")
+	_expect(cargo_rect.end.x <= 592.0 and not cargo_rect.intersects(tool_rect), "wide-mobile HUDs entered the touch-button region")
 	_expect(bool(active_tool.get_test_report().get("compact", false)), "wide-mobile active tool did not share the cargo breakpoint")
 
 	cargo.queue_free()
@@ -198,7 +200,7 @@ func _run() -> void:
 			push_error("Held cargo HUD smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Held cargo HUD smoke passed: owner=read_only cargo_slots=6 compact_cargo_slots=2 gear_slots=5 fixtures=0+5+8 overflow=true contexts=current+darkness+pressure+rebreather+capacitor compact_active=rebreather named_assets=Ti+Rubber+Coil+Relic+Rebreather active_tools_excluded=true layouts=1280x720+844x390 active_tool_bottom_separate=true.")
+	print("Held cargo HUD smoke passed: owner=read_only cargo_slots=6 compact_cargo_slots=2 desktop_gear_slots=6 compact_gear_slots=3 fixtures=0+5+8 overflow=true contexts=current+darkness+pressure+rebreather+capacitor compact_visible=rebreather+owned+overflow named_assets=Ti+Rubber+Coil+Relic+Rebreather active_tools_excluded=true layouts=1280x720+844x390 active_tool_bottom_separate=true.")
 	quit(0)
 
 

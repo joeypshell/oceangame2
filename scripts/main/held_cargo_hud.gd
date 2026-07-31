@@ -5,11 +5,10 @@ const PassiveEquipmentStrip := preload("res://scripts/main/passive_equipment_str
 const COMPACT_VIEWPORT_WIDTH := 1259.0
 const DESKTOP_SIZE := Vector2(520.0, 72.0)
 const COMPACT_HEIGHT := 72.0
-const COMPACT_SAFE_LEFT := 312.0
-const COMPACT_RIGHT_INSET := 434.0
-const COMPACT_MIN_WIDTH := 96.0
+const COMPACT_LEFT := 372.0
+const COMPACT_MIN_WIDTH := 148.0
 const COMPACT_MAX_WIDTH := 220.0
-const COMPACT_RIGHT_RESERVE := 752.0
+const COMPACT_RIGHT_RESERVE := 696.0
 const TOP_OFFSET := 12.0
 const DESKTOP_SLOT_COUNT := 6
 const COMPACT_SLOT_COUNT := 2
@@ -114,8 +113,7 @@ func layout_for_size(viewport_size: Vector2) -> void:
 	_refresh_capacity_text()
 	custom_minimum_size = target_size
 	size = target_size
-	var compact_left: float = floorf((COMPACT_SAFE_LEFT + viewport_size.x - COMPACT_RIGHT_INSET - target_size.x) * 0.5)
-	position = Vector2(compact_left if _compact else floor((viewport_size.x - target_size.x) * 0.5), TOP_OFFSET)
+	position = Vector2(COMPACT_LEFT if _compact else floor((viewport_size.x - target_size.x) * 0.5), TOP_OFFSET)
 	_render_slots()
 
 

@@ -25,7 +25,8 @@ const EQUIPMENT_TEXTURES := {
 	"current_stabilizer": preload("res://assets/ui/equipment_icons/current_stabilizer_01.svg"),
 	"shock_prod_capacitor": preload("res://assets/ui/equipment_icons/shock_prod_capacitor_01.svg"),
 }
-const DESKTOP_SLOT_COUNT := 5
+const DESKTOP_SLOT_COUNT := 6
+const COMPACT_SLOT_COUNT := 3
 const DESKTOP_SLOT_SIZE := Vector2(28, 34)
 const COMPACT_SLOT_SIZE := Vector2(24, 34)
 
@@ -67,15 +68,15 @@ func refresh(owned_capability_ids, context := {}) -> void:
 
 func layout_for_mode(compact: bool) -> void:
 	_compact = compact
-	_title_label.text = "G" if compact else "GEAR"
+	_title_label.text = "GEAR"
 	_title_label.add_theme_font_size_override("font_size", 9 if compact else 10)
-	_row.add_theme_constant_override("separation", 0 if compact else 3)
+	_row.add_theme_constant_override("separation", 2 if compact else 3)
 	for index in range(_slot_panels.size()):
-		_slot_panels[index].visible = index == 0 if compact else true
+		_slot_panels[index].visible = index < COMPACT_SLOT_COUNT if compact else true
 		_slot_panels[index].custom_minimum_size = COMPACT_SLOT_SIZE if compact else DESKTOP_SLOT_SIZE
 		_slot_symbols[index].add_theme_font_size_override("font_size", 8 if compact else 9)
 		_slot_badges[index].add_theme_font_size_override("font_size", 8)
-	custom_minimum_size = Vector2(24, 0) if compact else Vector2(152, 0)
+	custom_minimum_size = Vector2(76, 0) if compact else Vector2(183, 0)
 	_render()
 
 
@@ -128,45 +129,41 @@ func _render() -> void:
 		return
 	var prioritized := _prioritized_items()
 	_displayed_items = []
-	if _compact and not prioritized.is_empty():
-		var names := PackedStringArray()
-		for item in _owned_items:
-			names.append(str(item.get("label", "")))
-		var focus: Dictionary = prioritized[0]
-		_displayed_items.append({
-			"id": "equipment_summary",
-			"label": "%s | Owned: %s" % [focus.get("label", "Gear"), ", ".join(names)],
-			"texture_id": str(focus.get("texture_id", "")),
-			"symbol": str(focus.get("symbol", "EQ")),
-			"quantity": _owned_items.size(),
-			"has_texture": bool(focus.get("has_texture", false)),
-			"active": bool(focus.get("active", false)),
-		})
+	if _compact:
+		if prioritized.size() <= COMPACT_SLOT_COUNT:
+			_displayed_items = prioritized
+		else:
+			for index in range(COMPACT_SLOT_COUNT - 1):
+				_displayed_items.append(prioritized[index])
+			_displayed_items.append(_overflow_item(prioritized.slice(COMPACT_SLOT_COUNT - 1)))
 	elif not _compact:
 		if prioritized.size() <= DESKTOP_SLOT_COUNT:
 			_displayed_items = prioritized
 		else:
 			for index in range(DESKTOP_SLOT_COUNT - 1):
 				_displayed_items.append(prioritized[index])
-			var hidden := prioritized.slice(DESKTOP_SLOT_COUNT - 1)
-			var hidden_names := PackedStringArray()
-			for item in hidden:
-				hidden_names.append(str(item.get("label", "")))
-			_displayed_items.append({
-				"id": "equipment_overflow",
-				"label": "More gear: %s" % ", ".join(hidden_names),
-				"texture_id": "",
-				"symbol": "+",
-				"quantity": hidden.size(),
-				"has_texture": false,
-				"active": false,
-			})
+			_displayed_items.append(_overflow_item(prioritized.slice(DESKTOP_SLOT_COUNT - 1)))
 
 	for index in range(_slot_panels.size()):
-		if _compact and index > 0:
+		if _compact and index >= COMPACT_SLOT_COUNT:
 			continue
 		var item: Dictionary = _displayed_items[index] if index < _displayed_items.size() else {}
 		_render_slot(index, item)
+
+
+func _overflow_item(hidden: Array[Dictionary]) -> Dictionary:
+	var hidden_names := PackedStringArray()
+	for item in hidden:
+		hidden_names.append(str(item.get("label", "")))
+	return {
+		"id": "equipment_overflow",
+		"label": "More gear: %s" % ", ".join(hidden_names),
+		"texture_id": "",
+		"symbol": "+",
+		"quantity": hidden.size(),
+		"has_texture": false,
+		"active": false,
+	}
 
 
 func _prioritized_items() -> Array[Dictionary]:
