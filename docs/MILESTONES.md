@@ -1,6 +1,6 @@
 # Milestones
 
-Last updated: 2026-07-28
+Last updated: 2026-07-31
 
 This is the compact milestone index. Detailed direction lives in:
 
@@ -44,10 +44,14 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_15_WEB_PREVIEW_VERIFICATION.md`
 - `docs/current/OCEANGAME_EXPANSION_15_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_16_PLAN.md`
+- `docs/current/OCEANGAME_EXPANSION_16_SOURCE_STATE_CONTRACT.md`
+- `docs/current/OCEANGAME_EXPANSION_16_VISUAL_BASELINE_DECISION.md`
+- `docs/current/OCEANGAME_EXPANSION_16_WEB_PREVIEW_VERIFICATION.md`
+- `docs/current/OCEANGAME_EXPANSION_16_CLOSEOUT.md`
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-15 are complete with player GO. Expansion 15 creates one real night decision between existing regional and daily-opportunity leads. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
+Simple Diver Game 01-09 and OceanGame Expansions 01-16 are complete with player GO. Expansion 16 turns the Northwest relay lead into a prepared far-west wreck return. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
@@ -55,25 +59,25 @@ Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen so
 
 **Expansion 15: Expedition Planning And Choice** derives exactly two valid plans in the focused night state, lets the player pin one for the following day, and reduces it to compact active guidance without adding a quest log, map marker, reward, or new content chain. Milestone #41 is complete with owner GO.
 
-**Expansion 16: Deeper Wreck Oxygen Return** is selected by planning gate #1122. It will turn the committed Northwest relay signal into one far-west return through existing contiguous geography, with a recipe-built rebreather that normalizes a source-authored confined-wreck high-consumption oxygen zone. No implementation issue batch or milestone exists yet.
+**Expansion 16: Deeper Wreck Oxygen Return** turns the committed Northwest relay signal into one far-west return through existing contiguous geography, with a recipe-built rebreather that normalizes a source-authored confined-wreck high-consumption oxygen zone. Milestone #42 is complete with owner GO on exact runtime `05b482e` after bounded discoverability and HUD corrections.
 
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
-- Committed: Expansion 16 Deeper Wreck Oxygen Return; implementation batching is the next audit boundary.
+- Committed: no new implementation milestone; run a separate direction audit before batching work.
 - Proposed: no Expansion 17 direction is selected.
 - Directional: other regional identities and exceptional interiors remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-Expansion 15 is complete. Expansion 16 is selected in planning, but no later implementation milestone is open yet.
+Expansion 16 is complete. No later implementation milestone is open yet.
 
-1. [Expansion 15: Expedition Planning And Choice](https://github.com/joeypshell/oceangame2/milestone/41) - complete with owner GO after corrections #1113/#1117/#1119; exact reviewed runtime `23f4172`.
-2. [Expansion 14: Archive Current Return](https://github.com/joeypshell/oceangame2/milestone/40) - complete with owner GO after bounded corrections; exact reviewed runtime `1f148eb`.
-3. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - complete with owner GO after corrections #980/#982-#990, #1000-#1009, and audio interlude #1020-#1023; exact reviewed runtime `ede39d1`.
-4. [Expansion 12: Abyssal Pressure Return](https://github.com/joeypshell/oceangame2/milestone/38) - complete through #941 plus corrections #951-#953, with player GO and exact-SHA Web verification.
+1. [Expansion 16: Deeper Wreck Oxygen Return](https://github.com/joeypshell/oceangame2/milestone/42) - complete with owner GO after corrections #1143/#1144/#1151/#1153; exact reviewed runtime `05b482e`.
+2. [Expansion 15: Expedition Planning And Choice](https://github.com/joeypshell/oceangame2/milestone/41) - complete with owner GO after corrections #1113/#1117/#1119; exact reviewed runtime `23f4172`.
+3. [Expansion 14: Archive Current Return](https://github.com/joeypshell/oceangame2/milestone/40) - complete with owner GO after bounded corrections; exact reviewed runtime `1f148eb`.
+4. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - complete with owner GO after corrections #980/#982-#990, #1000-#1009, and audio interlude #1020-#1023; exact reviewed runtime `ede39d1`.
 
 ## Completed Expansion 04
 

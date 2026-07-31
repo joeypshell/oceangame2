@@ -1,12 +1,12 @@
 # Project Context
 
-Last updated: 2026-07-28
+Last updated: 2026-07-31
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
 ## Current Goal
 
-`oceangame2` has a GO release candidate and fifteen completed bounded Phase 2 expansions. Expansion 16 Deeper Wreck Oxygen Return is selected in planning; its implementation milestone and issue batch are not yet created. OceanGame Expansion 01 proved:
+`oceangame2` has a GO release candidate and sixteen completed bounded Phase 2 expansions. Expansion 16 Deeper Wreck Oxygen Return is complete with owner GO on exact Web runtime `05b482e`; no Expansion 17 direction is selected. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -44,7 +44,7 @@ Expansion 14 Archive Current Return is complete with owner GO at exact Web runti
 
 Expansion 15 Expedition Planning And Choice is complete with owner GO on exact Web runtime `23f4172`. It presents the unresolved Northwest Wreck Relay as main progression and the forecasted Southwest jellyfish bloom as an optional resource run, stores one session/day-scoped selection, and carries compact guidance through the following day's sorties. Corrections #1117/#1119 hardened build feedback and made the choices directly comparable without changing profile schema, topology, rewards, or progression ownership.
 
-Planning gate #1122 selects Expansion 16 Deeper Wreck Oxygen Return. The committed relay finding will lead into the underused far-west/lower-left part of continuous `production_level_01`, where one recipe-built closed-circuit rebreather normalizes a source-authored confined-wreck high-consumption oxygen zone before an existing-cutter/existing-scanner payoff. Planning found the nearby upper-left anchor too close to prove oxygen progression and selected representative far-west route evidence of `71.6s` ideal round-trip swimming before interaction or reserve. No gameplay, map, profile, capture, baseline, workflow, milestone, or implementation issue changes landed in the planning gate.
+Expansion 16 Deeper Wreck Oxygen Return is complete through #1122-#1133 plus bounded corrections #1143-#1146/#1151/#1153. The committed relay finding now leads into the underused far-west/lower-left part of continuous `production_level_01`, where one recipe-built closed-circuit rebreather normalizes a source-authored confined-wreck x8 oxygen zone before an existing-cutter/existing-scanner payoff. The final route cue, relay beacons, pressure warning, scalable passive-gear presentation, and scaled-display HUD correction passed exact-SHA Web verification. The owner confirmed the oxygen pressure, rebreather, cutter, and corrected HUD and gave GO on runtime `05b482e`.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -77,21 +77,21 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Completed Expansion 13 handoff: `docs/current/OCEANGAME_EXPANSION_13_CLOSEOUT.md`, with correction history in `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_PLAN.md`, `docs/current/ACTIVE_TOOL_AND_WRECK_REWARD_CONTRACT.md`, and `docs/current/OCEANGAME_EXPANSION_13_OWNER_HOLD_CORRECTION_VISUAL_WEB_VERIFICATION.md`
 - Completed Expansion 14 handoff: `docs/current/OCEANGAME_EXPANSION_14_CLOSEOUT.md`, with correction history in `docs/current/OCEANGAME_EXPANSION_14_OWNER_HOLD_CORRECTION_PLAN.md`, focused visual review, and exact Web verification
 - Completed Expansion 15 handoff: `docs/current/OCEANGAME_EXPANSION_15_CLOSEOUT.md`, with its plan, source/state contract, visual decision, final Web evidence, and corrections #1113/#1117/#1119
-- Selected Expansion 16 plan: `docs/current/OCEANGAME_EXPANSION_16_PLAN.md`; implementation remains unbatched
+- Completed Expansion 16 handoff: `docs/current/OCEANGAME_EXPANSION_16_CLOSEOUT.md`, with its plan, source/state contract, visual decisions, exact Web evidence, and corrections #1143-#1146/#1151/#1153
 - Latest audio/Web handoff: `docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Focused player-review workflow: `docs/current/PLAYTEST_CHECKPOINTS.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest owner decision: Expansion 15 GO on exact reviewed runtime `23f4172`; #1104 and milestone #41 are complete
-- Latest selected planning direction: Expansion 16 Deeper Wreck Oxygen Return through #1122; create its implementation milestone and frozen batch in the next audit
-- Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_15_PLAN.md`, with ownership locked by `docs/current/OCEANGAME_EXPANSION_15_SOURCE_STATE_CONTRACT.md`
-- Latest source contract: `docs/current/OCEANGAME_EXPANSION_15_SOURCE_STATE_CONTRACT.md`
-- Latest visual decision: Expansion 15's focused planning presentation is accepted in `docs/current/OCEANGAME_EXPANSION_15_VISUAL_BASELINE_DECISION.md`; established full-level and slice baselines did not change
+- Latest owner decision: Expansion 16 GO on exact reviewed runtime `05b482e`; #1133 and milestone #42 are complete
+- Latest selected planning direction: none beyond completed Expansion 16; run a separate roadmap/direction audit before selecting Expansion 17
+- Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_16_PLAN.md`, with ownership locked by `docs/current/OCEANGAME_EXPANSION_16_SOURCE_STATE_CONTRACT.md`
+- Latest source contract: `docs/current/OCEANGAME_EXPANSION_16_SOURCE_STATE_CONTRACT.md`
+- Latest visual decision: Expansion 16's focused oxygen-route presentation is accepted in `docs/current/OCEANGAME_EXPANSION_16_VISUAL_BASELINE_DECISION.md`, with bounded HUD corrections recorded in the closeout; established terrain and slice baselines did not change
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: corrected Expansion 15 owner candidate `23f4172`, recorded in `docs/current/OCEANGAME_EXPANSION_15_WEB_PREVIEW_VERIFICATION.md` and its closeout.
+- Latest Web verification: final Expansion 16 owner candidate `05b482e`, recorded in `docs/current/OCEANGAME_EXPANSION_16_CLOSEOUT.md`; the original technical candidate evidence remains in `docs/current/OCEANGAME_EXPANSION_16_WEB_PREVIEW_VERIFICATION.md`.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -207,7 +207,7 @@ For map changes, run the relevant generator, SVG renderer, validator, parity che
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Each issue needs acceptance criteria, relevant files, implementation notes, and verification steps.
 
-Current issue state as of 2026-07-28:
+Current issue state as of 2026-07-31:
 
 - Closed: #662-#671 completed Expansion 01 with a GO.
 - Closed: #685-#694 completed Expansion 02 with a GO.
@@ -228,7 +228,7 @@ Current issue state as of 2026-07-28:
 - Closed: #1069-#1077 and #1087/#1088 resolve the Expansion 14 owner-HOLD findings and late replay gaps.
 - Closed: #1040 records owner GO for exact runtime `1f148eb`; milestone #40 is complete.
 - Closed: #1094-#1104 plus corrections #1113/#1117/#1119 completed Expansion 15; #1104 records owner GO for exact runtime `23f4172`, and milestone #41 is complete.
-- Planning: #1122 selects Expansion 16 Deeper Wreck Oxygen Return and recommends, but does not create, its implementation batch.
+- Closed: #1122-#1133 plus corrections #1143-#1146/#1151/#1153 completed Expansion 16; #1133 records owner GO for exact runtime `05b482e`, and milestone #42 is complete.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -366,7 +366,7 @@ Current issue state as of 2026-07-28:
 
 ## Recommended Next Work
 
-Run a separate backlog audit to create the Expansion 16 implementation milestone and freeze the dependency-ordered batch recommended by `docs/current/OCEANGAME_EXPANSION_16_PLAN.md`. Do not reopen the direction decision or start implementation from #1122 itself. #52/#53 remain deferred rather than becoming the default next work.
+Run a separate roadmap/direction audit before selecting Expansion 17 or creating another implementation milestone. Evaluate the completed journey against the north star, current progression graph, underused authored regions, and owner feedback; then commit only one bounded next direction. #52/#53 remain deferred rather than becoming the default next work.
 
 Accepted constraints for next work:
 
@@ -379,7 +379,7 @@ Accepted constraints for next work:
 - Preserve the blueprint-and-material scanner project, same-map east-pocket anomaly, explicit returned cutter plan, daylight, surface oxygen, repeated sorties, boat return, night transition, seeded material ownership, canonical-boat commitment, and mandatory fins/cutter/weapon chain.
 - Omit prompted connectors and map transitions from normal full-level traversal. Preserve Expansion 14's source-authored advanced stabilizer current as a passive regional boundary inside continuous water; legacy slice behavior remains a protected reference surface, not the canonical prerequisite owner.
 - Keep standard capability gates inside contiguous authored geography and traversable through movement; reserve `E` connectors for explicit exceptional entrances/interiors.
-- Keep Expansion 16 in the existing far-west/lower-left geography with no expected terrain change. Its rebreather normalizes only a source-authored confined-wreck high-consumption oxygen zone; the session `O2 tank +15` must not substitute for the durable project.
+- Preserve Expansion 16's far-west/lower-left journey and source-authored confined-wreck oxygen zone as a completed regression surface. Its rebreather remains route-local; the session `O2 tank +15` does not substitute for the durable project.
 - Preserve the completed mineral research, fresh-day selection, and broad habitat-lead behavior as the practical-knowledge regression surface.
 - Preserve separate health, the source-authored eel territory, viable unarmed evasion, non-circular shock-prod project, day-local defeat, and no-reward combat semantics.
 - Night consumes no Food, Water, Power, or other survival tax.
