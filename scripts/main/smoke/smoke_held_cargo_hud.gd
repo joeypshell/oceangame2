@@ -192,15 +192,27 @@ func _run() -> void:
 	_expect(cargo_rect.end.x <= 592.0 and not cargo_rect.intersects(tool_rect), "wide-mobile HUDs entered the touch-button region")
 	_expect(bool(active_tool.get_test_report().get("compact", false)), "wide-mobile active tool did not share the cargo breakpoint")
 
+	var logical_viewport := SubViewport.new()
+	logical_viewport.size = Vector2i(1000, 600)
+	get_root().add_child(logical_viewport)
+	var scaled_cargo := HeldCargoHud.new()
+	logical_viewport.add_child(scaled_cargo)
+	await process_frame
+	var scaled_report: Dictionary = scaled_cargo.get_test_report()
+	var scaled_rect: Rect2 = scaled_report.get("rect", Rect2())
+	_expect(bool(scaled_report.get("compact", false)), "top HUD used the physical window instead of its logical viewport")
+	_expect(Rect2(Vector2.ZERO, Vector2(logical_viewport.size)).encloses(scaled_rect), "top HUD escaped its logical viewport: %s" % scaled_rect)
+
 	cargo.queue_free()
 	active_tool.queue_free()
+	logical_viewport.queue_free()
 	await process_frame
 	if not _failures.is_empty():
 		for failure in _failures:
 			push_error("Held cargo HUD smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Held cargo HUD smoke passed: owner=read_only cargo_slots=6 compact_cargo_slots=2 desktop_gear_slots=6 compact_gear_slots=3 fixtures=0+5+8 overflow=true contexts=current+darkness+pressure+rebreather+capacitor compact_visible=rebreather+owned+overflow named_assets=Ti+Rubber+Coil+Relic+Rebreather active_tools_excluded=true layouts=1280x720+844x390 active_tool_bottom_separate=true.")
+	print("Held cargo HUD smoke passed: owner=read_only cargo_slots=6 compact_cargo_slots=2 desktop_gear_slots=6 compact_gear_slots=3 fixtures=0+5+8 overflow=true contexts=current+darkness+pressure+rebreather+capacitor compact_visible=rebreather+owned+overflow named_assets=Ti+Rubber+Coil+Relic+Rebreather active_tools_excluded=true layouts=1280x720+844x390 scaled_subviewport=true active_tool_bottom_separate=true.")
 	quit(0)
 
 
