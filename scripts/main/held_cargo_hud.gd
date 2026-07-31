@@ -134,7 +134,7 @@ func get_test_report() -> Dictionary:
 func _layout() -> void:
 	if not is_inside_tree():
 		return
-	layout_for_size(Vector2(get_window().size))
+	layout_for_size(get_viewport_rect().size)
 
 
 func _refresh_capacity_text() -> void:
