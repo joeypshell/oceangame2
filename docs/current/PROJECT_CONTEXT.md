@@ -6,7 +6,7 @@ This file is the compact handoff for new Codex or ChatGPT Project sessions. It c
 
 ## Current Goal
 
-`oceangame2` has a GO release candidate and sixteen completed bounded Phase 2 expansions. Expansion 17 Wreck Network Triangulation is selected in planning; its implementation milestone and issue batch are not yet created. OceanGame Expansion 01 proved:
+`oceangame2` has a GO release candidate and sixteen completed bounded Phase 2 expansions. Expansion 17 Wreck Network Triangulation is active in milestone #43 through frozen issues #1158-#1167; its source/state contract is locked before implementation. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -46,7 +46,7 @@ Expansion 15 Expedition Planning And Choice is complete with owner GO on exact W
 
 Expansion 16 Deeper Wreck Oxygen Return is complete through #1122-#1133 plus bounded corrections #1143-#1146/#1151/#1153. The committed relay finding now leads into the underused far-west/lower-left part of continuous `production_level_01`, where one recipe-built closed-circuit rebreather normalizes a source-authored confined-wreck x8 oxygen zone before an existing-cutter/existing-scanner payoff. The final route cue, relay beacons, pressure warning, scalable passive-gear presentation, and scaled-display HUD correction passed exact-SHA Web verification. The owner confirmed the oxygen pressure, rebreather, cutter, and corrected HUD and gave GO on runtime `05b482e`.
 
-Planning gate #1156 selects Expansion 17 Wreck Network Triangulation. The far-west discovery will decode two broad leads to distinct physical relay artifacts in underused existing regions. Each route reuses a different combination of already-earned capabilities, each finding commits only at the canonical boat, and both enable one explicit night analysis that reveals a later destination promise. The pass adds no recipe, capability, terrain, transition, score reward, or broad system; implementation remains unbatched.
+Planning gate #1156 selects Expansion 17 Wreck Network Triangulation, now active as milestone #43 and frozen issues #1158-#1167. The far-west discovery will decode two broad leads to distinct physical relay artifacts in underused existing regions. Each route reuses a different combination of already-earned capabilities, each finding commits only at the canonical boat, and both enable one explicit night analysis that reveals a later destination promise. The pass adds no recipe, capability, terrain, transition, score reward, or broad system.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -80,7 +80,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Completed Expansion 14 handoff: `docs/current/OCEANGAME_EXPANSION_14_CLOSEOUT.md`, with correction history in `docs/current/OCEANGAME_EXPANSION_14_OWNER_HOLD_CORRECTION_PLAN.md`, focused visual review, and exact Web verification
 - Completed Expansion 15 handoff: `docs/current/OCEANGAME_EXPANSION_15_CLOSEOUT.md`, with its plan, source/state contract, visual decision, final Web evidence, and corrections #1113/#1117/#1119
 - Completed Expansion 16 handoff: `docs/current/OCEANGAME_EXPANSION_16_CLOSEOUT.md`, with its plan, source/state contract, visual decisions, exact Web evidence, and corrections #1143-#1146/#1151/#1153
-- Selected Expansion 17 plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`; implementation remains unbatched
+- Active Expansion 17 handoff: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md` and `docs/current/OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`; milestone #43 owns #1158-#1167
 - Latest audio/Web handoff: `docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
