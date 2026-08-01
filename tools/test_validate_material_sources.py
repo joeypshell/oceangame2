@@ -296,6 +296,9 @@ class MaterialSourceValidationTests(unittest.TestCase):
             "required_capability_id": "propulsion_fins",
         }]
         self.assertEqual(validate_material_source_schema(map_data), [])
+        map_data["regional_journeys"][0]["promise_gate_id"] = "later_landmark"
+        map_data["regional_journeys"][0]["required_discovery_id"] = "later_discovery"
+        self.assertEqual(validate_material_source_schema(map_data), [])
 
     def test_rejects_propulsion_project_without_blueprint_requirement(self) -> None:
         map_data = with_propulsion_project(valid_map())

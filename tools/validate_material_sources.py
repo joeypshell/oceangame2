@@ -376,7 +376,11 @@ def _validate_projects(
         promise_id = str(journey.get("promise_gate_id", ""))
         capability_id = str(journey.get("required_capability_id", ""))
         promise = current_gates.get(promise_id)
-        if promise_id not in referenced_gates or promise is None or promise.get("required_capability_id") != capability_id:
+        capability_owned = any(project.get("unlocks_capability_id") == capability_id for project in projects.values())
+        promised_unlock = promise_id in referenced_gates and promise is not None and (
+            promise.get("required_capability_id") == capability_id
+        )
+        if not promised_unlock and not (capability_owned and isinstance(journey.get("required_discovery_id"), str)):
             continue
         for gate_id in journey.get("entry_gate_ids", []):
             gate = current_gates.get(str(gate_id))

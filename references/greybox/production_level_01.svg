@@ -19,6 +19,8 @@
 <rect x="4672" y="4576" width="160" height="288" rx="64" fill="#237fad" opacity="0.22"/>
 <rect x="1792" y="1824" width="160" height="128" rx="64" fill="#237fad" opacity="0.22"/>
 <rect x="480" y="2976" width="224" height="160" rx="64" fill="#237fad" opacity="0.22"/>
+<rect x="608" y="3808" width="160" height="64" rx="64" fill="#237fad" opacity="0.22"/>
+<rect x="3840" y="4704" width="256" height="96" rx="64" fill="#237fad" opacity="0.22"/>
 <rect x="0" y="0" width="5056" height="5152" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
 <text x="12.0" y="34.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">production_level_bounds</text>
 <rect x="1216" y="1568" width="32" height="32" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
@@ -81,6 +83,14 @@
 <text x="1068.0" y="3010.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">far_west_confined_wreck_warning</text>
 <rect x="480" y="2976" width="224" height="160" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
 <text x="492.0" y="3010.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">far_west_deeper_wreck_landmark</text>
+<rect x="768" y="3808" width="32" height="96" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="780.0" y="3842.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">western_chasm_relay_current</text>
+<rect x="608" y="3808" width="160" height="64" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="620.0" y="3842.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">western_chasm_relay_landmark</text>
+<rect x="3648" y="4704" width="32" height="96" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="3660.0" y="4738.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">abyssal_shelf_pressure_seam</text>
+<rect x="3840" y="4704" width="256" height="96" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="3852.0" y="4738.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">abyssal_shelf_relay_landmark</text>
 <rect x="3456" y="0" width="1056" height="256" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="0" y="0" width="2912" height="320" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="0" y="320" width="2880" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
@@ -530,6 +540,20 @@
 <rect x="480" y="3040" width="64" height="64" rx="8" fill="#69f0dc" fill-opacity="0.28" stroke="#07584f" stroke-width="6"/>
 <circle cx="512.0" cy="3072.0" r="14" fill="none" stroke="#69f0dc" stroke-width="6"/>
 <text x="488.0" y="3030.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">far_west_deeper_wreck_survey</text>
+<rect x="640" y="3808" width="64" height="64" rx="8" fill="#69f0dc" fill-opacity="0.28" stroke="#07584f" stroke-width="6"/>
+<path d="M 660.0 3841.0 l 5 -5 h 45 l 6 6 v 32 h -56 z" fill="#1a3b42" stroke="#85bdb8" stroke-width="4"/>
+<rect x="670.0" y="3845.0" width="30" height="18" fill="#0a7a87"/>
+<path d="M 674.0 3857.0 h 5 l 3 -6 l 4 10 l 4 -7 h 6" fill="none" stroke="#ffd447" stroke-width="3"/>
+<path d="M 703.0 3836.0 v -9 l 7 -6" fill="none" stroke="#85bdb8" stroke-width="4"/>
+<polygon points="710.0,3816.0 715.0,3821.0 710.0,3826.0 705.0,3821.0" fill="#ffb83d"/>
+<text x="648.0" y="3798.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">western_chasm_wreck_fragment_survey</text>
+<rect x="3968" y="4704" width="64" height="64" rx="8" fill="#69f0dc" fill-opacity="0.28" stroke="#07584f" stroke-width="6"/>
+<path d="M 3988.0 4737.0 l 5 -5 h 45 l 6 6 v 32 h -56 z" fill="#1a3b42" stroke="#85bdb8" stroke-width="4"/>
+<rect x="3998.0" y="4741.0" width="30" height="18" fill="#0a7a87"/>
+<path d="M 4002.0 4753.0 h 5 l 3 -6 l 4 10 l 4 -7 h 6" fill="none" stroke="#ffd447" stroke-width="3"/>
+<path d="M 4031.0 4732.0 v -9 l 7 -6" fill="none" stroke="#85bdb8" stroke-width="4"/>
+<polygon points="4038.0,4712.0 4043.0,4717.0 4038.0,4722.0 4033.0,4717.0" fill="#ffb83d"/>
+<text x="3976.0" y="4694.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">abyssal_shelf_wreck_fragment_survey</text>
 <circle cx="4048.0" cy="1488.0" r="17" fill="#b8f36b" stroke="#3f6619" stroke-width="5"/>
 <circle cx="4036.0" cy="1496.0" r="8" fill="#b8f36b" stroke="#3f6619" stroke-width="4"/>
 <text x="4072.0" y="1522.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="20" paint-order="stroke" stroke="#10384a" stroke-width="4">upper_right_glow_anemone_sample</text>
