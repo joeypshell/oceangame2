@@ -21,11 +21,13 @@ func sync_route_guidance(world, profile) -> void:
 		)
 
 
-func promise_text(world, profile) -> String:
+func promise_text(world, profile, selected_lead_id := "") -> String:
 	if world == null or profile == null or not world.has_method("get_regional_journeys") or not world.has_method("get_survey_targets") or not world.has_method("get_tool_targets"):
 		return ""
 	var discovery_records := _discovery_records(world.get_survey_targets(), world.get_tool_targets())
 	for journey in world.get_regional_journeys():
+		if not str(selected_lead_id).is_empty() and str(journey.get("id", "")) != str(selected_lead_id):
+			continue
 		var required_discovery_id := str(journey.get("required_discovery_id", "")).strip_edges()
 		var survey_id := str(journey.get("survey_target_id", "")).strip_edges()
 		var target: Dictionary = discovery_records.get(survey_id, {})

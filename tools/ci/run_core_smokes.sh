@@ -14,6 +14,7 @@ run_godot pressure-zone-state 120 --headless --path . --script res://scripts/mai
 run_godot oxygen-consumption-zone-state 120 --headless --path . --script res://scripts/main/smoke/smoke_oxygen_consumption_zone_state.gd
 run_godot expansion-16-integration-state 180 --headless --path . --script res://scripts/main/smoke/smoke_expansion_16_integration_state.gd
 run_godot wreck-network-investigation-state 120 --headless --path . --script res://scripts/main/smoke/smoke_wreck_network_investigation_state.gd
+run_godot wreck-network-runtime-integration 180 --headless --path . --script res://scripts/main/smoke/smoke_wreck_network_runtime_integration.gd
 run_godot salvage-loop 120 --headless --path . --quit-after 1 --smoke-salvage-loop
 
 score_smokes=(

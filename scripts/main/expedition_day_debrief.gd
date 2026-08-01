@@ -36,6 +36,14 @@ static func handle_day_key(main) -> Dictionary:
 		return {"changed": false, "reason": "unavailable"}
 	if main._expedition_day_state.phase != ExpeditionDayState.PHASE_DEBRIEF:
 		return ExpeditionDayPresentation.try_request_voluntary_end(main)
+	if main._wreck_network_investigation != null and main._wreck_network_investigation.requires_analysis():
+		main._last_status_note = "Analyze wreck network before starting the next day"
+		main._update_status_label()
+		return {
+			"changed": false,
+			"reason": "analysis_required",
+			"note": main._last_status_note,
+		}
 	var plan_report: Dictionary = main._refresh_expedition_plan()
 	if _planner_requires_selection(main, plan_report):
 		main._last_status_note = "Pin an expedition plan before starting the next day"
@@ -70,6 +78,8 @@ static func handle_debrief_input(main, event: InputEvent) -> Dictionary:
 	if main._expedition_day_state.phase != ExpeditionDayState.PHASE_DEBRIEF:
 		return {"changed": false, "reason": "wrong_phase"}
 	var repeated_key := event is InputEventKey and (event as InputEventKey).echo
+	if event.is_action_pressed("active_tool_use") and not repeated_key:
+		return _analyze_wreck_network(main)
 	if event.is_action_pressed("active_tool_cycle_next") and not repeated_key:
 		return _cycle_plan_highlight(main)
 	if event is InputEventKey:
@@ -80,7 +90,7 @@ static func handle_debrief_input(main, event: InputEvent) -> Dictionary:
 
 
 static func _supported_keycode(event: InputEventKey) -> Key:
-	for candidate in [KEY_TAB, KEY_E, KEY_N, KEY_P]:
+	for candidate in [KEY_TAB, KEY_E, KEY_N, KEY_P, KEY_Q]:
 		if event.keycode == candidate or event.physical_keycode == candidate:
 			return candidate
 	return event.keycode
@@ -95,6 +105,8 @@ static func handle_debrief_key(main, keycode: Key) -> Dictionary:
 		return _cycle_plan_highlight(main)
 	if keycode == KEY_E:
 		return _pin_highlighted_plan(main)
+	if keycode == KEY_Q:
+		return _analyze_wreck_network(main)
 	if keycode == KEY_N:
 		return handle_day_key(main)
 	if keycode != KEY_P or main._material_project == null:
@@ -121,6 +133,24 @@ static func _cycle_plan_highlight(main) -> Dictionary:
 		selection,
 		str(main._expedition_day_state.phase)
 	)
+	main._update_status_label()
+	return result
+
+
+static func _analyze_wreck_network(main) -> Dictionary:
+	if main._wreck_network_investigation == null:
+		return {"changed": false, "reason": "investigation_unavailable"}
+	var result: Dictionary = main._wreck_network_investigation.try_analyze(
+		str(main._expedition_day_state.phase)
+	)
+	if str(result.get("status", "")) == "unavailable":
+		return {"changed": false, "reason": "investigation_unavailable"}
+	main._last_status_note = str(result.get("note", main._last_status_note))
+	if bool(result.get("changed", false)):
+		var state: Dictionary = result.get("state", {})
+		main._expedition_day_state.record_discovery(str(state.get("analysis_discovery_id", "")))
+		if main.has_method("_refresh_expedition_plan"):
+			main._refresh_expedition_plan()
 	main._update_status_label()
 	return result
 
@@ -203,7 +233,8 @@ static func apply_result_panel(main) -> bool:
 		main._expedition_day_state,
 		main._material_project,
 		main._daily_conditions,
-		main._last_status_note
+		main._last_status_note,
+		main._wreck_network_investigation
 	)
 	return true
 
@@ -212,7 +243,8 @@ static func build_text(
 	day,
 	material_project = null,
 	daily_conditions = null,
-	debrief_feedback := ""
+	debrief_feedback := "",
+	wreck_network_investigation = null
 ) -> String:
 	var reason_text := "Day ended at boat"
 	if day.end_reason == "nightfall":
@@ -232,6 +264,9 @@ static func build_text(
 		lines.append("Recovery: %s" % failure_text)
 	if material_project != null and material_project.has_method("debrief_lines"):
 		for line in material_project.debrief_lines():
+			lines.append(str(line))
+	if wreck_network_investigation != null and wreck_network_investigation.has_method("debrief_lines"):
+		for line in wreck_network_investigation.debrief_lines():
 			lines.append(str(line))
 	var feedback := str(debrief_feedback).strip_edges()
 	if (

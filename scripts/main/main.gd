@@ -66,6 +66,7 @@ const ExpeditionPlanPanel := preload("res://scripts/main/expedition_plan_panel.g
 const ExpeditionPlanState := preload("res://scripts/main/expedition_plan_state.gd")
 const ExpeditionDayPresentation := preload("res://scripts/main/expedition_day_presentation.gd")
 const ExpeditionDayDebrief := preload("res://scripts/main/expedition_day_debrief.gd")
+const WreckNetworkInvestigationRuntime := preload("res://scripts/main/wreck_network_investigation_runtime.gd")
 const DailyConditionState := preload("res://scripts/main/daily_condition_state.gd")
 const MapCatalog := preload("res://scripts/main/map_catalog.gd")
 const MapRuntimeProbe := preload("res://scripts/main/map_runtime_probe.gd")
@@ -247,6 +248,7 @@ var _expedition_day_state
 var _expedition_plan_state
 var _expedition_plan_report := {}
 var _expedition_plan_panel
+var _wreck_network_investigation
 var _timed_salvage
 var _world_connector
 var _audio_cues
@@ -864,6 +866,7 @@ func _ready() -> void:
 	_anomaly_survey = AnomalySurveyRuntime.new(_progression_runtime, profile_persistence_enabled, profile_state)
 	if not _review_checkpoint_id.is_empty():
 		_review_checkpoint_report = ReviewCheckpointFixture.apply(_review_checkpoint_id, _anomaly_survey.profile_state())
+	_wreck_network_investigation = WreckNetworkInvestigationRuntime.new(_anomaly_survey.profile_state())
 	_pressure_zone = PressureZoneController.new()
 	_progression_runtime.set_profile_state(_anomaly_survey.profile_state())
 	_material_runtime = MaterialRuntimeController.new(_anomaly_survey.profile_state())
@@ -1263,6 +1266,7 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	var player := PLAYER_SCENE.instantiate()
 	_player = player
 	_anomaly_survey.on_map_loaded(world)
+	_wreck_network_investigation.on_map_loaded(world)
 	_pressure_zone.on_map_loaded(world)
 	_oxygen_consumption_zone.on_map_loaded(world)
 	_expedition_day_state.on_map_loaded(str(world.map_id))
@@ -1402,7 +1406,11 @@ func _process(delta: float) -> void:
 	if survey_result.has("note"):
 		_last_status_note = str(survey_result["note"])
 	if bool(survey_result.get("committed", false)):
-		_expedition_day_state.record_discovery(str(survey_result.get("discovery_id", "")))
+		var discovery_id := str(survey_result.get("discovery_id", ""))
+		_expedition_day_state.record_discovery(discovery_id)
+		var investigation_result: Dictionary = _wreck_network_investigation.on_discovery_committed(discovery_id)
+		if investigation_result.has("note"):
+			_last_status_note = str(investigation_result["note"])
 		_refresh_expedition_plan()
 	_update_hazard_warning(delta)
 
@@ -2068,7 +2076,13 @@ func _update_status_label() -> void:
 	if not oxygen_feedback.is_empty():
 		oxygen_text = "Oxygen %ds %s" % [oxygen_seconds, oxygen_feedback]
 	var progression_text := _progression_overlay_text()
-	var anomaly_text: String = _anomaly_survey.overlay_text(_world, _player)
+	var selected_lead_id := (
+		str(_expedition_plan_state.selected_lead_id())
+		if _expedition_plan_state != null
+		else ""
+	)
+	var anomaly_text: String = _anomaly_survey.overlay_text(_world, _player, selected_lead_id)
+	var wreck_network_text: String = _wreck_network_investigation.objective_line()
 	var material_text: String = _material_runtime.overlay_text()
 
 	_status_label.text = "Score %d\nSalvage banked %d/%d\nHeld %d/%d (%d pts)\n%s\n%s\n%s" % [
@@ -2086,6 +2100,8 @@ func _update_status_label() -> void:
 		_status_label.text += "\n%s" % objective_text
 	if not anomaly_text.is_empty():
 		_status_label.text += "\n%s" % anomaly_text
+	if not wreck_network_text.is_empty() and wreck_network_text != prompt:
+		_status_label.text += "\n%s" % wreck_network_text
 	if not material_text.is_empty():
 		_status_label.text += "\n%s" % material_text
 	if not prompt.is_empty() and prompt != anomaly_text:
