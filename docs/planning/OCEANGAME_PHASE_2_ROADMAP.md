@@ -2,8 +2,8 @@
 
 Date: 2026-07-31
 
-Status: Expansions 01-16 are complete with player GO. Planning gate #1156
-selects Expansion 17 Wreck Network Triangulation; implementation is unbatched.
+Status: Expansions 01-16 are complete with player GO. Expansion 17 Wreck
+Network Triangulation is active in milestone #43 through issues #1158-#1167.
 
 ## Decision
 
@@ -91,7 +91,7 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 17 Wreck Network Triangulation; the next audit may create only its dependency-ordered implementation batch.
+Expansion 17 Wreck Network Triangulation through frozen milestone #43.
 
 ### Proposed
 
@@ -431,8 +431,8 @@ existing tool use, and exact-once boat commitment without terrain or global-syst
 
 ### Expansion 17: Wreck Network Triangulation
 
-Status: Selected in `docs/current/OCEANGAME_EXPANSION_17_PLAN.md` through
-planning gate #1156. Implementation remains unbatched.
+Status: Active in milestone #43 through frozen issues #1158-#1167. See
+`docs/current/OCEANGAME_EXPANSION_17_PLAN.md` and its source/state contract.
 
 Goal: turn the far-west network discovery into a two-lead, multi-return investigation
 that makes the existing capability set feel like a useful expedition toolkit.

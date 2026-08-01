@@ -49,6 +49,7 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_16_WEB_PREVIEW_VERIFICATION.md`
 - `docs/current/OCEANGAME_EXPANSION_16_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`
+- `docs/current/OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`
 
 ## Current State
 
@@ -62,25 +63,25 @@ Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen so
 
 **Expansion 16: Deeper Wreck Oxygen Return** turns the committed Northwest relay signal into one far-west return through existing contiguous geography, with a recipe-built rebreather that normalizes a source-authored confined-wreck high-consumption oxygen zone. Milestone #42 is complete with owner GO on exact runtime `05b482e` after bounded discoverability and HUD corrections.
 
-**Expansion 17: Wreck Network Triangulation** will decode two physical relay-artifact leads in distinct existing regions, reuse already-earned capabilities, commit each fragment at the boat, and combine both through one explicit night analysis. Planning gate #1156 selects the direction; implementation remains unbatched.
+**Expansion 17: Wreck Network Triangulation** will decode two physical relay-artifact leads in distinct existing regions, reuse already-earned capabilities, commit each fragment at the boat, and combine both through one explicit night analysis. Milestone #43 tracks frozen issues #1158-#1167; #1167 is the owner GO/HOLD gate.
 
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
-- Committed: Expansion 17 Wreck Network Triangulation; implementation batching is the next audit boundary.
+- Committed: Expansion 17 Wreck Network Triangulation through milestone #43 and issues #1158-#1167.
 - Proposed: no Expansion 18 direction is selected.
 - Directional: the triangulated destination, exceptional interiors, and other regional identities remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-Expansion 16 is complete. Expansion 17 is selected in planning, but no later implementation milestone is open yet.
+Expansion 16 is complete. Expansion 17 milestone #43 is active with frozen issues #1158-#1167.
 
-1. [Expansion 16: Deeper Wreck Oxygen Return](https://github.com/joeypshell/oceangame2/milestone/42) - complete with owner GO after corrections #1143/#1144/#1151/#1153; exact reviewed runtime `05b482e`.
-2. [Expansion 15: Expedition Planning And Choice](https://github.com/joeypshell/oceangame2/milestone/41) - complete with owner GO after corrections #1113/#1117/#1119; exact reviewed runtime `23f4172`.
-3. [Expansion 14: Archive Current Return](https://github.com/joeypshell/oceangame2/milestone/40) - complete with owner GO after bounded corrections; exact reviewed runtime `1f148eb`.
-4. [Expansion 13: Southeast Wreck Return](https://github.com/joeypshell/oceangame2/milestone/39) - complete with owner GO after corrections #980/#982-#990, #1000-#1009, and audio interlude #1020-#1023; exact reviewed runtime `ede39d1`.
+1. [Expansion 17: Wreck Network Triangulation](https://github.com/joeypshell/oceangame2/milestone/43) - active issues #1158-#1167; final owner review is #1167.
+2. [Expansion 16: Deeper Wreck Oxygen Return](https://github.com/joeypshell/oceangame2/milestone/42) - complete with owner GO after corrections #1143/#1144/#1151/#1153; exact reviewed runtime `05b482e`.
+3. [Expansion 15: Expedition Planning And Choice](https://github.com/joeypshell/oceangame2/milestone/41) - complete with owner GO after corrections #1113/#1117/#1119; exact reviewed runtime `23f4172`.
+4. [Expansion 14: Archive Current Return](https://github.com/joeypshell/oceangame2/milestone/40) - complete with owner GO after bounded corrections; exact reviewed runtime `1f148eb`.
 
 ## Completed Expansion 04
 

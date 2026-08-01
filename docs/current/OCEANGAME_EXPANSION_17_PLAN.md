@@ -2,8 +2,8 @@
 
 Date: 2026-07-31
 
-Status: Selected by planning gate #1156. No implementation milestone or issue
-batch exists yet.
+Status: Active in milestone #43 through frozen issues #1158-#1167. Source and
+state ownership is locked by #1158 before implementation.
 
 ## Decision
 
