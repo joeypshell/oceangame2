@@ -123,6 +123,39 @@ class ProgressionGraphAuditTests(unittest.TestCase):
         result = audit_graph(graph)
         self.assertTrue(any("Hard dependency cycle" in failure for failure in result.failures), result.failures)
 
+    def test_wreck_network_analysis_requires_both_committed_fragments(self) -> None:
+        maps = load_production_maps((ROOT / "maps" / "production_level_01.greybox.json",))
+        level = maps[0]
+        fragments = (
+            "western_chasm_wreck_fragment_discovery",
+            "abyssal_shelf_wreck_fragment_discovery",
+        )
+        for index, discovery_id in enumerate(fragments):
+            level["survey_targets"].append({
+                "id": f"fragment_survey_{index}",
+                "discovery_id": discovery_id,
+                "required_capability_id": "survey_scanner_1",
+                "commit_map_id": "production_level_01",
+                "commit_entry_id": "surface_boat_entry",
+            })
+        level["wreck_network_investigations"] = [{
+            "id": "wreck_network_triangulation",
+            "required_discovery_id": "far_west_deeper_wreck_discovery",
+            "fragment_discovery_ids": list(fragments),
+            "analysis_discovery_id": "wreck_network_triangulation_discovery",
+        }]
+        contract = copy.deepcopy(load_contract())
+        contract["canonical_start"]["map_id"] = "production_level_01"
+        graph = build_progression_graph(maps, contract)
+
+        investigation = graph.resolve("wreck_network_triangulation")
+        final_discovery = graph.resolve("wreck_network_triangulation_discovery")
+        requirements = {edge.target for edge in graph.requirements(investigation)}
+        self.assertIn(graph.resolve("far_west_deeper_wreck_discovery"), requirements)
+        self.assertTrue({graph.resolve(item) for item in fragments}.issubset(requirements))
+        self.assertTrue(any(edge.target == investigation for edge in graph.requirements(final_discovery)))
+        self.assertEqual((), audit_graph(graph, check_canonical=False).failures)
+
     def test_deep_harmonic_chain_includes_durable_light_requirement(self) -> None:
         maps = load_production_maps((ROOT / "maps" / "production_level_01.greybox.json",))
         level = next(item for item in maps if item.get("id") == "production_level_01")

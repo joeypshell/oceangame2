@@ -27,6 +27,8 @@ TARGET_DISCOVERIES = {
         "southeast_wreck_archive_discovery",
         "upper_left_wreck_relay_discovery",
         "far_west_deeper_wreck_discovery",
+        "western_chasm_wreck_fragment_discovery",
+        "abyssal_shelf_wreck_fragment_discovery",
     },
     "resource": {"upper_right_mineral_trace_research"},
 }
@@ -72,6 +74,7 @@ SURVEY_SPECIFIC_FIELDS = {
     "commit_map_id",
     "commit_map_path",
     "commit_entry_id",
+    "investigation_id",
     *SCAN_SUBJECT_FIELDS,
     *RESOURCE_FIELDS,
     *REGIONAL_FIELDS,

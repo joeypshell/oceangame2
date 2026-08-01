@@ -109,6 +109,30 @@ def valid_abyssal_target() -> dict:
     return target
 
 
+def valid_wreck_fragment_target() -> dict:
+    target = valid_regional_target()
+    target.update({
+        "id": "western_chasm_wreck_fragment_survey",
+        "investigation_id": "wreck_network_triangulation",
+        "interaction_label": "Scan wreck relay",
+        "clue_label": "Western relay | Fragment unresolved",
+        "finding_label": "Wreck-network fragment recovered",
+        "next_lead_label": "Return fragment to the boat",
+        "discovery_id": "western_chasm_wreck_fragment_discovery",
+        "required_route_id": "western_chasm_wreck_fragment_journey",
+        "route_context": "western_chasm_wreck_fragment_journey",
+        "scan_subject_kind": "artifact",
+        "scan_subject_id": "western_chasm_relay_artifact",
+        "scan_subject_label": "Wreck relay spar",
+        "scan_subject_description": "Broken relay spar carrying one route fragment",
+        "scan_presentation_id": "wreck_network_relay",
+        "scan_anchor": {"x": 2, "y": 2},
+        "scan_reward_kind": "discovery",
+        "scan_reward_id": "western_chasm_wreck_fragment_discovery",
+    })
+    return target
+
+
 class SurveyTargetValidationTests(unittest.TestCase):
     def test_valid_schema_and_reachability(self) -> None:
         map_data = valid_map()
@@ -190,6 +214,11 @@ class SurveyTargetValidationTests(unittest.TestCase):
         target["next_lead_label"] = "Next lead: x=123"
         failures = validate_survey_target_schema(SOURCE_MAP, map_data)
         self.assertTrue(any("next_lead_label must not contain coordinates" in failure for failure in failures), failures)
+
+    def test_accepts_physical_wreck_fragment_investigation_target(self) -> None:
+        map_data = valid_map()
+        map_data["survey_targets"] = [valid_wreck_fragment_target()]
+        self.assertEqual(validate_survey_target_schema(SOURCE_MAP, map_data), [])
 
     def test_accepts_only_the_contract_light_gated_regional_target(self) -> None:
         map_data = valid_map()

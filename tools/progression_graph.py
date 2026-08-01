@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """Build a cross-map progression dependency graph from production map data."""
 from __future__ import annotations
-
 import json
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterable
 
 from progression_graph_contract import CANONICAL_CHAIN_IDS
+from progression_graph_investigations import add_wreck_network_investigations
 from progression_graph_helpers import (
     add_discovery_reward_edges as _add_discovery_reward_edges,
     as_dict as _dict,
@@ -108,7 +108,6 @@ class ProgressionGraphBuilder:
         self.maps = maps
         self.contract = contract
         self.graph = ProgressionGraph()
-        self.map_by_id = {str(item.get("id", "")): item for item in maps}
         self.items_by_map: dict[str, list[tuple[str, dict[str, Any]]]] = {}
 
     def build(self) -> ProgressionGraph:
@@ -117,6 +116,7 @@ class ProgressionGraphBuilder:
             self._add_map_nodes(map_data)
         for map_data in self.maps:
             self._add_map_edges(map_data)
+            add_wreck_network_investigations(self.graph, map_data, Node)
         self._add_purchase_edges()
         self._mark_mandatory_chain()
         return self.graph
@@ -474,7 +474,7 @@ class ProgressionGraphBuilder:
                     if edge.target in self.graph.nodes and not self.graph.nodes[edge.target].mandatory:
                         self.graph.nodes[edge.target].mandatory = True
                         changed = True
-                if node.kind in {"project", "prompt", "regional_journey", "survey", "upgrade", "capability"}:
+                if node.kind in {"project", "prompt", "regional_journey", "investigation", "survey", "upgrade", "capability"}:
                     for edge in self.graph.outgoing(node.key):
                         if edge.relation in {"unlocks", "targets"} and edge.target in self.graph.nodes and not self.graph.nodes[edge.target].mandatory:
                             self.graph.nodes[edge.target].mandatory = True
