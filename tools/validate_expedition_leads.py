@@ -7,6 +7,7 @@ import re
 from typing import Any
 
 from validate_daily_conditions import validate_daily_condition_schema
+from validate_wreck_network_investigations import validate_wreck_network_investigation_schema
 
 
 PARENT_TYPES = {
@@ -216,4 +217,5 @@ def validate_expedition_planning_schema(map_data: dict[str, Any]) -> list[str]:
     return [
         *validate_daily_condition_schema(map_data),
         *validate_expedition_lead_schema(map_data),
+        *validate_wreck_network_investigation_schema(map_data),
     ]
