@@ -4,8 +4,10 @@ const ExpansionProfileState := preload("res://scripts/main/expansion_profile_sta
 
 const EXPANSION_14_START := "expansion_14_start"
 const EXPANSION_16_START := "expansion_16_start"
+const EXPANSION_17_START := "expansion_17_start"
 const EXPANSION_14_MAP_PATH := "res://maps/production_level_01.greybox.json"
 const EXPANSION_16_MAP_PATH := EXPANSION_14_MAP_PATH
+const EXPANSION_17_MAP_PATH := EXPANSION_14_MAP_PATH
 const PRIOR_PROJECT_IDS := [
 	ExpansionProfileState.PROPULSION_FINS_PROJECT_ID,
 	ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID,
@@ -54,6 +56,31 @@ const EXPANSION_16_PRIOR_DISCOVERY_IDS := [
 	ExpansionProfileState.SOUTHEAST_WRECK_DISCOVERY_ID,
 	ExpansionProfileState.UPPER_LEFT_WRECK_RELAY_DISCOVERY_ID,
 ]
+const EXPANSION_17_PRIOR_PROJECT_IDS := [
+	ExpansionProfileState.PROPULSION_FINS_PROJECT_ID,
+	ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID,
+	ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID,
+	ExpansionProfileState.SHOCK_PROD_PROJECT_ID,
+	ExpansionProfileState.SHOCK_PROD_CAPACITOR_PROJECT_ID,
+	ExpansionProfileState.DIVE_LIGHT_PROJECT_ID,
+	ExpansionProfileState.PRESSURE_SUIT_PROJECT_ID,
+	ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID,
+	ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_PROJECT_ID,
+]
+const EXPANSION_17_PRIOR_DISCOVERY_IDS := [
+	ExpansionProfileState.PROPULSION_FINS_BLUEPRINT_ID,
+	ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID,
+	ExpansionProfileState.ANOMALY_DISCOVERY_ID,
+	ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID,
+	ExpansionProfileState.MINERAL_TRACE_RESEARCH_ID,
+	ExpansionProfileState.SIGNAL_REEF_DISCOVERY_ID,
+	ExpansionProfileState.DEEP_HARMONIC_DISCOVERY_ID,
+	ExpansionProfileState.ABYSSAL_HARMONIC_DISCOVERY_ID,
+	ExpansionProfileState.SOUTHEAST_WRECK_NAVIGATION_DATA_ID,
+	ExpansionProfileState.SOUTHEAST_WRECK_DISCOVERY_ID,
+	ExpansionProfileState.UPPER_LEFT_WRECK_RELAY_DISCOVERY_ID,
+	ExpansionProfileState.FAR_WEST_WRECK_DISCOVERY_ID,
+]
 const REBREATHER_RECIPE := {
 	ExpansionProfileState.TITANIUM_MATERIAL_ID: 1,
 	ExpansionProfileState.RUBBER_MATERIAL_ID: 1,
@@ -63,7 +90,7 @@ const REBREATHER_RECIPE := {
 
 
 static func is_supported(checkpoint_id: String) -> bool:
-	return checkpoint_id in [EXPANSION_14_START, EXPANSION_16_START]
+	return checkpoint_id in [EXPANSION_14_START, EXPANSION_16_START, EXPANSION_17_START]
 
 
 static func required_map_path(checkpoint_id: String) -> String:
@@ -81,9 +108,9 @@ static func apply(checkpoint_id: String, profile) -> Dictionary:
 	var source := _load_project_source(required_map_path(checkpoint_id))
 	if not bool(source.get("ready", false)):
 		return _result(false, checkpoint_id, str(source.get("reason", "source_error")), source)
-	var project_ids: Array = EXPANSION_16_PRIOR_PROJECT_IDS if checkpoint_id == EXPANSION_16_START else PRIOR_PROJECT_IDS
-	var discovery_ids: Array = EXPANSION_16_PRIOR_DISCOVERY_IDS if checkpoint_id == EXPANSION_16_START else PRIOR_DISCOVERY_IDS
-	var recipe: Dictionary = REBREATHER_RECIPE if checkpoint_id == EXPANSION_16_START else STABILIZER_RECIPE
+	var project_ids: Array = _project_ids_for(checkpoint_id)
+	var discovery_ids: Array = _discovery_ids_for(checkpoint_id)
+	var recipe: Dictionary = _recipe_for(checkpoint_id)
 	var projects: Array = source.get("projects", [])
 	for project_id in project_ids:
 		var completion := _complete_project(profile, _project_by_id(projects, project_id))
@@ -93,12 +120,14 @@ static func apply(checkpoint_id: String, profile) -> Dictionary:
 		var discovery := _complete_discovery(profile, discovery_id)
 		if not bool(discovery.get("ready", false)):
 			return _result(false, checkpoint_id, "discovery_fixture_failed", discovery)
-	var recorder: Dictionary = profile.bank_tool_target(ExpansionProfileState.SOUTHEAST_WRECK_RECORDER_ID, false)
-	if not bool(recorder.get("changed", false)):
-		return _result(false, checkpoint_id, "recorder_fixture_failed", recorder)
-	var deposit: Dictionary = profile.deposit_materials(recipe, false)
-	if not bool(deposit.get("changed", false)):
-		return _result(false, checkpoint_id, "recipe_fixture_failed", deposit)
+	for target_id in _banked_target_ids_for(checkpoint_id):
+		var banked: Dictionary = profile.bank_tool_target(target_id, false)
+		if not bool(banked.get("changed", false)):
+			return _result(false, checkpoint_id, "recorder_fixture_failed", banked)
+	if not recipe.is_empty():
+		var deposit: Dictionary = profile.deposit_materials(recipe, false)
+		if not bool(deposit.get("changed", false)):
+			return _result(false, checkpoint_id, "recipe_fixture_failed", deposit)
 	if not _boundary_is_ready(checkpoint_id, profile):
 		return _result(false, checkpoint_id, "checkpoint_boundary_drift", profile.report())
 	return _result(true, checkpoint_id, "ready", {
@@ -106,6 +135,35 @@ static func apply(checkpoint_id: String, profile) -> Dictionary:
 		"completed_projects": project_ids.duplicate(),
 		"banked_materials": recipe.duplicate(true),
 	})
+
+
+static func _project_ids_for(checkpoint_id: String) -> Array:
+	if checkpoint_id == EXPANSION_17_START:
+		return EXPANSION_17_PRIOR_PROJECT_IDS
+	if checkpoint_id == EXPANSION_16_START:
+		return EXPANSION_16_PRIOR_PROJECT_IDS
+	return PRIOR_PROJECT_IDS
+
+
+static func _discovery_ids_for(checkpoint_id: String) -> Array:
+	if checkpoint_id == EXPANSION_17_START:
+		return EXPANSION_17_PRIOR_DISCOVERY_IDS
+	if checkpoint_id == EXPANSION_16_START:
+		return EXPANSION_16_PRIOR_DISCOVERY_IDS
+	return PRIOR_DISCOVERY_IDS
+
+
+static func _recipe_for(checkpoint_id: String) -> Dictionary:
+	if checkpoint_id == EXPANSION_17_START:
+		return {}
+	return REBREATHER_RECIPE if checkpoint_id == EXPANSION_16_START else STABILIZER_RECIPE
+
+
+static func _banked_target_ids_for(checkpoint_id: String) -> Array:
+	var target_ids: Array = [ExpansionProfileState.SOUTHEAST_WRECK_RECORDER_ID]
+	if checkpoint_id == EXPANSION_17_START:
+		target_ids.append(ExpansionProfileState.FAR_WEST_WRECK_RECORDER_ID)
+	return target_ids
 
 
 static func _complete_project(profile, project: Dictionary) -> Dictionary:
@@ -178,6 +236,17 @@ static func _profile_is_empty(profile) -> bool:
 
 
 static func _boundary_is_ready(checkpoint_id: String, profile) -> bool:
+	if checkpoint_id == EXPANSION_17_START:
+		return (
+			profile.has_completed_project(ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_PROJECT_ID)
+			and profile.has_capability(ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_CAPABILITY_ID)
+			and profile.has_completed_discovery(ExpansionProfileState.FAR_WEST_WRECK_DISCOVERY_ID)
+			and profile.has_banked_tool_target(ExpansionProfileState.FAR_WEST_WRECK_RECORDER_ID)
+			and not profile.has_completed_discovery(ExpansionProfileState.WESTERN_CHASM_FRAGMENT_DISCOVERY_ID)
+			and not profile.has_completed_discovery(ExpansionProfileState.ABYSSAL_SHELF_FRAGMENT_DISCOVERY_ID)
+			and not profile.has_completed_discovery(ExpansionProfileState.WRECK_NETWORK_TRIANGULATION_DISCOVERY_ID)
+			and profile.material_inventory().is_empty()
+		)
 	if checkpoint_id == EXPANSION_16_START:
 		return (
 			profile.has_completed_project(ExpansionProfileState.CURRENT_STABILIZER_PROJECT_ID)
