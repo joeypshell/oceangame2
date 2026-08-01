@@ -123,6 +123,7 @@ def godot_gates(godot: str) -> list[Gate]:
         ("smoke: expansion 14 archive-current return", ["--smoke-expansion-14-archive-current-return"]),
         ("smoke: expansion 15 expedition planning", ["--smoke-expansion-15-expedition-planning"]),
         ("smoke: expansion 16 deeper wreck", ["--smoke-expansion-16-deeper-wreck"]),
+        ("smoke: expansion 17 wreck network", ["--smoke-expansion-17-wreck-network"]),
         ("smoke: active-tool selection", ["--smoke-active-tool-selection"]),
         ("smoke: pass 18 progression", ["--quit-after", "1", "--smoke-pass-18-progression"]),
         ("smoke: pass 19 cargo upgrade", ["--quit-after", "1", "--smoke-pass-19-cargo-upgrade"]),

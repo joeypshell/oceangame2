@@ -13,6 +13,7 @@ run_godot expansion-13-southeast-wreck-return 300 --headless --path . --smoke-ex
 run_godot expansion-13-scanner-cutter-correction 120 --headless --path . --smoke-expansion-13-scanner-cutter-correction
 run_godot expansion-15-expedition-planning 180 --headless --path . --smoke-expansion-15-expedition-planning
 run_godot expansion-16-deeper-wreck 420 --headless --path . --smoke-expansion-16-deeper-wreck
+run_godot expansion-17-wreck-network 480 --headless --path . --smoke-expansion-17-wreck-network
 run_godot active-tool-selection 60 --headless --path . --smoke-active-tool-selection
 run_godot cutter-salvage-state 60 --headless --path . --script res://scripts/main/smoke/smoke_cutter_salvage_state.gd
 run_godot sealed-wreck-reward-state 60 --headless --path . --script res://scripts/main/smoke/smoke_sealed_wreck_reward_state.gd
