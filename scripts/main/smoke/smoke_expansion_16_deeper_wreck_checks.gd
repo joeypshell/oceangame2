@@ -10,6 +10,7 @@ const WARNING_ZONE_ID_16 := "far_west_confined_wreck_warning"
 const RECORDER_ID_16 := "far_west_wreck_data_recorder"
 const SURVEY_ID_16 := "far_west_deeper_wreck_survey"
 const DISCOVERY_ID_16 := "far_west_deeper_wreck_discovery"
+const NEXT_GUIDANCE_17 := "Western chasm | Search the lower-left rock loop"
 const RETURN_RESERVE_SECONDS := 12.0
 const PASSABLE_CAPABILITIES_16 := [
 	ProfileState.PROPULSION_FINS_CAPABILITY_ID,
@@ -281,7 +282,7 @@ func _complete_protected_journey(route: Dictionary) -> bool:
 		and profile.has_completed_discovery(DISCOVERY_ID_16)
 		and not _main._anomaly_survey.has_pending_discovery()
 		and _boat_result_16 == "%s\n%s" % [survey.get("finding_label", ""), survey.get("next_lead_label", "")]
-		and guidance_after_finding.is_empty()
+		and guidance_after_finding == NEXT_GUIDANCE_17
 		and _world.is_route_guidance_visible(ROUTE_ID_16),
 		"protected operation did not return and commit at the canonical boat"
 	)

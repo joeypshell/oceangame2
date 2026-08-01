@@ -50,6 +50,7 @@ KNOWN_REWARD_IDS = {
 LIGHT_GATED_TARGETS = {"signal_reef_deep_harmonic_survey": "dive_light_1"}
 PRESSURE_GATED_TARGETS = {
     "abyssal_basin_harmonic_source_survey": "pressure_suit_1",
+    "abyssal_shelf_wreck_fragment_survey": "pressure_suit_1",
     "southeast_wreck_archive_survey": "pressure_suit_1",
 }
 FINDING_FIELDS = {"clue_label", "finding_label"}

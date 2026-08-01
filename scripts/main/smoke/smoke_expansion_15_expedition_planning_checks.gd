@@ -9,6 +9,7 @@ const MAP_ID := "production_level_01"
 const BOAT_ENTRY_ID := "surface_boat_entry"
 const RELAY_ID := "upper_left_wreck_relay_route"
 const BLOOM_ID := "southwest_jellyfish_bloom"
+const SOURCE_LEAD_COUNT := 4
 const RELAY_GUIDANCE := "Plan: Follow the archive signal northwest"
 const BLOOM_GUIDANCE := "Plan: Search the southwest migration lane"
 
@@ -112,9 +113,9 @@ func _verify_source_projection_and_context_guards() -> bool:
 	_available_ids = report.get("eligible_ids", []).duplicate()
 	if not _require(
 		report.get("status") == "choice_ready"
-		and int(report.get("source_lead_count", 0)) == 2
+		and int(report.get("source_lead_count", 0)) == SOURCE_LEAD_COUNT
 		and _available_ids == [RELAY_ID, BLOOM_ID],
-		"night one did not derive exactly the relay and bloom choices"
+		"night one did not isolate the relay and bloom from later source leads"
 	):
 		return false
 	if not _verify_projected_lead(report, _relay_source, "regional_journey", "Known relay, survey unresolved"):

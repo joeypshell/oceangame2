@@ -1551,6 +1551,50 @@
         "h": 21
       },
       "intent": "Source-authored oxygen return and guidance metadata in existing continuous water."
+    },
+    "expansion_17": {
+      "source": "tools/production_level_01_expansion_17.py",
+      "investigation_ids": [
+        "wreck_network_triangulation"
+      ],
+      "journey_ids": [
+        "western_chasm_wreck_fragment_journey",
+        "abyssal_shelf_wreck_fragment_journey"
+      ],
+      "zone_ids": [
+        "western_chasm_relay_current",
+        "western_chasm_relay_landmark",
+        "abyssal_shelf_pressure_seam",
+        "abyssal_shelf_relay_landmark"
+      ],
+      "artifact_ids": [
+        "western_chasm_relay_artifact",
+        "abyssal_shelf_relay_artifact"
+      ],
+      "survey_target_ids": [
+        "western_chasm_wreck_fragment_survey",
+        "abyssal_shelf_wreck_fragment_survey"
+      ],
+      "background_ids": [
+        "western_chasm_relay_backdrop",
+        "abyssal_shelf_relay_backdrop"
+      ],
+      "camera_test_ids": [
+        "expansion_17_parallel_leads",
+        "expansion_17_western_approach",
+        "expansion_17_western_scan",
+        "expansion_17_abyssal_approach",
+        "expansion_17_abyssal_scan",
+        "expansion_17_analysis_ready"
+      ],
+      "terrain_changes": [],
+      "review_bounds": {
+        "x": 19,
+        "y": 119,
+        "w": 109,
+        "h": 31
+      },
+      "intent": "Two source-authored physical relay leads in existing continuous water."
     }
   },
   "units": {
@@ -4953,6 +4997,60 @@
       "regional_landmark": true,
       "regional_journey_id": "far_west_deeper_wreck_route",
       "landmark_label": "Far-West Deeper Wreck"
+    },
+    {
+      "id": "western_chasm_relay_current",
+      "type": "marker",
+      "x": 24,
+      "y": 119,
+      "w": 1,
+      "h": 3,
+      "current_gate": true,
+      "current_direction": "right",
+      "current_strength": 3.2,
+      "required_capability_id": "current_stabilizer",
+      "current_gate_label": "Western chasm current",
+      "current_affordance_role": "relay",
+      "route_context": "western_chasm_wreck_fragment_journey",
+      "intent": "Close the sole player-footprint seam into the lower-left relay pocket."
+    },
+    {
+      "id": "western_chasm_relay_landmark",
+      "type": "marker",
+      "x": 19,
+      "y": 119,
+      "w": 5,
+      "h": 2,
+      "regional_landmark": true,
+      "regional_journey_id": "western_chasm_wreck_fragment_journey",
+      "landmark_label": "Western Chasm Relay"
+    },
+    {
+      "id": "abyssal_shelf_pressure_seam",
+      "type": "marker",
+      "x": 114,
+      "y": 147,
+      "w": 1,
+      "h": 3,
+      "pressure_zone": true,
+      "pressure_level": "abyssal",
+      "pressure_label": "Abyssal shelf pressure",
+      "required_capability_id": "pressure_suit_1",
+      "warning_grace_seconds": 1.0,
+      "unprotected_oxygen_drain_multiplier": 8.0,
+      "route_context": "abyssal_shelf_wreck_fragment_journey",
+      "intent": "Name the existing pressure-basin seam into the eastern abyssal shelf."
+    },
+    {
+      "id": "abyssal_shelf_relay_landmark",
+      "type": "marker",
+      "x": 120,
+      "y": 147,
+      "w": 8,
+      "h": 3,
+      "regional_landmark": true,
+      "regional_journey_id": "abyssal_shelf_wreck_fragment_journey",
+      "landmark_label": "Abyssal Shelf Relay"
     }
   ],
   "regional_journeys": [
@@ -5040,6 +5138,52 @@
       "route_context": "far_west_deeper_wreck_route",
       "approach_guidance": "Far-west wreck | Follow cyan relay beacons west",
       "intent": "Turn the committed relay signal and night-built rebreather into one continuous far-west wreck operation and canonical-boat return."
+    },
+    {
+      "id": "western_chasm_wreck_fragment_journey",
+      "route_label": "Western chasm relay route",
+      "promise_gate_id": "far_west_deeper_wreck_landmark",
+      "entry_gate_ids": [
+        "western_chasm_relay_current"
+      ],
+      "required_capability_id": "current_stabilizer",
+      "required_discovery_id": "far_west_deeper_wreck_discovery",
+      "landmark_zone_id": "western_chasm_relay_landmark",
+      "survey_target_id": "western_chasm_wreck_fragment_survey",
+      "commit_entry_id": "surface_boat_entry",
+      "route_context": "western_chasm_wreck_fragment_journey",
+      "approach_guidance": "Western chasm | Search the lower-left rock loop",
+      "expedition_lead": {
+        "lead_type": "regional_journey",
+        "label": "Western Chasm Relay",
+        "summary": "MAIN INVESTIGATION | Stabilizer route | Relay fragment",
+        "active_guidance": "Plan: Trace the western chasm relay",
+        "order": 30
+      },
+      "intent": "Use the existing stabilizer to reach one physical relay fragment."
+    },
+    {
+      "id": "abyssal_shelf_wreck_fragment_journey",
+      "route_label": "Abyssal shelf relay route",
+      "promise_gate_id": "far_west_deeper_wreck_landmark",
+      "entry_gate_ids": [
+        "abyssal_shelf_pressure_seam"
+      ],
+      "required_capability_id": "pressure_suit_1",
+      "required_discovery_id": "far_west_deeper_wreck_discovery",
+      "landmark_zone_id": "abyssal_shelf_relay_landmark",
+      "survey_target_id": "abyssal_shelf_wreck_fragment_survey",
+      "commit_entry_id": "surface_boat_entry",
+      "route_context": "abyssal_shelf_wreck_fragment_journey",
+      "approach_guidance": "Abyssal shelf | Search east through the pressure basin",
+      "expedition_lead": {
+        "lead_type": "regional_journey",
+        "label": "Abyssal Shelf Relay",
+        "summary": "MAIN INVESTIGATION | Pressure suit route | Relay fragment",
+        "active_guidance": "Plan: Search the abyssal shelf wreckage",
+        "order": 40
+      },
+      "intent": "Use the existing pressure suit to reach the second physical relay fragment."
     }
   ],
   "daily_conditions": [
@@ -5445,6 +5589,75 @@
       "scan_reward_kind": "discovery",
       "scan_reward_id": "far_west_deeper_wreck_discovery",
       "intent": "Keep the recorder finding pending until the canonical boat return."
+    },
+    {
+      "id": "western_chasm_wreck_fragment_survey",
+      "investigation_id": "wreck_network_triangulation",
+      "target_type": "regional",
+      "x": 20,
+      "y": 119,
+      "w": 2,
+      "h": 2,
+      "required_capability_id": "survey_scanner_1",
+      "required_route_id": "western_chasm_wreck_fragment_journey",
+      "route_context": "western_chasm_wreck_fragment_journey",
+      "interaction": "survey",
+      "interaction_seconds": 3.0,
+      "interaction_label": "Survey western relay",
+      "clue_label": "Western relay | Fragment signal detected",
+      "finding_label": "Discovery logged: Western wreck fragment",
+      "next_lead_label": "Wreck network | Second fragment unresolved",
+      "discovery_id": "western_chasm_wreck_fragment_discovery",
+      "commit_map_id": "production_level_01",
+      "commit_map_path": "res://maps/production_level_01.greybox.json",
+      "commit_entry_id": "surface_boat_entry",
+      "scan_subject_kind": "artifact",
+      "scan_subject_id": "western_chasm_relay_artifact",
+      "scan_subject_label": "Western wreck relay",
+      "scan_subject_description": "Current-worn network fragment",
+      "scan_presentation_id": "northwest_wreck_relay_console",
+      "scan_anchor": {
+        "x": 21,
+        "y": 120
+      },
+      "scan_reward_kind": "discovery",
+      "scan_reward_id": "western_chasm_wreck_fragment_discovery",
+      "intent": "Create one pending fragment without depending on selected-lead state."
+    },
+    {
+      "id": "abyssal_shelf_wreck_fragment_survey",
+      "investigation_id": "wreck_network_triangulation",
+      "target_type": "regional",
+      "x": 124,
+      "y": 147,
+      "w": 2,
+      "h": 2,
+      "required_capability_id": "survey_scanner_1",
+      "required_pressure_capability_id": "pressure_suit_1",
+      "required_route_id": "abyssal_shelf_wreck_fragment_journey",
+      "route_context": "abyssal_shelf_wreck_fragment_journey",
+      "interaction": "survey",
+      "interaction_seconds": 3.0,
+      "interaction_label": "Survey abyssal relay",
+      "clue_label": "Abyssal relay | Fragment signal detected",
+      "finding_label": "Discovery logged: Abyssal wreck fragment",
+      "next_lead_label": "Wreck network | Second fragment unresolved",
+      "discovery_id": "abyssal_shelf_wreck_fragment_discovery",
+      "commit_map_id": "production_level_01",
+      "commit_map_path": "res://maps/production_level_01.greybox.json",
+      "commit_entry_id": "surface_boat_entry",
+      "scan_subject_kind": "artifact",
+      "scan_subject_id": "abyssal_shelf_relay_artifact",
+      "scan_subject_label": "Abyssal wreck relay",
+      "scan_subject_description": "Pressure-scored network fragment",
+      "scan_presentation_id": "northwest_wreck_relay_console",
+      "scan_anchor": {
+        "x": 125,
+        "y": 148
+      },
+      "scan_reward_kind": "discovery",
+      "scan_reward_id": "abyssal_shelf_wreck_fragment_discovery",
+      "intent": "Create the parallel pending fragment regardless of lead selection."
     }
   ],
   "material_candidate_pools": [
@@ -5702,6 +5915,28 @@
       "regional_landmark": true,
       "regional_journey_id": "far_west_deeper_wreck_route",
       "intent": "Distinct non-collision wreck silhouette in the existing far-west chamber."
+    },
+    {
+      "id": "western_chasm_relay_backdrop",
+      "type": "background",
+      "x": 19,
+      "y": 119,
+      "w": 5,
+      "h": 2,
+      "regional_landmark": true,
+      "regional_journey_id": "western_chasm_wreck_fragment_journey",
+      "intent": "Non-collision wreckage silhouette around the western relay artifact."
+    },
+    {
+      "id": "abyssal_shelf_relay_backdrop",
+      "type": "background",
+      "x": 120,
+      "y": 147,
+      "w": 8,
+      "h": 3,
+      "regional_landmark": true,
+      "regional_journey_id": "abyssal_shelf_wreck_fragment_journey",
+      "intent": "Non-collision wreckage silhouette around the abyssal relay artifact."
     }
   ],
   "entities": [
@@ -6339,6 +6574,48 @@
       "center_y": 12.0,
       "zoom": 0.55,
       "intent": "Pending far-west discovery returning to the canonical boat."
+    },
+    {
+      "id": "expansion_17_parallel_leads",
+      "center_x": 95.0,
+      "center_y": 12.0,
+      "zoom": 0.55,
+      "intent": "Two broad unresolved fragment leads after the far-west boat commit."
+    },
+    {
+      "id": "expansion_17_western_approach",
+      "center_x": 27.0,
+      "center_y": 120.0,
+      "zoom": 0.48,
+      "intent": "Stabilizer seam and recognizable lower-left relay pocket."
+    },
+    {
+      "id": "expansion_17_western_scan",
+      "center_x": 21.0,
+      "center_y": 120.0,
+      "zoom": 0.72,
+      "intent": "Held scanner progress on the western physical relay."
+    },
+    {
+      "id": "expansion_17_abyssal_approach",
+      "center_x": 117.0,
+      "center_y": 148.0,
+      "zoom": 0.45,
+      "intent": "Pressure-basin shelf seam and continuous return context."
+    },
+    {
+      "id": "expansion_17_abyssal_scan",
+      "center_x": 125.0,
+      "center_y": 148.0,
+      "zoom": 0.72,
+      "intent": "Held scanner progress on the abyssal physical relay."
+    },
+    {
+      "id": "expansion_17_analysis_ready",
+      "center_x": 95.0,
+      "center_y": 12.0,
+      "zoom": 0.55,
+      "intent": "Both committed fragments and explicit night-analysis prompt."
     }
   ],
   "review_questions": [
@@ -6362,6 +6639,27 @@
     "Can the confined-wreck threshold be scouted and safely retreated from before the rebreather?",
     "Does the night recipe clearly answer the relay's far-west oxygen limitation?",
     "Does protected travel preserve ordinary oxygen pressure and remembered geography?",
-    "Are cutter, scanner, pending finding, and canonical-boat commitment each distinct?"
+    "Are cutter, scanner, pending finding, and canonical-boat commitment each distinct?",
+    "Do the western-current and abyssal-pressure routes feel physically different?",
+    "Are both relay artifacts recognizable without exact route-line guidance?",
+    "Can either lead be followed first without hiding or invalidating the other target?",
+    "Do both fragment routes preserve a collision-active return to the canonical boat?"
+  ],
+  "wreck_network_investigations": [
+    {
+      "id": "wreck_network_triangulation",
+      "required_discovery_id": "far_west_deeper_wreck_discovery",
+      "fragment_discovery_ids": [
+        "western_chasm_wreck_fragment_discovery",
+        "abyssal_shelf_wreck_fragment_discovery"
+      ],
+      "analysis_discovery_id": "wreck_network_triangulation_discovery",
+      "analysis_phase": "night_debrief",
+      "analysis_label": "Triangulate wreck network",
+      "analysis_result_label": "Wreck network triangulated",
+      "next_lead_label": "Next lead: transfer hub beyond mapped cave",
+      "commit_map_id": "production_level_01",
+      "commit_entry_id": "surface_boat_entry"
+    }
   ]
 }

@@ -205,8 +205,19 @@ def validate_expansion_14_schema(map_data: dict[str, Any]) -> list[str]:
         item.get("id") for item in _items(map_data, "zones")
         if item.get("current_gate") is True and item.get("required_capability_id") == CAPABILITY_ID
     ]
-    if capability_gates != [GATE_ID]:
-        failures.append(f"Canonical full-level {CAPABILITY_ID} ownership must target only {GATE_ID}.")
+    reused_gates = {
+        str(gate_id)
+        for journey in _items(map_data, "regional_journeys")
+        if journey.get("required_capability_id") == CAPABILITY_ID
+        and isinstance(journey.get("required_discovery_id"), str)
+        for gate_id in journey.get("entry_gate_ids", [])
+    }
+    unsupported_gates = set(capability_gates) - {GATE_ID} - reused_gates
+    if GATE_ID not in capability_gates or unsupported_gates:
+        failures.append(
+            f"Canonical full-level {CAPABILITY_ID} ownership must retain {GATE_ID}; "
+            f"unlinked reuse gates: {sorted(unsupported_gates)}."
+        )
     archive_sources = [
         item.get("id") for item in _items(map_data, "survey_targets")
         if item.get("discovery_id") == ARCHIVE_DISCOVERY_ID
