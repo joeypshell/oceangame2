@@ -250,6 +250,10 @@ func get_final_dive_objective_seeds() -> Array:
 func get_regional_journeys() -> Array:
 	return _duplicate_dictionary_array(_map_data.get("regional_journeys", []))
 
+
+func get_wreck_network_investigations() -> Array:
+	return _duplicate_dictionary_array(_map_data.get("wreck_network_investigations", []))
+
 func get_survey_targets() -> Array:
 	return _survey_target_runtime.get_targets()
 

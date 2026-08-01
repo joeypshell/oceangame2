@@ -231,7 +231,7 @@ func clear_unbanked(reason: String, world = null) -> Dictionary:
 	return result
 
 
-func overlay_text(world, player) -> String:
+func overlay_text(world, player, selected_lead_id := "") -> String:
 	_regional_presentation.sync_route_guidance(world, _profile)
 	if _expedition.has_pending():
 		return _scanner_feedback.pending_return_text(_expedition.pending_metadata())
@@ -258,7 +258,7 @@ func overlay_text(world, player) -> String:
 		)
 	if not _last_result.is_empty() and not _scanner_cutter_presentation.result_is_superseded(world, _profile, _last_result):
 		return _last_result
-	var journey_promise: String = _regional_presentation.promise_text(world, _profile)
+	var journey_promise: String = _regional_presentation.promise_text(world, _profile, selected_lead_id)
 	if not journey_promise.is_empty():
 		return journey_promise
 	var scanner_cutter_lead: String = _scanner_cutter_presentation.objective_text(world, _profile)

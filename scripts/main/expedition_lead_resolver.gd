@@ -4,6 +4,10 @@ const PHASE_DEBRIEF := "debrief"
 const READINESS_READY := "ready"
 const READINESS_PREPARE := "prepare"
 const READINESS_INVALID := "invalid"
+const WRECK_NETWORK_LEAD_IDS := {
+	"western_chasm_wreck_fragment_journey": true,
+	"abyssal_shelf_wreck_fragment_journey": true,
+}
 const REPORT_FIELDS := {
 	"lead_id": true,
 	"lead_type": true,
@@ -36,6 +40,7 @@ static func resolve(world, profile, project_runtime, day_state, daily_conditions
 			eligible.append(outcome["report"])
 		elif outcome_status == "invalid":
 			invalid.append(outcome["report"])
+	eligible = _focus_main_investigation_pair(eligible)
 
 	var eligible_ids: Array[String] = []
 	for report in eligible:
@@ -55,6 +60,14 @@ static func resolve(world, profile, project_runtime, day_state, daily_conditions
 		"eligible_leads": eligible.duplicate(true),
 		"invalid_leads": invalid.duplicate(true),
 	}
+
+
+static func _focus_main_investigation_pair(leads: Array[Dictionary]) -> Array[Dictionary]:
+	var investigation: Array[Dictionary] = []
+	for lead in leads:
+		if WRECK_NETWORK_LEAD_IDS.has(str(lead.get("lead_id", ""))):
+			investigation.append(lead)
+	return investigation if investigation.size() == WRECK_NETWORK_LEAD_IDS.size() else leads
 
 
 static func _source_candidates(world) -> Array[Dictionary]:
