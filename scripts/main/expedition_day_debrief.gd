@@ -265,14 +265,23 @@ static func build_text(
 	if material_project != null and material_project.has_method("debrief_lines"):
 		for line in material_project.debrief_lines():
 			lines.append(str(line))
+	var wreck_lines: Array[String] = []
 	if wreck_network_investigation != null and wreck_network_investigation.has_method("debrief_lines"):
 		for line in wreck_network_investigation.debrief_lines():
+			wreck_lines.append(str(line))
 			lines.append(str(line))
 	var feedback := str(debrief_feedback).strip_edges()
+	var wreck_owns_feedback: bool = (
+		not wreck_lines.is_empty()
+		and wreck_network_investigation != null
+		and wreck_network_investigation.has_method("is_status_note")
+		and wreck_network_investigation.is_status_note(feedback)
+	)
 	if (
 		not feedback.is_empty()
 		and feedback != "Day complete"
 		and not feedback.begins_with("Plan pinned:")
+		and not wreck_owns_feedback
 		and not lines.has(feedback)
 	):
 		lines.append(feedback)

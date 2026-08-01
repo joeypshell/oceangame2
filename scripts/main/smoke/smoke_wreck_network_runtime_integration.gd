@@ -82,12 +82,17 @@ func _run() -> void:
 	_expect(one_fragment_plan.get("eligible_ids", []).has(ABYSS_JOURNEY_ID), "remaining lead disappeared after the first commit")
 	_expect(not one_fragment_plan.get("eligible_ids", []).has(WEST_JOURNEY_ID), "committed west lead remained eligible")
 	_expect(presentation.promise_text(world, profile) == "Abyssal shelf | Search east through the pressure basin", "one-fragment guidance did not narrow to the remaining route")
+	var one_fragment_text := ExpeditionDayDebrief.build_text(day, null, conditions, west_commit.get("note", ""), runtime)
+	_expect(one_fragment_text.count("Remaining: Abyssal Shelf Relay") == 1, "one-fragment debrief duplicated or lost the remaining lead")
 
 	profile.complete_discovery(ABYSS_FRAGMENT_ID, true)
 	var abyss_commit: Dictionary = runtime.on_discovery_committed(ABYSS_FRAGMENT_ID)
 	_expect(str(abyss_commit.get("note", "")).find("Analyze at night") != -1, "second fragment did not expose night analysis")
 	_expect(runtime.requires_analysis(), "two fragments did not block next-day start for explicit analysis")
 	_expect(runtime.debrief_lines().has("Q/USE: Triangulate wreck network"), "debrief omitted the desktop/mobile analysis command")
+	var ready_text := ExpeditionDayDebrief.build_text(day, null, conditions, abyss_commit.get("note", ""), runtime)
+	_expect(ready_text.count("Wreck fragments 2/2") == 1, "analysis-ready debrief duplicated or lost fragment readiness")
+	_expect(ready_text.find("Q/USE: Triangulate wreck network") != -1, "analysis-ready debrief lost the explicit action")
 
 	var main := DebriefMain.new()
 	main._expedition_day_state = day
@@ -103,8 +108,10 @@ func _run() -> void:
 	_expect(day.committed_discovery_ids.has(ExpansionProfileState.WRECK_NETWORK_TRIANGULATION_DISCOVERY_ID), "debrief summary did not record the analysis discovery")
 	_expect(ExpeditionDayDebrief.handle_debrief_key(main, KEY_Q).get("status") == "already_completed", "repeat analysis was not exact-once")
 	var debrief_text := ExpeditionDayDebrief.build_text(day, null, conditions, main._last_status_note, runtime)
-	_expect(debrief_text.find("Wreck network triangulated") != -1, "debrief omitted the analysis result")
-	_expect(debrief_text.find("Next lead: transfer hub beyond mapped cave") != -1, "debrief omitted the broad destination promise")
+	_expect(debrief_text.count("Wreck network triangulated") == 1, "debrief duplicated or omitted the analysis result")
+	_expect(debrief_text.count("Next lead: transfer hub beyond mapped cave") == 1, "debrief duplicated or omitted the broad destination promise")
+	var unrelated_feedback := ExpeditionDayDebrief.build_text(day, null, conditions, "Unrelated debrief feedback", runtime)
+	_expect(unrelated_feedback.find("Unrelated debrief feedback") != -1, "wreck feedback ownership suppressed unrelated debrief feedback")
 
 	world.queue_free()
 	_cleanup_profile()
