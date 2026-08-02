@@ -6,7 +6,7 @@ This file is the compact handoff for new Codex or ChatGPT Project sessions. It c
 
 ## Current Goal
 
-`oceangame2` has a GO release candidate and seventeen completed bounded Phase 2 expansions. Expansion 17 Wreck Network Triangulation closed with owner GO through #1167 after technical corrections #1175/#1178 and bounded owner-HOLD corrections #1181-#1184 on exact reviewed runtime `075a450`. OceanGame Expansion 01 proved:
+`oceangame2` has a GO release candidate and seventeen completed bounded Phase 2 expansions. Planning gate #1190 selects Expansion 18 Transfer Hub Interior Expedition; its implementation milestone and issue batch remain uncreated pending a separate audit. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -48,6 +48,8 @@ Expansion 16 Deeper Wreck Oxygen Return is complete through #1122-#1133 plus bou
 
 Expansion 17 Wreck Network Triangulation is complete with owner GO through #1167 after implementation #1158-#1166, technical corrections #1175/#1178, and owner-HOLD corrections #1181-#1184. The far-west recorder now explains that transfer-hub coordinates are split across a current-scoured western transponder and a pressure-crushed abyssal transponder. Each route reuses already-earned capabilities, each coordinate half commits only at the canonical boat, and returning both triggers one automatic, exact-once night comparison with a destination promise. Held scanner use is `Space/USE` on desktop and `USE` on mobile; there is no separate triangulation command. The pass adds no recipe, capability, terrain, transition, score reward, or broad system.
 
+Expansion 18 planning selects one exceptional `transfer_hub_interior_01` destination reached by swimming through the normal full level to a physical entrance. The same sortie must preserve oxygen, daylight, health, and cargo across entry and paired return. An existing-cutter operation frees one navigation core that still requires a cargo slot and canonical-boat commitment. It is not a connector network, fast travel, another scanner chain, another recipe/gate, or a second implementation batch.
+
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
 Controlled gameplay/visual passes are now a validation lane inside the roadmap, not the whole roadmap. New work should serve curiosity, pressure, payoff, remembered-place progress, meaningful route choice, or a reason to try another expedition.
@@ -81,6 +83,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Completed Expansion 15 handoff: `docs/current/OCEANGAME_EXPANSION_15_CLOSEOUT.md`, with its plan, source/state contract, visual decision, final Web evidence, and corrections #1113/#1117/#1119
 - Completed Expansion 16 handoff: `docs/current/OCEANGAME_EXPANSION_16_CLOSEOUT.md`, with its plan, source/state contract, visual decisions, exact Web evidence, and corrections #1143-#1146/#1151/#1153
 - Completed Expansion 17 handoff: `docs/current/OCEANGAME_EXPANSION_17_CLOSEOUT.md`, with its plan, source/state contract, visual decision, exact Web evidence, and corrections #1175/#1178/#1181-#1184
+- Selected Expansion 18 plan: `docs/current/OCEANGAME_EXPANSION_18_PLAN.md`; implementation milestone and issue batch pending a separate audit
 - Latest audio/Web handoff: `docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
@@ -88,7 +91,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Focused player-review workflow: `docs/current/PLAYTEST_CHECKPOINTS.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
 - Latest owner decision: Expansion 17 GO through #1167 on exact reviewed runtime `075a450`; milestone #43 is complete
-- Latest selected direction: no Expansion 18 direction is selected; run a bounded roadmap/backlog audit before creating its issue batch
+- Latest selected direction: Expansion 18 Transfer Hub Interior Expedition through #1190; create its milestone batch only in the next audit
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
 - Latest source contract: `docs/current/OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`
 - Latest visual decision: corrected Expansion 17 focused states are accepted for review while the 14-view full-level and slice baselines remain pixel-stable
@@ -233,7 +236,8 @@ Current issue state as of 2026-08-02:
 - Closed: #1094-#1104 plus corrections #1113/#1117/#1119 completed Expansion 15; #1104 records owner GO for exact runtime `23f4172`, and milestone #41 is complete.
 - Closed: #1122-#1133 plus corrections #1143-#1146/#1151/#1153 completed Expansion 16; #1133 records owner GO for exact runtime `05b482e`, and milestone #42 is complete.
 - Closed: #1156 planned Expansion 17; #1158-#1166 implemented it; #1175/#1178 corrected result/checkpoint gaps; #1181-#1184 corrected input, artifact identity, night payoff, visuals, and exact Web evidence after owner HOLD.
-- Closed: #1167 records owner GO for exact runtime `075a450`; milestone #43 is complete and Expansion 18 remains unselected.
+- Closed: #1167 records owner GO for exact runtime `075a450`; milestone #43 is complete.
+- Planning: #1190 selects Expansion 18 Transfer Hub Interior Expedition without creating its milestone or implementation issues.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -371,7 +375,7 @@ Current issue state as of 2026-08-02:
 
 ## Recommended Next Work
 
-Run a bounded roadmap/backlog audit against the north star before selecting Expansion 18 or creating its issue batch. Preserve Expansion 17 as a completed regression surface, and keep #52/#53 deferred rather than making slice-03 polish the default next work.
+Run a separate backlog audit to create and freeze the 10-issue Expansion 18 milestone batch from `OCEANGAME_EXPANSION_18_PLAN.md`. Do not implement the Transfer Hub, create Expansion 19 work, or activate #52/#53 before that audit establishes the exact issue set and dependency order.
 
 Accepted constraints for next work:
 
@@ -386,6 +390,7 @@ Accepted constraints for next work:
 - Keep standard capability gates inside contiguous authored geography and traversable through movement; reserve `E` connectors for explicit exceptional entrances/interiors.
 - Preserve Expansion 16's far-west/lower-left journey and source-authored confined-wreck oxygen zone as a completed regression surface. Its rebreather remains route-local; the session `O2 tank +15` does not substitute for the durable project.
 - Keep Expansion 17 inside existing contiguous geography with no terrain change. Its two physical transponders reuse already-earned capabilities, commit separately at the boat, and combine through one automatic exact-once night comparison; lead selection guides but never locks either target.
+- Keep Expansion 18 to one physically reached exceptional interior with paired return and continuous sortie pressure. The canonical boat remains the only bank/commit/night owner; no map menu, fast travel, connector network, second interior, or normal-traversal transition is selected.
 - Preserve the completed mineral research, fresh-day selection, and broad habitat-lead behavior as the practical-knowledge regression surface.
 - Preserve separate health, the source-authored eel territory, viable unarmed evasion, non-circular shock-prod project, day-local defeat, and no-reward combat semantics.
 - Night consumes no Food, Water, Power, or other survival tax.

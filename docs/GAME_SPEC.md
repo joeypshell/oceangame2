@@ -59,20 +59,23 @@ the normal world or separate campaign areas.
 
 ## Current Committed Direction
 
-Expansions 01-14 are complete with player GO. Expansion 15 milestone #41
-tracks #1095-#1104 for one bounded **Expedition Planning And Choice** pass:
+Expansions 01-17 are complete with player GO. Planning gate #1190 selects
+**Expansion 18: Transfer Hub Interior Expedition**. Its implementation
+milestone and issues remain intentionally uncreated pending a later audit.
 
-- derive available plans from existing source-authored regional journeys and
-  daily conditions
-- present exactly two meaningful choices in the focused night review state
-- let the player pin one plan for the following day
-- show compact active guidance without an exact map marker or route line
-- preserve all underlying discovery, project, capability, objective, and map
-  owners
+The selected pass should:
+
+- turn the recovered transfer-hub coordinates into one physical destination
+- require normal travel through `production_level_01` to one exceptional entry
+- preserve oxygen, daylight, health, and cargo across entry and return
+- use the existing cutter to free one tangible navigation core
+- require return through the same entrance and commitment at the canonical boat
+- avoid normal connector travel, fast travel, another scanner chain, or another
+  recipe-and-gate loop
 
 Detailed direction:
 
-- `docs/current/OCEANGAME_EXPANSION_15_PLAN.md`
+- `docs/current/OCEANGAME_EXPANSION_18_PLAN.md`
 - `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 
@@ -116,5 +119,6 @@ Detailed direction:
   accessibility/input work, balance, and save hardening before their own
   selected milestones.
 
-Exceptional interiors, additional regions, durable oxygen-route progression,
-and broader wildlife remain directional. They are not part of Expansion 15.
+Additional interiors, regions, equipment tiers, and broader wildlife remain
+directional. Expansion 18 selects exactly one exceptional interior, not a
+general connector or world-expansion system.
