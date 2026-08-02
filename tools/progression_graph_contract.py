@@ -39,4 +39,13 @@ CANONICAL_EXTENSION_CHAINS = (
             "far_west_deeper_wreck_discovery",
         ),
     ),
+    (
+        "transfer_hub_exterior_entrance",
+        (
+            "wreck_network_triangulation_discovery",
+            "transfer_hub_exterior_entrance",
+            "transfer_hub_navigation_core_cradle",
+            "transfer_hub_navigation_core_discovery",
+        ),
+    ),
 )

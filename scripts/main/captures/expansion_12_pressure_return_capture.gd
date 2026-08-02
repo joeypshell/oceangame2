@@ -72,8 +72,14 @@ func _prepare_capture() -> bool:
 	if _main._world == null or _main._player == null or _main._world.map_id != MAP_ID:
 		_fail("requires the contiguous production level")
 		return false
-	if not _main._world.get_world_connectors().is_empty():
-		_fail("full level unexpectedly contains connectors")
+	var connectors: Array = _main._world.get_world_connectors()
+	if (
+		connectors.size() != 1
+		or str(connectors[0].get("id", "")) != "transfer_hub_exterior_entrance"
+		or str(connectors[0].get("destination_map_id", "")) != "transfer_hub_interior_01"
+		or str(connectors[0].get("connector_direction", "")) != "forward"
+	):
+		_fail("full-level exceptional-interior connector contract drifted")
 		return false
 	var profile = _main._anomaly_survey.profile_state()
 	var report: Dictionary = profile.report()

@@ -32,6 +32,7 @@ from validate_survey_targets import validate_survey_target_schema
 
 ROOT = Path(__file__).resolve().parents[1]
 MAP_PATH = ROOT / "maps" / "production_level_01.greybox.json"
+INTERIOR_MAP_PATH = ROOT / "maps" / "transfer_hub_interior_01.greybox.json"
 
 
 def current_map() -> dict:
@@ -64,7 +65,8 @@ def without_expansion_14() -> dict:
 def fixture_graph(map_data: dict):
     contract = copy.deepcopy(load_contract())
     contract["canonical_start"] = {"map_id": "production_level_01", "entry_id": "surface_boat_entry"}
-    return build_progression_graph([map_data], contract)
+    interior_map = json.loads(INTERIOR_MAP_PATH.read_text(encoding="utf-8"))
+    return build_progression_graph([map_data, interior_map], contract)
 
 
 class Expansion14ContractTests(unittest.TestCase):

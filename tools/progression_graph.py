@@ -6,7 +6,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterable
 
-from progression_graph_contract import CANONICAL_CHAIN_IDS
+from progression_graph_contract import CANONICAL_CHAIN_IDS, CANONICAL_EXTENSION_CHAINS
 from progression_graph_investigations import add_wreck_network_investigations
 from progression_graph_helpers import (
     add_discovery_reward_edges as _add_discovery_reward_edges,
@@ -448,7 +448,8 @@ class ProgressionGraphBuilder:
                 self.graph.add_edge(key, self.graph.resolve(str(target_id)), "unlocks")
 
     def _mark_mandatory_chain(self) -> None:
-        for raw_id in CANONICAL_CHAIN_IDS:
+        active_chains = (CANONICAL_CHAIN_IDS, *(chain for trigger, chain in CANONICAL_EXTENSION_CHAINS if self.graph.resolve(trigger) in self.graph.nodes))
+        for raw_id in (item for chain in active_chains for item in chain):
             self._mark(self.graph.resolve(raw_id))
         for item in [*self.contract["session_upgrades"], *self.contract["durable_capabilities"], *self.contract["durable_purchases"]]:
             if item.get("mandatory") is True:

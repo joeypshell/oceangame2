@@ -55,7 +55,7 @@ def main() -> int:
         result,
         source_description=(
             "`config/progression_contract.json`, `config/progression_audit_views.json`, "
-            "and the promoted `maps/production_level_01.greybox.json` canonical view"
+            "and the promoted full-level map set named by the canonical view"
         ),
         audited_view_lines=summary_lines,
     )

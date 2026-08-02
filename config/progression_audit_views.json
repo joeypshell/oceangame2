@@ -23,10 +23,12 @@
       "id": "promoted_full_level",
       "label": "Promoted production level",
       "map_paths": [
-        "maps/production_level_01.greybox.json"
+        "maps/production_level_01.greybox.json",
+        "maps/transfer_hub_interior_01.greybox.json"
       ],
       "expected_map_ids": [
-        "production_level_01"
+        "production_level_01",
+        "transfer_hub_interior_01"
       ],
       "map_id_aliases": {
         "production_slice_01": "production_level_01"

@@ -27,7 +27,12 @@ class RegionalJourneyValidationTests(unittest.TestCase):
 
     def test_landmark_backdrop_must_match_source_rectangle(self) -> None:
         candidate = copy.deepcopy(self.map_data)
-        candidate["background"][-1]["x"] += 1
+        journey_id = candidate["regional_journeys"][0]["id"]
+        backdrop = next(
+            item for item in candidate["background"]
+            if item.get("regional_journey_id") == journey_id
+        )
+        backdrop["x"] += 1
         failures = validate_regional_journey_schema(candidate)
         self.assertTrue(any("backdrop" in failure for failure in failures), failures)
 

@@ -31,6 +31,7 @@ from validate_survey_targets import validate_survey_target_schema
 
 ROOT = Path(__file__).resolve().parents[1]
 MAP_PATH = ROOT / "maps" / "production_level_01.greybox.json"
+INTERIOR_MAP_PATH = ROOT / "maps" / "transfer_hub_interior_01.greybox.json"
 
 
 def current_map() -> dict:
@@ -178,7 +179,8 @@ class SoutheastWreckValidationTests(unittest.TestCase):
         for purchase in contract["durable_purchases"]:
             purchase["purchase_map_id"] = "production_level_01"
             purchase["purchase_entry_id"] = "surface_boat_entry"
-        graph = build_progression_graph([map_data], contract)
+        interior_map = json.loads(INTERIOR_MAP_PATH.read_text(encoding="utf-8"))
+        graph = build_progression_graph([map_data, interior_map], contract)
         result = audit_graph(graph)
         self.assertEqual((), result.failures)
         route = graph.resolve(ROUTE_ID)

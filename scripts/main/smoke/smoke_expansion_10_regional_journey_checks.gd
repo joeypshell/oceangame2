@@ -70,7 +70,14 @@ func _smoke_expansion_10_regional_journey_and_quit() -> void:
 func run_to_committed_signal_reef() -> bool:
 	if not _require(_world.map_id == MAP_ID, "loaded unexpected map %s" % _world.map_id):
 		return false
-	if not _require(_world.get_world_connectors().is_empty(), "full level contains connectors"):
+	var connectors: Array = _world.get_world_connectors()
+	if not _require(
+		connectors.size() == 1
+		and str(connectors[0].get("id", "")) == "transfer_hub_exterior_entrance"
+		and str(connectors[0].get("destination_map_id", "")) == "transfer_hub_interior_01"
+		and str(connectors[0].get("connector_direction", "")) == "forward",
+		"full-level exceptional-interior connector contract drifted"
+	):
 		return false
 	var collision := _player.get_node_or_null("CollisionShape2D") as CollisionShape2D
 	if not _require(collision != null and collision.shape is RectangleShape2D and not collision.disabled, "player collision is unavailable"):
