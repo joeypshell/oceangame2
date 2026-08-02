@@ -1,44 +1,49 @@
 # OceanGame Expansion 17 Web Preview Verification
 
-Date: 2026-08-01
+Date: 2026-08-02
 
-Issue: #1166 `Verify exact public Web preview for Expansion 17`
+Issue: #1184 `Verify Expansion 17 owner-HOLD clarity corrections`
 
 ## Result
 
-**PASS for exact deployment, browser initialization, responsive framing, and
-the isolated Expansion 17 checkpoint.** The verified candidate is:
+**PASS for the corrected exact deployment, browser initialization, responsive
+framing, mobile controls, and isolated Expansion 17 checkpoint.**
 
-- exact SHA: `9de14371c061b5dcc6283f07f8df848ddb4b8227`
-- build version: `9de1437`
+- exact SHA: `075a450d8751fae73ba796a6fdb001a9ce4e5281`
+- build version: `075a450`
 - `git_ref`: `main`
 - `dirty`: `false`
-- [Godot Smoke run 30724423196](https://github.com/joeypshell/oceangame2/actions/runs/30724423196):
+- [Godot Smoke run 30756224775](https://github.com/joeypshell/oceangame2/actions/runs/30756224775):
   source/map validation, core runtime, and regional journey jobs passed
-- [Progression Audit run 30724423184](https://github.com/joeypshell/oceangame2/actions/runs/30724423184):
+- [Progression Audit run 30756224768](https://github.com/joeypshell/oceangame2/actions/runs/30756224768):
   focused fixtures and source-derived progression graph passed
-- [Godot Web Export run 30724423177](https://github.com/joeypshell/oceangame2/actions/runs/30724423177):
+- [Godot Web Export run 30756224777](https://github.com/joeypshell/oceangame2/actions/runs/30756224777):
   export browser check and GitHub Pages deployment passed
 
 Public URLs:
 
 - root: `https://joeypshell.github.io/oceangame2/`
 - fresh isolated review:
-  `https://joeypshell.github.io/oceangame2/?review=9de14371c061b5dcc6283f07f8df848ddb4b8227`
+  `https://joeypshell.github.io/oceangame2/?review=075a450d8751fae73ba796a6fdb001a9ce4e5281`
 - focused Expansion 17 checkpoint:
-  `https://joeypshell.github.io/oceangame2/?review=9de14371c061b5dcc6283f07f8df848ddb4b8227&checkpoint=expansion_17_start`
+  `https://joeypshell.github.io/oceangame2/?review=075a450d8751fae73ba796a6fdb001a9ce4e5281&checkpoint=expansion_17_start`
 - explicit slice fallback:
-  `https://joeypshell.github.io/oceangame2/?review=9de14371c061b5dcc6283f07f8df848ddb4b8227&map=production_slice_01`
+  `https://joeypshell.github.io/oceangame2/?review=075a450d8751fae73ba796a6fdb001a9ce4e5281&map=production_slice_01`
 
-## Bounded Correction
+## Owner-HOLD Corrections
 
-Initial verification of pre-correction SHA `051efd3` found that the source/state
-contract named `expansion_17_start`, but the runtime still rejected that id to
-a fresh profile. Verification was held rather than recording a partial pass.
+This verification supersedes the pre-HOLD player path recorded for
+`9de1437`:
 
-#1178 / PR #1179 added the missing isolated checkpoint and deterministic
-boundary coverage without changing map source, progression rules, visuals, or
-the accepted baseline. This document records only the corrected deployed SHA.
+- #1181 moved desktop active-tool use from `Q` to physical/logical `Space`;
+  mobile `USE` retains the same action
+- #1182 replaced generic relay presentation with named current-scoured and
+  pressure-crushed coordinate transponders
+- #1183 made the two-half comparison an automatic exact-once night payoff,
+  removing the separate triangulation command
+
+No score, material, recipe, capability, terrain, transition, teleport, or
+reward changed.
 
 ## Public Browser Evidence
 
@@ -55,70 +60,68 @@ The repository checker confirmed:
   `(0, 0)` with zero visual-viewport offset
 - mobile touch differences are `8.60` for move-down, `4.91` for oxygen,
   `5.60` for build/project, and `5.10` for use, all above the required `2`
-- framing mean difference is `1.31`, below the maximum `18`
-- no failed requests, browser-console errors, Godot `SCRIPT ERROR`, or Godot
-  `ERROR:` occurred
+- framing mean difference is `1.34`, below the maximum `18`
+- no failed requests, page errors, browser-console failures, Godot
+  `SCRIPT ERROR`, or Godot `ERROR:` occurred
 
 Chromium emitted only the accepted WebGL `ReadPixels` performance warnings.
 
 ## Expansion 17 Checkpoint
 
 A separate public Playwright probe opened `expansion_17_start` at desktop
-1280x720 and touch-emulated iPhone landscape 844x390. Both runs reported:
+1280x720 and touch-emulated iPhone landscape 844x390. Both reported:
 
 ```text
 Review checkpoint active: id=expansion_17_start persistence=false propulsion_fins=true.
 Web map active: map=production_level_01 review=true.
 ```
 
-Both canvases initialized at the expected dimensions with zero failed
-requests, page errors, or fatal console lines. The checkpoint starts at the
-canonical boat with prior equipment and the far-west discovery committed,
-while both relay fragments and final triangulation remain unresolved.
+Desktop `N` and the rendered mobile `DAY` touch control opened the same night
+planning state. Visual inspection confirmed:
 
-Desktop `N` and the rendered mobile `DAY` touch control both opened the night
-planning surface. Visual inspection confirmed that Western Chasm Relay and
-Abyssal Shelf Relay are simultaneously visible, ready, and identified as
-distinct Stabilizer and Pressure-suit routes. The planning panel, cargo/gear
-surface, active-tool hotbar, movement control, and command controls remain
-visible and non-overlapping at both review sizes.
+- the recorder causally explains the two coordinate halves
+- both named transponder leads are visible, ready, and distinguishable
+- Western Chasm names the Stabilizer route and west half
+- Abyssal Shelf names the Pressure-suit route and east half
+- cargo, gear, active tools, movement, and command controls remain readable
 
 The checkpoint does not read or mutate the normal durable profile.
 
 ## Stable Areas
 
-No deployment drift was found in default full-level selection, explicit
-slice-01 fallback, terrain, collision-facing edges, camera framing, player,
-boat entry, desktop/wide presentation, landscape-mobile canvas placement,
-touch alignment, or isolated-profile behavior.
+No deployment drift was found in map selection, terrain, collision-facing
+edges, camera framing, player, boat, routes, desktop/wide presentation,
+landscape-mobile canvas placement, touch alignment, or isolated-profile
+behavior. The regenerated normal full-level images are pixel-identical to the
+accepted baseline, and slices 01-04 remain clean.
 
-No gameplay rule, map source, topology, asset, workflow, accepted baseline,
-generated capture, or generated Web export changed in this verification issue.
+## Owner Re-Test
 
-## Owner Review Path
+Issue #1167 remains open for the real GO/HOLD decision:
 
-Issue #1167 remains open for the real GO/HOLD decision. From the focused URL:
+1. Open the focused checkpoint URL and enter night with `N` or `DAY`.
+2. Confirm the recorder's two-coordinate-half explanation gives both leads a
+   reason to exist.
+3. Pin either lead, start the day, and travel to its named transponder.
+4. Select Scanner, face the artifact, and hold `Space/USE` or mobile `USE`.
+5. Return the pending coordinate half to the boat and confirm the other
+   transponder is named.
+6. Repeat the remaining route; entering night should automatically report
+   recovered transfer-hub coordinates without another command.
+7. Decide whether the two-place investigation now feels connected enough to
+   justify another expedition.
 
-1. At the boat, enter night with `N` or `DAY`; confirm both relay leads are
-   understandable and that pinning one does not disable the other.
-2. Start the day and follow either the Western Chasm or Abyssal Shelf lead.
-3. Face and hold Scanner on the physical artifact, then return its pending
-   fragment to the canonical boat.
-4. Follow the remaining lead and commit its fragment at the boat.
-5. Enter night and explicitly triangulate the completed network.
-6. Decide whether the two-place investigation feels connected and creates a
-   reason to plan another expedition.
-
-This technical PASS does not declare the player journey GO.
+This technical PASS does not declare the player journey GO and does not select
+Expansion 18.
 
 ## Verification
 
 ```powershell
-gh run view 30724423196 --repo joeypshell/oceangame2
-gh run view 30724423184 --repo joeypshell/oceangame2
-gh run view 30724423177 --repo joeypshell/oceangame2
+gh run view 30756224775 --repo joeypshell/oceangame2
+gh run view 30756224768 --repo joeypshell/oceangame2
+gh run view 30756224777 --repo joeypshell/oceangame2
 $env:NODE_PATH = 'C:\Users\pirat\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules'
-& 'C:\Users\pirat\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha 9de14371c061b5dcc6283f07f8df848ddb4b8227
+& 'C:\Users\pirat\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha 075a450d8751fae73ba796a6fdb001a9ce4e5281
 python tools/check_file_lengths.py
 git diff --check
 ```

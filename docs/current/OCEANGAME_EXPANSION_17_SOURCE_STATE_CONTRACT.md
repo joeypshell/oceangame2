@@ -1,8 +1,8 @@
 # OceanGame Expansion 17 Source And State Contract
 
-Date: 2026-08-01
+Date: 2026-08-02
 
-Issue: #1158
+Issues: #1158, corrected by #1181-#1184
 
 Plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`
 
@@ -12,7 +12,7 @@ Expansion 17 turns `far_west_deeper_wreck_discovery` into one investigation
 with two parallel physical relay leads in existing `production_level_01`.
 Either lead may be pinned for guidance, but both artifacts remain valid. Each
 scan creates one pending fragment, each fragment commits only at the canonical
-boat, and both committed fragments enable one explicit night analysis.
+boat, and both committed fragments enable one automatic night comparison.
 
 The analysis grants knowledge and a broad destination promise. It spends no
 score or materials and grants no recipe, capability, cargo, or loaded-map
@@ -60,9 +60,9 @@ cannot express without duplicating truth:
   ],
   "analysis_discovery_id": "wreck_network_triangulation_discovery",
   "analysis_phase": "night_debrief",
-  "analysis_label": "Triangulate wreck network",
-  "analysis_result_label": "Wreck network triangulated",
-  "next_lead_label": "Next lead: transfer hub beyond mapped cave",
+  "analysis_label": "Compare transfer-hub coordinates",
+  "analysis_result_label": "Transfer hub coordinates recovered",
+  "next_lead_label": "Destination: transfer hub beyond mapped cave",
   "commit_map_id": "production_level_01",
   "commit_entry_id": "surface_boat_entry"
 }
@@ -135,14 +135,14 @@ profile state to derive:
 
 - whether the prerequisite is committed
 - required, committed, and remaining fragment ids
-- whether explicit night analysis is ready
+- whether both coordinate halves are ready for night comparison
 - whether final triangulation is already complete
 - compact lead/result labels from source
 
-Its analysis command succeeds only during debrief, after both fragments, and
-before final completion. It calls the existing profile discovery transaction
-once. It owns no profile storage, scanner progress, pending discovery, plan
-selection, day transition, HUD node, or map mutation.
+Its analysis transaction succeeds only during debrief, after both fragments,
+and before final completion. It calls the existing profile discovery
+transaction once. It owns no profile storage, scanner progress, pending
+discovery, plan selection, day transition, HUD node, or map mutation.
 
 ## Planning, Night, And Presentation
 
@@ -151,10 +151,11 @@ prerequisite. Committing one fragment removes only its resolved lead. Pinning
 through `ExpeditionPlanState` changes compact guidance only; it never controls
 target visibility, scanner eligibility, collision, or discovery validity.
 
-`ExpeditionDayDebrief` delegates one explicit analysis command while in
-debrief. The existing input vocabulary is reused; the integration issue must
-choose a conflict-free command and present it beside the analysis label. The
-action is never automatic on boat return or night entry.
+`ExpeditionDayDebrief` invokes the comparison automatically when debrief
+begins with both coordinate halves committed. It records the final discovery
+once and presents the result without blocking next-day start behind `Q`,
+`Space`, or mobile `USE`. Entering night remains deliberate; only the
+redundant comparison command is removed.
 
 Presentation projects source/state reports only:
 
@@ -162,8 +163,8 @@ Presentation projects source/state reports only:
 - selected lead guidance without an exact route line
 - pending fragment return-to-boat feedback
 - one-fragment remaining-lead feedback
-- two-fragment analysis-ready prompt
-- final triangulation result and broad next promise
+- automatic two-fragment comparison result
+- broad next promise with no separate command prompt
 
 The final result is knowledge, not score, wallet value, salvage count, recipe,
 capability, or unexplained inventory.
@@ -180,8 +181,8 @@ capability, or unexplained inventory.
 | `ExpansionProfileState` | committed fragment and final discovery ids |
 | `ExpeditionLeadResolver` | unresolved lead eligibility/readiness |
 | `ExpeditionPlanState` | day-scoped guidance selection only |
-| focused investigation state | fragment-set derivation and explicit analysis transaction |
-| night debrief/presentation | input delegation and compact analysis/result projection |
+| focused investigation state | fragment-set derivation and exact-once analysis transaction |
+| night debrief/presentation | automatic transaction delegation and compact result projection |
 | `main.gd` | initialization, delegation, and refresh only |
 
 ## Validation Obligations
@@ -196,7 +197,7 @@ Issues #1159-#1166 must prove:
 - selection-independent scanner eligibility
 - held-scan cancellation and one-pending-fragment behavior
 - failure cleanup and exact-once canonical boat commits
-- explicit no-cost night analysis and profile reload
+- automatic no-cost night comparison, no extra input gate, and profile reload
 - focused journey smoke, desktop/mobile captures, intentional visual review,
   and exact-SHA public Web initialization
 

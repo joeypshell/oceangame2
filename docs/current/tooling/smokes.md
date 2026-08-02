@@ -79,7 +79,7 @@ The integrated expedition-day smoke verifies shared daylight across open-surface
 
 The integrated Expansion 03 smoke verifies deterministic recipe selection, connector-preserved material cargo, cargo pressure, canonical-boat commitment, knowledge/project gating, exact-once cutter completion, profile reload, next-day rotation, locked/unlocked sealed-wreck interaction, failure restoration, and final payoff banking. CI and release validation run it as `--smoke-expansion-03-material-project`.
 
-The integrated Expansion 06 smoke verifies source territory/timing, normal unarmed cache progress, active-eel contact/knockback interruption, health/oxygen separation, exact-once non-enemy shock-prod construction, selected-tool `Q` attacks, blocked legacy attack input, profile reload, reward-free armed victory, guarded-cache collection/banking, connector/day persistence, and combat/hazard/oxygen restoration. CI and release validation run it as `--smoke-expansion-06-combat-foundation`.
+The integrated Expansion 06 smoke verifies source territory/timing, normal unarmed cache progress, active-eel contact/knockback interruption, health/oxygen separation, exact-once non-enemy shock-prod construction, selected-tool `Space` attacks, blocked legacy attack input, profile reload, reward-free armed victory, guarded-cache collection/banking, connector/day persistence, and combat/hazard/oxygen restoration. CI and release validation run it as `--smoke-expansion-06-combat-foundation`.
 
 The mobile-control smoke protects the accepted eight-region landscape layout, 104 px bottom interaction inset, simultaneous stick/command input, shared `TOOL`/`USE` actions, and non-overlapping active-tool HUD states at 1280x720 and 844x390. CI runs it directly as `smoke_mobile_test_controls.gd`.
 
@@ -90,7 +90,7 @@ The named-checkpoint Shock Prod path is covered with:
 ```
 
 It verifies checkpoint ownership, Scanner-first selection, `Tab`/`TOOL` cycling,
-`Q`/`USE` dispatch, in-range facing, capacitor interruption, and honest
+`Space`/`USE` dispatch, in-range facing, capacitor interruption, and honest
 owned-versus-selected HUD text against the full-level eel. It also verifies
 that switching away from Scanner cancels partial relay progress.
 
