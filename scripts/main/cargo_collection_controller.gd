@@ -19,7 +19,7 @@ func update(delta: float) -> void:
 		_main._player.global_position,
 		_main.SALVAGE_COLLECTION_RADIUS,
 		delta,
-		_main._sortie_state.held_salvage,
+		_main._sortie_state.held_salvage + _main._navigation_core.held_count(),
 		_main._held_salvage_capacity()
 	)
 	if biological_result.has("note") and not str(biological_result.get("note", "")).is_empty():
@@ -47,7 +47,7 @@ func _update_non_biological_collection(delta: float) -> void:
 		_main._player.global_position,
 		_main.SALVAGE_COLLECTION_RADIUS,
 		_main._expedition_day_state,
-		_main._sortie_state.held_salvage,
+		_main._sortie_state.held_salvage + _main._navigation_core.held_count(),
 		_main._held_salvage_capacity()
 	)
 	if material_result.has("note"):
@@ -87,6 +87,20 @@ func _update_tool_target(delta: float) -> bool:
 			return true
 		if _main._world.collect_tool_target(target_id):
 			_main._anomaly_survey.record_tool_target_clearance(target, _main._world)
+			if _main._navigation_core.handles(target):
+				var secured: Dictionary = _main._navigation_core.secure(
+					target,
+					str(_main._world.map_id),
+					reward
+				)
+				if bool(secured.get("changed", false)):
+					_main._last_status_note = str(secured.get("note", "Navigation core secured | Return to the boat"))
+					_main._play_feedback_cue("salvage_pickup", target_id)
+				else:
+					_main._world.restore_salvage([target_id])
+					_main._anomaly_survey.clear_unbanked("navigation_core_secure_failed", _main._world)
+					_main._last_status_note = str(secured.get("note", "Navigation core could not be secured"))
+				return true
 			var score: int = int(_main._world.get_salvage_score(target_id))
 			var note: String = _scanner_cutter_presentation.completion_note(target, score, bool(reward.get("pending", false)))
 			if note.is_empty():
@@ -96,7 +110,7 @@ func _update_tool_target(delta: float) -> bool:
 			_main._anomaly_survey.clear_unbanked("tool_target_collect_failed", _main._world)
 			_main._last_status_note = "Wreck data could not be secured"
 	elif str(result.get("state", "")) == "ready" and _main._active_tools.selected_tool_id() != _main.ActiveToolController.CUTTER_TOOL_ID:
-		_main._last_status_note = "%s | Tab Cutter | Q Use" % _display_label(str(result.get("label", "sealed wreck")))
+		_main._last_status_note = "%s | Tab Cutter | Space/USE" % _display_label(str(result.get("label", "sealed wreck")))
 	elif result.has("note"):
 		_main._last_status_note = str(result["note"])
 	return true

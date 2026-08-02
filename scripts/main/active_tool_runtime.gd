@@ -152,7 +152,7 @@ func _use_cutter() -> Dictionary:
 func _wrong_context(tool_id: String) -> Dictionary:
 	var cutter_target := _cutter_target()
 	if not cutter_target.is_empty() and tool_id != ActiveToolController.CUTTER_TOOL_ID and _main._cutter_salvage.has_cutter():
-		return {"status": "wrong_context", "note": "%s | Tab Cutter | Q Use" % _target_label(cutter_target, "Sealed wreck")}
+		return {"status": "wrong_context", "note": "%s | Tab Cutter | Space/USE" % _target_label(cutter_target, "Sealed wreck")}
 
 	if not _hostile_target().is_empty() and tool_id != ActiveToolController.SHOCK_PROD_TOOL_ID and _main._material_project.has_shock_prod():
 		return {"status": "wrong_context", "note": "Eel in range | Tab Shock prod | Q Use"}

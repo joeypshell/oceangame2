@@ -1,6 +1,7 @@
 extends RefCounted
 
 const DISCOVERY_REWARD_KIND := "discovery"
+const HELD_DISCOVERY_CARGO_REWARD_KIND := "held_discovery_cargo"
 const REGIONAL_TARGET_TYPE := "regional"
 
 var _profile
@@ -16,12 +17,15 @@ func record(target: Dictionary, source_map_id: String) -> Dictionary:
 	var reward_kind := str(target.get("reward_kind", "")).strip_edges()
 	if reward_kind.is_empty():
 		return {"changed": false, "reason": "no_reward", "allow_collection": true}
-	if reward_kind != DISCOVERY_REWARD_KIND:
+	if reward_kind not in [DISCOVERY_REWARD_KIND, HELD_DISCOVERY_CARGO_REWARD_KIND]:
 		return _blocked("unsupported_reward", "Wreck data unavailable")
+	var held_cargo := reward_kind == HELD_DISCOVERY_CARGO_REWARD_KIND
 	var reward_id := str(target.get("reward_id", "")).strip_edges()
 	if reward_id.is_empty() or _profile == null or _expedition == null:
 		return _blocked("invalid_reward", "Wreck data unavailable")
 	if _profile.has_completed_discovery(reward_id):
+		if held_cargo:
+			return _blocked("already_completed", "Navigation core already delivered")
 		return {"changed": false, "reason": "already_completed", "allow_collection": true}
 
 	var pending: Dictionary = _expedition.create_pending(
@@ -31,7 +35,7 @@ func record(target: Dictionary, source_map_id: String) -> Dictionary:
 		str(target.get("reward_commit_map_id", "")),
 		str(target.get("reward_commit_entry_id", "")),
 		{
-			"target_type": REGIONAL_TARGET_TYPE,
+			"target_type": HELD_DISCOVERY_CARGO_REWARD_KIND if held_cargo else REGIONAL_TARGET_TYPE,
 			"pending_label": str(target.get("reward_pending_label", "")),
 			"finding_label": str(target.get("reward_commit_label", "")),
 			"next_lead_label": str(target.get("reward_next_lead_label", "")),
@@ -44,6 +48,8 @@ func record(target: Dictionary, source_map_id: String) -> Dictionary:
 			"reason": status,
 			"allow_collection": true,
 			"pending": true,
+			"held_cargo": held_cargo,
+			"reward_kind": reward_kind,
 			"discovery_id": reward_id,
 			"note": _pending_note(target),
 		}

@@ -26,6 +26,7 @@ const ITEM_LABELS := {
 	"insulating_gel": "Insulating gel",
 	"eel_electrocyte": "Eel electrocyte",
 	"held_salvage": "Valuable salvage",
+	"navigation_core": "Transfer Hub navigation core",
 }
 const ITEM_SYMBOLS := {
 	"titanium_scrap": "Ti",
@@ -34,6 +35,7 @@ const ITEM_SYMBOLS := {
 	"insulating_gel": "Ge",
 	"eel_electrocyte": "El",
 	"held_salvage": "V",
+	"navigation_core": "NC",
 }
 const ITEM_TEXTURES := {
 	"titanium_scrap": preload("res://assets/materials/titanium_scrap_01.png"),
@@ -81,7 +83,7 @@ func refresh(
 	_items = _snapshot_items(material_report, sortie_report)
 	_equipment_strip.refresh(owned_capability_ids, equipment_context)
 	_capacity = maxi(0, capacity)
-	_used = maxi(0, int(material_report.get("held_count", 0))) + maxi(0, int(sortie_report.get("held_salvage", 0)))
+	_used = maxi(0, int(material_report.get("held_count", 0))) + maxi(0, int(sortie_report.get("held_salvage", 0))) + maxi(0, int(sortie_report.get("held_navigation_core", 0)))
 	_available = maxi(0, _capacity - _used)
 	_refresh_capacity_text()
 	_capacity_label.add_theme_color_override(
@@ -151,6 +153,9 @@ func _snapshot_items(material_report: Dictionary, sortie_report: Dictionary) -> 
 	var salvage_count := maxi(0, int(sortie_report.get("held_salvage", 0)))
 	if salvage_count > 0:
 		values.append(_item("held_salvage", salvage_count))
+	var navigation_core_count := maxi(0, int(sortie_report.get("held_navigation_core", 0)))
+	if navigation_core_count > 0:
+		values.append(_item("navigation_core", navigation_core_count))
 	return values
 
 

@@ -86,7 +86,7 @@ func _run() -> void:
 	main._sortie_state.clear_held()
 
 	main._process(0.5)
-	_expect(main._last_status_note.find("Q Use cutter") != -1, "cutter proximity did not stay ready before explicit use")
+	_expect(main._last_status_note.find("Space/USE cutter") != -1, "cutter proximity did not stay ready before explicit use")
 	_expect(is_zero_approx(float(main._cutter_salvage.report().get("progress_seconds", -1.0))), "cutter proximity advanced progress before use")
 	_press_use(main)
 	main._process(0.5)
