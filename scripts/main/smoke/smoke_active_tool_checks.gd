@@ -35,7 +35,7 @@ func smoke_and_quit() -> void:
 			InputMap.action_get_events("active_tool_cycle_next"),
 			InputMap.action_get_events("active_tool_use"),
 			KEY_TAB,
-			KEY_Q,
+			KEY_SPACE,
 		])
 		return
 	if not _expect_selection(controller.refresh_ownership(has_capability), "", []):
@@ -88,7 +88,7 @@ func smoke_and_quit() -> void:
 		_fail("No-tool use mutated dispatch state: result=%s dispatched=%s." % [no_tool_result, _dispatched_tool_ids])
 		return
 
-	print("Active-tool selection smoke passed: order=%s bindings=Tab/Q passive_excluded=true dispatch=%s normalized=%s." % [
+	print("Active-tool selection smoke passed: order=%s bindings=Tab/Space passive_excluded=true dispatch=%s normalized=%s." % [
 		ActiveToolController.ordered_tool_ids(),
 		_dispatched_tool_ids,
 		controller.selected_tool_id(),
@@ -148,7 +148,7 @@ func smoke_checkpoint_shock_prod_and_quit() -> void:
 	_main._player.swim_in_direction(Vector2.RIGHT, 0.0)
 	_main._hostiles.update(_main._world, _main._player.global_position, 0.0)
 	var wrong_tool_prompt: String = _main._active_tool_runtime.combat_prompt()
-	if wrong_tool_prompt.find("Tab/TOOL select Shock prod") == -1 or wrong_tool_prompt.find("Q/USE") == -1:
+	if wrong_tool_prompt.find("Tab/TOOL select Shock prod") == -1 or wrong_tool_prompt.find("Space/USE") == -1:
 		_fail("Encounter did not explain selected-tool use: %s." % wrong_tool_prompt)
 		return
 	_main._update_status_label()
@@ -170,7 +170,7 @@ func smoke_checkpoint_shock_prod_and_quit() -> void:
 	_press_action("active_tool_use")
 	var hit_state: Dictionary = _main._hostiles.state_for(HOSTILE_ID)
 	if int(hit_state.get("health", -1)) != 2 or str(hit_state.get("phase", "")) != "recovery" or not _main._last_status_note.begins_with("Shock prod capacitor hit"):
-		_fail("Real Q/USE dispatch did not interrupt the eel: state=%s note=%s." % [hit_state, _main._last_status_note])
+		_fail("Real Space/USE dispatch did not interrupt the eel: state=%s note=%s." % [hit_state, _main._last_status_note])
 		return
 	var discharge: Dictionary = _main._player.get_shock_prod_presentation_report()
 	if (
@@ -180,7 +180,7 @@ func smoke_checkpoint_shock_prod_and_quit() -> void:
 		or not is_equal_approx(float(discharge.get("range_pixels", 0.0)), ShockProdController.ATTACK_RANGE_PX)
 		or not is_equal_approx(float(discharge.get("arc_half_angle_degrees", 0.0)), ShockProdController.ATTACK_HALF_ANGLE_DEGREES)
 	):
-		_fail("Real Q/USE hit did not produce authoritative range/target feedback: %s." % discharge)
+		_fail("Real Space/USE hit did not produce authoritative range/target feedback: %s." % discharge)
 		return
 
 	print("Checkpoint Shock Prod smoke passed: checkpoint=expansion_14_start scanner_switch_cancel=true default=Scanner selected=Shock_prod range=72 cone=35 discharge=visible_connected hit=1 recoil=44 health=2/3 phase=recovery capacitor=true.")
@@ -227,7 +227,8 @@ func _verify_input_actions() -> bool:
 		InputMap.has_action("active_tool_cycle_next")
 		and InputMap.has_action("active_tool_use")
 		and _action_has_key("active_tool_cycle_next", KEY_TAB)
-		and _action_has_key("active_tool_use", KEY_Q)
+		and _action_has_key("active_tool_use", KEY_SPACE)
+		and not _action_has_key("active_tool_use", KEY_Q)
 	)
 
 

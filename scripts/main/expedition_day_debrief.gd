@@ -90,7 +90,7 @@ static func handle_debrief_input(main, event: InputEvent) -> Dictionary:
 
 
 static func _supported_keycode(event: InputEventKey) -> Key:
-	for candidate in [KEY_TAB, KEY_E, KEY_N, KEY_P, KEY_Q]:
+	for candidate in [KEY_TAB, KEY_E, KEY_N, KEY_P, KEY_SPACE]:
 		if event.keycode == candidate or event.physical_keycode == candidate:
 			return candidate
 	return event.keycode
@@ -105,7 +105,7 @@ static func handle_debrief_key(main, keycode: Key) -> Dictionary:
 		return _cycle_plan_highlight(main)
 	if keycode == KEY_E:
 		return _pin_highlighted_plan(main)
-	if keycode == KEY_Q:
+	if keycode == KEY_SPACE:
 		return _analyze_wreck_network(main)
 	if keycode == KEY_N:
 		return handle_day_key(main)

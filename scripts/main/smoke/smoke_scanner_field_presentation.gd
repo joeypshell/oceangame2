@@ -148,7 +148,7 @@ func _verify_mobile_use_command() -> void:
 	_expect(not Input.is_action_pressed("active_tool_use"), "mobile USE remained held after touch release")
 	_expect(_mobile_use_event is InputEventAction, "mobile USE did not dispatch the shared action")
 	if _mobile_use_event is InputEventAction:
-		_expect((_mobile_use_event as InputEventAction).action == &"active_tool_use", "mobile USE did not use desktop Q action semantics")
+		_expect((_mobile_use_event as InputEventAction).action == &"active_tool_use", "mobile USE did not use desktop Space action semantics")
 	var reachable_bottom := (report.get("viewport_size", Vector2.ZERO) as Vector2).y - float(report.get("bottom_inset", 0.0))
 	_expect(use_rect.end.y <= reachable_bottom, "mobile USE extended below the reachable landscape inset")
 	controls.queue_free()

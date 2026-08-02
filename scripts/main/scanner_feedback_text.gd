@@ -15,7 +15,7 @@ func identification_note(target: Dictionary) -> String:
 	var description := str(target.get("scan_subject_description", "")).strip_edges()
 	var note := "Identified: %s | %s" % [label, description] if not description.is_empty() else "Identified: %s" % label
 	if str(target.get("source_type", "")) == "tool_target":
-		note += " | Tab Cutter | Q/USE"
+		note += " | Tab Cutter | Space/USE"
 	return note
 
 
@@ -59,7 +59,7 @@ func nearby_scan_text(target: Dictionary, clue: String, active_target_id: String
 	if not regional_prompt.is_empty():
 		return regional_prompt
 	var label := str(target.get("interaction_label", "Survey signal")).strip_edges()
-	var prompt := "Hold Q/USE to scan: %s" % (label if not label.is_empty() else "Survey signal")
+	var prompt := "Hold Space/USE to scan: %s" % (label if not label.is_empty() else "Survey signal")
 	return "%s\n%s" % [clue, prompt] if not clue.is_empty() else prompt
 
 

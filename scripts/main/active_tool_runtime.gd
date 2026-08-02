@@ -39,10 +39,10 @@ func combat_prompt() -> String:
 	):
 		return ""
 	if _selection.selected_tool_id() != ActiveToolController.SHOCK_PROD_TOOL_ID:
-		return "Eel active | Tab/TOOL select Shock prod | Q/USE"
+		return "Eel active | Tab/TOOL select Shock prod | Space/USE"
 	if _hostile_target().is_empty():
-		return "Shock prod selected | move close and face eel | Q/USE"
-	return "Eel in Shock prod range | Q/USE discharge"
+		return "Shock prod selected | move close and face eel | Space/USE"
+	return "Eel in Shock prod range | Space/USE discharge"
 
 
 func cycle() -> Dictionary:
@@ -159,7 +159,7 @@ func _wrong_context(tool_id: String) -> Dictionary:
 
 	var survey_target: Dictionary = _main._anomaly_survey.active_tool_target(_main._world, _main._player)
 	if not survey_target.is_empty() and tool_id != ActiveToolController.SCANNER_TOOL_ID and _main._anomaly_survey.has_scanner():
-		return {"status": "wrong_context", "note": "%s | Tab Scanner | Hold Q/USE" % _target_label(survey_target, "Survey signal")}
+		return {"status": "wrong_context", "note": "%s | Tab Scanner | Hold Space/USE" % _target_label(survey_target, "Survey signal")}
 	return {}
 
 

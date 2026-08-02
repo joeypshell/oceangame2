@@ -50,7 +50,7 @@ alignment, and clean browser/resource startup.
 
 1. Build the Current Stabilizer and pass through the left advanced current by
    swimming; no `E` interaction is expected.
-2. Find the visible Northwest Wreck Relay, equip Scanner, and hold `Q/USE`.
+2. Find the visible Northwest Wreck Relay, equip Scanner, and hold `Space/USE`.
    The field must remain visible for the full hold; releasing the input or
    switching tools must clear it and cancel partial progress.
 3. Aim the Scanner at ordinary subjects and confirm the temporary local card

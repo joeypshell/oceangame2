@@ -125,7 +125,7 @@ func debrief_lines() -> Array[String]:
 		return lines
 	if bool(current.get("analysis_ready", false)):
 		lines.append("Wreck fragments 2/2")
-		lines.append("Q/USE: %s" % str(current.get("analysis_label", "Triangulate wreck network")))
+		lines.append("Space/USE: %s" % str(current.get("analysis_label", "Triangulate wreck network")))
 		return lines
 	var objective := objective_line()
 	if not objective.is_empty():

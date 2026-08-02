@@ -201,7 +201,7 @@ func _complete_abyssal_fragment() -> bool:
 func _analyze_and_verify_reload() -> bool:
 	var requested: Dictionary = ExpeditionDayDebrief17.handle_day_key(_main)
 	_main._process(0.0)
-	if not _require(bool(requested.get("requested", false)) and _main._result_label.text.find("Q/USE: Triangulate wreck network") != -1, "analysis-ready debrief omitted the explicit action"):
+	if not _require(bool(requested.get("requested", false)) and _main._result_label.text.find("Space/USE: Triangulate wreck network") != -1, "analysis-ready debrief omitted the explicit action"):
 		return false
 	var blocked: Dictionary = ExpeditionDayDebrief17.handle_debrief_key(_main, KEY_N)
 	if not _require(blocked.get("reason") == "analysis_required", "next day bypassed explicit analysis"):

@@ -103,7 +103,7 @@ func scanner_action(world, player) -> Dictionary:
 	return _note_result(
 		bool(activation.get("changed", false)),
 		"activated",
-		str(activation.get("note", "Scanner active | Hold Q/USE and position")),
+		str(activation.get("note", "Scanner active | Hold Space/USE and position")),
 		{"target_id": target_id}
 	)
 

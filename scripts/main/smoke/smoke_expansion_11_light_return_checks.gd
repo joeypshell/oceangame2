@@ -244,7 +244,7 @@ func _complete_harmonic_return() -> bool:
 	if not _place_for_scan(target):
 		return false
 	var seconds := float(target.get("interaction_seconds", 0.0))
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	_advance(seconds * 0.5)
 	var partial := float(_main._anomaly_survey.report().get("interaction", {}).get("progress", 0.0))
 	if not _require(partial > 0.0 and partial < 1.0, "light-owned survey did not expose partial progress"):
@@ -262,7 +262,7 @@ func _complete_harmonic_return() -> bool:
 		return false
 	if not _place_for_scan(target):
 		return false
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	_advance(seconds + 0.01)
 	if not _require(_main._anomaly_survey.has_pending_discovery() and not _world.is_inside_boat(_player.global_position) and not profile.has_completed_discovery(HARMONIC_DISCOVERY_ID), "harmonic completion did not remain pending away from boat"):
 		return false

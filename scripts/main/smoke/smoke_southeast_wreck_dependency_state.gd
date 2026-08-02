@@ -66,7 +66,7 @@ func _run() -> void:
 	_expect(main._world.is_salvage_collected(RECORDER_ID), "cutter did not clear recorder")
 	_expect(main._sortie_state.held_salvage_ids.has(RECORDER_ID), "recorder did not enter held cargo")
 	_place_for_scan(main, survey)
-	_expect(main._anomaly_survey.overlay_text(main._world, main._player) == "Archive exposed | Hold Q/USE to scan wreck archive", "exposed archive prompt was unclear")
+	_expect(main._anomaly_survey.overlay_text(main._world, main._player) == "Archive exposed | Hold Space/USE to scan wreck archive", "exposed archive prompt was unclear")
 	main._sortie_state.collect_salvage("capacity_after_recorder", 0)
 	var activated: Dictionary = main._anomaly_survey.scanner_action(main._world, main._player)
 	_expect(activated.get("reason") == "activated", "full cargo blocked current-sortie archive survey")

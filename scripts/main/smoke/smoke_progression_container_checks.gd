@@ -136,8 +136,8 @@ func _smoke_upgrade_chest_and_quit() -> void:
 	var scanner_status := _status_text()
 	if not _require(scanner_status.find("Scanner project | Ti 1 + Coil 1") != -1, "scanner project was not the next action: %s" % scanner_status):
 		return
-	_press_key(KEY_Q)
-	if not _require(not _main._anomaly_survey.has_scanner() and _session_wallet() == wallet_before_payoff + valuable_score, "Q used score to bypass the scanner project"):
+	_press_key(KEY_SPACE)
+	if not _require(not _main._anomaly_survey.has_scanner() and _session_wallet() == wallet_before_payoff + valuable_score, "Space used score to bypass the scanner project"):
 		return
 
 	print("Blueprint fins journey smoke passed: blueprint=%s explicit_e=true proximity_auto_open=false daytime_build=false recipe=ti2+rubber1 tracker=banked_vs_held passive_current=true e_required=false same_map=true controller_frames=%d payoff=%s scanner_blueprint_next=true scanner_recipe=ti1+coil1 score_bypass=false." % [
