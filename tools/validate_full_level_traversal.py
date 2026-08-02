@@ -316,6 +316,13 @@ def transition_metadata_failures(map_data: dict) -> list[str]:
     for section in ("zones", "entities"):
         for item in map_data.get(section, []):
             present = forbidden & set(item)
+            is_exceptional = (
+                section == "zones"
+                and item.get("world_connector") is True
+                and item.get("connector_kind") == "exceptional_interior"
+            )
+            if is_exceptional and "teleport" not in present:
+                continue
             if present:
                 failures.append(
                     f"{section} record {item.get('id', '<missing>')} has transition metadata {sorted(present)}"

@@ -21,6 +21,7 @@
 <rect x="480" y="2976" width="224" height="160" rx="64" fill="#237fad" opacity="0.22"/>
 <rect x="608" y="3808" width="160" height="64" rx="64" fill="#237fad" opacity="0.22"/>
 <rect x="3840" y="4704" width="256" height="96" rx="64" fill="#237fad" opacity="0.22"/>
+<rect x="2848" y="4736" width="288" height="256" rx="64" fill="#237fad" opacity="0.22"/>
 <rect x="0" y="0" width="5056" height="5152" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
 <text x="12.0" y="34.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">production_level_bounds</text>
 <rect x="1216" y="1568" width="32" height="32" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
@@ -91,6 +92,8 @@
 <text x="3660.0" y="4738.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">abyssal_shelf_pressure_seam</text>
 <rect x="3840" y="4704" width="256" height="96" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
 <text x="3852.0" y="4738.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">abyssal_shelf_relay_landmark</text>
+<rect x="2944" y="4832" width="96" height="96" fill="#ffffff" opacity="0.08" stroke="#ffffff" stroke-width="4" stroke-dasharray="16 14"/>
+<text x="2956.0" y="4866.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="24" paint-order="stroke" stroke="#10384a" stroke-width="4">transfer_hub_exterior_entrance</text>
 <rect x="3456" y="0" width="1056" height="256" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="0" y="0" width="2912" height="320" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
 <rect x="0" y="320" width="2880" height="32" fill="#26333f" stroke="#8ea9b5" stroke-width="3"/>
@@ -505,6 +508,8 @@
 <rect x="4703.0" y="4767.0" width="34" height="34" fill="#ffad42" stroke="#6e4210" stroke-width="5"/>
 <polygon points="1872.0,1919.0 1889.0,1936.0 1872.0,1953.0 1855.0,1936.0" fill="#ffd34a" stroke="#7f5b00" stroke-width="5"/>
 <rect x="511.0" y="3071.0" width="34" height="34" fill="#ffad42" stroke="#6e4210" stroke-width="5"/>
+<circle cx="2832.0" cy="4880.0" r="18" fill="#29d66f" stroke="#08351c" stroke-width="5"/>
+<text x="2856.0" y="4890.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">START</text>
 <rect x="2432" y="2304" width="64" height="64" rx="8" fill="#d68cff" stroke="#5b236b" stroke-width="5"/>
 <text x="2440.0" y="2294.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">lower_loop_upgrade_chest</text>
 <rect x="4000" y="1280" width="64" height="64" rx="8" fill="#d68cff" stroke="#5b236b" stroke-width="5"/>

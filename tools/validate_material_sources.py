@@ -207,7 +207,9 @@ def _validate_projects(
     raw_projects = map_data.get("material_projects", [])
     if not isinstance(raw_projects, list):
         return ["material_projects must be a list when present."]
-    if (pools or tool_entities) and not raw_projects:
+    cross_map_targets = {target_id for target_id, target in tool_entities.items()
+                         if target.get("reward_kind") == "held_discovery_cargo"}
+    if (pools or set(tool_entities) - cross_map_targets) and not raw_projects:
         failures.append("Material source requires at least one material project.")
     seen_ids: set[str] = set()
     reserved = _reserved_ids(map_data) | set(pools)
@@ -395,6 +397,7 @@ def _validate_projects(
             and target.get("required_tool_id") == project.get("unlocks_capability_id")
         ):
             referenced_targets.add(target_id)
+    referenced_targets.update(cross_map_targets)
     for target_id in sorted(set(tool_entities) - referenced_targets):
         failures.append(f"Cutter target {target_id!r} is not referenced by a material project.")
     durable_gates = {
@@ -405,8 +408,6 @@ def _validate_projects(
     for hostile_id in sorted(set(hostile_encounters) - referenced_hostiles):
         failures.append(f"Hostile encounter {hostile_id!r} is not referenced by a material project.")
     return failures
-
-
 def validate_material_source_schema(map_data: dict[str, Any]) -> list[str]:
     entities = _items(map_data, "entities")
     failures, material_entities, tool_entities = _validate_entity_metadata(entities)
@@ -416,8 +417,6 @@ def validate_material_source_schema(map_data: dict[str, Any]) -> list[str]:
     failures.extend(validate_research_source_schema(map_data))
     failures.extend(validate_tool_target_reward_schema(map_data))
     return failures
-
-
 def validate_material_source_reachability(
     entities: list[dict[str, Any]],
     solid: set[tuple[int, int]],
