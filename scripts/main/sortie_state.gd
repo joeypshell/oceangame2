@@ -26,6 +26,11 @@ func begin_map_leg(map_id: String, entry_id: String, oxygen_capacity_seconds: fl
 	active = kept_active
 
 
+func begin_continuous_map_leg(map_id: String, entry_id: String) -> void:
+	current_map_id = map_id
+	current_entry_id = entry_id
+
+
 func update_offload_presence(at_offload: bool, oxygen_capacity_seconds: float) -> bool:
 	if failed:
 		return false
