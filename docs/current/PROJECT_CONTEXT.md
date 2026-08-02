@@ -1,12 +1,12 @@
 # Project Context
 
-Last updated: 2026-07-31
+Last updated: 2026-08-02
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
 ## Current Goal
 
-`oceangame2` has a GO release candidate and sixteen completed bounded Phase 2 expansions. Expansion 17 Wreck Network Triangulation is active in milestone #43 through frozen issues #1158-#1167; its source/state contract is locked before implementation. OceanGame Expansion 01 proved:
+`oceangame2` has a GO release candidate and sixteen completed bounded Phase 2 expansions. Expansion 17 Wreck Network Triangulation is implemented and technically verified after bounded owner-HOLD corrections #1181-#1184; #1167 remains open for the short player GO/HOLD re-test. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -36,7 +36,7 @@ Expansion 10 completed through #889 plus player-gate correction #900. Propulsion
 
 Expansion 11 is complete with player GO through #914 plus corrections #925/#927. Signal Reef knowledge now reveals a durable Ti1/Coil1/Gel1 night-built light for one remembered dark-harmonic return. The old 900-score light purchase and 300-wallet scanner shortcut are retired; scanner ownership instead uses a guaranteed post-fins blueprint and Ti1/Coil1 night project, while the nearby valuable cache remains optional score. Final exact-SHA Web verification passed at `eb940b7`.
 
-Expansion 12 is complete with player GO through #941 plus player-HOLD corrections #951-#953. The deep-harmonic clue now reveals a durable Ti2/Rubber1/Gel1 night-built pressure suit for one scoutable lower-central pressure threshold and protected abyssal survey. Explicit `Q/SCAN` activation, full-cargo scanner feedback, pending boat-return guidance, deterministic journey coverage, and exact-SHA Web verification pass at runtime `d864a9e`.
+Expansion 12 is complete with player GO through #941 plus player-HOLD corrections #951-#953. The deep-harmonic clue now reveals a durable Ti2/Rubber1/Gel1 night-built pressure suit for one scoutable lower-central pressure threshold and protected abyssal survey. Explicit held `Space/SCAN` activation, full-cargo scanner feedback, pending boat-return guidance, deterministic journey coverage, and exact-SHA Web verification pass at runtime `d864a9e`.
 
 Expansion 13 Southeast Wreck Return is complete with owner GO. After two bounded HOLD corrections, #1000-#1009 established deliberate shared tool controls, matching mobile presentation, named material sprites, and failure-safe sealed-wreck navigation data through canonical-boat commitment. Bounded audio interlude #1020-#1023 added first-material pickup ownership, individually generated semantic cues, deterministic lifecycle/asset coverage, and exact-SHA Web verification. The owner reviewed runtime `ede39d1`, reported the corrected experience was fine, and closed the player gate through #969.
 
@@ -46,7 +46,7 @@ Expansion 15 Expedition Planning And Choice is complete with owner GO on exact W
 
 Expansion 16 Deeper Wreck Oxygen Return is complete through #1122-#1133 plus bounded corrections #1143-#1146/#1151/#1153. The committed relay finding now leads into the underused far-west/lower-left part of continuous `production_level_01`, where one recipe-built closed-circuit rebreather normalizes a source-authored confined-wreck x8 oxygen zone before an existing-cutter/existing-scanner payoff. The final route cue, relay beacons, pressure warning, scalable passive-gear presentation, and scaled-display HUD correction passed exact-SHA Web verification. The owner confirmed the oxygen pressure, rebreather, cutter, and corrected HUD and gave GO on runtime `05b482e`.
 
-Planning gate #1156 selects Expansion 17 Wreck Network Triangulation, now active as milestone #43 and frozen issues #1158-#1167. The far-west discovery will decode two broad leads to distinct physical relay artifacts in underused existing regions. Each route reuses a different combination of already-earned capabilities, each finding commits only at the canonical boat, and both enable one explicit night analysis that reveals a later destination promise. The pass adds no recipe, capability, terrain, transition, score reward, or broad system.
+Expansion 17 Wreck Network Triangulation is implemented through #1158-#1166 plus owner-HOLD corrections #1181-#1184. The far-west recorder now explains that transfer-hub coordinates are split across a current-scoured western transponder and a pressure-crushed abyssal transponder. Each route reuses already-earned capabilities, each coordinate half commits only at the canonical boat, and returning both triggers one automatic, exact-once night comparison with a destination promise. Held scanner use is `Space/USE` on desktop and `USE` on mobile; there is no separate triangulation command. The pass adds no recipe, capability, terrain, transition, score reward, or broad system.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -80,21 +80,21 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Completed Expansion 14 handoff: `docs/current/OCEANGAME_EXPANSION_14_CLOSEOUT.md`, with correction history in `docs/current/OCEANGAME_EXPANSION_14_OWNER_HOLD_CORRECTION_PLAN.md`, focused visual review, and exact Web verification
 - Completed Expansion 15 handoff: `docs/current/OCEANGAME_EXPANSION_15_CLOSEOUT.md`, with its plan, source/state contract, visual decision, final Web evidence, and corrections #1113/#1117/#1119
 - Completed Expansion 16 handoff: `docs/current/OCEANGAME_EXPANSION_16_CLOSEOUT.md`, with its plan, source/state contract, visual decisions, exact Web evidence, and corrections #1143-#1146/#1151/#1153
-- Active Expansion 17 handoff: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md` and `docs/current/OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`; milestone #43 owns #1158-#1167
+- Active Expansion 17 handoff: its plan, source/state contract, visual decision, and exact Web verification under `docs/current/`; milestone #43 leaves only owner gate #1167 open after correction verification #1184
 - Latest audio/Web handoff: `docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Focused player-review workflow: `docs/current/PLAYTEST_CHECKPOINTS.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest owner decision: Expansion 16 GO on exact reviewed runtime `05b482e`; #1133 and milestone #42 are complete
-- Latest selected planning direction: Expansion 17 Wreck Network Triangulation through #1156; create its implementation milestone and frozen batch in the next audit
-- Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_16_PLAN.md`, with ownership locked by `docs/current/OCEANGAME_EXPANSION_16_SOURCE_STATE_CONTRACT.md`
-- Latest source contract: `docs/current/OCEANGAME_EXPANSION_16_SOURCE_STATE_CONTRACT.md`
-- Latest visual decision: Expansion 16's focused oxygen-route presentation is accepted in `docs/current/OCEANGAME_EXPANSION_16_VISUAL_BASELINE_DECISION.md`, with bounded HUD corrections recorded in the closeout; established terrain and slice baselines did not change
+- Latest owner decision: Expansion 16 GO on exact reviewed runtime `05b482e`; Expansion 17 remains at owner HOLD pending #1167 re-test
+- Latest selected direction: finish the bounded Expansion 17 player decision on exact corrected runtime `075a450`; do not select Expansion 18 first
+- Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
+- Latest source contract: `docs/current/OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`
+- Latest visual decision: corrected Expansion 17 focused states are accepted for review while the 14-view full-level and slice baselines remain pixel-stable
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: final Expansion 16 owner candidate `05b482e`, recorded in `docs/current/OCEANGAME_EXPANSION_16_CLOSEOUT.md`; the original technical candidate evidence remains in `docs/current/OCEANGAME_EXPANSION_16_WEB_PREVIEW_VERIFICATION.md`.
+- Latest Web verification: corrected Expansion 17 owner candidate `075a450`, recorded in `docs/current/OCEANGAME_EXPANSION_17_WEB_PREVIEW_VERIFICATION.md`.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -210,7 +210,7 @@ For map changes, run the relevant generator, SVG renderer, validator, parity che
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Each issue needs acceptance criteria, relevant files, implementation notes, and verification steps.
 
-Current issue state as of 2026-07-31:
+Current issue state as of 2026-08-02:
 
 - Closed: #662-#671 completed Expansion 01 with a GO.
 - Closed: #685-#694 completed Expansion 02 with a GO.
@@ -232,7 +232,8 @@ Current issue state as of 2026-07-31:
 - Closed: #1040 records owner GO for exact runtime `1f148eb`; milestone #40 is complete.
 - Closed: #1094-#1104 plus corrections #1113/#1117/#1119 completed Expansion 15; #1104 records owner GO for exact runtime `23f4172`, and milestone #41 is complete.
 - Closed: #1122-#1133 plus corrections #1143-#1146/#1151/#1153 completed Expansion 16; #1133 records owner GO for exact runtime `05b482e`, and milestone #42 is complete.
-- Planning: #1156 selects Expansion 17 Wreck Network Triangulation and recommends, but does not create, its implementation batch.
+- Closed: #1158-#1166 implemented and technically verified Expansion 17; #1181-#1184 corrected input, artifact identity, night payoff, visuals, and exact Web evidence after owner HOLD.
+- Open owner gate: #1167 awaits the short corrected Expansion 17 player re-test; milestone #43 remains open and Expansion 18 is not selected.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -370,7 +371,7 @@ Current issue state as of 2026-07-31:
 
 ## Recommended Next Work
 
-Run a separate backlog audit to create the Expansion 17 implementation milestone and freeze the dependency-ordered batch recommended by `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`. Do not reopen the direction decision or implement from #1156 itself. #52/#53 remain deferred rather than becoming the default next work.
+Use #1167 for a short player re-test of the corrected Expansion 17 journey on exact runtime `075a450`. Do not create Expansion 18 work until that gate records GO or a new bounded HOLD. #52/#53 remain deferred rather than becoming the default next work.
 
 Accepted constraints for next work:
 
@@ -384,7 +385,7 @@ Accepted constraints for next work:
 - Omit prompted connectors and map transitions from normal full-level traversal. Preserve Expansion 14's source-authored advanced stabilizer current as a passive regional boundary inside continuous water; legacy slice behavior remains a protected reference surface, not the canonical prerequisite owner.
 - Keep standard capability gates inside contiguous authored geography and traversable through movement; reserve `E` connectors for explicit exceptional entrances/interiors.
 - Preserve Expansion 16's far-west/lower-left journey and source-authored confined-wreck oxygen zone as a completed regression surface. Its rebreather remains route-local; the session `O2 tank +15` does not substitute for the durable project.
-- Keep Expansion 17 inside existing contiguous geography with no expected terrain change. Its two physical artifacts reuse already-earned capabilities, commit separately at the boat, and combine only through explicit night analysis; lead selection guides but never locks either target.
+- Keep Expansion 17 inside existing contiguous geography with no terrain change. Its two physical transponders reuse already-earned capabilities, commit separately at the boat, and combine through one automatic exact-once night comparison; lead selection guides but never locks either target.
 - Preserve the completed mineral research, fresh-day selection, and broad habitat-lead behavior as the practical-knowledge regression surface.
 - Preserve separate health, the source-authored eel territory, viable unarmed evasion, non-circular shock-prod project, day-local defeat, and no-reward combat semantics.
 - Night consumes no Food, Water, Power, or other survival tax.

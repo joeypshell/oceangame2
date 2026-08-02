@@ -50,10 +50,12 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_16_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`
 - `docs/current/OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`
+- `docs/current/OCEANGAME_EXPANSION_17_VISUAL_BASELINE_DECISION.md`
+- `docs/current/OCEANGAME_EXPANSION_17_WEB_PREVIEW_VERIFICATION.md`
 
 ## Current State
 
-Simple Diver Game 01-09 and OceanGame Expansions 01-16 are complete with player GO. Expansion 17 is selected in planning to turn the far-west network finding into a two-lead investigation using existing capabilities and geography. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
+Simple Diver Game 01-09 and OceanGame Expansions 01-16 are complete with player GO. Expansion 17 is implemented and technically verified after bounded owner-HOLD corrections; #1167 remains its player GO/HOLD gate. `production_level_01` remains the normal editor, local, and public Web default; slices 01-04 remain unchanged regression/provenance fixtures.
 
 Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen sorties, boat-only banking, night debrief/preparation, material-and-knowledge projects, capability-gated map returns, practical research, enemies/weapons, and biological resources.
 
@@ -63,22 +65,22 @@ Phase 2 is now selected. Its organizing loop is daylight with multiple oxygen so
 
 **Expansion 16: Deeper Wreck Oxygen Return** turns the committed Northwest relay signal into one far-west return through existing contiguous geography, with a recipe-built rebreather that normalizes a source-authored confined-wreck high-consumption oxygen zone. Milestone #42 is complete with owner GO on exact runtime `05b482e` after bounded discoverability and HUD corrections.
 
-**Expansion 17: Wreck Network Triangulation** will decode two physical relay-artifact leads in distinct existing regions, reuse already-earned capabilities, commit each fragment at the boat, and combine both through one explicit night analysis. Milestone #43 tracks frozen issues #1158-#1167; #1167 is the owner GO/HOLD gate.
+**Expansion 17: Wreck Network Triangulation** decodes two named coordinate-transponder leads in distinct existing regions, reuses already-earned capabilities, commits each half at the boat, and combines both through one automatic exact-once night comparison. Milestone #43 leaves #1167 open as the owner GO/HOLD gate.
 
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
-- Committed: Expansion 17 Wreck Network Triangulation through milestone #43 and issues #1158-#1167.
+- Committed: finish Expansion 17 through milestone #43 owner gate #1167 on corrected runtime `075a450`.
 - Proposed: no Expansion 18 direction is selected.
 - Directional: the triangulated destination, exceptional interiors, and other regional identities remain uncommitted.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-Expansion 16 is complete. Expansion 17 milestone #43 is active with frozen issues #1158-#1167.
+Expansion 16 is complete. Expansion 17 milestone #43 is technically verified with only owner gate #1167 open.
 
-1. [Expansion 17: Wreck Network Triangulation](https://github.com/joeypshell/oceangame2/milestone/43) - active issues #1158-#1167; final owner review is #1167.
+1. [Expansion 17: Wreck Network Triangulation](https://github.com/joeypshell/oceangame2/milestone/43) - implementation and HOLD corrections verified at `075a450`; final owner review is #1167.
 2. [Expansion 16: Deeper Wreck Oxygen Return](https://github.com/joeypshell/oceangame2/milestone/42) - complete with owner GO after corrections #1143/#1144/#1151/#1153; exact reviewed runtime `05b482e`.
 3. [Expansion 15: Expedition Planning And Choice](https://github.com/joeypshell/oceangame2/milestone/41) - complete with owner GO after corrections #1113/#1117/#1119; exact reviewed runtime `23f4172`.
 4. [Expansion 14: Archive Current Return](https://github.com/joeypshell/oceangame2/milestone/40) - complete with owner GO after bounded corrections; exact reviewed runtime `1f148eb`.
@@ -117,7 +119,7 @@ Expansion 16 is complete. Expansion 17 milestone #43 is active with frozen issue
 
 ## Completed Expansion 12
 
-#932-#941 plus player-HOLD corrections #951-#953 are complete with GO. The deep-harmonic clue now leads to a durable Ti2/Rubber1/Gel1 night-built pressure suit, one scoutable pressure threshold, and one protected abyssal survey with canonical-boat commitment. Surveys require explicit `Q/SCAN`, work at full cargo, and explain pending boat return. Final exact-SHA Web verification passed at `d864a9e`.
+#932-#941 plus player-HOLD corrections #951-#953 are complete with GO. The deep-harmonic clue now leads to a durable Ti2/Rubber1/Gel1 night-built pressure suit, one scoutable pressure threshold, and one protected abyssal survey with canonical-boat commitment. Surveys require explicit held `Space/SCAN`, work at full cargo, and explain pending boat return. Final exact-SHA Web verification passed at `d864a9e`.
 
 ## Completed Expansion 13
 

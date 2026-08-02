@@ -2,8 +2,10 @@
 
 Date: 2026-07-31
 
-Status: Active in milestone #43 through frozen issues #1158-#1167. Source and
-state ownership is locked by #1158 before implementation.
+Corrected: 2026-08-02 after owner HOLD
+
+Status: Implemented and technically verified through #1158-#1166 plus bounded
+owner-HOLD corrections #1181-#1184. #1167 remains the player GO/HOLD gate.
 
 ## Decision
 
@@ -14,9 +16,9 @@ network leads in distinct, underused parts of the existing contiguous
 `production_level_01`. Each lead ends at a recognizable physical relay
 artifact and asks the player to reuse a different combination of capabilities
 already earned in Expansions 10-16. Each scan becomes durable only after return
-to the canonical boat. Once both fragments are committed, one explicit night
-analysis triangulates the network and reveals the next broad destination
-promise.
+to the canonical boat. Once both fragments are committed, entering night
+automatically compares the coordinate halves exactly once and reveals the next
+broad destination promise.
 
 This pass adds no new recipe or capability. Its purpose is to test whether the
 existing equipment, planner, map memory, boat return, and night phase can form
@@ -67,8 +69,8 @@ expedition while preserving current geography and owners.
    player deliberately faces it and holds the scanner through readable progress.
 6. Each fragment remains pending until the canonical boat, where it commits
    exactly once and updates the remaining network objective.
-7. After both fragments are committed, the night debrief offers one explicit
-   network-analysis action. It spends no score or materials.
+7. After both fragments are committed, entering night automatically compares
+   them exactly once. It spends no score or materials and adds no input gate.
 8. Analysis commits one triangulated-network discovery and reveals a broad
    destination promise for a later expansion.
 
@@ -85,8 +87,8 @@ Expansion 17 fails if it only:
 - makes lead selection a hidden interaction lock
 - grants fragments on proximity or scan completion without boat return
 - awards only score, cargo, or an unexplained item
-- makes the final analysis automatic or visually indistinguishable from normal
-  night text
+- hides the final result behind an unexplained extra command or makes it
+  visually indistinguishable from normal night text
 - adds an interior transition, teleport, terrain expansion, or exact route line
   to make the investigation feel larger
 
@@ -130,9 +132,9 @@ fragments, night analysis state, or UI visibility.
 | `ExpeditionDiscoveryState` | one pending fragment and canonical-boat commit semantics |
 | `ExpeditionLeadResolver` | source/state-derived eligibility and readiness of the two leads |
 | `ExpeditionPlanState` | day-scoped selected guidance id only |
-| focused investigation resolver | derive fragment set, remaining leads, and night-analysis readiness |
+| focused investigation resolver | derive fragment set, remaining leads, and night-comparison readiness |
 | scanner owners | deliberate forward-cone acquisition, progress, cancellation, and physical target presentation |
-| night debrief/presentation | explicit analysis command and compact result presentation |
+| night debrief/presentation | automatic exact-once comparison and compact result presentation |
 | map source | immutable artifact, route, relationship, label, and commit metadata |
 
 Use the existing completed-discovery profile model if it can represent all
@@ -156,8 +158,9 @@ Source and progression validation must prove:
 
 The deterministic journey smoke should cover lead resolution, alternate
 selection, scan cancellation, pending failure cleanup, exact-once boat commits,
-one-fragment incomplete state, two-fragment night readiness, explicit analysis,
-profile reload, final result text, and prior Expansion 15/16 regressions.
+one-fragment incomplete state, automatic two-fragment night comparison, no
+extra input gate, profile reload, final result text, and prior Expansion 15/16
+regressions.
 
 Run the integrated release suite once after source, runtime, smoke, and capture
 work are assembled, not after each small implementation issue.
@@ -170,7 +173,7 @@ Focused desktop and iPhone-landscape captures should show:
 - each physical artifact in recognizable regional context
 - held scanner acquisition/progress at both artifacts
 - one-fragment boat result and remaining lead
-- two-fragment night analysis readiness and committed result
+- automatic two-fragment night result with no separate command
 
 No accepted terrain or slice baseline should change. Compare full-level and
 HUD baselines before accepting intentional artifact, guidance, debrief, or
@@ -212,7 +215,7 @@ Expansion 17 is complete only when:
 2. existing capabilities feel useful as a toolkit rather than obsolete keys
 3. lead selection guides but does not lock interaction
 4. each fragment survives only through canonical-boat commitment
-5. both fragments enable one explicit, readable night analysis
+5. both fragments enable one automatic, readable, exact-once night comparison
 6. the combined discovery produces a motivating next promise without points,
    a surprise upgrade, or a loaded-map transition
 7. source validation, progression audit, deterministic smoke, visual review,

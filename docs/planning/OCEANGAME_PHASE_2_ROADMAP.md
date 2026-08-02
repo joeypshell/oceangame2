@@ -2,8 +2,8 @@
 
 Date: 2026-07-31
 
-Status: Expansions 01-16 are complete with player GO. Expansion 17 Wreck
-Network Triangulation is active in milestone #43 through issues #1158-#1167.
+Status: Expansions 01-16 are complete with player GO. Expansion 17 is
+technically verified after owner-HOLD corrections; #1167 remains its player gate.
 
 ## Decision
 
@@ -91,7 +91,7 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Expansion 17 Wreck Network Triangulation through frozen milestone #43.
+Finish Expansion 17 through milestone #43 owner gate #1167.
 
 ### Proposed
 
@@ -431,8 +431,8 @@ existing tool use, and exact-once boat commitment without terrain or global-syst
 
 ### Expansion 17: Wreck Network Triangulation
 
-Status: Active in milestone #43 through frozen issues #1158-#1167. See
-`docs/current/OCEANGAME_EXPANSION_17_PLAN.md` and its source/state contract.
+Status: Technically verified on corrected runtime `075a450`; milestone #43
+remains open only for owner GO/HOLD gate #1167.
 
 Goal: turn the far-west network discovery into a two-lead, multi-return investigation
 that makes the existing capability set feel like a useful expedition toolkit.
@@ -443,7 +443,7 @@ Prove:
 - source-derived parallel leads with day-scoped guidance, not interaction locks
 - different prior-capability combinations and no new recipe or capability
 - deliberate scanner use and separate exact-once canonical-boat commits
-- one explicit two-fragment night analysis and a broad destination promise
+- one automatic exact-once night comparison and a broad destination promise
 - no terrain, transition, teleport, score reward, economy, or new enemy
 
 Exit question: did following two physical wreck-network leads, returning each
