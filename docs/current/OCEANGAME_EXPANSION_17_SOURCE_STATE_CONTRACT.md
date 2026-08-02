@@ -201,8 +201,9 @@ Issues #1159-#1166 must prove:
 - focused journey smoke, desktop/mobile captures, intentional visual review,
   and exact-SHA public Web initialization
 
-Issue #1167 remains open until the owner reports GO or HOLD. #52/#53 remain
-deferred optional slice-03 presentation work.
+The owner later gave GO through #1167 on this verified contract and runtime; see
+`OCEANGAME_EXPANSION_17_CLOSEOUT.md`. #52/#53 remain deferred optional slice-03
+presentation work.
 
 ## Non-Goals
 

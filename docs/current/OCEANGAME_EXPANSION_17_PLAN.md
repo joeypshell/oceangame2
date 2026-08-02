@@ -4,8 +4,10 @@ Date: 2026-07-31
 
 Corrected: 2026-08-02 after owner HOLD
 
-Status: Implemented and technically verified through #1158-#1166 plus bounded
-owner-HOLD corrections #1181-#1184. #1167 remains the player GO/HOLD gate.
+Status: Complete with owner GO through #1167 after #1158-#1166,
+#1175/#1178, and bounded owner-HOLD corrections #1181-#1184 on exact reviewed
+Web runtime `075a450`. Milestone #43 is closed. See
+`docs/current/OCEANGAME_EXPANSION_17_CLOSEOUT.md`.
 
 ## Decision
 
