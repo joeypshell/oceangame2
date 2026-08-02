@@ -10,6 +10,7 @@ Accept the current production-slice captures as the named visual baseline:
 
 ```bash
 python tools/manage_production_slice_baseline.py --slice production_level_01 accept
+python tools/manage_production_slice_baseline.py --slice transfer_hub_interior_01 accept
 python tools/manage_production_slice_baseline.py accept
 python tools/manage_production_slice_baseline.py --slice production_slice_02 accept
 python tools/manage_production_slice_baseline.py --slice production_slice_03 accept
@@ -29,6 +30,7 @@ Render the accepted-baseline comparison sheet:
 
 ```bash
 python tools/manage_production_slice_baseline.py --slice production_level_01 compare
+python tools/manage_production_slice_baseline.py --slice transfer_hub_interior_01 compare
 python tools/manage_production_slice_baseline.py compare
 python tools/manage_production_slice_baseline.py --slice production_slice_02 compare
 python tools/manage_production_slice_baseline.py --slice production_slice_03 compare

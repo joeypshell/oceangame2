@@ -45,6 +45,19 @@ SLICE_CONFIGS = {
             "production_level_return_to_boat_mobile_844x390",
         ],
     },
+    "transfer_hub_interior_01": {
+        "capture_dir": ROOT / "visual_captures" / "expansion_18_transfer_hub",
+        "baseline_dir": ROOT / "visual_baselines" / "transfer_hub_interior_01_accepted",
+        "review_path": ROOT / "references" / "asset_reviews" / "transfer_hub_interior_01_visual_baseline_review.png",
+        "view_ids": [
+            "transfer_hub_interior_01_interior_arrival_1280x720",
+            "transfer_hub_interior_01_interior_arrival_mobile_844x390",
+            "transfer_hub_interior_01_core_cargo_full_1280x720",
+            "transfer_hub_interior_01_core_cargo_full_mobile_844x390",
+            "transfer_hub_interior_01_core_recovered_1280x720",
+            "transfer_hub_interior_01_core_recovered_mobile_844x390",
+        ],
+    },
     "production_slice_01": {
         "capture_dir": ROOT / "visual_captures" / "production_slice_01",
         "baseline_dir": ROOT / "visual_baselines" / "production_slice_01_accepted",
@@ -294,7 +307,7 @@ def render_comparison(
     label_font = load_font(14)
     small_font = load_font(12)
 
-    is_full_level = slice_id == "production_level_01"
+    is_full_level = slice_id in {"production_level_01", "transfer_hub_interior_01"}
     title = "Production Map Visual Baseline Review" if is_full_level else "Production Slice Visual Baseline Review"
     subject_label = "Map" if is_full_level else "Slice"
     draw.text((margin, 16), title, fill=TEXT, font=title_font)

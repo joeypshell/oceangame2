@@ -1,0 +1,28 @@
+{
+  "baseline_id": "transfer_hub_interior_01_accepted",
+  "slice_id": "transfer_hub_interior_01",
+  "accepted_at_utc": "2026-08-02T21:38:26+00:00",
+  "source_capture_dir": "visual_captures/expansion_18_transfer_hub",
+  "accepted_from_commit": "7cd4054",
+  "view_ids": [
+    "transfer_hub_interior_01_interior_arrival_1280x720",
+    "transfer_hub_interior_01_interior_arrival_mobile_844x390",
+    "transfer_hub_interior_01_core_cargo_full_1280x720",
+    "transfer_hub_interior_01_core_cargo_full_mobile_844x390",
+    "transfer_hub_interior_01_core_recovered_1280x720",
+    "transfer_hub_interior_01_core_recovered_mobile_844x390"
+  ],
+  "views": [
+    "visual_baselines/transfer_hub_interior_01_accepted/transfer_hub_interior_01_interior_arrival_1280x720.png",
+    "visual_baselines/transfer_hub_interior_01_accepted/transfer_hub_interior_01_interior_arrival_mobile_844x390.png",
+    "visual_baselines/transfer_hub_interior_01_accepted/transfer_hub_interior_01_core_cargo_full_1280x720.png",
+    "visual_baselines/transfer_hub_interior_01_accepted/transfer_hub_interior_01_core_cargo_full_mobile_844x390.png",
+    "visual_baselines/transfer_hub_interior_01_accepted/transfer_hub_interior_01_core_recovered_1280x720.png",
+    "visual_baselines/transfer_hub_interior_01_accepted/transfer_hub_interior_01_core_recovered_mobile_844x390.png"
+  ],
+  "notes": [
+    "Accepted transfer_hub_interior_01 visual baseline.",
+    "Update this baseline only after the current production map is intentionally accepted.",
+    "For regressions or disputed changes, keep the baseline fixed and create a follow-up issue."
+  ]
+}
