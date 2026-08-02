@@ -114,9 +114,8 @@ class ProgressionGraphBuilder:
         self._add_global_nodes()
         for map_data in self.maps:
             self._add_map_nodes(map_data)
-        for map_data in self.maps:
-            self._add_map_edges(map_data)
-            add_wreck_network_investigations(self.graph, map_data, Node)
+        for map_data in self.maps: add_wreck_network_investigations(self.graph, map_data, Node)
+        for map_data in self.maps: self._add_map_edges(map_data)
         self._add_purchase_edges()
         self._mark_mandatory_chain()
         return self.graph
@@ -172,7 +171,7 @@ class ProgressionGraphBuilder:
                     attrs=attrs,
                 ), raw_id)
                 self.items_by_map.setdefault(map_id, []).append((key, item))
-                if (discovery_id := str(item.get("reward_id", ""))) and ((kind == "container" and item.get("reward_type") == "blueprint") or item.get("reward_kind") == "discovery"):
+                if (discovery_id := str(item.get("reward_id", ""))) and ((kind == "container" and item.get("reward_type") == "blueprint") or item.get("reward_kind") in {"discovery", "held_discovery_cargo"}):
                     self.graph.add_node(Node(f"discovery:{discovery_id}", _display(discovery_id), "discovery", map_id), discovery_id)
                 if kind == "hostile":
                     defeat_key = f"defeat:{map_id}/{raw_id}"
@@ -267,8 +266,8 @@ class ProgressionGraphBuilder:
         destination_map = str(item.get("destination_map_id", ""))
         destination_entry = str(item.get("destination_entry_id", ""))
         self.graph.add_edge(key, f"map:{destination_map}", "travels_to", note=destination_entry)
-        entry_key = self.graph.resolve(destination_entry, destination_map)
-        self.graph.add_edge(key, entry_key, "travels_to")
+        self.graph.add_edge(key, self.graph.resolve(destination_entry, destination_map), "travels_to")
+        if required_discovery := str(item.get("required_discovery_id", "")): self.graph.add_edge(key, self.graph.resolve(required_discovery), "requires", hard=True)
         for gate_key, gate in self.items_by_map.get(map_id, []):
             if self.graph.nodes[gate_key].kind == "gate" and _rects_overlap(item, gate):
                 requirement = _requirement_id(gate)

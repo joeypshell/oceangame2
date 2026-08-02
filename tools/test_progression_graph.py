@@ -156,6 +156,48 @@ class ProgressionGraphAuditTests(unittest.TestCase):
         self.assertTrue(any(edge.target == investigation for edge in graph.requirements(final_discovery)))
         self.assertEqual((), audit_graph(graph, check_canonical=False).failures)
 
+    def test_exceptional_interior_chain_requires_coordinates_cutter_and_boat(self) -> None:
+        exterior = load_production_maps((ROOT / "maps" / "production_level_01.greybox.json",))[0]
+        exterior["entities"].append({"id": "transfer_hub_exterior_return", "type": "spawn"})
+        exterior["zones"].append({
+            "id": "transfer_hub_exterior_entrance", "type": "marker",
+            "world_connector": True, "connector_kind": "exceptional_interior",
+            "connector_direction": "forward", "destination_map_id": "transfer_hub_interior_01",
+            "destination_entry_id": "transfer_hub_interior_entry",
+            "required_discovery_id": "wreck_network_triangulation_discovery",
+        })
+        interior = {
+            "id": "transfer_hub_interior_01",
+            "entities": [
+                {"id": "transfer_hub_interior_entry", "type": "spawn"},
+                {
+                    "id": "transfer_hub_navigation_core_cradle", "type": "tool_target",
+                    "required_tool_id": "salvage_cutter", "reward_kind": "held_discovery_cargo",
+                    "reward_id": "transfer_hub_navigation_core_discovery",
+                    "reward_commit_map_id": "production_level_01",
+                    "reward_commit_entry_id": "surface_boat_entry",
+                },
+            ],
+            "zones": [{
+                "id": "transfer_hub_interior_return", "type": "marker",
+                "world_connector": True, "connector_kind": "exceptional_interior",
+                "connector_direction": "return", "destination_map_id": "production_level_01",
+                "destination_entry_id": "transfer_hub_exterior_return",
+            }],
+        }
+        contract = copy.deepcopy(load_contract())
+        contract["canonical_start"] = {"map_id": "production_level_01", "entry_id": "surface_boat_entry"}
+        graph = build_progression_graph([exterior, interior], contract)
+        entrance = graph.resolve("transfer_hub_exterior_entrance", "production_level_01")
+        core = graph.resolve("transfer_hub_navigation_core_cradle", "transfer_hub_interior_01")
+        discovery = graph.resolve("transfer_hub_navigation_core_discovery")
+        self.assertTrue(any(edge.target == graph.resolve("wreck_network_triangulation_discovery") for edge in graph.requirements(entrance)))
+        self.assertTrue(any(edge.target == graph.resolve("salvage_cutter") for edge in graph.requirements(core)))
+        requirements = {edge.target for edge in graph.requirements(discovery)}
+        self.assertIn(core, requirements)
+        self.assertIn(graph.resolve("surface_boat_entry", "production_level_01"), requirements)
+        self.assertEqual((), audit_graph(graph, check_canonical=False).failures)
+
     def test_deep_harmonic_chain_includes_durable_light_requirement(self) -> None:
         maps = load_production_maps((ROOT / "maps" / "production_level_01.greybox.json",))
         level = next(item for item in maps if item.get("id") == "production_level_01")

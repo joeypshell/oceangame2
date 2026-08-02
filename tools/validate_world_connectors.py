@@ -12,6 +12,7 @@ from typing import Any
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 DISPLAY_LABEL_PATTERN = re.compile(r"^[A-Za-z0-9][A-Za-z0-9 _'-]{0,31}$")
 CONNECTOR_DIRECTIONS = {"forward", "return", "bidirectional"}
+CONNECTOR_KINDS = {"exceptional_interior"}
 CONNECTOR_FIELDS = {
     "world_connector",
     "connector_label",
@@ -19,7 +20,12 @@ CONNECTOR_FIELDS = {
     "destination_map_path",
     "destination_entry_id",
     "connector_direction",
+    "connector_kind",
+    "paired_connector_id",
+    "required_discovery_id",
 }
+CONNECTOR_TRIGGER_FIELDS = CONNECTOR_FIELDS - {"required_discovery_id"}
+RUNTIME_FIELDS = {"active", "consumed", "transition_state", "unlocked"}
 
 
 def _rect_cells(item: dict[str, Any]) -> set[tuple[int, int]]:
@@ -91,7 +97,7 @@ def validate_world_connector_schema(map_path: Path, map_data: dict[str, Any]) ->
     connector_ids: set[str] = set()
 
     for entity in map_data.get("entities", []):
-        fields = CONNECTOR_FIELDS & set(entity.keys())
+        fields = CONNECTOR_TRIGGER_FIELDS & set(entity.keys())
         if fields:
             failures.append(
                 f"{entity.get('id', 'entity')} connector metadata ({', '.join(sorted(fields))}) "
@@ -99,7 +105,7 @@ def validate_world_connector_schema(map_path: Path, map_data: dict[str, Any]) ->
             )
 
     for index, zone in enumerate(map_data.get("zones", [])):
-        fields = CONNECTOR_FIELDS & set(zone.keys())
+        fields = CONNECTOR_TRIGGER_FIELDS & set(zone.keys())
         if not fields:
             continue
         item_label = str(zone.get("id", f"zone[{index}]"))
@@ -164,6 +170,47 @@ def validate_world_connector_schema(map_path: Path, map_data: dict[str, Any]) ->
             allowed = ", ".join(sorted(CONNECTOR_DIRECTIONS))
             failures.append(f"{item_label} connector_direction must be one of: {allowed}.")
 
+        forbidden = sorted(RUNTIME_FIELDS & set(zone))
+        if forbidden:
+            failures.append(f"{item_label} connector must not author runtime state fields: {forbidden}.")
+
+        connector_kind = zone.get("connector_kind")
+        paired_id = zone.get("paired_connector_id")
+        required_discovery = zone.get("required_discovery_id")
+        if connector_kind is None:
+            if paired_id is not None or required_discovery is not None:
+                failures.append(f"{item_label} paired/prerequisite metadata requires connector_kind.")
+            continue
+        if connector_kind not in CONNECTOR_KINDS:
+            failures.append(f"{item_label} connector_kind must be 'exceptional_interior'.")
+            continue
+        if direction not in {"forward", "return"}:
+            failures.append(f"{item_label} exceptional interior direction must be forward or return.")
+        if not isinstance(paired_id, str) or not ID_PATTERN.fullmatch(paired_id):
+            failures.append(f"{item_label} paired_connector_id must use lower_snake_case.")
+        if direction == "forward" and (not isinstance(required_discovery, str) or not ID_PATTERN.fullmatch(required_discovery)):
+            failures.append(f"{item_label} forward exceptional interior requires lower_snake_case required_discovery_id.")
+        if direction == "return" and required_discovery is not None:
+            failures.append(f"{item_label} return exceptional interior must not repeat a progression prerequisite.")
+        if destination_data is not None and isinstance(paired_id, str):
+            pairs = [
+                item for item in destination_data.get("zones", [])
+                if isinstance(item, dict) and item.get("id") == paired_id
+            ]
+            if len(pairs) != 1:
+                failures.append(f"{item_label} paired_connector_id {paired_id!r} must resolve exactly once in the destination map.")
+            else:
+                pair = pairs[0]
+                if pair.get("connector_kind") != "exceptional_interior":
+                    failures.append(f"{item_label} paired connector {paired_id!r} must also be exceptional_interior.")
+                if pair.get("paired_connector_id") != item_label:
+                    failures.append(f"{item_label} paired connector {paired_id!r} must point back to {item_label!r}.")
+                if pair.get("destination_map_id") != map_data.get("id"):
+                    failures.append(f"{item_label} paired connector {paired_id!r} must return to map {map_data.get('id')!r}.")
+                expected_direction = "return" if direction == "forward" else "forward"
+                if pair.get("connector_direction", "forward") != expected_direction:
+                    failures.append(f"{item_label} paired connector {paired_id!r} must use direction {expected_direction!r}.")
+
     return failures
 
 
@@ -174,7 +221,7 @@ def validate_world_connector_reachability(
 ) -> list[str]:
     failures: list[str] = []
     for zone in zones:
-        if not (CONNECTOR_FIELDS & set(zone.keys())):
+        if not (CONNECTOR_TRIGGER_FIELDS & set(zone.keys())):
             continue
         item_label = str(zone.get("id", "connector"))
         if not all(field in zone and _is_int_value(zone[field]) for field in ("x", "y", "w", "h")):
