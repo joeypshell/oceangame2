@@ -407,20 +407,20 @@ def main() -> int:
         return 1
 
     spawn_entities = [entity for entity in entities if entity.get("type") in ("spawn", "boat_spawn")]
-    if len(spawn_entities) != 1:
-        print(f"Expected exactly one spawn or boat_spawn entity, found {len(spawn_entities)}.")
+    boat_spawns = [entity for entity in spawn_entities if entity.get("type") == "boat_spawn"]
+    if len(boat_spawns) > 1 or (not boat_spawns and len(spawn_entities) != 1):
+        print("Expected one primary spawn, with optional named spawn entries only beside one boat_spawn.")
         return 1
-
-    if spawn_entities[0].get("type") == "boat_spawn":
-        failures.extend(validate_boat_spawn(spawn_entities[0], solid, width, height))
+    primary_spawn = boat_spawns[0] if boat_spawns else spawn_entities[0]
+    if primary_spawn.get("type") == "boat_spawn": failures.extend(validate_boat_spawn(primary_spawn, solid, width, height))
     if failures:
         for failure in failures:
             print(failure)
         return 1
 
-    spawn = spawn_cell(spawn_entities[0])
+    spawn = spawn_cell(primary_spawn)
     if spawn in solid:
-        print(f"Spawn {spawn_entities[0]['id']} is inside solid terrain at {spawn}.")
+        print(f"Spawn {primary_spawn['id']} is inside solid terrain at {spawn}.")
         return 1
 
     reachable: set[tuple[int, int]] = {spawn}

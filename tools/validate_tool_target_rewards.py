@@ -20,6 +20,7 @@ REWARD_FIELDS = {
 }
 REQUIRED_REWARD_FIELDS = tuple(sorted(REWARD_FIELDS))
 RUNTIME_FIELDS = {"committed", "pending", "profile_state", "reward_claimed"}
+REWARD_KINDS = {"discovery", "held_discovery_cargo"}
 
 
 def _items(map_data: dict[str, Any], field: str) -> list[dict[str, Any]]:
@@ -39,7 +40,7 @@ def discovery_reward_sources(map_data: dict[str, Any], reward_id: str) -> list[d
     return [
         entity
         for entity in _items(map_data, "entities")
-        if entity.get("reward_kind") == "discovery" and entity.get("reward_id") == reward_id
+        if entity.get("reward_kind") in REWARD_KINDS and entity.get("reward_id") == reward_id
     ]
 
 
@@ -70,8 +71,9 @@ def validate_tool_target_reward_schema(map_data: dict[str, Any]) -> list[str]:
             failures.append(f"{label} discovery reward metadata is supported only on cutter tool_target entities.")
         if entity.get("tier") != "valuable":
             failures.append(f"{label} discovery reward must retain valuable salvage value.")
-        if entity.get("reward_kind") != "discovery":
-            failures.append(f"{label} reward_kind must be 'discovery'.")
+        reward_kind = entity.get("reward_kind")
+        if reward_kind not in REWARD_KINDS:
+            failures.append(f"{label} reward_kind must be 'discovery' or 'held_discovery_cargo'.")
 
         reward_id = entity.get("reward_id")
         if not _valid_id(reward_id):
@@ -86,13 +88,19 @@ def validate_tool_target_reward_schema(map_data: dict[str, Any]) -> list[str]:
 
         map_id = str(map_data.get("id", ""))
         commit_map_id = entity.get("reward_commit_map_id")
-        if not _valid_id(commit_map_id) or commit_map_id != map_id:
-            failures.append(f"{label} reward_commit_map_id must equal the source map id {map_id!r}.")
-        expected_path = f"res://maps/{map_id}.greybox.json"
+        if not _valid_id(commit_map_id):
+            failures.append(f"{label} reward_commit_map_id must use lower_snake_case.")
+        elif reward_kind == "discovery" and commit_map_id != map_id:
+            failures.append(f"{label} discovery reward_commit_map_id must equal the source map id {map_id!r}.")
+        elif reward_kind == "held_discovery_cargo" and commit_map_id == map_id:
+            failures.append(f"{label} held discovery cargo must commit on a different canonical map.")
+        expected_path = f"res://maps/{commit_map_id}.greybox.json"
         if entity.get("reward_commit_map_path") != expected_path:
             failures.append(f"{label} reward_commit_map_path must be {expected_path!r}.")
         entry_id = entity.get("reward_commit_entry_id")
-        if not _valid_id(entry_id) or entry_id not in boats:
+        if not _valid_id(entry_id):
+            failures.append(f"{label} reward_commit_entry_id must use lower_snake_case.")
+        elif reward_kind == "discovery" and entry_id not in boats:
             failures.append(f"{label} reward_commit_entry_id must reference the canonical boat_spawn.")
 
         for journey in journeys:

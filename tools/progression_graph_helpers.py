@@ -49,7 +49,7 @@ def requirement_id(item: dict[str, Any]) -> str:
 
 def add_discovery_reward_edges(graph: Any, source_key: str, item: dict[str, Any]) -> None:
     reward_id = str(item.get("reward_id", ""))
-    if item.get("reward_kind") != "discovery" or not reward_id:
+    if item.get("reward_kind") not in {"discovery", "held_discovery_cargo"} or not reward_id:
         return
     reward_key = graph.resolve(reward_id)
     graph.add_edge(reward_key, source_key, "requires", hard=True, note="target and commit")

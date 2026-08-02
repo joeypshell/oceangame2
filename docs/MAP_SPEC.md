@@ -64,7 +64,9 @@ Normal previews should keep debug markers subtle or hidden. When `--show-debug-o
 
 ## Spawn And Extraction Entities
 
-Maps must define exactly one player entry entity:
+Maps define one primary player entry. A production map with exactly one
+`boat_spawn` may also define named `spawn` entries used only as explicit loaded
+interior return points:
 
 - `spawn`: legacy in-water start cell for small test maps.
 - `boat_spawn`: preferred top-water entry and extraction marker for production-style maps.
@@ -99,7 +101,9 @@ Every authored entity must include:
 - `type`: one of `spawn`, `boat_spawn`, `salvage`, or `hazard`.
 - `x`, `y`: integer tile coordinates for point entities.
 
-`spawn` is a legacy point entity:
+`spawn` is a point entry entity. Without a boat, exactly one is the primary
+start. With a boat, additional named spawns never become extraction/refill
+owners:
 
 ```json
 {
@@ -345,7 +349,7 @@ The marker rectangle must stay inside map bounds, contain only non-solid reachab
 
 Playable maps may include optional world connector markers under `zones`. A connector marker describes one source-authored transition point from the current map to another committed greybox map. It is a world-slice expansion cue, not terrain stitching, fast travel, a map screen, or persistent save data.
 
-The first supported connector is intentionally narrow:
+All connectors use this narrow base:
 
 - `type`: must be `marker`.
 - `world_connector`: must be `true` when connector metadata is present.
@@ -358,25 +362,21 @@ The first supported connector is intentionally narrow:
 
 The marker rectangle must stay in bounds, contain only non-solid reachable water cells, and remain source-authored through the map generator/source path. Runtime may use it to show a compact prompt and load the destination map at the authored destination entry. It must not author score, wallet, cargo, oxygen, objective progress, save state, or collision changes.
 
-Recommended Pass 21 metadata:
+Legacy connectors may omit a connector kind and retain their historical reset
+semantics. Expansion 18's one paired interior follows
+`docs/current/OCEANGAME_EXPANSION_18_SOURCE_STATE_CONTRACT.md` and adds:
 
-```json
-{
-  "id": "lower_left_loop_connector",
-  "type": "marker",
-  "x": 20,
-  "y": 70,
-  "w": 4,
-  "h": 4,
-  "world_connector": true,
-  "connector_label": "Lower-left loop",
-  "destination_map_id": "production_slice_04",
-  "destination_map_path": "res://maps/production_slice_04.greybox.json",
-  "destination_entry_id": "relay_sub_entry",
-  "connector_direction": "forward",
-  "intent": "Pass 21 connector from the default boat hub toward the lower-left loop reference slice."
-}
-```
+- `connector_kind`: exactly `exceptional_interior`.
+- `paired_connector_id`: reciprocal marker id in the destination map.
+- `required_discovery_id`: required lower_snake_case prerequisite on the
+  `forward` marker; forbidden on the `return` marker.
+- Direction must be `forward` or `return`; both markers must point to each
+  other, opposite directions, destination maps, and named entries.
+
+The interior core remains a cutter `tool_target` and may use
+`reward_kind = held_discovery_cargo`. This narrow reward requires one cargo
+slot, commits on a different canonical map/entry, and keeps all held, consumed,
+pending, and committed state in runtime owners rather than JSON.
 
 ## Current Gate Markers
 
@@ -461,7 +461,7 @@ Validation expectations:
 - Daily conditions must follow the Expansion 08 source contract; condition-bound bonus yield is excluded from project guarantees and required progression.
 - The Expansion 11 light project must have one durable owner, exact Ti1/Coil1/Gel1 guaranteed inputs, noncombat replenishable gel, a visible pre-light survey with zero progress, and a non-solid returnable route to `surface_boat_entry`.
 - Entity coordinates must be inside map bounds, non-solid, and reachable from the player entry cell.
-- Maps must define exactly one `spawn` or `boat_spawn`.
+- Maps without a boat define exactly one primary `spawn`. A map with exactly one `boat_spawn` may add named `spawn` transition entries; they are not extraction or refill owners.
 - Playable salvage maps must define a base extraction zone or use `boat_spawn` extraction. Renderer stress-test maps may use `stress_marker` salvage without an extraction zone.
 
 ## Source Of Truth Options

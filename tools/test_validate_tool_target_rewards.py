@@ -56,7 +56,7 @@ class ToolTargetRewardValidationTests(unittest.TestCase):
         map_data = valid_map()
         target = map_data["entities"][1]
         target["reward_commit_map_id"] = "production_slice_02"
-        target["reward_commit_map_path"] = "res://maps/production_slice_02.greybox.json"
+        target["reward_commit_map_path"] = "res://maps/production_slice_03.greybox.json"
         target["reward_commit_entry_id"] = "relay_sub_entry"
         failures = validate_tool_target_reward_schema(map_data)
         self.assertTrue(any("reward_commit_map_id" in failure for failure in failures), failures)
@@ -74,6 +74,25 @@ class ToolTargetRewardValidationTests(unittest.TestCase):
         failures = validate_tool_target_reward_schema(map_data)
         self.assertTrue(any("must not depend on the journey" in failure for failure in failures), failures)
         self.assertTrue(any("exactly one source owner" in failure for failure in failures), failures)
+
+    def test_accepts_cross_map_held_discovery_cargo(self) -> None:
+        map_data = valid_map()
+        map_data["id"] = "transfer_hub_interior_01"
+        target = map_data["entities"][1]
+        target["reward_kind"] = "held_discovery_cargo"
+        target["reward_id"] = "transfer_hub_navigation_core_discovery"
+        target["reward_commit_map_id"] = "production_level_01"
+        target["reward_commit_map_path"] = "res://maps/production_level_01.greybox.json"
+        target["reward_commit_entry_id"] = "surface_boat_entry"
+        map_data["regional_journeys"] = []
+        self.assertEqual([], validate_tool_target_reward_schema(map_data))
+
+    def test_rejects_local_commit_for_held_discovery_cargo(self) -> None:
+        map_data = valid_map()
+        target = map_data["entities"][1]
+        target["reward_kind"] = "held_discovery_cargo"
+        failures = validate_tool_target_reward_schema(map_data)
+        self.assertTrue(any("different canonical map" in failure for failure in failures), failures)
 
 
 if __name__ == "__main__":
