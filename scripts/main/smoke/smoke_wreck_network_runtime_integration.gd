@@ -89,10 +89,10 @@ func _run() -> void:
 	var abyss_commit: Dictionary = runtime.on_discovery_committed(ABYSS_FRAGMENT_ID)
 	_expect(str(abyss_commit.get("note", "")).find("Analyze at night") != -1, "second fragment did not expose night analysis")
 	_expect(runtime.requires_analysis(), "two fragments did not block next-day start for explicit analysis")
-	_expect(runtime.debrief_lines().has("Q/USE: Triangulate wreck network"), "debrief omitted the desktop/mobile analysis command")
+	_expect(runtime.debrief_lines().has("Space/USE: Triangulate wreck network"), "debrief omitted the desktop/mobile analysis command")
 	var ready_text := ExpeditionDayDebrief.build_text(day, null, conditions, abyss_commit.get("note", ""), runtime)
 	_expect(ready_text.count("Wreck fragments 2/2") == 1, "analysis-ready debrief duplicated or lost fragment readiness")
-	_expect(ready_text.find("Q/USE: Triangulate wreck network") != -1, "analysis-ready debrief lost the explicit action")
+	_expect(ready_text.find("Space/USE: Triangulate wreck network") != -1, "analysis-ready debrief lost the explicit action")
 
 	var main := DebriefMain.new()
 	main._expedition_day_state = day
@@ -103,10 +103,10 @@ func _run() -> void:
 	use_event.action = &"active_tool_use"
 	use_event.pressed = true
 	var analyzed: Dictionary = ExpeditionDayDebrief.handle_debrief_input(main, use_event)
-	_expect(analyzed.get("status") == "analysis_completed" and bool(analyzed.get("changed", false)), "Q/USE did not perform explicit night analysis")
+	_expect(analyzed.get("status") == "analysis_completed" and bool(analyzed.get("changed", false)), "Space/USE did not perform explicit night analysis")
 	_expect(profile.has_completed_discovery(ExpansionProfileState.WRECK_NETWORK_TRIANGULATION_DISCOVERY_ID), "analysis did not persist the final discovery")
 	_expect(day.committed_discovery_ids.has(ExpansionProfileState.WRECK_NETWORK_TRIANGULATION_DISCOVERY_ID), "debrief summary did not record the analysis discovery")
-	_expect(ExpeditionDayDebrief.handle_debrief_key(main, KEY_Q).get("status") == "already_completed", "repeat analysis was not exact-once")
+	_expect(ExpeditionDayDebrief.handle_debrief_key(main, KEY_SPACE).get("status") == "already_completed", "repeat analysis was not exact-once")
 	var debrief_text := ExpeditionDayDebrief.build_text(day, null, conditions, main._last_status_note, runtime)
 	_expect(debrief_text.count("Wreck network triangulated") == 1, "debrief duplicated or omitted the analysis result")
 	_expect(debrief_text.count("Next lead: transfer hub beyond mapped cave") == 1, "debrief duplicated or omitted the broad destination promise")
@@ -120,7 +120,7 @@ func _run() -> void:
 			push_error("Wreck-network runtime integration smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Wreck-network runtime integration smoke passed: leads=west,abyss optional_suppressed=true selection_guidance_only=true one_fragment_names_remaining=true analysis_gate=true input=Q/USE exact_once=true result=transfer_hub_promise.")
+	print("Wreck-network runtime integration smoke passed: leads=west,abyss optional_suppressed=true selection_guidance_only=true one_fragment_names_remaining=true analysis_gate=true input=Space/USE exact_once=true result=transfer_hub_promise.")
 	quit(0)
 
 

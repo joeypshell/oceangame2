@@ -83,12 +83,12 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 	_process(0.0)
 	var ready_status: String = _status_label.text
 	if not _require(
-		ready_status.find("Hold Q/USE to scan: Survey anomaly") != -1
+		ready_status.find("Hold Space/USE to scan: Survey anomaly") != -1
 		and ready_status.find("Cargo full") != -1,
 		"full cargo hid the scanner activation prompt: %s" % ready_status
 	):
 		return
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	_process(1.0)
 	var partial: float = float(_main._anomaly_survey.report().get("interaction", {}).get("progress", 0.0))
 	var progress_status: String = _status_label.text
@@ -110,7 +110,7 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 	if not _place_for_scan(resource_target):
 		return
 	_process(0.0)
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	var pending_status: String = _status_label.text
 	if not _require(
 		pending_status.find("Return to surface boat before another scan") != -1
@@ -157,7 +157,7 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 		return
 
 	_cleanup_profile()
-	print("Anomaly survey journey smoke passed: map=%s contiguous=true connectors=none fins_gate=%s payoff=%s optional_score=%d scanner_blueprint=true recipe=ti1+coil1 score_bypass=false explicit_q=true full_cargo_scan=true pending_boat_guidance=true target=%s partial=%.2f cancel_on_leave=true failure_clears_pending=true committed_at_boat=true source_result=true discovery=%s profile=%s." % [
+	print("Anomaly survey journey smoke passed: map=%s contiguous=true connectors=none fins_gate=%s payoff=%s optional_score=%d scanner_blueprint=true recipe=ti1+coil1 score_bypass=false explicit_space=true full_cargo_scan=true pending_boat_guidance=true target=%s partial=%.2f cancel_on_leave=true failure_clears_pending=true committed_at_boat=true source_result=true discovery=%s profile=%s." % [
 		MAP_ID,
 		ExpansionProfileState.PROPULSION_FINS_GATE_ID,
 		PAYOFF_TARGET_ID,
@@ -173,7 +173,7 @@ func _smoke_anomaly_survey_journey_and_quit() -> void:
 func _complete_survey(target: Dictionary, expected_held: int, expected_wallet: int) -> bool:
 	if not _place_for_scan(target):
 		return false
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	_process(float(target.get("interaction_seconds", 0.0)) + 0.1)
 	return _require(
 		_main._anomaly_survey.has_pending_discovery()

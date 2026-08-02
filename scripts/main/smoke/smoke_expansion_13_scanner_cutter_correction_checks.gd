@@ -160,7 +160,7 @@ func _complete_artifact_commit() -> bool:
 
 	var oxygen_before := _oxygen_seconds
 	var daylight_before: float = _main._expedition_day_state.daylight_remaining_seconds
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	_advance(_artifact_seconds / 3.0)
 	var partial: Dictionary = _main._anomaly_survey.report().get("interaction", {})
 	if not _require(
@@ -180,7 +180,7 @@ func _complete_artifact_commit() -> bool:
 	):
 		return false
 	ScannerPose.new().place(_world, _player, artifact)
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	_advance(_artifact_seconds / 3.0)
 	var scan_position: Vector2 = _player.global_position
 	_player.swim_in_direction(Vector2(-float(pose.get("facing_sign", 1.0)), 0.0), 0.0)
@@ -193,7 +193,7 @@ func _complete_artifact_commit() -> bool:
 	ScannerPose.new().place(_world, _player, artifact)
 	for index in range(_main._held_salvage_capacity()):
 		_main._sortie_state.collect_salvage("scanner_capacity_fixture_%d" % index, 0)
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	_advance(_artifact_seconds + 0.01)
 	_cargo_full_scan = _main._anomaly_survey.has_pending_discovery() and _main._held_cargo_count() == _main._held_salvage_capacity()
 	if not _require(
@@ -214,7 +214,7 @@ func _complete_artifact_commit() -> bool:
 	_starting_health = int(_main._player_health.current_health)
 
 	ScannerPose.new().place(_world, _player, artifact)
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	_advance(_artifact_seconds + 0.01)
 	if not _require(_main._anomaly_survey.has_pending_discovery() and not profile.has_completed_discovery(BLUEPRINT_ID), "artifact retry did not recreate pending knowledge"):
 		return false

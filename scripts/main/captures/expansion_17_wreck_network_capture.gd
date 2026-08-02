@@ -283,13 +283,13 @@ func _prepare_analysis_debrief() -> bool:
 	return _expect(
 		_main._wreck_network_investigation.requires_analysis()
 		and result_text.find("Wreck fragments 2/2") != -1
-		and result_text.find("Q/USE: Triangulate wreck network") != -1,
+		and result_text.find("Space/USE: Triangulate wreck network") != -1,
 		"two-fragment debrief omitted explicit analysis readiness"
 	)
 
 
 func _complete_analysis() -> bool:
-	var analyzed: Dictionary = ExpeditionDayDebrief.handle_debrief_key(_main, KEY_Q)
+	var analyzed: Dictionary = ExpeditionDayDebrief.handle_debrief_key(_main, KEY_SPACE)
 	var result_text: String = _main._result_label.text if _main._result_label != null else ""
 	return _expect(
 		bool(analyzed.get("changed", false))

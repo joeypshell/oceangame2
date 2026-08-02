@@ -192,7 +192,7 @@ func _complete_abyssal_return() -> bool:
 	if not _place_for_scan(target):
 		return false
 	var survey_seconds := float(target.get("interaction_seconds", 0.0))
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	_advance(survey_seconds * 0.5)
 	var partial := float(_main._anomaly_survey.report().get("interaction", {}).get("progress", 0.0))
 	if not _require(partial > 0.0 and partial < 1.0 and bool(_main._pressure_zone.report().get("protected", false)), "protected survey did not expose partial progress at normal drain"):
@@ -229,7 +229,7 @@ func _complete_abyssal_return() -> bool:
 		return false
 	if not _place_for_scan(target):
 		return false
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	_advance(survey_seconds + 0.01)
 	if not _require(
 		_main._anomaly_survey.has_pending_discovery()

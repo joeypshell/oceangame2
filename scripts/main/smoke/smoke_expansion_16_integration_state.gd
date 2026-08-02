@@ -57,7 +57,7 @@ func _run() -> void:
 	_expect(not main._world.is_salvage_collected(RECORDER_ID), "proximity completed the explicit cutter target")
 	main._active_tool_runtime.cycle()
 	var cutter_use: Dictionary = main._active_tool_runtime.use()
-	_expect(cutter_use.get("status") == "used", "selected cutter did not activate on explicit Q/USE")
+	_expect(cutter_use.get("status") == "used", "selected cutter did not activate on explicit Space/USE")
 	main._cargo_collection.update(2.1)
 	_expect(main._world.is_salvage_collected(RECORDER_ID), "explicit cutter hold did not clear recorder")
 	_expect(main._sortie_state.held_salvage_ids.has(RECORDER_ID), "cleared recorder did not enter held cargo")

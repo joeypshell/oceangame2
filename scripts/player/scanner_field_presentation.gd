@@ -174,7 +174,7 @@ func _draw_target_card() -> void:
 	if not _target_description.is_empty():
 		detail += " | %s" % _target_description
 	draw_string(font, title_position + Vector2(0.0, 20.0), _fit_text(detail, 40), HORIZONTAL_ALIGNMENT_LEFT, text_width, CARD_TEXT_SIZE, CARD_TEXT_COLOR)
-	var instruction := "Hold Q/USE | %d%%" % int(floor(_progress * 100.0)) if _requires_hold else "Identified"
+	var instruction := "Hold Space/USE | %d%%" % int(floor(_progress * 100.0)) if _requires_hold else "Identified"
 	draw_string(font, title_position + Vector2(0.0, 40.0), instruction, HORIZONTAL_ALIGNMENT_LEFT, text_width, CARD_TEXT_SIZE, CARD_TEXT_COLOR)
 
 

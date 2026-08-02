@@ -43,7 +43,7 @@ func _smoke_expansion_14_archive_current_return_and_quit() -> void:
 	var cargo_capacity := int(_full_cargo_report.get("capacity", -1))
 	var cargo_available := int(_full_cargo_report.get("available", -1))
 	cleanup_profile_storage()
-	print("Expansion 14 archive-current return smoke passed: route=%s archive=%s archive_committed=true project=%s recipe=Ti2+Coil1 held_recipe_denied=true night_only=true project_count=%d capability=%s capability_count=%d profile_reload=true gate=%s pre_blocked=true push=%.1fpx passive_owned=true outbound_passive=%s return_passive=%s core=%s cargo=%d/%d_free%d full_block=true failure_restore=true banked=true survey=%s explicit_q=true partial=%.2f cancel_on_leave=true full_cargo_scan=true pending=true failure_clear=true discovery=%s discovery_count=%d exact_once=true oxygen=%.1f boat_result=\"%s\" legacy_profile=true source_owners=%d+%d." % [
+	print("Expansion 14 archive-current return smoke passed: route=%s archive=%s archive_committed=true project=%s recipe=Ti2+Coil1 held_recipe_denied=true night_only=true project_count=%d capability=%s capability_count=%d profile_reload=true gate=%s pre_blocked=true push=%.1fpx passive_owned=true outbound_passive=%s return_passive=%s core=%s cargo=%d/%d_free%d full_block=true failure_restore=true banked=true survey=%s explicit_space=true partial=%.2f cancel_on_leave=true full_cargo_scan=true pending=true failure_clear=true discovery=%s discovery_count=%d exact_once=true oxygen=%.1f boat_result=\"%s\" legacy_profile=true source_owners=%d+%d." % [
 		ROUTE_ID_14,
 		ProfileState.SOUTHEAST_WRECK_DISCOVERY_ID,
 		ProfileState.CURRENT_STABILIZER_PROJECT_ID,
@@ -259,10 +259,10 @@ func _prove_capacity_scanner_and_failure_cleanup() -> bool:
 	_advance(0.25)
 	if not _require(is_zero_approx(float(_main._anomaly_survey.report().get("interaction", {}).get("progress", -1.0))), "relay survey advanced without explicit Q"):
 		return false
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	_advance(float(survey.get("interaction_seconds", 0.0)) / 3.0)
 	_survey_partial_14 = float(_main._anomaly_survey.report().get("interaction", {}).get("progress", 0.0))
-	if not _require(_survey_partial_14 > 0.0 and _survey_partial_14 < 1.0, "full-cargo Q scan did not expose partial progress"):
+	if not _require(_survey_partial_14 > 0.0 and _survey_partial_14 < 1.0, "full-cargo Space scan did not expose partial progress"):
 		return false
 	var scan_position: Vector2 = _player.global_position
 	_player.swim_in_direction(Vector2(-_player.get_facing_sign(), 0.0), 0.0)
@@ -273,7 +273,7 @@ func _prove_capacity_scanner_and_failure_cleanup() -> bool:
 		return false
 	if not _place_for_scan(survey):
 		return false
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	_advance(float(survey.get("interaction_seconds", 0.0)) + 0.1)
 	if not _require(_main._anomaly_survey.has_pending_discovery() and not profile.has_completed_discovery(DISCOVERY_ID_14), "relay survey did not remain pending away from the boat"):
 		return false
@@ -312,7 +312,7 @@ func _complete_relay_return() -> bool:
 		return false
 	if not _require(_select_active_tool_for_smoke(ProfileState.SURVEY_SCANNER_CAPABILITY_ID) and _place_for_scan(survey), "real relay return could not use the scanner"):
 		return false
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	_advance(float(survey.get("interaction_seconds", 0.0)) + 0.1)
 	if not _require(_main._anomaly_survey.has_pending_discovery(), "real relay survey did not create a pending finding"):
 		return false

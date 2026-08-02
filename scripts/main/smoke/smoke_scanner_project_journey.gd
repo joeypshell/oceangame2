@@ -31,8 +31,8 @@ func run(owner) -> bool:
 		"scanner recipe tracker was not immediate and exact: %s" % tracker_text
 	):
 		return false
-	owner._press_key(KEY_Q)
-	if not owner._require(not owner._main._anomaly_survey.has_scanner() and owner._main._last_status_note.find("Ti 1 + Coil 1") != -1, "Q bypassed or obscured scanner project"):
+	owner._press_key(KEY_SPACE)
+	if not owner._require(not owner._main._anomaly_survey.has_scanner() and owner._main._last_status_note.find("Ti 1 + Coil 1") != -1, "Space bypassed or obscured scanner project"):
 		return false
 	if not await owner._return_to_boat("scanner_blueprint_return", navigation):
 		return false
@@ -85,7 +85,7 @@ func run(owner) -> bool:
 	owner._body_size = ((owner._player.get_node("CollisionShape2D") as CollisionShape2D).shape as RectangleShape2D).size
 	owner._starting_health = int(owner._main._player_health.current_health)
 	owner._minimum_oxygen = owner._oxygen_seconds
-	owner._press_key(KEY_Q)
+	owner._press_key(KEY_SPACE)
 	return owner._require(
 		owner._main._expedition_day_state.day_number == 3
 		and owner._main._last_status_note.begins_with("Scanner ready"),

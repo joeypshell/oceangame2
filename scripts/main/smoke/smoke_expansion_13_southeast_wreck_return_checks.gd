@@ -44,7 +44,7 @@ func _smoke_expansion_13_southeast_wreck_return_and_quit() -> void:
 	var survey := _survey_by_id(SURVEY_ID_13)
 	var result_text: String = _main._anomaly_survey.result_text().replace("\n", " | ")
 	cleanup_profile_storage()
-	print("Expansion 13 southeast-wreck return smoke passed: route=%s prerequisite=%s capabilities=%s pressure_crossing=true optional_tank_purchased=%s recorder=%s cutter_seconds=%.1f cutter_partial=%.2f cargo_full_safe=%s survey=%s survey_seconds=%.1f survey_partial=%.2f scanner_full_cargo=%s explicit_q=true cancel_on_leave=true failures=hazard+oxygen+combat planned_distance=%.1fpx actual_distance=%.1fpx demand=%.1fs base_margin=%.1fs upgraded_margin=%.1fs actual_oxygen_margin=%.1fs held=%d banked_recorder=%s pending_then_committed=true discovery=%s exact_once=true profile_reload=true result=\"%s\"." % [
+	print("Expansion 13 southeast-wreck return smoke passed: route=%s prerequisite=%s capabilities=%s pressure_crossing=true optional_tank_purchased=%s recorder=%s cutter_seconds=%.1f cutter_partial=%.2f cargo_full_safe=%s survey=%s survey_seconds=%.1f survey_partial=%.2f scanner_full_cargo=%s explicit_space=true cancel_on_leave=true failures=hazard+oxygen+combat planned_distance=%.1fpx actual_distance=%.1fpx demand=%.1fs base_margin=%.1fs upgraded_margin=%.1fs actual_oxygen_margin=%.1fs held=%d banked_recorder=%s pending_then_committed=true discovery=%s exact_once=true profile_reload=true result=\"%s\"." % [
 		ROUTE_ID_13,
 		ABYSSAL_DISCOVERY_ID,
 		",".join(PackedStringArray(REQUIRED_CAPABILITIES)),
@@ -235,11 +235,11 @@ func _complete_real_wreck_return() -> bool:
 	if not _place_for_scan(survey):
 		return false
 	_advance(0.25)
-	if not _require(is_zero_approx(float(_main._anomaly_survey.report().get("interaction", {}).get("progress", -1.0))), "survey advanced before held Q/USE"):
+	if not _require(is_zero_approx(float(_main._anomaly_survey.report().get("interaction", {}).get("progress", -1.0))), "survey advanced before held Space/USE"):
 		return false
 	_main._sortie_state.collect_salvage(CAPACITY_SCAN_ID, 0)
 	_scanner_full_cargo = _main._held_cargo_count() == _held_salvage_capacity()
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	_advance(float(survey.get("interaction_seconds", 0.0)) / 3.0)
 	_survey_partial = float(_main._anomaly_survey.report().get("interaction", {}).get("progress", 0.0))
 	if not _require(_scanner_full_cargo and _survey_partial > 0.0 and _survey_partial < 1.0, "explicit full-cargo scan did not expose partial progress"):
@@ -253,7 +253,7 @@ func _complete_real_wreck_return() -> bool:
 		return false
 	if not _place_for_scan(survey):
 		return false
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	_advance(float(survey.get("interaction_seconds", 0.0)) + 0.1)
 	if not _require(
 		_main._anomaly_survey.has_pending_discovery()

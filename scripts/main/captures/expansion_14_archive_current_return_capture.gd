@@ -335,7 +335,7 @@ func _prepare_relay_arrival() -> bool:
 	_main._update_status_label()
 	return _expect(
 		not _main._world.is_salvage_collected(CORE_ID)
-		and _status_text().find("Relay signal | Hold Q/USE to scan wreck relay") != -1,
+		and _status_text().find("Relay signal | Hold Space/USE to scan wreck relay") != -1,
 		"relay arrival omitted its core or explicit scanner affordance"
 	)
 

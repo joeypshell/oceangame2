@@ -245,7 +245,7 @@ func _complete_regional_journey() -> bool:
 		return false
 	var survey_position: Vector2 = _player.global_position
 	_advance(0.0)
-	_press_key(KEY_Q)
+	_press_key(KEY_SPACE)
 	var interaction_seconds := float(target.get("interaction_seconds", 0.0))
 	_advance(interaction_seconds * 0.5)
 	var interaction: Dictionary = _main._anomaly_survey.report().get("interaction", {})
