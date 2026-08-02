@@ -55,7 +55,7 @@ func on_discovery_committed(discovery_id: String) -> Dictionary:
 		return {"changed": false, "status": "unrelated"}
 	var remaining: Array = current.get("remaining_fragment_ids", [])
 	if remaining.is_empty():
-		_last_note = "Transfer-hub coordinate halves secured 2/2 | Compare at night"
+		_last_note = "Coordinate halves secured 2/2 | Night will compare them"
 	else:
 		_last_note = "%s | Remaining: %s" % [
 			_fragment_result_label(discovery_id),
@@ -110,10 +110,10 @@ func objective_line() -> String:
 	var committed: Array = current.get("committed_fragment_ids", [])
 	var remaining: Array = current.get("remaining_fragment_ids", [])
 	if remaining.is_empty():
-		return "Transfer-hub coordinate halves 2/2 | Compare at night"
+		return "Coordinate halves 2/2 | Night will compare them"
 	if committed.is_empty():
 		return ""
-	return "Coordinate halves %d/2 | Remaining: %s" % [
+	return "Coordinate half %d/2 | Next: %s" % [
 		committed.size(),
 		_fragment_label(str(remaining[0])),
 	]
@@ -129,12 +129,17 @@ func debrief_lines() -> Array[String]:
 					lines.append(str(line))
 		return lines
 	if bool(current.get("analysis_ready", false)):
-		lines.append("Transfer-hub coordinate halves 2/2")
-		lines.append("Space/USE: %s" % str(current.get("analysis_label", "Compare transfer-hub coordinates")))
+		lines.append("Coordinate halves secured 2/2")
+		lines.append("Night comparison pending")
 		return lines
-	var objective := objective_line()
-	if not objective.is_empty():
-		lines.append(objective)
+	var committed: Array = current.get("committed_fragment_ids", [])
+	var remaining: Array = current.get("remaining_fragment_ids", [])
+	if committed.is_empty() and remaining.size() == 2:
+		lines.append("Far-west recorder: transfer-hub coordinates split across two wreck transponders")
+		lines.append("Recover and return both coordinate halves")
+	elif committed.size() == 1 and remaining.size() == 1:
+		lines.append("Coordinate half secured 1/2")
+		lines.append("Remaining: %s" % _fragment_label(str(remaining[0])))
 	return lines
 
 
@@ -149,6 +154,8 @@ func is_status_note(note: String) -> bool:
 		or note.begins_with("West transfer-hub")
 		or note.begins_with("East transfer-hub")
 		or note.begins_with("Transfer-hub")
+		or note.begins_with("Transfer hub coordinates")
+		or note.begins_with("Coordinate half")
 		or note.begins_with("Coordinate halves")
 	)
 

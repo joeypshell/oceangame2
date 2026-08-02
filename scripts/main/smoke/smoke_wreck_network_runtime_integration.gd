@@ -63,6 +63,9 @@ func _run() -> void:
 	var runtime := WreckNetworkInvestigationRuntime.new(profile)
 	var initial: Dictionary = runtime.on_map_loaded(world)
 	_expect(initial.get("status") == "fragments_required", "runtime did not derive the open investigation")
+	var initial_text := ExpeditionDayDebrief.build_text(day, null, conditions, "", runtime)
+	_expect(initial_text.find("Far-west recorder: transfer-hub coordinates split across two wreck transponders") != -1, "zero-fragment night omitted the recorder's causal lead")
+	_expect(initial_text.find("Recover and return both coordinate halves") != -1, "zero-fragment night omitted the two-half objective")
 	var plan: Dictionary = ExpeditionLeadResolver.resolve(world, profile, projects, day, conditions)
 	_expect(plan.get("status") == "choice_ready", "two investigation leads were not planner-ready")
 	_expect(plan.get("eligible_ids") == [WEST_JOURNEY_ID, ABYSS_JOURNEY_ID], "optional daily lead displaced the main investigation pair")
@@ -83,30 +86,32 @@ func _run() -> void:
 	_expect(not one_fragment_plan.get("eligible_ids", []).has(WEST_JOURNEY_ID), "committed west lead remained eligible")
 	_expect(presentation.promise_text(world, profile) == "Abyssal shelf | Find the pressure-crushed transponder", "one-fragment guidance did not narrow to the remaining route")
 	var one_fragment_text := ExpeditionDayDebrief.build_text(day, null, conditions, west_commit.get("note", ""), runtime)
+	_expect(one_fragment_text.count("Coordinate half secured 1/2") == 1, "one-fragment debrief did not explain secured progress")
 	_expect(one_fragment_text.count("Remaining: Abyssal Coordinate Transponder") == 1, "one-fragment debrief duplicated or lost the remaining lead")
 
 	profile.complete_discovery(ABYSS_FRAGMENT_ID, true)
 	var abyss_commit: Dictionary = runtime.on_discovery_committed(ABYSS_FRAGMENT_ID)
-	_expect(str(abyss_commit.get("note", "")).find("Compare at night") != -1, "second coordinate half did not expose the night comparison")
-	_expect(runtime.requires_analysis(), "two fragments did not block next-day start for explicit analysis")
-	_expect(runtime.debrief_lines().has("Space/USE: Compare transfer-hub coordinates"), "debrief omitted the desktop/mobile analysis command")
+	_expect(str(abyss_commit.get("note", "")).find("Night will compare them") != -1, "second coordinate half did not explain the night payoff")
+	_expect(runtime.requires_analysis(), "two coordinate halves did not become ready for night comparison")
+	_expect(runtime.debrief_lines().has("Night comparison pending"), "ready debrief omitted automatic night-comparison readiness")
 	var ready_text := ExpeditionDayDebrief.build_text(day, null, conditions, abyss_commit.get("note", ""), runtime)
-	_expect(ready_text.count("Transfer-hub coordinate halves 2/2") == 1, "analysis-ready debrief duplicated or lost coordinate readiness")
-	_expect(ready_text.find("Space/USE: Compare transfer-hub coordinates") != -1, "analysis-ready debrief lost the explicit action")
+	_expect(ready_text.count("Coordinate halves secured 2/2") == 1, "analysis-ready debrief duplicated or lost coordinate readiness: %s" % ready_text.replace("\n", " | "))
+	_expect(ready_text.find("Space/USE") == -1, "analysis-ready debrief retained a mystery command")
 
 	var main := DebriefMain.new()
 	main._expedition_day_state = day
 	main._wreck_network_investigation = runtime
-	var blocked: Dictionary = ExpeditionDayDebrief.handle_day_key(main)
-	_expect(blocked.get("reason") == "analysis_required", "next day bypassed ready wreck-network analysis")
 	var use_event := InputEventAction.new()
 	use_event.action = &"active_tool_use"
 	use_event.pressed = true
-	var analyzed: Dictionary = ExpeditionDayDebrief.handle_debrief_input(main, use_event)
-	_expect(analyzed.get("status") == "analysis_completed" and bool(analyzed.get("changed", false)), "Space/USE did not perform explicit night analysis")
+	var ignored_use: Dictionary = ExpeditionDayDebrief.handle_debrief_input(main, use_event)
+	_expect(ignored_use.get("reason") == "ignored", "debrief still routed Space/USE into coordinate analysis")
+	var analyzed: Dictionary = ExpeditionDayDebrief.resolve_wreck_network_night_payoff(main)
+	_expect(analyzed.get("status") == "analysis_completed" and bool(analyzed.get("changed", false)), "automatic night payoff did not compare the coordinates")
 	_expect(profile.has_completed_discovery(ExpansionProfileState.WRECK_NETWORK_TRIANGULATION_DISCOVERY_ID), "analysis did not persist the final discovery")
 	_expect(day.committed_discovery_ids.has(ExpansionProfileState.WRECK_NETWORK_TRIANGULATION_DISCOVERY_ID), "debrief summary did not record the analysis discovery")
-	_expect(ExpeditionDayDebrief.handle_debrief_key(main, KEY_SPACE).get("status") == "already_completed", "repeat analysis was not exact-once")
+	_expect(ExpeditionDayDebrief.resolve_wreck_network_night_payoff(main).get("status") == "not_ready", "completed analysis remained actionable")
+	_expect(ExpeditionDayDebrief.handle_debrief_key(main, KEY_SPACE).get("reason") == "ignored", "Space remained a debrief analysis command")
 	var debrief_text := ExpeditionDayDebrief.build_text(day, null, conditions, main._last_status_note, runtime)
 	_expect(debrief_text.count("Transfer hub coordinates recovered") == 1, "debrief duplicated or omitted the analysis result")
 	_expect(debrief_text.count("Destination: transfer hub beyond mapped cave") == 1, "debrief duplicated or omitted the broad destination promise")
@@ -120,7 +125,7 @@ func _run() -> void:
 			push_error("Wreck-network runtime integration smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Wreck-network runtime integration smoke passed: leads=west,abyss optional_suppressed=true selection_guidance_only=true one_fragment_names_remaining=true analysis_gate=true input=Space/USE exact_once=true result=transfer_hub_promise.")
+	print("Wreck-network runtime integration smoke passed: leads=west,abyss recorder_explains_split=true one_fragment_names_remaining=true night_analysis=automatic input_gate=none exact_once=true result=transfer_hub_promise.")
 	quit(0)
 
 
