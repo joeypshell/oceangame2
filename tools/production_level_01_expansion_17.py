@@ -19,6 +19,7 @@ WEST_BACKGROUND_ID = "western_chasm_relay_backdrop"
 WEST_ARTIFACT_ID = "western_chasm_relay_artifact"
 WEST_SURVEY_ID = "western_chasm_wreck_fragment_survey"
 WEST_DISCOVERY_ID = "western_chasm_wreck_fragment_discovery"
+WEST_PRESENTATION_ID = "western_chasm_navigation_transponder"
 
 ABYSS_JOURNEY_ID = "abyssal_shelf_wreck_fragment_journey"
 ABYSS_GATE_ID = "abyssal_shelf_pressure_seam"
@@ -27,6 +28,7 @@ ABYSS_BACKGROUND_ID = "abyssal_shelf_relay_backdrop"
 ABYSS_ARTIFACT_ID = "abyssal_shelf_relay_artifact"
 ABYSS_SURVEY_ID = "abyssal_shelf_wreck_fragment_survey"
 ABYSS_DISCOVERY_ID = "abyssal_shelf_wreck_fragment_discovery"
+ABYSS_PRESENTATION_ID = "abyssal_shelf_navigation_transponder"
 
 
 def investigations() -> list[dict]:
@@ -36,9 +38,9 @@ def investigations() -> list[dict]:
         "fragment_discovery_ids": [WEST_DISCOVERY_ID, ABYSS_DISCOVERY_ID],
         "analysis_discovery_id": FINAL_DISCOVERY_ID,
         "analysis_phase": "night_debrief",
-        "analysis_label": "Triangulate wreck network",
-        "analysis_result_label": "Wreck network triangulated",
-        "next_lead_label": "Next lead: transfer hub beyond mapped cave",
+        "analysis_label": "Compare transfer-hub coordinates",
+        "analysis_result_label": "Transfer hub coordinates recovered",
+        "next_lead_label": "Destination: transfer hub beyond mapped cave",
         "commit_map_id": "production_level_01",
         "commit_entry_id": BOAT_ID,
     }]
@@ -71,7 +73,7 @@ def zones() -> list[dict]:
             "h": 2,
             "regional_landmark": True,
             "regional_journey_id": WEST_JOURNEY_ID,
-            "landmark_label": "Western Chasm Relay",
+            "landmark_label": "Western Chasm Transponder",
         },
         {
             "id": ABYSS_GATE_ID,
@@ -98,7 +100,7 @@ def zones() -> list[dict]:
             "h": 3,
             "regional_landmark": True,
             "regional_journey_id": ABYSS_JOURNEY_ID,
-            "landmark_label": "Abyssal Shelf Relay",
+            "landmark_label": "Abyssal Shelf Transponder",
         },
     ]
 
@@ -107,7 +109,7 @@ def regional_journeys() -> list[dict]:
     return [
         {
             "id": WEST_JOURNEY_ID,
-            "route_label": "Western chasm relay route",
+            "route_label": "Western coordinate transponder route",
             "promise_gate_id": PROMISE_ID,
             "entry_gate_ids": [WEST_GATE_ID],
             "required_capability_id": "current_stabilizer",
@@ -116,19 +118,19 @@ def regional_journeys() -> list[dict]:
             "survey_target_id": WEST_SURVEY_ID,
             "commit_entry_id": BOAT_ID,
             "route_context": WEST_JOURNEY_ID,
-            "approach_guidance": "Western chasm | Search the lower-left rock loop",
+            "approach_guidance": "Western chasm | Find the current-scoured transponder",
             "expedition_lead": {
                 "lead_type": "regional_journey",
-                "label": "Western Chasm Relay",
-                "summary": "MAIN INVESTIGATION | Stabilizer route | Relay fragment",
-                "active_guidance": "Plan: Trace the western chasm relay",
+                "label": "Western Coordinate Transponder",
+                "summary": "MAIN INVESTIGATION | Stabilizer route | West coordinate half",
+                "active_guidance": "Plan: Recover west transfer-hub coordinates",
                 "order": 30,
             },
-            "intent": "Use the existing stabilizer to reach one physical relay fragment.",
+            "intent": "Use the existing stabilizer to recover the western half of the transfer-hub coordinates.",
         },
         {
             "id": ABYSS_JOURNEY_ID,
-            "route_label": "Abyssal shelf relay route",
+            "route_label": "Abyssal coordinate transponder route",
             "promise_gate_id": PROMISE_ID,
             "entry_gate_ids": [ABYSS_GATE_ID],
             "required_capability_id": "pressure_suit_1",
@@ -137,15 +139,15 @@ def regional_journeys() -> list[dict]:
             "survey_target_id": ABYSS_SURVEY_ID,
             "commit_entry_id": BOAT_ID,
             "route_context": ABYSS_JOURNEY_ID,
-            "approach_guidance": "Abyssal shelf | Search east through the pressure basin",
+            "approach_guidance": "Abyssal shelf | Find the pressure-crushed transponder",
             "expedition_lead": {
                 "lead_type": "regional_journey",
-                "label": "Abyssal Shelf Relay",
-                "summary": "MAIN INVESTIGATION | Pressure suit route | Relay fragment",
-                "active_guidance": "Plan: Search the abyssal shelf wreckage",
+                "label": "Abyssal Coordinate Transponder",
+                "summary": "MAIN INVESTIGATION | Pressure suit route | East coordinate half",
+                "active_guidance": "Plan: Recover east transfer-hub coordinates",
                 "order": 40,
             },
-            "intent": "Use the existing pressure suit to reach the second physical relay fragment.",
+            "intent": "Use the existing pressure suit to recover the eastern half of the transfer-hub coordinates.",
         },
     ]
 
@@ -165,23 +167,23 @@ def survey_targets() -> list[dict]:
             "route_context": WEST_JOURNEY_ID,
             "interaction": "survey",
             "interaction_seconds": 3.0,
-            "interaction_label": "Survey western relay",
-            "clue_label": "Western relay | Fragment signal detected",
-            "finding_label": "Discovery logged: Western wreck fragment",
-            "next_lead_label": "Wreck network | Second fragment unresolved",
+            "interaction_label": "Scan west transponder",
+            "clue_label": "Current-scoured transponder | West coordinate half detected",
+            "finding_label": "West transfer-hub coordinates recovered",
+            "next_lead_label": "Transfer-hub trace | East coordinate half unresolved",
             "discovery_id": WEST_DISCOVERY_ID,
             "commit_map_id": "production_level_01",
             "commit_map_path": "res://maps/production_level_01.greybox.json",
             "commit_entry_id": BOAT_ID,
             "scan_subject_kind": "artifact",
             "scan_subject_id": WEST_ARTIFACT_ID,
-            "scan_subject_label": "Western wreck relay",
-            "scan_subject_description": "Current-worn network fragment",
-            "scan_presentation_id": "northwest_wreck_relay_console",
+            "scan_subject_label": "Current-scoured navigation transponder",
+            "scan_subject_description": "Stores the western half of the transfer-hub coordinates",
+            "scan_presentation_id": WEST_PRESENTATION_ID,
             "scan_anchor": {"x": 21, "y": 120},
             "scan_reward_kind": "discovery",
             "scan_reward_id": WEST_DISCOVERY_ID,
-            "intent": "Create one pending fragment without depending on selected-lead state.",
+            "intent": "Recover the western coordinate half without depending on selected-lead state.",
         },
         {
             "id": ABYSS_SURVEY_ID,
@@ -197,23 +199,23 @@ def survey_targets() -> list[dict]:
             "route_context": ABYSS_JOURNEY_ID,
             "interaction": "survey",
             "interaction_seconds": 3.0,
-            "interaction_label": "Survey abyssal relay",
-            "clue_label": "Abyssal relay | Fragment signal detected",
-            "finding_label": "Discovery logged: Abyssal wreck fragment",
-            "next_lead_label": "Wreck network | Second fragment unresolved",
+            "interaction_label": "Scan abyss transponder",
+            "clue_label": "Pressure-crushed transponder | East coordinate half detected",
+            "finding_label": "East transfer-hub coordinates recovered",
+            "next_lead_label": "Transfer-hub trace | West coordinate half unresolved",
             "discovery_id": ABYSS_DISCOVERY_ID,
             "commit_map_id": "production_level_01",
             "commit_map_path": "res://maps/production_level_01.greybox.json",
             "commit_entry_id": BOAT_ID,
             "scan_subject_kind": "artifact",
             "scan_subject_id": ABYSS_ARTIFACT_ID,
-            "scan_subject_label": "Abyssal wreck relay",
-            "scan_subject_description": "Pressure-scored network fragment",
-            "scan_presentation_id": "northwest_wreck_relay_console",
+            "scan_subject_label": "Pressure-crushed navigation transponder",
+            "scan_subject_description": "Stores the eastern half of the transfer-hub coordinates",
+            "scan_presentation_id": ABYSS_PRESENTATION_ID,
             "scan_anchor": {"x": 125, "y": 148},
             "scan_reward_kind": "discovery",
             "scan_reward_id": ABYSS_DISCOVERY_ID,
-            "intent": "Create the parallel pending fragment regardless of lead selection.",
+            "intent": "Recover the eastern coordinate half regardless of lead selection.",
         },
     ]
 
@@ -259,7 +261,7 @@ def camera_tests() -> list[dict]:
 def review_questions() -> list[str]:
     return [
         "Do the western-current and abyssal-pressure routes feel physically different?",
-        "Are both relay artifacts recognizable without exact route-line guidance?",
+        "Are both navigation transponders distinct and recognizable without exact route-line guidance?",
         "Can either lead be followed first without hiding or invalidating the other target?",
         "Do both fragment routes preserve a collision-active return to the canonical boat?",
     ]
@@ -277,7 +279,7 @@ def source_provenance() -> dict:
         "camera_test_ids": [item["id"] for item in camera_tests()],
         "terrain_changes": [],
         "review_bounds": {"x": 19, "y": 119, "w": 109, "h": 31},
-        "intent": "Two source-authored physical relay leads in existing continuous water.",
+        "intent": "Two source-authored coordinate transponders in existing continuous water.",
     }
 
 

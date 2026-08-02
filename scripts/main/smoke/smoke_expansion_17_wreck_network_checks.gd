@@ -10,7 +10,7 @@ const ABYSS_JOURNEY_ID_17 := "abyssal_shelf_wreck_fragment_journey"
 const ABYSS_SURVEY_ID_17 := "abyssal_shelf_wreck_fragment_survey"
 const ABYSS_FRAGMENT_ID_17 := "abyssal_shelf_wreck_fragment_discovery"
 const ANALYSIS_DISCOVERY_ID_17 := "wreck_network_triangulation_discovery"
-const ANALYSIS_PROMISE_17 := "Next lead: transfer hub beyond mapped cave"
+const ANALYSIS_PROMISE_17 := "Destination: transfer hub beyond mapped cave"
 const PASSABLE_CAPABILITIES_17 := [
 	ProfileState.PROPULSION_FINS_CAPABILITY_ID,
 	ProfileState.CURRENT_STABILIZER_CAPABILITY_ID,
@@ -158,7 +158,7 @@ func _complete_western_fragment() -> bool:
 		profile.report().get("completed_discoveries", []).count(WEST_FRAGMENT_ID_17) == 1
 		and not _main._anomaly_survey.has_pending_discovery()
 		and investigation.get("remaining_fragment_ids") == [ABYSS_FRAGMENT_ID_17]
-		and _main._wreck_network_investigation.objective_line().find("Abyssal Shelf Relay") != -1
+		and _main._wreck_network_investigation.objective_line().find("Abyssal Coordinate Transponder") != -1
 		and _main._expedition_plan_state.selected_lead_id() == ABYSS_JOURNEY_ID_17,
 		"western commit lost exact-once, remaining-lead, or selection state"
 	)
@@ -167,7 +167,7 @@ func _complete_western_fragment() -> bool:
 func _review_one_fragment_and_start_next_day() -> bool:
 	var requested: Dictionary = ExpeditionDayDebrief17.handle_day_key(_main)
 	_main._process(0.0)
-	if not _require(bool(requested.get("requested", false)) and _main._result_label.text.find("Abyssal Shelf Relay") != -1, "one-fragment debrief did not name the remaining lead"):
+	if not _require(bool(requested.get("requested", false)) and _main._result_label.text.find("Abyssal Coordinate Transponder") != -1, "one-fragment debrief did not name the remaining lead"):
 		return false
 	var started: Dictionary = ExpeditionDayDebrief17.handle_debrief_key(_main, KEY_N)
 	await get_tree().physics_frame
@@ -201,7 +201,7 @@ func _complete_abyssal_fragment() -> bool:
 func _analyze_and_verify_reload() -> bool:
 	var requested: Dictionary = ExpeditionDayDebrief17.handle_day_key(_main)
 	_main._process(0.0)
-	if not _require(bool(requested.get("requested", false)) and _main._result_label.text.find("Space/USE: Triangulate wreck network") != -1, "analysis-ready debrief omitted the explicit action"):
+	if not _require(bool(requested.get("requested", false)) and _main._result_label.text.find("Space/USE: Compare transfer-hub coordinates") != -1, "analysis-ready debrief omitted the explicit action"):
 		return false
 	var blocked: Dictionary = ExpeditionDayDebrief17.handle_debrief_key(_main, KEY_N)
 	if not _require(blocked.get("reason") == "analysis_required", "next day bypassed explicit analysis"):
@@ -216,7 +216,7 @@ func _analyze_and_verify_reload() -> bool:
 	var load: Dictionary = reloaded.load_profile()
 	return _require(
 		profile.report().get("completed_discoveries", []).count(ANALYSIS_DISCOVERY_ID_17) == 1
-		and _analysis_result_17.find("Wreck network triangulated") != -1
+		and _analysis_result_17.find("Transfer hub coordinates recovered") != -1
 		and _analysis_result_17.find(ANALYSIS_PROMISE_17) != -1
 		and _main._result_label.text.find(ANALYSIS_PROMISE_17) != -1
 		and int(_main._banked_score) == score_before

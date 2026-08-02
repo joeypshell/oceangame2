@@ -103,14 +103,14 @@ The table and dependency diagram below describe the promoted full-level view.
 | 28 | `Far-west deeper wreck route` | production_level_01 / far_west_deeper_wreck_route | Closed Circuit Rebreather, Upper Left Wreck Relay Discovery | production_level_01, Closed Circuit Rebreather, Upper Left Wreck Relay Discovery | Survey deeper wreck recorder | stage 28 |
 | 29 | `Survey deeper wreck recorder` | production_level_01 / far_west_deeper_wreck_route | wreck data recorder, Survey Scanner 1, Far-west deeper wreck route | wreck data recorder, production_level_01, Survey Scanner 1 | Far West Deeper Wreck Discovery | stage 29 |
 | 30 | `Far West Deeper Wreck Discovery` | production_level_01 / far_west_deeper_wreck_route | Survey deeper wreck recorder, Surface Boat Entry | Survey deeper wreck recorder, production_level_01, Surface Boat Entry | state/payoff | stage 30 |
-| 31 | `Abyssal shelf relay route` | production_level_01 / abyssal_shelf_wreck_fragment_journey | Pressure Suit 1, Far West Deeper Wreck Discovery | production_level_01, Pressure Suit 1, Far West Deeper Wreck Discovery | Survey abyssal relay | stage 31 |
-| 31 | `Western chasm relay route` | production_level_01 / western_chasm_wreck_fragment_journey | Current Stabilizer, Far West Deeper Wreck Discovery | production_level_01, Current Stabilizer, Far West Deeper Wreck Discovery | Survey western relay | stage 31 |
-| 32 | `Survey abyssal relay` | production_level_01 / abyssal_shelf_wreck_fragment_journey | Survey Scanner 1, Pressure Suit 1, Abyssal shelf relay route | production_level_01, Survey Scanner 1, Pressure Suit 1 | Abyssal Shelf Wreck Fragment Discovery | stage 32 |
-| 32 | `Survey western relay` | production_level_01 / western_chasm_wreck_fragment_journey | Survey Scanner 1, Western chasm relay route | production_level_01, Survey Scanner 1, Western chasm relay route | Western Chasm Wreck Fragment Discovery | stage 32 |
-| 33 | `Abyssal Shelf Wreck Fragment Discovery` | production_level_01 / abyssal_shelf_wreck_fragment_journey | Survey abyssal relay, Surface Boat Entry | Survey abyssal relay, production_level_01, Surface Boat Entry | state/payoff | stage 33 |
-| 33 | `Western Chasm Wreck Fragment Discovery` | production_level_01 / western_chasm_wreck_fragment_journey | Survey western relay, Surface Boat Entry | Survey western relay, production_level_01, Surface Boat Entry | state/payoff | stage 33 |
-| 34 | `Triangulate wreck network` | production_level_01 | Far West Deeper Wreck Discovery, Western Chasm Wreck Fragment Discovery, Abyssal Shelf Wreck Fragment Discovery | production_level_01, Far West Deeper Wreck Discovery, Western Chasm Wreck Fragment Discovery | Wreck Network Triangulation Discovery | stage 34 |
-| 35 | `Wreck Network Triangulation Discovery` | production_level_01 | Triangulate wreck network | Triangulate wreck network | state/payoff | stage 35 |
+| 31 | `Abyssal coordinate transponder route` | production_level_01 / abyssal_shelf_wreck_fragment_journey | Pressure Suit 1, Far West Deeper Wreck Discovery | production_level_01, Pressure Suit 1, Far West Deeper Wreck Discovery | Scan abyss transponder | stage 31 |
+| 31 | `Western coordinate transponder route` | production_level_01 / western_chasm_wreck_fragment_journey | Current Stabilizer, Far West Deeper Wreck Discovery | production_level_01, Current Stabilizer, Far West Deeper Wreck Discovery | Scan west transponder | stage 31 |
+| 32 | `Scan abyss transponder` | production_level_01 / abyssal_shelf_wreck_fragment_journey | Survey Scanner 1, Pressure Suit 1, Abyssal coordinate transponder route | production_level_01, Survey Scanner 1, Pressure Suit 1 | Abyssal Shelf Wreck Fragment Discovery | stage 32 |
+| 32 | `Scan west transponder` | production_level_01 / western_chasm_wreck_fragment_journey | Survey Scanner 1, Western coordinate transponder route | production_level_01, Survey Scanner 1, Western coordinate transponder route | Western Chasm Wreck Fragment Discovery | stage 32 |
+| 33 | `Abyssal Shelf Wreck Fragment Discovery` | production_level_01 / abyssal_shelf_wreck_fragment_journey | Scan abyss transponder, Surface Boat Entry | Scan abyss transponder, production_level_01, Surface Boat Entry | state/payoff | stage 33 |
+| 33 | `Western Chasm Wreck Fragment Discovery` | production_level_01 / western_chasm_wreck_fragment_journey | Scan west transponder, Surface Boat Entry | Scan west transponder, production_level_01, Surface Boat Entry | state/payoff | stage 33 |
+| 34 | `Compare transfer-hub coordinates` | production_level_01 | Far West Deeper Wreck Discovery, Western Chasm Wreck Fragment Discovery, Abyssal Shelf Wreck Fragment Discovery | production_level_01, Far West Deeper Wreck Discovery, Western Chasm Wreck Fragment Discovery | Wreck Network Triangulation Discovery | stage 34 |
+| 35 | `Wreck Network Triangulation Discovery` | production_level_01 | Compare transfer-hub coordinates | Compare transfer-hub coordinates | state/payoff | stage 35 |
 
 ## Soft Pressure Annotations
 
@@ -165,7 +165,7 @@ flowchart LR
     n32["Strong east current"]
     n33["Western chasm current"]
     n34["Deep Cache Territorial Eel"]
-    n35["Triangulate wreck network"]
+    n35["Compare transfer-hub coordinates"]
     n36["Abyssal Basin Landmark"]
     n37["Abyssal Shelf Relay Landmark"]
     n38["Far West Deeper Wreck Landmark"]
@@ -193,26 +193,26 @@ flowchart LR
     n65["Shock prod project"]
     n66["Survey scanner project"]
     n67["Next dive: Investigate east current"]
-    n68["Abyssal shelf relay route"]
+    n68["Abyssal coordinate transponder route"]
     n69["Abyssal basin route"]
     n70["Signal Reef route"]
     n71["Far-west deeper wreck route"]
     n72["Southeast wreck archive route"]
     n73["Northwest wreck relay route"]
-    n74["Western chasm relay route"]
+    n74["Western coordinate transponder route"]
     n75["deep cache"]
     n76["Salvage Lower Loop"]
     n77["Salvage Southwest Return Cache"]
     n78["Upper Left Wreck Relay Core"]
     n79["Survey abyssal source"]
-    n80["Survey abyssal relay"]
+    n80["Scan abyss transponder"]
     n81["Survey deeper wreck recorder"]
     n82["Scan maintenance case"]
     n83["Survey Signal Reef"]
     n84["Survey deep harmonic"]
     n85["Survey wreck archive"]
     n86["Survey wreck relay"]
-    n87["Survey western relay"]
+    n87["Scan west transponder"]
     n88["wreck data recorder"]
     n89["sealed wreck"]
     n90["wreck recorder"]

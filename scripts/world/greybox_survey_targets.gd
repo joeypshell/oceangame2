@@ -2,6 +2,8 @@ extends RefCounted
 
 const CUTTER_BLUEPRINT_PRESENTATION_ID := "salvage_cutter_blueprint_case"
 const WRECK_RELAY_PRESENTATION_ID := "northwest_wreck_relay_console"
+const WEST_TRANSPONDER_PRESENTATION_ID := "western_chasm_navigation_transponder"
+const ABYSS_TRANSPONDER_PRESENTATION_ID := "abyssal_shelf_navigation_transponder"
 const STATE_COLORS := {
 	"locked": Color(0.28, 0.72, 0.76, 0.46),
 	"available": Color(0.18, 0.96, 0.88, 0.92),
@@ -72,6 +74,10 @@ func _add_marker(parent: Node2D, target: Dictionary, center: Vector2) -> Node2D:
 			_add_salvage_cutter_blueprint_case(root)
 		WRECK_RELAY_PRESENTATION_ID:
 			_add_northwest_wreck_relay_console(root)
+		WEST_TRANSPONDER_PRESENTATION_ID:
+			_add_western_chasm_transponder(root)
+		ABYSS_TRANSPONDER_PRESENTATION_ID:
+			_add_abyssal_shelf_transponder(root)
 	root.modulate = STATE_COLORS["locked"]
 	return root
 
@@ -152,6 +158,119 @@ func _add_northwest_wreck_relay_console(root: Node2D) -> void:
 	feet.default_color = Color(0.26, 0.42, 0.43, 1.0)
 	feet.width = 3.0
 	root.add_child(feet)
+
+
+func _add_western_chasm_transponder(root: Node2D) -> void:
+	var shadow := Polygon2D.new()
+	shadow.name = "WesternTransponderShadow"
+	shadow.polygon = PackedVector2Array([
+		Vector2(-34, -10), Vector2(17, -14), Vector2(31, -4),
+		Vector2(22, 16), Vector2(-29, 14), Vector2(-38, 4),
+	])
+	shadow.position = Vector2(3, 4)
+	shadow.color = Color(0.01, 0.06, 0.08, 0.58)
+	root.add_child(shadow)
+
+	var body := Polygon2D.new()
+	body.name = "CurrentScouredTransponder"
+	body.polygon = PackedVector2Array([
+		Vector2(-34, -10), Vector2(17, -14), Vector2(31, -4),
+		Vector2(22, 16), Vector2(-29, 14), Vector2(-38, 4),
+	])
+	body.color = Color(0.09, 0.28, 0.31, 1.0)
+	root.add_child(body)
+
+	var frame := Line2D.new()
+	frame.name = "ScouredTransponderFrame"
+	frame.points = PackedVector2Array([
+		Vector2(-34, -10), Vector2(17, -14), Vector2(31, -4),
+		Vector2(22, 16), Vector2(-29, 14), Vector2(-38, 4), Vector2(-34, -10),
+	])
+	frame.default_color = Color(0.48, 0.78, 0.75, 1.0)
+	frame.width = 2.0
+	root.add_child(frame)
+
+	var coordinate_trace := Line2D.new()
+	coordinate_trace.name = "WestCoordinateTrace"
+	coordinate_trace.points = PackedVector2Array([
+		Vector2(-23, 5), Vector2(-15, -4), Vector2(-7, 5),
+		Vector2(1, -4), Vector2(10, 5), Vector2(18, -2),
+	])
+	coordinate_trace.default_color = Color(1.0, 0.82, 0.26, 1.0)
+	coordinate_trace.width = 3.0
+	root.add_child(coordinate_trace)
+
+	var current_vane := Line2D.new()
+	current_vane.name = "CurrentVane"
+	current_vane.points = PackedVector2Array([
+		Vector2(-34, -4), Vector2(-48, -4), Vector2(-57, -11),
+		Vector2(-48, -4), Vector2(-57, 3),
+	])
+	current_vane.default_color = Color(0.39, 0.63, 0.64, 1.0)
+	current_vane.width = 3.0
+	root.add_child(current_vane)
+
+	var beacon := Polygon2D.new()
+	beacon.name = "WestCoordinateBeacon"
+	beacon.polygon = PackedVector2Array([
+		Vector2(22, -12), Vector2(29, -5), Vector2(22, 2), Vector2(15, -5),
+	])
+	beacon.color = Color(0.20, 0.94, 0.86, 1.0)
+	root.add_child(beacon)
+
+
+func _add_abyssal_shelf_transponder(root: Node2D) -> void:
+	var shadow := Polygon2D.new()
+	shadow.name = "AbyssalTransponderShadow"
+	shadow.polygon = PackedVector2Array([
+		Vector2(-18, -27), Vector2(15, -27), Vector2(28, -15), Vector2(28, 14),
+		Vector2(16, 27), Vector2(-17, 27), Vector2(-29, 13), Vector2(-29, -14),
+	])
+	shadow.position = Vector2(3, 4)
+	shadow.color = Color(0.01, 0.05, 0.09, 0.62)
+	root.add_child(shadow)
+
+	var body := Polygon2D.new()
+	body.name = "PressureCrushedTransponder"
+	body.polygon = shadow.polygon
+	body.color = Color(0.12, 0.20, 0.34, 1.0)
+	root.add_child(body)
+
+	var pressure_ring := Line2D.new()
+	pressure_ring.name = "PressureBrace"
+	pressure_ring.points = PackedVector2Array([
+		Vector2(-18, -27), Vector2(15, -27), Vector2(28, -15), Vector2(28, 14),
+		Vector2(16, 27), Vector2(-17, 27), Vector2(-29, 13), Vector2(-29, -14), Vector2(-18, -27),
+	])
+	pressure_ring.default_color = Color(0.45, 0.70, 0.79, 1.0)
+	pressure_ring.width = 3.0
+	root.add_child(pressure_ring)
+
+	var coordinate_core := Polygon2D.new()
+	coordinate_core.name = "EastCoordinateCore"
+	coordinate_core.polygon = PackedVector2Array([
+		Vector2(0, -13), Vector2(13, 0), Vector2(0, 13), Vector2(-13, 0),
+	])
+	coordinate_core.color = Color(0.06, 0.62, 0.70, 1.0)
+	root.add_child(coordinate_core)
+
+	var coordinate_trace := Line2D.new()
+	coordinate_trace.name = "EastCoordinateTrace"
+	coordinate_trace.points = PackedVector2Array([
+		Vector2(-9, 2), Vector2(-4, -5), Vector2(1, 5), Vector2(7, -4),
+	])
+	coordinate_trace.default_color = Color(1.0, 0.82, 0.26, 1.0)
+	coordinate_trace.width = 3.0
+	root.add_child(coordinate_trace)
+
+	var crush_crack := Line2D.new()
+	crush_crack.name = "PressureCrack"
+	crush_crack.points = PackedVector2Array([
+		Vector2(-20, -18), Vector2(-10, -8), Vector2(-15, 1), Vector2(-5, 10), Vector2(-9, 20),
+	])
+	crush_crack.default_color = Color(0.68, 0.86, 0.88, 0.82)
+	crush_crack.width = 2.0
+	root.add_child(crush_crack)
 
 
 func _add_salvage_cutter_blueprint_case(root: Node2D) -> void:

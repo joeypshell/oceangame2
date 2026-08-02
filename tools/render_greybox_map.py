@@ -199,6 +199,38 @@ def render_svg(map_data: dict) -> str:
                 f'<polygon points="{cx + 22},{cy - 40} {cx + 27},{cy - 35} '
                 f'{cx + 22},{cy - 30} {cx + 17},{cy - 35}" fill="#ffb83d"/>'
             )
+        elif presentation_id == "western_chasm_navigation_transponder":
+            anchor = target["scan_anchor"]
+            cx = (float(anchor["x"]) + 0.5) * tile_size
+            cy = (float(anchor["y"]) + 0.5) * tile_size
+            parts.append(
+                f'<path d="M {cx - 34} {cy - 10} l 51 -4 l 14 10 l -9 20 l -51 -2 l -9 -10 z" '
+                'fill="#17474f" stroke="#7ac7bf" stroke-width="4"/>'
+            )
+            parts.append(
+                f'<path d="M {cx - 23} {cy + 5} l 8 -9 l 8 9 l 8 -9 l 9 9 l 8 -7" '
+                'fill="none" stroke="#ffd142" stroke-width="4"/>'
+            )
+            parts.append(
+                f'<path d="M {cx - 34} {cy - 4} h -14 l -9 -7 m 9 7 l -9 7" '
+                'fill="none" stroke="#649fa3" stroke-width="4"/>'
+            )
+        elif presentation_id == "abyssal_shelf_navigation_transponder":
+            anchor = target["scan_anchor"]
+            cx = (float(anchor["x"]) + 0.5) * tile_size
+            cy = (float(anchor["y"]) + 0.5) * tile_size
+            parts.append(
+                f'<polygon points="{cx - 18},{cy - 27} {cx + 15},{cy - 27} {cx + 28},{cy - 15} '
+                f'{cx + 28},{cy + 14} {cx + 16},{cy + 27} {cx - 17},{cy + 27} '
+                f'{cx - 29},{cy + 13} {cx - 29},{cy - 14}" fill="#1f3657" stroke="#73b3c9" stroke-width="4"/>'
+            )
+            parts.append(
+                f'<polygon points="{cx},{cy - 13} {cx + 13},{cy} {cx},{cy + 13} {cx - 13},{cy}" fill="#109eaf"/>'
+            )
+            parts.append(
+                f'<path d="M {cx - 20} {cy - 18} l 10 10 l -5 9 l 10 9 l -4 10" '
+                'fill="none" stroke="#addbdd" stroke-width="3"/>'
+            )
         else:
             parts.append(f'<circle cx="{cx}" cy="{cy}" r="14" fill="none" stroke="{COLORS["survey"]}" stroke-width="6"/>')
         parts.append(text(x + 8, y - 10, target["id"], 22))

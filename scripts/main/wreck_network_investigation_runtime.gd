@@ -6,6 +6,7 @@ var _profile
 var _state := WreckNetworkInvestigationState.new()
 var _configured := false
 var _fragment_labels := {}
+var _fragment_result_labels := {}
 var _last_note := ""
 var _last_result := ""
 
@@ -18,6 +19,7 @@ func on_map_loaded(world) -> Dictionary:
 	_state = WreckNetworkInvestigationState.new()
 	_configured = false
 	_fragment_labels.clear()
+	_fragment_result_labels.clear()
 	_last_note = ""
 	_last_result = ""
 	if world == null or not world.has_method("get_wreck_network_investigations"):
@@ -53,9 +55,12 @@ func on_discovery_committed(discovery_id: String) -> Dictionary:
 		return {"changed": false, "status": "unrelated"}
 	var remaining: Array = current.get("remaining_fragment_ids", [])
 	if remaining.is_empty():
-		_last_note = "Wreck fragments 2/2 | Analyze at night"
+		_last_note = "Transfer-hub coordinate halves secured 2/2 | Compare at night"
 	else:
-		_last_note = "Wreck fragment committed | Remaining: %s" % _fragment_label(str(remaining[0]))
+		_last_note = "%s | Remaining: %s" % [
+			_fragment_result_label(discovery_id),
+			_fragment_label(str(remaining[0])),
+		]
 	return {
 		"changed": true,
 		"status": str(current.get("status", "fragments_required")),
@@ -72,11 +77,11 @@ func try_analyze(runtime_phase: String, persist := true) -> Dictionary:
 	match status:
 		"analysis_completed":
 			_last_note = "%s | %s" % [
-				str(result.get("result_label", "Wreck network triangulated")),
+				str(result.get("result_label", "Transfer hub coordinates recovered")),
 				str(result.get("next_lead_label", "")),
 			]
 			_last_result = "%s\n%s" % [
-				str(result.get("result_label", "Wreck network triangulated")),
+				str(result.get("result_label", "Transfer hub coordinates recovered")),
 				str(result.get("next_lead_label", "")),
 			]
 		"already_completed":
@@ -105,10 +110,10 @@ func objective_line() -> String:
 	var committed: Array = current.get("committed_fragment_ids", [])
 	var remaining: Array = current.get("remaining_fragment_ids", [])
 	if remaining.is_empty():
-		return "Wreck fragments 2/2 | Analyze at night"
+		return "Transfer-hub coordinate halves 2/2 | Compare at night"
 	if committed.is_empty():
 		return ""
-	return "Wreck fragments %d/2 | Remaining: %s" % [
+	return "Coordinate halves %d/2 | Remaining: %s" % [
 		committed.size(),
 		_fragment_label(str(remaining[0])),
 	]
@@ -124,8 +129,8 @@ func debrief_lines() -> Array[String]:
 					lines.append(str(line))
 		return lines
 	if bool(current.get("analysis_ready", false)):
-		lines.append("Wreck fragments 2/2")
-		lines.append("Space/USE: %s" % str(current.get("analysis_label", "Triangulate wreck network")))
+		lines.append("Transfer-hub coordinate halves 2/2")
+		lines.append("Space/USE: %s" % str(current.get("analysis_label", "Compare transfer-hub coordinates")))
 		return lines
 	var objective := objective_line()
 	if not objective.is_empty():
@@ -138,7 +143,14 @@ func result_text() -> String:
 
 
 func is_status_note(note: String) -> bool:
-	return note.begins_with("Wreck fragment") or note.begins_with("Wreck network")
+	return (
+		note.begins_with("Wreck fragment")
+		or note.begins_with("Wreck network")
+		or note.begins_with("West transfer-hub")
+		or note.begins_with("East transfer-hub")
+		or note.begins_with("Transfer-hub")
+		or note.begins_with("Coordinate halves")
+	)
 
 
 func _build_fragment_labels(world) -> void:
@@ -157,12 +169,21 @@ func _build_fragment_labels(world) -> void:
 		var label := str(lead.get("label", "")).strip_edges()
 		if not label.is_empty():
 			_fragment_labels[discovery_id] = label
+		var result_label := str(survey.get("finding_label", "")).strip_edges()
+		if not result_label.is_empty():
+			_fragment_result_labels[discovery_id] = result_label
 
 
 func _fragment_label(discovery_id: String) -> String:
 	if _fragment_labels.has(discovery_id):
 		return str(_fragment_labels[discovery_id])
 	return discovery_id.replace("_discovery", "").replace("_", " ").capitalize()
+
+
+func _fragment_result_label(discovery_id: String) -> String:
+	if _fragment_result_labels.has(discovery_id):
+		return str(_fragment_result_labels[discovery_id])
+	return "%s secured" % _fragment_label(discovery_id)
 
 
 func _record_by_id(records: Array, record_id: String) -> Dictionary:

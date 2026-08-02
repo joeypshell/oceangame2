@@ -118,6 +118,23 @@ def draw_survey_targets(draw: ImageDraw.ImageDraw, map_data: dict, scale: int) -
             draw.line((cx + half_w // 2, cy - half_h, cx + half_w // 2, cy - half_h - scale), fill=(133, 189, 184, 255), width=max(1, scale // 3))
             r = max(2, scale // 3)
             draw.polygon([(cx + half_w // 2, cy - half_h - scale - r), (cx + half_w // 2 + r, cy - half_h - scale), (cx + half_w // 2, cy - half_h - scale + r), (cx + half_w // 2 - r, cy - half_h - scale)], fill=(255, 184, 61, 255))
+        elif presentation_id == "western_chasm_navigation_transponder":
+            anchor = target["scan_anchor"]
+            cx = round((float(anchor["x"]) + 0.5) * scale)
+            cy = round((float(anchor["y"]) + 0.5) * scale)
+            body = [(cx - scale, cy - scale // 3), (cx + scale // 2, cy - scale // 2), (cx + scale, cy), (cx + scale // 2, cy + scale // 2), (cx - scale, cy + scale // 3)]
+            draw.polygon(body, fill=(23, 71, 79, 255), outline=(122, 199, 191, 255))
+            draw.line((cx - scale, cy, cx - scale * 2, cy), fill=(100, 159, 163, 255), width=max(1, scale // 3))
+            draw.line((cx - scale // 2, cy, cx, cy - scale // 3, cx + scale // 2, cy), fill=(255, 209, 66, 255), width=max(1, scale // 3))
+        elif presentation_id == "abyssal_shelf_navigation_transponder":
+            anchor = target["scan_anchor"]
+            cx = round((float(anchor["x"]) + 0.5) * scale)
+            cy = round((float(anchor["y"]) + 0.5) * scale)
+            r = max(5, scale)
+            body = [(cx - r // 2, cy - r), (cx + r // 2, cy - r), (cx + r, cy - r // 2), (cx + r, cy + r // 2), (cx + r // 2, cy + r), (cx - r // 2, cy + r), (cx - r, cy + r // 2), (cx - r, cy - r // 2)]
+            draw.polygon(body, fill=(31, 54, 87, 255), outline=(115, 179, 201, 255))
+            draw.polygon([(cx, cy - r // 2), (cx + r // 2, cy), (cx, cy + r // 2), (cx - r // 2, cy)], fill=(16, 158, 175, 255))
+            draw.line((cx - r * 2 // 3, cy - r * 2 // 3, cx - r // 3, cy - r // 3, cx - r // 2, cy, cx, cy + r // 2), fill=(173, 219, 221, 255), width=max(1, scale // 3))
         else:
             cx, cy = (x0 + x1) // 2, (y0 + y1) // 2
             r = max(3, scale // 2)
