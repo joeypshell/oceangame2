@@ -2,8 +2,8 @@
 
 Date: 2026-07-31
 
-Status: Expansions 01-17 are complete with player GO. Expansion 17 closed
-through #1167 after bounded owner-HOLD corrections on runtime `075a450`.
+Status: Expansions 01-17 are complete with player GO. Planning gate #1190
+selects Expansion 18 Transfer Hub Interior Expedition; implementation is not batched.
 
 ## Decision
 
@@ -91,16 +91,15 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Run a bounded roadmap/backlog audit before selecting the next expansion.
+Create and freeze the Expansion 18 implementation milestone in a separate audit.
 
 ### Proposed
 
-No Expansion 18 direction is selected.
+No Expansion 19 direction is selected.
 
 ### Directional
 
-The triangulated destination, exceptional interiors, other regional identities,
-and later equipment tiers remain directional.
+Additional interiors, other regional identities, and later equipment tiers remain directional.
 
 ### Vision
 
@@ -431,24 +430,24 @@ existing tool use, and exact-once boat commitment without terrain or global-syst
 
 ### Expansion 17: Wreck Network Triangulation
 
-Status: Complete with owner GO through #1167 on corrected runtime `075a450`;
-milestone #43 is closed. Expansion 18 remains unselected.
+Status: Complete with owner GO through #1167 on corrected runtime `075a450`; milestone #43 is closed.
 
-Goal: turn the far-west network discovery into a two-lead, multi-return investigation
-that makes the existing capability set feel like a useful expedition toolkit.
+It proved two distinct physical transponders, guidance-only lead choice, prior-capability reuse, separate canonical-boat commits, and one automatic night comparison without terrain, transition, reward, or system expansion. The recovered coordinates promise a Transfer Hub beyond the mapped cave.
+
+### Expansion 18: Transfer Hub Interior Expedition
+
+Status: Selected through planning gate #1190. Implementation milestone and issues are not yet created.
+
+Goal: turn the recovered coordinates into one physically reached exceptional destination whose entry, recovery, return, and boat commitment remain one pressured expedition.
 
 Prove:
+- one source-authored exterior entrance and one small paired-return interior
+- continuous oxygen, daylight, health, cargo, and pending-recovery state
+- one deliberate existing-cutter operation and tangible navigation core
+- full-cargo blocking, failure restoration, anti-duplication, and exact boat commit
+- no travel menu, connector network, second interior, new recipe/capability, generic scan, or fast travel
 
-- two distinct physical relay artifacts in existing underused regions
-- source-derived parallel leads with day-scoped guidance, not interaction locks
-- different prior-capability combinations and no new recipe or capability
-- deliberate scanner use and separate exact-once canonical-boat commits
-- one automatic exact-once night comparison and a broad destination promise
-- no terrain, transition, teleport, score reward, economy, or new enemy
-
-Exit question: did following two physical wreck-network leads, returning each
-fragment, and triangulating them at night make the existing ocean feel like a
-connected mystery worth planning another expedition around?
+Exit question: did the coordinates lead to a place worth reaching, and did recovering the core and carrying it back feel like one earned expedition rather than a teleport or reset?
 
 ## Original OceanGame Convergence
 
