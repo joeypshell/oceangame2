@@ -5,9 +5,11 @@ const ExpansionProfileState := preload("res://scripts/main/expansion_profile_sta
 const EXPANSION_14_START := "expansion_14_start"
 const EXPANSION_16_START := "expansion_16_start"
 const EXPANSION_17_START := "expansion_17_start"
+const EXPANSION_18_START := "expansion_18_start"
 const EXPANSION_14_MAP_PATH := "res://maps/production_level_01.greybox.json"
 const EXPANSION_16_MAP_PATH := EXPANSION_14_MAP_PATH
 const EXPANSION_17_MAP_PATH := EXPANSION_14_MAP_PATH
+const EXPANSION_18_MAP_PATH := EXPANSION_14_MAP_PATH
 const PRIOR_PROJECT_IDS := [
 	ExpansionProfileState.PROPULSION_FINS_PROJECT_ID,
 	ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID,
@@ -81,6 +83,12 @@ const EXPANSION_17_PRIOR_DISCOVERY_IDS := [
 	ExpansionProfileState.UPPER_LEFT_WRECK_RELAY_DISCOVERY_ID,
 	ExpansionProfileState.FAR_WEST_WRECK_DISCOVERY_ID,
 ]
+const EXPANSION_18_PRIOR_PROJECT_IDS := EXPANSION_17_PRIOR_PROJECT_IDS
+const EXPANSION_18_PRIOR_DISCOVERY_IDS := EXPANSION_17_PRIOR_DISCOVERY_IDS + [
+	ExpansionProfileState.WESTERN_CHASM_FRAGMENT_DISCOVERY_ID,
+	ExpansionProfileState.ABYSSAL_SHELF_FRAGMENT_DISCOVERY_ID,
+	ExpansionProfileState.WRECK_NETWORK_TRIANGULATION_DISCOVERY_ID,
+]
 const REBREATHER_RECIPE := {
 	ExpansionProfileState.TITANIUM_MATERIAL_ID: 1,
 	ExpansionProfileState.RUBBER_MATERIAL_ID: 1,
@@ -90,7 +98,7 @@ const REBREATHER_RECIPE := {
 
 
 static func is_supported(checkpoint_id: String) -> bool:
-	return checkpoint_id in [EXPANSION_14_START, EXPANSION_16_START, EXPANSION_17_START]
+	return checkpoint_id in [EXPANSION_14_START, EXPANSION_16_START, EXPANSION_17_START, EXPANSION_18_START]
 
 
 static func required_map_path(checkpoint_id: String) -> String:
@@ -138,6 +146,8 @@ static func apply(checkpoint_id: String, profile) -> Dictionary:
 
 
 static func _project_ids_for(checkpoint_id: String) -> Array:
+	if checkpoint_id == EXPANSION_18_START:
+		return EXPANSION_18_PRIOR_PROJECT_IDS
 	if checkpoint_id == EXPANSION_17_START:
 		return EXPANSION_17_PRIOR_PROJECT_IDS
 	if checkpoint_id == EXPANSION_16_START:
@@ -146,6 +156,8 @@ static func _project_ids_for(checkpoint_id: String) -> Array:
 
 
 static func _discovery_ids_for(checkpoint_id: String) -> Array:
+	if checkpoint_id == EXPANSION_18_START:
+		return EXPANSION_18_PRIOR_DISCOVERY_IDS
 	if checkpoint_id == EXPANSION_17_START:
 		return EXPANSION_17_PRIOR_DISCOVERY_IDS
 	if checkpoint_id == EXPANSION_16_START:
@@ -154,14 +166,14 @@ static func _discovery_ids_for(checkpoint_id: String) -> Array:
 
 
 static func _recipe_for(checkpoint_id: String) -> Dictionary:
-	if checkpoint_id == EXPANSION_17_START:
+	if checkpoint_id in [EXPANSION_17_START, EXPANSION_18_START]:
 		return {}
 	return REBREATHER_RECIPE if checkpoint_id == EXPANSION_16_START else STABILIZER_RECIPE
 
 
 static func _banked_target_ids_for(checkpoint_id: String) -> Array:
 	var target_ids: Array = [ExpansionProfileState.SOUTHEAST_WRECK_RECORDER_ID]
-	if checkpoint_id == EXPANSION_17_START:
+	if checkpoint_id in [EXPANSION_17_START, EXPANSION_18_START]:
 		target_ids.append(ExpansionProfileState.FAR_WEST_WRECK_RECORDER_ID)
 	return target_ids
 
@@ -236,6 +248,16 @@ static func _profile_is_empty(profile) -> bool:
 
 
 static func _boundary_is_ready(checkpoint_id: String, profile) -> bool:
+	if checkpoint_id == EXPANSION_18_START:
+		return (
+			profile.has_completed_project(ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_PROJECT_ID)
+			and profile.has_capability(ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_CAPABILITY_ID)
+			and profile.has_completed_discovery(ExpansionProfileState.WESTERN_CHASM_FRAGMENT_DISCOVERY_ID)
+			and profile.has_completed_discovery(ExpansionProfileState.ABYSSAL_SHELF_FRAGMENT_DISCOVERY_ID)
+			and profile.has_completed_discovery(ExpansionProfileState.WRECK_NETWORK_TRIANGULATION_DISCOVERY_ID)
+			and not profile.has_completed_discovery(ExpansionProfileState.TRANSFER_HUB_NAVIGATION_CORE_DISCOVERY_ID)
+			and profile.material_inventory().is_empty()
+		)
 	if checkpoint_id == EXPANSION_17_START:
 		return (
 			profile.has_completed_project(ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_PROJECT_ID)

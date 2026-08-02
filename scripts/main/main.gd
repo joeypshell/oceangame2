@@ -33,6 +33,7 @@ const Expansion14ArchiveCurrentReturnCapture := preload("res://scripts/main/capt
 const Expansion15ExpeditionPlanningCapture := preload("res://scripts/main/captures/expansion_15_expedition_planning_capture.gd")
 const Expansion16DeeperWreckCapture := preload("res://scripts/main/captures/expansion_16_deeper_wreck_capture.gd")
 const Expansion17WreckNetworkCapture := preload("res://scripts/main/captures/expansion_17_wreck_network_capture.gd")
+const Expansion18TransferHubCapture := preload("res://scripts/main/captures/expansion_18_transfer_hub_capture.gd")
 const FinalDiveObjectiveSeed := preload("res://scripts/main/final_dive_objective_seed.gd")
 const MovingHazardCapture := preload("res://scripts/main/captures/moving_hazard_capture.gd")
 const MovingHazardController := preload("res://scripts/main/moving_hazard_controller.gd")
@@ -189,6 +190,7 @@ const EXPANSION_14_ARCHIVE_CURRENT_RETURN_CAPTURE_DIR := "res://visual_captures/
 const EXPANSION_15_EXPEDITION_PLANNING_CAPTURE_DIR := "res://visual_captures/expansion_15_expedition_planning"
 const EXPANSION_16_DEEPER_WRECK_CAPTURE_DIR := "res://visual_captures/expansion_16_deeper_wreck"
 const EXPANSION_17_WRECK_NETWORK_CAPTURE_DIR := "res://visual_captures/expansion_17_wreck_network"
+const EXPANSION_18_TRANSFER_HUB_CAPTURE_DIR := "res://visual_captures/expansion_18_transfer_hub"
 const DARKNESS_LIGHT_CAPTURE_DIR := "res://visual_captures/darkness_light_gate"
 const CURRENT_GATE_CAPTURE_DIR := "res://visual_captures/current_gate"
 const MOVING_HAZARD_CAPTURE_DIR := "res://visual_captures/moving_hazard"
@@ -432,6 +434,7 @@ func _ready() -> void:
 	var capture_expansion_15_expedition_planning := _has_arg(user_args, engine_args, "--capture-expansion-15-expedition-planning")
 	var capture_expansion_16_deeper_wreck := _has_arg(user_args, engine_args, "--capture-expansion-16-deeper-wreck")
 	var capture_expansion_17_wreck_network := _has_arg(user_args, engine_args, "--capture-expansion-17-wreck-network")
+	var capture_expansion_18_transfer_hub := _has_arg(user_args, engine_args, "--capture-expansion-18-transfer-hub")
 	var capture_darkness_light_gate := _has_arg(user_args, engine_args, "--capture-darkness-light-gate")
 	var capture_current_gate := _has_arg(user_args, engine_args, "--capture-current-gate")
 	var capture_moving_hazard := _has_arg(user_args, engine_args, "--capture-moving-hazard")
@@ -622,6 +625,8 @@ func _ready() -> void:
 		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
 	elif capture_expansion_17_wreck_network:
 		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
+	elif capture_expansion_18_transfer_hub:
+		selected_map_path = PRODUCTION_LEVEL_MAP_PATH
 	elif smoke_production_slice_route:
 		selected_map_path = PRODUCTION_SLICE_MAP_PATH
 	elif smoke_production_slice_02_route:
@@ -802,6 +807,7 @@ func _ready() -> void:
 		or capture_expansion_15_expedition_planning
 		or capture_expansion_16_deeper_wreck
 		or capture_expansion_17_wreck_network
+		or capture_expansion_18_transfer_hub
 		or capture_darkness_light_gate
 		or capture_current_gate
 		or capture_moving_hazard
@@ -1264,6 +1270,9 @@ func _ready() -> void:
 	elif capture_expansion_17_wreck_network:
 		var capture := Expansion17WreckNetworkCapture.new(self)
 		await capture.capture_and_quit(EXPANSION_17_WRECK_NETWORK_CAPTURE_DIR)
+	elif capture_expansion_18_transfer_hub:
+		var capture := Expansion18TransferHubCapture.new(self)
+		await capture.capture_and_quit(EXPANSION_18_TRANSFER_HUB_CAPTURE_DIR)
 	elif capture_darkness_light_gate:
 		_capture_controller.capture_darkness_light_gate_and_quit(DARKNESS_LIGHT_CAPTURE_DIR)
 	elif capture_current_gate:

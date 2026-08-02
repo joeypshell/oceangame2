@@ -391,7 +391,7 @@ mobile 844x390 review sizes under ignored
 ids, checks HUD/touch-control separation, and does not accept or replace
 baselines.
 
-Expansion 17 uses the [focused wreck-network capture guide](expansion_17_capture.md).
+Expansion 17 uses the [focused wreck-network capture guide](expansion_17_capture.md); Expansion 18 uses the [focused Transfer Hub capture guide](expansion_18_capture.md).
 
 Capture the first production slice:
 
