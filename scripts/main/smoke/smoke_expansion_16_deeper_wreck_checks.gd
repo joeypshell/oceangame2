@@ -10,7 +10,7 @@ const WARNING_ZONE_ID_16 := "far_west_confined_wreck_warning"
 const RECORDER_ID_16 := "far_west_wreck_data_recorder"
 const SURVEY_ID_16 := "far_west_deeper_wreck_survey"
 const DISCOVERY_ID_16 := "far_west_deeper_wreck_discovery"
-const NEXT_GUIDANCE_17 := "Western chasm | Search the lower-left rock loop"
+const NEXT_GUIDANCE_17 := "Western chasm | Find the current-scoured transponder"
 const RETURN_RESERVE_SECONDS := 12.0
 const PASSABLE_CAPABILITIES_16 := [
 	ProfileState.PROPULSION_FINS_CAPABILITY_ID,

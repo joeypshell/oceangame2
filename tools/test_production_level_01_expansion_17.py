@@ -14,6 +14,7 @@ from production_level_01_expansion_17 import (
     ABYSS_GATE_ID,
     ABYSS_JOURNEY_ID,
     ABYSS_LANDMARK_ID,
+    ABYSS_PRESENTATION_ID,
     ABYSS_SURVEY_ID,
     FINAL_DISCOVERY_ID,
     INVESTIGATION_ID,
@@ -23,6 +24,7 @@ from production_level_01_expansion_17 import (
     WEST_GATE_ID,
     WEST_JOURNEY_ID,
     WEST_LANDMARK_ID,
+    WEST_PRESENTATION_ID,
     WEST_SURVEY_ID,
 )
 from validate_expansion_14_contract import TERRAIN_SHA256
@@ -79,22 +81,44 @@ class ProductionLevelExpansion17Tests(unittest.TestCase):
             for x in range(terrain["x"], terrain["x"] + terrain["w"])
         }
         expected = (
-            (WEST_GATE_ID, (24, 119, 1, 3), WEST_LANDMARK_ID, (19, 119, 5, 2), WEST_SURVEY_ID, WEST_ARTIFACT_ID),
-            (ABYSS_GATE_ID, (114, 147, 1, 3), ABYSS_LANDMARK_ID, (120, 147, 8, 3), ABYSS_SURVEY_ID, ABYSS_ARTIFACT_ID),
+            (WEST_GATE_ID, (24, 119, 1, 3), WEST_LANDMARK_ID, (19, 119, 5, 2), WEST_SURVEY_ID, WEST_ARTIFACT_ID, WEST_PRESENTATION_ID),
+            (ABYSS_GATE_ID, (114, 147, 1, 3), ABYSS_LANDMARK_ID, (120, 147, 8, 3), ABYSS_SURVEY_ID, ABYSS_ARTIFACT_ID, ABYSS_PRESENTATION_ID),
         )
-        for gate_id, gate_rect, landmark_id, landmark_rect, survey_id, artifact_id in expected:
+        for gate_id, gate_rect, landmark_id, landmark_rect, survey_id, artifact_id, presentation_id in expected:
             gate = _by_id(self.map_data, "zones", gate_id)
             landmark = _by_id(self.map_data, "zones", landmark_id)
             survey = _by_id(self.map_data, "survey_targets", survey_id)
             self.assertEqual(gate_rect, tuple(gate[field] for field in ("x", "y", "w", "h")))
             self.assertEqual(landmark_rect, tuple(landmark[field] for field in ("x", "y", "w", "h")))
             self.assertEqual(artifact_id, survey["scan_subject_id"])
-            self.assertEqual("northwest_wreck_relay_console", survey["scan_presentation_id"])
+            self.assertEqual(presentation_id, survey["scan_presentation_id"])
             self.assertFalse({
                 (x, y)
                 for y in range(landmark["y"], landmark["y"] + landmark["h"])
                 for x in range(landmark["x"], landmark["x"] + landmark["w"])
             } & solids)
+
+    def test_transponders_explain_the_split_transfer_hub_coordinates(self) -> None:
+        investigation = self.map_data["wreck_network_investigations"][0]
+        self.assertEqual("Compare transfer-hub coordinates", investigation["analysis_label"])
+        self.assertEqual("Transfer hub coordinates recovered", investigation["analysis_result_label"])
+        self.assertIn("transfer hub", investigation["next_lead_label"].lower())
+
+        west = _by_id(self.map_data, "survey_targets", WEST_SURVEY_ID)
+        abyss = _by_id(self.map_data, "survey_targets", ABYSS_SURVEY_ID)
+        self.assertNotEqual(west["scan_presentation_id"], abyss["scan_presentation_id"])
+        self.assertEqual("Current-scoured navigation transponder", west["scan_subject_label"])
+        self.assertIn("western half", west["scan_subject_description"])
+        self.assertIn("West coordinate half", west["clue_label"])
+        self.assertEqual("Pressure-crushed navigation transponder", abyss["scan_subject_label"])
+        self.assertIn("eastern half", abyss["scan_subject_description"])
+        self.assertIn("East coordinate half", abyss["clue_label"])
+
+        west_journey = _by_id(self.map_data, "regional_journeys", WEST_JOURNEY_ID)
+        abyss_journey = _by_id(self.map_data, "regional_journeys", ABYSS_JOURNEY_ID)
+        for journey in (west_journey, abyss_journey):
+            self.assertIn("coordinate half", journey["expedition_lead"]["summary"])
+            self.assertIn("transfer-hub coordinates", journey["expedition_lead"]["active_guidance"])
 
     def test_lead_selection_never_owns_target_validity(self) -> None:
         forbidden = {"active", "eligible", "selected", "selected_lead_id", "visible"}

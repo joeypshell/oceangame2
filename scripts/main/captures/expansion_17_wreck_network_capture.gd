@@ -160,7 +160,7 @@ func _prepare_parallel_leads() -> bool:
 		and plan.get("eligible_ids") == [WEST_JOURNEY_ID, ABYSS_JOURNEY_ID]
 		and panel.get("lead_ids") == [WEST_JOURNEY_ID, ABYSS_JOURNEY_ID]
 		and _rows_name_both_leads(panel.get("row_texts", [])),
-		"night planning did not show both relay leads"
+		"night planning did not show both coordinate-transponder leads"
 	)
 
 
@@ -268,7 +268,7 @@ func _prepare_one_fragment_debrief() -> bool:
 	var result_text: String = _main._result_label.text if _main._result_label != null else ""
 	return _expect(
 		_main._expedition_day_state.phase == ExpeditionDayState.PHASE_DEBRIEF
-		and result_text.find("Remaining: Abyssal Shelf Relay") != -1,
+		and result_text.find("Remaining: Abyssal Coordinate Transponder") != -1,
 		"one-fragment boat feedback did not name the remaining lead"
 	)
 
@@ -282,8 +282,8 @@ func _prepare_analysis_debrief() -> bool:
 	var result_text: String = _main._result_label.text if _main._result_label != null else ""
 	return _expect(
 		_main._wreck_network_investigation.requires_analysis()
-		and result_text.find("Wreck fragments 2/2") != -1
-		and result_text.find("Space/USE: Triangulate wreck network") != -1,
+		and result_text.find("Transfer-hub coordinate halves 2/2") != -1
+		and result_text.find("Space/USE: Compare transfer-hub coordinates") != -1,
 		"two-fragment debrief omitted explicit analysis readiness"
 	)
 
@@ -294,8 +294,8 @@ func _complete_analysis() -> bool:
 	return _expect(
 		bool(analyzed.get("changed", false))
 		and _main._anomaly_survey.profile_state().has_completed_discovery(ANALYSIS_DISCOVERY_ID)
-		and result_text.find("Wreck network triangulated") != -1
-		and result_text.find("Next lead: transfer hub beyond mapped cave") != -1,
+		and result_text.find("Transfer hub coordinates recovered") != -1
+		and result_text.find("Destination: transfer hub beyond mapped cave") != -1,
 		"final analysis result or destination promise was not committed"
 	)
 
@@ -334,8 +334,8 @@ func _record_by_id(records: Array, record_id: String) -> Dictionary:
 func _rows_name_both_leads(rows: Array) -> bool:
 	return (
 		rows.size() == 2
-		and str(rows[0]).find("Western Chasm Relay") != -1
-		and str(rows[1]).find("Abyssal Shelf Relay") != -1
+		and str(rows[0]).find("Western Coordinate Transponder") != -1
+		and str(rows[1]).find("Abyssal Coordinate Transponder") != -1
 	)
 
 
