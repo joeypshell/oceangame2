@@ -43,7 +43,8 @@ func capture_pair(
 	capture_dir: String,
 	state_id: String,
 	camera_test: Dictionary,
-	allow_status_overlap := false
+	allow_status_overlap := false,
+	mobile_focus_shift_px := 0.0
 ) -> bool:
 	for spec in CAPTURE_SIZES:
 		var expected_size: Vector2i = spec["canvas_size"]
@@ -51,7 +52,7 @@ func capture_pair(
 		_main.get_window().size = spec["window_size"]
 		_mobile_controls.visible = show_touch
 		_main._held_cargo_hud.layout_for_size(Vector2(spec["window_size"]))
-		_frame_camera(camera_test)
+		_frame_camera(camera_test, float(mobile_focus_shift_px) if show_touch else 0.0)
 		await _settle_frames()
 		if not _verify_layout(show_touch, bool(allow_status_overlap)):
 			return false
@@ -65,7 +66,8 @@ func capture_pair(
 				str(image.get_size()),
 			])
 			return false
-		var filename := "%s_%s_%s.png" % [MAP_ID, state_id, str(spec["suffix"])]
+		var map_id := str(_main._world.map_id) if _main._world != null else MAP_ID
+		var filename := "%s_%s_%s.png" % [map_id, state_id, str(spec["suffix"])]
 		if not _save_capture(capture_dir, filename, image):
 			return false
 	return true
@@ -121,17 +123,17 @@ func _verify_layout(touch_visible: bool, allow_status_overlap: bool) -> bool:
 	return true
 
 
-func _frame_camera(camera_test: Dictionary) -> void:
+func _frame_camera(camera_test: Dictionary, focus_shift_px: float) -> void:
 	var tile_size: float = float(_main._world.tile_size)
 	var zoom := float(camera_test.get("zoom", 0.5))
 	var safe_offset_world := HUD_SAFE_FOCUS_OFFSET_PX / zoom
 	_camera.zoom = Vector2(zoom, zoom)
 	_camera.limit_left = -int(ceil(safe_offset_world))
 	_camera.limit_top = 0
-	_camera.limit_right = int(_main._world.map_pixel_size.x)
+	_camera.limit_right = int(_main._world.map_pixel_size.x) + int(ceil(maxf(focus_shift_px / zoom, 0.0)))
 	_camera.limit_bottom = int(_main._world.map_pixel_size.y)
 	_camera.position = Vector2(
-		float(camera_test.get("center_x", 0.0)) * tile_size - safe_offset_world,
+		float(camera_test.get("center_x", 0.0)) * tile_size - safe_offset_world + focus_shift_px / zoom,
 		float(camera_test.get("center_y", 0.0)) * tile_size
 	)
 	_camera.make_current()

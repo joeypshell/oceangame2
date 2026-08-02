@@ -19,13 +19,14 @@ func _run() -> void:
 	_test_expansion_14_boundary()
 	_test_expansion_16_boundary()
 	_test_expansion_17_boundary()
+	_test_expansion_18_boundary()
 	_test_unknown_checkpoint_fallback()
 	if not _failures.is_empty():
 		for failure in _failures:
 			push_error("Review checkpoint smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Review checkpoint smoke passed: expansion14=Ti2+Coil1 expansion16=Ti1+Rubber1+Coil1+Gel1 expansion17=two_fragments_unresolved persistence=false unknown=fresh.")
+	print("Review checkpoint smoke passed: expansion14=Ti2+Coil1 expansion16=Ti1+Rubber1+Coil1+Gel1 expansion17=two_fragments_unresolved expansion18=triangulated_before_entry persistence=false unknown=fresh.")
 	quit(0)
 
 
@@ -39,6 +40,8 @@ func _test_argument_contract() -> void:
 	_expect(ReviewProfileMode.checkpoint_from_web_query("?checkpoint=EXPANSION_16_START") == ReviewCheckpointFixture.EXPANSION_16_START, "Expansion 16 Web checkpoint was not normalized")
 	_expect(ReviewProfileMode.checkpoint_id(PackedStringArray(["--review-checkpoint=expansion_17_start"]), PackedStringArray()) == ReviewCheckpointFixture.EXPANSION_17_START, "Expansion 17 local checkpoint was not parsed")
 	_expect(ReviewProfileMode.checkpoint_from_web_query("?checkpoint=EXPANSION_17_START") == ReviewCheckpointFixture.EXPANSION_17_START, "Expansion 17 Web checkpoint was not normalized")
+	_expect(ReviewProfileMode.checkpoint_id(PackedStringArray(["--review-checkpoint=expansion_18_start"]), PackedStringArray()) == ReviewCheckpointFixture.EXPANSION_18_START, "Expansion 18 local checkpoint was not parsed")
+	_expect(ReviewProfileMode.checkpoint_from_web_query("?checkpoint=EXPANSION_18_START") == ReviewCheckpointFixture.EXPANSION_18_START, "Expansion 18 Web checkpoint was not normalized")
 	_expect(ReviewProfileMode.requested(local_args, PackedStringArray()), "checkpoint did not imply isolated review mode")
 	_expect(not ReviewProfileMode.persistence_enabled(false, true), "isolated review mode enabled persistence")
 
@@ -98,6 +101,30 @@ func _test_expansion_17_boundary() -> void:
 	_expect(investigation.get("committed_fragment_ids", []).is_empty(), "Expansion 17 checkpoint pre-committed a fragment")
 	_expect(investigation.get("remaining_fragment_ids", []).size() == 2, "Expansion 17 checkpoint did not expose both fragment leads")
 	_expect(not bool(investigation.get("analysis_ready", true)), "Expansion 17 checkpoint pre-enabled night analysis")
+	world.queue_free()
+
+
+func _test_expansion_18_boundary() -> void:
+	var profile := ExpansionProfileState.new("", false)
+	profile.load_profile()
+	var applied: Dictionary = ReviewCheckpointFixture.apply(ReviewCheckpointFixture.EXPANSION_18_START, profile)
+	var report: Dictionary = profile.report()
+	_expect(bool(applied.get("ready", false)), "Expansion 18 checkpoint did not apply: %s" % applied)
+	_expect(applied.get("map_path") == ReviewCheckpointFixture.EXPANSION_18_MAP_PATH, "Expansion 18 checkpoint did not require the full production level")
+	_expect(report.get("completed_projects", []).size() == ReviewCheckpointFixture.EXPANSION_18_PRIOR_PROJECT_IDS.size(), "Expansion 18 checkpoint did not complete exactly the prior project set")
+	_expect(profile.has_completed_discovery(ExpansionProfileState.WESTERN_CHASM_FRAGMENT_DISCOVERY_ID), "Expansion 18 checkpoint omitted the western fragment")
+	_expect(profile.has_completed_discovery(ExpansionProfileState.ABYSSAL_SHELF_FRAGMENT_DISCOVERY_ID), "Expansion 18 checkpoint omitted the abyssal fragment")
+	_expect(profile.has_completed_discovery(ExpansionProfileState.WRECK_NETWORK_TRIANGULATION_DISCOVERY_ID), "Expansion 18 checkpoint omitted triangulation")
+	_expect(not profile.has_completed_discovery(ExpansionProfileState.TRANSFER_HUB_NAVIGATION_CORE_DISCOVERY_ID), "Expansion 18 checkpoint pre-completed the navigation core")
+	_expect(profile.material_inventory().is_empty(), "Expansion 18 checkpoint retained unrelated recipe materials")
+	_expect(ReviewProfileMode.startup_report(true, ReviewCheckpointFixture.EXPANSION_18_START, true).find("id=expansion_18_start persistence=false") != -1, "Expansion 18 startup report omitted its isolated marker")
+	var world = WORLD_SCENE.instantiate()
+	world.map_path = ReviewCheckpointFixture.EXPANSION_18_MAP_PATH
+	get_root().add_child(world)
+	world.load_greybox()
+	var runtime := WreckNetworkInvestigationRuntime.new(profile)
+	var investigation: Dictionary = runtime.on_map_loaded(world)
+	_expect(bool(investigation.get("completed", false)), "Expansion 18 checkpoint did not start after triangulation: %s" % investigation)
 	world.queue_free()
 
 
