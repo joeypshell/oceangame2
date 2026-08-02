@@ -16,6 +16,7 @@ const COMMIT_NOTE := "Discovery committed at surface boat"
 const BLUEPRINT_COMMIT_NOTE := "Blueprint committed at surface boat"
 const REGIONAL_TARGET_TYPE := "regional"
 const RESOURCE_TARGET_TYPE := "resource"
+const HELD_DISCOVERY_CARGO_TARGET_TYPE := "held_discovery_cargo"
 const RESOURCE_COMMIT_NOTE := "Research committed at surface boat"
 
 var _progression_runtime
@@ -359,7 +360,7 @@ func _try_commit(world, player) -> Dictionary:
 	var metadata: Dictionary = commit.get("metadata", {})
 	_last_note = BLUEPRINT_COMMIT_NOTE if str(metadata.get("scan_reward_kind", "")) == "blueprint" else COMMIT_NOTE
 	_last_result = str(metadata.get("finding_label", "Discovery logged"))
-	if str(metadata.get("target_type", "")) == REGIONAL_TARGET_TYPE:
+	if str(metadata.get("target_type", "")) in [REGIONAL_TARGET_TYPE, HELD_DISCOVERY_CARGO_TARGET_TYPE]:
 		var next_lead := str(metadata.get("next_lead_label", "")).strip_edges()
 		if not next_lead.is_empty():
 			_last_result += "\n%s" % next_lead

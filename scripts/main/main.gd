@@ -77,6 +77,7 @@ const PlayerHealthState := preload("res://scripts/main/player_health_state.gd")
 const SortieState := preload("res://scripts/main/sortie_state.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
 const InteriorExpeditionTransitionState := preload("res://scripts/main/interior_expedition_transition_state.gd")
+const NavigationCoreRecoveryState := preload("res://scripts/main/navigation_core_recovery_state.gd")
 const WorldConnectorController := preload("res://scripts/main/world_connector_controller.gd")
 const AudioCuePlayer := preload("res://scripts/main/audio_cue_player.gd")
 const SmokeFeedbackAudioChecks := preload("res://scripts/main/smoke/smoke_feedback_audio_checks.gd")
@@ -256,6 +257,7 @@ var _expedition_plan_panel
 var _wreck_network_investigation
 var _timed_salvage
 var _interior_expedition_transition
+var _navigation_core
 var _world_connector
 var _audio_cues
 var _smoke_feedback_audio_checks
@@ -890,6 +892,7 @@ func _ready() -> void:
 	_material_project = MaterialProjectRuntime.new(_anomaly_survey.profile_state())
 	_refresh_active_tools()
 	_cutter_salvage = CutterSalvageController.new(_anomaly_survey.profile_state())
+	_navigation_core = NavigationCoreRecoveryState.new(_anomaly_survey.profile_state())
 	_biological_resources = BiologicalResourceController.new(_anomaly_survey.profile_state())
 	_cargo_collection = CargoCollectionController.new(self)
 	_map_selector_enabled = (not automated_review) and _review_map_selector_allowed(user_args, engine_args)
@@ -1318,6 +1321,7 @@ func _load_playable_map(
 	_player_health.begin_map_leg(preserve_sortie)
 	if continuous_sortie:
 		_interior_expedition_transition.apply_consumed(world)
+	_navigation_core.on_map_loaded(world)
 	player.position = world.get_entry_position(entry_id) if not entry_id.is_empty() and world.has_method("get_entry_position") else world.spawn_position
 	add_child(player)
 	_apply_durable_light_profile()
@@ -1447,6 +1451,7 @@ func _process(delta: float) -> void:
 		_last_status_note = str(survey_result["note"])
 	if bool(survey_result.get("committed", false)):
 		var discovery_id := str(survey_result.get("discovery_id", ""))
+		_navigation_core.on_discovery_committed(discovery_id)
 		_expedition_day_state.record_discovery(discovery_id)
 		var investigation_result: Dictionary = _wreck_network_investigation.on_discovery_committed(discovery_id)
 		if investigation_result.has("note"):
@@ -1587,6 +1592,7 @@ func _reset_run() -> void:
 
 	_world.reset_salvage()
 	_anomaly_survey.clear_unbanked("reset", _world)
+	_clear_navigation_core_unbanked("reset")
 	_pressure_zone.reset()
 	_oxygen_consumption_zone.reset()
 	_biological_resources.restore_material_cargo(_material_runtime, _world, _expedition_day_state, _hostiles, "reset")
@@ -1633,6 +1639,7 @@ func _reset_interior_expedition_to_boat() -> void:
 	if origin_map_path.is_empty():
 		origin_map_path = PRODUCTION_LEVEL_MAP_PATH
 	_anomaly_survey.clear_unbanked("reset", _world)
+	_clear_navigation_core_unbanked("reset")
 	_biological_resources.restore_material_cargo(
 		_material_runtime,
 		_world,
@@ -1812,6 +1819,7 @@ func _handle_oxygen_depleted() -> void:
 	if _sortie_state.failed:
 		return
 	_anomaly_survey.clear_unbanked("oxygen_failure", _world)
+	_clear_navigation_core_unbanked("oxygen_failure")
 	_pressure_zone.reset()
 	_oxygen_consumption_zone.reset()
 	_play_feedback_cue("oxygen_failure", "oxygen_failure")
@@ -1859,6 +1867,7 @@ func _apply_combat_damage(amount: int, source_id: String) -> Dictionary:
 
 func _handle_combat_defeat(_source_id: String) -> void:
 	_anomaly_survey.clear_unbanked("combat_defeat", _world)
+	_clear_navigation_core_unbanked("combat_defeat")
 	_pressure_zone.reset()
 	_oxygen_consumption_zone.reset()
 	_oxygen_rest_feedback.reset()
@@ -1898,6 +1907,7 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 	_shock_prod.reset()
 	_combat_feedback_seconds = 0.0
 	_anomaly_survey.clear_unbanked("hazard", _world)
+	_clear_navigation_core_unbanked("hazard")
 	_pressure_zone.reset()
 	_oxygen_consumption_zone.reset()
 	var material_drop: Dictionary = _biological_resources.restore_material_cargo(_material_runtime, _world, _expedition_day_state, _hostiles, "hazard")
@@ -2598,9 +2608,11 @@ func _update_held_cargo_hud() -> void:
 			_oxygen_consumption_zone.report() if _oxygen_consumption_zone != null else {},
 			str(_active_tool_runtime.report().get("selected_tool_id", "")) if _active_tool_runtime != null else ""
 		)
+		var sortie_report: Dictionary = _sortie_state.report() if _sortie_state != null else {}
+		sortie_report["held_navigation_core"] = _navigation_core.held_count() if _navigation_core != null else 0
 		_held_cargo_hud.refresh(
 			_material_runtime.report() if _material_runtime != null else {},
-			_sortie_state.report() if _sortie_state != null else {},
+			sortie_report,
 			_held_salvage_capacity(),
 			owned_capability_ids,
 			equipment_context
@@ -2673,7 +2685,22 @@ func _held_salvage_capacity() -> int:
 
 
 func _held_cargo_count() -> int:
-	return _sortie_state.held_salvage + (_material_runtime.held_count() if _material_runtime != null else 0)
+	return (
+		_sortie_state.held_salvage
+		+ (_material_runtime.held_count() if _material_runtime != null else 0)
+		+ (_navigation_core.held_count() if _navigation_core != null else 0)
+	)
+
+
+func _clear_navigation_core_unbanked(reason: String) -> Dictionary:
+	var result: Dictionary = _navigation_core.clear_unbanked(_world, reason)
+	var cleared: Dictionary = result.get("cleared", {})
+	if not cleared.is_empty():
+		_interior_expedition_transition.forget_consumed(
+			str(cleared.get("source_map_id", "")),
+			str(cleared.get("target_id", ""))
+		)
+	return result
 
 
 func _oxygen_capacity_seconds() -> float:

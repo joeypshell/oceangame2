@@ -39,7 +39,7 @@ deferred.
 
 Legacy player-facing behavior changes intentionally:
 
-- `Q` is no longer scanner-only; it uses the selected tool.
+- `Space/USE` uses the selected tool; `Q` is not a separate tool action.
 - `Space` is no longer a separate player-facing shock-prod attack.
 - proximity is never a cutter-use input.
 
@@ -81,7 +81,7 @@ One compact unframed or minimally framed control shows:
 
 - selected tool icon or stable symbol
 - short selected label
-- `Tab Tool | Q Use` on desktop
+- `Tab Tool | Space/USE` on desktop
 
 The mobile testing overlay exposes `TOOL` and `USE` in reachable positions.
 Do not add an inventory grid, recipe list, or permanent explanatory panel.

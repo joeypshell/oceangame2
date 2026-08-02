@@ -86,6 +86,18 @@ func apply_consumed(world) -> Array[String]:
 	return applied
 
 
+func forget_consumed(map_id: String, item_id: String) -> bool:
+	if map_id.is_empty() or item_id.is_empty() or not _consumed_ids_by_map.has(map_id):
+		return false
+	var consumed: Dictionary = _consumed_ids_by_map[map_id]
+	var changed := consumed.erase(item_id)
+	if consumed.is_empty():
+		_consumed_ids_by_map.erase(map_id)
+	else:
+		_consumed_ids_by_map[map_id] = consumed
+	return changed
+
+
 func mark_failed() -> void:
 	if not _round_trip.is_empty():
 		_phase = PHASE_FAILED

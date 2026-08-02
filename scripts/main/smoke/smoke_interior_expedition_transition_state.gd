@@ -6,6 +6,7 @@ const CutterSalvageController := preload("res://scripts/main/cutter_salvage_cont
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
 const MaterialRuntimeController := preload("res://scripts/main/material_runtime_controller.gd")
+const NavigationCoreRecoveryState := preload("res://scripts/main/navigation_core_recovery_state.gd")
 
 const EXTERIOR_MAP_ID := "production_level_01"
 const INTERIOR_MAP_ID := "transfer_hub_interior_01"
@@ -182,6 +183,7 @@ func _attach_profile(main, profile) -> void:
 	main._material_runtime = MaterialRuntimeController.new(profile)
 	main._material_project = MaterialProjectRuntime.new(profile)
 	main._cutter_salvage = CutterSalvageController.new(profile)
+	main._navigation_core = NavigationCoreRecoveryState.new(profile)
 
 
 func _connector_by_id(main, connector_id: String) -> Dictionary:

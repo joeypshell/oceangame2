@@ -114,7 +114,7 @@ func update(target: Dictionary, delta: float, occupied_cargo: int, cargo_capacit
 			"state": "ready",
 			"id": target_id,
 			"label": _display_label(target),
-			"note": "%s | Q Use cutter" % _title_label(_display_label(target)),
+			"note": "%s | Space/USE cutter" % _title_label(_display_label(target)),
 			"progress_ratio": 0.0,
 		}
 	if target_id != _active_id:
