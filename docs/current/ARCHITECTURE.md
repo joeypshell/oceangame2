@@ -4,7 +4,7 @@
 
 The current project is a Godot 4.7 side-view ocean salvage prototype for proving the source-driven map, terrain, validation, capture, and gameplay workflow that will support a finished small diver game.
 
-The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`. Expansions 13-16 are complete with owner GO. Expansion 17 Wreck Network Triangulation is implemented and technically verified on exact runtime `075a450`; #1167 remains its owner GO/HOLD gate. Its two source-authored transponders compose existing planner, capability, scanner, pending-discovery, boat-commit, profile, night-debrief, and HUD owners without moving progression rules into the map or `main.gd`.
+The long-range product roadmap is `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`. Expansions 13-17 are complete with owner GO. Expansion 17 Wreck Network Triangulation closed through #1167 on exact reviewed runtime `075a450`. Its two source-authored transponders compose existing planner, capability, scanner, pending-discovery, boat-commit, profile, night-debrief, and HUD owners without moving progression rules into the map or `main.gd`.
 
 ## Source Of Truth
 

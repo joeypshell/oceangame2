@@ -2,8 +2,8 @@
 
 Date: 2026-07-31
 
-Status: Expansions 01-16 are complete with player GO. Expansion 17 is
-technically verified after owner-HOLD corrections; #1167 remains its player gate.
+Status: Expansions 01-17 are complete with player GO. Expansion 17 closed
+through #1167 after bounded owner-HOLD corrections on runtime `075a450`.
 
 ## Decision
 
@@ -91,7 +91,7 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Finish Expansion 17 through milestone #43 owner gate #1167.
+Run a bounded roadmap/backlog audit before selecting the next expansion.
 
 ### Proposed
 
@@ -431,8 +431,8 @@ existing tool use, and exact-once boat commitment without terrain or global-syst
 
 ### Expansion 17: Wreck Network Triangulation
 
-Status: Technically verified on corrected runtime `075a450`; milestone #43
-remains open only for owner GO/HOLD gate #1167.
+Status: Complete with owner GO through #1167 on corrected runtime `075a450`;
+milestone #43 is closed. Expansion 18 remains unselected.
 
 Goal: turn the far-west network discovery into a two-lead, multi-return investigation
 that makes the existing capability set feel like a useful expedition toolkit.

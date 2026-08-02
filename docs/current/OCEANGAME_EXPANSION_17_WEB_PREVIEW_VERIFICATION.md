@@ -95,9 +95,9 @@ landscape-mobile canvas placement, touch alignment, or isolated-profile
 behavior. The regenerated normal full-level images are pixel-identical to the
 accepted baseline, and slices 01-04 remain clean.
 
-## Owner Re-Test
+## Owner Review Path And Result
 
-Issue #1167 remains open for the real GO/HOLD decision:
+The exact build was presented through #1167 for the real GO/HOLD decision:
 
 1. Open the focused checkpoint URL and enter night with `N` or `DAY`.
 2. Confirm the recorder's two-coordinate-half explanation gives both leads a
@@ -111,8 +111,9 @@ Issue #1167 remains open for the real GO/HOLD decision:
 7. Decide whether the two-place investigation now feels connected enough to
    justify another expedition.
 
-This technical PASS does not declare the player journey GO and does not select
-Expansion 18.
+This technical PASS did not by itself declare the player journey GO. The owner
+later completed the corrected review and gave GO through #1167; see
+`OCEANGAME_EXPANSION_17_CLOSEOUT.md`. Expansion 18 remains unselected.
 
 ## Verification
 
