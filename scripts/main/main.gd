@@ -76,6 +76,7 @@ const MaterialProjectRuntime := preload("res://scripts/main/material_project_run
 const PlayerHealthState := preload("res://scripts/main/player_health_state.gd")
 const SortieState := preload("res://scripts/main/sortie_state.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
+const InteriorExpeditionTransitionState := preload("res://scripts/main/interior_expedition_transition_state.gd")
 const WorldConnectorController := preload("res://scripts/main/world_connector_controller.gd")
 const AudioCuePlayer := preload("res://scripts/main/audio_cue_player.gd")
 const SmokeFeedbackAudioChecks := preload("res://scripts/main/smoke/smoke_feedback_audio_checks.gd")
@@ -126,6 +127,7 @@ const ORGANIC_MAP_PATH := MapCatalog.ORGANIC_MAP_PATH
 const FULL_SKETCH_MAP_PATH := MapCatalog.FULL_SKETCH_MAP_PATH
 const PRODUCTION_LEVEL_MAP_PATH := MapCatalog.PRODUCTION_LEVEL_MAP_PATH
 const PRODUCTION_LEVEL_MAP_ID := "production_level_01"
+const CANONICAL_BOAT_ENTRY_ID := "surface_boat_entry"
 const PRODUCTION_SLICE_MAP_PATH := MapCatalog.PRODUCTION_SLICE_MAP_PATH
 const PRODUCTION_SLICE_02_MAP_PATH := MapCatalog.PRODUCTION_SLICE_02_MAP_PATH
 const PRODUCTION_SLICE_03_MAP_PATH := MapCatalog.PRODUCTION_SLICE_03_MAP_PATH
@@ -253,6 +255,7 @@ var _expedition_plan_report := {}
 var _expedition_plan_panel
 var _wreck_network_investigation
 var _timed_salvage
+var _interior_expedition_transition
 var _world_connector
 var _audio_cues
 var _smoke_feedback_audio_checks
@@ -341,6 +344,7 @@ func _ready() -> void:
 	_daily_conditions = DailyConditionState.new()
 	_progression_runtime = ProgressionRuntimeController.new(_session_progression)
 	_timed_salvage = TimedSalvageController.new()
+	_interior_expedition_transition = InteriorExpeditionTransitionState.new()
 	_world_connector = WorldConnectorController.new()
 	_audio_cues = AudioCuePlayer.new()
 	add_child(_audio_cues)
@@ -1277,9 +1281,18 @@ func _create_world(map_path: String, show_debug_overlay: bool) -> Node:
 	world.load_greybox()
 	return world
 
-func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := "", status_note := "", preserve_sortie := false) -> void:
+func _load_playable_map(
+	map_path: String,
+	show_debug_overlay: bool,
+	entry_id := "",
+	status_note := "",
+	preserve_sortie := false,
+	continuous_sortie := false
+) -> void:
 	if not preserve_sortie and _world != null and _material_runtime != null:
 		_biological_resources.restore_material_cargo(_material_runtime, _world, _expedition_day_state, _hostiles, "map_reload")
+	if not preserve_sortie and _interior_expedition_transition != null:
+		_interior_expedition_transition.reset()
 	_clear_loaded_review_nodes()
 	var world := _create_world(map_path, show_debug_overlay)
 	var player := PLAYER_SCENE.instantiate()
@@ -1292,14 +1305,19 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_daily_conditions.sync(world.get_daily_conditions(), _expedition_day_state.day_number)
 	_material_runtime.on_map_loaded(world, _expedition_day_state, _daily_conditions.current_ids())
 	_material_project.on_map_loaded(world)
-	_refresh_expedition_plan()
+	_refresh_expedition_plan(continuous_sortie)
 	_refresh_active_tools()
 	_cutter_salvage.on_map_loaded(world)
 	_hostiles.on_map_loaded(world, preserve_sortie)
 	_biological_resources.on_map_loaded(world, preserve_sortie)
 	_shock_prod.reset()
-	_sortie_state.begin_map_leg(str(world.map_id), entry_id, _oxygen_capacity_seconds(), preserve_sortie)
+	if continuous_sortie:
+		_sortie_state.begin_continuous_map_leg(str(world.map_id), entry_id)
+	else:
+		_sortie_state.begin_map_leg(str(world.map_id), entry_id, _oxygen_capacity_seconds(), preserve_sortie)
 	_player_health.begin_map_leg(preserve_sortie)
+	if continuous_sortie:
+		_interior_expedition_transition.apply_consumed(world)
 	player.position = world.get_entry_position(entry_id) if not entry_id.is_empty() and world.has_method("get_entry_position") else world.spawn_position
 	add_child(player)
 	_apply_durable_light_profile()
@@ -1309,13 +1327,14 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	if player.has_method("snap_camera"):
 		player.snap_camera()
 
-	_banked_salvage = 0
-	_total_salvage = world.get_total_salvage_count()
-	if _cutter_salvage.has_cutter():
-		_total_salvage += _cutter_salvage.available_target_count(world)
-	_banked_salvage_ids = []
-	_banked_score = 0
-	_completion_oxygen_bonus = 0
+	if not continuous_sortie:
+		_banked_salvage = 0
+		_total_salvage = world.get_total_salvage_count()
+		if _cutter_salvage.has_cutter():
+			_total_salvage += _cutter_salvage.available_target_count(world)
+		_banked_salvage_ids = []
+		_banked_score = 0
+		_completion_oxygen_bonus = 0
 	_current_gate.reset()
 	_moving_hazards.reset(world, _daily_conditions.current_ids(), preserve_sortie)
 	_pry_salvage.reset()
@@ -1328,14 +1347,16 @@ func _load_playable_map(map_path: String, show_debug_overlay: bool, entry_id := 
 	_refresh_route_commitment_feedback(world)
 	_refresh_salvage_route_metadata(world)
 	_refresh_destination_payoff_feedback(world)
-	_banked_validation_route_counts = {}
+	if not continuous_sortie:
+		_banked_validation_route_counts = {}
 	_hazard_cooldown_seconds = 0.0
 	_hazard_feedback_seconds = 0.0
 	_hazard_interactions_enabled = true
 	_hazard_warning_id = ""
 	_reset_hazard_feedback_cues()
 	_reset_oxygen_feedback_cues()
-	_run_complete = false
+	if not continuous_sortie:
+		_run_complete = false
 	_last_status_note = status_note
 	_create_review_overlay(world)
 	_update_status_label()
@@ -1556,6 +1577,12 @@ func _unhandled_input(event: InputEvent) -> void:
 func _reset_run() -> void:
 	if _world == null or _player == null:
 		return
+	if (
+		_interior_expedition_transition != null
+		and _interior_expedition_transition.requires_canonical_reload(str(_world.map_id))
+	):
+		_reset_interior_expedition_to_boat()
+		return
 	_refresh_active_tools()
 
 	_world.reset_salvage()
@@ -1589,6 +1616,7 @@ func _reset_run() -> void:
 	_reset_hazard_feedback_cues()
 	_reset_oxygen_feedback_cues()
 	_run_complete = false
+	_interior_expedition_transition.reset()
 	_last_status_note = "Reset"
 	_player.modulate = Color.WHITE
 	_player.position = _world.spawn_position
@@ -1598,6 +1626,28 @@ func _reset_run() -> void:
 	if _player.has_method("snap_camera"):
 		_player.snap_camera()
 	_update_status_label()
+
+
+func _reset_interior_expedition_to_boat() -> void:
+	var origin_map_path: String = _interior_expedition_transition.origin_map_path()
+	if origin_map_path.is_empty():
+		origin_map_path = PRODUCTION_LEVEL_MAP_PATH
+	_anomaly_survey.clear_unbanked("reset", _world)
+	_biological_resources.restore_material_cargo(
+		_material_runtime,
+		_world,
+		_expedition_day_state,
+		_hostiles,
+		"reset"
+	)
+	_sortie_state.clear_held()
+	_interior_expedition_transition.reset()
+	_load_playable_map(
+		origin_map_path,
+		_debug_overlay_enabled,
+		CANONICAL_BOAT_ENTRY_ID,
+		"Reset"
+	)
 
 
 func _try_world_connector_transition() -> bool:
@@ -1618,13 +1668,43 @@ func _try_world_connector_transition() -> bool:
 		_last_status_note = "Connector unavailable"
 		_update_status_label()
 		return false
+	var transition: Dictionary = _interior_expedition_transition.prepare_transition(
+		connector,
+		str(_world.map_id),
+		str(_world.map_path),
+		Callable(_anomaly_survey.profile_state(), "has_completed_discovery")
+	)
+	if not bool(transition.get("allowed", false)):
+		_last_status_note = str(transition.get("note", "Connector unavailable"))
+		_update_status_label()
+		return false
+	var continuous_sortie := bool(transition.get("continuous", false))
+	if continuous_sortie:
+		var consumed_salvage_ids: Array[String] = _sortie_state.held_salvage_ids.duplicate()
+		consumed_salvage_ids.append_array(_banked_salvage_ids)
+		_interior_expedition_transition.capture_consumed(_world, consumed_salvage_ids)
 
 	var destination_map_id := str(connector.get("destination_map_id", "")).strip_edges()
 	var destination_entry_id := str(connector.get("destination_entry_id", "")).strip_edges()
 	var arrival_note: String = _world_connector.arrival_note(connector)
 	_anomaly_survey.on_map_transition(destination_map_id)
 	_expedition_day_state.on_map_transition(destination_map_id)
-	_load_playable_map(destination_map_path, _debug_overlay_enabled, destination_entry_id, arrival_note, true)
+	_load_playable_map(
+		destination_map_path,
+		_debug_overlay_enabled,
+		destination_entry_id,
+		arrival_note,
+		true,
+		continuous_sortie
+	)
+	if continuous_sortie:
+		var arrival: Dictionary = _interior_expedition_transition.complete_arrival(str(_world.map_id))
+		if str(arrival.get("reason", "")) == "arrival_mismatch":
+			_sortie_state.mark_failed("transition_failure")
+			_last_status_note = "Transfer Hub transition failed - press R"
+			_player.set_physics_process(false)
+			_update_status_label()
+			return false
 	return true
 
 
@@ -1752,6 +1832,7 @@ func _handle_oxygen_depleted() -> void:
 	_sortie_state.oxygen_seconds = _oxygen_capacity_seconds()
 	_reset_oxygen_feedback_cues()
 	_sortie_state.mark_failed("oxygen_failure")
+	_interior_expedition_transition.mark_failed()
 	_expedition_day_state.record_failure("oxygen_depleted")
 	_hazard_cooldown_seconds = HAZARD_COOLDOWN_SECONDS
 	_player.global_position = _world.spawn_position
@@ -1793,6 +1874,7 @@ func _handle_combat_defeat(_source_id: String) -> void:
 		_world.restore_salvage(_sortie_state.clear_held())
 	_last_status_note = "Injured - surfaced, press R"
 	_sortie_state.mark_failed("combat_defeat")
+	_interior_expedition_transition.mark_failed()
 	_expedition_day_state.record_failure("combat_defeat")
 	_player.global_position = _world.spawn_position
 	_player.set_physics_process(false)
@@ -2195,7 +2277,11 @@ func _progression_container_prompt() -> String:
 func _world_connector_prompt() -> String:
 	if _world_connector == null or _world == null or _player == null or _run_complete or _sortie_state.failed:
 		return ""
-	return _world_connector.prompt_for(_world, _player.global_position)
+	return _world_connector.prompt_for(
+		_world,
+		_player.global_position,
+		Callable(_anomaly_survey.profile_state(), "has_completed_discovery")
+	)
 
 
 func _route_commitment_overlay_text(show_step_cue := true) -> String:
@@ -2615,7 +2701,7 @@ func _update_progression_project_tracker() -> void:
 	)
 
 
-func _refresh_expedition_plan() -> Dictionary:
+func _refresh_expedition_plan(preserve_selection := false) -> Dictionary:
 	if _world == null or _anomaly_survey == null or _material_project == null:
 		_expedition_plan_report = {"status": "unavailable", "source_lead_count": 0}
 		return _expedition_plan_report.duplicate(true)
@@ -2630,7 +2716,7 @@ func _refresh_expedition_plan() -> Dictionary:
 		int(_expedition_plan_report.get("source_lead_count", 0)) > 0
 		or str(_world.map_id) == PRODUCTION_LEVEL_MAP_ID
 	)
-	if _expedition_plan_state != null and source_is_authoritative:
+	if _expedition_plan_state != null and source_is_authoritative and not preserve_selection:
 		_expedition_plan_state.reconcile(_expedition_plan_report.get("eligible_ids", []))
 	_update_expedition_plan_panel()
 	return _expedition_plan_report.duplicate(true)

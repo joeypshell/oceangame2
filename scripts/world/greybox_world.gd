@@ -627,6 +627,9 @@ func _world_connector_runtime_info(zone: Dictionary) -> Dictionary:
 		"destination_map_path": str(zone.get("destination_map_path", "")),
 		"destination_entry_id": str(zone.get("destination_entry_id", "")),
 		"connector_direction": str(zone.get("connector_direction", "")),
+		"connector_kind": str(zone.get("connector_kind", "")),
+		"paired_connector_id": str(zone.get("paired_connector_id", "")),
+		"required_discovery_id": str(zone.get("required_discovery_id", "")),
 	}
 
 
