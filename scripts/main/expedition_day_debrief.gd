@@ -37,13 +37,14 @@ static func handle_day_key(main) -> Dictionary:
 	if main._expedition_day_state.phase != ExpeditionDayState.PHASE_DEBRIEF:
 		return ExpeditionDayPresentation.try_request_voluntary_end(main)
 	if main._wreck_network_investigation != null and main._wreck_network_investigation.requires_analysis():
-		main._last_status_note = "Analyze wreck network before starting the next day"
-		main._update_status_label()
-		return {
-			"changed": false,
-			"reason": "analysis_required",
-			"note": main._last_status_note,
-		}
+		var analysis_result := resolve_wreck_network_night_payoff(main)
+		if not bool(analysis_result.get("changed", false)):
+			main._update_status_label()
+			return {
+				"changed": false,
+				"reason": "analysis_save_failed",
+				"note": main._last_status_note,
+			}
 	var plan_report: Dictionary = main._refresh_expedition_plan()
 	if _planner_requires_selection(main, plan_report):
 		main._last_status_note = "Pin an expedition plan before starting the next day"
@@ -78,8 +79,6 @@ static func handle_debrief_input(main, event: InputEvent) -> Dictionary:
 	if main._expedition_day_state.phase != ExpeditionDayState.PHASE_DEBRIEF:
 		return {"changed": false, "reason": "wrong_phase"}
 	var repeated_key := event is InputEventKey and (event as InputEventKey).echo
-	if event.is_action_pressed("active_tool_use") and not repeated_key:
-		return _analyze_wreck_network(main)
 	if event.is_action_pressed("active_tool_cycle_next") and not repeated_key:
 		return _cycle_plan_highlight(main)
 	if event is InputEventKey:
@@ -90,7 +89,7 @@ static func handle_debrief_input(main, event: InputEvent) -> Dictionary:
 
 
 static func _supported_keycode(event: InputEventKey) -> Key:
-	for candidate in [KEY_TAB, KEY_E, KEY_N, KEY_P, KEY_SPACE]:
+	for candidate in [KEY_TAB, KEY_E, KEY_N, KEY_P]:
 		if event.keycode == candidate or event.physical_keycode == candidate:
 			return candidate
 	return event.keycode
@@ -105,8 +104,6 @@ static func handle_debrief_key(main, keycode: Key) -> Dictionary:
 		return _cycle_plan_highlight(main)
 	if keycode == KEY_E:
 		return _pin_highlighted_plan(main)
-	if keycode == KEY_SPACE:
-		return _analyze_wreck_network(main)
 	if keycode == KEY_N:
 		return handle_day_key(main)
 	if keycode != KEY_P or main._material_project == null:
@@ -137,9 +134,11 @@ static func _cycle_plan_highlight(main) -> Dictionary:
 	return result
 
 
-static func _analyze_wreck_network(main) -> Dictionary:
+static func resolve_wreck_network_night_payoff(main) -> Dictionary:
 	if main._wreck_network_investigation == null:
 		return {"changed": false, "reason": "investigation_unavailable"}
+	if not main._wreck_network_investigation.requires_analysis():
+		return {"changed": false, "status": "not_ready"}
 	var result: Dictionary = main._wreck_network_investigation.try_analyze(
 		str(main._expedition_day_state.phase)
 	)
@@ -149,9 +148,6 @@ static func _analyze_wreck_network(main) -> Dictionary:
 	if bool(result.get("changed", false)):
 		var state: Dictionary = result.get("state", {})
 		main._expedition_day_state.record_discovery(str(state.get("analysis_discovery_id", "")))
-		if main.has_method("_refresh_expedition_plan"):
-			main._refresh_expedition_plan()
-	main._update_status_label()
 	return result
 
 
@@ -335,13 +331,15 @@ static func _enter_debrief(main, reason: String) -> void:
 	if reason == "voluntary" and main._world != null and main._player != null and main._world.is_inside_boat(main._player.global_position):
 		_commit_boat_materials(main)
 	main._expedition_day_state.end_day(reason)
+	var analysis_result := resolve_wreck_network_night_payoff(main)
 	if main.has_method("_refresh_expedition_plan"):
 		main._refresh_expedition_plan()
 	main._run_complete = false
 	main._sortie_state.failed = false
 	main._sortie_state.failure_reason = ""
 	main._sortie_state.active = false
-	main._last_status_note = "Day complete"
+	if not bool(analysis_result.get("changed", false)) and str(analysis_result.get("status", "")) != "storage_error":
+		main._last_status_note = "Day complete"
 	if main._player != null:
 		main._player.set_physics_process(false)
 		if main._player.has_method("reset_motion"):

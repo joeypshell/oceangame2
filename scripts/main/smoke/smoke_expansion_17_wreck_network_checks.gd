@@ -55,7 +55,7 @@ func _smoke_expansion_17_wreck_network_and_quit() -> void:
 	var day_report: Dictionary = _main._expedition_day_state.report()
 	var oxygen := _oxygen_seconds
 	cleanup_profile_storage_17()
-	print("Expansion 17 wreck-network smoke passed: artifacts=%s,%s selected=%s selection_independent=true cancel_progress=%.2f cancel_on_leave=true pending_cleanup=hazard pending_ids=%s committed_ids=%s exact_once=true readiness=analysis_ready analysis=%s day=%d oxygen=%.1f score=%d materials=%s profile_discoveries=%d reload=true result=\"%s\"." % [
+	print("Expansion 17 wreck-network smoke passed: artifacts=%s,%s selected=%s selection_independent=true cancel_progress=%.2f cancel_on_leave=true pending_cleanup=hazard pending_ids=%s committed_ids=%s exact_once=true night_payoff=automatic analysis=%s day=%d oxygen=%.1f score=%d materials=%s profile_discoveries=%d reload=true result=\"%s\"." % [
 		WEST_SURVEY_ID_17,
 		ABYSS_SURVEY_ID_17,
 		_selected_lead_17,
@@ -199,33 +199,42 @@ func _complete_abyssal_fragment() -> bool:
 
 
 func _analyze_and_verify_reload() -> bool:
-	var requested: Dictionary = ExpeditionDayDebrief17.handle_day_key(_main)
-	_main._process(0.0)
-	if not _require(bool(requested.get("requested", false)) and _main._result_label.text.find("Space/USE: Compare transfer-hub coordinates") != -1, "analysis-ready debrief omitted the explicit action"):
-		return false
-	var blocked: Dictionary = ExpeditionDayDebrief17.handle_debrief_key(_main, KEY_N)
-	if not _require(blocked.get("reason") == "analysis_required", "next day bypassed explicit analysis"):
-		return false
 	var profile = _main._anomaly_survey.profile_state()
 	var score_before := int(_main._banked_score)
 	var materials_before: Dictionary = profile.material_inventory()
-	_use_active_tool_for_smoke()
+	var requested: Dictionary = ExpeditionDayDebrief17.handle_day_key(_main)
+	_main._process(0.0)
 	_analysis_result_17 = _main._wreck_network_investigation.result_text()
-	_use_active_tool_for_smoke()
+	var debrief_text: String = _main._result_label.text
+	if not _require(
+		bool(requested.get("requested", false))
+		and not _main._wreck_network_investigation.requires_analysis()
+		and profile.has_completed_discovery(ANALYSIS_DISCOVERY_ID_17)
+		and _main._expedition_day_state.committed_discovery_ids.has(ANALYSIS_DISCOVERY_ID_17)
+		and debrief_text.find("Transfer hub coordinates recovered") != -1
+		and debrief_text.find(ANALYSIS_PROMISE_17) != -1
+		and debrief_text.find("Space/USE") == -1,
+		"night did not automatically present the coordinate payoff"
+	):
+		return false
+	var ignored_use: Dictionary = ExpeditionDayDebrief17.handle_debrief_key(_main, KEY_SPACE)
+	if not _require(ignored_use.get("reason") == "ignored", "Space remained a separate night-analysis command"):
+		return false
+	var next_day: Dictionary = ExpeditionDayDebrief17.handle_debrief_key(_main, KEY_N)
 	var reloaded := ProfileState.new(PROFILE_PATH_17, true)
 	var load: Dictionary = reloaded.load_profile()
 	return _require(
 		profile.report().get("completed_discoveries", []).count(ANALYSIS_DISCOVERY_ID_17) == 1
 		and _analysis_result_17.find("Transfer hub coordinates recovered") != -1
 		and _analysis_result_17.find(ANALYSIS_PROMISE_17) != -1
-		and _main._result_label.text.find(ANALYSIS_PROMISE_17) != -1
+		and bool(next_day.get("changed", false))
 		and int(_main._banked_score) == score_before
 		and profile.material_inventory() == materials_before
 		and load.get("status") == "loaded"
 		and reloaded.has_completed_discovery(WEST_FRAGMENT_ID_17)
 		and reloaded.has_completed_discovery(ABYSS_FRAGMENT_ID_17)
 		and reloaded.has_completed_discovery(ANALYSIS_DISCOVERY_ID_17),
-		"analysis result, cost, exact-once state, or profile reload drifted"
+		"automatic analysis result, next-day flow, cost, exact-once state, or profile reload drifted"
 	)
 
 

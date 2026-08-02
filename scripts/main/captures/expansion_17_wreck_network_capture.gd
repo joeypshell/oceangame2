@@ -76,11 +76,7 @@ func capture_and_quit(capture_dir: String) -> void:
 		return
 	if not _complete_and_commit(ABYSS_SURVEY_ID, ABYSS_FRAGMENT_ID):
 		return
-	if not _prepare_analysis_debrief():
-		return
-	if not await _renderer.capture_pair(capture_dir, "night_analysis_ready", camera_tests[CAMERA_IDS["analysis"]]):
-		return
-	if not _complete_analysis():
+	if not _prepare_automatic_analysis_debrief():
 		return
 	if not await _renderer.capture_pair(capture_dir, "night_analysis_result", camera_tests[CAMERA_IDS["analysis"]]):
 		return
@@ -273,7 +269,7 @@ func _prepare_one_fragment_debrief() -> bool:
 	)
 
 
-func _prepare_analysis_debrief() -> bool:
+func _prepare_automatic_analysis_debrief() -> bool:
 	if not _main._expedition_day_state.request_end_day("voluntary"):
 		_fail("could not request the analysis debrief")
 		return false
@@ -281,22 +277,13 @@ func _prepare_analysis_debrief() -> bool:
 	_main._update_status_label()
 	var result_text: String = _main._result_label.text if _main._result_label != null else ""
 	return _expect(
-		_main._wreck_network_investigation.requires_analysis()
-		and result_text.find("Transfer-hub coordinate halves 2/2") != -1
-		and result_text.find("Space/USE: Compare transfer-hub coordinates") != -1,
-		"two-fragment debrief omitted explicit analysis readiness"
-	)
-
-
-func _complete_analysis() -> bool:
-	var analyzed: Dictionary = ExpeditionDayDebrief.handle_debrief_key(_main, KEY_SPACE)
-	var result_text: String = _main._result_label.text if _main._result_label != null else ""
-	return _expect(
-		bool(analyzed.get("changed", false))
+		not _main._wreck_network_investigation.requires_analysis()
 		and _main._anomaly_survey.profile_state().has_completed_discovery(ANALYSIS_DISCOVERY_ID)
+		and _main._expedition_day_state.committed_discovery_ids.has(ANALYSIS_DISCOVERY_ID)
 		and result_text.find("Transfer hub coordinates recovered") != -1
-		and result_text.find("Destination: transfer hub beyond mapped cave") != -1,
-		"final analysis result or destination promise was not committed"
+		and result_text.find("Destination: transfer hub beyond mapped cave") != -1
+		and result_text.find("Space/USE") == -1,
+		"night did not automatically commit one readable coordinate result"
 	)
 
 
