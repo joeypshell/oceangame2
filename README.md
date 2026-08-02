@@ -2,7 +2,7 @@
 
 `oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
 
-The compact diver foundation and OceanGame Expansions 01-17 are complete with player GO. Expansion 18 is selected as one exceptional Transfer Hub interior expedition that preserves pressure across entry and return; its implementation milestone remains uncreated. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
+The compact diver foundation and OceanGame Expansions 01-17 are complete with player GO. Expansion 18 is active in milestone #44 as one exceptional Transfer Hub interior expedition that preserves pressure across entry and return. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
 
 ## Project Goal
 
@@ -24,7 +24,7 @@ Build a small side-view salvage game that proves:
 
 ## Planning Docs
 
-[Milestone #43](https://github.com/joeypshell/oceangame2/milestone/43) and Expansion 17 are complete with owner GO on exact reviewed runtime `075a450`. Planning gate #1190 selects Expansion 18 `Transfer Hub Interior Expedition`; a later audit must create its milestone and frozen implementation batch. Normal connector traversal, fast travel, broad economy, and another isolated upgrade remain deferred.
+[Milestone #43](https://github.com/joeypshell/oceangame2/milestone/43) and Expansion 17 are complete with owner GO on exact reviewed runtime `075a450`. [Milestone #44](https://github.com/joeypshell/oceangame2/milestone/44) freezes #1192-#1201 for Expansion 18 `Transfer Hub Interior Expedition`. Normal connector traversal, fast travel, broad economy, and another isolated upgrade remain deferred.
 
 Core sources and operating docs:
 
@@ -145,6 +145,7 @@ Current release and expansion handoff:
 - [Expansion 17 Web Preview Verification](docs/current/OCEANGAME_EXPANSION_17_WEB_PREVIEW_VERIFICATION.md)
 - [Expansion 17 Closeout](docs/current/OCEANGAME_EXPANSION_17_CLOSEOUT.md)
 - [OceanGame Expansion 18 Transfer Hub Interior Expedition Plan](docs/current/OCEANGAME_EXPANSION_18_PLAN.md)
+- [OceanGame Expansion 18 Source And State Contract](docs/current/OCEANGAME_EXPANSION_18_SOURCE_STATE_CONTRACT.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 

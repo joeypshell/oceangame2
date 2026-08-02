@@ -2,8 +2,8 @@
 
 Date: 2026-08-02
 
-Status: Selected through planning gate #1190. The implementation milestone and
-issue batch are intentionally uncreated pending a separate audit.
+Status: Active milestone #44. Issues #1192-#1201 are the frozen implementation,
+verification, and player-closeout batch.
 
 ## Decision
 
@@ -148,7 +148,7 @@ after failure is allowed.
 
 ## Planned Issue Batch
 
-A later audit should create and freeze this dependency order:
+Milestone #44 freezes this dependency order:
 
 1. Lock Expansion 18 source, transition, cargo, failure, and profile contract.
 2. Add exceptional-interior schema, paired-entrance, and progression validation.
@@ -163,7 +163,8 @@ A later audit should create and freeze this dependency order:
 9. Verify the exact public Web build and isolated review checkpoint.
 10. Run the owner journey and close with GO or a bounded HOLD.
 
-Do not create these issues or the milestone in planning gate #1190.
+The concrete issue range is #1192-#1201. Do not add Expansion 19 or deferred
+slice-polish work to this milestone.
 
 ## Validation Plan
 
