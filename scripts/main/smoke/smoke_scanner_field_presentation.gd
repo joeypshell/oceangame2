@@ -94,7 +94,7 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: scanner field range_tiles=6 half_angle=30 held=continuous release=clear active=progression subject=bracketed card=name+type+hold progress=compact identify=held_no_reward mobile_use=held_action generic_rings=removed debug_outline=available.")
+	print("PASS: scanner field range_tiles=6 half_angle=30 held=continuous release=clear active=progression subject=bracketed card=name+type+hold progress=compact identify=held_no_reward mobile_use=held_action generic_rings=removed completed_transponders=badge+signal_off debug_outline=available.")
 	quit(0)
 
 
@@ -177,6 +177,22 @@ func _verify_world_subject_presentation() -> void:
 			"scan_presentation_id": "northwest_wreck_relay_console",
 			"scan_anchor": {"x": 10, "y": 2},
 		},
+		{
+			"id": "west_transponder",
+			"x": 14,
+			"y": 2,
+			"w": 2,
+			"h": 2,
+			"scan_presentation_id": "western_chasm_navigation_transponder",
+		},
+		{
+			"id": "abyss_transponder",
+			"x": 18,
+			"y": 2,
+			"w": 2,
+			"h": 2,
+			"scan_presentation_id": "abyssal_shelf_navigation_transponder",
+		},
 	]
 	var normal_parent := Node2D.new()
 	get_root().add_child(normal_parent)
@@ -192,6 +208,17 @@ func _verify_world_subject_presentation() -> void:
 	var relay_target: Dictionary = normal_renderer.get_targets()[2]
 	_expect(relay_target.get("scan_subject_label") == "Wreck relay console", "wreck relay target lost its source-authored name")
 	_expect(relay_target.get("scan_anchor_world") == Vector2(336, 80), "wreck relay bracket anchor drifted from the physical console")
+	_expect(not normal_parent.get_node("west_transponderCompletedBadge").visible, "west transponder started with a completion badge")
+	_expect(not normal_parent.get_node("abyss_transponderCompletedBadge").visible, "abyss transponder started with a completion badge")
+	normal_renderer.set_target_state("west_transponder", "completed")
+	normal_renderer.set_target_state("abyss_transponder", "completed")
+	_expect(normal_parent.get_node("west_transponderCompletedBadge").visible, "completed west transponder lacked its scanned badge")
+	_expect(normal_parent.get_node("abyss_transponderCompletedBadge").visible, "completed abyss transponder lacked its scanned badge")
+	_expect(not normal_parent.get_node("west_transponder/WestCoordinateTrace").visible, "completed west transponder retained its live trace")
+	_expect(not normal_parent.get_node("abyss_transponder/EastCoordinateTrace").visible, "completed abyss transponder retained its live trace")
+	normal_renderer.set_target_state("west_transponder", "active")
+	_expect(not normal_parent.get_node("west_transponderCompletedBadge").visible, "active west transponder retained its completion badge")
+	_expect(normal_parent.get_node("west_transponder/WestCoordinateTrace").visible, "active west transponder lost its live trace")
 	_expect(normal_parent.get_node_or_null("generic_signalDebugOutline") == null, "debug outline leaked into normal play")
 
 	var debug_parent := Node2D.new()
