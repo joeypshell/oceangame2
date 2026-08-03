@@ -373,10 +373,10 @@ semantics. Expansion 18's one paired interior follows
 - Direction must be `forward` or `return`; both markers must point to each
   other, opposite directions, destination maps, and named entries.
 
-The interior core remains a cutter `tool_target` and may use
-`reward_kind = held_discovery_cargo`. This narrow reward requires one cargo
-slot, commits on a different canonical map/entry, and keeps all held, consumed,
-pending, and committed state in runtime owners rather than JSON.
+The interior core remains a cutter `tool_target` using
+`reward_kind = held_discovery_cargo` and may use the presentation-only
+`tool_affordance_id = chain_seal`. The reward requires one cargo slot and a
+different canonical commit map; chain visibility follows existing target state.
 
 ## Current Gate Markers
 

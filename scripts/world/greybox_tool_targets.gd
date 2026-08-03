@@ -28,6 +28,7 @@ func build(parent: Node2D, entities: Array, tile_size: int, show_debug: bool, pr
 			str(target.get("interaction", "cutter_salvage")),
 			asset_lookup
 		)
+		prop_renderer.add_tool_target_affordance(node, target)
 		_nodes_by_id[target_id] = node
 		if show_debug:
 			_add_debug_label(parent, target)

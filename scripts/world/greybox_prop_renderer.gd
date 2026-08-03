@@ -7,6 +7,9 @@ const COLOR_SALVAGE_VALUABLE := Color(1.0, 0.92, 0.36, 0.92)
 const COLOR_SALVAGE_VALUABLE_GLOW := Color(1.0, 0.86, 0.22, 0.24)
 const COLOR_SALVAGE_TIMED := Color(0.42, 0.95, 1.0, 0.72)
 const COLOR_SALVAGE_TIMED_GLOW := Color(0.28, 0.92, 0.98, 0.16)
+const COLOR_CHAIN_DARK := Color(0.13, 0.19, 0.22, 1.0)
+const COLOR_CHAIN_METAL := Color(0.97, 0.73, 0.24, 1.0)
+const COLOR_CHAIN_CUT := Color(0.40, 0.96, 1.0, 1.0)
 const COLOR_HAZARD := Color(1.0, 0.22, 0.34, 1.0)
 const COLOR_HAZARD_DARK := Color(0.40, 0.04, 0.10, 1.0)
 const COLOR_HAZARD_LIGHT := Color(1.0, 0.58, 0.66, 1.0)
@@ -53,6 +56,16 @@ func add_hazard_prop(parent: Node2D, marker_name: String, center: Vector2, kind:
 	return root
 
 
+func add_tool_target_affordance(root: Node2D, target: Dictionary) -> void:
+	if root == null or str(target.get("tool_affordance_id", "")) != "chain_seal":
+		return
+	for generic_cue in ["ValuableRing", "ValuableSparkle", "TimedActionRing", "TimedActionTick", "TimedActionDot"]:
+		var node := root.get_node_or_null(generic_cue)
+		if node != null:
+			node.visible = false
+	_add_chain_seal_affordance(root)
+
+
 func _prop_texture(kind: String, fallback_kind: String, asset_lookup) -> Texture2D:
 	if asset_lookup == null:
 		return null
@@ -85,6 +98,41 @@ func _add_timed_salvage_affordance(root: Node2D) -> void:
 
 	var dot := _add_local_polygon(root, "TimedActionDot", _circle_points(3.0, 8, Vector2(0, -31)), COLOR_SALVAGE_TIMED)
 	dot.z_index = 7
+
+
+func _add_chain_seal_affordance(root: Node2D) -> void:
+	var affordance := Node2D.new()
+	affordance.name = "ChainSealAffordance"
+	affordance.z_index = 10
+	root.add_child(affordance)
+	_add_chain_run(affordance, "ChainDown", Vector2(-27, -17), Vector2(27, 17))
+	_add_chain_run(affordance, "ChainUp", Vector2(-27, 17), Vector2(27, -17))
+	_add_local_polygon(affordance, "SealGlow", _circle_points(13.0, 16), Color(1.0, 0.75, 0.22, 0.20))
+	_add_local_polygon(affordance, "SealPlate", _diamond_points(9.0), COLOR_CHAIN_DARK)
+	var outline_points := _diamond_points(9.0)
+	outline_points.append(outline_points[0])
+	_add_local_line(affordance, "SealOutline", outline_points, COLOR_CHAIN_METAL, 2.5)
+	_add_local_line(
+		affordance,
+		"CutterNotch",
+		PackedVector2Array([Vector2(-4, 4), Vector2(4, -4)]),
+		COLOR_CHAIN_CUT,
+		2.5
+	)
+
+
+func _add_chain_run(parent: Node2D, name_prefix: String, start: Vector2, finish: Vector2) -> void:
+	var angle := (finish - start).angle()
+	for index in range(7):
+		var center := start.lerp(finish, float(index) / 6.0)
+		var points := _ellipse_points(5.5, 3.4, 12)
+		points.append(points[0])
+		var shadow := _add_local_line(parent, "%sShadow%d" % [name_prefix, index], points, COLOR_CHAIN_DARK, 5.0)
+		shadow.position = center
+		shadow.rotation = angle + (PI * 0.5 if index % 2 == 1 else 0.0)
+		var link := _add_local_line(parent, "%sLink%d" % [name_prefix, index], points, COLOR_CHAIN_METAL, 2.5)
+		link.position = center
+		link.rotation = shadow.rotation
 
 
 func _add_valuable_salvage_cue(root: Node2D) -> void:

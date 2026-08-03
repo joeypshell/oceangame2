@@ -22,6 +22,7 @@ REQUIRED_REWARD_FIELDS = tuple(sorted(REWARD_FIELDS))
 RUNTIME_FIELDS = {"committed", "pending", "profile_state", "reward_claimed"}
 REWARD_KINDS = {"discovery", "held_discovery_cargo"}
 MISSION_FIELDS = {"mission_id", "mission_guidance", "mission_return_guidance"}
+TOOL_AFFORDANCE_IDS = {"chain_seal"}
 
 
 def _items(map_data: dict[str, Any], field: str) -> list[dict[str, Any]]:
@@ -61,10 +62,20 @@ def validate_tool_target_reward_schema(map_data: dict[str, Any]) -> list[str]:
     }
     seen_reward_ids: set[str] = set()
     for index, entity in enumerate(_items(map_data, "entities")):
+        label = str(entity.get("id", f"entities[{index}]"))
+        affordance_id = entity.get("tool_affordance_id")
+        if affordance_id is not None:
+            if entity.get("type") != "tool_target" or entity.get("interaction") != "cutter_salvage":
+                failures.append(
+                    f"{label} tool_affordance_id is supported only on cutter tool_target entities."
+                )
+            if affordance_id not in TOOL_AFFORDANCE_IDS:
+                failures.append(
+                    f"{label} tool_affordance_id must be one of: {', '.join(sorted(TOOL_AFFORDANCE_IDS))}."
+                )
         present = REWARD_FIELDS & set(entity)
         if not present:
             continue
-        label = str(entity.get("id", f"entities[{index}]"))
         missing = [field for field in REQUIRED_REWARD_FIELDS if field not in entity]
         if missing:
             failures.append(f"{label} discovery reward is missing required fields: {', '.join(missing)}.")

@@ -193,6 +193,8 @@ func _prove_full_cargo_and_hazard_restoration() -> bool:
 	var target := _core_target()
 	if target.is_empty():
 		return _abort("missing navigation core target")
+	if str(target.get("tool_affordance_id", "")) != "chain_seal" or not _chain_seal_visible():
+		return _abort("navigation core omitted its visible source-authored chain seal")
 	_player.global_position = target.get("center", Vector2.ZERO)
 	if not _select_active_tool_for_smoke(ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID):
 		return _abort("could not select the existing Salvage Cutter")
@@ -202,6 +204,8 @@ func _prove_full_cargo_and_hazard_restoration() -> bool:
 	_main._cargo_collection.update(float(target.get("interaction_seconds", 0.0)) + 0.1)
 	if _world.is_salvage_collected(CORE_TARGET_ID) or _main._navigation_core.held_count() != 0:
 		return _abort("full cargo consumed or secured the navigation core")
+	if not _chain_seal_visible():
+		return _abort("cargo-full block hid the retryable chain seal")
 	_main._material_runtime.discard_unbanked("capacity_probe_complete")
 	if not _recover_core():
 		return false
@@ -210,6 +214,8 @@ func _prove_full_cargo_and_hazard_restoration() -> bool:
 		return _abort("hazard retained unbanked navigation-core state")
 	if _world.is_salvage_collected(CORE_TARGET_ID):
 		return _abort("hazard did not restore the navigation core cradle")
+	if not _chain_seal_visible():
+		return _abort("hazard restoration did not restore the chain seal")
 	_failure_restoration.append("hazard")
 	return true
 
@@ -259,6 +265,8 @@ func _recover_core() -> bool:
 	var target := _core_target()
 	if target.is_empty():
 		return _abort("navigation core target was unavailable for recovery")
+	if not _chain_seal_visible():
+		return _abort("navigation core chain seal was not visible before Cutter use")
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
 	_combat_interactions_enabled = false
@@ -268,12 +276,16 @@ func _recover_core() -> bool:
 	_main._cargo_collection.update(0.1)
 	if _world.is_salvage_collected(CORE_TARGET_ID):
 		return _abort("navigation core collected without explicit Cutter use")
+	if _main._last_status_note.find("Chain-sealed navigation core | Space/USE cutter") == -1:
+		return _abort("nearby Cutter prompt did not name the chain-sealed navigation core")
 	var activated: Dictionary = _main._use_active_tool()
 	if str(activated.get("status", "")) != "used":
 		return _abort("Space/USE did not activate the Cutter: %s" % str(activated))
 	_main._cargo_collection.update(float(target.get("interaction_seconds", 0.0)) + 0.1)
 	if not _world.is_salvage_collected(CORE_TARGET_ID) or _main._navigation_core.held_count() != 1:
 		return _abort("Cutter completion did not create held navigation-core cargo")
+	if _chain_seal_visible():
+		return _abort("completed Cutter recovery left the chain seal visible")
 	if not _main._anomaly_survey.has_pending_discovery():
 		return _abort("navigation core did not create pending boat commitment")
 	if _main._anomaly_survey.profile_state().has_completed_discovery(CORE_DISCOVERY_ID):
@@ -370,6 +382,14 @@ func _core_target() -> Dictionary:
 		if str(target.get("id", "")) == CORE_TARGET_ID:
 			return target
 	return {}
+
+
+func _chain_seal_visible() -> bool:
+	var root := _world.find_child(CORE_TARGET_ID, true, false)
+	if root == null or not root.visible:
+		return false
+	var affordance := root.find_child("ChainSealAffordance", true, false)
+	return affordance != null and affordance.visible
 
 
 func _snapshot(stage: String) -> Dictionary:

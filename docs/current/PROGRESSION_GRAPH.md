@@ -113,8 +113,8 @@ The table and dependency diagram below describe the promoted full-level view.
 | 35 | `Wreck Network Triangulation Discovery` | production_level_01 | Compare transfer-hub coordinates | Compare transfer-hub coordinates | state/payoff | stage 35 |
 | 36 | `Transfer Hub` | production_level_01 | Wreck Network Triangulation Discovery | production_level_01, Wreck Network Triangulation Discovery | transfer_hub_interior_01, Transfer Hub Interior Entry | stage 36 |
 | 37 | `transfer_hub_interior_01` | transfer_hub_interior_01 | none | source-authored | state/payoff | stage 37 |
-| 38 | `navigation core` | transfer_hub_interior_01 | Salvage Cutter | transfer_hub_interior_01, Salvage Cutter | Transfer Hub Navigation Core Discovery | stage 38 |
-| 39 | `Transfer Hub Navigation Core Discovery` | transfer_hub_interior_01 | navigation core, Surface Boat Entry | navigation core, production_level_01, Surface Boat Entry | state/payoff | stage 39 |
+| 38 | `chain-sealed navigation core` | transfer_hub_interior_01 | Salvage Cutter | transfer_hub_interior_01, Salvage Cutter | Transfer Hub Navigation Core Discovery | stage 38 |
+| 39 | `Transfer Hub Navigation Core Discovery` | transfer_hub_interior_01 | chain-sealed navigation core, Surface Boat Entry | chain-sealed navigation core, production_level_01, Surface Boat Entry | state/payoff | stage 39 |
 
 ## Soft Pressure Annotations
 
@@ -225,7 +225,7 @@ flowchart LR
   subgraph transfer_hub_interior_01["transfer_hub_interior_01"]
     n26["Transfer Hub Navigation Core Discovery"]
     n46["transfer_hub_interior_01"]
-    n94["navigation core"]
+    n94["chain-sealed navigation core"]
   end
   n0 -->|"requires"| n14
   n0 -->|"requires"| n45
