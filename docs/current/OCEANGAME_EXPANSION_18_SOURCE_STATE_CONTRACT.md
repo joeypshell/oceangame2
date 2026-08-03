@@ -67,7 +67,12 @@ The pair is reciprocal by map id and marker id; it is not a destination list,
 shortcut network, boat transition, or map-menu node.
 
 The source owns marker rectangles, labels, destination references,
-prerequisite, direction, intent, provenance, and review questions. It owns no
+prerequisite, direction, mission id, approach/return guidance, intent,
+provenance, and review questions. The real `expansion_18_start` checkpoint and
+the normal post-triangulation profile both resolve that same metadata: the
+exterior names the lowest central chamber, the interior names the Cutter
+objective, and held core cargo names the return leg. While this mission is
+unresolved, older route and research hints must not outrank it. The source owns no
 unlocked flag, active transition, origin snapshot, oxygen, daylight, health,
 cargo, consumed core, failure, profile, or UI state.
 

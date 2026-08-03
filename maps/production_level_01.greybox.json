@@ -5092,6 +5092,9 @@
       "connector_direction": "forward",
       "paired_connector_id": "transfer_hub_interior_return",
       "required_discovery_id": "wreck_network_triangulation_discovery",
+      "mission_id": "transfer_hub_core_recovery",
+      "mission_guidance": "Transfer Hub | Descend to lowest central chamber | Find marked bulkhead",
+      "mission_return_guidance": "Navigation core secured | Return to surface boat",
       "intent": "Physically scoutable lower-chamber doorway whose interaction is unlocked by the recovered transfer-hub coordinates."
     }
   ],

@@ -13,6 +13,7 @@ INTERIOR_MAP_ID = "transfer_hub_interior_01"
 INTERIOR_ENTRY_ID = "transfer_hub_interior_entry"
 INTERIOR_RETURN_ID = "transfer_hub_interior_return"
 LANDMARK_ID = "transfer_hub_exterior_bulkhead"
+MISSION_ID = "transfer_hub_core_recovery"
 
 
 def zones() -> list[dict]:
@@ -33,6 +34,13 @@ def zones() -> list[dict]:
             "connector_direction": "forward",
             "paired_connector_id": INTERIOR_RETURN_ID,
             "required_discovery_id": PREREQUISITE_ID,
+            "mission_id": MISSION_ID,
+            "mission_guidance": (
+                "Transfer Hub | Descend to lowest central chamber | Find marked bulkhead"
+            ),
+            "mission_return_guidance": (
+                "Navigation core secured | Return to surface boat"
+            ),
             "intent": (
                 "Physically scoutable lower-chamber doorway whose interaction is "
                 "unlocked by the recovered transfer-hub coordinates."

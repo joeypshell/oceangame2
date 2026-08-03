@@ -26,6 +26,7 @@ CONNECTOR_FIELDS = {
 }
 CONNECTOR_TRIGGER_FIELDS = CONNECTOR_FIELDS - {"required_discovery_id"}
 RUNTIME_FIELDS = {"active", "consumed", "transition_state", "unlocked"}
+MISSION_FIELDS = {"mission_id", "mission_guidance", "mission_return_guidance"}
 
 
 def _rect_cells(item: dict[str, Any]) -> set[tuple[int, int]]:
@@ -38,6 +39,28 @@ def _rect_cells(item: dict[str, Any]) -> set[tuple[int, int]]:
 
 def _is_int_value(value: Any) -> bool:
     return isinstance(value, int) and not isinstance(value, bool)
+
+
+def _validate_mission_fields(item: dict[str, Any], item_label: str) -> list[str]:
+    present = MISSION_FIELDS & set(item)
+    if not present:
+        return []
+    failures: list[str] = []
+    missing = sorted(MISSION_FIELDS - set(item))
+    if missing:
+        failures.append(
+            f"{item_label} mission guidance is missing required fields: {', '.join(missing)}."
+        )
+    mission_id = item.get("mission_id")
+    if not isinstance(mission_id, str) or not ID_PATTERN.fullmatch(mission_id):
+        failures.append(f"{item_label} mission_id must use lower_snake_case.")
+    for field in ("mission_guidance", "mission_return_guidance"):
+        value = item.get(field)
+        if not isinstance(value, str) or not (1 <= len(value) <= 96) or "\n" in value or "\r" in value:
+            failures.append(
+                f"{item_label} {field} must be non-empty display-safe text up to 96 characters."
+            )
+    return failures
 
 
 def _repo_root_for_map(map_path: Path) -> Path:
@@ -173,6 +196,8 @@ def validate_world_connector_schema(map_path: Path, map_data: dict[str, Any]) ->
         forbidden = sorted(RUNTIME_FIELDS & set(zone))
         if forbidden:
             failures.append(f"{item_label} connector must not author runtime state fields: {forbidden}.")
+
+        failures.extend(_validate_mission_fields(zone, item_label))
 
         connector_kind = zone.get("connector_kind")
         paired_id = zone.get("paired_connector_id")

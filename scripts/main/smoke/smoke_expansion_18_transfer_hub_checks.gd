@@ -16,7 +16,7 @@ const CORE_TARGET_ID := "transfer_hub_navigation_core_cradle"
 const CORE_DISCOVERY_ID := "transfer_hub_navigation_core_discovery"
 const CONTINUITY_SALVAGE_ID := "salvage_entry_shaft"
 const CONTINUITY_MATERIAL_ID := "titanium_scrap"
-const PLAN_ID := "transfer_hub_core_recovery"
+const LEGACY_CURRENT_GATE_ID := "western_chasm_relay_current"
 
 var _snapshots: Array[Dictionary] = []
 var _failure_restoration: Array[String] = []
@@ -99,22 +99,43 @@ func _prepare_profile_and_gate() -> bool:
 	if _world.map_id != EXTERIOR_MAP_ID:
 		return _abort("loaded unexpected exterior map %s" % _world.map_id)
 	var profile = _main._anomaly_survey.profile_state()
-	var checkpoint: Dictionary = ReviewCheckpointFixture.apply(ReviewCheckpointFixture.EXPANSION_17_START, profile)
+	var checkpoint: Dictionary = ReviewCheckpointFixture.apply(ReviewCheckpointFixture.EXPANSION_18_START, profile)
 	if not bool(checkpoint.get("ready", false)):
-		return _abort("could not prepare Expansion 17 boundary: %s" % str(checkpoint))
+		return _abort("could not prepare Expansion 18 boundary: %s" % str(checkpoint))
 	_refresh_runtime_owners()
+	_main._refresh_expedition_plan()
+	_main._update_status_label()
+	if _status_label.text.find("Transfer Hub | Descend to lowest central chamber") == -1:
+		return _abort("real Expansion 18 checkpoint omitted the source-authored Hub objective")
+	if not _prove_legacy_gate_cannot_displace_mission():
+		return false
 	var entrance := _connector_by_id(ENTRANCE_ID)
 	if entrance.is_empty():
 		return _abort("missing source-authored entrance %s" % ENTRANCE_ID)
 	_player.global_position = entrance.get("center", Vector2.ZERO)
 	_update_status_label()
-	if _main._try_world_connector_transition() or _world.map_id != EXTERIOR_MAP_ID:
-		return _abort("entrance opened before triangulation")
-	if _status_label.text.find("Coordinates not triangulated") == -1:
-		return _abort("locked entrance omitted triangulation feedback")
-	var prerequisite: Dictionary = profile.complete_discovery(PREREQUISITE_ID, false)
-	if not bool(prerequisite.get("changed", false)):
-		return _abort("could not complete the triangulation prerequisite: %s" % str(prerequisite))
+	if _status_label.text.find("E: Enter Transfer Hub") == -1:
+		return _abort("ready entrance omitted its E/ACT interaction")
+	return true
+
+
+func _prove_legacy_gate_cannot_displace_mission() -> bool:
+	var gate := {}
+	for value in _world.get_current_gates():
+		if str(value.get("id", "")) == LEGACY_CURRENT_GATE_ID:
+			gate = value
+			break
+	if gate.is_empty():
+		return _abort("missing legacy current gate guidance probe")
+	_player.global_position = gate.get("center", Vector2.ZERO)
+	_main._last_status_note = ""
+	_main._update_status_label()
+	var text := str(_status_label.text)
+	if text.find("Transfer Hub | Descend to lowest central chamber") == -1:
+		return _abort("legacy current gate displaced the Transfer Hub mission")
+	for stale_text in ["Far-west wreck", "Research lead", "Objective: Deep cache"]:
+		if text.find(stale_text) != -1:
+			return _abort("legacy guidance remained above the Transfer Hub mission: %s" % stale_text)
 	return true
 
 
@@ -125,9 +146,6 @@ func _prepare_continuity_state(fill_capacity: bool) -> bool:
 	_main._expedition_day_state.begin_day(3)
 	_main._expedition_day_state.daylight_remaining_seconds = 214.0
 	_main._expedition_day_state.sortie_count = 2
-	var selected: Dictionary = _main._expedition_plan_state.select(PLAN_ID, [PLAN_ID], "debrief")
-	if not bool(selected.get("changed", false)) and _main._expedition_plan_state.selected_lead_id() != PLAN_ID:
-		return _abort("could not prepare expedition plan continuity")
 	if fill_capacity:
 		if not _world.collect_salvage_by_id(CONTINUITY_SALVAGE_ID):
 			return _abort("could not prepare source salvage continuity")
@@ -275,6 +293,9 @@ func _enter_hub() -> bool:
 	_player.set_physics_process(false)
 	_hazard_interactions_enabled = false
 	_combat_interactions_enabled = false
+	_main._update_status_label()
+	if _status_label.text.find("Navigation core | Select Cutter") == -1:
+		return _abort("interior did not replace approach guidance with the Cutter objective")
 	return true
 
 
@@ -289,6 +310,9 @@ func _return_to_exterior() -> bool:
 		return _abort("paired return ignored its source-authored exterior entry")
 	if _main._navigation_core.held_count() != 1 or not _main._anomaly_survey.has_pending_discovery():
 		return _abort("paired return lost navigation-core cargo")
+	_main._update_status_label()
+	if _status_label.text.find("Navigation core secured | Return to surface boat") == -1:
+		return _abort("paired return omitted the source-authored boat guidance")
 	return true
 
 
@@ -360,19 +384,20 @@ func _snapshot(stage: String) -> Dictionary:
 		"banked_materials": _main._anomaly_survey.profile_state().material_inventory(),
 		"held_core": _main._navigation_core.held_count(),
 		"plan": _main._expedition_plan_state.selected_lead_id(),
+		"mission": str(_main._transfer_hub_mission_report().get("mission_id", "")),
 		"phase": _main._expedition_day_state.phase,
 	}
 
 
 func _expect_continuity(before: Dictionary, after: Dictionary, label: String) -> bool:
-	for key in ["oxygen", "daylight", "health", "held_salvage", "held_materials", "banked_materials", "held_core", "plan", "phase"]:
+	for key in ["oxygen", "daylight", "health", "held_salvage", "held_materials", "banked_materials", "held_core", "plan", "mission", "phase"]:
 		if before.get(key) != after.get(key):
 			return _abort("%s transition changed %s: %s -> %s" % [label, key, str(before.get(key)), str(after.get(key))])
 	return true
 
 
 func _expect_recovery_continuity(before: Dictionary, after: Dictionary) -> bool:
-	for key in ["health", "held_salvage", "held_materials", "banked_materials", "plan", "phase"]:
+	for key in ["health", "held_salvage", "held_materials", "banked_materials", "plan", "mission", "phase"]:
 		if before.get(key) != after.get(key):
 			return _abort("paired return changed %s: %s -> %s" % [key, str(before.get(key)), str(after.get(key))])
 	if float(after.get("oxygen", 0.0)) > float(before.get("oxygen", 0.0)):

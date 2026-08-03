@@ -87,6 +87,19 @@ class ToolTargetRewardValidationTests(unittest.TestCase):
         map_data["regional_journeys"] = []
         self.assertEqual([], validate_tool_target_reward_schema(map_data))
 
+    def test_validates_optional_held_cargo_mission_guidance(self) -> None:
+        map_data = valid_map()
+        target = map_data["entities"][1]
+        target.update({
+            "mission_id": "transfer_hub_core_recovery",
+            "mission_guidance": "Navigation core | Select Cutter | Space/USE on sealed cradle",
+            "mission_return_guidance": "Navigation core secured | Return through west door",
+        })
+        self.assertEqual([], validate_tool_target_reward_schema(map_data))
+        target["mission_id"] = "Bad Mission"
+        failures = validate_tool_target_reward_schema(map_data)
+        self.assertTrue(any("mission_id must use lower_snake_case" in failure for failure in failures), failures)
+
     def test_rejects_local_commit_for_held_discovery_cargo(self) -> None:
         map_data = valid_map()
         target = map_data["entities"][1]
