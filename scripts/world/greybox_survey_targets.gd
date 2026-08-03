@@ -14,11 +14,13 @@ const STATE_COLORS := {
 
 var _targets: Array = []
 var _nodes_by_id := {}
+var _completion_badges_by_id := {}
 
 
 func build(parent: Node2D, source_targets: Array, tile_size: int, show_debug: bool) -> void:
 	_targets = []
 	_nodes_by_id = {}
+	_completion_badges_by_id = {}
 	for source in source_targets:
 		if typeof(source) != TYPE_DICTIONARY:
 			continue
@@ -32,6 +34,12 @@ func build(parent: Node2D, source_targets: Array, tile_size: int, show_debug: bo
 		var target_id := str(target.get("id", "SurveyTarget"))
 		var marker := _add_marker(parent, target, target["scan_anchor_world"])
 		_nodes_by_id[target_id] = marker
+		if _is_navigation_transponder(target):
+			_completion_badges_by_id[target_id] = _add_completed_badge(
+				parent,
+				target_id,
+				target["scan_anchor_world"]
+			)
 		if show_debug:
 			_add_debug_outline(parent, target_id, rect)
 
@@ -60,6 +68,9 @@ func set_target_state(target_id: String, state: String) -> void:
 	if _nodes_by_id.has(target_id):
 		var marker := _nodes_by_id[target_id] as Node2D
 		marker.modulate = STATE_COLORS[normalized]
+		_set_transponder_signal_visible(marker, normalized != "completed")
+	if _completion_badges_by_id.has(target_id):
+		(_completion_badges_by_id[target_id] as Node2D).visible = normalized == "completed"
 
 
 func _add_marker(parent: Node2D, target: Dictionary, center: Vector2) -> Node2D:
@@ -273,6 +284,50 @@ func _add_abyssal_shelf_transponder(root: Node2D) -> void:
 	root.add_child(crush_crack)
 
 
+func _is_navigation_transponder(target: Dictionary) -> bool:
+	return str(target.get("scan_presentation_id", "")) in [
+		WEST_TRANSPONDER_PRESENTATION_ID,
+		ABYSS_TRANSPONDER_PRESENTATION_ID,
+	]
+
+
+func _add_completed_badge(parent: Node2D, target_id: String, center: Vector2) -> Node2D:
+	var badge := Node2D.new()
+	badge.name = "%sCompletedBadge" % target_id
+	badge.position = center + Vector2(0.0, -27.0)
+	badge.z_index = 18
+	badge.visible = false
+	parent.add_child(badge)
+
+	var back := Polygon2D.new()
+	back.name = "ScanCompleteBack"
+	back.polygon = _circle_points(12.0, 16)
+	back.color = Color(0.02, 0.12, 0.15, 0.96)
+	badge.add_child(back)
+	var ring := Line2D.new()
+	ring.name = "ScanCompleteRing"
+	ring.points = _circle_points(10.0, 16, true)
+	ring.default_color = Color(0.30, 1.0, 0.88, 1.0)
+	ring.width = 2.5
+	ring.antialiased = true
+	badge.add_child(ring)
+	var check := Line2D.new()
+	check.name = "ScanCompleteCheck"
+	check.points = PackedVector2Array([Vector2(-5, 0), Vector2(-1, 5), Vector2(7, -6)])
+	check.default_color = Color(0.84, 1.0, 0.96, 1.0)
+	check.width = 3.0
+	check.antialiased = true
+	badge.add_child(check)
+	return badge
+
+
+func _set_transponder_signal_visible(marker: Node2D, visible: bool) -> void:
+	for node_name in ["WestCoordinateTrace", "WestCoordinateBeacon", "EastCoordinateTrace", "EastCoordinateCore"]:
+		var signal_node := marker.get_node_or_null(node_name) as CanvasItem
+		if signal_node != null:
+			signal_node.visible = visible
+
+
 func _add_salvage_cutter_blueprint_case(root: Node2D) -> void:
 	var shadow := Polygon2D.new()
 	shadow.name = "ArtifactShadow"
@@ -367,3 +422,11 @@ func _scan_anchor_world(target: Dictionary, tile_size: int, fallback: Vector2) -
 	if typeof(anchor) != TYPE_DICTIONARY or anchor.is_empty():
 		return fallback
 	return Vector2(float(anchor.get("x", 0)) + 0.5, float(anchor.get("y", 0)) + 0.5) * tile_size
+
+
+func _circle_points(radius: float, steps: int, close := false) -> PackedVector2Array:
+	var points := PackedVector2Array()
+	for index in range(steps + (1 if close else 0)):
+		var angle := TAU * float(index % steps) / float(steps)
+		points.append(Vector2(cos(angle), sin(angle)) * radius)
+	return points

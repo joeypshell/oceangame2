@@ -60,6 +60,11 @@ func capture_and_quit(capture_dir: String) -> void:
 		return
 	if not _complete_and_commit(WEST_SURVEY_ID, WEST_FRAGMENT_ID):
 		return
+	if not _prepare_completed_artifact(WEST_SURVEY_ID):
+		return
+	if not await _renderer.capture_pair(capture_dir, "western_relay_completed", camera_tests[CAMERA_IDS["west_scan"]], true):
+		return
+	_place_at_boat()
 	if not _prepare_one_fragment_debrief():
 		return
 	if not await _renderer.capture_pair(capture_dir, "night_one_fragment_remaining", camera_tests[CAMERA_IDS["parallel"]]):
@@ -252,6 +257,24 @@ func _complete_and_commit(survey_id: String, discovery_id: String) -> bool:
 	return _expect(
 		_main._anomaly_survey.profile_state().report().get("completed_discoveries", []).count(discovery_id) == 1,
 		"artifact %s did not commit exactly once" % survey_id
+	)
+
+
+func _prepare_completed_artifact(survey_id: String) -> bool:
+	_main._anomaly_survey.on_map_loaded(_main._world)
+	var survey := _record_by_id(_main._world.get_survey_targets(), survey_id)
+	var pose: Dictionary = ScannerPose.new().place(_main._world, _main._player, survey)
+	_main._last_status_note = ""
+	_main._player.sync_scanner_presentation(_main._anomaly_survey.report())
+	_main._update_status_label()
+	var badge := _main._world.get_node_or_null("Markers/%sCompletedBadge" % survey_id) as CanvasItem
+	var trace := _main._world.get_node_or_null("Markers/%s/WestCoordinateTrace" % survey_id) as CanvasItem
+	return _expect(
+		bool(pose.get("found", false))
+		and str(_record_by_id(_main._world.get_survey_targets(), survey_id).get("state", "")) == "completed"
+		and badge != null and badge.visible
+		and trace != null and not trace.visible,
+		"completed west transponder did not present as scanned/inactive"
 	)
 
 
