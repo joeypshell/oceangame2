@@ -1,19 +1,20 @@
 # OceanGame Expansion 18 Visual Baseline Decision
 
-Date: 2026-08-02
+Date: 2026-08-03
 
-Issue: #1199 `Review and accept Expansion 18 visual differences`
+Issue: #1213 `Review and deploy Expansion 18 owner-HOLD corrections`
 
-Reviewed runtime: `7cd4054f43466d7156a9368cdbf64135a5994cbe`
+Reviewed runtime: `fb4aa9645ffa44ba9540c4f25a3fe60421af1270`
 
 ## Decision
 
-**Accept the named Transfer Hub visual differences.**
+**Accept the bounded Transfer Hub owner-HOLD corrections.**
 
 The existing `production_level_01` baseline now includes only the authored
 lower-chamber bulkhead, exceptional-interior entrance marker, and paired return
-entry. A new `transfer_hub_interior_01_accepted` baseline owns six desktop and
-iPhone-landscape interior states.
+entry. The `transfer_hub_interior_01_accepted` baseline owns six desktop and
+iPhone-landscape interior states. Those six states now include source-owned
+mission guidance and a distinct chain seal on the Cutter target.
 
 No production-slice baseline changed. Focused exterior entrance, return, and
 boat-result captures remain ignored local evidence rather than accepted
@@ -47,10 +48,13 @@ pairs for:
 - recovered navigation core
 
 The compact room has a distinct bulkhead backdrop, one central terrain mass,
-one readable east-side Cutter cradle/core target, and one physical west return.
-The mobile core framing keeps the diver and core left of ACT/USE controls while
-retaining the existing right command rail. No map source is mutated by capture
-setup.
+one east-side Cutter cradle/core target, and one physical west return. Before
+recovery, two crossed linked chains and a cyan cut mark replace the generic
+valuable-target rings. The seal remains visible while cargo is full and the
+target remains retryable; the whole affordance disappears with the recovered
+core. The mobile core framing keeps the diver and core left of ACT/USE controls
+while retaining the existing right command rail. No map source is mutated by
+capture setup.
 
 The wider ignored focused set also confirms locked/ready exterior entry,
 paired exterior return, and canonical-boat delivery feedback.
@@ -76,7 +80,9 @@ The committed source/render/collision sheets are:
 
 No unexplained difference was accepted in player, boat, terrain, existing
 props, prior routes, camera framing, cargo/gear/tool presentation, or slices
-01-04. After acceptance, every configured difference panel is black.
+01-04. The production-level comparison stayed pixel-identical. After accepting
+only the six configured Transfer Hub interior views, every configured
+difference panel is black.
 
 The ready-entrance focused frame still has a dense status panel touching the
 leading edge of the cargo strip. The route prompt, held count, gear icons, and
@@ -96,6 +102,8 @@ python tools/validate_full_level_traversal.py maps/production_level_01.greybox.j
 python tools/test_production_level_01_expansion_18.py
 python tools/check_map_parity.py maps/production_level_01.greybox.json maps/transfer_hub_interior_01.greybox.json
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --capture-expansion-18-transfer-hub
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . -- --smoke-expansion-18-transfer-hub
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . -- --smoke-expansion-09-full-level-journey
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --capture-expansion-09-full-level
 python tools/check_camera_captures.py maps/production_level_01.greybox.json visual_captures/expansion_09_full_level --camera-id-prefix production_level_ --suffix 1280x720 --suffix mobile_844x390 --fail-on-stale
 python tools/manage_production_slice_baseline.py compare-all
@@ -104,4 +112,5 @@ python tools/check_file_lengths.py
 git diff --check
 ```
 
-Exact-SHA public Web verification remains scoped to #1200.
+Exact-SHA public Web verification is recorded in the companion Expansion 18
+Web preview verification.

@@ -1,9 +1,9 @@
 {
   "baseline_id": "transfer_hub_interior_01_accepted",
   "slice_id": "transfer_hub_interior_01",
-  "accepted_at_utc": "2026-08-02T21:38:26+00:00",
+  "accepted_at_utc": "2026-08-03T14:15:04+00:00",
   "source_capture_dir": "visual_captures/expansion_18_transfer_hub",
-  "accepted_from_commit": "7cd4054",
+  "accepted_from_commit": "fb4aa96",
   "view_ids": [
     "transfer_hub_interior_01_interior_arrival_1280x720",
     "transfer_hub_interior_01_interior_arrival_mobile_844x390",
