@@ -21,6 +21,7 @@ REWARD_FIELDS = {
 REQUIRED_REWARD_FIELDS = tuple(sorted(REWARD_FIELDS))
 RUNTIME_FIELDS = {"committed", "pending", "profile_state", "reward_claimed"}
 REWARD_KINDS = {"discovery", "held_discovery_cargo"}
+MISSION_FIELDS = {"mission_id", "mission_guidance", "mission_return_guidance"}
 
 
 def _items(map_data: dict[str, Any], field: str) -> list[dict[str, Any]]:
@@ -85,6 +86,21 @@ def validate_tool_target_reward_schema(map_data: dict[str, Any]) -> list[str]:
         for field in ("reward_pending_label", "reward_commit_label", "reward_next_lead_label"):
             if not _valid_label(entity.get(field)):
                 failures.append(f"{label} {field} must be non-empty display-safe text up to 96 characters.")
+
+        mission_fields = MISSION_FIELDS & set(entity)
+        if mission_fields:
+            missing_mission_fields = sorted(MISSION_FIELDS - set(entity))
+            if missing_mission_fields:
+                failures.append(
+                    f"{label} mission guidance is missing required fields: {', '.join(missing_mission_fields)}."
+                )
+            if not _valid_id(entity.get("mission_id")):
+                failures.append(f"{label} mission_id must use lower_snake_case.")
+            for field in ("mission_guidance", "mission_return_guidance"):
+                if not _valid_label(entity.get(field)):
+                    failures.append(
+                        f"{label} {field} must be non-empty display-safe text up to 96 characters."
+                    )
 
         map_id = str(map_data.get("id", ""))
         commit_map_id = entity.get("reward_commit_map_id")

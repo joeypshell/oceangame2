@@ -116,6 +116,8 @@ func _test_expansion_18_boundary() -> void:
 	_expect(profile.has_completed_discovery(ExpansionProfileState.ABYSSAL_SHELF_FRAGMENT_DISCOVERY_ID), "Expansion 18 checkpoint omitted the abyssal fragment")
 	_expect(profile.has_completed_discovery(ExpansionProfileState.WRECK_NETWORK_TRIANGULATION_DISCOVERY_ID), "Expansion 18 checkpoint omitted triangulation")
 	_expect(not profile.has_completed_discovery(ExpansionProfileState.TRANSFER_HUB_NAVIGATION_CORE_DISCOVERY_ID), "Expansion 18 checkpoint pre-completed the navigation core")
+	_expect(applied.get("active_objective_id") == "transfer_hub_core_recovery", "Expansion 18 checkpoint omitted the active Transfer Hub objective")
+	_expect(applied.get("active_objective_label") == "Transfer Hub", "Expansion 18 checkpoint omitted the active objective label")
 	_expect(profile.material_inventory().is_empty(), "Expansion 18 checkpoint retained unrelated recipe materials")
 	_expect(ReviewProfileMode.startup_report(true, ReviewCheckpointFixture.EXPANSION_18_START, true).find("id=expansion_18_start persistence=false") != -1, "Expansion 18 startup report omitted its isolated marker")
 	var world = WORLD_SCENE.instantiate()

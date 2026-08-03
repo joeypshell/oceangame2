@@ -19,6 +19,7 @@ EXTERIOR_RETURN_ID = "transfer_hub_exterior_return"
 EXTERIOR_ENTRANCE_ID = "transfer_hub_exterior_entrance"
 CORE_ID = "transfer_hub_navigation_core_cradle"
 CORE_DISCOVERY_ID = "transfer_hub_navigation_core_discovery"
+MISSION_ID = "transfer_hub_core_recovery"
 BOAT_ID = "surface_boat_entry"
 
 
@@ -113,6 +114,13 @@ def entities() -> list[dict]:
             "reward_commit_map_id": EXTERIOR_MAP_ID,
             "reward_commit_map_path": f"res://maps/{EXTERIOR_MAP_ID}.greybox.json",
             "reward_commit_entry_id": BOAT_ID,
+            "mission_id": MISSION_ID,
+            "mission_guidance": (
+                "Navigation core | Select Cutter | Space/USE on sealed cradle"
+            ),
+            "mission_return_guidance": (
+                "Navigation core secured | Return through west door, then surface boat"
+            ),
             "intent": "One deliberate Cutter recovery whose discovery commits only at the canonical boat.",
         },
     ]

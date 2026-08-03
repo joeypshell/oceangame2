@@ -79,6 +79,7 @@ const SortieState := preload("res://scripts/main/sortie_state.gd")
 const TimedSalvageController := preload("res://scripts/main/timed_salvage_controller.gd")
 const InteriorExpeditionTransitionState := preload("res://scripts/main/interior_expedition_transition_state.gd")
 const NavigationCoreRecoveryState := preload("res://scripts/main/navigation_core_recovery_state.gd")
+const TransferHubMissionGuidance := preload("res://scripts/main/transfer_hub_mission_guidance.gd")
 const WorldConnectorController := preload("res://scripts/main/world_connector_controller.gd")
 const AudioCuePlayer := preload("res://scripts/main/audio_cue_player.gd")
 const SmokeFeedbackAudioChecks := preload("res://scripts/main/smoke/smoke_feedback_audio_checks.gd")
@@ -2199,7 +2200,10 @@ func _update_status_label() -> void:
 		objective_step_cue_blocked = true
 	if not oxygen_feedback.is_empty():
 		objective_step_cue_blocked = true
-	var objective_text := _route_commitment_overlay_text(not objective_step_cue_blocked)
+	var transfer_hub_mission := _transfer_hub_mission_report()
+	var transfer_hub_active := bool(transfer_hub_mission.get("active", false))
+	var mission_text := str(transfer_hub_mission.get("text", ""))
+	var objective_text := "" if transfer_hub_active else _route_commitment_overlay_text(not objective_step_cue_blocked)
 
 	var oxygen_seconds := int(ceil(_sortie_state.oxygen_seconds))
 	var oxygen_text := "Oxygen %ds" % oxygen_seconds
@@ -2211,9 +2215,9 @@ func _update_status_label() -> void:
 		if _expedition_plan_state != null
 		else ""
 	)
-	var anomaly_text: String = _anomaly_survey.overlay_text(_world, _player, selected_lead_id)
-	var wreck_network_text: String = _wreck_network_investigation.objective_line()
-	var material_text: String = _material_runtime.overlay_text()
+	var anomaly_text: String = "" if transfer_hub_active else _anomaly_survey.overlay_text(_world, _player, selected_lead_id)
+	var wreck_network_text: String = "" if transfer_hub_active else _wreck_network_investigation.objective_line()
+	var material_text: String = _material_runtime.overlay_text(not transfer_hub_active)
 
 	_status_label.text = "Score %d\nSalvage banked %d/%d\nHeld %d/%d (%d pts)\n%s\n%s\n%s" % [
 		_banked_score,
@@ -2226,6 +2230,8 @@ func _update_status_label() -> void:
 		oxygen_text,
 		progression_text,
 	]
+	if not mission_text.is_empty():
+		_status_label.text += "\n%s" % mission_text
 	if not objective_text.is_empty():
 		_status_label.text += "\n%s" % objective_text
 	if not anomaly_text.is_empty():
@@ -2238,6 +2244,14 @@ func _update_status_label() -> void:
 		_status_label.text += "\n%s" % prompt
 	_status_label.text = ExpeditionDayPresentation.decorate_status(self, _status_label.text)
 	_update_result_panel()
+
+
+func _transfer_hub_mission_report() -> Dictionary:
+	return TransferHubMissionGuidance.report(
+		_world,
+		_anomaly_survey.profile_state() if _anomaly_survey != null else null,
+		_navigation_core
+	)
 
 
 func _review_header_text(world) -> String:

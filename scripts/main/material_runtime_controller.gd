@@ -134,7 +134,7 @@ func banked_quantity(material_id: String) -> int:
 	return _profile.material_quantity(material_id) if _profile != null else 0
 
 
-func overlay_text() -> String:
+func overlay_text(include_research_lead := true) -> String:
 	var held := held_quantities()
 	var titanium_banked := banked_quantity(TITANIUM_ID)
 	var rubber_banked := banked_quantity(RUBBER_ID)
@@ -159,7 +159,7 @@ func overlay_text() -> String:
 			electrocyte_banked,
 			int(held.get(EEL_ELECTROCYTE_ID, 0)),
 		])
-	if not _research_lead_text.is_empty():
+	if include_research_lead and not _research_lead_text.is_empty():
 		lines.append(_research_lead_text)
 	return "\n".join(lines)
 

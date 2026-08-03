@@ -211,6 +211,9 @@
       "reward_commit_map_id": "production_level_01",
       "reward_commit_map_path": "res://maps/production_level_01.greybox.json",
       "reward_commit_entry_id": "surface_boat_entry",
+      "mission_id": "transfer_hub_core_recovery",
+      "mission_guidance": "Navigation core | Select Cutter | Space/USE on sealed cradle",
+      "mission_return_guidance": "Navigation core secured | Return through west door, then surface boat",
       "intent": "One deliberate Cutter recovery whose discovery commits only at the canonical boat."
     }
   ],

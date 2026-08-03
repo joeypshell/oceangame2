@@ -110,6 +110,19 @@ class WorldConnectorValidationTests(unittest.TestCase):
         failures = validate_world_connector_schema(self.exterior_path, legacy)
         self.assertTrue(any("requires connector_kind" in failure for failure in failures), failures)
 
+    def test_validates_optional_source_owned_mission_guidance(self) -> None:
+        entrance = self.exterior["zones"][0]
+        entrance.update({
+            "mission_id": "transfer_hub_core_recovery",
+            "mission_guidance": "Transfer Hub | Descend to lowest central chamber",
+            "mission_return_guidance": "Navigation core secured | Return to surface boat",
+        })
+        self._write_maps()
+        self.assertEqual([], validate_world_connector_schema(self.exterior_path, self.exterior))
+        entrance.pop("mission_return_guidance")
+        failures = validate_world_connector_schema(self.exterior_path, self.exterior)
+        self.assertTrue(any("mission guidance is missing" in failure for failure in failures), failures)
+
 
 if __name__ == "__main__":
     unittest.main()

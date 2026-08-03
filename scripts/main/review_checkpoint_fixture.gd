@@ -138,11 +138,15 @@ static func apply(checkpoint_id: String, profile) -> Dictionary:
 			return _result(false, checkpoint_id, "recipe_fixture_failed", deposit)
 	if not _boundary_is_ready(checkpoint_id, profile):
 		return _result(false, checkpoint_id, "checkpoint_boundary_drift", profile.report())
-	return _result(true, checkpoint_id, "ready", {
+	var result := {
 		"map_path": required_map_path(checkpoint_id),
 		"completed_projects": project_ids.duplicate(),
 		"banked_materials": recipe.duplicate(true),
-	})
+	}
+	if checkpoint_id == EXPANSION_18_START:
+		result["active_objective_id"] = "transfer_hub_core_recovery"
+		result["active_objective_label"] = "Transfer Hub"
+	return _result(true, checkpoint_id, "ready", result)
 
 
 static func _project_ids_for(checkpoint_id: String) -> Array:
