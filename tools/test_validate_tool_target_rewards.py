@@ -94,11 +94,16 @@ class ToolTargetRewardValidationTests(unittest.TestCase):
             "mission_id": "transfer_hub_core_recovery",
             "mission_guidance": "Navigation core | Select Cutter | Space/USE on sealed cradle",
             "mission_return_guidance": "Navigation core secured | Return through west door",
+            "tool_affordance_id": "chain_seal",
         })
         self.assertEqual([], validate_tool_target_reward_schema(map_data))
         target["mission_id"] = "Bad Mission"
         failures = validate_tool_target_reward_schema(map_data)
         self.assertTrue(any("mission_id must use lower_snake_case" in failure for failure in failures), failures)
+        target["mission_id"] = "transfer_hub_core_recovery"
+        target["tool_affordance_id"] = "generic_gray_block"
+        failures = validate_tool_target_reward_schema(map_data)
+        self.assertTrue(any("tool_affordance_id must be one of" in failure for failure in failures), failures)
 
     def test_rejects_local_commit_for_held_discovery_cargo(self) -> None:
         map_data = valid_map()
@@ -106,6 +111,16 @@ class ToolTargetRewardValidationTests(unittest.TestCase):
         target["reward_kind"] = "held_discovery_cargo"
         failures = validate_tool_target_reward_schema(map_data)
         self.assertTrue(any("different canonical map" in failure for failure in failures), failures)
+
+    def test_rejects_chain_seal_on_non_cutter_entity(self) -> None:
+        map_data = valid_map()
+        map_data["entities"].append({
+            "id": "ordinary_salvage",
+            "type": "salvage",
+            "tool_affordance_id": "chain_seal",
+        })
+        failures = validate_tool_target_reward_schema(map_data)
+        self.assertTrue(any("supported only on cutter tool_target" in failure for failure in failures), failures)
 
 
 if __name__ == "__main__":

@@ -103,9 +103,10 @@ def entities() -> list[dict]:
             "tier": "valuable",
             "interaction": "cutter_salvage",
             "interaction_seconds": 2.5,
-            "interaction_label": "navigation core",
+            "interaction_label": "chain-sealed navigation core",
             "required_tool_id": "salvage_cutter",
             "tool_project_id": "salvage_cutter_project",
+            "tool_affordance_id": "chain_seal",
             "reward_kind": "held_discovery_cargo",
             "reward_id": CORE_DISCOVERY_ID,
             "reward_pending_label": "Navigation core secured | Return to the boat",
@@ -116,7 +117,7 @@ def entities() -> list[dict]:
             "reward_commit_entry_id": BOAT_ID,
             "mission_id": MISSION_ID,
             "mission_guidance": (
-                "Navigation core | Select Cutter | Space/USE on sealed cradle"
+                "Navigation core | Select Cutter | Space/USE to cut chains"
             ),
             "mission_return_guidance": (
                 "Navigation core secured | Return through west door, then surface boat"

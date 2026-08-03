@@ -149,6 +149,25 @@ def render_svg(map_data: dict) -> str:
             parts.append(f'<circle cx="{cx}" cy="{cy}" r="15" fill="{COLORS["material"]}" stroke="#07584f" stroke-width="5"/>')
         elif entity_type == "tool_target":
             parts.append(f'<rect x="{cx - 17}" y="{cy - 17}" width="34" height="34" fill="{COLORS["tool_target"]}" stroke="#6e4210" stroke-width="5"/>')
+            if entity.get("tool_affordance_id") == "chain_seal":
+                parts.append(
+                    f'<path d="M {cx - 29} {cy - 19} L {cx + 29} {cy + 19} '
+                    f'M {cx - 29} {cy + 19} L {cx + 29} {cy - 19}" '
+                    'fill="none" stroke="#17242a" stroke-width="10"/>'
+                )
+                parts.append(
+                    f'<path d="M {cx - 29} {cy - 19} L {cx + 29} {cy + 19} '
+                    f'M {cx - 29} {cy + 19} L {cx + 29} {cy - 19}" '
+                    'fill="none" stroke="#f7ba3d" stroke-width="4" stroke-dasharray="8 5"/>'
+                )
+                parts.append(
+                    f'<polygon points="{cx},{cy - 12} {cx + 12},{cy} {cx},{cy + 12} {cx - 12},{cy}" '
+                    'fill="#17242a" stroke="#f7ba3d" stroke-width="4"/>'
+                )
+                parts.append(
+                    f'<line x1="{cx - 5}" y1="{cy + 5}" x2="{cx + 5}" y2="{cy - 5}" '
+                    'stroke="#66f5ff" stroke-width="4"/>'
+                )
         elif entity_type == "hazard":
             parts.append(f'<circle cx="{cx}" cy="{cy}" r="19" fill="{COLORS["hazard"]}" stroke="#64121d" stroke-width="5"/>')
             parts.append(f'<line x1="{cx - 12}" y1="{cy - 12}" x2="{cx + 12}" y2="{cy + 12}" stroke="#ffffff" stroke-width="5"/>')

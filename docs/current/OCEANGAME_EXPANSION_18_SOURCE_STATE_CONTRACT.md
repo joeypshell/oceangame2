@@ -98,8 +98,9 @@ The core cradle is a `tool_target` using the existing deliberate cutter shape:
 ```text
 interaction = cutter_salvage
 interaction_seconds = <positive duration>
-interaction_label = navigation core
+interaction_label = chain-sealed navigation core
 required_tool_id = salvage_cutter
+tool_affordance_id = chain_seal
 reward_kind = held_discovery_cargo
 reward_id = transfer_hub_navigation_core_discovery
 reward_commit_map_id = production_level_01
@@ -112,6 +113,11 @@ completes. Full cargo leaves the cradle present and unconsumed. The source may
 provide compact held, blocked, and commit labels, but cannot author progress,
 capacity, consumed state, pending state, completion, score, materials, profile
 data, or UI visibility.
+
+`chain_seal` is presentation-only. It replaces the core's generic valuable and
+timed rings with visible linked chains and a central cut seal. Because the
+affordance is a child of the target node, it hides on successful recovery and
+returns with the target after existing failure restoration.
 
 The reward grants no score, wallet value, recipe, capability, tool, material,
 or automatic route unlock. Its payoff is the physical core and one broad

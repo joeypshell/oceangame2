@@ -33,6 +33,10 @@
 <circle cx="208.0" cy="464.0" r="18" fill="#29d66f" stroke="#08351c" stroke-width="5"/>
 <text x="232.0" y="474.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">START</text>
 <rect x="1215.0" y="447.0" width="34" height="34" fill="#ffad42" stroke="#6e4210" stroke-width="5"/>
+<path d="M 1203.0 445.0 L 1261.0 483.0 M 1203.0 483.0 L 1261.0 445.0" fill="none" stroke="#17242a" stroke-width="10"/>
+<path d="M 1203.0 445.0 L 1261.0 483.0 M 1203.0 483.0 L 1261.0 445.0" fill="none" stroke="#f7ba3d" stroke-width="4" stroke-dasharray="8 5"/>
+<polygon points="1232.0,452.0 1244.0,464.0 1232.0,476.0 1220.0,464.0" fill="#17242a" stroke="#f7ba3d" stroke-width="4"/>
+<line x1="1227.0" y1="469.0" x2="1237.0" y2="459.0" stroke="#66f5ff" stroke-width="4"/>
 <rect x="0" y="0" width="1408" height="896" fill="url(#grid)"/>
 <text x="24.0" y="42.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="30" paint-order="stroke" stroke="#10384a" stroke-width="4">transfer_hub_interior_01 - greybox source preview</text>
 <text x="24.0" y="854.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">cyan=open | gray=solid | tan=extraction | orange=boat/tool | green=start | yellow=salvage | teal=material/survey</text>
