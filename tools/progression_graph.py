@@ -5,7 +5,7 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Iterable
-
+from progression_graph_creatures import add_creature_edges, add_creature_nodes
 from progression_graph_contract import CANONICAL_CHAIN_IDS, CANONICAL_EXTENSION_CHAINS
 from progression_graph_investigations import add_wreck_network_investigations
 from progression_graph_helpers import (
@@ -18,7 +18,6 @@ from progression_graph_helpers import (
     rects_overlap as _rects_overlap,
     requirement_id as _requirement_id,
 )
-
 ROOT = Path(__file__).resolve().parents[1]
 PRODUCTION_MAP_PATHS = tuple(sorted((ROOT / "maps").glob("production_slice_*.greybox.json")))
 ENTRY_TYPES = {"boat_spawn", "spawn"}
@@ -119,7 +118,6 @@ class ProgressionGraphBuilder:
         self._add_purchase_edges()
         self._mark_mandatory_chain()
         return self.graph
-
     def _add_global_nodes(self) -> None:
         for item in self.contract["session_upgrades"]:
             self.graph.add_node(Node(f"upgrade:{item['id']}", _display(item["id"]), "upgrade", attrs=dict(item)), item["id"])
@@ -191,6 +189,7 @@ class ProgressionGraphBuilder:
         for item in _items(map_data, "survey_targets"):
             if reward_id := str(item.get("scan_reward_id", "")):
                 self.graph.add_node(Node(f"discovery:{reward_id}", _display(reward_id), "discovery", map_id, str(item.get("route_context", ""))), reward_id)
+        add_creature_nodes(self.graph, map_data, Node)
 
     def _kind_for(self, collection: str, item: dict[str, Any]) -> str:
         if collection == "entities":
@@ -261,6 +260,7 @@ class ProgressionGraphBuilder:
                 self._biological_edges(key, item, map_id)
             elif node.kind in {"salvage", "tool_target", "material_source"}:
                 self._entity_edges(key, item, map_id)
+        add_creature_edges(self.graph, map_data)
 
     def _connector_edges(self, key: str, item: dict[str, Any], map_id: str) -> None:
         destination_map = str(item.get("destination_map_id", ""))

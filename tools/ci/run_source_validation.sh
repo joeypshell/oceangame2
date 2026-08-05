@@ -10,6 +10,8 @@ python tools/test_production_level_01_expansion_16.py
 python tools/test_validate_expansion_14_contract.py
 python tools/test_validate_southeast_wreck_return.py
 python tools/test_validate_tool_target_rewards.py
+python tools/test_validate_living_expedition_schema.py
+python tools/test_progression_graph_creatures.py
 python tools/validate_regional_journeys.py maps/production_level_01.greybox.json
 python tools/validate_deeper_wreck_return.py maps/production_level_01.greybox.json
 python tools/validate_expansion_14_contract.py maps/production_level_01.greybox.json

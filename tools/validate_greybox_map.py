@@ -14,6 +14,7 @@ from validate_expansion_14_contract import validate_expansion_14_contract
 from validate_destination_payoffs import validate_destination_payoff_schema
 from validate_final_dive_objective_seeds import validate_final_dive_objective_seed_reachability, validate_final_dive_objective_seed_schema
 from validate_hostile_encounters import validate_hostile_encounter_reachability, validate_hostile_encounter_schema
+from validate_living_expedition_schema import validate_living_expedition_reachability, validate_living_expedition_schema
 from validate_light_return import validate_light_return
 from validate_material_sources import validate_material_source_reachability, validate_material_source_schema
 from validate_moving_hazards import validate_moving_hazard_reachability, validate_moving_hazard_schema
@@ -363,13 +364,11 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("map_json", type=Path)
     args = parser.parse_args()
-
     with args.map_json.open("r", encoding="utf-8") as handle:
         map_data = json.load(handle)
 
     width = int(map_data["units"]["width_tiles"])
     height = int(map_data["units"]["height_tiles"])
-
     solid: set[tuple[int, int]] = set()
     for terrain in map_data.get("terrain", []):
         if terrain.get("type") == "solid":
@@ -377,7 +376,6 @@ def main() -> int:
 
     entities = map_data.get("entities", [])
     base_zones = [zone for zone in map_data.get("zones", []) if zone.get("type") == "base"]
-
     failures: list[str] = []
     zones = map_data.get("zones", [])
     failures.extend(validate_entity_schema(entities, width, height, base_zones))
@@ -389,6 +387,7 @@ def main() -> int:
     failures.extend(validate_destination_payoff_schema(args.map_json, map_data))
     failures.extend(validate_final_dive_objective_seed_schema(map_data, entities))
     failures.extend(validate_hostile_encounter_schema(map_data))
+    failures.extend(validate_living_expedition_schema(map_data))
     failures.extend(validate_material_source_schema(map_data))
     failures.extend(validate_moving_hazard_schema(map_data))
     failures.extend(validate_next_dive_prompt_schema(map_data, entities, zones))
@@ -478,6 +477,7 @@ def main() -> int:
     failures.extend(validate_current_gate_reachability(zones, solid, reachable))
     failures.extend(validate_final_dive_objective_seed_reachability(map_data, entities, solid, reachable))
     failures.extend(validate_hostile_encounter_reachability(map_data.get("hostile_encounters", []), solid, reachable))
+    failures.extend(validate_living_expedition_reachability(map_data, solid, reachable))
     failures.extend(validate_material_source_reachability(entities, solid, reachable))
     failures.extend(validate_moving_hazard_reachability(map_data.get("moving_hazards", []), solid, reachable))
     failures.extend(validate_progression_container_reachability(map_data.get("progression_containers", []), solid, reachable))

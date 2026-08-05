@@ -22,5 +22,7 @@ jobs:
           python-version: "3.12"
       - name: Run focused progression fixtures
         run: python tools/test_progression_graph.py
+      - name: Run proposed creature progression fixtures
+        run: python tools/test_progression_graph_creatures.py
       - name: Audit source-derived progression graph
         run: python tools/audit_progression_graph.py

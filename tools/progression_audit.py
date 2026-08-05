@@ -46,6 +46,8 @@ def audit_graph(graph: ProgressionGraph, *, check_canonical: bool = True) -> Aud
     for node in sorted(graph.nodes.values(), key=lambda item: item.key):
         if node.mandatory and node.key not in stages:
             failures.append(f"Mandatory {node.label} ({node.key}) is unreachable from a fresh profile.")
+        elif node.attrs.get("implementation_status") == "proposed" and node.key not in stages:
+            failures.append(f"Proposed {node.label} ({node.key}) is unreachable from a fresh profile.")
     failures.extend(_funding_failures(graph))
     failures.extend(_material_floor_failures(graph))
     failures.extend(_guard_counter_failures(graph))
@@ -88,7 +90,10 @@ def render_review_doc(
         "| Stage | Item / condition | Map / route | Blocker | Prerequisite source | Unlock / payoff | Reachability |",
         "| ---: | --- | --- | --- | --- | --- | --- |",
     ])
-    report_nodes = [node for node in graph.nodes.values() if node.mandatory]
+    report_nodes = [
+        node for node in graph.nodes.values()
+        if node.mandatory or node.attrs.get("implementation_status") == "proposed"
+    ]
     report_nodes.sort(key=lambda node: (result.stages.get(node.key, 9999), node.map_id, node.kind, node.key))
     for node in report_nodes:
         stage = result.stages.get(node.key)

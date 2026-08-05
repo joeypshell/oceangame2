@@ -16,6 +16,7 @@ species, stable UI, turn-based combat, terrain expansion, or broad companion AI.
 | Species | `spark_ray` |
 | Individual | `spark_ray_juvenile_01` |
 | Rescue | `spark_ray_rescue_01` |
+| Riding review | `spark_ray_riding_review_01` |
 | Base mounted action | `glide_surge` |
 | Current memory opportunity | `spark_ray_current_memory_01` |
 | Hostile memory opportunity | `spark_ray_eel_memory_01` |
@@ -29,6 +30,9 @@ species, stable UI, turn-based combat, terrain expansion, or broad companion AI.
 
 These IDs are immutable once source authoring or profile fixtures use them.
 Display labels and individual callsign may change independently.
+
+The exact catalog and optional map-record shapes are defined in
+`docs/current/LIVING_EXPEDITION_01_MAP_SCHEMA.md`.
 
 ## Ownership
 
