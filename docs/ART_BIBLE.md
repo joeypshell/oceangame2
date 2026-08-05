@@ -2,7 +2,7 @@
 
 ## Visual Goal
 
-The game should look like a clean, readable, stylized side-view underwater cave adventure. The art should be simple enough to generate and iterate safely while staying consistent enough to scale into a larger OceanGame-style project later.
+The game should look like a clean, readable, stylized side-view underwater expedition with a living-creature focus. Terrain, diver, companions, wildlife, tools, and UI should be simple enough to generate and revise individually while remaining coherent at gameplay scale.
 
 The approved primary visual direction is:
 
@@ -30,6 +30,7 @@ Use it for modular underwater cave terrain, broad readable rock shapes, clear bl
 - Outlines: optional soft edge accents; avoid heavy black outlines unless the full style commits to them.
 - Detail: readable at gameplay zoom first, attractive second.
 - Color: limited ocean palette with strong contrast between interactive and background objects.
+- Creatures: distinctive silhouette, movement rhythm, and behavior first; color swaps alone do not establish a species or adaptation.
 - Terrain should be modular and asset-friendly: grid-aligned floors, walls, ceilings, corners, and background silhouettes.
 - Decorative coral, seaweed, crates, lamps, wreckage, and bubbles should be separate props, not baked into every terrain chunk.
 
@@ -73,6 +74,35 @@ Normal gameplay previews should use small readable in-world props instead of abs
 
 The approved `assets/player/player_diver_01.png` remains the style and scale anchor for player animation. The first animation slice uses `assets/player/player_diver_swim_01.png`, a small swim/idle sheet with matching 96x64 frame bounds, right-facing source frames, runtime visual-only flipping, and no collision, camera, movement, map, oxygen, cargo, or light-cone behavior changes.
 
+## Creature And Adaptation Direction
+
+Creature art must support attachment and mechanical reading rather than act as
+collectible decoration.
+
+- Each species needs a recognizable body plan and locomotion silhouette at the
+  normal gameplay camera.
+- An individual companion should remain identifiable beside the diver without
+  crowding traversal or HUD space.
+- Base behavior requires readable idle, follow, catch-up, separated/worried,
+  encounter-response, and recovery states before broad animation production.
+- Temperament may affect timing, posture, spacing, and idle expression, but not
+  make critical behavior visually ambiguous.
+- Permanent adaptations need a body, marking, posture, or effect change that is
+  visible without opening a stat screen.
+- Adaptation effects must show direction, range, target, charge, cooldown, and
+  outcome where relevant.
+- Companion, passive wildlife, defensive wildlife, territorial enemies, and
+  predators need different movement and warning language.
+- Do not communicate species only through a floating marker, scan circle,
+  recolor, or text label.
+
+The first Spark Ray proof uses one base individual plus separately reviewable
+Anchor Fins and Guardian Pulse variants. Anchor Fins should broaden the fin-tip
+silhouette and lower the current stance. Guardian Pulse should add a conductive
+stripe, readable charge, directional discharge, hit response, and cooldown
+recovery. Changing either variant must not regenerate terrain, diver, boat,
+other wildlife, or the full scene.
+
 ## Current Boat Entry Pass
 
 Production-style `boat_spawn` visuals should read as the top-water start and return craft, not as an abstract rectangle:
@@ -104,6 +134,7 @@ Avoid these in the first prototype:
 - Retro SNES/pixel cave style.
 - Final terrain that reads as obvious repeated square tiles. Temporary grid-readable test tiles are acceptable while proving terrain rules.
 - Generic mobile platformer identity: coins, stars, ladders, and crowded collectible trails.
+- Generic pet/monster icons, capsule-like capture effects, or color-only creature variants that make individuals read as inventory tokens.
 - Dramatic lighting that hides gameplay information.
 - Whole-scene redraws to fix one asset.
 

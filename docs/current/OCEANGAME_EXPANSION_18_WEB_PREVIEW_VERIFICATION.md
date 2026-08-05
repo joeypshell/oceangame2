@@ -108,12 +108,12 @@ after the automatic two-half comparison and directs the player toward the
 physically reached Transfer Hub. The exact-SHA browser probe itself made no
 runtime, map, asset, workflow, capture, or baseline change.
 
-## Remaining Owner Gate
+## Recorded Owner Decision
 
-This technical PASS does not answer the milestone exit question. Issue #1201
-must still judge whether entering the discovered place, recovering its core,
-and carrying it back through the ocean feels like one earned expedition rather
-than a teleport or reset.
+This technical PASS did not answer the milestone exit question. The subsequent
+owner review closed #1201 with strategic HOLD: the Transfer Hub remains valid
+regression foundation, but extending its clue, recipe, gate, and scan cadence is
+not the active product direction. See `OCEANGAME_EXPANSION_18_CLOSEOUT.md`.
 
 ## Verification
 

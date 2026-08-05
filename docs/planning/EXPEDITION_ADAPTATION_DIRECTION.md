@@ -2,9 +2,9 @@
 
 Date: 2026-08-05
 
-Status: Selected proposed direction. Planning issue #1219 may land while
-Expansion 18 remains at its player gate. The implementation milestone must not
-start until #1201 closes and this proof is reviewed.
+Status: Active first-proof contract under the Living Expedition roadmap.
+Expansion 18 closes with strategic HOLD; the Spark Ray milestone is the next
+bounded implementation batch.
 
 ## Decision
 
@@ -108,7 +108,7 @@ plausible and visually distinct.
 
 The proof includes:
 
-- one rescued and named individual
+- one rescued individual with a stable callsign
 - one active companion at a time
 - deterministic follow, separation recovery, and context response
 - two meaningful expedition memories
@@ -132,8 +132,8 @@ proof adds no unexplained global command.
    condition, not waiting as an abstract collectible.
 3. The rescue uses an already understood diver verb and returns the creature to
    the canonical boat.
-4. Night debrief introduces the individual, allows naming, and establishes it
-   as tomorrow's active companion.
+4. Night debrief introduces the individual's stable callsign and establishes it
+   as tomorrow's active companion; free-form naming remains deferred.
 
 The rescue grants no score purchase and no surprise blueprint.
 
@@ -267,12 +267,12 @@ Deterministic evidence should prove:
 Automation proves the contract, not attachment or fun. The final gate requires
 the owner to play the three-day journey on the exact public build.
 
-## Proposed Milestone
+## First Milestone
 
-Proposed title: **OceanGame Expansion 19: Expedition Adaptation Proof**.
+Title: **Living Expedition 01: Spark Ray Adaptation Proof**.
 
-Create the milestone only after #1201 closes and this direction receives a
-planning review. Freeze approximately ten issues in this order:
+Freeze approximately ten issues in this order after the target-game and
+creature-system planning reset lands:
 
 1. Lock the companion experience, source, state, failure, and control contract.
 2. Add species, rescue, memory, adaptation, and payoff schema validation.

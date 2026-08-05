@@ -1,8 +1,8 @@
 # OceanGame Phase 2 Roadmap
 
 Date: 2026-08-05
-Status: Expansions 01-17 are complete with player GO. Expansion 18 remains at
-player gate #1201; Expedition Adaptation is the proposed post-gate direction.
+Status: Historical foundation roadmap. Expansions 01-17 have player GO;
+Expansion 18 closes technically complete with strategic experience HOLD.
 
 ## Decision
 
@@ -10,7 +10,7 @@ player gate #1201; Expedition Adaptation is the proposed post-gate direction.
 
 The finished Simple Diver Game and OceanGame Expansion 01 already prove authored maps, controlled rendering, oxygen/cargo pressure, connected routes, focused interactions, limited upgrades, a profile-backed scanner, durable discovery, deterministic validation, captures, and Web deployment.
 
-Phase 2 builds the longer game loop on that foundation:
+Phase 2 built the longer diver-expedition foundation:
 
 ```text
 morning promise -> choose a route -> make multiple oxygen sorties
@@ -90,18 +90,17 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Close Expansion 18 milestone #44 through its owner experience gate.
+No active commitment lives in this historical roadmap.
 
 ### Proposed
 
-Expansion 19 Expedition Adaptation Proof: one rescued active companion, two shared
-memories, one night choice, and one visible next-day payoff. See
-`docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`; implementation waits for #1201.
+The active commitment is Living Expedition 01. See
+`docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md`.
 
 ### Directional
 
-A small companion stable, more species, habitat consequences, regional identities,
-and later equipment tiers remain directional.
+Creature, stable, ecology, combat, and regional direction lives in the active
+Living Expedition roadmap.
 
 ### Vision
 
@@ -438,7 +437,7 @@ It proved two distinct physical transponders, guidance-only lead choice, prior-c
 
 ### Expansion 18: Transfer Hub Interior Expedition
 
-Status: Technical work is merged; milestone #44 remains open for #1201 and closeout.
+Status: Technical work is retained; the milestone closes with strategic HOLD.
 
 Goal: turn the recovered coordinates into one physically reached exceptional destination whose entry, recovery, return, and boat commitment remain one pressured expedition.
 
@@ -451,7 +450,7 @@ Prove:
 
 Exit question: did the coordinates lead to a place worth reaching, and did recovering the core and carrying it back feel like one earned expedition rather than a teleport or reset?
 
-The next proposed proof must make expeditions personally motivating before adding a roster.
+The active roadmap now requires a bonded-companion proof before adding a roster.
 
 ## Original OceanGame Convergence
 

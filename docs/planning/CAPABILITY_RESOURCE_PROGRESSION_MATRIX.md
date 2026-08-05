@@ -119,7 +119,7 @@ Creature materials should express function. Examples remain provisional: luminou
 | Expansion 07 | Valuable biological component | Weapon/suit upgrade | Creature scan and analyzed material | Base inputs plus low-count creature material | Guaranteed habitat candidate | New tactical behavior or access |
 | Expansion 08 | Tomorrow-specific opportunity | Condition-informed loadout/project choice | Forecast and existing knowledge | Seed-selected authored opportunities | Mandatory floor plus optional variance | A reason to choose another day/route |
 | Expansion 09 | New regional promise | Region-specific capability chain | Landmark, research, and mystery clues | Region materials plus prior capability | Cross-region dependency validation | Durable campaign progression |
-| Proposed Expansion 19 | Rescued individual changes through shared dives | One memory-selected companion adaptation | Meaningful current or threat experience | No generic XP or score purchase in the proof | Exact-once source condition plus profile persistence | Immediate exploration or protection payoff and another-day motivation |
+| Living Expedition 01 | Rescued individual changes through shared dives | One memory-selected companion adaptation | Meaningful current or threat experience | No generic XP or score purchase in the proof | Exact-once source condition plus profile persistence | Immediate exploration or protection payoff and another-day motivation |
 
 This matrix is sequencing guidance, not authorization to implement every named example. Each milestone plan must select one narrow row and lock exact source fields, dependencies, counts, failure rules, and validation.
 

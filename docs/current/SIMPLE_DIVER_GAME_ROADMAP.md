@@ -171,13 +171,13 @@ Good pass targets:
 
 Avoid pass targets that only add bookkeeping, labels, or isolated polish unless they unblock roadmap work.
 
-## Current Next Direction
+## Historical Next Direction
 
-Simple Diver Game 08 is a GO release candidate, Simple Diver Game 09 planning is complete, and OceanGame Expansion 01 closed with a GO. This roadmap is now finished history; active direction lives in `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`.
+Simple Diver Game 08 is a GO release candidate, Simple Diver Game 09 planning is complete, and OceanGame Expansion 01 closed with a GO. This roadmap is finished history. The Phase 2 roadmap records the foundation built afterward; active direction now lives in `docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md`.
 
 Expansion 01 proved one scanner/profile discovery path, source-authored `production_slice_01 <-> production_slice_04 <-> production_slice_02` travel, one timed anomaly survey, failure cleanup, exact-once boat commit, deterministic smoke, focused visual review, and public Web deployment.
 
-The selected next step is OceanGame Expansion 02: daylight, open-surface oxygen refill, boat-only banking, multiple sorties, and a compact night transition. The previously recommended noncombat territorial-eel pass remains useful behavioral reference, but it is no longer the immediate product target; enemies and weapons now enter through the later Combat Foundation milestone.
+At this roadmap's close, the selected next step was OceanGame Expansion 02: daylight, open-surface oxygen refill, boat-only banking, multiple sorties, and a compact night transition. That work is now part of the completed runtime foundation rather than the current product target.
 
 ## Deferred Work
 
