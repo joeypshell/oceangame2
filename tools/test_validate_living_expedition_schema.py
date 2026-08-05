@@ -1,0 +1,256 @@
+#!/usr/bin/env python3
+"""Focused fixtures for Living Expedition creature catalog and map schema."""
+
+from __future__ import annotations
+
+import copy
+import unittest
+
+from validate_living_expedition_schema import (
+    load_creature_catalog,
+    validate_creature_catalog,
+    validate_living_expedition_reachability,
+    validate_living_expedition_schema,
+)
+
+
+def valid_map() -> dict:
+    return {
+        "id": "production_level_01",
+        "units": {"width_tiles": 20, "height_tiles": 12, "tile_size_px": 32},
+        "terrain": [],
+        "entities": [{
+            "id": "surface_boat_entry",
+            "type": "boat_spawn",
+            "x": 1,
+            "y": 1,
+            "w": 3,
+            "h": 2,
+            "entry_x": 2,
+            "entry_y": 2,
+        }],
+        "zones": [{
+            "id": "spark_ray_memory_current",
+            "type": "marker",
+            "x": 8,
+            "y": 3,
+            "w": 1,
+            "h": 2,
+            "current_gate": True,
+            "required_capability_id": "propulsion_fins",
+        }],
+        "hostile_encounters": [{
+            "id": "spark_ray_memory_eel",
+            "x": 14,
+            "y": 5,
+            "territory": {"x": 13, "y": 4, "w": 3, "h": 3},
+            "required_weapon_capability_id": "shock_prod",
+        }],
+        "creature_rescues": [{
+            "id": "spark_ray_rescue_01",
+            "species_id": "spark_ray",
+            "individual_id": "spark_ray_juvenile_01",
+            "x": 3,
+            "y": 3,
+            "rescue_kind": "physical_aid",
+            "required_capability_id": "salvage_cutter",
+            "commit_map_id": "production_level_01",
+            "commit_entry_id": "surface_boat_entry",
+            "riding_review_context_id": "spark_ray_riding_review_01",
+            "availability": "all_supported_seeds",
+        }],
+        "companion_contexts": [
+            {
+                "id": "spark_ray_riding_review_01",
+                "context_kind": "mounted_route_review",
+                "species_id": "spark_ray",
+                "action_id": "glide_surge",
+                "route_points": [{"x": 3, "y": 3}, {"x": 6, "y": 3}],
+                "required_access_ids": [],
+                "dismount": {"outcome": "clear", "x": 6, "y": 3},
+                "availability": "all_supported_seeds",
+            },
+            {
+                "id": "spark_ray_anchor_independent_review_01",
+                "context_kind": "independent_action_review",
+                "species_id": "spark_ray",
+                "action_id": "anchor_brace",
+                "required_adaptation_id": "anchor_fins",
+                "target_id": "spark_ray_memory_current",
+                "availability": "all_supported_seeds",
+            },
+            {
+                "id": "spark_ray_anchor_mounted_review_01",
+                "context_kind": "mounted_action_review",
+                "species_id": "spark_ray",
+                "action_id": "anchor_brace",
+                "required_adaptation_id": "anchor_fins",
+                "target_id": "spark_ray_memory_current",
+                "availability": "all_supported_seeds",
+            },
+            {
+                "id": "spark_ray_guardian_independent_review_01",
+                "context_kind": "independent_action_review",
+                "species_id": "spark_ray",
+                "action_id": "guardian_pulse_action",
+                "required_adaptation_id": "guardian_pulse",
+                "target_id": "spark_ray_memory_eel",
+                "availability": "all_supported_seeds",
+            },
+            {
+                "id": "spark_ray_guardian_mounted_review_01",
+                "context_kind": "mounted_action_review",
+                "species_id": "spark_ray",
+                "action_id": "guardian_pulse_action",
+                "required_adaptation_id": "guardian_pulse",
+                "target_id": "spark_ray_memory_eel",
+                "availability": "all_supported_seeds",
+            },
+        ],
+        "creature_memory_opportunities": [
+            {
+                "id": "spark_ray_current_memory_01",
+                "memory_id": "held_the_flow",
+                "species_id": "spark_ray",
+                "individual_id": "spark_ray_juvenile_01",
+                "event_kind": "current_cycle_completed",
+                "target_id": "spark_ray_memory_current",
+                "adaptation_ids": ["anchor_fins"],
+                "payoff_id": "spark_ray_anchor_current_01",
+                "required_access_ids": ["propulsion_fins"],
+                "availability": "all_supported_seeds",
+            },
+            {
+                "id": "spark_ray_eel_memory_01",
+                "memory_id": "stood_ground",
+                "species_id": "spark_ray",
+                "individual_id": "spark_ray_juvenile_01",
+                "event_kind": "territorial_threat_cycle_resolved",
+                "target_id": "spark_ray_memory_eel",
+                "adaptation_ids": ["guardian_pulse"],
+                "payoff_id": "spark_ray_guardian_eel_01",
+                "required_access_ids": ["shock_prod"],
+                "availability": "all_supported_seeds",
+            },
+        ],
+        "creature_adaptation_payoffs": [
+            {
+                "id": "spark_ray_anchor_current_01",
+                "species_id": "spark_ray",
+                "adaptation_id": "anchor_fins",
+                "target_id": "spark_ray_memory_current",
+                "required_access_ids": ["propulsion_fins"],
+                "independent_context_id": "spark_ray_anchor_independent_review_01",
+                "mounted_context_id": "spark_ray_anchor_mounted_review_01",
+                "availability": "all_supported_seeds",
+            },
+            {
+                "id": "spark_ray_guardian_eel_01",
+                "species_id": "spark_ray",
+                "adaptation_id": "guardian_pulse",
+                "target_id": "spark_ray_memory_eel",
+                "required_access_ids": ["shock_prod"],
+                "independent_context_id": "spark_ray_guardian_independent_review_01",
+                "mounted_context_id": "spark_ray_guardian_mounted_review_01",
+                "availability": "all_supported_seeds",
+            },
+        ],
+    }
+
+
+def validate_all(map_data: dict) -> list[str]:
+    reachable = {(x, y) for x in range(20) for y in range(12)}
+    return [
+        *validate_living_expedition_schema(map_data),
+        *validate_living_expedition_reachability(map_data, set(), reachable),
+    ]
+
+
+class LivingExpeditionSchemaTests(unittest.TestCase):
+    def test_catalog_and_complete_first_proof_fixture_pass(self) -> None:
+        self.assertEqual([], validate_creature_catalog(load_creature_catalog()))
+        self.assertEqual([], validate_all(valid_map()))
+
+    def test_existing_map_without_creature_records_preserves_behavior(self) -> None:
+        map_data = valid_map()
+        for field in (
+            "creature_rescues",
+            "companion_contexts",
+            "creature_memory_opportunities",
+            "creature_adaptation_payoffs",
+        ):
+            map_data.pop(field)
+        self.assertEqual([], validate_living_expedition_schema(map_data))
+
+    def test_rejects_duplicate_unknown_and_mutable_source(self) -> None:
+        map_data = valid_map()
+        duplicate = copy.deepcopy(map_data["companion_contexts"][0])
+        duplicate["mounted"] = True
+        duplicate["action_id"] = "missing_action"
+        map_data["companion_contexts"].append(duplicate)
+        map_data["companion_contexts"][0]["dismount"]["progress"] = 0.5
+        failures = validate_all(map_data)
+        self.assertTrue(any("Duplicate creature map id" in failure for failure in failures), failures)
+        self.assertTrue(any("mutable or seed-dependent" in failure for failure in failures), failures)
+        self.assertTrue(any("dismount.progress" in failure for failure in failures), failures)
+        self.assertTrue(any("unknown action" in failure for failure in failures), failures)
+
+    def test_rejects_catalog_relationship_drift_and_duplicate_ids(self) -> None:
+        catalog = copy.deepcopy(load_creature_catalog())
+        catalog["memories"][0]["adaptation_ids"] = ["guardian_pulse"]
+        catalog["actions"][0]["id"] = "spark_ray"
+        failures = validate_creature_catalog(catalog)
+        self.assertTrue(any("Duplicate creature catalog id" in failure for failure in failures), failures)
+        self.assertTrue(any("unsupported memory/adaptation" in failure for failure in failures), failures)
+
+    def test_rejects_dangling_and_circular_memory_payoff_links(self) -> None:
+        map_data = valid_map()
+        memory = map_data["creature_memory_opportunities"][0]
+        memory["payoff_id"] = "missing_payoff"
+        memory["required_adaptation_id"] = "anchor_fins"
+        failures = validate_all(map_data)
+        self.assertTrue(any("circularly requires" in failure for failure in failures), failures)
+        self.assertTrue(any("malformed adaptation link" in failure for failure in failures), failures)
+
+    def test_rejects_seed_dependent_required_opportunity(self) -> None:
+        map_data = valid_map()
+        memory = map_data["creature_memory_opportunities"][0]
+        memory["availability"] = "daily_roll"
+        memory["day_seed"] = 4
+        failures = validate_all(map_data)
+        self.assertTrue(any("day_seed" in failure for failure in failures), failures)
+        self.assertTrue(any("all_supported_seeds" in failure for failure in failures), failures)
+
+    def test_rejects_rider_footprint_clipping_and_missing_dismount(self) -> None:
+        map_data = valid_map()
+        map_data["terrain"] = [{"id": "route_block", "type": "solid", "x": 4, "y": 3, "w": 1, "h": 1}]
+        map_data["companion_contexts"][0].pop("dismount")
+        failures = validate_all(map_data)
+        self.assertTrue(any("rider footprint clips terrain" in failure for failure in failures), failures)
+        self.assertTrue(any("reviewed clear dismount" in failure for failure in failures), failures)
+
+    def test_rejects_mounted_equipment_gate_bypass(self) -> None:
+        map_data = valid_map()
+        gate = map_data["zones"][0]
+        gate.update({"x": 4, "y": 3, "w": 1, "h": 1})
+        failures = validate_all(map_data)
+        self.assertTrue(any("bypasses equipment gate" in failure for failure in failures), failures)
+        map_data["companion_contexts"][0]["required_access_ids"] = ["propulsion_fins"]
+        self.assertEqual([], validate_all(map_data))
+
+    def test_rejects_payoff_that_drops_target_equipment_requirement(self) -> None:
+        map_data = valid_map()
+        map_data["creature_adaptation_payoffs"][0]["required_access_ids"] = []
+        failures = validate_all(map_data)
+        self.assertTrue(any("would bypass target equipment" in failure for failure in failures), failures)
+
+    def test_rejects_unreachable_required_records(self) -> None:
+        map_data = valid_map()
+        failures = validate_living_expedition_reachability(map_data, set(), {(0, 0)})
+        self.assertTrue(any("rescue site is unreachable" in failure for failure in failures), failures)
+        self.assertTrue(any("mounted route point is unreachable" in failure for failure in failures), failures)
+        self.assertTrue(any("target" in failure and "unreachable" in failure for failure in failures), failures)
+
+
+if __name__ == "__main__":
+    unittest.main()

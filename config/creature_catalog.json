@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "implementation_status": "proposed",
+  "species": [
+    {
+      "id": "spark_ray",
+      "display_name": "Spark Ray",
+      "roles": [
+        "independent",
+        "mounted"
+      ],
+      "ride_capable": true,
+      "rider_footprint_px": {
+        "width": 48,
+        "height": 24
+      },
+      "dismount_clearance_px": {
+        "width": 26,
+        "height": 18
+      },
+      "base_action_ids": [
+        "glide_surge"
+      ],
+      "memory_ids": [
+        "held_the_flow",
+        "stood_ground"
+      ],
+      "adaptation_ids": [
+        "anchor_fins",
+        "guardian_pulse"
+      ]
+    }
+  ],
+  "actions": [
+    {
+      "id": "glide_surge",
+      "roles": [
+        "mounted"
+      ],
+      "effect_kind": "movement",
+      "damaging": false
+    },
+    {
+      "id": "anchor_brace",
+      "roles": [
+        "independent",
+        "mounted"
+      ],
+      "effect_kind": "current_brace",
+      "damaging": false
+    },
+    {
+      "id": "guardian_pulse_action",
+      "roles": [
+        "independent",
+        "mounted"
+      ],
+      "effect_kind": "interrupt_knockback",
+      "damaging": false
+    }
+  ],
+  "memories": [
+    {
+      "id": "held_the_flow",
+      "event_kind": "current_cycle_completed",
+      "adaptation_ids": [
+        "anchor_fins"
+      ]
+    },
+    {
+      "id": "stood_ground",
+      "event_kind": "territorial_threat_cycle_resolved",
+      "adaptation_ids": [
+        "guardian_pulse"
+      ]
+    }
+  ],
+  "adaptations": [
+    {
+      "id": "anchor_fins",
+      "required_memory_id": "held_the_flow",
+      "independent_action_id": "anchor_brace",
+      "mounted_action_id": "anchor_brace",
+      "mutually_exclusive_with": [
+        "guardian_pulse"
+      ]
+    },
+    {
+      "id": "guardian_pulse",
+      "required_memory_id": "stood_ground",
+      "independent_action_id": "guardian_pulse_action",
+      "mounted_action_id": "guardian_pulse_action",
+      "mutually_exclusive_with": [
+        "anchor_fins"
+      ]
+    }
+  ]
+}
