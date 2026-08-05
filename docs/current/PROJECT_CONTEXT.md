@@ -1,12 +1,12 @@
 # Project Context
 
-Last updated: 2026-08-02
+Last updated: 2026-08-05
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
 ## Current Goal
 
-`oceangame2` has a GO release candidate and seventeen completed bounded Phase 2 expansions. Expansion 18 Transfer Hub Interior Expedition is active in milestone #44 through frozen issues #1192-#1201. OceanGame Expansion 01 proved:
+`oceangame2` has a GO release candidate and seventeen completed bounded Phase 2 expansions. Expansion 18 Transfer Hub Interior Expedition is technically assembled and remains active at player gate #1201 in milestone #44. Expedition Adaptation is the selected proposed post-gate direction, with implementation intentionally unbatched until the current gate closes and its one-companion proof is reviewed. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -50,6 +50,8 @@ Expansion 17 Wreck Network Triangulation is complete with owner GO through #1167
 
 Expansion 18 selects one exceptional `transfer_hub_interior_01` destination reached by swimming through the normal full level to a physical entrance. Milestone #44 implements the source/state contract, generated maps, continuous sortie, existing-cutter core recovery, deterministic evidence, and exact public player gate. The same sortie must preserve oxygen, daylight, health, and cargo across entry and paired return. It is not a connector network, fast travel, another scanner chain, another recipe/gate, or a second implementation batch.
 
+The proposed next direction is one bonded active companion whose meaningful expedition experiences become memories and whose selected memory becomes a visible adaptation during night debrief. The first proof uses one juvenile Spark Ray, two experience paths, one mutually exclusive adaptation choice, and an immediate next-day exploration or protection payoff. Diver equipment retains hard geographic access; the companion changes what the pair can accomplish within reachable regions.
+
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
 Controlled gameplay/visual passes are now a validation lane inside the roadmap, not the whole roadmap. New work should serve curiosity, pressure, payoff, remembered-place progress, meaningful route choice, or a reason to try another expedition.
@@ -74,6 +76,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Current docs index: `README.md`
 - Finished foundation roadmap: `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`
 - Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
+- Proposed creature direction: `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
 - Completed Expansion 10 handoff: `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md` plus its linked plan, source contract, visual decision, Web verification, and correction #900
 - Completed Expansion 11 handoff: `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #925/#927, and player GO #914
@@ -83,7 +86,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Completed Expansion 15 handoff: `docs/current/OCEANGAME_EXPANSION_15_CLOSEOUT.md`, with its plan, source/state contract, visual decision, final Web evidence, and corrections #1113/#1117/#1119
 - Completed Expansion 16 handoff: `docs/current/OCEANGAME_EXPANSION_16_CLOSEOUT.md`, with its plan, source/state contract, visual decisions, exact Web evidence, and corrections #1143-#1146/#1151/#1153
 - Completed Expansion 17 handoff: `docs/current/OCEANGAME_EXPANSION_17_CLOSEOUT.md`, with its plan, source/state contract, visual decision, exact Web evidence, and corrections #1175/#1178/#1181-#1184
-- Active Expansion 18 handoff: `docs/current/OCEANGAME_EXPANSION_18_PLAN.md` and `docs/current/OCEANGAME_EXPANSION_18_SOURCE_STATE_CONTRACT.md`; milestone #44 contains #1192-#1201
+- Active Expansion 18 handoff: plan, source/state contract, visual decision, and Web verification under `docs/current/`; only player gate #1201 remains open in milestone #44
 - Latest audio/Web handoff: `docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
@@ -91,7 +94,8 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Focused player-review workflow: `docs/current/PLAYTEST_CHECKPOINTS.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
 - Latest owner decision: Expansion 17 GO through #1167 on exact reviewed runtime `075a450`; milestone #43 is complete
-- Latest selected direction: Expansion 18 Transfer Hub Interior Expedition; resolve frozen milestone #44 without adding Expansion 19 work
+- Latest committed direction: close Expansion 18 milestone #44 through player gate #1201
+- Latest proposed direction: Expansion 19 Expedition Adaptation Proof; do not create its implementation batch before #1201 closes and the proof is reviewed
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
 - Latest source contract: `docs/current/OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`
 - Latest visual decision: corrected Expansion 17 focused states are accepted for review while the 14-view full-level and slice baselines remain pixel-stable
@@ -213,7 +217,7 @@ For map changes, run the relevant generator, SVG renderer, validator, parity che
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Each issue needs acceptance criteria, relevant files, implementation notes, and verification steps.
 
-Current issue state as of 2026-08-02:
+Current issue state as of 2026-08-05:
 
 - Closed: #662-#671 completed Expansion 01 with a GO.
 - Closed: #685-#694 completed Expansion 02 with a GO.
@@ -238,7 +242,8 @@ Current issue state as of 2026-08-02:
 - Closed: #1156 planned Expansion 17; #1158-#1166 implemented it; #1175/#1178 corrected result/checkpoint gaps; #1181-#1184 corrected input, artifact identity, night payoff, visuals, and exact Web evidence after owner HOLD.
 - Closed: #1167 records owner GO for exact runtime `075a450`; milestone #43 is complete.
 - Closed planning: #1190 selected Expansion 18 Transfer Hub Interior Expedition.
-- Active: milestone #44 freezes #1192-#1201 for contract, source, runtime, smoke, visual/Web evidence, and player closeout.
+- Active: only #1201 remains open in milestone #44 for the Expansion 18 player verdict and closeout; #1192-#1200 plus bounded corrections are closed.
+- Active planning: #1219 documents the proposed Expedition Adaptation proof without creating its implementation batch.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -376,10 +381,11 @@ Current issue state as of 2026-08-02:
 
 ## Recommended Next Work
 
-Resolve frozen Expansion 18 milestone #44 in dependency order from #1192 through #1201. Stop at the exact-SHA player gate for GO/HOLD; do not create Expansion 19 work or activate #52/#53 in this resolver run.
+Resolve Expansion 18 player gate #1201 and record its GO or bounded HOLD. Planning issue #1219 may document Expedition Adaptation, but do not create or resolve the proposed Expansion 19 implementation batch until #1201 closes and the one-companion proof is reviewed. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 
+- Treat Expedition Adaptation as proposed, not implemented. Preserve one active companion, meaningful experience rather than XP grinding, deliberate night consolidation, visible adaptation, and the equipment-versus-companion boundary in its planning contract.
 - Keep the implemented held-cargo strip, selectable active tools, persistent vitals/objectives, and temporary prompts as distinct HUD responsibilities; a broad production HUD replacement remains directional.
 - Keep `production_level_01` as the default preview map unless a separate reviewed decision changes it.
 - Preserve `maps/full_cave_sketch_01.greybox.json` as the generated topology draft and source for a separately named `production_level_01` output.

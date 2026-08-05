@@ -1,18 +1,25 @@
 # Capability And Resource Progression Framework
 
-Date: 2026-07-09
+Date: 2026-08-05
 
 Status: directional design contract. Exact names, counts, placements, and balance belong to the milestone that implements each row.
 
 ## Purpose
 
-Plan maps, materials, tools, weapons, wildlife, and upgrades as one dependency system. This prevents isolated stat upgrades, progression blocked by random seeds, and map regions that do not pay off a capability.
+Plan maps, materials, tools, weapons, wildlife, companion adaptations, and upgrades as one dependency system. This prevents isolated stat upgrades, progression blocked by random seeds, and map regions that do not pay off a capability.
 
 The required pattern is:
 
 ```text
 visible promise -> practical knowledge -> guaranteed materials
 -> special component -> project -> changed capability -> remembered return payoff
+```
+
+The proposed companion path is separate from equipment crafting:
+
+```text
+meaningful shared experience -> individual memory -> night consolidation
+-> visible adaptation -> changed exploration or protection payoff
 ```
 
 ## Progression Nouns
@@ -24,6 +31,8 @@ visible promise -> practical knowledge -> guaranteed materials
 - Tool: an active interaction verb such as cut, pry, drill, sample, or clear.
 - Suit capability: passive access or survival behavior such as oxygen, light, current resistance, or pressure protection.
 - Weapon: an active combat option with a distinct tactical role.
+- Memory: an exact-once individual record of a meaningful shared encounter.
+- Adaptation: a deliberate night-consolidated change to one companion's body and behavior.
 - Payoff: a new route, interaction, material class, research result, threat response, or mystery lead.
 
 ## Gate Grammar
@@ -40,6 +49,23 @@ visible promise -> practical knowledge -> guaranteed materials
 Gates may block extraction of a resource or entry to a payoff, but required early materials must remain obtainable before the gate they unlock.
 
 Do not add fast travel, pylons, elevators, or permanent route bypasses. The player's mastery and equipment may improve traversal, but the journey remains part of the game.
+
+## Equipment And Companion Boundary
+
+Equipment remains the predictable owner of hard geographic access. Companion
+adaptations change what the pair can accomplish inside a region the diver can
+already reach or survive.
+
+| Pressure | Equipment responsibility | Companion opportunity |
+| --- | --- | --- |
+| Strong current | Propulsion fins permit required traversal | Hold position for a difficult scan, cut, sample, or defense |
+| Darkness | Dive light permits readable navigation | Reveal behavior, hidden organisms, or threat cues |
+| Pressure | Pressure equipment permits safe entry | Improve sensing, protection, or biological interaction |
+| Enemy territory | Weapon/health preparation preserves direct agency | Warn, distract, interrupt, defend, or support retreat |
+
+An adaptation must not silently bypass the equipment prerequisite that opens a
+mandatory region. Occasional paired gates may be planned later only when the
+progression graph proves both prerequisites and a non-circular payoff.
 
 ## Candidate Placement Contract
 
@@ -73,6 +99,7 @@ Creature materials should express function. Examples remain provisional: luminou
 - Creature materials occupy cargo and are not secured until banked at the boat.
 - Duplicate scans and already-completed knowledge should have a useful, bounded outcome rather than becoming dead interactions.
 - No project should be only a wallet payment once typed materials exist.
+- Major companion adaptations require distinct memories, not generic XP or repeated exposure. A material or biological catalyst may support a later adaptation but cannot substitute for its memory.
 - Equipment capabilities use explicit ingredient recipes. Score may gate access to blueprint research later, but never substitutes for required materials.
 - #825 gates the `propulsion_fins` recipe behind the guaranteed recovered `propulsion_fins_blueprint`; it does not settle whether future plans require overnight research or whether every known recipe builds during debrief.
 - #829 makes fins a passive same-map current capability, moves the scanner promise and anomaly into the east pocket, and keeps `current_stabilizer` as a later optional advanced-current tier rather than a weapon prerequisite.
@@ -92,6 +119,7 @@ Creature materials should express function. Examples remain provisional: luminou
 | Expansion 07 | Valuable biological component | Weapon/suit upgrade | Creature scan and analyzed material | Base inputs plus low-count creature material | Guaranteed habitat candidate | New tactical behavior or access |
 | Expansion 08 | Tomorrow-specific opportunity | Condition-informed loadout/project choice | Forecast and existing knowledge | Seed-selected authored opportunities | Mandatory floor plus optional variance | A reason to choose another day/route |
 | Expansion 09 | New regional promise | Region-specific capability chain | Landmark, research, and mystery clues | Region materials plus prior capability | Cross-region dependency validation | Durable campaign progression |
+| Proposed Expansion 19 | Rescued individual changes through shared dives | One memory-selected companion adaptation | Meaningful current or threat experience | No generic XP or score purchase in the proof | Exact-once source condition plus profile persistence | Immediate exploration or protection payoff and another-day motivation |
 
 This matrix is sequencing guidance, not authorization to implement every named example. Each milestone plan must select one narrow row and lock exact source fields, dependencies, counts, failure rules, and validation.
 
@@ -108,4 +136,5 @@ Every capability, material, tool, weapon, or creature-resource issue should answ
 - Can the seed or enemy dependency make progression impossible?
 - What changes after completion?
 - What remains risky on the return journey?
+- If a companion is involved, what exact experience creates its memory and why does its adaptation not replace the diver's access equipment?
 - Which generator, validator, runtime owner, smoke, and capture prove the contract?

@@ -6,9 +6,9 @@ OceanGame
 
 ## Purpose
 
-`oceangame2` is the production foundation for a side-view ocean expedition
-game. The project uses a compact playable scope to prove the larger OceanGame
-loop without treating the current work as disposable.
+`oceangame2` is the production foundation for a side-view ocean expedition and
+creature-raising game. The project uses a compact playable scope to prove the
+larger OceanGame loop without treating the current work as disposable.
 
 The game combines authored exploration, oxygen and daylight pressure,
 materials and blueprints, night projects, practical research, capability-gated
@@ -19,7 +19,9 @@ returns, limited combat, and reasons to begin another expedition day.
 The player is a researcher-diver operating from a surface boat above a
 dangerous cave network. They learn the water, investigate signals and wildlife,
 recover useful materials, build equipment, and return through remembered
-places with capabilities that change what can be reached or survived.
+places with capabilities that change what can be reached or survived. The
+proposed next direction adds one bonded sea companion whose individual growth
+is shaped by the expeditions they experience together.
 
 ## Core Loop
 
@@ -33,6 +35,13 @@ see a promise -> choose and prepare -> dive under daylight
 One day supports multiple oxygen sorties. Open surface water refills oxygen;
 only the canonical boat banks cargo, commits discoveries, supports night
 projects, and ends the day.
+
+The proposed Expedition Adaptation extension is:
+
+```text
+meaningful shared experience -> individual memory -> night consolidation
+-> visible adaptation -> changed next-day exploration or protection
+```
 
 ## Current Playable Foundation
 
@@ -59,11 +68,11 @@ the normal world or separate campaign areas.
 
 ## Current Committed Direction
 
-Expansions 01-17 are complete with player GO. Planning gate #1190 selects
-**Expansion 18: Transfer Hub Interior Expedition**. Its implementation
-milestone and issues remain intentionally uncreated pending a later audit.
+Expansions 01-17 are complete with player GO. Expansion 18 technically proves
+the Transfer Hub journey through #1192-#1200 and bounded corrections; player
+gate #1201 and milestone #44 remain open for the final experience verdict.
 
-The selected pass should:
+Expansion 18 preserves these boundaries:
 
 - turn the recovered transfer-hub coordinates into one physical destination
 - require normal travel through `production_level_01` to one exceptional entry
@@ -78,6 +87,16 @@ Detailed direction:
 - `docs/current/OCEANGAME_EXPANSION_18_PLAN.md`
 - `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
+
+After the Expansion 18 gate, the selected proposed direction is **Expedition
+Adaptation**: prove one rescued active companion, two meaningful memories, one
+night adaptation choice, one visible individual change, and immediate
+exploration/protection payoff. The implementation milestone remains uncreated
+until #1201 closes and the proof receives planning review.
+
+Detailed direction:
+
+- `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
 
 ## Design Principles
 
@@ -95,6 +114,10 @@ Detailed direction:
   everything is not the automatic best route.
 - Every expedition day should leave a project, opportunity, unresolved signal,
   remembered gate, or mystery worth returning for.
+- Companion growth should come from understandable shared experiences and a
+  deliberate night choice, never generic XP grinding or random mutation.
+- Diver equipment should retain hard geographic access; companions should
+  change what the pair can accomplish within reachable regions.
 
 ## Source And Validation Rules
 
@@ -115,6 +138,8 @@ Detailed direction:
 - Broad economy, crafting tree, or inventory grid.
 - Shortcut or fast-travel networks.
 - Full ecosystem simulation.
+- Broad creature rosters, breeding, fusion, party combat, lifespan pressure,
+  and habitat management before the one-companion proof succeeds.
 - Vehicles, large-scale production content, final art/audio, broad
   accessibility/input work, balance, and save hardening before their own
   selected milestones.

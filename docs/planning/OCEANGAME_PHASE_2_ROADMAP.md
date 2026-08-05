@@ -1,9 +1,8 @@
 # OceanGame Phase 2 Roadmap
 
-Date: 2026-07-31
-
-Status: Expansions 01-17 are complete with player GO. Planning gate #1190
-selects Expansion 18 Transfer Hub Interior Expedition; implementation is not batched.
+Date: 2026-08-05
+Status: Expansions 01-17 are complete with player GO. Expansion 18 remains at
+player gate #1201; Expedition Adaptation is the proposed post-gate direction.
 
 ## Decision
 
@@ -91,15 +90,18 @@ knowledge + base materials + special component = changed capability
 
 ### Committed
 
-Create and freeze the Expansion 18 implementation milestone in a separate audit.
+Close Expansion 18 milestone #44 through its owner experience gate.
 
 ### Proposed
 
-No Expansion 19 direction is selected.
+Expansion 19 Expedition Adaptation Proof: one rescued active companion, two shared
+memories, one night choice, and one visible next-day payoff. See
+`docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`; implementation waits for #1201.
 
 ### Directional
 
-Additional interiors, other regional identities, and later equipment tiers remain directional.
+A small companion stable, more species, habitat consequences, regional identities,
+and later equipment tiers remain directional.
 
 ### Vision
 
@@ -436,7 +438,7 @@ It proved two distinct physical transponders, guidance-only lead choice, prior-c
 
 ### Expansion 18: Transfer Hub Interior Expedition
 
-Status: Selected through planning gate #1190. Implementation milestone and issues are not yet created.
+Status: Technical work is merged; milestone #44 remains open for #1201 and closeout.
 
 Goal: turn the recovered coordinates into one physically reached exceptional destination whose entry, recovery, return, and boat commitment remain one pressured expedition.
 
@@ -448,6 +450,8 @@ Prove:
 - no travel menu, connector network, second interior, new recipe/capability, generic scan, or fast travel
 
 Exit question: did the coordinates lead to a place worth reaching, and did recovering the core and carrying it back feel like one earned expedition rather than a teleport or reset?
+
+The next proposed proof must make expeditions personally motivating before adding a roster.
 
 ## Original OceanGame Convergence
 
