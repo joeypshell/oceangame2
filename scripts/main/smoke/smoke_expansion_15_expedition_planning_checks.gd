@@ -43,7 +43,7 @@ func _smoke_expansion_15_expedition_planning_and_quit() -> void:
 		+ "route_contexts=%s,%s guidance=\"%s | %s\" preservation=%s "
 		+ "sorties=%d bloom_clear=invalidated relay_clear=resolved "
 		+ "final_selected=\"%s\" remaining_ids=%s auto_pin=false "
-		+ "unselected_mutation=false profile_schema=4."
+		+ "unselected_mutation=false profile_schema=%d."
 	)
 	print(summary % [
 		",".join(PackedStringArray([BLOOM_ID, RELAY_ID])),
@@ -57,6 +57,7 @@ func _smoke_expansion_15_expedition_planning_and_quit() -> void:
 		_sortie_count,
 		_main._expedition_plan_state.selected_lead_id(),
 		str(final_report.get("eligible_ids", [])),
+		ExpansionProfileState.SCHEMA_VERSION,
 	])
 	get_tree().quit(0)
 
@@ -355,7 +356,7 @@ func _exercise_relay_plan_build_and_resolution() -> bool:
 func _verify_final_owner_boundaries() -> bool:
 	var profile_report: Dictionary = _main._anomaly_survey.profile_state().report()
 	return _require(
-		int(profile_report.get("schema_version", -1)) == 4
+		int(profile_report.get("schema_version", -1)) == ExpansionProfileState.SCHEMA_VERSION
 		and not profile_report.has("selected_lead_id")
 		and _record_by_id(_world.get_regional_journeys(), RELAY_ID) == _relay_source
 		and _record_by_id(_world.get_daily_conditions(), BLOOM_ID) == _bloom_source,

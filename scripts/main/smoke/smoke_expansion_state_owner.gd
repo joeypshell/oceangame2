@@ -2,6 +2,7 @@ extends SceneTree
 
 const ExpeditionDiscoveryState := preload("res://scripts/main/expedition_discovery_state.gd")
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
+const CompanionProfileState := preload("res://scripts/main/companion_profile_state.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const SortieState := preload("res://scripts/main/sortie_state.gd")
 const TEST_PATH := "user://oceangame2_expansion_state_test.json"
@@ -59,6 +60,7 @@ func _run() -> void:
 			"material_inventory": {},
 			"completed_projects": [],
 			"banked_tool_target_ids": invalid_ids,
+			"companion_profile": CompanionProfileState.new().payload(),
 		}))
 		profile = ExpansionProfileState.new(TEST_PATH)
 		_expect(profile.load_profile().get("status") == "invalid_schema", "invalid banked tool target ids were accepted")
@@ -70,6 +72,7 @@ func _run() -> void:
 		"material_inventory": {},
 		"completed_projects": [],
 		"banked_tool_target_ids": [],
+		"companion_profile": CompanionProfileState.new().payload(),
 	}))
 	profile = ExpansionProfileState.new(TEST_PATH)
 	report = profile.load_profile()

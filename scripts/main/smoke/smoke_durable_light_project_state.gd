@@ -2,6 +2,7 @@ extends SceneTree
 
 const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+const CompanionProfileState := preload("res://scripts/main/companion_profile_state.gd")
 const MaterialProjectRuntime := preload("res://scripts/main/material_project_runtime.gd")
 const ProgressionRuntimeController := preload("res://scripts/main/progression_runtime_controller.gd")
 const ReviewProgressionFixture := preload("res://scripts/main/review_progression_fixture.gd")
@@ -163,6 +164,7 @@ func _profile_payload(projects: Array, capabilities: Array) -> Dictionary:
 		"material_inventory": {},
 		"completed_projects": projects,
 		"banked_tool_target_ids": [],
+		"companion_profile": CompanionProfileState.new().payload(),
 	}
 
 
