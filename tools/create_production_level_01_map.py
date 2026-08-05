@@ -12,6 +12,7 @@ import production_level_01_expansion_14 as expansion_14
 import production_level_01_expansion_16 as expansion_16
 import production_level_01_expansion_17 as expansion_17
 import production_level_01_expansion_18 as expansion_18
+import production_level_01_living_expedition_01 as living_expedition_01
 from production_level_01_expansion_15 import author_expedition_leads
 from production_level_01_gameplay_transform import (
     LOCAL_TO_GLOBAL_OFFSET,
@@ -32,7 +33,6 @@ from production_level_01_expansion_11 import (
     survey_targets as expansion_11_survey_targets,
     zones as expansion_11_zones,
 )
-
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_MAP_PATH = ROOT / "maps" / "full_cave_sketch_01.greybox.json"
 OUTPUT_MAP_PATH = ROOT / "maps" / "production_level_01.greybox.json"
@@ -328,7 +328,7 @@ def build_map_data(source_map: dict) -> dict:
 
     gameplay, gameplay_provenance = transform_gameplay_sections()
 
-    return expansion_18.author(expansion_17.author(expansion_16.author(author_expedition_leads({
+    return living_expedition_01.author(expansion_18.author(expansion_17.author(expansion_16.author(author_expedition_leads({
         "id": "production_level_01",
         "version": 1,
         "purpose": (
@@ -479,7 +479,7 @@ def build_map_data(source_map: dict) -> dict:
             *expansion_13.review_questions(),
             *expansion_14.review_questions(),
         ],
-    }))))
+    })))))
 
 
 def main() -> int:

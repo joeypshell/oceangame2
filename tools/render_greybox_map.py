@@ -25,6 +25,8 @@ COLORS = {
     "moving_hazard": "#ff96b0",
     "hostile": "#ff745e",
     "biological": "#b8f36b",
+    "creature": "#66f5ff",
+    "adaptation": "#ffd76a",
     "survey": "#69f0dc",
     "marker": "#ffffff",
     "container": "#d68cff",
@@ -58,6 +60,25 @@ def text(x: float, y: float, value: str, size: int = 28) -> str:
         f'font-family="Arial, sans-serif" font-size="{size}" '
         f'paint-order="stroke" stroke="#10384a" stroke-width="4">{html.escape(value)}</text>'
     )
+
+
+def record_center(item: dict, tile_size: int) -> tuple[float, float]:
+    width = float(item.get("w", 1))
+    height = float(item.get("h", 1))
+    return (
+        (float(item["x"]) + width * 0.5) * tile_size,
+        (float(item["y"]) + height * 0.5) * tile_size,
+    )
+
+
+def source_record_index(map_data: dict) -> dict[str, dict]:
+    collections = ("entities", "zones", "hostile_encounters", "survey_targets")
+    return {
+        str(item["id"]): item
+        for collection in collections
+        for item in map_data.get(collection, [])
+        if isinstance(item, dict) and "id" in item
+    }
 
 
 def render_svg(map_data: dict) -> str:
@@ -297,12 +318,75 @@ def render_svg(map_data: dict) -> str:
         parts.append(f'<ellipse cx="{cx}" cy="{cy}" rx="28" ry="14" fill="{COLORS["hostile"]}" stroke="#64180f" stroke-width="5"/>')
         parts.append(text(cx + 34, cy - 18, hostile["id"], 22))
 
+    for rescue in map_data.get("creature_rescues", []):
+        cx, cy = record_center(rescue, tile_size)
+        parts.append(
+            f'<circle cx="{cx}" cy="{cy}" r="27" fill="{COLORS["creature"]}" '
+            'fill-opacity="0.24" stroke="#075d68" stroke-width="6"/>'
+        )
+        parts.append(
+            f'<path d="M {cx - 18} {cy} Q {cx} {cy - 18} {cx + 18} {cy} '
+            f'Q {cx} {cy + 18} {cx - 18} {cy}" fill="none" '
+            f'stroke="{COLORS["creature"]}" stroke-width="5"/>'
+        )
+        parts.append(text(cx + 34, cy - 20, rescue["id"], 22))
+
+    for context in map_data.get("companion_contexts", []):
+        if context.get("context_kind") != "mounted_route_review":
+            continue
+        points = [
+            record_center(point, tile_size) for point in context.get("route_points", [])
+        ]
+        if len(points) >= 2:
+            point_text = " ".join(f"{x:.1f},{y:.1f}" for x, y in points)
+            parts.append(
+                f'<polyline points="{point_text}" fill="none" '
+                f'stroke="{COLORS["creature"]}" stroke-width="7" '
+                'stroke-dasharray="18 10"/>'
+            )
+            for cx, cy in points:
+                parts.append(
+                    f'<circle cx="{cx}" cy="{cy}" r="9" '
+                    f'fill="{COLORS["creature"]}" stroke="#075d68" stroke-width="4"/>'
+                )
+            parts.append(text(points[0][0] + 18, points[0][1] - 18, context["id"], 22))
+        dismount = context.get("dismount")
+        if isinstance(dismount, dict):
+            cx, cy = record_center(dismount, tile_size)
+            parts.append(
+                f'<rect x="{cx - 13}" y="{cy - 13}" width="26" height="26" '
+                f'fill="none" stroke="{COLORS["creature"]}" stroke-width="5"/>'
+            )
+
+    map_items = source_record_index(map_data)
+    for memory in map_data.get("creature_memory_opportunities", []):
+        target = map_items.get(str(memory.get("target_id", "")))
+        if target is None:
+            continue
+        cx, cy = record_center(target, tile_size)
+        parts.append(
+            f'<circle cx="{cx}" cy="{cy}" r="34" fill="none" '
+            f'stroke="{COLORS["creature"]}" stroke-width="6" stroke-dasharray="10 7"/>'
+        )
+        parts.append(text(cx + 40, cy - 34, memory["id"], 20))
+
+    for payoff in map_data.get("creature_adaptation_payoffs", []):
+        target = map_items.get(str(payoff.get("target_id", "")))
+        if target is None:
+            continue
+        cx, cy = record_center(target, tile_size)
+        parts.append(
+            f'<circle cx="{cx}" cy="{cy}" r="48" fill="none" '
+            f'stroke="{COLORS["adaptation"]}" stroke-width="6"/>'
+        )
+        parts.append(text(cx + 54, cy - 50, payoff["id"], 20))
+
     parts.extend(
         [
             f'<rect x="0" y="0" width="{width_px}" height="{height_px}" fill="url(#grid)"/>',
             text(24, 42, f'{map_data["id"]} - greybox source preview', 30),
             text(24, height_px - 42, "cyan=open | gray=solid | tan=extraction | orange=boat/tool | green=start | yellow=salvage | teal=material/survey", 22),
-            text(24, height_px - 16, "red=hazard | pink=moving | coral=hostile | lime=biological | purple=container", 22),
+            text(24, height_px - 16, "red=hazard | pink=moving | coral=hostile | lime=biological | purple=container | cyan/gold=creature proof", 22),
             "</svg>",
             "",
         ]

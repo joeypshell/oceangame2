@@ -54,6 +54,11 @@ ALLOWLIST: tuple[AllowlistEntry, ...] = (
         "generated/source map data; validate with map tooling",
     ),
     AllowlistEntry(
+        "docs/current/PROGRESSION_GRAPH.md",
+        CATEGORY_GENERATED,
+        "generated progression review; refresh with audit_progression_graph.py --write",
+    ),
+    AllowlistEntry(
         "scripts/main/main.gd",
         CATEGORY_TEMPORARY_DEBT,
         "known large gameplay shell; follow-up refactor target",
