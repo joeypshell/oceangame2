@@ -1,8 +1,11 @@
 extends Node
 
 const SPARK_RAY_SCENE := preload("res://scenes/companion/SparkRayCompanion.tscn")
+const CompanionAdaptationDebrief := preload("res://scripts/companion/companion_adaptation_debrief.gd")
 const CompanionControlRuntime := preload("res://scripts/companion/companion_control_runtime.gd")
+const CompanionMemoryRuntime := preload("res://scripts/companion/companion_memory_runtime.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
+const SHARED_EVENT_DISTANCE_PX := 240.0
 
 var _world
 var _player
@@ -11,6 +14,8 @@ var _has_upgrade := Callable()
 var _companion
 var _control
 var _gate_access := CurrentGateController.new()
+var _memory_runtime := CompanionMemoryRuntime.new()
+var _adaptation_debrief := CompanionAdaptationDebrief.new()
 
 
 func _ready() -> void:
@@ -22,12 +27,23 @@ func bind_interface(active_tool_hud, status_sink: Callable, cancel_diver_tool: C
 	_control.bind_interface(active_tool_hud, status_sink, cancel_diver_tool, control_allowed)
 
 
-func bind_map(world, player, profile, has_upgrade: Callable, sortie_active := false) -> Dictionary:
+func bind_map(
+	world,
+	player,
+	profile,
+	has_upgrade: Callable,
+	sortie_active := false,
+	preserve_sortie := false
+) -> Dictionary:
 	clear_map()
 	_world = world
 	_player = player
 	_profile = profile
 	_has_upgrade = has_upgrade
+	var has_capability := Callable(profile, "has_capability") if profile != null and profile.has_method("has_capability") else Callable()
+	_memory_runtime.bind_map(world, profile, has_upgrade, has_capability, preserve_sortie)
+	_adaptation_debrief.bind_profile(profile)
+	_adaptation_debrief.end()
 	return sync_spawn() if sortie_active else {"spawned": false, "reason": "sortie_not_launched"}
 
 
@@ -75,6 +91,69 @@ func reset_control(reason := "reset") -> void:
 		_control.reset_control(reason)
 
 
+func observe_current(gate_result: Dictionary) -> Dictionary:
+	if _world == null or _player == null:
+		return {"changed": false, "reason": "map_unavailable"}
+	return _memory_runtime.observe_current(
+		_world,
+		_player.global_position,
+		gate_result,
+		_shared_event_context()
+	)
+
+
+func observe_hostiles(hostiles, event: Dictionary) -> Dictionary:
+	if _player == null:
+		return {"changed": false, "reason": "player_unavailable"}
+	return _memory_runtime.observe_hostiles(
+		hostiles,
+		event,
+		_player.global_position,
+		_shared_event_context()
+	)
+
+
+func commit_memories_at_boat() -> Dictionary:
+	var at_boat: bool = (
+		_world != null
+		and _player != null
+		and _world.has_method("is_inside_boat")
+		and _world.is_inside_boat(_player.global_position)
+	)
+	return _memory_runtime.commit_at_boat(at_boat)
+
+
+func discard_uncommitted_memories(reason := "failure") -> Dictionary:
+	return _memory_runtime.discard_uncommitted(reason)
+
+
+func begin_debrief() -> void:
+	reset_control("debrief")
+	_adaptation_debrief.begin()
+
+
+func end_debrief() -> void:
+	_adaptation_debrief.end()
+
+
+func handle_debrief_input(event: InputEvent) -> Dictionary:
+	return _adaptation_debrief.handle_input(event)
+
+
+func requires_adaptation_selection() -> bool:
+	return _adaptation_debrief.requires_selection()
+
+
+func debrief_lines() -> Array[String]:
+	return _adaptation_debrief.debrief_lines()
+
+
+func memory_report() -> Dictionary:
+	var value := _memory_runtime.report()
+	value["debrief"] = _adaptation_debrief.report()
+	return value
+
+
 func handle_input(event: InputEvent) -> bool:
 	return _control != null and bool(_control.handle_input(event))
 
@@ -115,10 +194,15 @@ func companion():
 
 func report() -> Dictionary:
 	if _companion == null or not is_instance_valid(_companion):
-		return {"spawned": false, "control": _control.report() if _control != null else {}}
+		return {
+			"spawned": false,
+			"control": _control.report() if _control != null else {},
+			"memory": memory_report(),
+		}
 	var value: Dictionary = _companion.report()
 	value["spawned"] = true
 	value["control"] = _control.report() if _control != null else {}
+	value["memory"] = memory_report()
 	return value
 
 
@@ -144,6 +228,29 @@ func _dependencies_valid() -> bool:
 		and _profile != null
 		and _profile.has_method("active_companion_available_on_sortie_launch")
 	)
+
+
+func _shared_event_context() -> Dictionary:
+	if _companion == null or not is_instance_valid(_companion) or _player == null or not is_instance_valid(_player):
+		return {"active": false, "together": false, "mode": "independent"}
+	var companion_report: Dictionary = _companion.report()
+	var state := str(companion_report.get("state", ""))
+	var mounted: bool = _control != null and _control.is_mounted()
+	var distance: float = _companion.global_position.distance_to(_player.global_position)
+	var together: bool = mounted or (
+		state not in ["separated", "recovery"]
+		and distance <= SHARED_EVENT_DISTANCE_PX
+	)
+	var callsign := "Spark Ray"
+	if _profile != null and _profile.has_method("companion_report"):
+		callsign = str(_profile.companion_report().get("individual", {}).get("callsign", callsign))
+	return {
+		"active": true,
+		"together": together,
+		"mode": "mounted" if mounted else "independent",
+		"distance_px": distance,
+		"callsign": callsign,
+	}
 
 
 func _ensure_control() -> void:

@@ -45,6 +45,15 @@ static func handle_day_key(main) -> Dictionary:
 				"reason": "analysis_save_failed",
 				"note": main._last_status_note,
 			}
+	var companion_sortie = _companion_sortie_for(main)
+	if companion_sortie != null and companion_sortie.requires_adaptation_selection():
+		main._last_status_note = "Consolidate one Spark Ray adaptation before starting the next day"
+		main._update_status_label()
+		return {
+			"changed": false,
+			"reason": "companion_adaptation_required",
+			"note": main._last_status_note,
+		}
 	var plan_report: Dictionary = main._refresh_expedition_plan()
 	if _planner_requires_selection(main, plan_report):
 		main._last_status_note = "Pin an expedition plan before starting the next day"
@@ -57,6 +66,8 @@ static func handle_day_key(main) -> Dictionary:
 
 	var restart_map_path := _restart_map_path(main)
 	main._expedition_day_state.begin_next_day()
+	if companion_sortie != null:
+		companion_sortie.end_debrief()
 	main._load_playable_map(
 		restart_map_path,
 		main._debug_overlay_enabled,
@@ -78,6 +89,14 @@ static func handle_debrief_input(main, event: InputEvent) -> Dictionary:
 		return {"changed": false, "reason": "unavailable"}
 	if main._expedition_day_state.phase != ExpeditionDayState.PHASE_DEBRIEF:
 		return {"changed": false, "reason": "wrong_phase"}
+	var companion_sortie = _companion_sortie_for(main)
+	if companion_sortie != null:
+		var companion_result: Dictionary = companion_sortie.handle_debrief_input(event)
+		if bool(companion_result.get("handled", false)):
+			if companion_result.has("note"):
+				main._last_status_note = str(companion_result["note"])
+			main._update_status_label()
+			return companion_result
 	var repeated_key := event is InputEventKey and (event as InputEventKey).echo
 	if event.is_action_pressed("active_tool_cycle_next") and not repeated_key:
 		return _cycle_plan_highlight(main)
@@ -225,12 +244,14 @@ static func apply_result_panel(main) -> bool:
 		review_panel.visible = false
 	main._result_panel.position = DEBRIEF_PANEL_POSITION
 	main._result_panel.visible = true
+	var companion_sortie = _companion_sortie_for(main)
 	main._result_label.text = build_text(
 		main._expedition_day_state,
 		main._material_project,
 		main._daily_conditions,
 		main._last_status_note,
-		main._wreck_network_investigation
+		main._wreck_network_investigation,
+		companion_sortie
 	)
 	return true
 
@@ -240,7 +261,8 @@ static func build_text(
 	material_project = null,
 	daily_conditions = null,
 	debrief_feedback := "",
-	wreck_network_investigation = null
+	wreck_network_investigation = null,
+	companion_sortie = null
 ) -> String:
 	var reason_text := "Day ended at boat"
 	if day.end_reason == "nightfall":
@@ -265,6 +287,9 @@ static func build_text(
 	if wreck_network_investigation != null and wreck_network_investigation.has_method("debrief_lines"):
 		for line in wreck_network_investigation.debrief_lines():
 			wreck_lines.append(str(line))
+			lines.append(str(line))
+	if companion_sortie != null and companion_sortie.has_method("debrief_lines"):
+		for line in companion_sortie.debrief_lines():
 			lines.append(str(line))
 	var feedback := str(debrief_feedback).strip_edges()
 	var wreck_owns_feedback: bool = (
@@ -330,7 +355,12 @@ static func _commit_boat_materials(main) -> void:
 static func _enter_debrief(main, reason: String) -> void:
 	if reason == "voluntary" and main._world != null and main._player != null and main._world.is_inside_boat(main._player.global_position):
 		_commit_boat_materials(main)
+	var companion_sortie = _companion_sortie_for(main)
+	if companion_sortie != null:
+		companion_sortie.commit_memories_at_boat()
 	main._expedition_day_state.end_day(reason)
+	if companion_sortie != null:
+		companion_sortie.begin_debrief()
 	var analysis_result := resolve_wreck_network_night_payoff(main)
 	if main.has_method("_refresh_expedition_plan"):
 		main._refresh_expedition_plan()
@@ -351,6 +381,15 @@ static func _restart_map_path(main) -> String:
 	if main._world != null and str(main._world.map_id) == PRODUCTION_LEVEL_MAP_ID:
 		return main.PRODUCTION_LEVEL_MAP_PATH
 	return main.PRODUCTION_SLICE_MAP_PATH
+
+
+static func _companion_sortie_for(main):
+	if main == null or not main.has_method("get_property_list"):
+		return null
+	for property in main.get_property_list():
+		if str(property.get("name", "")) == "_companion_sortie":
+			return main.get("_companion_sortie")
+	return null
 
 
 static func _failure_text(reason: String) -> String:

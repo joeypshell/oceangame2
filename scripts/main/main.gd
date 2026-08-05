@@ -1353,7 +1353,8 @@ func _load_playable_map(
 		player,
 		_anomaly_survey.profile_state(),
 		Callable(self, "_has_upgrade_id"),
-		_sortie_state.active
+		_sortie_state.active,
+		preserve_sortie
 	)
 	_apply_durable_light_profile()
 
@@ -1575,12 +1576,12 @@ func _pry_salvage_completion_feedback(salvage_id: String, label: String) -> Stri
 
 
 func _unhandled_input(event: InputEvent) -> void:
-	if _companion_sortie != null and _companion_sortie.handle_input(event):
-		return
 	if _expedition_day_state.phase == ExpeditionDayState.PHASE_DEBRIEF:
 		if event.is_action_released("active_tool_use"):
 			_release_active_tool()
 		ExpeditionDayDebrief.handle_debrief_input(self, event)
+		return
+	if _companion_sortie != null and _companion_sortie.handle_input(event):
 		return
 	if event.is_action_released("active_tool_use"):
 		_release_active_tool()
@@ -1625,6 +1626,7 @@ func _reset_run() -> void:
 		_reset_interior_expedition_to_boat()
 		return
 	_companion_sortie.reset_control("retry")
+	_companion_sortie.discard_uncommitted_memories("retry")
 	_refresh_active_tools()
 
 	_world.reset_salvage()
@@ -1686,6 +1688,7 @@ func _reset_interior_expedition_to_boat() -> void:
 		"reset"
 	)
 	_sortie_state.clear_held()
+	_companion_sortie.discard_uncommitted_memories("retry")
 	_interior_expedition_transition.reset()
 	_load_playable_map(
 		origin_map_path,
@@ -1805,7 +1808,16 @@ func _reset_oxygen_feedback_cues() -> void:
 func _update_current_gate(delta: float) -> void:
 	if _current_gate == null:
 		return
-	_current_gate.update(_world, _player, Callable(self, "_has_upgrade_id"), Callable(_anomaly_survey.profile_state(), "has_capability"), delta)
+	var gate_result: Dictionary = _current_gate.update(
+		_world,
+		_player,
+		Callable(self, "_has_upgrade_id"),
+		Callable(_anomaly_survey.profile_state(), "has_capability"),
+		delta
+	)
+	var memory_result: Dictionary = _companion_sortie.observe_current(gate_result)
+	if bool(memory_result.get("changed", false)):
+		_last_status_note = str(memory_result.get("note", _last_status_note))
 
 
 func _update_moving_hazards(delta: float) -> void:
@@ -1818,6 +1830,9 @@ func _update_hostile_encounter(delta: float) -> bool:
 	if not _combat_interactions_enabled or _hostiles == null or _world == null or _player == null:
 		return false
 	var event: Dictionary = _hostiles.update(_world, _player.global_position, delta)
+	var memory_result: Dictionary = _companion_sortie.observe_hostiles(_hostiles, event)
+	if bool(memory_result.get("changed", false)):
+		_last_status_note = str(memory_result.get("note", _last_status_note))
 	if str(event.get("kind", "")) != "contact":
 		return false
 	var damage: Dictionary = _apply_combat_damage(int(event.get("damage", 1)), str(event.get("id", "hostile")))
@@ -1831,8 +1846,10 @@ func _update_hostile_encounter(delta: float) -> bool:
 				float(event.get("disruption_seconds", 0.0))
 			)
 			_last_status_note += " | knocked back"
-		_combat_feedback_seconds = COMBAT_FEEDBACK_SECONDS
-		return true
+			if bool(memory_result.get("changed", false)):
+				_last_status_note += "\n%s" % str(memory_result.get("note", "Spark Ray memory ready"))
+			_combat_feedback_seconds = COMBAT_FEEDBACK_SECONDS
+			return true
 	return false
 
 
@@ -1857,6 +1874,7 @@ func _current_gate_block_prompt(gate: Dictionary) -> String:
 func _handle_oxygen_depleted() -> void:
 	if _sortie_state.failed:
 		return
+	_companion_sortie.discard_uncommitted_memories("oxygen_failure")
 	_anomaly_survey.clear_unbanked("oxygen_failure", _world)
 	_clear_navigation_core_unbanked("oxygen_failure")
 	_pressure_zone.reset()
@@ -1906,6 +1924,7 @@ func _apply_combat_damage(amount: int, source_id: String) -> Dictionary:
 
 
 func _handle_combat_defeat(_source_id: String) -> void:
+	_companion_sortie.discard_uncommitted_memories("combat_defeat")
 	_anomaly_survey.clear_unbanked("combat_defeat", _world)
 	_clear_navigation_core_unbanked("combat_defeat")
 	_pressure_zone.reset()

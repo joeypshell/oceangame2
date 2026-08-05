@@ -251,6 +251,10 @@ func get_regional_journeys() -> Array:
 	return _duplicate_dictionary_array(_map_data.get("regional_journeys", []))
 
 
+func get_creature_memory_opportunities() -> Array:
+	return _duplicate_dictionary_array(_map_data.get("creature_memory_opportunities", []))
+
+
 func get_wreck_network_investigations() -> Array:
 	return _duplicate_dictionary_array(_map_data.get("wreck_network_investigations", []))
 
