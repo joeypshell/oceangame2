@@ -12,6 +12,7 @@ const EXPECTED_COMMANDS := {
 	&"reset": KEY_R,
 	&"interact": KEY_E,
 	&"use": &"active_tool_use",
+	&"bond": &"companion_command",
 }
 
 var _failures: Array[String] = []
@@ -42,8 +43,8 @@ func _run() -> void:
 	var command_rects: Dictionary = report.get("command_rects", {})
 	var viewport_size: Vector2 = report.get("viewport_size", Vector2.ZERO)
 	var bottom_inset := float(report.get("bottom_inset", 0.0))
-	_expect(commands.size() == EXPECTED_COMMANDS.size(), "command pad did not expose exactly eight commands")
-	_expect(command_rects.size() == EXPECTED_COMMANDS.size(), "command pad did not lay out exactly eight touch regions")
+	_expect(commands.size() == EXPECTED_COMMANDS.size(), "command pad did not expose exactly nine commands")
+	_expect(command_rects.size() == EXPECTED_COMMANDS.size(), "command pad did not lay out exactly nine touch regions")
 
 	var stick_rect: Rect2 = report.get("stick_rect", Rect2())
 	var reachable_bottom := viewport_size.y - bottom_inset
@@ -52,6 +53,7 @@ func _run() -> void:
 		_expect(stick_rect == Rect2(30, 392, 224, 224), "accepted landscape stick rect drifted: %s" % stick_rect)
 		_expect(command_rects.get(&"tool", Rect2()) == Rect2(1122, 356, 128, 80), "TOOL left its accepted touch rect")
 		_expect(command_rects.get(&"use", Rect2()) == Rect2(984, 536, 128, 80), "USE left its accepted touch rect")
+		_expect(command_rects.get(&"bond", Rect2()) == Rect2(1122, 536, 128, 80), "BOND did not use the open ninth touch rect")
 	for command_id in command_rects:
 		var command_rect: Rect2 = command_rects[command_id]
 		_expect(command_rect.end.y <= reachable_bottom, "%s extended into the bottom interaction inset" % command_id)
@@ -81,7 +83,7 @@ func _run() -> void:
 	_expect(Input.get_action_strength("ui_down") > 0.8, "lower stick travel did not press down movement")
 	_expect(is_zero_approx(Input.get_action_strength("ui_up")), "lower stick travel pressed up movement")
 	controls._input(_touch(11, down_position, false))
-	for action in [&"ui_left", &"ui_right", &"ui_up", &"ui_down", &"active_tool_cycle_next", &"active_tool_use"]:
+	for action in [&"ui_left", &"ui_right", &"ui_up", &"ui_down", &"active_tool_cycle_next", &"active_tool_use", &"companion_command"]:
 		_expect(not Input.is_action_pressed(action), "%s remained pressed after touch release" % action)
 
 	_expect(_dispatched.size() == EXPECTED_COMMANDS.size(), "not every command emitted an input event")
@@ -139,7 +141,7 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: mobile test controls auto_hidden=headless stick=8_direction down_reachable=true bottom_inset=104 commands=8 simultaneous_input=true keyboard_events=U,C,P,N,R,E actions=TOOL+USE hold_until_release=true active_tool_hotbar=bottom_icons+desktop+844x390.")
+	print("PASS: mobile test controls auto_hidden=headless stick=8_direction down_reachable=true bottom_inset=104 commands=9 simultaneous_input=true keyboard_events=U,C,P,N,R,E actions=TOOL+USE+BOND hold_until_release=true active_tool_hotbar=bottom_icons+desktop+844x390.")
 	quit(0)
 
 

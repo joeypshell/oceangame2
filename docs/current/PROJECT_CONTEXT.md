@@ -248,7 +248,7 @@ Current issue state as of 2026-08-05:
 - Closed planning: #1190 selected Expansion 18 Transfer Hub Interior Expedition.
 - Closed direction gate: #1201 records Expansion 18's strategic HOLD and transition; #1192-#1200 plus bounded corrections remain technically complete.
 - Closed planning: #1219 documents the first Expedition Adaptation proof; #1221 realigns the target game, creature contracts, roadmap, and milestone state through merged PR #1222.
-- Active implementation: milestone #45 contains revised Living Expedition 01 issues #1223-#1232 plus focused command/riding issue #1235; source/state contract #1223 is first.
+- Active implementation: milestone #45 has completed its contract, schema, profile, follow, and command/riding foundation through #1223-#1226 and #1235; map-source authoring #1227 is next.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -386,11 +386,11 @@ Current issue state as of 2026-08-05:
 
 ## Recommended Next Work
 
-Begin Living Expedition 01 with #1223, then resolve #1224 schema -> #1225 profile -> #1226 follow -> #1235 command/riding -> #1227 map source -> #1228 memory/night -> #1229/#1230 adaptations -> #1231 evidence -> #1232 exact-Web owner closeout. Milestone #45 is the only active implementation milestone. Keep #52/#53 deferred.
+Continue Living Expedition 01 with #1227 map source -> #1228 memory/night -> #1229/#1230 adaptations -> #1231 evidence -> #1232 exact-Web owner closeout. The contract, schema, profile, follow, and command/riding foundation is complete through #1223-#1226 and #1235. Milestone #45 is the only active implementation milestone. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 
-- Treat Living Expedition as active product direction but not current runtime. Preserve one active companion, species-plus-experience roles, deliberate real-time commands, committed-bond riding, meaningful experience rather than XP grinding, night consolidation, visible adaptation, and the equipment-versus-companion boundary.
+- Treat Living Expedition as the active product direction and a bounded current runtime proof. Preserve one active companion, species-plus-experience roles, deliberate real-time commands, committed-bond riding, meaningful experience rather than XP grinding, night consolidation, visible adaptation, and the equipment-versus-companion boundary.
 - Use `Shift/BOND` and a maximum-three-action 20-percent slow-time palette. Mounted play transfers movement and hotbar ownership to creature actions; dismount restores diver tools. Do not reuse `Q` or `E/ACT` for the companion.
 - Riding cannot bypass fins, darkness, pressure, collision, oxygen, daylight, health, cargo, boat, or failure authority.
 - Do not add a second species, stable UI, turn-based or broad combat framework, creature health/death, or ecosystem simulation before the Spark Ray player gate.

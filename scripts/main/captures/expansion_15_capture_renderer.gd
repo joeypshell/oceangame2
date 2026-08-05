@@ -120,7 +120,7 @@ func _verify_layout(touch_visible: bool, expect_planner: bool) -> bool:
 		return true
 
 	var controls: Dictionary = _mobile_controls.get_test_report()
-	if not bool(controls.get("enabled", false)) or controls.get("command_rects", {}).size() != 8:
+	if not bool(controls.get("enabled", false)) or controls.get("command_rects", {}).size() != 9:
 		_fail("landscape-mobile controls are incomplete")
 		return false
 	var touch_rects: Array[Rect2] = [controls.get("stick_rect", Rect2())]
