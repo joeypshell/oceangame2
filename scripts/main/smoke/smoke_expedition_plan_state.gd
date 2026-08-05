@@ -98,7 +98,7 @@ func _run() -> void:
 	var fresh_session := ExpeditionPlanState.new()
 	_expect(not fresh_session.has_selection(), "new application session restored a selected lead")
 	var profile_report: Dictionary = profile.report()
-	_expect(profile_report.get("schema_version") == 4, "profile schema changed")
+	_expect(profile_report.get("schema_version") == ExpansionProfileState.SCHEMA_VERSION, "profile schema changed")
 	_expect(not profile_report.has("selected_lead_id"), "selected plan leaked into profile")
 
 	world.queue_free()
@@ -107,7 +107,7 @@ func _run() -> void:
 			push_error("Expedition plan state smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Expedition plan state passed: leads=relay,bloom order=10,20 prepare=true ready=true debrief_only=true replace=true next_day=true sorties=2 offload=true map_reload=true failure=true bloom_expiry=true relay_commit_clear=true auto_select=false profile_schema=4.")
+	print("Expedition plan state passed: leads=relay,bloom order=10,20 prepare=true ready=true debrief_only=true replace=true next_day=true sorties=2 offload=true map_reload=true failure=true bloom_expiry=true relay_commit_clear=true auto_select=false profile_schema=%d." % ExpansionProfileState.SCHEMA_VERSION)
 	quit(0)
 
 
