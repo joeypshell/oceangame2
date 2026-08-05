@@ -255,6 +255,10 @@ func get_creature_memory_opportunities() -> Array:
 	return _duplicate_dictionary_array(_map_data.get("creature_memory_opportunities", []))
 
 
+func get_creature_adaptation_payoffs() -> Array:
+	return _duplicate_dictionary_array(_map_data.get("creature_adaptation_payoffs", []))
+
+
 func get_wreck_network_investigations() -> Array:
 	return _duplicate_dictionary_array(_map_data.get("wreck_network_investigations", []))
 

@@ -17,6 +17,7 @@ run_godot companion-profile-state 120 --headless --path . --script res://scripts
 run_godot companion-memory-night 180 --headless --path . --script res://scripts/main/smoke/smoke_companion_memory_night.gd
 run_godot spark-ray-follow 180 --headless --path . --script res://scripts/main/smoke/smoke_spark_ray_follow.gd
 run_godot spark-ray-riding 180 --headless --path . --script res://scripts/main/smoke/smoke_spark_ray_riding.gd
+run_godot anchor-fins-payoff 180 --headless --path . --script res://scripts/main/smoke/smoke_anchor_fins_payoff.gd
 run_godot wreck-network-investigation-state 120 --headless --path . --script res://scripts/main/smoke/smoke_wreck_network_investigation_state.gd
 run_godot wreck-network-runtime-integration 180 --headless --path . --script res://scripts/main/smoke/smoke_wreck_network_runtime_integration.gd
 run_godot salvage-loop 120 --headless --path . --quit-after 1 --smoke-salvage-loop
