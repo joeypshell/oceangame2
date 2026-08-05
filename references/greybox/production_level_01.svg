@@ -569,8 +569,26 @@
 <rect x="3776" y="2272" width="320" height="256" fill="#ff745e" fill-opacity="0.09" stroke="#8f281c" stroke-width="5" stroke-dasharray="14 8"/>
 <ellipse cx="3984.0" cy="2384.0" rx="28" ry="14" fill="#ff745e" stroke="#64180f" stroke-width="5"/>
 <text x="4018.0" y="2366.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">deep_cache_territorial_eel</text>
+<circle cx="3792.0" cy="1328.0" r="27" fill="#66f5ff" fill-opacity="0.24" stroke="#075d68" stroke-width="6"/>
+<path d="M 3774.0 1328.0 Q 3792.0 1310.0 3810.0 1328.0 Q 3792.0 1346.0 3774.0 1328.0" fill="none" stroke="#66f5ff" stroke-width="5"/>
+<text x="3826.0" y="1308.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">spark_ray_rescue_01</text>
+<polyline points="3056.0,272.0 3152.0,464.0 3280.0,624.0 3472.0,720.0" fill="none" stroke="#66f5ff" stroke-width="7" stroke-dasharray="18 10"/>
+<circle cx="3056.0" cy="272.0" r="9" fill="#66f5ff" stroke="#075d68" stroke-width="4"/>
+<circle cx="3152.0" cy="464.0" r="9" fill="#66f5ff" stroke="#075d68" stroke-width="4"/>
+<circle cx="3280.0" cy="624.0" r="9" fill="#66f5ff" stroke="#075d68" stroke-width="4"/>
+<circle cx="3472.0" cy="720.0" r="9" fill="#66f5ff" stroke="#075d68" stroke-width="4"/>
+<text x="3074.0" y="254.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">spark_ray_riding_review_01</text>
+<rect x="3459.0" y="707.0" width="26" height="26" fill="none" stroke="#66f5ff" stroke-width="5"/>
+<circle cx="3536.0" cy="2688.0" r="34" fill="none" stroke="#66f5ff" stroke-width="6" stroke-dasharray="10 7"/>
+<text x="3576.0" y="2654.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="20" paint-order="stroke" stroke="#10384a" stroke-width="4">spark_ray_current_memory_01</text>
+<circle cx="3984.0" cy="2384.0" r="34" fill="none" stroke="#66f5ff" stroke-width="6" stroke-dasharray="10 7"/>
+<text x="4024.0" y="2350.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="20" paint-order="stroke" stroke="#10384a" stroke-width="4">spark_ray_eel_memory_01</text>
+<circle cx="4704.0" cy="2464.0" r="48" fill="none" stroke="#ffd76a" stroke-width="6"/>
+<text x="4758.0" y="2414.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="20" paint-order="stroke" stroke="#10384a" stroke-width="4">spark_ray_anchor_current_01</text>
+<circle cx="3984.0" cy="2384.0" r="48" fill="none" stroke="#ffd76a" stroke-width="6"/>
+<text x="4038.0" y="2334.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="20" paint-order="stroke" stroke="#10384a" stroke-width="4">spark_ray_guardian_eel_01</text>
 <rect x="0" y="0" width="5056" height="5152" fill="url(#grid)"/>
 <text x="24.0" y="42.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="30" paint-order="stroke" stroke="#10384a" stroke-width="4">production_level_01 - greybox source preview</text>
 <text x="24.0" y="5110.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">cyan=open | gray=solid | tan=extraction | orange=boat/tool | green=start | yellow=salvage | teal=material/survey</text>
-<text x="24.0" y="5136.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">red=hazard | pink=moving | coral=hostile | lime=biological | purple=container</text>
+<text x="24.0" y="5136.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">red=hazard | pink=moving | coral=hostile | lime=biological | purple=container | cyan/gold=creature proof</text>
 </svg>
