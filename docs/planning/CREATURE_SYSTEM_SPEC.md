@@ -21,15 +21,15 @@ into tools, quest rewards, or unvalidated state inside `main.gd`.
 - Acquisition begins through observation, aid, rescue, or trust, not an abstract
   capture device.
 - Species provide a body plan, instincts, possible memories, adaptations, and
-  ecological role.
+  ecological role, including whether riding is physically credible.
 - Individuals provide identity, temperament, lived memories, selected
   adaptation, condition, and relationship history.
 - Major growth comes from meaningful shared events plus night consolidation,
   never generic experience points.
 - The player chooses critical adaptations; randomness cannot decide required
   progression.
-- Companions support the diver but do not replace equipment, weapons, or direct
-  player agency.
+- Companions may support independently or become directly controlled mounts, but
+  do not replace equipment gates, survival ownership, or deliberate player agency.
 
 ## Species And Individual State
 
@@ -39,6 +39,7 @@ A future species definition should provide immutable data such as:
 - display name and short ecological description
 - base visual and animation set
 - movement and follow envelope
+- allowed independent/mounted roles, rider footprint, and base creature actions
 - temperament options
 - eligible memory kinds
 - adaptation branches and compatibility
@@ -58,8 +59,10 @@ A versioned individual record should own only persistent mutable state such as:
 - bounded condition or recovery state when implemented
 - legacy/release state only after a later milestone selects it
 
-Position, target, follow velocity, cooldowns, animation state, and in-progress
-encounters are live runtime state, not profile data.
+Position, target, follow velocity, control mode, mounted state, palette selection,
+cooldowns, animation state, and in-progress encounters are live runtime state,
+not profile data. Riding availability is derived from committed rescue and active
+selection; it is not a separately purchased profile capability.
 
 ## Acquisition And Bond
 
@@ -81,6 +84,10 @@ Bond is expressed first through reliable behavior, proximity, visible response,
 shared memories, and the night scene. A numeric bond meter is not required to
 prove attachment.
 
+The first canonical-boat return commits the rescued Spark Ray. Riding becomes
+available on the next launched sortie, normally Day 2 in the first-proof review
+path. The trust payoff is not granted inside the rescue encounter.
+
 ## Active Companion Behavior
 
 The active companion should:
@@ -93,13 +100,39 @@ The active companion should:
 - react visibly to memory opportunities and danger
 - never fail a critical command because of hidden temperament or loyalty
 
-Active tools keep the existing `Tab/TOOL` selection and `Space/USE` action. The
-companion is not another hotbar item. Explicit first-proof companion actions use
-the existing contextual `E/ACT` surface only when a clear world target and
-companion affordance are present.
+The companion is not a diver hotbar item. `companion_command` is a dedicated
+`Shift/BOND` action. Holding it slows the complete gameplay simulation to 20
+percent and presents no more than three currently valid commands. Desktop and
+mobile dispatch the same action; the system does not reuse `Q` or `E/ACT`.
 
-Later milestones may test follow, hold, send, protect, or recall commands, but
-the first proof should not create a command wheel or broad AI order system.
+The first-proof independent palette may show recall, mount, and the selected
+adaptation action. It must communicate invalid target, range, clearance, or
+cooldown states rather than silently ignoring input. Temperament changes
+expression, not command validity.
+
+## Independent And Mounted Modes
+
+Unmounted:
+
+- the diver owns movement, `Tab/TOOL`, and `Space/USE`
+- the companion follows and uses deliberate palette commands
+- significant offensive or protection actions do not fire as hidden autonomous
+  damage
+
+Mounted:
+
+- movement authority transfers to the creature controller
+- the bottom hotbar projects creature actions only
+- `Tab/TOOL` selects and `Space/USE` activates the selected creature action
+- diver tools remain unavailable until dismount
+- the camera, world collision, oxygen, daylight, diver health, route gates, and
+  failure owners remain authoritative
+- dismount requires safe diver clearance and returns immediate denial feedback
+  when blocked
+
+A major hostile hit while mounted applies existing diver damage and knockback,
+forces readable separation, and returns control to the diver. The first proof
+adds no creature health, permanent injury, death, or hidden loyalty penalty.
 
 ## Experience And Memory
 
@@ -167,13 +200,14 @@ The proof does not need a familiarity meter.
 
 Companions may eventually provide:
 
+- direct mounted movement and creature actions when anatomy permits
 - sensing and ecological interpretation
 - interaction stability in difficult conditions
 - warning and threat-reading behavior
 - distraction, interruption, defense, or support
 - specialized collection or nonlethal creature handling
 
-The diver retains:
+While unmounted, the diver retains:
 
 - movement and survival responsibility
 - equipment access gates
@@ -181,9 +215,17 @@ The diver retains:
 - cargo and return decisions
 - direct retreat and route choice
 
-Combat remains real-time in the shared side-view world. The first proof adds one
-protection behavior, not turn-based battles, party switching, elemental charts,
-or a general combat rewrite.
+Combat remains real-time in the shared side-view world. A creature's credible
+body plan defines possible roles; experience and selected adaptations specialize
+how that individual performs them. One individual may therefore act as a mount,
+guardian, hunter, sensor, healer, or utility partner without every species
+learning every role.
+
+The design adapts monster-collector build experimentation and synergy through
+real-time setup/payoff windows. It does not add turn-based battles, multiple
+active party members, elemental charts, generic battle arenas, or a general
+combat rewrite. See
+`docs/planning/REAL_TIME_CREATURE_PARTNERSHIP_DIRECTION.md`.
 
 ## Failure And Persistence
 
@@ -205,11 +247,13 @@ possible memories and one selected adaptation:
 
 | Memory | Adaptation | Visible change | Mechanical payoff |
 | --- | --- | --- | --- |
-| `held_the_flow` | Anchor Fins | broader fin tips, low stable posture | hold position for one interaction inside difficult current without bypassing fins access |
-| `stood_ground` | Guardian Pulse | bright conductive stripe and charge cue | contextual hostile interruption and knockback without replacing the Shock Prod |
+| `held_the_flow` | Anchor Fins | broader fin tips, low stable posture in either mode | independent or mounted bracing for one difficult current interaction without bypassing fins access |
+| `stood_ground` | Guardian Pulse | bright conductive stripe and aimed charge cue | deliberate independent or mounted hostile interruption and knockback without replacing the Shock Prod |
 
-The proof includes one base visual plus one individually reviewed variant for
-each adaptation. The two branches are mutually exclusive for this individual.
+The proof includes one base independent/mounted visual plus one individually
+reviewed variant for each adaptation. Before adaptation, committed riding provides
+direct movement and one non-damaging `glide_surge`. The two branches are mutually
+exclusive for this individual.
 
 ## Validation Surface
 
@@ -217,6 +261,11 @@ Deterministic checks should prove:
 
 - rescue and commitment occur once
 - follow and separation recovery work through the selected route
+- riding unlocks only after canonical-boat commitment
+- command slow-time scales world, cooldown, oxygen, and daylight consistently
+- mount/dismount, rider clearance, movement authority, and hotbar ownership switch
+  cleanly on desktop and landscape mobile
+- `glide_surge` moves visibly, cools down, causes no damage, and bypasses no gate
 - only meaningful conditions award each memory
 - duplicate exposure and reload cannot duplicate memories
 - only earned options appear at night
@@ -228,7 +277,8 @@ Deterministic checks should prove:
 - existing tool, eel, day, map, and profile regressions remain stable
 
 Player review must judge attachment, clarity, personality, adaptation payoff,
-and desire to begin another day. Automation cannot close those questions.
+mounted feel, build curiosity, and desire to begin another day. Automation cannot
+close those questions.
 
 ## Deferred Systems
 
@@ -237,6 +287,7 @@ and desire to begin another day. Automation cannot close those questions.
 - feeding, care schedules, bond meters, and personality conflicts
 - eggs, breeding, fusion, genes, and inherited techniques
 - release, retirement, lifespan, death, and legacy
-- party combat, tournaments, or broad creature-versus-creature systems
+- party or turn-based combat, tournaments, or broad creature-versus-creature
+  systems
 - generalized ecosystem simulation
 - final creature art, animation, audio, balance, and accessibility

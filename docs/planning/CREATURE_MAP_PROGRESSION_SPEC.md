@@ -36,6 +36,8 @@ Equipment owns predictable hard access and survival:
 An active companion may change what can be accomplished after the diver can
 reach or survive a region:
 
+- carry the diver through already-accessible open water when species anatomy and
+  committed bond permit riding
 - stabilize a scan, cut, sample, rescue, or defense under pressure
 - detect or interpret a real organism, behavior, or environmental clue
 - warn, distract, interrupt, protect, or support retreat
@@ -61,6 +63,7 @@ Future schema work should select the smallest records needed for:
 - memory opportunities
 - ecological observations
 - companion-context interactions
+- mounted-action contexts and reviewed mount/dismount clearance where required
 - adaptation payoffs
 - guard/threat relationships
 - review cameras and provenance
@@ -94,7 +97,7 @@ A rescue site should identify:
 - prerequisite knowledge or equipment
 - completion and failure behavior
 - canonical-boat commitment
-- the next-day companionship promise
+- the next-sortie companionship and riding promise
 
 The creature cannot appear as an abstract pickup, score reward, blueprint, or
 automatic scanner result.
@@ -120,7 +123,7 @@ meaningful completion condition.
 
 | Region pressure | Diver requirement | Companion opportunity | Invalid shortcut |
 | --- | --- | --- | --- |
-| strong current | propulsion fins for required crossing | Anchor Fins holds position for one interaction | companion crossing a fins-gated route alone |
+| strong current | propulsion fins for required crossing | mounted travel uses the same access; Anchor Fins braces one interaction | companion crossing or carrying the diver through a fins-gated route without fins |
 | darkness | dive light for safe readable travel | luminous or sonar behavior reveals ecology | companion replacing the light gate |
 | pressure | pressure equipment for safe entry | sensing or protection changes exploitation | companion granting pressure immunity |
 | hostile territory | weapon, health, or viable evade route | warning, distraction, interruption, defense | mandatory companion obtained behind that hostile |
@@ -135,13 +138,15 @@ Source authoring should add only:
 
 1. One physically motivated rescue site connected to the retained Transfer Hub
    result or another reviewed post-foundation clue.
-2. One current-based `held_the_flow` opportunity inside a route already
+2. One existing-topology route that can review follow, safe mount/dismount,
+   mounted movement, and `glide_surge` without creating a shortcut.
+3. One current-based `held_the_flow` opportunity inside a route already
    accessible with the correct diver equipment.
-3. One territorial-threat `stood_ground` opportunity using the existing eel
+4. One territorial-threat `stood_ground` opportunity using the existing eel
    behavior without making the eel a companion or required drop.
-4. One short next-day payoff for Anchor Fins and one for Guardian Pulse.
-5. Focused review cameras for rescue, both memories, night choice, and both
-   adaptation payoffs.
+5. One short next-day payoff for Anchor Fins and one for Guardian Pulse.
+6. Focused review cameras for rescue, follow, mounted play, both memories, night
+   choice, and both independent/mounted adaptation payoffs.
 
 The proof should not change accepted terrain topology or populate the entire map
 with creatures.
@@ -152,6 +157,9 @@ Extend the source-derived audit to answer:
 
 - Is the rescue reachable with guaranteed prior capabilities?
 - Can the individual commit at the canonical boat exactly once?
+- Does riding unlock only after commitment, and can the rider footprint complete
+  the reviewed route without clipping or bypassing a gate?
+- Can every required mounted state dismount safely or return a clear denial?
 - Is each memory opportunity reachable after rescue?
 - Does each memory require a real event and avoid duplicate farming?
 - Is every adaptation offered only from an earned memory?
@@ -169,6 +177,7 @@ Before accepting source changes:
 
 - render the generated JSON preview
 - validate bounds, non-solid placement, player footprint, and reachability
+- validate the contracted rider footprint and reviewed mount/dismount clearances
 - audit the merged progression graph
 - verify terrain/render/collision parity
 - run existing full-level route regressions
@@ -181,6 +190,7 @@ Before accepting source changes:
 - Do not hand-place creature progression in Godot scenes.
 - Do not add a habitat without a behavior, mystery, resource, rescue, or payoff
   role.
+- Do not use mounted speed, size, or collision to bypass a diver capability gate.
 - Do not use a companion ability as an unexplained colored lock.
 - Do not add random required spawns.
 - Do not add a second species during the Spark Ray proof.
