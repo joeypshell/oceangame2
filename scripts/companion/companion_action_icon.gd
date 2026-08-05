@@ -20,6 +20,8 @@ func _draw() -> void:
 	var center := size * 0.5
 	if _action_id == "glide_surge":
 		_draw_glide(center, color)
+	elif _action_id == "anchor_brace":
+		_draw_anchor(center, color)
 	else:
 		draw_circle(center, minf(size.x, size.y) * 0.18, color)
 	if _cooldown_ratio > 0.0:
@@ -38,3 +40,10 @@ func _draw_glide(center: Vector2, color: Color) -> void:
 	draw_polyline(points, color, 3.0, true)
 	draw_line(center + Vector2(-20.0, -13.0) * scale_factor, center + Vector2(-9.0, -13.0) * scale_factor, Color(color, 0.58), 2.0, true)
 	draw_line(center + Vector2(-20.0, 13.0) * scale_factor, center + Vector2(-9.0, 13.0) * scale_factor, Color(color, 0.58), 2.0, true)
+
+
+func _draw_anchor(center: Vector2, color: Color) -> void:
+	var scale_factor := minf(size.x, size.y) / 56.0
+	draw_line(center + Vector2(0.0, -17.0) * scale_factor, center + Vector2(0.0, 13.0) * scale_factor, color, 3.0, true)
+	draw_arc(center + Vector2(0.0, 9.0) * scale_factor, 10.0 * scale_factor, 0.0, PI, 18, color, 3.0, true)
+	draw_line(center + Vector2(-15.0, -7.0) * scale_factor, center + Vector2(15.0, -7.0) * scale_factor, Color(color, 0.58), 2.0, true)

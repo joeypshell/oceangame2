@@ -2,6 +2,7 @@ extends Node
 
 const SPARK_RAY_SCENE := preload("res://scenes/companion/SparkRayCompanion.tscn")
 const CompanionAdaptationDebrief := preload("res://scripts/companion/companion_adaptation_debrief.gd")
+const CompanionAnchorFinsRuntime := preload("res://scripts/companion/companion_anchor_fins_runtime.gd")
 const CompanionControlRuntime := preload("res://scripts/companion/companion_control_runtime.gd")
 const CompanionMemoryRuntime := preload("res://scripts/companion/companion_memory_runtime.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
@@ -14,6 +15,7 @@ var _has_upgrade := Callable()
 var _companion
 var _control
 var _gate_access := CurrentGateController.new()
+var _anchor_fins := CompanionAnchorFinsRuntime.new()
 var _memory_runtime := CompanionMemoryRuntime.new()
 var _adaptation_debrief := CompanionAdaptationDebrief.new()
 
@@ -25,6 +27,7 @@ func _ready() -> void:
 func bind_interface(active_tool_hud, status_sink: Callable, cancel_diver_tool: Callable, control_allowed: Callable) -> void:
 	_ensure_control()
 	_control.bind_interface(active_tool_hud, status_sink, cancel_diver_tool, control_allowed)
+	_anchor_fins.bind_status_sink(status_sink)
 
 
 func bind_map(
@@ -42,6 +45,7 @@ func bind_map(
 	_has_upgrade = has_upgrade
 	var has_capability := Callable(profile, "has_capability") if profile != null and profile.has_method("has_capability") else Callable()
 	_memory_runtime.bind_map(world, profile, has_upgrade, has_capability, preserve_sortie)
+	_anchor_fins.bind_map(world, player, profile, null, has_upgrade, has_capability)
 	_adaptation_debrief.bind_profile(profile)
 	_adaptation_debrief.end()
 	return sync_spawn() if sortie_active else {"spawned": false, "reason": "sortie_not_launched"}
@@ -49,6 +53,7 @@ func bind_map(
 
 func sync_spawn() -> Dictionary:
 	if _companion != null and is_instance_valid(_companion):
+		_anchor_fins.bind_companion(_companion)
 		_bind_control_map()
 		return report()
 	if not _dependencies_valid() or not _profile.active_companion_available_on_sortie_launch():
@@ -61,11 +66,13 @@ func sync_spawn() -> Dictionary:
 		Callable(self, "_position_allowed"),
 		_profile.companion_report().get("individual", {})
 	)
+	_anchor_fins.bind_companion(_companion)
 	_bind_control_map()
 	return report()
 
 
 func clear_map() -> void:
+	_anchor_fins.clear_map()
 	if _control != null:
 		_control.clear_map()
 	if _companion != null and is_instance_valid(_companion):
@@ -80,6 +87,7 @@ func clear_map() -> void:
 
 
 func recover_to_player() -> void:
+	_anchor_fins.reset("recovery")
 	if _control != null:
 		_control.reset_control("recovery")
 	if _companion != null and is_instance_valid(_companion):
@@ -87,6 +95,7 @@ func recover_to_player() -> void:
 
 
 func reset_control(reason := "reset") -> void:
+	_anchor_fins.reset(reason)
 	if _control != null:
 		_control.reset_control(reason)
 
@@ -163,6 +172,7 @@ func hides_diver_hotbar() -> bool:
 
 
 func force_dismount_for_hit(source_position: Vector2) -> Dictionary:
+	_anchor_fins.reset("hostile_hit")
 	return _control.force_dismount_for_hit(source_position) if _control != null else {"changed": false, "reason": "control_unavailable"}
 
 
@@ -173,6 +183,10 @@ func set_adaptation_hooks(action_provider: Callable, action_dispatch: Callable) 
 
 func control_runtime():
 	return _control
+
+
+func adaptation_runtime():
+	return _anchor_fins
 
 
 func set_external_control_active(active: bool) -> bool:
@@ -198,12 +212,18 @@ func report() -> Dictionary:
 			"spawned": false,
 			"control": _control.report() if _control != null else {},
 			"memory": memory_report(),
+			"adaptation": _anchor_fins.report(),
 		}
 	var value: Dictionary = _companion.report()
 	value["spawned"] = true
 	value["control"] = _control.report() if _control != null else {}
 	value["memory"] = memory_report()
+	value["adaptation"] = _anchor_fins.report()
 	return value
+
+
+func _process(delta: float) -> void:
+	_anchor_fins.advance(delta, _control != null and _control.is_mounted())
 
 
 func _position_allowed(position: Vector2) -> bool:
@@ -258,6 +278,7 @@ func _ensure_control() -> void:
 		return
 	_control = CompanionControlRuntime.new()
 	add_child(_control)
+	_control.set_adaptation_hooks(Callable(_anchor_fins, "actions"), Callable(_anchor_fins, "dispatch"))
 
 
 func _bind_control_map() -> void:

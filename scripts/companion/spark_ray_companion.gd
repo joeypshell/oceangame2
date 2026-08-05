@@ -25,6 +25,7 @@ var _player
 var _position_allowed := Callable()
 var _identity := {}
 var _follow := SparkRayFollowController.new()
+var _anchor_braced := false
 var _facing_sign := 1.0
 var _pending_facing_sign := 1.0
 var _pending_facing_seconds := 0.0
@@ -36,10 +37,20 @@ func configure(world, player, position_allowed: Callable, identity: Dictionary) 
 	_world = world
 	_player = player
 	_position_allowed = position_allowed
-	_identity = identity.duplicate(true)
+	apply_identity(identity)
 	_follow.reset()
 	global_position = _spawn_position()
 	velocity = Vector2.ZERO
+	_sync_presentation()
+
+
+func apply_identity(identity: Dictionary) -> void:
+	_identity = identity.duplicate(true)
+	if _presentation != null:
+		_presentation.set_adaptation(
+			str(_identity.get("selected_adaptation_id", "")),
+			str(_identity.get("callsign", "Spark Ray"))
+		)
 	_sync_presentation()
 
 
@@ -72,6 +83,18 @@ func set_external_control_active(active: bool) -> void:
 func move_under_external_control(direction: Vector2, delta: float, speed_multiplier := 1.0) -> Dictionary:
 	if not _dependencies_valid() or not bool(_follow.report().get("external_control_active", false)):
 		return {"changed": false, "reason": "external_control_inactive"}
+	if _anchor_braced:
+		velocity = Vector2.ZERO
+		_sync_presentation()
+		return {
+			"changed": false,
+			"reason": "anchor_brace",
+			"position": global_position,
+			"velocity": velocity,
+			"direction": Vector2.ZERO,
+			"blocked_by_gate": false,
+			"blocked_by_terrain": false,
+		}
 	var safe_direction := direction.normalized() if direction.length() > 1.0 else direction
 	var desired_velocity := safe_direction * MOUNTED_SWIM_SPEED * maxf(1.0, speed_multiplier)
 	var change_rate := MOUNTED_ACCELERATION if desired_velocity != Vector2.ZERO else MOUNTED_DECELERATION
@@ -118,6 +141,15 @@ func show_glide_surge(direction: Vector2, duration: float) -> void:
 		_presentation.show_glide_surge(direction, duration)
 
 
+func set_anchor_brace(active: bool, direction: Vector2, progress: float, cue_state: String) -> void:
+	_anchor_braced = active
+	if active:
+		velocity = Vector2.ZERO
+	if _presentation != null:
+		_presentation.show_anchor_brace(direction, progress, cue_state)
+	_sync_presentation()
+
+
 func can_handoff_control(maximum_distance := 96.0) -> bool:
 	if not _dependencies_valid():
 		return false
@@ -150,6 +182,7 @@ func report() -> Dictionary:
 	value["facing_change_count"] = _facing_change_count
 	value["maximum_step_distance"] = _maximum_step_distance
 	value["can_handoff_control"] = can_handoff_control()
+	value["anchor_braced"] = _anchor_braced
 	value["presentation"] = _presentation.report() if _presentation != null else {}
 	return value
 
@@ -164,6 +197,11 @@ func _advance_step(delta: float) -> void:
 		_position_allowed,
 		delta
 	)
+	if _anchor_braced:
+		velocity = Vector2.ZERO
+		_presentation.advance(delta)
+		_sync_presentation()
+		return
 	if bool(movement.get("external_control_active", false)):
 		_presentation.advance(delta)
 		_sync_presentation()
