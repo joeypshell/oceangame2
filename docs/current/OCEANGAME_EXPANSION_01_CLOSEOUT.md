@@ -2,7 +2,10 @@
 
 Date: 2026-07-09
 
-Roadmap status: historical GO closeout. Its territorial-eel next-step recommendation was superseded by the owner-approved Phase 2 roadmap in `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`; Expansion 02 is now the committed next milestone.
+Roadmap status: historical GO closeout. Its territorial-eel next-step
+recommendation was superseded by the completed Phase 2 foundation. Active
+direction now lives in
+`docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md`.
 
 Issues: #662-#671
 Milestone: OceanGame Expansion 01 `Anomaly Survey Foundation`

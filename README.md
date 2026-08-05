@@ -1,31 +1,31 @@
 # oceangame2
 
-`oceangame2` is a side-view ocean expedition game built on a controlled diver-salvage foundation.
+`oceangame2` is a side-view underwater expedition-raising game built on a controlled diver-expedition foundation.
 
-The compact diver foundation and OceanGame Expansions 01-17 are complete with player GO. Expansion 18 is active at its milestone #44 player gate after technically proving one exceptional Transfer Hub interior expedition. Expedition Adaptation is the selected proposed post-gate direction: one bonded companion develops from meaningful shared dives and consolidates one memory into an adaptation at night. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
+The existing runtime proves contiguous authored exploration, oxygen/daylight pressure, equipment progression, limited combat, night projects, and stable validation/deployment. Expansion 18 is technically complete but closes with a strategic player-experience HOLD: extending the old clue, recipe, gate, and scan cadence would not solve its generic motivation. The active Living Expedition direction centers one bonded creature whose meaningful shared memories become deliberate visible adaptations at night.
 
 ## Project Goal
 
-Build a small side-view salvage game that proves:
+Build a distinctive side-view ocean game in which:
 
-- The map can be authored as data and rendered accurately in Godot.
-- The art direction can stay coherent across revisions.
-- Individual visual issues can be fixed without resetting the whole scene.
-- Approved assets can be locked and reused.
-- The core diver loop can support a distinctive expedition-raising game without discarding its source, validation, visual, or deployment foundation.
+- The diver prepares equipment and one active companion for remembered places.
+- Meaningful shared events create individual creature memories.
+- Night consolidation visibly changes the creature and the next expedition.
+- Equipment owns hard geographic access while companions change what the pair can accomplish there.
+- Source-authored maps, controlled assets, deterministic validation, and Web review remain production foundations.
 
 ## Prototype Shape
 
-- Genre: side-view 2D ocean salvage game
+- Genre: side-view 2D underwater expedition-raising action game
 - Engine: Godot
 - Current map: one contiguous source-authored production cave
 - Current core loop: choose and prepare, make multiple oxygen sorties under daylight, bank and learn at the boat, build at night, and return changed
-- Proposed signature loop: meaningful shared experience, individual creature memory, night consolidation, visible next-day adaptation
-- Primary risks being tested: source-driven world production, expedition motivation, meaningful route choice, readable progression, and controlled visual growth
+- Target signature loop: meaningful shared experience, individual creature memory, night consolidation, visible next-day adaptation
+- Primary next risk: whether one companion feels personally shaped by a dive and creates genuine another-day motivation
 
 ## Planning Docs
 
-[Milestone #43](https://github.com/joeypshell/oceangame2/milestone/43) and Expansion 17 are complete with owner GO. [Milestone #44](https://github.com/joeypshell/oceangame2/milestone/44) remains active through player gate #1201 for Expansion 18 `Transfer Hub Interior Expedition`. The proposed Expedition Adaptation proof is documented but its implementation milestone and issue batch remain blocked until that gate closes.
+The Simple Diver and Phase 2 expansion roadmaps now describe the completed runtime foundation. The active product roadmap is Living Expedition. Its first implementation milestone is one Spark Ray direction proof; later species, stable, ecology, combat, and regional growth remain directional until that player gate succeeds.
 
 Core sources and operating docs:
 
@@ -36,7 +36,10 @@ Core sources and operating docs:
 - [Visual Workflow](docs/VISUAL_WORKFLOW.md)
 - [Milestones](docs/MILESTONES.md)
 - [Finished Simple Diver Game Roadmap](docs/current/SIMPLE_DIVER_GAME_ROADMAP.md)
-- [OceanGame Phase 2 Roadmap](docs/planning/OCEANGAME_PHASE_2_ROADMAP.md)
+- [Active Living Expedition Roadmap](docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md)
+- [Creature System Spec](docs/planning/CREATURE_SYSTEM_SPEC.md)
+- [Creature Map Progression Spec](docs/planning/CREATURE_MAP_PROGRESSION_SPEC.md)
+- [Historical OceanGame Phase 2 Foundation Roadmap](docs/planning/OCEANGAME_PHASE_2_ROADMAP.md)
 - [Expedition Adaptation Direction](docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md)
 - [Capability And Resource Progression Framework](docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md)
 - [Executable Cross-Map Progression Graph](docs/current/PROGRESSION_GRAPH.md)
@@ -148,6 +151,7 @@ Current release and expansion handoff:
 - [Expansion 17 Closeout](docs/current/OCEANGAME_EXPANSION_17_CLOSEOUT.md)
 - [OceanGame Expansion 18 Transfer Hub Interior Expedition Plan](docs/current/OCEANGAME_EXPANSION_18_PLAN.md)
 - [OceanGame Expansion 18 Source And State Contract](docs/current/OCEANGAME_EXPANSION_18_SOURCE_STATE_CONTRACT.md)
+- [OceanGame Expansion 18 Strategic-HOLD Closeout](docs/current/OCEANGAME_EXPANSION_18_CLOSEOUT.md)
 
 Historical controlled-pass documents remain under `docs/current/`; use their closeouts only when working on the matching regression surface.
 
@@ -281,4 +285,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when authored expeditions preserve pressure, remembered geography, meaningful tools, night preparation, deterministic validation, focused visual review, and public Web deployment. The proposed next proof succeeds only if one companion feels shaped by a shared expedition and its next-day adaptation creates a genuine reason to begin another day.
+The current foundation remains successful when expeditions preserve pressure, remembered geography, meaningful tools, deterministic validation, focused visual review, and public Web deployment. The target game succeeds only when individual companions, shared memories, night adaptation, ecological discovery, and real-time partnership make another expedition emotionally and mechanically desirable.

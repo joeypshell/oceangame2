@@ -241,8 +241,10 @@ Issues #1193-#1200 must prove:
 - focused journey smoke, desktop/mobile captures, intentional baseline review,
   and exact-SHA public Web initialization
 
-Player-experience issue #1201 must remain open until the owner gives GO or a
-bounded HOLD. #52/#53 remain deferred optional slice-03 presentation work.
+Player-experience issue #1201 closed with the owner's strategic HOLD. This
+contract remains valid regression evidence for the implemented Transfer Hub;
+it is not the active product roadmap. #52/#53 remain deferred optional slice-03
+presentation work.
 
 ## Non-Goals
 

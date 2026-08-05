@@ -6,7 +6,7 @@ This file is the compact handoff for new Codex or ChatGPT Project sessions. It c
 
 ## Current Goal
 
-`oceangame2` has a GO release candidate and seventeen completed bounded Phase 2 expansions. Expansion 18 Transfer Hub Interior Expedition is technically assembled and remains active at player gate #1201 in milestone #44. Expedition Adaptation is the selected proposed post-gate direction, with implementation intentionally unbatched until the current gate closes and its one-companion proof is reviewed. OceanGame Expansion 01 proved:
+`oceangame2` has a stable diver-expedition runtime foundation and seventeen completed bounded Phase 2 expansions. Expansion 18 Transfer Hub Interior Expedition is technically complete but closes with a strategic player-experience HOLD: another clue/recipe/gate/scan correction would not solve the owner's finding that the wider loop feels boring and generic. Living Expedition is now the active product direction, beginning with one Spark Ray adaptation proof. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -48,9 +48,9 @@ Expansion 16 Deeper Wreck Oxygen Return is complete through #1122-#1133 plus bou
 
 Expansion 17 Wreck Network Triangulation is complete with owner GO through #1167 after implementation #1158-#1166, technical corrections #1175/#1178, and owner-HOLD corrections #1181-#1184. The far-west recorder now explains that transfer-hub coordinates are split across a current-scoured western transponder and a pressure-crushed abyssal transponder. Each route reuses already-earned capabilities, each coordinate half commits only at the canonical boat, and returning both triggers one automatic, exact-once night comparison with a destination promise. Held scanner use is `Space/USE` on desktop and `USE` on mobile; there is no separate triangulation command. The pass adds no recipe, capability, terrain, transition, score reward, or broad system.
 
-Expansion 18 selects one exceptional `transfer_hub_interior_01` destination reached by swimming through the normal full level to a physical entrance. Milestone #44 implements the source/state contract, generated maps, continuous sortie, existing-cutter core recovery, deterministic evidence, and exact public player gate. The same sortie must preserve oxygen, daylight, health, and cargo across entry and paired return. It is not a connector network, fast travel, another scanner chain, another recipe/gate, or a second implementation batch.
+Expansion 18 implements one exceptional `transfer_hub_interior_01` destination reached by swimming through the normal full level to a physical entrance. Its source/state contract, generated maps, continuous sortie, existing-cutter core recovery, deterministic evidence, and exact public build remain valid regression surfaces. It receives no player-experience GO and no further bounded correction pass.
 
-The proposed next direction is one bonded active companion whose meaningful expedition experiences become memories and whose selected memory becomes a visible adaptation during night debrief. The first proof uses one juvenile Spark Ray, two experience paths, one mutually exclusive adaptation choice, and an immediate next-day exploration or protection payoff. Diver equipment retains hard geographic access; the companion changes what the pair can accomplish within reachable regions.
+The active direction is one bonded active companion whose meaningful expedition experiences become memories and whose selected memory becomes a visible adaptation during night debrief. The first proof uses one juvenile Spark Ray, two experience paths, one mutually exclusive adaptation choice, and an immediate next-day exploration or protection payoff. Diver equipment retains hard geographic access; the companion changes what the pair can accomplish within reachable regions.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -75,8 +75,11 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Web export workflow: `.github/workflows/godot-web-export.yml`
 - Current docs index: `README.md`
 - Finished foundation roadmap: `docs/current/SIMPLE_DIVER_GAME_ROADMAP.md`
-- Active Phase 2 roadmap: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
-- Proposed creature direction: `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
+- Active product roadmap: `docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md`
+- Creature system contract: `docs/planning/CREATURE_SYSTEM_SPEC.md`
+- Creature/map progression contract: `docs/planning/CREATURE_MAP_PROGRESSION_SPEC.md`
+- Foundation history: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
+- First adaptation proof: `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
 - Completed Expansion 10 handoff: `docs/current/OCEANGAME_EXPANSION_10_CLOSEOUT.md` plus its linked plan, source contract, visual decision, Web verification, and correction #900
 - Completed Expansion 11 handoff: `docs/current/OCEANGAME_EXPANSION_11_CLOSEOUT.md` plus its plan, source/state contract, visual decision, Web verification, corrections #925/#927, and player GO #914
@@ -86,16 +89,15 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Completed Expansion 15 handoff: `docs/current/OCEANGAME_EXPANSION_15_CLOSEOUT.md`, with its plan, source/state contract, visual decision, final Web evidence, and corrections #1113/#1117/#1119
 - Completed Expansion 16 handoff: `docs/current/OCEANGAME_EXPANSION_16_CLOSEOUT.md`, with its plan, source/state contract, visual decisions, exact Web evidence, and corrections #1143-#1146/#1151/#1153
 - Completed Expansion 17 handoff: `docs/current/OCEANGAME_EXPANSION_17_CLOSEOUT.md`, with its plan, source/state contract, visual decision, exact Web evidence, and corrections #1175/#1178/#1181-#1184
-- Active Expansion 18 handoff: plan, source/state contract, visual decision, and Web verification under `docs/current/`; only player gate #1201 remains open in milestone #44
+- Expansion 18 handoff: plan, source/state contract, visual decision, Web verification, and strategic-HOLD closeout under `docs/current/`
 - Latest audio/Web handoff: `docs/current/FEEDBACK_AUDIO_CORRECTION_WEB_VERIFICATION.md`
 - Progression framework: `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
 - Architecture: `docs/current/ARCHITECTURE.md`
 - Tooling: `docs/current/TOOLING.md`
 - Focused player-review workflow: `docs/current/PLAYTEST_CHECKPOINTS.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest owner decision: Expansion 17 GO through #1167 on exact reviewed runtime `075a450`; milestone #43 is complete
-- Latest committed direction: close Expansion 18 milestone #44 through player gate #1201
-- Latest proposed direction: Expansion 19 Expedition Adaptation Proof; do not create its implementation batch before #1201 closes and the proof is reviewed
+- Latest owner decision: Expansion 18 is technically complete but strategically HOLD because the old cadence does not provide enough attachment or another-day motivation
+- Latest committed direction: Living Expedition 01 Spark Ray Adaptation Proof
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
 - Latest source contract: `docs/current/OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`
 - Latest visual decision: corrected Expansion 17 focused states are accepted for review while the 14-view full-level and slice baselines remain pixel-stable
@@ -242,8 +244,9 @@ Current issue state as of 2026-08-05:
 - Closed: #1156 planned Expansion 17; #1158-#1166 implemented it; #1175/#1178 corrected result/checkpoint gaps; #1181-#1184 corrected input, artifact identity, night payoff, visuals, and exact Web evidence after owner HOLD.
 - Closed: #1167 records owner GO for exact runtime `075a450`; milestone #43 is complete.
 - Closed planning: #1190 selected Expansion 18 Transfer Hub Interior Expedition.
-- Active: only #1201 remains open in milestone #44 for the Expansion 18 player verdict and closeout; #1192-#1200 plus bounded corrections are closed.
-- Active planning: #1219 documents the proposed Expedition Adaptation proof without creating its implementation batch.
+- Closed direction gate: #1201 records Expansion 18's strategic HOLD and transition; #1192-#1200 plus bounded corrections remain technically complete.
+- Closed planning: #1219 documents the first Expedition Adaptation proof.
+- Active planning: #1221 realigns the target game, creature contracts, roadmap, and milestone state.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -381,11 +384,12 @@ Current issue state as of 2026-08-05:
 
 ## Recommended Next Work
 
-Resolve Expansion 18 player gate #1201 and record its GO or bounded HOLD. Planning issue #1219 may document Expedition Adaptation, but do not create or resolve the proposed Expansion 19 implementation batch until #1201 closes and the one-companion proof is reviewed. Keep #52/#53 deferred.
+Complete #1221, close Expansion 18 as strategic HOLD, and freeze Living Expedition 01 as the only active implementation milestone. Resolve its Spark Ray issues in source/state -> schema/validation -> profile -> behavior -> map authoring -> memory/night -> adaptations -> smoke/capture -> Web/player order. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 
-- Treat Expedition Adaptation as proposed, not implemented. Preserve one active companion, meaningful experience rather than XP grinding, deliberate night consolidation, visible adaptation, and the equipment-versus-companion boundary in its planning contract.
+- Treat Living Expedition as active product direction but not current runtime. Preserve one active companion, meaningful experience rather than XP grinding, deliberate night consolidation, visible adaptation, and the equipment-versus-companion boundary.
+- Do not add a second species, stable UI, broad combat framework, or ecosystem simulation before the Spark Ray player gate.
 - Keep the implemented held-cargo strip, selectable active tools, persistent vitals/objectives, and temporary prompts as distinct HUD responsibilities; a broad production HUD replacement remains directional.
 - Keep `production_level_01` as the default preview map unless a separate reviewed decision changes it.
 - Preserve `maps/full_cave_sketch_01.greybox.json` as the generated topology draft and source for a separately named `production_level_01` output.
@@ -413,8 +417,8 @@ Keep new work small. If a task touches visual style, map topology, renderer beha
 Use this as the short project instruction text if moving context into a ChatGPT Project:
 
 ```text
-This project is for oceangame2, a Godot 4.7 side-view ocean salvage visual prototype.
+This project is for oceangame2, a Godot 4.7 side-view underwater expedition-raising game built on a stable diver-expedition foundation.
 
-Prioritize visual consistency, map/source-of-truth discipline, GitHub issue workflow, and small scoped implementation passes. Before making changes, read AGENTS.md, docs/current/PROJECT_CONTEXT.md, and relevant current docs. Use GitHub issues for actionable work. Do not regenerate the whole visual scene to fix one visual issue. For terrain/map changes, update source data or renderer first, then verify with screenshots/web preview.
+Prioritize the Living Expedition roadmap, creature attachment and adaptation, visual consistency, map/source-of-truth discipline, GitHub issue workflow, and small scoped implementation passes. Before making changes, read AGENTS.md, docs/current/PROJECT_CONTEXT.md, docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md, and relevant contracts. Keep current runtime distinct from planned creature systems. Do not regenerate the whole visual scene to fix one issue. For terrain/map changes, update source data or renderer first, then verify with validation and focused screenshots/Web preview.
 ```
 

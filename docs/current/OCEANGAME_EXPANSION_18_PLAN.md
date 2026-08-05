@@ -2,8 +2,10 @@
 
 Date: 2026-08-02
 
-Status: Active milestone #44. Issues #1192-#1201 are the frozen implementation,
-verification, and player-closeout batch.
+Status: Historical implementation plan for milestone #44. Issues #1192-#1200
+are technically complete; #1201 closed with the strategic player-experience
+HOLD recorded in `OCEANGAME_EXPANSION_18_CLOSEOUT.md`. Active product direction
+lives in `docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md`.
 
 ## Decision
 

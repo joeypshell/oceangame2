@@ -1,149 +1,254 @@
 # Game Spec
 
+Date: 2026-08-05
+
 ## Working Title
 
 OceanGame
 
-## Purpose
+## Product Identity
 
-`oceangame2` is the production foundation for a side-view ocean expedition and
-creature-raising game. The project uses a compact playable scope to prove the
-larger OceanGame loop without treating the current work as disposable.
+OceanGame is a side-view underwater expedition-raising game.
 
-The game combines authored exploration, oxygen and daylight pressure,
-materials and blueprints, night projects, practical research, capability-gated
-returns, limited combat, and reasons to begin another expedition day.
+The player is a researcher-diver operating from a surface boat above a large,
+remembered ocean cave system. They prepare equipment, explore under oxygen and
+daylight pressure, study wildlife, recover useful resources, confront or avoid
+danger, and return to the boat to care, research, build, and plan.
+
+The emotional center is one bonded active creature whose individual growth is
+shaped by meaningful shared expeditions.
+
+The signature promise is:
+
+> Every dive writes the creature you are raising; every night lets you decide
+> what those shared experiences become.
 
 ## Player Fantasy
 
-The player is a researcher-diver operating from a surface boat above a
-dangerous cave network. They learn the water, investigate signals and wildlife,
-recover useful materials, build equipment, and return through remembered
-places with capabilities that change what can be reached or survived. The
-proposed next direction adds one bonded sea companion whose individual growth
-is shaped by the expeditions they experience together.
+The player should feel like an increasingly capable ocean researcher who knows
+the geography, understands its wildlife, develops practical equipment, and
+builds a history with distinct creature companions.
 
-## Core Loop
+Progress is not only reaching a deeper room or earning a larger number. It is:
+
+- recognizing a place and understanding what lives there
+- preparing the right equipment and companion for an expedition
+- surviving an event that changes the partnership
+- watching an individual creature develop because of what happened
+- using that development to interact with the ocean differently
+- returning to the boat with a reason to care about tomorrow
+
+## Target Core Loop
 
 ```text
-see a promise -> choose and prepare -> dive under daylight
--> manage oxygen, health, cargo, tools, and route pressure
--> return to the boat -> bank cargo and commit discoveries
--> end the day -> review, build, and plan -> return changed
+notice a creature, habitat, threat, resource, or mystery
+-> choose equipment and one active companion
+-> dive through remembered geography under oxygen and daylight pressure
+-> explore, observe, gather, fight, evade, rescue, or protect
+-> create meaningful shared experiences
+-> return to the canonical boat and commit the expedition
+-> care, research, build, and consolidate one creature memory at night
+-> begin the next day with a visibly changed partnership
 ```
 
 One day supports multiple oxygen sorties. Open surface water refills oxygen;
-only the canonical boat banks cargo, commits discoveries, supports night
-projects, and ends the day.
+only the canonical boat banks cargo, commits discoveries and creature state,
+supports care/projects, and ends the day.
 
-The proposed Expedition Adaptation extension is:
+## Product Pillars
+
+### Living Partnership
+
+- One active companion is present and readable during a dive.
+- Species define possibilities; individual history defines development.
+- Meaningful events create memories; repetition does not create major growth.
+- Night consolidation turns one understood memory into a visible adaptation.
+- Personality affects expression without making critical controls unreliable.
+
+### Remembered Expedition World
+
+- Geography is contiguous, source-authored, and learnable.
+- Equipment opens predictable hard access through current, darkness, pressure,
+  wreck, and later capability gates.
+- Companions change what the pair can accomplish within reachable regions.
+- Habitats, threats, resources, mysteries, and adaptation opportunities are
+  planned together.
+- Fast travel and shortcut networks do not erase the journey.
+
+### Preparation And Pressure
+
+- Oxygen is the tactical sortie budget.
+- Daylight is the strategic expedition budget.
+- Health, cargo, tools, weapons, currents, and hostile behavior create route
+  decisions.
+- The player may evade, observe, distract, rescue, disable, fight, sample, or
+  harvest according to the species and encounter contract.
+- Failure is readable and deterministic rather than a hidden permanent penalty.
+
+### Meaningful Nights
+
+Night is a compact consequence and preparation phase, not a survival tax.
+
+It supports:
+
+- creature memory consolidation and recovery
+- practical research and ecological understanding
+- blueprint and material projects for diver equipment
+- expedition review and next-day planning
+- visible anticipation for what changes tomorrow
+
+There is no Emergency Week and no Food/Water/Power overnight consumption loop.
+
+## Progression Systems
+
+### Diver Equipment
+
+Knowledge plus guaranteed materials plus an appropriate component creates a
+tool, suit capability, or weapon. Equipment owns direct player verbs and hard
+geographic access.
+
+Examples include fins, light, pressure protection, cutter, scanner, rebreather,
+Current Stabilizer, and Shock Prod. Existing equipment remains foundation, but
+future projects must serve creature, habitat, threat, or region goals rather
+than extend a recipe-and-gate treadmill.
+
+### Companion Development
 
 ```text
-meaningful shared experience -> individual memory -> night consolidation
--> visible adaptation -> changed next-day exploration or protection
+meaningful shared event -> individual memory -> night consolidation
+-> permanent adaptation -> visible next-day payoff
 ```
 
-## Current Playable Foundation
+Companion adaptation is not bought with score and is not unlocked by generic
+experience points. Later adaptations may require a thematically related care
+item or biological catalyst, but the item cannot replace the lived memory.
 
-- One contiguous source-authored production cave:
-  `maps/production_level_01.greybox.json`.
-- A canonical top-water boat, direct continuous swimming, and no normal
-  teleport, prompted connector, or fast-travel route.
-- Oxygen as the tactical sortie budget and daylight as the strategic day
-  budget.
-- Held cargo, boat-only offload, typed materials, deterministic authored
-  candidate pools, and compact night projects.
-- Durable blueprint knowledge and equipment including propulsion fins,
-  scanner, cutter, dive light, pressure suit, Current Stabilizer, and Shock
-  Prod progression.
-- Remembered current, darkness, pressure, wreck, and tool interactions whose
-  prerequisites are validated as one progression graph.
-- Practical scanner findings, pending boat commitment, daily opportunities,
-  one territorial enemy, separate health, and bounded biological resources.
-- Desktop, landscape-mobile, local Godot, deterministic smoke, focused capture,
-  accepted baseline, and public Web review workflows.
+### Research And Ecology
 
-Production slices 01-04 remain regression and provenance fixtures. They are not
-the normal world or separate campaign areas.
+The scanner should identify real organisms, anatomy, behavior, habitats,
+environmental relationships, and artifacts. Research should improve decisions,
+not award unrelated blueprints from abstract targets.
 
-## Current Committed Direction
+Some passive, defensive, or hostile wildlife may provide bounded biological
+resources for equipment or care. Required resources use guaranteed authored
+habitats, low counts, and non-circular dependencies.
 
-Expansions 01-17 are complete with player GO. Expansion 18 technically proves
-the Transfer Hub journey through #1192-#1200 and bounded corrections; player
-gate #1201 and milestone #44 remain open for the final experience verdict.
+### Stable And Individual History
 
-Expansion 18 preserves these boundaries:
+The first proof has one individual. A later compact boat habitat may hold a
+small stable with one active companion selected per expedition.
 
-- turn the recovered transfer-hub coordinates into one physical destination
-- require normal travel through `production_level_01` to one exceptional entry
-- preserve oxygen, daylight, health, and cargo across entry and return
-- use the existing cutter to free one tangible navigation core
-- require return through the same entrance and commitment at the canonical boat
-- avoid normal connector travel, fast travel, another scanner chain, or another
-  recipe-and-gate loop
+The game should preserve individual names/callsigns, temperament, memories,
+adaptations, and important history. Large storage catalogs, breeding, fusion,
+and disposable duplicates are not current goals.
 
-Detailed direction:
+## Exploration And Map Progression
 
-- `docs/current/OCEANGAME_EXPANSION_18_PLAN.md`
-- `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
+The map is planned on two connected axes:
+
+1. **Diver access:** equipment determines where the diver can travel or survive.
+2. **Companion opportunity:** individual adaptations determine what the pair can
+   understand, stabilize, protect, or accomplish there.
+
+A paired challenge may occasionally require both, but a companion cannot
+silently substitute for the equipment that opens a mandatory region.
+
+Detailed rules:
+
+- `docs/MAP_SPEC.md`
 - `docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md`
+- `docs/planning/CREATURE_MAP_PROGRESSION_SPEC.md`
 
-After the Expansion 18 gate, the selected proposed direction is **Expedition
-Adaptation**: prove one rescued active companion, two meaningful memories, one
-night adaptation choice, one visible individual change, and immediate
-exploration/protection payoff. The implementation milestone remains uncreated
-until #1201 closes and the proof receives planning review.
+## Combat Direction
 
-Detailed direction:
+Combat remains real-time inside the side-view expedition world.
 
-- `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
+- The diver controls movement, weapons, positioning, and retreat.
+- The active companion provides readable warning, distraction, interruption,
+  defense, sensing, or support according to its development.
+- Enemies and defensive wildlife use learnable behaviors and territories.
+- Fighting costs time, oxygen, health, position, cargo opportunity, or
+  preparation.
+- Killing everything is not the automatic best answer.
+- Some enemies or wildlife may provide progression resources when the source
+  contract makes the acquisition understandable and non-circular.
 
-## Design Principles
+The first creature proof adds one protection action, not party combat,
+tournaments, elemental charts, or a broad arsenal.
 
-- Stable geography should become more legible and useful as the player learns
-  it; progression should not erase travel with shortcuts.
-- Meaningful equipment combines knowledge, guaranteed base materials, and an
-  appropriate special component.
-- Upgrades should change a verb, route, threat response, information surface,
-  or reachable payoff. Pure percentages are secondary.
-- Required progression cannot depend on an unlucky daily seed, inaccessible
-  material, or circular enemy/tool dependency.
-- Scanner results should identify the world or create practical knowledge, not
-  award unrelated blueprints from abstract markers.
-- Fighting should cost time, oxygen, health, position, or preparation; killing
-  everything is not the automatic best route.
-- Every expedition day should leave a project, opportunity, unresolved signal,
-  remembered gate, or mystery worth returning for.
-- Companion growth should come from understandable shared experiences and a
-  deliberate night choice, never generic XP grinding or random mutation.
-- Diver equipment should retain hard geographic access; companions should
-  change what the pair can accomplish within reachable regions.
+## First Direction Proof
+
+The first companion is a rescued juvenile bioelectric Spark Ray.
+
+It records two meaningful memories:
+
+- `held_the_flow` can become **Anchor Fins**, supporting one difficult
+  interaction inside current without bypassing propulsion-fin access.
+- `stood_ground` can become **Guardian Pulse**, supporting one contextual
+  hostile interruption and knockback without replacing the Shock Prod.
+
+The player chooses one at night. The next morning changes the creature's body,
+behavior, and immediate expedition possibilities.
+
+Detailed contract:
+`docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`.
+
+## Current Runtime Foundation
+
+The repository currently implements:
+
+- one contiguous source-authored production cave plus regression slices
+- direct swimming, oxygen, daylight, repeated sorties, health, and cargo
+- canonical-boat banking, night transition, materials, blueprints, and projects
+- fins, scanner, cutter, light, pressure suit, rebreather, stabilizer, and Shock
+  Prod progression
+- current, darkness, pressure, wreck, hostile, research, and interior journeys
+- one territorial eel and bounded biological resources
+- deterministic validators, progression audit, smokes, captures, baselines, and
+  public Web deployment
+
+The repository does not yet implement:
+
+- a general creature/species model
+- persistent individual companions or a stable
+- follow, context, memory, or adaptation runtime
+- creature-focused night care or consolidation
+- scalable creature art, animation, audio, behavior, or combat architecture
+
+Current runtime truth is documented in `docs/current/PROJECT_CONTEXT.md` and
+`docs/current/ARCHITECTURE.md`. Target direction is documented in
+`docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md`.
 
 ## Source And Validation Rules
 
-- JSON and generator helpers own terrain, collision-facing topology, entities,
-  gates, landmarks, habitats, resource candidates, encounter candidates,
-  journeys, and planning relationships.
-- Runtime derives presentation and mutable state from source; it does not
-  invent progression dependencies.
-- Map changes update the generator/source path first, then regenerate, validate,
-  audit reachability/parity, and verify final Godot/Web rendering.
-- Visual revisions target named assets or renderer rules and compare focused
-  captures before baseline acceptance.
+- JSON/generators own geography, habitats, encounter sites, rescue sites,
+  memory opportunities, and payoff relationships.
+- Runtime and versioned profile owners hold mutable individual state.
+- Do not hand-author gameplay placement in Godot scenes.
+- Validate reachability, player footprint, equipment prerequisites, companion
+  relationships, non-circular progression, failure, and exact-once state.
+- Use focused captures and exact Web checkpoints for final presentation review.
+- Do not regenerate whole scenes to revise one creature or adaptation asset.
 
 ## Current Non-Goals
 
-- Procedural geography.
-- Emergency Week or Food/Water/Power overnight survival taxes.
-- Broad economy, crafting tree, or inventory grid.
-- Shortcut or fast-travel networks.
-- Full ecosystem simulation.
-- Broad creature rosters, breeding, fusion, party combat, lifespan pressure,
-  and habitat management before the one-companion proof succeeds.
-- Vehicles, large-scale production content, final art/audio, broad
-  accessibility/input work, balance, and save hardening before their own
-  selected milestones.
+- procedural geography
+- fast travel or shortcut networks
+- Emergency Week or overnight survival-resource taxes
+- giant creature roster or storage UI
+- turn-based three-creature party combat
+- breeding, fusion, genes, eggs, or inheritance in the first proof
+- feeding chores, hidden loyalty, lifespan, forced retirement, or creature death
+- generalized ecosystem simulation
+- broad economy, inventory grid, or unrestricted crafting tree
+- vehicles, final art/audio, broad accessibility, balance, and save hardening
+  before their selected milestones
 
-Additional interiors, regions, equipment tiers, and broader wildlife remain
-directional. Expansion 18 selects exactly one exceptional interior, not a
-general connector or world-expansion system.
+## Product Success Question
+
+The next proof succeeds when the player can answer yes:
+
+> Did this creature feel like an individual shaped by what happened during our
+> expedition, and did seeing its adaptation make me want to begin another day?
+
+If not, add no second species. Correct the relationship and loop first.
