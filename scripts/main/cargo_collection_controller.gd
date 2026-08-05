@@ -39,6 +39,9 @@ func update(delta: float) -> void:
 	)
 	if material_commit.has("note"):
 		_main._last_status_note = str(material_commit["note"])
+	var memory_commit: Dictionary = _main._companion_sortie.commit_memories_at_boat()
+	if memory_commit.has("note") and not str(memory_commit.get("note", "")).is_empty():
+		_main._last_status_note = str(memory_commit["note"])
 
 
 func _update_non_biological_collection(delta: float) -> void:
