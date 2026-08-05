@@ -12,6 +12,7 @@ const PassiveEquipmentContext := preload("res://scripts/main/passive_equipment_c
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const CargoCollectionController := preload("res://scripts/main/cargo_collection_controller.gd")
 const BiologicalResourceController := preload("res://scripts/main/biological_resource_controller.gd")
+const CompanionSortieRuntime := preload("res://scripts/companion/companion_sortie_runtime.gd")
 const CutterSalvageController := preload("res://scripts/main/cutter_salvage_controller.gd")
 const CurrentGateCapture := preload("res://scripts/main/captures/current_gate_capture.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
@@ -228,6 +229,7 @@ var _active_tool_runtime
 var _capture_controller
 var _cargo_collection
 var _biological_resources
+var _companion_sortie
 var _current_gate
 var _cutter_salvage
 var _destination_payoff_feedback
@@ -354,6 +356,8 @@ func _ready() -> void:
 	_world_connector = WorldConnectorController.new()
 	_audio_cues = AudioCuePlayer.new()
 	add_child(_audio_cues)
+	_companion_sortie = CompanionSortieRuntime.new()
+	add_child(_companion_sortie)
 	_smoke_feedback_audio_checks = SmokeFeedbackAudioChecks.new(self)
 	_smoke_active_tool_checks = SmokeActiveToolChecks.new(self)
 	_smoke_final_dive_objective_checks = SmokeFinalDiveObjectiveChecks.new(self)
@@ -1344,6 +1348,13 @@ func _load_playable_map(
 	_navigation_core.on_map_loaded(world)
 	player.position = world.get_entry_position(entry_id) if not entry_id.is_empty() and world.has_method("get_entry_position") else world.spawn_position
 	add_child(player)
+	_companion_sortie.bind_map(
+		world,
+		player,
+		_anomaly_survey.profile_state(),
+		Callable(self, "_has_upgrade_id"),
+		_sortie_state.active
+	)
 	_apply_durable_light_profile()
 
 	if player.has_method("set_camera_limits"):
@@ -1386,6 +1397,8 @@ func _load_playable_map(
 	_update_status_label()
 
 func _clear_loaded_review_nodes() -> void:
+	if _companion_sortie != null:
+		_companion_sortie.clear_map()
 	for node in [_review_canvas, _player, _world]:
 		if node == null or not is_instance_valid(node):
 			continue
@@ -1436,6 +1449,7 @@ func _process(delta: float) -> void:
 	_update_hazard_feedback(delta)
 	if _sortie_state.update_offload_presence(_world.is_inside_extraction(_player.global_position), _oxygen_capacity_seconds()):
 		_expedition_day_state.record_sortie_started()
+		_companion_sortie.sync_spawn()
 		_run_complete = false
 		_completion_oxygen_bonus = 0
 	if _sortie_state.failed:
@@ -1646,6 +1660,7 @@ func _reset_run() -> void:
 	_last_status_note = "Reset"
 	_player.modulate = Color.WHITE
 	_player.position = _world.spawn_position
+	_companion_sortie.recover_to_player()
 	_player.set_physics_process(true)
 	if _player.has_method("reset_motion"):
 		_player.reset_motion()
@@ -1864,6 +1879,7 @@ func _handle_oxygen_depleted() -> void:
 	_expedition_day_state.record_failure("oxygen_depleted")
 	_hazard_cooldown_seconds = HAZARD_COOLDOWN_SECONDS
 	_player.global_position = _world.spawn_position
+	_companion_sortie.recover_to_player()
 	_player.set_physics_process(false)
 	if _player.has_method("reset_motion"):
 		_player.reset_motion()
@@ -1906,6 +1922,7 @@ func _handle_combat_defeat(_source_id: String) -> void:
 	_interior_expedition_transition.mark_failed()
 	_expedition_day_state.record_failure("combat_defeat")
 	_player.global_position = _world.spawn_position
+	_companion_sortie.recover_to_player()
 	_player.set_physics_process(false)
 	if _player.has_method("reset_motion"):
 		_player.reset_motion()
@@ -1947,6 +1964,7 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 	_hazard_cooldown_seconds = HAZARD_COOLDOWN_SECONDS
 	_hazard_feedback_seconds = HAZARD_FEEDBACK_SECONDS
 	_player.global_position = _world.spawn_position
+	_companion_sortie.recover_to_player()
 	if _player.has_method("reset_motion"):
 		_player.reset_motion()
 	if _player.has_method("snap_camera"):
