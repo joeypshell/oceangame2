@@ -1,8 +1,8 @@
 # oceangame2
 
-`oceangame2` is a compact side-view diver salvage game foundation in a controlled OceanGame Phase 2 expansion.
+`oceangame2` is a side-view ocean expedition game built on a controlled diver-salvage foundation.
 
-The compact diver foundation and OceanGame Expansions 01-17 are complete with player GO. Expansion 18 is active in milestone #44 as one exceptional Transfer Hub interior expedition that preserves pressure across entry and return. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
+The compact diver foundation and OceanGame Expansions 01-17 are complete with player GO. Expansion 18 is active at its milestone #44 player gate after technically proving one exceptional Transfer Hub interior expedition. Expedition Adaptation is the selected proposed post-gate direction: one bonded companion develops from meaningful shared dives and consolidates one memory into an adaptation at night. The contiguous `production_level_01` remains the editor, local, and public Web default; slices 01-04 remain unchanged regression fixtures.
 
 ## Project Goal
 
@@ -12,19 +12,20 @@ Build a small side-view salvage game that proves:
 - The art direction can stay coherent across revisions.
 - Individual visual issues can be fixed without resetting the whole scene.
 - Approved assets can be locked and reused.
-- The core diver loop can become a finished small game before larger OceanGame expansion.
+- The core diver loop can support a distinctive expedition-raising game without discarding its source, validation, visual, or deployment foundation.
 
 ## Prototype Shape
 
 - Genre: side-view 2D ocean salvage game
 - Engine: Godot
 - Current map: one contiguous source-authored production cave
-- Core loop: choose and prepare, make multiple oxygen sorties under daylight, bank and learn at the boat, build at night, and return changed
+- Current core loop: choose and prepare, make multiple oxygen sorties under daylight, bank and learn at the boat, build at night, and return changed
+- Proposed signature loop: meaningful shared experience, individual creature memory, night consolidation, visible next-day adaptation
 - Primary risks being tested: source-driven world production, expedition motivation, meaningful route choice, readable progression, and controlled visual growth
 
 ## Planning Docs
 
-[Milestone #43](https://github.com/joeypshell/oceangame2/milestone/43) and Expansion 17 are complete with owner GO on exact reviewed runtime `075a450`. [Milestone #44](https://github.com/joeypshell/oceangame2/milestone/44) freezes #1192-#1201 for Expansion 18 `Transfer Hub Interior Expedition`. Normal connector traversal, fast travel, broad economy, and another isolated upgrade remain deferred.
+[Milestone #43](https://github.com/joeypshell/oceangame2/milestone/43) and Expansion 17 are complete with owner GO. [Milestone #44](https://github.com/joeypshell/oceangame2/milestone/44) remains active through player gate #1201 for Expansion 18 `Transfer Hub Interior Expedition`. The proposed Expedition Adaptation proof is documented but its implementation milestone and issue batch remain blocked until that gate closes.
 
 Core sources and operating docs:
 
@@ -36,6 +37,7 @@ Core sources and operating docs:
 - [Milestones](docs/MILESTONES.md)
 - [Finished Simple Diver Game Roadmap](docs/current/SIMPLE_DIVER_GAME_ROADMAP.md)
 - [OceanGame Phase 2 Roadmap](docs/planning/OCEANGAME_PHASE_2_ROADMAP.md)
+- [Expedition Adaptation Direction](docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md)
 - [Capability And Resource Progression Framework](docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md)
 - [Executable Cross-Map Progression Graph](docs/current/PROGRESSION_GRAPH.md)
 - [Current Architecture](docs/current/ARCHITECTURE.md)
@@ -279,4 +281,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation succeeds when one authored expedition can use a profile-backed scanner, make multiple oxygen sorties under daylight, turn seeded materials and practical knowledge into durable route decisions, revisit remembered targets, resolve one optional fight-or-evade encounter, choose between known next-day opportunities, resolve night cleanly, and remain deterministic across map validation, smokes, captures, accepted baselines, and the public Web preview. Expansions 01-16 meet that condition through the player-approved full cave, regional, light, pressure, southeast-wreck, archive-current, expedition-planning, and deeper-wreck oxygen returns.
+The current foundation succeeds when authored expeditions preserve pressure, remembered geography, meaningful tools, night preparation, deterministic validation, focused visual review, and public Web deployment. The proposed next proof succeeds only if one companion feels shaped by a shared expedition and its next-day adaptation creates a genuine reason to begin another day.
