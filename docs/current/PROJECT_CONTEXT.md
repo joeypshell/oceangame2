@@ -97,7 +97,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Focused player-review workflow: `docs/current/PLAYTEST_CHECKPOINTS.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
 - Latest owner decision: Expansion 18 is technically complete but strategically HOLD because the old cadence does not provide enough attachment or another-day motivation
-- Latest committed direction: Living Expedition 01 Spark Ray Adaptation Proof
+- Latest committed direction: milestone #45 Living Expedition 01 Spark Ray Adaptation Proof, frozen as #1223-#1232
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
 - Latest source contract: `docs/current/OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`
 - Latest visual decision: corrected Expansion 17 focused states are accepted for review while the 14-view full-level and slice baselines remain pixel-stable
@@ -245,8 +245,8 @@ Current issue state as of 2026-08-05:
 - Closed: #1167 records owner GO for exact runtime `075a450`; milestone #43 is complete.
 - Closed planning: #1190 selected Expansion 18 Transfer Hub Interior Expedition.
 - Closed direction gate: #1201 records Expansion 18's strategic HOLD and transition; #1192-#1200 plus bounded corrections remain technically complete.
-- Closed planning: #1219 documents the first Expedition Adaptation proof.
-- Active planning: #1221 realigns the target game, creature contracts, roadmap, and milestone state.
+- Closed planning: #1219 documents the first Expedition Adaptation proof; #1221 realigns the target game, creature contracts, roadmap, and milestone state through merged PR #1222.
+- Active implementation: milestone #45 contains frozen Living Expedition 01 issues #1223-#1232; source/state contract #1223 is first.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -384,7 +384,7 @@ Current issue state as of 2026-08-05:
 
 ## Recommended Next Work
 
-Complete #1221, close Expansion 18 as strategic HOLD, and freeze Living Expedition 01 as the only active implementation milestone. Resolve its Spark Ray issues in source/state -> schema/validation -> profile -> behavior -> map authoring -> memory/night -> adaptations -> smoke/capture -> Web/player order. Keep #52/#53 deferred.
+Begin Living Expedition 01 with source/state contract #1223, then resolve frozen issues #1224-#1232 in schema/validation -> profile -> behavior -> map authoring -> memory/night -> adaptations -> smoke/capture -> Web/player order. Milestone #45 is the only active implementation milestone. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 
