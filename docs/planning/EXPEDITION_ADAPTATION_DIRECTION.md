@@ -111,16 +111,19 @@ The proof includes:
 - one rescued individual with a stable callsign
 - one active companion at a time
 - deterministic follow, separation recovery, and context response
+- one committed-bond riding unlock with seamless mount/dismount
+- one dedicated slow-time command palette and direct mounted action surface
 - two meaningful expedition memories
 - one mutually exclusive night adaptation choice
 - one changed silhouette or body-pattern detail
 - one exploration payoff and one protection payoff across the branches
 - no feeding schedule, lifespan, breeding, fusion, roster management, or death
 
-The companion is not placed in the active-tool hotbar. Tools retain their
-existing cycle and `Space/USE` action. Explicit companion interactions may use
-the existing contextual `E/ACT` surface when a clear target is present; the
-proof adds no unexplained global command.
+The companion is not placed in the diver tool hotbar. Unmounted tools retain
+their existing cycle and `Space/USE` action. `Shift/BOND` opens a bounded
+slow-time companion palette. While mounted, the bottom hotbar deliberately
+projects creature actions instead of diver tools; dismount restores the tool
+surface.
 
 ## Three-Day Experience
 
@@ -132,22 +135,25 @@ proof adds no unexplained global command.
    condition, not waiting as an abstract collectible.
 3. The rescue uses an already understood diver verb and returns the creature to
    the canonical boat.
-4. Night debrief introduces the individual's stable callsign and establishes it
-   as tomorrow's active companion; free-form naming remains deferred.
+4. The canonical boat commits the individual and riding becomes available on
+   the next launched sortie; free-form naming remains deferred.
 
 The rescue grants no score purchase and no surprise blueprint.
 
 ### Day Two: Shared Experiences
 
 1. The Spark Ray accompanies the diver through normal oxygen and daylight
-   pressure.
-2. One authored current situation creates `held_the_flow` when the pair
+   pressure, accepts deliberate commands, and can be mounted or dismounted in
+   valid clearance.
+2. Mounted control proves direct movement and one non-damaging `glide_surge`
+   without bypassing an equipment gate.
+3. One authored current situation creates `held_the_flow` when the pair
    completes a meaningful interaction rather than idling in current water.
-3. One territorial-threat situation creates `stood_ground` when the companion
+4. One territorial-threat situation creates `stood_ground` when the companion
    remains with or protects the diver through a real warning/attack cycle.
-4. Each earned memory receives one short in-world acknowledgement. It does not
+5. Each earned memory receives one short in-world acknowledgement. It does not
    interrupt the dive with a permanent panel.
-5. Returning to the boat preserves the memories; failure restores the
+6. Returning to the boat preserves the memories; failure restores the
    pre-sortie state according to the contract instead of duplicating them.
 
 ### Night Two: Consolidation
@@ -176,8 +182,8 @@ must not end only with score or an instruction to repeat the same action.
 ### Anchor Fins
 
 - Visual: broader fin tips and a stable, low swimming posture in strong flow.
-- Trigger: automatic stance near the authored interaction, with a clear
-  companion context cue.
+- Trigger: a deliberate independent command or mounted brace action at the
+  authored interaction.
 - Effect: reduces local drift and lets the pair hold position long enough to
   scan, cut, sample, or protect something inside difficult water.
 - Boundary: does not open a current gate that still requires propulsion fins.
@@ -187,12 +193,12 @@ must not end only with score or an instruction to repeat the same action.
 ### Guardian Pulse
 
 - Visual: brighter conductive stripe and a readable charge before discharge.
-- Trigger: contextual `E/ACT` against a clearly targeted threat while the
-  companion is in protection range.
+- Trigger: a deliberately aimed independent `BOND` command or selected mounted
+  creature action against a clearly targeted threat.
 - Effect: interrupts and knocks back one territorial lunge on a visible
   cooldown. It does not silently kill the enemy or replace the Shock Prod.
-- Boundary: the diver keeps direct weapon control and remains responsible for
-  positioning, health, and retreat.
+- Boundary: unmounted diver weapons and mounted creature actions are mutually
+  exclusive; diver health, oxygen, and retreat remain authoritative.
 - Payoff: enough breathing room to escape, recover position, or deliberately
   continue the encounter.
 
@@ -247,14 +253,18 @@ The companion must read as a living individual, not a marker or floating tool:
 - restrained effects that remain readable in the existing cave palette
 - no whole-scene regeneration to revise the creature
 
-The first visual review compares base, Anchor Fins, and Guardian Pulse states at
-desktop and landscape-mobile scale before accepting any baseline.
+The first visual review compares base independent/mounted, Anchor Fins, and
+Guardian Pulse states at desktop and landscape-mobile scale before accepting any
+baseline.
 
 ## Validation And Review
 
 Deterministic evidence should prove:
 
 - rescue and canonical-boat commitment occur exactly once
+- riding unlocks only after commitment; mode switching, rider clearance,
+  movement authority, hotbar projection, and mobile `BOND` controls are stable
+- `glide_surge` is non-damaging and bypasses no access gate
 - only meaningful conditions award each memory
 - repetition cannot grind duplicate memory or adaptation progress
 - only earned memories appear at night
@@ -271,19 +281,22 @@ the owner to play the three-day journey on the exact public build.
 
 Title: **Living Expedition 01: Spark Ray Adaptation Proof**.
 
-Freeze approximately ten issues in this order after the target-game and
+Freeze one bounded issue batch in this order after the target-game and
 creature-system planning reset lands:
 
 1. Lock the companion experience, source, state, failure, and control contract.
 2. Add species, rescue, memory, adaptation, and payoff schema validation.
 3. Add versioned individual companion/profile state with migration coverage.
 4. Implement one deterministic Spark Ray follow and context-behavior owner.
-5. Author the rescue and two memory opportunities through the source pipeline.
-6. Implement memory qualification and exact-once night consolidation.
-7. Implement Anchor Fins and Guardian Pulse with visible individual changes.
-8. Add deterministic rescue, memory, adaptation, failure, and regression smoke.
-9. Add focused desktop/mobile captures and controlled visual review.
-10. Verify the exact public Web build and run the three-day owner closeout.
+5. Implement companion commands, riding, mounted movement, and action projection.
+6. Author the rescue and two memory opportunities through the source pipeline.
+7. Implement memory qualification and exact-once night consolidation.
+8. Implement Anchor Fins and Guardian Pulse with visible individual/mounted
+   changes.
+9. Add deterministic rescue, riding, memory, adaptation, failure, and regression
+   smoke.
+10. Add focused desktop/mobile captures and controlled visual review.
+11. Verify the exact public Web build and run the three-day owner closeout.
 
 Do not create a second creature or the next creature milestone during this
 proof.
@@ -308,8 +321,8 @@ The direction proof succeeds only if the owner can answer yes to both:
 > Did the companion feel like an individual shaped by what happened during the
 > expedition rather than a tool, quest reward, or skill-tree token?
 
-> After seeing the adaptation the next morning, did you want to begin another
-> day to discover what this creature could become?
+> After commanding, riding, and seeing the adaptation the next morning, did you
+> want to begin another day to discover what this partnership could become?
 
 If the proof produces another checklist, generic unlock, passive key, or
 unexplained command, hold the milestone and correct the experience before

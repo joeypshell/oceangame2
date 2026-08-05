@@ -2,13 +2,14 @@
 
 `oceangame2` is a side-view underwater expedition-raising game built on a controlled diver-expedition foundation.
 
-The existing runtime proves contiguous authored exploration, oxygen/daylight pressure, equipment progression, limited combat, night projects, and stable validation/deployment. Expansion 18 is technically complete but closes with a strategic player-experience HOLD: extending the old clue, recipe, gate, and scan cadence would not solve its generic motivation. The active Living Expedition direction centers one bonded creature whose meaningful shared memories become deliberate visible adaptations at night.
+The existing runtime proves contiguous authored exploration, oxygen/daylight pressure, equipment progression, limited combat, night projects, and stable validation/deployment. Expansion 18 is technically complete but closes with a strategic player-experience HOLD: extending the old clue, recipe, gate, and scan cadence would not solve its generic motivation. The active Living Expedition direction centers one bonded creature that can support or be ridden in real time, with meaningful shared memories becoming deliberate visible adaptations at night.
 
 ## Project Goal
 
 Build a distinctive side-view ocean game in which:
 
 - The diver prepares equipment and one active companion for remembered places.
+- Species anatomy and lived adaptation determine whether that individual supports, fights, senses, protects, or becomes a directly controlled mount.
 - Meaningful shared events create individual creature memories.
 - Night consolidation visibly changes the creature and the next expedition.
 - Equipment owns hard geographic access while companions change what the pair can accomplish there.
@@ -20,8 +21,8 @@ Build a distinctive side-view ocean game in which:
 - Engine: Godot
 - Current map: one contiguous source-authored production cave
 - Current core loop: choose and prepare, make multiple oxygen sorties under daylight, bank and learn at the boat, build at night, and return changed
-- Target signature loop: meaningful shared experience, individual creature memory, night consolidation, visible next-day adaptation
-- Primary next risk: whether one companion feels personally shaped by a dive and creates genuine another-day motivation
+- Target signature loop: rescue, bond, command or ride, share meaningful experience, consolidate at night, and feel a visible next-day adaptation
+- Primary next risk: whether commanding and riding one adapting individual creates attachment, build curiosity, and genuine another-day motivation
 
 ## Planning Docs
 
@@ -37,8 +38,10 @@ Core sources and operating docs:
 - [Milestones](docs/MILESTONES.md)
 - [Finished Simple Diver Game Roadmap](docs/current/SIMPLE_DIVER_GAME_ROADMAP.md)
 - [Active Living Expedition Roadmap](docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md)
+- [Real-Time Creature Partnership Direction](docs/planning/REAL_TIME_CREATURE_PARTNERSHIP_DIRECTION.md)
 - [Creature System Spec](docs/planning/CREATURE_SYSTEM_SPEC.md)
 - [Creature Map Progression Spec](docs/planning/CREATURE_MAP_PROGRESSION_SPEC.md)
+- [Living Expedition 01 Source And State Contract](docs/current/LIVING_EXPEDITION_01_SOURCE_STATE_CONTRACT.md)
 - [Historical OceanGame Phase 2 Foundation Roadmap](docs/planning/OCEANGAME_PHASE_2_ROADMAP.md)
 - [Expedition Adaptation Direction](docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md)
 - [Capability And Resource Progression Framework](docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md)
@@ -285,4 +288,4 @@ Local preview commands are documented in [Tooling](docs/current/TOOLING.md). The
 
 ## Current Success Condition
 
-The current foundation remains successful when expeditions preserve pressure, remembered geography, meaningful tools, deterministic validation, focused visual review, and public Web deployment. The target game succeeds only when individual companions, shared memories, night adaptation, ecological discovery, and real-time partnership make another expedition emotionally and mechanically desirable.
+The current foundation remains successful when expeditions preserve pressure, remembered geography, meaningful tools, deterministic validation, focused visual review, and public Web deployment. The target game succeeds only when commanding, supporting, or riding an individual companion, then seeing shared memories become visible adaptations, makes another expedition emotionally and mechanically desirable.

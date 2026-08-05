@@ -16,7 +16,9 @@ daylight pressure, study wildlife, recover useful resources, confront or avoid
 danger, and return to the boat to care, research, build, and plan.
 
 The emotional center is one bonded active creature whose individual growth is
-shaped by meaningful shared expeditions.
+shaped by meaningful shared expeditions. Depending on species anatomy and learned
+adaptations, that individual may support the diver independently or become a
+directly controlled mount.
 
 The signature promise is:
 
@@ -44,7 +46,8 @@ Progress is not only reaching a deeper room or earning a larger number. It is:
 notice a creature, habitat, threat, resource, or mystery
 -> choose equipment and one active companion
 -> dive through remembered geography under oxygen and daylight pressure
--> explore, observe, gather, fight, evade, rescue, or protect
+-> command, support, or ride the companion while exploring, observing,
+   gathering, fighting, evading, rescuing, or protecting
 -> create meaningful shared experiences
 -> return to the canonical boat and commit the expedition
 -> care, research, build, and consolidate one creature memory at night
@@ -61,6 +64,10 @@ supports care/projects, and ends the day.
 
 - One active companion is present and readable during a dive.
 - Species define possibilities; individual history defines development.
+- The companion can remain independent or transfer movement/action control while
+  mounted when its anatomy and bond support that role.
+- A small slow-time command palette makes deliberate real-time coordination
+  readable without turning expeditions into party battles.
 - Meaningful events create memories; repetition does not create major growth.
 - Night consolidation turns one understood memory into a visible adaptation.
 - Personality affects expression without making critical controls unreliable.
@@ -123,6 +130,11 @@ Companion adaptation is not bought with score and is not unlocked by generic
 experience points. Later adaptations may require a thematically related care
 item or biological catalyst, but the item cannot replace the lived memory.
 
+Species define credible affordances such as carrying, sensing, shielding,
+healing, bracing, or discharging. Experience and night choices specialize those
+affordances so two individuals of the same species may play differently without
+becoming anatomically arbitrary.
+
 ### Research And Ecology
 
 The scanner should identify real organisms, anatomy, behavior, habitats,
@@ -161,11 +173,17 @@ Detailed rules:
 
 ## Combat Direction
 
-Combat remains real-time inside the side-view expedition world.
+Combat and exploration remain real-time inside the shared side-view world.
 
-- The diver controls movement, weapons, positioning, and retreat.
-- The active companion provides readable warning, distraction, interruption,
-  defense, sensing, or support according to its development.
+- One active companion may support independently, fight beside the diver, or be
+  ridden and directly controlled according to species and learned skills.
+- Unmounted, the diver owns movement, tools, weapons, positioning, and retreat;
+  deliberate companion actions use a bounded slow-time command palette.
+- Mounted, movement and the action hotbar transfer to the creature until the
+  player dismounts; diver tools are unavailable in that mode.
+- The active companion provides readable movement, warning, distraction,
+  interruption, defense, sensing, support, or direct creature actions according
+  to its development.
 - Enemies and defensive wildlife use learnable behaviors and territories.
 - Fighting costs time, oxygen, health, position, cargo opportunity, or
   preparation.
@@ -173,22 +191,29 @@ Combat remains real-time inside the side-view expedition world.
 - Some enemies or wildlife may provide progression resources when the source
   contract makes the acquisition understandable and non-circular.
 
-The first creature proof adds one protection action, not party combat,
-tournaments, elemental charts, or a broad arsenal.
+The design borrows build experimentation, role synergy, and field utility from
+monster collectors such as Monster Sanctuary without adopting three-creature
+turn-based combat, elemental charts, a giant initial roster, or generic battle
+arenas. Detailed direction:
+`docs/planning/REAL_TIME_CREATURE_PARTNERSHIP_DIRECTION.md`.
 
 ## First Direction Proof
 
-The first companion is a rescued juvenile bioelectric Spark Ray.
+The first companion is a rescued juvenile bioelectric Spark Ray. Day 1 rescues
+and commits the individual at the canonical boat. Its first subsequently launched
+sortie proves follow, a dedicated `Shift/BOND` command palette, seamless
+mount/dismount, direct mounted movement, and one non-damaging Glide Surge.
 
 It records two meaningful memories:
 
-- `held_the_flow` can become **Anchor Fins**, supporting one difficult
-  interaction inside current without bypassing propulsion-fin access.
-- `stood_ground` can become **Guardian Pulse**, supporting one contextual
-  hostile interruption and knockback without replacing the Shock Prod.
+- `held_the_flow` can become **Anchor Fins**, adding independent and mounted
+  current bracing without bypassing propulsion-fin access.
+- `stood_ground` can become **Guardian Pulse**, adding one deliberately aimed
+  independent or mounted hostile interruption and knockback without replacing
+  the Shock Prod.
 
-The player chooses one at night. The next morning changes the creature's body,
-behavior, and immediate expedition possibilities.
+The player chooses one at night. Day 3 changes the creature's body, independent
+behavior, mounted action set, and immediate expedition possibilities.
 
 Detailed contract:
 `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`.
@@ -211,7 +236,7 @@ The repository does not yet implement:
 
 - a general creature/species model
 - persistent individual companions or a stable
-- follow, context, memory, or adaptation runtime
+- follow, command, mounting, context, memory, or adaptation runtime
 - creature-focused night care or consolidation
 - scalable creature art, animation, audio, behavior, or combat architecture
 
@@ -237,6 +262,7 @@ Current runtime truth is documented in `docs/current/PROJECT_CONTEXT.md` and
 - Emergency Week or overnight survival-resource taxes
 - giant creature roster or storage UI
 - turn-based three-creature party combat
+- more than one active expedition companion in the first proof
 - breeding, fusion, genes, eggs, or inheritance in the first proof
 - feeding chores, hidden loyalty, lifespan, forced retirement, or creature death
 - generalized ecosystem simulation

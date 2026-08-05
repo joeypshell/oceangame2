@@ -85,6 +85,10 @@ collectible decoration.
   crowding traversal or HUD space.
 - Base behavior requires readable idle, follow, catch-up, separated/worried,
   encounter-response, and recovery states before broad animation production.
+- Ride-capable species need a readable approach, mount, mounted locomotion,
+  direct-action, forced-separation, and dismount silhouette at gameplay scale.
+- Mounted framing must keep the diver and creature legible as one controlled pair
+  without making the rider look pasted on or hiding facing and attack direction.
 - Temperament may affect timing, posture, spacing, and idle expression, but not
   make critical behavior visually ambiguous.
 - Permanent adaptations need a body, marking, posture, or effect change that is
@@ -97,10 +101,12 @@ collectible decoration.
   recolor, or text label.
 
 The first Spark Ray proof uses one base individual plus separately reviewable
-Anchor Fins and Guardian Pulse variants. Anchor Fins should broaden the fin-tip
-silhouette and lower the current stance. Guardian Pulse should add a conductive
-stripe, readable charge, directional discharge, hit response, and cooldown
-recovery. Changing either variant must not regenerate terrain, diver, boat,
+Anchor Fins and Guardian Pulse variants. The base individual needs independent
+follow and mounted silhouettes plus a readable non-damaging Glide Surge. Anchor
+Fins should broaden the fin-tip silhouette and lower both independent and mounted
+current stances. Guardian Pulse should add a conductive stripe, readable aimed
+charge in either mode, directional discharge, hit response, and cooldown
+recovery. Changing any Spark Ray state must not regenerate terrain, diver, boat,
 other wildlife, or the full scene.
 
 ## Current Boat Entry Pass

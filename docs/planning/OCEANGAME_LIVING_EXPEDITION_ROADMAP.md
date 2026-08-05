@@ -13,6 +13,9 @@ The player remains a researcher-diver operating from a surface boat, exploring
 one remembered ocean world under oxygen, daylight, health, cargo, and route
 pressure. The new emotional center is a bonded active creature whose individual
 development is shaped by meaningful expeditions and deliberate night choices.
+Exploration and combat remain real-time. Depending on species anatomy and learned
+skills, the individual may support independently, fight beside the diver, or
+become a directly controlled mount.
 
 The signature promise is:
 
@@ -41,7 +44,7 @@ individual development, and expressive choice before expanding content.
 notice a creature, habitat, threat, or mystery
 -> choose equipment and one active companion
 -> dive through remembered geography
--> survive a meaningful shared event
+-> command, support, or ride the companion through a meaningful shared event
 -> return discoveries, resources, and creature memories to the boat
 -> care, research, build, and consolidate one memory at night
 -> see a visible behavioral adaptation next morning
@@ -73,6 +76,8 @@ Every day should leave at least one personal reason to return:
 - scanner research toward real species, habitats, behavior, and anatomy
 - biological resources toward bounded ecological and progression roles
 - combat toward diver-and-companion tactical cooperation
+- controls toward one readable independent/mounted partnership rather than a
+  passive pet or interchangeable party roster
 - night debrief toward care, memory consolidation, research, and preparation
 - map progression toward equipment access plus companion opportunities
 - profile state toward a small set of persistent individuals
@@ -92,7 +97,7 @@ Every day should leave at least one personal reason to return:
 - fast travel or shortcut networks that erase remembered geography
 - giant creature catalogs before individual attachment works
 - random mutation, generic XP grinding, or repeated exposure farming
-- broad turn-based party combat as the first creature implementation
+- turn-based party combat, elemental charts, and generic encounter arenas
 - full ecosystem simulation, breeding, fusion, or forced creature death now
 
 ## Planning Horizons
@@ -106,6 +111,9 @@ It must prove:
 
 - one physical rescue and stable individual identity
 - one active companion with readable follow and context behavior
+- one dedicated slow-time command surface with at most three contextual actions
+- one committed-bond riding unlock, seamless mount/dismount, and direct mounted
+  movement/action ownership
 - two meaningful memories earned through real expedition events
 - one deliberate night consolidation choice
 - one visible adaptation on the following day
@@ -120,10 +128,12 @@ Only milestone-level goals are selected beyond the first proof:
 
 1. **Living Expedition 02: Small Stable And Species Identity**
    Add two contrasting species, a compact boat habitat, one active selection,
-   clear individual records, and reasons to care about inactive companions.
+   clear individual records, contrasting independent/mounted affordances, and
+   reasons to care about inactive companions.
 2. **Living Expedition 03: Field Roles And Ecological Discovery**
    Make species perception and behavior reveal real habitats, organisms,
-   resources, and mysteries without turning creatures into keys.
+   resources, and mysteries while deepening support, direct-control, and mounted
+   roles without turning creatures into keys.
 3. **Living Expedition 04: Duo Combat And Wildlife Consequences**
    Expand real-time diver-and-companion tactics, enemy behavior, nonlethal
    responses, and bounded wildlife resources.
@@ -146,21 +156,23 @@ unticketed.
 
 ## Committed Milestone Batch
 
-Freeze approximately ten issues for Living Expedition 01 in this order:
+Freeze one bounded issue batch for Living Expedition 01 in this order:
 
 1. Lock companion experience, controls, source, state, and failure contracts.
 2. Add species, rescue, memory, adaptation, and payoff schema validation.
 3. Add versioned individual companion state and profile migration.
 4. Implement deterministic Spark Ray follow, separation, and context behavior.
-5. Author one rescue and two memory opportunities through the map source path.
-6. Implement exact-once memory qualification and night consolidation.
-7. Implement Anchor Fins exploration adaptation and visual change.
-8. Implement Guardian Pulse protection adaptation and visual change.
-9. Add deterministic journey smoke, review checkpoint, and focused captures.
-10. Verify the exact public Web build and run the three-day owner closeout.
+5. Implement the slow-time command palette, bonded riding, mounted movement, and
+   creature-action hotbar projection.
+6. Author one rescue and two memory opportunities through the map source path.
+7. Implement exact-once memory qualification and night consolidation.
+8. Implement Anchor Fins independent and mounted payoff.
+9. Implement Guardian Pulse independent and mounted payoff.
+10. Add deterministic journey smoke, review checkpoint, and focused captures.
+11. Verify the exact public Web build and run the three-day owner closeout.
 
-Do not combine the two adaptations with a second creature, roster UI, broad
-combat framework, map expansion, or accepted-baseline sweep.
+Do not combine the two adaptations with a second creature, roster UI, turn-based
+or broad combat framework, map expansion, or accepted-baseline sweep.
 
 ## Map And Progression Rules
 
@@ -181,6 +193,10 @@ Detailed contract:
 
 - One active companion is the emotional and mechanical center of a dive.
 - Species define possibilities; individual history defines the selected build.
+- A capable individual may alternate between independent and mounted play during
+  the same dive; mounted control is a role, not an equipment-gate bypass.
+- Significant companion actions are deliberate through `Shift/BOND` and a
+  bounded slow-time palette, not hidden autonomous damage.
 - Meaningful events create memories; repetition does not create major growth.
 - The player chooses permanent adaptations with predictable consequences.
 - Temperament affects expression, not critical command reliability.
@@ -188,6 +204,8 @@ Detailed contract:
   equipment slots.
 
 Detailed contract: `docs/planning/CREATURE_SYSTEM_SPEC.md`.
+Control/combat decision:
+`docs/planning/REAL_TIME_CREATURE_PARTNERSHIP_DIRECTION.md`.
 
 ## Execution Rules
 
@@ -201,9 +219,9 @@ Detailed contract: `docs/planning/CREATURE_SYSTEM_SPEC.md`.
 
 ## Living Expedition 01 Exit Question
 
-> Did the Spark Ray feel like an individual shaped by what happened during the
-> expedition, and did seeing its adaptation make the player want to begin
-> another day to discover what the partnership could become?
+> Did commanding and riding the Spark Ray feel like a partnership shaped by what
+> happened during the expedition, and did seeing its adaptation make the player
+> want to begin another day to discover what the partnership could become?
 
 If the result feels like another tool, gate key, passive follower, checklist,
 or skill-tree token, HOLD before creating a second species.

@@ -7,7 +7,7 @@ Keep guidance practical and compact. Add rules only when they prevent repeated m
 ## Repository Shape
 
 - Source: Godot 4.x project using GDScript. Scenes should live in `scenes/`; scripts should live in `scripts/`.
-- Current purpose: use the finished diver-expedition foundation to build OceanGame as a side-view underwater expedition-raising game centered on one bonded active companion, meaningful shared memories, and deliberate night adaptation.
+- Current purpose: use the finished diver-expedition foundation to build OceanGame as a real-time side-view underwater expedition-raising game centered on one bonded active companion, embodied independent/mounted play, meaningful shared memories, and deliberate night adaptation.
 - Runtime/config, once the Godot project exists: `project.godot`, `icon.svg`, Godot scenes, and GDScript files.
 - GitHub Actions: `.github/workflows/godot-web-export.yml`.
 - Planning docs: `docs/`; active product direction starts at `docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md`, while `OCEANGAME_PHASE_2_ROADMAP.md` remains the historical foundation roadmap.
@@ -23,6 +23,7 @@ Keep guidance practical and compact. Add rules only when they prevent repeated m
 - For gameplay/backlog work, apply the Living Expedition north-star filter: the change should create creature attachment, meaningful shared experience, expressive adaptation, ecological curiosity, pressure, remembered-place progress, meaningful route choice, or a reason to begin another day; otherwise treat it as foundation tooling/polish and keep it proportional.
 - Keep current-runtime truth separate from target-game plans. Do not claim proposed creature, memory, adaptation, stable, or habitat systems exist before their implementation issues merge.
 - Preserve the progression boundary: diver equipment owns predictable hard geographic access; companions change what the pair can accomplish within reachable regions and must not become unexplained gate keys.
+- Preserve the partnership boundary: one active companion may support independently or transfer movement/action control while mounted, but its role must come from credible species anatomy plus individual experience. Do not reduce companions to passive bonuses, autonomous damage, generic keys, or interchangeable hotbar items.
 - For map/terrain work, do not visually interpret screenshots or hand-tune Godot polygons as topology fixes. Update the machine-readable source map or converter, regenerate runtime geometry and previews, then use Godot/Playwright screenshots only as final rendering confirmation.
 - For map/topology work, validate player accessibility from the spawn. All intended open areas, salvage, hazards, and return/extraction zones must be reachable unless explicitly marked decorative/background-only.
 - If new work appears, create or request a follow-up issue instead of expanding the ticket.
