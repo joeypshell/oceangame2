@@ -1575,6 +1575,8 @@ func _pry_salvage_completion_feedback(salvage_id: String, label: String) -> Stri
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if _companion_sortie != null and _companion_sortie.handle_input(event):
+		return
 	if _expedition_day_state.phase == ExpeditionDayState.PHASE_DEBRIEF:
 		if event.is_action_released("active_tool_use"):
 			_release_active_tool()
@@ -1622,6 +1624,7 @@ func _reset_run() -> void:
 	):
 		_reset_interior_expedition_to_boat()
 		return
+	_companion_sortie.reset_control("retry")
 	_refresh_active_tools()
 
 	_world.reset_salvage()
@@ -1821,6 +1824,7 @@ func _update_hostile_encounter(delta: float) -> bool:
 	if bool(damage.get("changed", false)):
 		_timed_salvage.reset()
 		if not bool(damage.get("defeated", false)) and _player.has_method("apply_knockback"):
+			_companion_sortie.force_dismount_for_hit(event.get("position", _player.global_position) as Vector2)
 			_player.apply_knockback(
 				_player.global_position - (event.get("position", _player.global_position) as Vector2),
 				float(event.get("knockback_force", 0.0)),
@@ -2088,6 +2092,12 @@ func _create_review_overlay(world: Node) -> void:
 	var mobile_controls = get_node_or_null("MobileTestControls")
 	if mobile_controls != null:
 		_active_tool_hud.set_mobile_controls_visible(bool(mobile_controls.get_test_report().get("enabled", false)))
+	_companion_sortie.bind_interface(
+		_active_tool_hud,
+		Callable(self, "_set_companion_status_note"),
+		Callable(self, "_release_active_tool"),
+		Callable(self, "_companion_control_available")
+	)
 
 	_progression_project_tracker = ProgressionProjectTracker.new()
 	canvas.add_child(_progression_project_tracker)
@@ -2644,7 +2654,25 @@ func _refresh_active_tools() -> Dictionary:
 
 func _update_active_tool_hud() -> void:
 	if _active_tool_hud != null and _active_tool_runtime != null:
-		_active_tool_hud.refresh(_active_tool_runtime.report())
+		if _companion_sortie != null and _companion_sortie.hides_diver_hotbar():
+			_active_tool_hud.visible = false
+		else:
+			_active_tool_hud.refresh(_active_tool_runtime.report())
+
+
+func _set_companion_status_note(note: String) -> void:
+	_last_status_note = note
+	_update_status_label()
+
+
+func _companion_control_available() -> bool:
+	return (
+		_world != null
+		and _player != null
+		and not _run_complete
+		and not _sortie_state.failed
+		and _expedition_day_state.phase != ExpeditionDayState.PHASE_DEBRIEF
+	)
 
 
 func _update_held_cargo_hud() -> void:

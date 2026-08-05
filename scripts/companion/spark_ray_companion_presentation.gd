@@ -21,6 +21,10 @@ var _context_kind := ""
 var _context_direction := Vector2.RIGHT
 var _context_seconds := 0.0
 var _pulse_seconds := 0.0
+var _mounted := false
+var _glide_direction := Vector2.RIGHT
+var _glide_seconds := 0.0
+var _glide_duration := 0.0
 
 
 func sync(state: String, facing_sign: float, path_points: Array) -> void:
@@ -40,6 +44,18 @@ func show_context_response(context_kind: String, direction: Vector2, duration :=
 	return true
 
 
+func set_mounted(active: bool) -> void:
+	_mounted = active
+	queue_redraw()
+
+
+func show_glide_surge(direction: Vector2, duration: float) -> void:
+	_glide_direction = direction.normalized() if direction != Vector2.ZERO else Vector2.RIGHT * _facing_sign
+	_glide_duration = maxf(0.1, duration)
+	_glide_seconds = _glide_duration
+	queue_redraw()
+
+
 func advance(delta: float) -> void:
 	var safe_delta := maxf(0.0, delta)
 	_pulse_seconds = fmod(_pulse_seconds + safe_delta, 1.0)
@@ -47,6 +63,7 @@ func advance(delta: float) -> void:
 		_context_seconds = maxf(0.0, _context_seconds - safe_delta)
 		if _context_seconds == 0.0:
 			_context_kind = ""
+	_glide_seconds = maxf(0.0, _glide_seconds - safe_delta)
 	queue_redraw()
 
 
@@ -57,6 +74,9 @@ func report() -> Dictionary:
 		"recovery_path_visible": _state in [STATE_SEPARATED, STATE_RECOVERY] and not _path_points.is_empty(),
 		"context_kind": _context_kind,
 		"context_seconds": _context_seconds,
+		"mounted": _mounted,
+		"glide_visible": _glide_seconds > 0.0,
+		"glide_direction": _glide_direction,
 	}
 
 
@@ -64,6 +84,8 @@ func _draw() -> void:
 	_draw_recovery_path()
 	_draw_wake()
 	_draw_ray()
+	_draw_rider()
+	_draw_glide_surge()
 	_draw_state_cue()
 	_draw_context_cue()
 
@@ -109,6 +131,28 @@ func _draw_wake() -> void:
 		var x := (-31.0 - float(index) * 10.0) * direction
 		draw_line(Vector2(x, -5.0), Vector2(x - 6.0 * direction, -5.0), color, 1.5, true)
 		draw_line(Vector2(x, 5.0), Vector2(x - 6.0 * direction, 5.0), color, 1.5, true)
+
+
+func _draw_rider() -> void:
+	if not _mounted:
+		return
+	var direction := _facing_sign
+	draw_circle(Vector2(-1.0 * direction, -12.0), 5.0, Color("f6c453"))
+	draw_circle(Vector2(0.5 * direction, -12.0), 3.2, Color("72d9e8"))
+	draw_line(Vector2(-6.0 * direction, -7.0), Vector2(7.0 * direction, -5.0), Color("df8d2f"), 4.0, true)
+
+
+func _draw_glide_surge() -> void:
+	if _glide_seconds <= 0.0:
+		return
+	var progress := 1.0 - (_glide_seconds / maxf(0.01, _glide_duration))
+	var direction := _glide_direction.normalized()
+	var side := direction.orthogonal()
+	var tail := -direction * (34.0 + progress * 22.0)
+	var color := Color(COLOR_ELECTRIC, 0.82 * (1.0 - progress))
+	draw_line(tail + side * 10.0, -direction * 20.0 + side * 5.0, color, 3.0, true)
+	draw_line(tail - side * 10.0, -direction * 20.0 - side * 5.0, color, 3.0, true)
+	draw_arc(Vector2.ZERO, 25.0 + progress * 8.0, -0.8 + direction.angle(), 0.8 + direction.angle(), 16, color, 2.0, true)
 
 
 func _draw_recovery_path() -> void:

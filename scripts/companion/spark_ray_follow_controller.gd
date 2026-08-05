@@ -28,6 +28,7 @@ var _replan_seconds := 0.0
 var _separated_seconds := 0.0
 var _path_blocked_by_gate := false
 var _external_control_active := false
+var _forced_separation_seconds := 0.0
 
 
 func reset() -> void:
@@ -38,6 +39,7 @@ func reset() -> void:
 	_separated_seconds = 0.0
 	_path_blocked_by_gate = false
 	_external_control_active = false
+	_forced_separation_seconds = 0.0
 
 
 func set_external_control_active(active: bool) -> void:
@@ -50,6 +52,22 @@ func set_external_control_active(active: bool) -> void:
 	else:
 		_state = STATE_NEAR
 		_separated_seconds = 0.0
+
+
+func request_recall() -> void:
+	_replan_seconds = 0.0
+	_separated_seconds = WORRIED_SECONDS
+	if _state == STATE_SEPARATED:
+		_state = STATE_RECOVERY
+
+
+func force_readable_separation(duration := WORRIED_SECONDS) -> void:
+	_external_control_active = false
+	_forced_separation_seconds = maxf(0.1, duration)
+	_state = STATE_SEPARATED
+	_path.clear()
+	_path_index = 0
+	_replan_seconds = 0.0
 
 
 func step(
@@ -65,6 +83,10 @@ func step(
 
 	var safe_delta := maxf(0.0, delta)
 	var distance := current_position.distance_to(player_position)
+	if _forced_separation_seconds > 0.0:
+		_forced_separation_seconds = maxf(0.0, _forced_separation_seconds - safe_delta)
+		_state = STATE_SEPARATED
+		return _movement_result(Vector2.ZERO, 0.0, distance)
 	var desired_state := _distance_state(distance)
 	if _state == STATE_RECOVERY and distance > FOLLOW_DISTANCE:
 		desired_state = STATE_RECOVERY
@@ -109,6 +131,7 @@ func report() -> Dictionary:
 		"path_blocked_by_gate": _path_blocked_by_gate,
 		"separated_seconds": _separated_seconds,
 		"external_control_active": _external_control_active,
+		"forced_separation_seconds": _forced_separation_seconds,
 	}
 
 

@@ -11,6 +11,7 @@ const SWIM_FRAME_COUNT := 4
 const SWIM_FRAME_RATE := 8.0
 
 @onready var _body := $Body as Sprite2D
+@onready var _collision_shape := $CollisionShape2D as CollisionShape2D
 @onready var _light_cone := $LightCone as Sprite2D
 @onready var _scanner_field := $ScannerField as Node2D
 @onready var _shock_prod_field := $ShockProdField as Node2D
@@ -20,6 +21,7 @@ var _light_range_scale := BASE_LIGHT_RANGE_SCALE
 var _light_alpha := BASE_LIGHT_ALPHA
 var _swim_frame_time := 0.0
 var _movement_disruption_seconds := 0.0
+var _mounted_control_active := false
 
 
 func _ready() -> void:
@@ -28,6 +30,10 @@ func _ready() -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if _mounted_control_active:
+		velocity = Vector2.ZERO
+		_update_swim_animation(Vector2.ZERO, delta)
+		return
 	if _movement_disruption_seconds > 0.0:
 		_movement_disruption_seconds = maxf(0.0, _movement_disruption_seconds - maxf(0.0, delta))
 		move_and_slide()
@@ -68,6 +74,26 @@ func reset_motion() -> void:
 	velocity = Vector2.ZERO
 	_movement_disruption_seconds = 0.0
 	_update_swim_animation(Vector2.ZERO, 0.0)
+
+
+func set_mounted_control_active(active: bool) -> void:
+	_mounted_control_active = active
+	velocity = Vector2.ZERO
+	_movement_disruption_seconds = 0.0
+	_collision_shape.disabled = active
+	_body.visible = not active
+	_scanner_field.visible = not active
+	_shock_prod_field.visible = not active
+	_update_swim_animation(Vector2.ZERO, 0.0)
+
+
+func sync_mounted_pose(mounted_position: Vector2, facing_sign: float) -> void:
+	global_position = mounted_position
+	_set_facing(facing_sign)
+
+
+func mounted_control_active() -> bool:
+	return _mounted_control_active
 
 
 func apply_knockback(direction: Vector2, force: float, disruption_seconds: float) -> void:

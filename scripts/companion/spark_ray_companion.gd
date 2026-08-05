@@ -5,6 +5,9 @@ const SparkRayFollowController := preload("res://scripts/companion/spark_ray_fol
 const MAX_SIMULATION_STEP := 1.0 / 30.0
 const MOVEMENT_ACCELERATION := 760.0
 const MOVEMENT_DECELERATION := 920.0
+const MOUNTED_SWIM_SPEED := 235.0
+const MOUNTED_ACCELERATION := 840.0
+const MOUNTED_DECELERATION := 980.0
 const FOLLOW_OFFSET := Vector2(54.0, 22.0)
 const SPAWN_OFFSETS := [
 	Vector2(-52.0, 24.0),
@@ -61,7 +64,58 @@ func set_external_control_active(active: bool) -> void:
 	_follow.set_external_control_active(active)
 	velocity = Vector2.ZERO
 	_pending_facing_seconds = 0.0
+	if _presentation != null:
+		_presentation.set_mounted(active)
 	_sync_presentation()
+
+
+func move_under_external_control(direction: Vector2, delta: float, speed_multiplier := 1.0) -> Dictionary:
+	if not _dependencies_valid() or not bool(_follow.report().get("external_control_active", false)):
+		return {"changed": false, "reason": "external_control_inactive"}
+	var safe_direction := direction.normalized() if direction.length() > 1.0 else direction
+	var desired_velocity := safe_direction * MOUNTED_SWIM_SPEED * maxf(1.0, speed_multiplier)
+	var change_rate := MOUNTED_ACCELERATION if desired_velocity != Vector2.ZERO else MOUNTED_DECELERATION
+	velocity = velocity.move_toward(desired_velocity, change_rate * maxf(0.0, delta))
+	var before := global_position
+	var proposed := before + velocity * maxf(0.0, delta)
+	var blocked_by_gate := not _segment_allowed(before, proposed)
+	var blocked_by_terrain := false
+	if delta > 0.0 and not blocked_by_gate:
+		move_and_slide()
+		blocked_by_terrain = get_slide_collision_count() > 0
+	elif blocked_by_gate:
+		velocity = Vector2.ZERO
+	_maximum_step_distance = maxf(_maximum_step_distance, before.distance_to(global_position))
+	_update_facing(delta)
+	_sync_presentation()
+	return {
+		"changed": before.distance_to(global_position) > 0.01,
+		"reason": "equipment_gate" if blocked_by_gate else "terrain" if blocked_by_terrain else "moved" if safe_direction != Vector2.ZERO else "idle",
+		"position": global_position,
+		"velocity": velocity,
+		"direction": safe_direction,
+		"blocked_by_gate": blocked_by_gate,
+		"blocked_by_terrain": blocked_by_terrain,
+	}
+
+
+func request_recall() -> void:
+	_follow.request_recall()
+	_sync_presentation()
+
+
+func force_readable_separation(direction: Vector2) -> void:
+	_follow.force_readable_separation()
+	velocity = Vector2.ZERO
+	if _presentation != null:
+		_presentation.set_mounted(false)
+		_presentation.show_context_response("danger", direction, 1.1)
+	_sync_presentation()
+
+
+func show_glide_surge(direction: Vector2, duration: float) -> void:
+	if _presentation != null:
+		_presentation.show_glide_surge(direction, duration)
 
 
 func can_handoff_control(maximum_distance := 96.0) -> bool:
@@ -177,6 +231,15 @@ func _is_open_position(position: Vector2) -> bool:
 
 func _is_position_allowed(position: Vector2) -> bool:
 	return not _position_allowed.is_valid() or bool(_position_allowed.call(position))
+
+
+func _segment_allowed(start: Vector2, target: Vector2) -> bool:
+	var distance := start.distance_to(target)
+	var sample_count := maxi(1, int(ceil(distance / 8.0)))
+	for index in range(sample_count + 1):
+		if not _is_position_allowed(start.lerp(target, float(index) / float(sample_count))):
+			return false
+	return true
 
 
 func _update_facing(delta: float) -> void:

@@ -18,6 +18,7 @@ Run the Godot headless launch smoke check on this Windows setup:
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --script res://scripts/main/smoke/smoke_night_debrief.gd
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --script res://scripts/main/smoke/smoke_combat_runtime_state.gd
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --script res://scripts/main/smoke/smoke_spark_ray_follow.gd
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --script res://scripts/main/smoke/smoke_spark_ray_riding.gd
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expedition-day
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-03-material-project
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --smoke-expansion-06-combat-foundation
@@ -82,7 +83,9 @@ The integrated Expansion 03 smoke verifies deterministic recipe selection, conne
 
 The integrated Expansion 06 smoke verifies source territory/timing, normal unarmed cache progress, active-eel contact/knockback interruption, health/oxygen separation, exact-once non-enemy shock-prod construction, selected-tool `Space` attacks, blocked legacy attack input, profile reload, reward-free armed victory, guarded-cache collection/banking, connector/day persistence, and combat/hazard/oxygen restoration. CI and release validation run it as `--smoke-expansion-06-combat-foundation`.
 
-The mobile-control smoke protects the accepted eight-region landscape layout, 104 px bottom interaction inset, simultaneous stick/command input, shared `TOOL`/`USE` actions, and non-overlapping active-tool HUD states at 1280x720 and 844x390. CI runs it directly as `smoke_mobile_test_controls.gd`.
+The Spark Ray riding smoke protects the dedicated Shift/BOND action, global 20-percent command time, explicit mount/dismount clearance, mounted collision and camera ownership, creature-only hotbar, directional non-damaging Glide Surge, equipment-gate denial, hostile forced dismount, reset restoration, and profile immutability. CI runs it directly as `smoke_spark_ray_riding.gd`.
+
+The mobile-control smoke protects the accepted nine-region landscape layout, 104 px bottom interaction inset, simultaneous stick/command input, shared `TOOL`/`USE`/`BOND` actions, and non-overlapping active-tool HUD states at 1280x720 and 844x390. CI runs it directly as `smoke_mobile_test_controls.gd`.
 
 The named-checkpoint Shock Prod path is covered with:
 
