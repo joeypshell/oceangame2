@@ -1,4 +1,4 @@
-const defaultReviewCheckpoint = "living_expedition_01_start";
+const defaultReviewCheckpoint = "living_expedition_02_start";
 
 function parseArgs(argv) {
 	const parsed = {

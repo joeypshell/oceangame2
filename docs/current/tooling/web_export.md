@@ -34,7 +34,7 @@ npm install --prefix "$env:TEMP\oceangame2-web-preview-check" playwright@1.55.0
 node tools/check_web_preview.cjs http://127.0.0.1:8060/ --expected-sha (git rev-parse HEAD)
 ```
 
-The checker uses `living_expedition_01_start` as the current named checkpoint.
+The checker uses `living_expedition_02_start` as the current named checkpoint.
 Pass `--checkpoint <id>` to verify a retained checkpoint instead.
 
 The check fails if the web preview logs missing texture warnings such as `Unable to open texture asset`, `Unable to create cave TileSet`, `SCRIPT ERROR`, `ERROR:`, failed resource requests, a missing Godot canvas, a framing/readability mismatch between 1280x720 and 1920x1080 browser viewports, a touch-enabled 844x390 canvas that is not top anchored or does not cover the visual viewport, visible mobile controls that do not respond at their rendered touch positions, or an external `build_info.json` whose `git_sha` does not match the expected commit. Omit `--expected-sha` when checking an older export that does not include external build metadata.
@@ -80,5 +80,12 @@ the required prior projects complete, Cutter/Fins/Shock Prod available, empty
 cargo, and no companion committed. It is the fresh isolated milestone start
 for the three-day owner journey; a blank historical profile remains a separate
 whole-game progression review.
+
+For focused Living Expedition 02 review, use
+`https://joeypshell.github.io/oceangame2/?review=<sha>&checkpoint=living_expedition_02_start`.
+This isolated checkpoint starts at the canonical boat with Kite committed and
+selected, Mica unrescued, prior required progression complete, and empty cargo.
+The checker probes movement and all nine mobile command surfaces; TOOL and USE
+cover habitat selection/confirmation, while RESET covers retry.
 
 The public root and `https://joeypshell.github.io/oceangame2/?review=<sha>` now load `production_level_01`; the review query still isolates profile state. To review a retained slice fixture, add an explicit supported map, for example `?review=<sha>&map=production_slice_01`. A bare `map` query without `review` does not override the default. The Web checker verifies the full-level default and explicit slice-01 fallback at desktop and mobile browser sizes.
