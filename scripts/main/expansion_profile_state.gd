@@ -163,11 +163,13 @@ func load_profile() -> Dictionary:
 		status = "migrated_v3"
 	elif loaded_version == TOOL_TARGET_SCHEMA_VERSION:
 		status = "migrated_v4"
+	elif loaded_version == SCHEMA_VERSION and int((payload["companion_profile"] as Dictionary).get("schema_version", 0)) == CompanionProfileState.LEGACY_PROFILE_SCHEMA_VERSION:
+		status = "migrated_companion_v2"
 	elif bool(migrations.get("scanner_purchase", false)):
 		status = "migrated_scanner_purchase"
 	elif bool(migrations.get("wreck_navigation", false)):
 		status = "migrated_wreck_navigation"
-	var migration_changed: bool = loaded_version == TOOL_TARGET_SCHEMA_VERSION or bool(migrations.get("cutter_blueprint", false)) or bool(migrations.get("scanner_purchase", false)) or bool(migrations.get("wreck_navigation", false))
+	var migration_changed: bool = loaded_version == TOOL_TARGET_SCHEMA_VERSION or (loaded_version == SCHEMA_VERSION and int((payload["companion_profile"] as Dictionary).get("schema_version", 0)) == CompanionProfileState.LEGACY_PROFILE_SCHEMA_VERSION) or bool(migrations.get("cutter_blueprint", false)) or bool(migrations.get("scanner_purchase", false)) or bool(migrations.get("wreck_navigation", false))
 	if migration_changed and not save_profile():
 		_last_storage_report = _report("migration_write_error")
 		return _last_storage_report.duplicate(true)
@@ -344,13 +346,11 @@ func has_banked_tool_target(target_id: String) -> bool:
 
 func commit_companion_rescue(individual_id: String, species_id: String, callsign: String, persist := true) -> Dictionary:
 	return _apply_companion_change("commit_rescue", [individual_id, species_id, callsign, true], persist)
-
 func select_active_companion(individual_id: String, persist := true) -> Dictionary:
 	return _apply_companion_change("select_active", [individual_id], persist)
 
 func earn_companion_memory(memory_id: String, persist := true) -> Dictionary:
 	return _apply_companion_change("earn_memory", [memory_id], persist)
-
 func select_companion_adaptation(adaptation_id: String, persist := true) -> Dictionary:
 	return _apply_companion_change("select_adaptation", [adaptation_id], persist)
 

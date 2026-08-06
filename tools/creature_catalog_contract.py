@@ -1,4 +1,4 @@
-"""Validate the immutable first-proof creature catalog."""
+"""Validate the immutable bounded companion catalog."""
 
 from __future__ import annotations
 
@@ -11,19 +11,32 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = ROOT / "config" / "creature_catalog.json"
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
-SPECIES_ID = "spark_ray"
 ROLES = {"independent", "mounted"}
+SPECIES_IDS = {"spark_ray", "veil_cuttle"}
+INDIVIDUAL_VALUES = {
+    "spark_ray_juvenile_01": {"species_id": "spark_ray", "default_callsign": "Kite"},
+    "veil_cuttle_juvenile_01": {"species_id": "veil_cuttle", "default_callsign": "Mica"},
+}
 CATALOG_IDS = {
-    "actions": {"glide_surge", "anchor_brace", "guardian_pulse_action"},
+    "actions": {"glide_surge", "anchor_brace", "guardian_pulse_action", "reveal_trace"},
     "memories": {"held_the_flow", "stood_ground"},
     "adaptations": {"anchor_fins", "guardian_pulse"},
 }
 SPECIES_VALUES = {
-    "roles": ["independent", "mounted"],
-    "ride_capable": True,
-    "base_action_ids": ["glide_surge"],
-    "memory_ids": ["held_the_flow", "stood_ground"],
-    "adaptation_ids": ["anchor_fins", "guardian_pulse"],
+    "spark_ray": {
+        "roles": ["independent", "mounted"],
+        "ride_capable": True,
+        "base_action_ids": ["glide_surge"],
+        "memory_ids": ["held_the_flow", "stood_ground"],
+        "adaptation_ids": ["anchor_fins", "guardian_pulse"],
+    },
+    "veil_cuttle": {
+        "roles": ["independent"],
+        "ride_capable": False,
+        "base_action_ids": ["reveal_trace"],
+        "memory_ids": [],
+        "adaptation_ids": [],
+    },
 }
 ACTION_VALUES = {
     "glide_surge": {"roles": ["mounted"], "effect_kind": "movement", "damaging": False},
@@ -33,6 +46,7 @@ ACTION_VALUES = {
         "effect_kind": "interrupt_knockback",
         "damaging": False,
     },
+    "reveal_trace": {"roles": ["independent"], "effect_kind": "trace_reveal", "damaging": False},
 }
 MEMORY_VALUES = {
     "held_the_flow": {"event_kind": "current_cycle_completed", "adaptation_ids": ["anchor_fins"]},
@@ -105,9 +119,10 @@ def _positive_size(value: Any, label: str) -> list[str]:
     return failures
 
 
-def _id_list(value: Any, label: str) -> tuple[list[str], list[str]]:
-    if not isinstance(value, list) or not value:
-        return [], [f"{label} must be a non-empty id list."]
+def _id_list(value: Any, label: str, *, allow_empty: bool = False) -> tuple[list[str], list[str]]:
+    if not isinstance(value, list) or (not allow_empty and not value):
+        qualifier = "an" if allow_empty else "a non-empty"
+        return [], [f"{label} must be {qualifier} id list."]
     values: list[str] = []
     failures: list[str] = []
     for index, item in enumerate(value):
@@ -143,14 +158,14 @@ def _contract_drift(item: dict[str, Any], expected: dict[str, Any], label: str) 
 
 def validate_creature_catalog(catalog: dict[str, Any]) -> list[str]:
     failures: list[str] = []
-    if catalog.get("version") != 1:
-        failures.append("creature catalog version must be 1.")
-    if catalog.get("implementation_status") != "proposed":
-        failures.append("creature catalog implementation_status must remain 'proposed' until runtime support lands.")
+    if catalog.get("version") != 2:
+        failures.append("creature catalog version must be 2.")
+    if catalog.get("implementation_status") != "partial_runtime":
+        failures.append("creature catalog implementation_status must be 'partial_runtime' during the two-species build.")
     if forbidden := _forbidden_paths(catalog):
         failures.append(f"creature catalog contains mutable state fields: {forbidden}.")
     seen: dict[str, str] = {}
-    for field in ("species", "actions", "memories", "adaptations"):
+    for field in ("species", "individuals", "actions", "memories", "adaptations"):
         value = catalog.get(field)
         if not isinstance(value, list):
             failures.append(f"creature catalog {field} must be a list.")
@@ -167,27 +182,46 @@ def validate_creature_catalog(catalog: dict[str, Any]) -> list[str]:
                     failures.append(f"Duplicate creature catalog id {item_id!r} in {seen[item_id]} and {field}.")
                 seen[item_id] = field
     species = _index(catalog, "species")
+    individuals = _index(catalog, "individuals")
     actions = _index(catalog, "actions")
     memories = _index(catalog, "memories")
     adaptations = _index(catalog, "adaptations")
-    if set(species) != {SPECIES_ID}:
-        failures.append(f"First-proof creature catalog must define only species {SPECIES_ID!r}.")
+    if set(species) != SPECIES_IDS:
+        failures.append(f"Bounded creature catalog species ids must be exactly {sorted(SPECIES_IDS)}.")
+    if set(individuals) != set(INDIVIDUAL_VALUES):
+        failures.append(f"Bounded creature catalog individual ids must be exactly {sorted(INDIVIDUAL_VALUES)}.")
     for field, expected_ids in CATALOG_IDS.items():
         if set(_index(catalog, field)) != expected_ids:
-            failures.append(f"First-proof creature catalog {field} ids must be exactly {sorted(expected_ids)}.")
+            failures.append(f"Bounded creature catalog {field} ids must be exactly {sorted(expected_ids)}.")
     for species_id, item in species.items():
         roles, item_failures = _id_list(item.get("roles"), f"species {species_id}.roles")
         failures.extend(item_failures)
         if set(roles) - ROLES:
             failures.append(f"species {species_id} has unsupported roles {sorted(set(roles) - ROLES)}.")
-        failures.extend(_positive_size(item.get("rider_footprint_px"), f"species {species_id}.rider_footprint_px"))
-        failures.extend(_positive_size(item.get("dismount_clearance_px"), f"species {species_id}.dismount_clearance_px"))
+        if not isinstance(item.get("ride_capable"), bool):
+            failures.append(f"species {species_id}.ride_capable must be boolean.")
+        elif item["ride_capable"]:
+            if "mounted" not in roles:
+                failures.append(f"ride-capable species {species_id} must support the mounted role.")
+            failures.extend(_positive_size(item.get("rider_footprint_px"), f"species {species_id}.rider_footprint_px"))
+            failures.extend(_positive_size(item.get("dismount_clearance_px"), f"species {species_id}.dismount_clearance_px"))
+        elif "mounted" in roles or "rider_footprint_px" in item or "dismount_clearance_px" in item:
+            failures.append(f"non-rideable species {species_id} cannot declare mounted role or rider clearance.")
         for field, known in (("base_action_ids", actions), ("memory_ids", memories), ("adaptation_ids", adaptations)):
-            ids, item_failures = _id_list(item.get(field), f"species {species_id}.{field}")
+            ids, item_failures = _id_list(
+                item.get(field), f"species {species_id}.{field}", allow_empty=field != "base_action_ids"
+            )
             failures.extend(item_failures)
             if unknown := sorted(set(ids) - set(known)):
                 failures.append(f"species {species_id}.{field} references unknown ids {unknown}.")
-        failures.extend(_contract_drift(item, SPECIES_VALUES, f"species {species_id}"))
+        failures.extend(_contract_drift(item, SPECIES_VALUES.get(species_id, {}), f"species {species_id}"))
+    for individual_id, item in individuals.items():
+        failures.extend(_contract_drift(item, INDIVIDUAL_VALUES.get(individual_id, {}), f"individual {individual_id}"))
+        if item.get("species_id") not in species:
+            failures.append(f"individual {individual_id} references unknown species {item.get('species_id')!r}.")
+        callsign = item.get("default_callsign")
+        if not isinstance(callsign, str) or not callsign.strip() or len(callsign) > 32:
+            failures.append(f"individual {individual_id}.default_callsign must be 1-32 non-whitespace characters.")
     for action_id, item in actions.items():
         roles, item_failures = _id_list(item.get("roles"), f"action {action_id}.roles")
         failures.extend(item_failures)

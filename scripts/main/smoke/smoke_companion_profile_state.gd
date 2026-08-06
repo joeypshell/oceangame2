@@ -5,9 +5,11 @@ const ExpansionProfileState := preload("res://scripts/main/expansion_profile_sta
 
 const PROFILE_PATH := "user://oceangame2_companion_profile_smoke.json"
 const LEGACY_PATH := "user://oceangame2_companion_profile_v4_smoke.json"
+const COMPANION_V1_PATH := "user://oceangame2_companion_profile_v1_smoke.json"
 const ISOLATED_PATH := "user://oceangame2_companion_profile_isolated_smoke.json"
 const BLOCKED_PATH := "user://oceangame2_companion_profile_blocked"
 const SPECIES_ID := "spark_ray"
+const SECOND_SPECIES_ID := "veil_cuttle"
 const CALLSIGN := "Test Ray"
 const FLOW_MEMORY_ID := "held_the_flow"
 const GROUND_MEMORY_ID := "stood_ground"
@@ -24,6 +26,7 @@ func _init() -> void:
 func _run() -> void:
 	_cleanup()
 	_test_fresh_and_v4_migration()
+	_test_companion_v1_migration_and_collection()
 	_test_exact_once_round_trip()
 	_test_storage_rollback()
 	_test_transient_state_rejection()
@@ -35,9 +38,11 @@ func _run() -> void:
 		quit(1)
 		return
 	print(
-		"Companion profile smoke passed: schema=%d individual=%s rescue_exact_once=true memories_exact_once=true adaptation=%s reload_unmounted=true v4_migration=true review_isolated=true riding_derived=true." % [
+		"Companion profile smoke passed: outer_schema=%d companion_schema=%d individuals=%s,%s migration_exact=true active_selection=mica riding_derived=false rescue_exact_once=true memories_exact_once=true adaptation=%s reload_unmounted=true v4_migration=true review_isolated=true." % [
 			ExpansionProfileState.SCHEMA_VERSION,
+			CompanionProfileState.PROFILE_SCHEMA_VERSION,
 			CompanionProfileState.FIRST_PROOF_INDIVIDUAL_ID,
+			CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID,
 			ANCHOR_ADAPTATION_ID,
 		]
 	)
@@ -61,9 +66,85 @@ func _test_fresh_and_v4_migration() -> void:
 	_expect(migrated_payload.get("schema_version") == ExpansionProfileState.SCHEMA_VERSION, "v4 profile was not rewritten at the current version")
 	_expect(
 		typeof(migrated_payload.get("companion_profile")) == TYPE_DICTIONARY
-		and (migrated_payload["companion_profile"] as Dictionary).get("individual", {}).is_empty(),
+		and (migrated_payload["companion_profile"] as Dictionary).get("individuals", []).is_empty(),
 		"v4 migration did not write the empty companion default"
 	)
+
+
+func _test_companion_v1_migration_and_collection() -> void:
+	_write_json(COMPANION_V1_PATH, _outer_payload_with_companion_v1())
+	var profile := ExpansionProfileState.new(COMPANION_V1_PATH, true)
+	var migration: Dictionary = profile.load_profile()
+	_expect(migration.get("status") == "migrated_companion_v2", "companion v1 payload did not report migration: %s" % migration)
+	var persisted: Dictionary = _read_json(COMPANION_V1_PATH).get("companion_profile", {})
+	_expect(persisted.get("schema_version") == CompanionProfileState.PROFILE_SCHEMA_VERSION, "companion migration did not write schema v2")
+	var persisted_individuals: Array = persisted.get("individuals", [])
+	_expect(persisted_individuals.size() == 1, "companion migration duplicated or lost Kite")
+	_expect(persisted.get("active_individual_id") == "", "companion migration changed empty active selection")
+	if persisted_individuals.is_empty():
+		return
+	var migrated_kite: Dictionary = persisted_individuals[0]
+	_expect(migrated_kite.get("callsign") == CALLSIGN, "companion migration changed Kite callsign")
+	_expect(migrated_kite.get("earned_memory_ids", []).has(FLOW_MEMORY_ID), "companion migration lost Kite memory")
+	_expect(migrated_kite.get("selected_adaptation_id") == ANCHOR_ADAPTATION_ID, "companion migration lost Kite adaptation")
+	var second_load := ExpansionProfileState.new(COMPANION_V1_PATH, true)
+	_expect(second_load.load_profile().get("status") == "loaded", "companion migration was not idempotent")
+	_expect((second_load.companion_report().get("individuals", []) as Array).size() == 1, "second load duplicated Kite")
+	_expect(bool(second_load.select_active_companion(CompanionProfileState.FIRST_PROOF_INDIVIDUAL_ID, true).get("changed", false)), "could not explicitly select migrated Kite")
+	var mica: Dictionary = second_load.commit_companion_rescue(
+		CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID,
+		SECOND_SPECIES_ID,
+		"Mica",
+		true
+	)
+	_expect(bool(mica.get("changed", false)), "second companion commitment failed")
+	var two_report := second_load.companion_report()
+	_expect((two_report.get("individuals", []) as Array).size() == 2, "two-individual collection did not persist")
+	_expect(two_report.get("active_individual_id") == CompanionProfileState.FIRST_PROOF_INDIVIDUAL_ID, "second commitment replaced Kite selection")
+	_expect(second_load.commit_companion_rescue(CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID, SECOND_SPECIES_ID, "Again", true).get("reason") == "already_committed", "duplicate Mica commitment was not idempotent")
+	_expect(bool(second_load.select_active_companion(CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID, true).get("changed", false)), "could not select Mica")
+	var mica_report: Dictionary = second_load.companion_report()
+	_expect(mica_report.get("individual", {}).get("individual_id") == CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID, "active compatibility projection did not follow Mica selection")
+	_expect(not bool(mica_report.get("riding_available_on_sortie_launch", true)), "Mica incorrectly derived riding availability")
+	_expect(second_load.earn_companion_memory(FLOW_MEMORY_ID, false).get("reason") == "unsupported_memory", "Mica accepted Spark Ray memory")
+	var reloaded := ExpansionProfileState.new(COMPANION_V1_PATH, true)
+	reloaded.load_profile()
+	_expect((reloaded.companion_report().get("individuals", []) as Array).size() == 2, "reload lost two-individual collection")
+	_expect(reloaded.companion_report().get("active_individual_id") == CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID, "reload lost Mica selection")
+	_test_invalid_collection_payloads()
+
+
+func _test_invalid_collection_payloads() -> void:
+	var state := CompanionProfileState.new()
+	var kite := _individual(CompanionProfileState.FIRST_PROOF_INDIVIDUAL_ID, SPECIES_ID, "Kite")
+	var mica := _individual(CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID, SECOND_SPECIES_ID, "Mica")
+	var duplicate := {"schema_version": 2, "individuals": [kite, kite.duplicate(true)], "active_individual_id": CompanionProfileState.FIRST_PROOF_INDIVIDUAL_ID}
+	_expect(_has_failure(state.validate_payload(duplicate), "duplicate individual_id"), "duplicate individual ids passed validation")
+	var mismatch := {"schema_version": 2, "individuals": [mica], "active_individual_id": CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID}
+	mismatch["individuals"][0]["species_id"] = SPECIES_ID
+	_expect(_has_failure(state.validate_payload(mismatch), "does not match"), "individual/species mismatch passed validation")
+	var invalid_active := {"schema_version": 2, "individuals": [kite], "active_individual_id": "missing_companion"}
+	_expect(_has_failure(state.validate_payload(invalid_active), "reference a committed"), "unknown active id passed validation")
+	var over_capacity := {"schema_version": 2, "individuals": [kite, mica, kite.duplicate(true)], "active_individual_id": ""}
+	_expect(_has_failure(state.validate_payload(over_capacity), "at most 2"), "over-capacity collection passed validation")
+
+
+func _individual(individual_id: String, species_id: String, callsign: String) -> Dictionary:
+	return {
+		"individual_id": individual_id,
+		"species_id": species_id,
+		"callsign": callsign,
+		"rescue_committed": true,
+		"earned_memory_ids": [],
+		"selected_adaptation_id": "",
+	}
+
+
+func _has_failure(failures: Array[String], fragment: String) -> bool:
+	for failure in failures:
+		if fragment in failure:
+			return true
+	return false
 
 
 func _test_exact_once_round_trip() -> void:
@@ -172,6 +253,25 @@ func _v4_payload() -> Dictionary:
 	}
 
 
+func _outer_payload_with_companion_v1() -> Dictionary:
+	var kite := _individual(CompanionProfileState.FIRST_PROOF_INDIVIDUAL_ID, SPECIES_ID, CALLSIGN)
+	kite["earned_memory_ids"] = [FLOW_MEMORY_ID]
+	kite["selected_adaptation_id"] = ANCHOR_ADAPTATION_ID
+	return {
+		"schema_version": ExpansionProfileState.SCHEMA_VERSION,
+		"completed_discoveries": [],
+		"unlocked_capabilities": [],
+		"material_inventory": {},
+		"completed_projects": [],
+		"banked_tool_target_ids": [],
+		"companion_profile": {
+			"schema_version": CompanionProfileState.LEGACY_PROFILE_SCHEMA_VERSION,
+			"individual": kite,
+			"active_individual_id": "",
+		},
+	}
+
+
 func _contains_transient_state(value) -> bool:
 	var forbidden := ["position", "velocity", "control_mode", "mounted", "target", "palette_selection", "cooldown", "animation", "encounter_progress"]
 	if typeof(value) == TYPE_DICTIONARY:
@@ -207,7 +307,7 @@ func _write_json(path: String, payload: Dictionary) -> void:
 
 
 func _cleanup() -> void:
-	for base_path in [PROFILE_PATH, LEGACY_PATH, ISOLATED_PATH]:
+	for base_path in [PROFILE_PATH, LEGACY_PATH, COMPANION_V1_PATH, ISOLATED_PATH]:
 		for suffix in ["", ".tmp", ".bak"]:
 			var path := "%s%s" % [base_path, suffix]
 			if FileAccess.file_exists(path):
