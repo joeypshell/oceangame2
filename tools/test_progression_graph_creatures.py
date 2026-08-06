@@ -8,7 +8,7 @@ import unittest
 
 from progression_audit import audit_graph, render_review_doc
 from progression_graph import build_progression_graph
-from test_validate_living_expedition_schema import valid_map
+from test_validate_living_expedition_schema import valid_living_expedition_03_map, valid_map
 
 
 def contract() -> dict:
@@ -107,6 +107,19 @@ class CreatureProgressionGraphTests(unittest.TestCase):
             and any(edge.target in {rescue, trace} for edge in graph.requirements(node.key))
         ]
         self.assertEqual([], equipment_dependents)
+
+    def test_mica_drift_payoff_targets_a_non_rewarding_moving_hazard_node(self) -> None:
+        graph = build_progression_graph([valid_living_expedition_03_map()], contract())
+        result = audit_graph(graph, check_canonical=False)
+        self.assertEqual((), result.failures)
+        payoff = graph.resolve("veil_cuttle_drift_lens_payoff_01")
+        patrol = graph.resolve("deep_route_jellyfish_patrol")
+        self.assertEqual("moving_hazard", graph.nodes[patrol].kind)
+        self.assertTrue(any(edge.target == patrol for edge in graph.requirements(payoff)))
+        self.assertFalse([
+            edge for edge in graph.outgoing(patrol)
+            if edge.relation in {"unlocks", "rewards", "guards", "funds"}
+        ])
 
 
 if __name__ == "__main__":

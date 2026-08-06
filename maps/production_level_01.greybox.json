@@ -1667,20 +1667,59 @@
       "habitat_ids": [
         "companion_habitat_01"
       ],
-      "trace_ids": [
-        "veil_cuttle_trace_01"
-      ],
+      "trace_ids": [],
       "camera_test_ids": [
         "veil_cuttle_review_01"
       ],
       "target_ids": [
         "surface_boat_entry",
-        "veil_cuttle_rescue_01",
-        "veil_cuttle_trace_01"
+        "veil_cuttle_rescue_01"
       ],
       "availability": "all_supported_seeds",
       "terrain_changes": [],
-      "intent": "One guaranteed second-individual rescue, canonical-boat habitat relationship, and optional no-reward trace in existing topology."
+      "intent": "One guaranteed second-individual rescue, canonical-boat habitat relationship, and optional no-reward trace in existing topology.",
+      "retired_trace_ids": [
+        "veil_cuttle_trace_01"
+      ],
+      "trace_transition_owner": "living_expedition_03"
+    },
+    "living_expedition_03": {
+      "source": "tools/production_level_01_living_expedition_03.py",
+      "relationship_ids": [
+        "southwest_bloom_migration_trace"
+      ],
+      "observation_ids": [
+        "southwest_bloom_migration_observation"
+      ],
+      "memory_opportunity_ids": [
+        "veil_cuttle_bloom_memory_01"
+      ],
+      "adaptation_payoff_ids": [
+        "veil_cuttle_drift_lens_payoff_01"
+      ],
+      "companion_context_ids": [
+        "veil_cuttle_drift_review_01"
+      ],
+      "camera_test_ids": [
+        "living_expedition_03_bloom_review_01"
+      ],
+      "condition_ids": [
+        "southwest_jellyfish_bloom"
+      ],
+      "moving_hazard_ids": [
+        "southwest_bloom_jellyfish_patrol",
+        "deep_route_jellyfish_patrol"
+      ],
+      "retired_trace_ids": [
+        "veil_cuttle_trace_01"
+      ],
+      "derived_trace_anchor": {
+        "x": 72,
+        "y": 78
+      },
+      "availability": "all_supported_seeds",
+      "terrain_changes": [],
+      "intent": "Replace the anonymous Mica trace with one source-linked bloom migration observation and independent next-sortie field payoff."
     }
   },
   "units": {
@@ -6809,6 +6848,13 @@
       "center_y": 52,
       "zoom": 0.58,
       "intent": "Mica rescue, close-follow identity, and optional Reveal Trace review."
+    },
+    {
+      "id": "living_expedition_03_bloom_review_01",
+      "center_x": 72,
+      "center_y": 78,
+      "zoom": 0.58,
+      "intent": "Southwest bloom patrol, migration filament, and Mica observation review."
     }
   ],
   "review_questions": [
@@ -6843,7 +6889,9 @@
     "Can the rider complete the entry-shaft route and dismount without clipping, bypass, or stranding?",
     "Do both memory events retain their diver-equipment requirements and lead to distinct day-3 payoffs?",
     "Does Mica's rescue read as physical aid in a reachable existing chamber?",
-    "Does the optional trace remain clearly separate from scanner identification and progression?"
+    "Does the optional trace remain clearly separate from scanner identification and progression?",
+    "Does the migration trace read as evidence connected to the moving southwest bloom?",
+    "Does the relationship remain optional, rewardless, reachable, and separate from hazard authority?"
   ],
   "wreck_network_investigations": [
     {
@@ -6888,7 +6936,7 @@
       "commit_map_id": "production_level_01",
       "commit_entry_id": "surface_boat_entry",
       "habitat_id": "companion_habitat_01",
-      "trace_id": "veil_cuttle_trace_01",
+      "trace_id": "southwest_bloom_migration_trace",
       "review_camera_id": "veil_cuttle_review_01",
       "optional": true,
       "availability": "all_supported_seeds",
@@ -6963,6 +7011,16 @@
       "required_adaptation_id": "guardian_pulse",
       "target_id": "deep_cache_territorial_eel",
       "availability": "all_supported_seeds"
+    },
+    {
+      "id": "veil_cuttle_drift_review_01",
+      "context_kind": "independent_action_review",
+      "species_id": "veil_cuttle",
+      "action_id": "read_drift",
+      "required_adaptation_id": "drift_lens",
+      "target_id": "deep_route_jellyfish_patrol",
+      "availability": "all_supported_seeds",
+      "intent": "Review deliberate Read Drift against an existing moving jellyfish patrol."
     }
   ],
   "creature_memory_opportunities": [
@@ -6999,6 +7057,21 @@
       ],
       "availability": "all_supported_seeds",
       "intent": "Resolve one existing territorial eel threat cycle together while retaining the diver's shock-prod requirement."
+    },
+    {
+      "id": "veil_cuttle_bloom_memory_01",
+      "memory_id": "followed_the_bloom",
+      "species_id": "veil_cuttle",
+      "individual_id": "veil_cuttle_juvenile_01",
+      "event_kind": "ecological_observation_committed",
+      "target_id": "southwest_bloom_migration_trace",
+      "adaptation_ids": [
+        "drift_lens"
+      ],
+      "payoff_id": "veil_cuttle_drift_lens_payoff_01",
+      "required_access_ids": [],
+      "availability": "all_supported_seeds",
+      "intent": "Commit the identified bloom migration only at the canonical boat."
     }
   ],
   "creature_adaptation_payoffs": [
@@ -7027,6 +7100,16 @@
       "mounted_context_id": "spark_ray_guardian_mounted_review_01",
       "availability": "all_supported_seeds",
       "intent": "Review Guardian Pulse as a deliberate interruption in both roles; the shock prod remains the required weapon."
+    },
+    {
+      "id": "veil_cuttle_drift_lens_payoff_01",
+      "species_id": "veil_cuttle",
+      "adaptation_id": "drift_lens",
+      "target_id": "deep_route_jellyfish_patrol",
+      "required_access_ids": [],
+      "independent_context_id": "veil_cuttle_drift_review_01",
+      "availability": "all_supported_seeds",
+      "intent": "Read a jellyfish patrol's existing path and direction without changing it."
     }
   ],
   "companion_habitats": [
@@ -7046,12 +7129,12 @@
   ],
   "ecological_traces": [
     {
-      "id": "veil_cuttle_trace_01",
+      "id": "southwest_bloom_migration_trace",
       "trace_kind": "concealed_ecological_trace",
       "species_id": "veil_cuttle",
       "individual_id": "veil_cuttle_juvenile_01",
-      "x": 52,
-      "y": 54,
+      "x": 72,
+      "y": 78,
       "action_id": "reveal_trace",
       "reveal_radius_tiles": 6,
       "scanner_capability_id": "survey_scanner_1",
@@ -7059,8 +7142,14 @@
       "optional": true,
       "reward_ids": [],
       "progression_effect": "none",
+      "relationship_kind": "moving_hazard_migration",
+      "observation_id": "southwest_bloom_migration_observation",
+      "daily_condition_id": "southwest_jellyfish_bloom",
+      "moving_hazard_id": "southwest_bloom_jellyfish_patrol",
+      "memory_opportunity_id": "veil_cuttle_bloom_memory_01",
+      "adaptation_payoff_id": "veil_cuttle_drift_lens_payoff_01",
       "availability": "all_supported_seeds",
-      "intent": "Mica may reveal this concealed environmental trace in already accessible water; the diver must still scan it to identify it."
+      "intent": "Mica reveals a migration filament derived from the linked active jellyfish patrol; the Scanner identifies the relationship."
     }
   ]
 }
