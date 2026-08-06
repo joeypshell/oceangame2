@@ -76,6 +76,13 @@ func _prepare_main() -> bool:
 		or not bool(_main._review_checkpoint_report.get("ready", false))
 	):
 		return _fail("requires the isolated living_expedition_02_start checkpoint")
+	_main._expedition_day_state.begin_day(2)
+	_main._load_playable_map(
+		_main.PRODUCTION_LEVEL_MAP_PATH,
+		false,
+		BOAT_ENTRY_ID,
+		"Living Expedition 02 review | Day 2 bloom"
+	)
 	_disable_live_processing()
 	_main._player.global_position = _main._world.get_entry_position(BOAT_ENTRY_ID)
 	_main._player.reset_motion()

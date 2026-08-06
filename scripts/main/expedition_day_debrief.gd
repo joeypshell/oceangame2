@@ -13,6 +13,7 @@ static func update(main, delta: float) -> bool:
 	if main == null or main._expedition_day_state == null:
 		return false
 	var day = main._expedition_day_state
+	_sync_mobile_controls(main, "debrief" if day.phase == ExpeditionDayState.PHASE_DEBRIEF else "dive")
 	if day.phase == ExpeditionDayState.PHASE_DEBRIEF:
 		return true
 	if day.phase == ExpeditionDayState.PHASE_END_REQUESTED:
@@ -381,6 +382,12 @@ static func _restart_map_path(main) -> String:
 	if main._world != null and str(main._world.map_id) == PRODUCTION_LEVEL_MAP_ID:
 		return main.PRODUCTION_LEVEL_MAP_PATH
 	return main.PRODUCTION_SLICE_MAP_PATH
+
+
+static func _sync_mobile_controls(main, context_mode: String) -> void:
+	var controls = main.get_node_or_null("MobileTestControls")
+	if controls != null and controls.has_method("set_context_mode"):
+		controls.set_context_mode(context_mode)
 
 
 static func _companion_sortie_for(main):
