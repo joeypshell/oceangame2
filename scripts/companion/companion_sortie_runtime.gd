@@ -12,6 +12,7 @@ const SHARED_EVENT_DISTANCE_PX := 240.0
 var _world
 var _player
 var _profile
+var _moving_hazards
 var _has_upgrade := Callable()
 var _companion
 var _control
@@ -54,12 +55,14 @@ func bind_map(
 	has_upgrade: Callable,
 	sortie_active := false,
 	preserve_sortie := false,
-	hostiles = null
+	hostiles = null,
+	moving_hazards = null
 ) -> Dictionary:
 	clear_map()
 	_world = world
 	_player = player
 	_profile = profile
+	_moving_hazards = moving_hazards
 	_has_upgrade = has_upgrade
 	_ensure_control(_selected_species_id())
 	_habitat.bind_map(world, player, profile, Callable(self, "release_to_habitat"))
@@ -113,6 +116,7 @@ func clear_map() -> void:
 	_world = null
 	_player = null
 	_profile = null
+	_moving_hazards = null
 	_has_upgrade = Callable()
 
 
@@ -370,7 +374,7 @@ func _bind_control_map() -> void:
 	if _spark_active():
 		_control.bind_map(_world, _player, _companion, Callable(self, "_position_allowed"))
 	else:
-		_control.bind_map(_world, _player, _companion)
+		_control.bind_map(_world, _player, _companion, _moving_hazards)
 
 
 func _bind_control_interface() -> void:

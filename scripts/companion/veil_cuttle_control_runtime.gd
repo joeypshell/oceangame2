@@ -2,6 +2,7 @@ extends Node
 
 const CompanionCommandPalette := preload("res://scripts/companion/companion_command_palette.gd")
 const VeilCuttleTraceRuntime := preload("res://scripts/companion/veil_cuttle_trace_runtime.gd")
+const VeilCuttleDriftLensRuntime := preload("res://scripts/companion/veil_cuttle_drift_lens_runtime.gd")
 
 const COMMAND_TIME_SCALE := 0.2
 
@@ -12,6 +13,7 @@ var _status_sink := Callable()
 var _control_allowed := Callable()
 var _palette
 var _trace := VeilCuttleTraceRuntime.new()
+var _drift_lens := VeilCuttleDriftLensRuntime.new()
 var _command_mode := false
 var _selected_command_index := 0
 var _palette_feedback := ""
@@ -36,20 +38,23 @@ func bind_interface(status_sink: Callable, control_allowed: Callable) -> void:
 	_status_sink = status_sink
 	_control_allowed = control_allowed
 	_trace.bind_interface(status_sink)
+	_drift_lens.bind_interface(status_sink)
 
 
-func bind_map(world, player, companion) -> void:
+func bind_map(world, player, companion, moving_hazards = null) -> void:
 	clear_map()
 	_world = world
 	_player = player
 	_companion = companion
-	_trace.bind_map(world, player, companion)
+	_trace.bind_map(world, player, companion, moving_hazards)
+	_drift_lens.bind_map(world, player, companion, moving_hazards)
 	_refresh_presentation()
 
 
 func clear_map() -> void:
 	reset_control("map_clear")
 	_trace.clear_map()
+	_drift_lens.clear_map()
 	_world = null
 	_player = null
 	_companion = null
@@ -90,7 +95,7 @@ func begin_command_mode() -> Dictionary:
 	_prior_time_scale = Engine.time_scale
 	_owns_time_scale = true
 	Engine.time_scale = COMMAND_TIME_SCALE
-	_trace.preview()
+	_sync_command_preview()
 	_refresh_presentation()
 	return report()
 
@@ -112,6 +117,7 @@ func cycle_context_command() -> Dictionary:
 	if not commands.is_empty():
 		_selected_command_index = (_selected_command_index + 1) % commands.size()
 		_palette_feedback = ""
+		_sync_command_preview()
 		_refresh_presentation()
 	return report()
 
@@ -137,6 +143,7 @@ func reset_control(_reason := "reset") -> void:
 func reset_transient(reason := "reset") -> void:
 	reset_control(reason)
 	_trace.reset_transient(reason)
+	_drift_lens.reset_transient(reason)
 
 
 func hides_diver_hotbar() -> bool:
@@ -151,6 +158,10 @@ func trace_runtime():
 	return _trace
 
 
+func drift_lens_runtime():
+	return _drift_lens
+
+
 func report() -> Dictionary:
 	return {
 		"command_mode": _command_mode,
@@ -160,23 +171,25 @@ func report() -> Dictionary:
 		"context_commands": _context_commands(),
 		"last_denial": _last_denial,
 		"trace": _trace.report(),
+		"drift_lens": _drift_lens.report(),
 		"palette": _palette.get_test_report() if _palette != null else {},
 	}
 
 
 func _process(delta: float) -> void:
 	_trace.advance(delta)
+	_drift_lens.advance(delta)
 	if _command_mode and (not _control_is_allowed() or not _dependencies_valid()):
 		reset_control("inactive")
 		return
 	if _command_mode:
-		_trace.preview()
+		_sync_command_preview()
 	_refresh_presentation()
 
 
 func _execute_command(command_id: String, command: Dictionary) -> Dictionary:
 	if not bool(command.get("enabled", true)):
-		return _deny(str(command.get("reason", "command_denied")))
+		return _deny(str(command.get("reason", "command_denied")), command)
 	if command_id == "recall":
 		if _companion.has_method("request_recall"):
 			_companion.request_recall()
@@ -184,16 +197,21 @@ func _execute_command(command_id: String, command: Dictionary) -> Dictionary:
 		return {"changed": true, "reason": "recalled", "mounted": false}
 	if command_id == VeilCuttleTraceRuntime.ACTION_ID:
 		return _trace.dispatch(command_id)
+	if command_id == VeilCuttleDriftLensRuntime.ACTION_ID:
+		return _drift_lens.dispatch(command_id)
 	return _deny("command_unavailable")
 
 
 func _context_commands() -> Array:
 	if not _dependencies_valid():
 		return []
-	return [
+	var commands := [
 		{"id": "recall", "label": "Recall", "enabled": true, "reason": "ready"},
 		_trace.action(),
 	]
+	if _drift_lens.is_learned():
+		commands.append(_drift_lens.action())
+	return commands
 
 
 func _refresh_presentation() -> void:
@@ -205,9 +223,21 @@ func _refresh_presentation() -> void:
 		_palette.hide_palette()
 
 
-func _deny(reason: String) -> Dictionary:
+func _sync_command_preview() -> void:
+	_trace.end_preview()
+	var commands := _context_commands()
+	if commands.is_empty():
+		return
+	var command: Dictionary = commands[clampi(_selected_command_index, 0, commands.size() - 1)]
+	if str(command.get("id", "")) == VeilCuttleTraceRuntime.ACTION_ID:
+		_trace.preview()
+
+
+func _deny(reason: String, command := {}) -> Dictionary:
 	_last_denial = reason
-	var note := str(_trace.action().get("denial", "unavailable")) if reason != "command_unavailable" else "unavailable"
+	var note := str(command.get("denial", ""))
+	if note.is_empty():
+		note = str(_trace.action().get("denial", "unavailable")) if reason != "command_unavailable" else "unavailable"
 	_palette_feedback = note.capitalize()
 	_notify("BOND denied | %s" % note)
 	_refresh_presentation()

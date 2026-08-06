@@ -1370,7 +1370,8 @@ func _load_playable_map(
 		Callable(self, "_has_upgrade_id"),
 		_sortie_state.active,
 		preserve_sortie,
-		_hostiles
+		_hostiles,
+		_moving_hazards
 	)
 	_apply_durable_light_profile()
 
