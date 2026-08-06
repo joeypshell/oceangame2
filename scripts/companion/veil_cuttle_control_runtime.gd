@@ -134,6 +134,11 @@ func reset_control(_reason := "reset") -> void:
 	_refresh_presentation()
 
 
+func reset_transient(reason := "reset") -> void:
+	reset_control(reason)
+	_trace.reset_transient(reason)
+
+
 func hides_diver_hotbar() -> bool:
 	return false
 

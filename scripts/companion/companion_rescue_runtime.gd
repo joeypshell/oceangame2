@@ -1,10 +1,9 @@
 extends Node
 
-const SPARK_RAY_SCENE := preload("res://scenes/companion/SparkRayCompanion.tscn")
+const CompanionSpeciesRuntimeFactory := preload("res://scripts/companion/companion_species_runtime_factory.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
 
 const RELEASE_SECONDS := 1.4
-const DEFAULT_CALLSIGN := "Kite"
 const AVAILABLE := "available"
 const RELEASING := "releasing"
 const PENDING := "pending"
@@ -22,6 +21,7 @@ var _release_progress := 0.0
 var _holding_use := false
 var _pending_companion
 var _gate_access := CurrentGateController.new()
+var _species_factory := CompanionSpeciesRuntimeFactory.new()
 
 
 func bind_map(
@@ -39,31 +39,30 @@ func bind_map(
 	_has_upgrade = has_upgrade
 	_has_capability = has_capability
 	_interaction_radius = maxf(1.0, interaction_radius)
-	var committed := _profile_has_committed_companion()
 	for rescue in _source_rescues():
-		_set_source_state(str(rescue.get("id", "")), COMMITTED if committed else AVAILABLE)
+		var individual_id := str(rescue.get("individual_id", ""))
+		_set_source_state(str(rescue.get("id", "")), COMMITTED if _profile_has_committed_individual(individual_id) else AVAILABLE)
 	return report()
 
 
 func target_near() -> Dictionary:
-	if not _dependencies_valid() or _profile_has_committed_companion() or not _pending_rescue.is_empty():
+	if not _dependencies_valid() or not _pending_rescue.is_empty():
 		return {}
-	return _world.get_creature_rescue_near(_player.global_position, _interaction_radius)
+	var rescue: Dictionary = _world.get_creature_rescue_near(_player.global_position, _interaction_radius)
+	return {} if _profile_has_committed_individual(str(rescue.get("individual_id", ""))) else rescue
 
 
 func activate() -> Dictionary:
 	if not _dependencies_valid():
 		return _result("unavailable", "Rescue unavailable", false, "dependencies_unavailable")
-	if _profile_has_committed_companion():
-		return _result("unavailable", "Spark Ray bond already committed", false, "already_committed")
 	if not _pending_rescue.is_empty():
 		return _result("unavailable", _pending_note(), false, "pending_commit")
 	var rescue := target_near()
 	if rescue.is_empty():
-		return _result("wrong_context", "No rescue cable in Cutter range", false, "wrong_context")
+		return _result("wrong_context", "No trapped companion in Cutter range", false, "wrong_context")
 	var required_capability := str(rescue.get("required_capability_id", ""))
 	if required_capability.is_empty() or not _capability_owned(required_capability):
-		return _result("unavailable", "Trapped Spark Ray | Salvage Cutter required", false, "missing_capability")
+		return _result("unavailable", "%s | Salvage Cutter required" % _rescue_label(rescue), false, "missing_capability")
 	_active_rescue = rescue.duplicate(true)
 	_holding_use = true
 	_set_source_state(str(_active_rescue.get("id", "")), RELEASING)
@@ -129,16 +128,22 @@ func commit_at_boat() -> Dictionary:
 	var result: Dictionary = _profile.commit_companion_rescue(
 		str(_pending_rescue.get("individual_id", "")),
 		str(_pending_rescue.get("species_id", "")),
-		str(_pending_rescue.get("callsign", DEFAULT_CALLSIGN)),
+		_rescue_callsign(_pending_rescue),
 		true
 	)
 	if not bool(result.get("changed", false)):
-		result["note"] = "Spark Ray bond could not be committed"
+		result["note"] = "%s bond could not be committed" % _rescue_callsign(_pending_rescue)
 		return result
+	var callsign := _rescue_callsign(_pending_rescue)
+	var now_active := str(_profile.companion_report().get("active_individual_id", "")) == str(_pending_rescue.get("individual_id", ""))
 	_pending_rescue = {}
 	_free_pending_companion()
 	_set_source_state(rescue_id, COMMITTED)
-	result["note"] = "PARTNER: %s bonded | Press N at the boat to end the day | %s joins next dive" % [DEFAULT_CALLSIGN, DEFAULT_CALLSIGN]
+	result["note"] = (
+		"PARTNER: %s bonded | Leave the boat to begin a dive together" % callsign
+		if now_active
+		else "PARTNER: %s bonded | Hold Shift/BOND at the boat to choose the next partner" % callsign
+	)
 	result["commit_entry_id"] = commit_entry_id
 	return result
 
@@ -177,8 +182,8 @@ func prompt() -> String:
 		return ""
 	var required_capability := str(rescue.get("required_capability_id", ""))
 	if not _capability_owned(required_capability):
-		return "Trapped Spark Ray | Salvage Cutter required"
-	return "Trapped Spark Ray | Tab Cutter | Hold Space/USE"
+		return "%s | Salvage Cutter required" % _rescue_label(rescue)
+	return "%s | Tab Cutter | Hold Space/USE" % _rescue_label(rescue)
 
 
 func pending_companion():
@@ -195,6 +200,8 @@ func report() -> Dictionary:
 		"release_progress": clampf(_release_progress / RELEASE_SECONDS, 0.0, 1.0),
 		"pending_companion_spawned": pending_companion() != null,
 		"profile_committed": _profile_has_committed_companion(),
+		"pending_species_id": str(_pending_rescue.get("species_id", "")),
+		"pending_individual_id": str(_pending_rescue.get("individual_id", "")),
 	}
 
 
@@ -202,7 +209,10 @@ func _spawn_pending_companion() -> void:
 	_free_pending_companion()
 	if not _dependencies_valid():
 		return
-	_pending_companion = SPARK_RAY_SCENE.instantiate()
+	var species_id := str(_pending_rescue.get("species_id", ""))
+	_pending_companion = _species_factory.create_companion(species_id)
+	if _pending_companion == null:
+		return
 	get_parent().add_child(_pending_companion)
 	_pending_companion.configure(
 		_world,
@@ -211,14 +221,15 @@ func _spawn_pending_companion() -> void:
 		{
 			"individual_id": str(_pending_rescue.get("individual_id", "")),
 			"species_id": str(_pending_rescue.get("species_id", "")),
-			"callsign": str(_pending_rescue.get("callsign", DEFAULT_CALLSIGN)),
+			"callsign": _rescue_callsign(_pending_rescue),
 			"rescue_committed": false,
 			"earned_memory_ids": [],
 			"selected_adaptation_id": "",
 		}
 	)
 	_pending_companion.global_position = _pending_rescue.get("center", _player.global_position)
-	_pending_companion.show_context_response("rescue_memory", _player.global_position)
+	if _pending_companion.has_method("show_context_response"):
+		_pending_companion.show_context_response("rescue_memory", _player.global_position)
 
 
 func _free_pending_companion() -> void:
@@ -259,6 +270,15 @@ func _profile_has_committed_companion() -> bool:
 	return _profile != null and _profile.has_method("has_committed_companion") and bool(_profile.has_committed_companion())
 
 
+func _profile_has_committed_individual(individual_id: String) -> bool:
+	if individual_id.is_empty() or _profile == null or not _profile.has_method("companion_report"):
+		return false
+	for individual in _profile.companion_report().get("individuals", []):
+		if str((individual as Dictionary).get("individual_id", "")) == individual_id:
+			return true
+	return false
+
+
 func _dependencies_valid() -> bool:
 	return (
 		get_parent() != null
@@ -272,11 +292,23 @@ func _dependencies_valid() -> bool:
 
 
 func _release_note() -> String:
-	return "Freeing Spark Ray | Cable %d%% | hold Space/USE" % int(round(100.0 * clampf(_release_progress / RELEASE_SECONDS, 0.0, 1.0)))
+	return "Freeing %s | Restraint %d%% | hold Space/USE" % [
+		_rescue_callsign(_active_rescue),
+		int(round(100.0 * clampf(_release_progress / RELEASE_SECONDS, 0.0, 1.0))),
+	]
 
 
 func _pending_note() -> String:
-	return "PARTNER: Kite is free | Return together to the yellow surface boat"
+	return "PARTNER: %s is free | Return together to the yellow surface boat" % _rescue_callsign(_pending_rescue)
+
+
+func _rescue_callsign(rescue: Dictionary) -> String:
+	var callsign := str(rescue.get("callsign", "")).strip_edges()
+	return callsign if not callsign.is_empty() else _species_factory.default_callsign(str(rescue.get("species_id", "")))
+
+
+func _rescue_label(rescue: Dictionary) -> String:
+	return "Trapped %s" % _species_factory.display_name(str(rescue.get("species_id", "")))
 
 
 func _result(state: String, note: String, changed: bool, reason: String) -> Dictionary:

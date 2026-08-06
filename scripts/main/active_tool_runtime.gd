@@ -160,7 +160,7 @@ func _use_cutter() -> Dictionary:
 
 func _wrong_context(tool_id: String) -> Dictionary:
 	if not _rescue_target().is_empty() and tool_id != ActiveToolController.CUTTER_TOOL_ID and _main._cutter_salvage.has_cutter():
-		return {"status": "wrong_context", "note": "Trapped Spark Ray | Tab Cutter | Hold Space/USE"}
+		return {"status": "wrong_context", "note": _main._companion_rescue.prompt()}
 	var cutter_target := _cutter_target()
 	if not cutter_target.is_empty() and tool_id != ActiveToolController.CUTTER_TOOL_ID and _main._cutter_salvage.has_cutter():
 		return {"status": "wrong_context", "note": "%s | Tab Cutter | Space/USE" % _target_label(cutter_target, "Sealed wreck")}

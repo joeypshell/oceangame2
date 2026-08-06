@@ -1,12 +1,11 @@
 extends Node
 
-const SPARK_RAY_SCENE := preload("res://scenes/companion/SparkRayCompanion.tscn")
 const CompanionAdaptationDebrief := preload("res://scripts/companion/companion_adaptation_debrief.gd")
 const CompanionAnchorFinsRuntime := preload("res://scripts/companion/companion_anchor_fins_runtime.gd")
-const CompanionControlRuntime := preload("res://scripts/companion/companion_control_runtime.gd")
 const CompanionGuardianPulseRuntime := preload("res://scripts/companion/companion_guardian_pulse_runtime.gd")
 const CompanionHabitatSelection := preload("res://scripts/companion/companion_habitat_selection.gd")
 const CompanionMemoryRuntime := preload("res://scripts/companion/companion_memory_runtime.gd")
+const CompanionSpeciesRuntimeFactory := preload("res://scripts/companion/companion_species_runtime_factory.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
 const SHARED_EVENT_DISTANCE_PX := 240.0
 
@@ -16,7 +15,13 @@ var _profile
 var _has_upgrade := Callable()
 var _companion
 var _control
+var _active_species_id := CompanionSpeciesRuntimeFactory.SPARK_RAY
+var _active_tool_hud
+var _status_sink := Callable()
+var _cancel_diver_tool := Callable()
+var _control_allowed := Callable()
 var _gate_access := CurrentGateController.new()
+var _species_factory := CompanionSpeciesRuntimeFactory.new()
 var _anchor_fins := CompanionAnchorFinsRuntime.new()
 var _guardian_pulse := CompanionGuardianPulseRuntime.new()
 var _habitat
@@ -25,14 +30,18 @@ var _adaptation_debrief := CompanionAdaptationDebrief.new()
 
 
 func _ready() -> void:
-	_ensure_control()
+	_ensure_control(CompanionSpeciesRuntimeFactory.SPARK_RAY)
 	_habitat = CompanionHabitatSelection.new()
 	add_child(_habitat)
 
 
 func bind_interface(active_tool_hud, status_sink: Callable, cancel_diver_tool: Callable, control_allowed: Callable) -> void:
-	_ensure_control()
-	_control.bind_interface(active_tool_hud, status_sink, cancel_diver_tool, control_allowed)
+	_active_tool_hud = active_tool_hud
+	_status_sink = status_sink
+	_cancel_diver_tool = cancel_diver_tool
+	_control_allowed = control_allowed
+	_ensure_control(_active_species_id)
+	_bind_control_interface()
 	_anchor_fins.bind_status_sink(status_sink)
 	_guardian_pulse.bind_status_sink(status_sink)
 	_habitat.bind_interface(status_sink, control_allowed)
@@ -52,11 +61,16 @@ func bind_map(
 	_player = player
 	_profile = profile
 	_has_upgrade = has_upgrade
+	_ensure_control(_selected_species_id())
 	_habitat.bind_map(world, player, profile, Callable(self, "release_to_habitat"))
 	var has_capability := Callable(profile, "has_capability") if profile != null and profile.has_method("has_capability") else Callable()
 	_memory_runtime.bind_map(world, profile, has_upgrade, has_capability, preserve_sortie)
-	_anchor_fins.bind_map(world, player, profile, null, has_upgrade, has_capability)
-	_guardian_pulse.bind_map(world, player, profile, null, hostiles, has_upgrade, has_capability)
+	if _spark_active():
+		_anchor_fins.bind_map(world, player, profile, null, has_upgrade, has_capability)
+		_guardian_pulse.bind_map(world, player, profile, null, hostiles, has_upgrade, has_capability)
+	else:
+		_anchor_fins.clear_map()
+		_guardian_pulse.clear_map()
 	_adaptation_debrief.bind_profile(profile)
 	_adaptation_debrief.end()
 	return sync_spawn() if sortie_active else {"spawned": false, "reason": "sortie_not_launched"}
@@ -64,27 +78,31 @@ func bind_map(
 
 func sync_spawn() -> Dictionary:
 	if _companion != null and is_instance_valid(_companion):
-		_anchor_fins.bind_companion(_companion)
-		_guardian_pulse.bind_companion(_companion)
+		_bind_species_companion()
 		_bind_control_map()
 		return report()
 	if not _dependencies_valid() or not _profile.active_companion_available_on_sortie_launch():
 		return {"spawned": false, "reason": "no_launchable_companion"}
-	_companion = SPARK_RAY_SCENE.instantiate()
+	var individual := _selected_individual()
+	var species_id := str(individual.get("species_id", ""))
+	_ensure_control(species_id)
+	_companion = _species_factory.create_companion(species_id)
+	if _companion == null:
+		return {"spawned": false, "reason": "unsupported_species", "species_id": species_id}
 	get_parent().add_child(_companion)
 	_companion.configure(
 		_world,
 		_player,
 		Callable(self, "_position_allowed"),
-		_profile.companion_report().get("individual", {})
+		individual
 	)
-	_anchor_fins.bind_companion(_companion)
-	_guardian_pulse.bind_companion(_companion)
+	_bind_species_companion()
 	_bind_control_map()
 	return report()
 
 
 func clear_map() -> void:
+	_reset_species_transient("map_clear")
 	_anchor_fins.clear_map()
 	_guardian_pulse.clear_map()
 	if _control != null:
@@ -98,11 +116,12 @@ func clear_map() -> void:
 	_has_upgrade = Callable()
 
 
-func recover_to_player() -> void:
+func recover_to_player(reason := "recovery") -> void:
 	_anchor_fins.reset("recovery")
 	_guardian_pulse.reset("recovery")
+	_reset_species_transient(reason)
 	if _control != null:
-		_control.reset_control("recovery")
+		_control.reset_control(reason)
 	if _companion != null and is_instance_valid(_companion):
 		_companion.recover_to_player()
 
@@ -110,11 +129,15 @@ func recover_to_player() -> void:
 func reset_control(reason := "reset") -> void:
 	_anchor_fins.reset(reason)
 	_guardian_pulse.reset(reason)
+	if reason in ["retry", "failure", "oxygen_failure", "combat_defeat", "hazard", "boat_habitat", "map_clear"]:
+		_reset_species_transient(reason)
 	if _control != null:
 		_control.reset_control(reason)
 
 
 func observe_current(gate_result: Dictionary) -> Dictionary:
+	if not _spark_active():
+		return {"changed": false, "reason": "species_has_no_memory"}
 	if _world == null or _player == null:
 		return {"changed": false, "reason": "map_unavailable"}
 	return _memory_runtime.observe_current(
@@ -126,6 +149,8 @@ func observe_current(gate_result: Dictionary) -> Dictionary:
 
 
 func observe_hostiles(hostiles, event: Dictionary) -> Dictionary:
+	if not _spark_active():
+		return {"changed": false, "reason": "species_has_no_memory"}
 	if _player == null:
 		return {"changed": false, "reason": "player_unavailable"}
 	return _memory_runtime.observe_hostiles(
@@ -202,12 +227,12 @@ func hides_diver_hotbar() -> bool:
 func force_dismount_for_hit(source_position: Vector2) -> Dictionary:
 	_anchor_fins.reset("hostile_hit")
 	_guardian_pulse.reset("hostile_hit")
-	return _control.force_dismount_for_hit(source_position) if _control != null else {"changed": false, "reason": "control_unavailable"}
+	return _control.force_dismount_for_hit(source_position) if _control != null and _control.has_method("force_dismount_for_hit") else {"changed": false, "reason": "not_mounted"}
 
 
 func set_adaptation_hooks(action_provider: Callable, action_dispatch: Callable) -> void:
-	_ensure_control()
-	_control.set_adaptation_hooks(action_provider, action_dispatch)
+	if _spark_active() and _control != null and _control.has_method("set_adaptation_hooks"):
+		_control.set_adaptation_hooks(action_provider, action_dispatch)
 
 
 func control_runtime():
@@ -223,14 +248,14 @@ func guardian_pulse_runtime():
 
 
 func set_external_control_active(active: bool) -> bool:
-	if _companion == null or not is_instance_valid(_companion):
+	if _companion == null or not is_instance_valid(_companion) or not _companion.has_method("set_external_control_active"):
 		return false
 	_companion.set_external_control_active(active)
 	return true
 
 
 func show_context_response(context_kind: String, source_position: Vector2) -> bool:
-	if _companion == null or not is_instance_valid(_companion):
+	if _companion == null or not is_instance_valid(_companion) or not _companion.has_method("show_context_response"):
 		return false
 	return bool(_companion.show_context_response(context_kind, source_position))
 
@@ -243,6 +268,7 @@ func report() -> Dictionary:
 	if _companion == null or not is_instance_valid(_companion):
 		return {
 			"spawned": false,
+			"active_species_id": _active_species_id,
 			"control": _control.report() if _control != null else {},
 			"memory": memory_report(),
 			"adaptation": _selected_adaptation_report(),
@@ -251,6 +277,7 @@ func report() -> Dictionary:
 		}
 	var value: Dictionary = _companion.report()
 	value["spawned"] = true
+	value["active_species_id"] = _active_species_id
 	value["control"] = _control.report() if _control != null else {}
 	value["memory"] = memory_report()
 	value["adaptation"] = _selected_adaptation_report()
@@ -260,8 +287,9 @@ func report() -> Dictionary:
 
 
 func _process(delta: float) -> void:
-	_anchor_fins.advance(delta, _control != null and _control.is_mounted())
-	_guardian_pulse.advance(delta, _control != null and _control.is_mounted())
+	if _spark_active():
+		_anchor_fins.advance(delta, _control != null and _control.is_mounted())
+		_guardian_pulse.advance(delta, _control != null and _control.is_mounted())
 
 
 func _position_allowed(position: Vector2) -> bool:
@@ -299,7 +327,7 @@ func _shared_event_context() -> Dictionary:
 		state not in ["separated", "recovery"]
 		and distance <= SHARED_EVENT_DISTANCE_PX
 	)
-	var callsign := "Spark Ray"
+	var callsign := _species_factory.display_name(_active_species_id)
 	if _profile != null and _profile.has_method("companion_report"):
 		callsign = str(_profile.companion_report().get("individual", {}).get("callsign", callsign))
 	return {
@@ -311,13 +339,22 @@ func _shared_event_context() -> Dictionary:
 	}
 
 
-func _ensure_control() -> void:
-	if _control != null:
+func _ensure_control(species_id: String) -> void:
+	var normalized_species := species_id if _species_factory.is_supported(species_id) else CompanionSpeciesRuntimeFactory.SPARK_RAY
+	if _control != null and _active_species_id == normalized_species:
 		return
-	_control = CompanionControlRuntime.new()
+	if _control != null:
+		_control.clear_map()
+		if _control.get_parent() != null:
+			_control.get_parent().remove_child(_control)
+		_control.queue_free()
+	_control = _species_factory.create_control(normalized_species)
+	_active_species_id = normalized_species
 	add_child(_control)
-	_guardian_pulse.bind_aim_provider(Callable(self, "_guardian_aim_direction"))
-	_control.set_adaptation_hooks(Callable(self, "_adaptation_actions"), Callable(self, "_dispatch_adaptation_action"))
+	_bind_control_interface()
+	if _spark_active():
+		_guardian_pulse.bind_aim_provider(Callable(self, "_guardian_aim_direction"))
+		_control.set_adaptation_hooks(Callable(self, "_adaptation_actions"), Callable(self, "_dispatch_adaptation_action"))
 
 
 func _free_companion() -> void:
@@ -329,8 +366,48 @@ func _free_companion() -> void:
 
 
 func _bind_control_map() -> void:
-	_ensure_control()
-	_control.bind_map(_world, _player, _companion, Callable(self, "_position_allowed"))
+	_ensure_control(_active_species_id)
+	if _spark_active():
+		_control.bind_map(_world, _player, _companion, Callable(self, "_position_allowed"))
+	else:
+		_control.bind_map(_world, _player, _companion)
+
+
+func _bind_control_interface() -> void:
+	if _control == null:
+		return
+	if _spark_active():
+		_control.bind_interface(_active_tool_hud, _status_sink, _cancel_diver_tool, _control_allowed)
+	else:
+		_control.bind_interface(_status_sink, _control_allowed)
+
+
+func _bind_species_companion() -> void:
+	if _spark_active():
+		_anchor_fins.bind_companion(_companion)
+		_guardian_pulse.bind_companion(_companion)
+	else:
+		_anchor_fins.bind_companion(null)
+		_guardian_pulse.bind_companion(null)
+
+
+func _reset_species_transient(reason: String) -> void:
+	if _control != null and _control.has_method("reset_transient"):
+		_control.reset_transient(reason)
+
+
+func _selected_individual() -> Dictionary:
+	if _profile == null or not _profile.has_method("companion_report"):
+		return {}
+	return _profile.companion_report().get("individual", {}).duplicate(true)
+
+
+func _selected_species_id() -> String:
+	return str(_selected_individual().get("species_id", CompanionSpeciesRuntimeFactory.SPARK_RAY))
+
+
+func _spark_active() -> bool:
+	return _active_species_id == CompanionSpeciesRuntimeFactory.SPARK_RAY
 
 
 func _adaptation_actions(context: String) -> Array:

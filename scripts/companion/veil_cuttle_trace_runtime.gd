@@ -38,6 +38,14 @@ func advance(delta: float) -> void:
 	_cooldown_seconds = maxf(0.0, _cooldown_seconds - maxf(0.0, delta))
 
 
+func reset_transient(_reason := "reset") -> void:
+	end_preview()
+	if _world != null and _world.has_method("set_ecological_trace_state"):
+		_world.set_ecological_trace_state(TARGET_ID, "hidden")
+	_cooldown_seconds = 0.0
+	_last_result = {}
+
+
 func action() -> Dictionary:
 	var reason := _availability_reason()
 	return {
