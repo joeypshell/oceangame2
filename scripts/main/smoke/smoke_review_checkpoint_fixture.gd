@@ -21,13 +21,14 @@ func _run() -> void:
 	_test_expansion_17_boundary()
 	_test_expansion_18_boundary()
 	_test_living_expedition_01_boundary()
+	_test_living_expedition_02_boundary()
 	_test_unknown_checkpoint_fallback()
 	if not _failures.is_empty():
 		for failure in _failures:
 			push_error("Review checkpoint smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Review checkpoint smoke passed: expansion14=Ti2+Coil1 expansion16=Ti1+Rubber1+Coil1+Gel1 expansion17=two_fragments_unresolved expansion18=triangulated_before_entry living_expedition_01=pre_rescue persistence=false unknown=fresh.")
+	print("Review checkpoint smoke passed: expansion14=Ti2+Coil1 expansion16=Ti1+Rubber1+Coil1+Gel1 expansion17=two_fragments_unresolved expansion18=triangulated_before_entry living_expedition_01=pre_rescue living_expedition_02=Kite_committed+Mica_unrescued persistence=false unknown=fresh.")
 	quit(0)
 
 
@@ -45,6 +46,8 @@ func _test_argument_contract() -> void:
 	_expect(ReviewProfileMode.checkpoint_from_web_query("?checkpoint=EXPANSION_18_START") == ReviewCheckpointFixture.EXPANSION_18_START, "Expansion 18 Web checkpoint was not normalized")
 	_expect(ReviewProfileMode.checkpoint_id(PackedStringArray(["--review-checkpoint=living_expedition_01_start"]), PackedStringArray()) == ReviewCheckpointFixture.LIVING_EXPEDITION_01_START, "Living Expedition 01 local checkpoint was not parsed")
 	_expect(ReviewProfileMode.checkpoint_from_web_query("?checkpoint=LIVING_EXPEDITION_01_START") == ReviewCheckpointFixture.LIVING_EXPEDITION_01_START, "Living Expedition 01 Web checkpoint was not normalized")
+	_expect(ReviewProfileMode.checkpoint_id(PackedStringArray(["--review-checkpoint=living_expedition_02_start"]), PackedStringArray()) == ReviewCheckpointFixture.LIVING_EXPEDITION_02_START, "Living Expedition 02 local checkpoint was not parsed")
+	_expect(ReviewProfileMode.checkpoint_from_web_query("?checkpoint=LIVING_EXPEDITION_02_START") == ReviewCheckpointFixture.LIVING_EXPEDITION_02_START, "Living Expedition 02 Web checkpoint was not normalized")
 	_expect(ReviewProfileMode.requested(local_args, PackedStringArray()), "checkpoint did not imply isolated review mode")
 	_expect(not ReviewProfileMode.persistence_enabled(false, true), "isolated review mode enabled persistence")
 
@@ -149,6 +152,23 @@ func _test_living_expedition_01_boundary() -> void:
 	_expect(profile.material_inventory().is_empty(), "Living Expedition 01 checkpoint retained unrelated materials")
 	_expect(applied.get("active_objective_id") == "spark_ray_rescue", "Living Expedition 01 checkpoint omitted the rescue focus")
 	_expect(ReviewProfileMode.startup_report(true, ReviewCheckpointFixture.LIVING_EXPEDITION_01_START, true).find("id=living_expedition_01_start persistence=false") != -1, "Living Expedition 01 startup report omitted isolation")
+
+
+func _test_living_expedition_02_boundary() -> void:
+	var profile := ExpansionProfileState.new("", false)
+	profile.load_profile()
+	var applied: Dictionary = ReviewCheckpointFixture.apply(ReviewCheckpointFixture.LIVING_EXPEDITION_02_START, profile)
+	var companion: Dictionary = profile.companion_report()
+	_expect(bool(applied.get("ready", false)), "Living Expedition 02 checkpoint did not apply: %s" % applied)
+	_expect(applied.get("map_path") == ReviewCheckpointFixture.LIVING_EXPEDITION_02_MAP_PATH, "Living Expedition 02 checkpoint did not require the full production level")
+	_expect((companion.get("individuals", []) as Array).size() == 1, "Living Expedition 02 checkpoint did not contain exactly one committed individual")
+	_expect(str(companion.get("active_individual_id", "")) == "spark_ray_juvenile_01", "Living Expedition 02 checkpoint did not select Kite")
+	_expect(str(companion.get("individual", {}).get("species_id", "")) == "spark_ray", "Living Expedition 02 checkpoint selected the wrong species")
+	_expect(applied.get("active_objective_id") == "veil_cuttle_rescue", "Living Expedition 02 checkpoint omitted Mica's rescue focus")
+	_expect(profile.has_capability(ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID), "Living Expedition 02 checkpoint omitted the rescue Cutter")
+	_expect(profile.has_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID), "Living Expedition 02 checkpoint omitted the trace scanner")
+	_expect(profile.material_inventory().is_empty(), "Living Expedition 02 checkpoint retained unrelated materials")
+	_expect(ReviewProfileMode.startup_report(true, ReviewCheckpointFixture.LIVING_EXPEDITION_02_START, true).find("id=living_expedition_02_start persistence=false") != -1, "Living Expedition 02 startup report omitted isolation")
 
 
 func _test_expansion_16_boundary() -> void:

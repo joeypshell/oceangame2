@@ -73,6 +73,7 @@ def valid_map() -> dict:
                 "habitat_id": "companion_habitat_01",
                 "trace_id": "veil_cuttle_trace_01",
                 "review_camera_id": "veil_cuttle_review_01",
+                "optional": True,
                 "availability": "all_supported_seeds",
             },
         ],

@@ -6890,6 +6890,7 @@
       "habitat_id": "companion_habitat_01",
       "trace_id": "veil_cuttle_trace_01",
       "review_camera_id": "veil_cuttle_review_01",
+      "optional": true,
       "availability": "all_supported_seeds",
       "intent": "Cut Mica free from a discarded survey net in the accessible upper-west chamber, then return together to the surface boat."
     }

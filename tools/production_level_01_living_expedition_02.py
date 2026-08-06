@@ -31,6 +31,7 @@ def creature_rescues() -> list[dict]:
             "habitat_id": HABITAT_ID,
             "trace_id": TRACE_ID,
             "review_camera_id": REVIEW_CAMERA_ID,
+            "optional": True,
             "availability": AVAILABILITY,
             "intent": (
                 "Cut Mica free from a discarded survey net in the accessible "

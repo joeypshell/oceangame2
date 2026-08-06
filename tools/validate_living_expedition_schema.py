@@ -250,6 +250,8 @@ def validate_living_expedition_schema(
             if riding.get("context_kind") != "mounted_route_review":
                 failures.append(f"{label}.riding_review_context_id must reference a mounted_route_review.")
         elif label == VEIL_RESCUE_ID:
+            if rescue.get("optional") is not True:
+                failures.append(f"{label} must remain optional progression.")
             expected_links = {
                 "habitat_id": HABITAT_ID,
                 "trace_id": TRACE_ID,

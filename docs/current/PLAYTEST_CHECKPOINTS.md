@@ -17,12 +17,13 @@ the routine end-to-end regression layer.
 
 | ID | Starts with | Deliberately incomplete |
 | --- | --- | --- |
+| `living_expedition_02_start` | Prior required projects/discoveries committed; Cutter and Scanner available; Kite committed and selected; empty cargo | Mica rescue/commitment, two-partner habitat selection, Mica Reveal Trace sortie, and return to Kite |
 | `living_expedition_01_start` | Prior required projects/discoveries committed; Cutter, Fins, and Shock Prod available; empty cargo; no companion | Spark Ray rescue, boat commitment, command/riding proof, shared memory, night adaptation, and Day 3 payoff |
 
 Local:
 
 ```powershell
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=living_expedition_01_start
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=living_expedition_02_start
 ```
 
 The checkpoint forces `production_level_01` and identifies itself in the
@@ -35,7 +36,9 @@ Exact public Web candidate:
 https://joeypshell.github.io/oceangame2/?review=c0c7b4ef7b295e97e5eb417bbec8555db42ebea4&checkpoint=living_expedition_01_start
 ```
 
-The Pages workflow and independent desktop/mobile checker passed for corrected
+The latest deployed checkpoint verification remains Living Expedition 01 until
+the Living Expedition 02 exact-Web issue closes. The Pages workflow and
+independent desktop/mobile checker passed for corrected
 exact SHA `c0c7b4ef7b295e97e5eb417bbec8555db42ebea4`. Technical evidence and the
 owner GO are recorded in
 [Living Expedition 01 Technical Review](LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md).
@@ -56,6 +59,17 @@ owner GO are recorded in
 
 The retained `expansion_14_start` fixture remains available for targeted legacy
 regressions, but it is no longer the current owner checkpoint.
+
+## Living Expedition 02 Replay
+
+1. Find Mica in the accessible upper-west chamber, select the Cutter, and hold
+   `Space/USE` to free her; return together to the canonical boat.
+2. Hold `Shift/BOND` at the boat, use `Tab/TOOL` to choose Mica, and confirm with
+   `Space/USE`; leave the boat to launch the Mica sortie.
+3. Near Mica's authored trace, use BOND to select `Reveal Trace`, then identify
+   the revealed evidence with the Scanner. It grants no cargo or access.
+4. Return to the boat, select Kite for the next sortie, and confirm Kite's
+   Mount action and mounted hotbar return.
 
 ## Guardrails
 

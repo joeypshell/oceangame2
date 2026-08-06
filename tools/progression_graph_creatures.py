@@ -38,7 +38,10 @@ def add_creature_nodes(graph: Any, map_data: dict[str, Any], node_type: Any) -> 
         for item in _items(map_data, collection):
             item_id = str(item.get("id", ""))
             attrs = {**item, "collection": collection, "implementation_status": "proposed"}
-            mandatory = kind == "creature_rescue" or item.get("context_kind") == "mounted_route_review"
+            mandatory = (
+                (kind == "creature_rescue" and item.get("optional") is not True)
+                or item.get("context_kind") == "mounted_route_review"
+            )
             graph.add_node(node_type(
                 _key(kind, map_id, item_id),
                 f"[proposed] {_display(item_id)}",
