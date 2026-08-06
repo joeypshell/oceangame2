@@ -5,17 +5,23 @@ const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime.gd")
 const CompanionJourneyGuidance := preload("res://scripts/companion/companion_journey_guidance.gd")
 const CompanionSortieRuntime := preload("res://scripts/companion/companion_sortie_runtime.gd")
+const ExpeditionDayState := preload("res://scripts/main/expedition_day_state.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const MovingHazardController := preload("res://scripts/main/moving_hazard_controller.gd")
 const ReviewCheckpointFixture := preload("res://scripts/main/review_checkpoint_fixture.gd")
+const SortieState := preload("res://scripts/main/sortie_state.gd")
+const VeilCuttleDriftLensRuntime := preload("res://scripts/companion/veil_cuttle_drift_lens_runtime.gd")
 
 const MAP_PATH := "res://maps/production_level_01.greybox.json"
+const PROFILE_PATH := "user://smoke_living_expedition_03_profile.json"
 const TRACE_ID := "southwest_bloom_migration_trace"
 const OBSERVATION_ID := "southwest_bloom_migration_observation"
 const CONDITION_ID := "southwest_jellyfish_bloom"
 const MEMORY_ID := "followed_the_bloom"
 const ADAPTATION_ID := "drift_lens"
 const KITE_ID := "spark_ray_juvenile_01"
+const SOUTHWEST_PATROL_ID := "southwest_bloom_jellyfish_patrol"
+const DEEP_PATROL_ID := "deep_route_jellyfish_patrol"
 
 var _failures: Array[String] = []
 var _status_notes: Array[String] = []
@@ -32,6 +38,7 @@ func _initialize() -> void:
 
 
 func _run() -> void:
+	_cleanup_profile()
 	var world = WORLD_SCENE.instantiate()
 	world.map_path = MAP_PATH
 	get_root().add_child(world)
@@ -40,7 +47,7 @@ func _run() -> void:
 	player.set_physics_process(false)
 	await process_frame
 
-	var profile := ExpansionProfileState.new("", false)
+	var profile := ExpansionProfileState.new(PROFILE_PATH, true)
 	profile.load_profile()
 	var survey := AnomalySurveyRuntime.new(null, false, profile)
 	var checkpoint: Dictionary = ReviewCheckpointFixture.apply(
@@ -49,9 +56,16 @@ func _run() -> void:
 	)
 	_expect(bool(checkpoint.get("ready", false)), "Day 2 review checkpoint failed: %s" % checkpoint)
 	_expect(int(checkpoint.get("day_number", 0)) == 2, "checkpoint did not declare Day 2")
+	_expect(profile.save_profile(), "isolated checkpoint profile could not be saved for reload coverage")
+	var progression_before := _progression_snapshot(profile)
+	var companion_before_failure: Dictionary = profile.companion_report()
+	var parity_before: Dictionary = world.get_runtime_parity_report()
+	var gates_before: Array = world.get_current_gates()
 
 	var hazards := MovingHazardController.new()
 	hazards.reset(world, [CONDITION_ID])
+	var oxygen := SortieState.new(90.0)
+	var daylight := ExpeditionDayState.new(300.0)
 	var sortie := CompanionSortieRuntime.new()
 	get_root().add_child(sortie)
 	await process_frame
@@ -81,8 +95,12 @@ func _run() -> void:
 	player.global_position = mica.global_position + Vector2(-20.0, 0.0)
 	sortie.control_runtime()._process(0.0)
 	_expect(bool(mica.report().get("presentation", {}).get("ecology_interest_visible", false)), "Mica did not visibly react to the in-range hidden migration")
-	var first: Dictionary = _reveal_and_identify(world, player, sortie, survey)
+	var first: Dictionary = _reveal_and_identify(world, player, sortie, survey, hazards, oxygen, daylight)
 	_expect(bool(first.get("ready", false)), "first observation setup failed: %s" % first)
+	_expect(bool(first.get("reveal_only", false)), "Reveal Trace identified or committed the relationship by itself")
+	_expect(is_equal_approx(float(first.get("oxygen_delta", 0.0)), 1.55), "held Scanner interaction paused oxygen pressure")
+	_expect(is_equal_approx(float(first.get("daylight_delta", 0.0)), 1.55), "held Scanner interaction paused daylight pressure")
+	_expect(bool(first.get("hazard_advanced", false)), "held Scanner interaction paused the moving bloom patrol")
 	_expect(str(sortie.memory_report().get("ecology", {}).get("pending_observation_id", "")) == OBSERVATION_ID, "held Scanner completion did not create pending observation")
 	_expect(not _active_individual(profile).get("earned_memory_ids", []).has(MEMORY_ID), "identification committed memory before boat return")
 
@@ -91,9 +109,10 @@ func _run() -> void:
 	_expect(bool(discarded.get("changed", false)), "hazard did not discard uncommitted ecology state")
 	_expect(str(sortie.memory_report().get("ecology", {}).get("pending_observation_id", "")).is_empty(), "hazard retained pending observation")
 	_expect(_trace_state(world) == "hidden", "hazard reset retained revealed trace")
+	_expect(profile.companion_report() == companion_before_failure, "failure changed committed companion state")
 
 	survey.on_map_loaded(world)
-	var second: Dictionary = _reveal_and_identify(world, player, sortie, survey)
+	var second: Dictionary = _reveal_and_identify(world, player, sortie, survey, hazards, oxygen, daylight)
 	_expect(bool(second.get("ready", false)), "second observation setup failed: %s" % second)
 	player.global_position = world.get_entry_position("surface_boat_entry")
 	var committed: Dictionary = sortie.commit_memories_at_boat()
@@ -119,13 +138,21 @@ func _run() -> void:
 	)
 	_expect(str(mica_next_launch.get("active_species_id", "")) == "veil_cuttle", "next sortie did not restore Mica")
 	_expect(_command_ids(sortie).has("read_drift"), "next-sortie Mica palette omitted Read Drift")
+	_test_read_drift(player, sortie, hazards, SOUTHWEST_PATROL_ID)
+	sortie.control_runtime().drift_lens_runtime().advance(VeilCuttleDriftLensRuntime.COOLDOWN_SECONDS + 0.1)
+	_test_read_drift(player, sortie, hazards, DEEP_PATROL_ID)
 
-	var capability_snapshot: Array = profile.report().get("unlocked_capabilities", []).duplicate()
-	profile.select_active_companion(KITE_ID, false)
+	var reloaded := ExpansionProfileState.new(PROFILE_PATH, true)
+	var reload: Dictionary = reloaded.load_profile()
+	_expect(str(reload.get("status", "")) == "loaded", "committed Mica journey did not reload")
+	var reloaded_mica: Dictionary = _individual_by_id(reloaded, "veil_cuttle_juvenile_01")
+	_expect((reloaded_mica.get("earned_memory_ids", []) as Array).count(MEMORY_ID) == 1, "reload lost or duplicated Mica's memory")
+	_expect(str(reloaded_mica.get("selected_adaptation_id", "")) == ADAPTATION_ID, "reload lost Drift Lens")
+	reloaded.select_active_companion(KITE_ID, true)
 	var kite_launch: Dictionary = sortie.bind_map(
 		world,
 		player,
-		profile,
+		reloaded,
 		Callable(self, "_has_no_upgrade"),
 		true,
 		false,
@@ -135,18 +162,21 @@ func _run() -> void:
 	)
 	_expect(str(kite_launch.get("active_species_id", "")) == "spark_ray", "Kite selection did not restore Spark Ray runtime")
 	_expect(_command_ids(sortie).has("mount") and not _command_ids(sortie).has("read_drift"), "Kite action ownership leaked Mica's field action")
-	_expect(profile.report().get("unlocked_capabilities", []) == capability_snapshot, "ecology journey changed equipment access")
-	_expect(profile.material_inventory().is_empty(), "ecology journey granted materials")
+	_expect(reloaded.active_companion_available_on_sortie_launch(), "Kite riding availability changed after the Mica journey")
+	_expect(_progression_snapshot(reloaded) == progression_before, "ecology journey changed discoveries, projects, materials, targets, or equipment access")
+	_expect(world.get_runtime_parity_report() == parity_before, "ecology journey changed terrain or collision")
+	_expect(world.get_current_gates() == gates_before, "ecology journey changed authored access gates")
 
 	sortie.clear_map()
 	sortie.queue_free()
 	player.queue_free()
 	world.queue_free()
 	Engine.time_scale = 1.0
+	_cleanup_profile()
 	_finish()
 
 
-func _reveal_and_identify(world, player, sortie, survey) -> Dictionary:
+func _reveal_and_identify(world, player, sortie, survey, hazards, oxygen, daylight) -> Dictionary:
 	var trace := _record_by_id(world.get_ecological_traces(), TRACE_ID)
 	var mica = sortie.companion()
 	if trace.is_empty() or mica == null:
@@ -157,18 +187,54 @@ func _reveal_and_identify(world, player, sortie, survey) -> Dictionary:
 	var reveal: Dictionary = _dispatch_command(sortie, "reveal_trace")
 	if not bool(reveal.get("changed", false)):
 		return {"ready": false, "reason": "reveal_failed", "detail": reveal}
+	var reveal_only := (
+		_trace_state(world) == "revealed"
+		and str(sortie.memory_report().get("ecology", {}).get("pending_observation_id", "")).is_empty()
+	)
 	var activated: Dictionary = survey.scanner_action(world, player)
 	if str(activated.get("reason", "")) != "activated":
 		return {"ready": false, "reason": "scanner_not_held", "detail": activated}
+	var oxygen_before: float = oxygen.oxygen_seconds
+	var daylight_before: float = daylight.daylight_remaining_seconds
+	var hazard_before: Vector2 = hazards.snapshot_for(SOUTHWEST_PATROL_ID).get("center", Vector2.ZERO)
 	var partial: Dictionary = survey.update(world, player, 0.75)
+	oxygen.drain_oxygen(0.75)
+	daylight.advance_daylight(0.75)
+	hazards.update(world, player.global_position, 0.0, 0.75)
 	if str(partial.get("reason", "")) != "progress":
 		return {"ready": false, "reason": "scanner_no_progress", "detail": partial}
+	var partial_progress: float = float(survey.report().get("identification", {}).get("progress", 0.0))
 	var identified: Dictionary = survey.update(world, player, 0.8)
+	oxygen.drain_oxygen(0.8)
+	daylight.advance_daylight(0.8)
+	hazards.update(world, player.global_position, 0.0, 0.8)
+	var hazard_after: Vector2 = hazards.snapshot_for(SOUTHWEST_PATROL_ID).get("center", Vector2.ZERO)
 	return {
 		"ready": str(identified.get("reason", "")) == "identified",
 		"reason": str(identified.get("reason", "")),
-		"partial_progress": float(survey.report().get("identification", {}).get("progress", 0.0)),
+		"reveal_only": reveal_only,
+		"partial_progress": partial_progress,
+		"oxygen_delta": oxygen_before - oxygen.oxygen_seconds,
+		"daylight_delta": daylight_before - daylight.daylight_remaining_seconds,
+		"hazard_advanced": not hazard_before.is_equal_approx(hazard_after),
 	}
+
+
+func _test_read_drift(player, sortie, hazards, patrol_id: String) -> void:
+	var target: Dictionary = hazards.snapshot_for(patrol_id)
+	var mica = sortie.companion()
+	_expect(not target.is_empty(), "Read Drift subject was unavailable: %s" % patrol_id)
+	if target.is_empty() or mica == null:
+		return
+	var center: Vector2 = target.get("center", Vector2.ZERO)
+	mica.global_position = center + Vector2(-24.0, 0.0)
+	player.global_position = mica.global_position + Vector2(-12.0, 0.0)
+	mica.advance(0.0)
+	var hazards_before: Array = hazards.snapshot()
+	var result: Dictionary = _dispatch_command(sortie, "read_drift")
+	_expect(bool(result.get("changed", false)) and str(result.get("target_id", "")) == patrol_id, "Read Drift did not project patrol %s" % patrol_id)
+	_expect(hazards.snapshot() == hazards_before, "Read Drift mutated patrol authority for %s" % patrol_id)
+	_expect((result.get("reward_ids", []) as Array).is_empty() and not bool(result.get("access_changed", true)), "Read Drift granted reward or access for %s" % patrol_id)
 
 
 func _dispatch_command(sortie, action_id: String) -> Dictionary:
@@ -194,6 +260,24 @@ func _command_ids(sortie) -> Array[String]:
 
 func _active_individual(profile) -> Dictionary:
 	return profile.companion_report().get("individual", {})
+
+
+func _individual_by_id(profile, individual_id: String) -> Dictionary:
+	for individual in profile.companion_report().get("individuals", []):
+		if str((individual as Dictionary).get("individual_id", "")) == individual_id:
+			return (individual as Dictionary).duplicate(true)
+	return {}
+
+
+func _progression_snapshot(profile) -> Dictionary:
+	var report: Dictionary = profile.report()
+	return {
+		"completed_discoveries": report.get("completed_discoveries", []).duplicate(),
+		"unlocked_capabilities": report.get("unlocked_capabilities", []).duplicate(),
+		"material_inventory": (report.get("material_inventory", {}) as Dictionary).duplicate(true),
+		"completed_projects": report.get("completed_projects", []).duplicate(),
+		"banked_tool_target_ids": report.get("banked_tool_target_ids", []).duplicate(),
+	}
 
 
 func _trace_state(world) -> String:
@@ -227,6 +311,13 @@ func _has_no_upgrade(_upgrade_id: String) -> bool:
 	return false
 
 
+func _cleanup_profile() -> void:
+	for suffix in ["", ".tmp", ".bak"]:
+		var path := "%s%s" % [PROFILE_PATH, suffix]
+		if FileAccess.file_exists(path):
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
+
+
 func _expect(condition: bool, message: String) -> void:
 	if not condition:
 		_failures.append(message)
@@ -238,5 +329,5 @@ func _finish() -> void:
 			push_error("Living Expedition 03 integration smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("PASS: Living Expedition 03 integration checkpoint=Day2+Kite+Mica+Scanner active=Mica bloom=active reveal=BOND identification=held_1.5s pending=no_reward failure=cleared boat=memory_exact_once night=Drift_Lens_deliberate next_sortie=Read_Drift Kite=restored access_unchanged=true materials=none.")
+	print("PASS: Living Expedition 03 integration checkpoint=Day2+Kite+Mica+Scanner active=Mica bloom=active reveal!=identify identification=held_1.5s pressure=oxygen+daylight+moving_hazard pending=no_reward failure=uncommitted_only boat=memory_exact_once night=Drift_Lens_deliberate reload=true patrols=conditional+unconditional Kite=selection+riding+actions topology=unchanged progression=unchanged.")
 	quit(0)
