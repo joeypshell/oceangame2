@@ -1,12 +1,12 @@
 # Project Context
 
-Last updated: 2026-08-05
+Last updated: 2026-08-06
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
 ## Current Goal
 
-`oceangame2` has a stable diver-expedition runtime foundation and seventeen completed bounded Phase 2 expansions. Expansion 18 Transfer Hub Interior Expedition is technically complete but closes with a strategic player-experience HOLD: another clue/recipe/gate/scan correction would not solve the owner's finding that the wider loop feels boring and generic. Living Expedition is now the active product direction, beginning with one Spark Ray adaptation proof. OceanGame Expansion 01 proved:
+`oceangame2` has a stable diver-expedition runtime foundation and seventeen completed bounded Phase 2 expansions. Expansion 18 Transfer Hub Interior Expedition is technically complete but closes with a strategic player-experience HOLD: another clue/recipe/gate/scan correction would not solve the owner's finding that the wider loop feels boring and generic. Living Expedition is now the active product direction; its first two owner-approved milestones prove one adapted Spark Ray and a bounded Kite/Mica habitat with active species choice. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -50,7 +50,7 @@ Expansion 17 Wreck Network Triangulation is complete with owner GO through #1167
 
 Expansion 18 implements one exceptional `transfer_hub_interior_01` destination reached by swimming through the normal full level to a physical entrance. Its source/state contract, generated maps, continuous sortie, existing-cutter core recovery, deterministic evidence, and exact public build remain valid regression surfaces. It receives no player-experience GO and no further bounded correction pass.
 
-The active direction is one bonded active companion whose credible species roles and meaningful expedition experiences shape real-time independent or mounted play. Living Expedition 01 implements and owner-approves the juvenile Spark Ray rescue, riding, BOND palette, two memory paths, night choice, and independent/mounted payoff. Living Expedition 02 is the next committed plan: exactly two total individuals, a compact canonical-boat habitat, and one selected active companion. Diver equipment retains hard geographic access; companions cannot bypass it.
+The active direction is one bonded active companion whose credible species roles and meaningful expedition experiences shape real-time independent or mounted play. Living Expedition 01 implements and owner-approves the juvenile Spark Ray rescue, riding, BOND palette, two memory paths, night choice, and independent/mounted payoff. Living Expedition 02 also has owner GO: Kite and Mica now occupy one compact canonical-boat habitat, one is selected for each launched sortie, and Mica's independent sensing role contrasts with Kite's mounted role. Diver equipment retains hard geographic access; companions cannot bypass it. No later implementation milestone is currently committed.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -81,8 +81,11 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Creature/map progression contract: `docs/planning/CREATURE_MAP_PROGRESSION_SPEC.md`
 - First-proof source/state contract: `docs/current/LIVING_EXPEDITION_01_SOURCE_STATE_CONTRACT.md`
 - First-proof technical/Web evidence and owner GO: `docs/current/LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md`
-- Next committed milestone plan: `docs/current/LIVING_EXPEDITION_02_PLAN.md`
+- Completed Living Expedition 02 plan: `docs/current/LIVING_EXPEDITION_02_PLAN.md`
 - Living Expedition 02 ownership contract: `docs/current/LIVING_EXPEDITION_02_SOURCE_STATE_CONTRACT.md`
+- Living Expedition 02 visual decision: `docs/current/LIVING_EXPEDITION_02_VISUAL_DECISION.md`
+- Living Expedition 02 exact Web evidence: `docs/current/LIVING_EXPEDITION_02_WEB_VERIFICATION.md`
+- Living Expedition 02 owner-GO closeout: `docs/current/LIVING_EXPEDITION_02_CLOSEOUT.md`
 - Foundation history: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - First adaptation proof: `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
@@ -101,15 +104,15 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Tooling: `docs/current/TOOLING.md`
 - Focused player-review workflow: `docs/current/PLAYTEST_CHECKPOINTS.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest owner decision: Living Expedition 01 received GO after bounded post-rescue guidance correction #1249
-- Latest completed direction: milestone #45 Living Expedition 01 Spark Ray Adaptation Proof, implemented as #1223-#1232 plus focused command/riding issue #1235
-- Latest committed direction: Living Expedition 02 Small Stable And Species Identity, scoped to Kite plus one non-mounted Veil Cuttle
+- Latest owner decision: Living Expedition 02 received GO on exact reviewed runtime `b639dcf`; no additional correction notes were supplied
+- Latest completed direction: milestone #46 Living Expedition 02 Small Stable And Species Identity, implemented as #1253-#1262
+- Next direction boundary: a separate planning decision may define Living Expedition 03 ecological field roles; no implementation batch is committed
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
 - Latest source contract: `docs/current/OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`
 - Latest visual decision: Living Expedition focused captures are generated review evidence only; all six configured accepted baseline sheets remain pixel-stable
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: corrected Living Expedition candidate `c0c7b4e`, recorded with owner GO in `docs/current/LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md` after bounded post-rescue guidance correction #1249.
+- Latest Web verification: Living Expedition 02 runtime `b639dcf`, recorded in `docs/current/LIVING_EXPEDITION_02_WEB_VERIFICATION.md`; owner GO and limitations are in `docs/current/LIVING_EXPEDITION_02_CLOSEOUT.md`.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -225,7 +228,7 @@ For map changes, run the relevant generator, SVG renderer, validator, parity che
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Each issue needs acceptance criteria, relevant files, implementation notes, and verification steps.
 
-Current issue state as of 2026-08-05:
+Current issue state as of 2026-08-06:
 
 - Closed: #662-#671 completed Expansion 01 with a GO.
 - Closed: #685-#694 completed Expansion 02 with a GO.
@@ -253,7 +256,7 @@ Current issue state as of 2026-08-05:
 - Closed direction gate: #1201 records Expansion 18's strategic HOLD and transition; #1192-#1200 plus bounded corrections remain technically complete.
 - Closed planning: #1219 documents the first Expedition Adaptation proof; #1221 realigns the target game, creature contracts, roadmap, and milestone state through merged PR #1222.
 - Closed: milestone #45 Living Expedition 01 has playable work, deterministic journey/checkpoint/capture evidence, exact-Web verification, bounded guidance correction #1249, and owner GO through #1232.
-- Selected planning: #1251 defines Living Expedition 02 as a bounded two-individual habitat/selection proof; implementation issue creation follows its merge.
+- Closed: milestone #46 and #1253-#1262 implement the bounded Kite/Mica habitat, active selection, Mica sensing role, deterministic evidence, exact Web checkpoint, and owner GO.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -391,14 +394,14 @@ Current issue state as of 2026-08-05:
 
 ## Recommended Next Work
 
-Use `docs/current/LIVING_EXPEDITION_02_PLAN.md` to create and execute one bounded milestone for Kite, Mica, the compact boat habitat, and next-sortie active selection. Add no third species or broad stable/ecology framework before the player gate. Keep #52/#53 deferred.
+Living Expedition 02 is complete. The next audit should create only the planning decision needed to define a bounded Living Expedition 03 ecological field-role proof. Do not create its implementation batch, add a third species, or broaden the stable until that plan names its goal, ownership boundaries, non-goals, and player exit question. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 
 - Treat Living Expedition as the active product direction and a bounded current runtime proof. Preserve one active companion, species-plus-experience roles, deliberate real-time commands, committed-bond riding, meaningful experience rather than XP grinding, night consolidation, visible adaptation, and the equipment-versus-companion boundary.
 - Use `Shift/BOND` and a maximum-three-action 20-percent slow-time palette. Mounted play transfers movement and hotbar ownership to creature actions; dismount restores diver tools. Do not reuse `Q` or `E/ACT` for the companion.
 - Riding cannot bypass fins, darkness, pressure, collision, oxygen, daylight, health, cargo, boat, or failure authority.
-- Add only the selected Veil Cuttle and compact two-entry habitat; do not add a third species, broad stable UI, turn-based or broad combat framework, creature health/death, or ecosystem simulation before the next player gate.
+- Keep Kite and Mica as the complete current roster and the habitat compact; do not add a third species, broad stable UI, turn-based or broad combat framework, creature health/death, or ecosystem simulation without a later reviewed plan.
 - Keep the implemented held-cargo strip, selectable active tools, persistent vitals/objectives, and temporary prompts as distinct HUD responsibilities; a broad production HUD replacement remains directional.
 - Keep `production_level_01` as the default preview map unless a separate reviewed decision changes it.
 - Preserve `maps/full_cave_sketch_01.greybox.json` as the generated topology draft and source for a separately named `production_level_01` output.

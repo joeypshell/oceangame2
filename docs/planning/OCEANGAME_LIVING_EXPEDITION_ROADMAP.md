@@ -110,28 +110,18 @@ follow, slow-time commands, riding, two meaningful memories, night
 consolidation, mutually exclusive visible adaptations, equipment-gate safety,
 and deterministic journey/Web evidence.
 
+**Living Expedition 02: Small Stable And Species Identity** is implemented and
+closed with owner GO. It proves schema-v2 migration, a compact two-individual
+boat habitat, one active next-sortie selection, Mica's independent sensing role,
+Kite's retained mounted role, optional Reveal Trace evidence, equipment-gate
+safety, and deterministic journey/visual/Web evidence.
+
 ### Committed
 
-**Living Expedition 02: Small Stable And Species Identity** is the next bounded
-milestone. It adds one Veil Cuttle to create exactly two total individuals: Kite
-as the mounted Spark Ray and Mica as a non-mounted sensing partner.
-
-It must prove:
-
-- schema-v1 Spark Ray profiles migrate without identity, memory, or adaptation
-  loss;
-- one compact canonical-boat habitat presents both named individuals;
-- exactly one companion is selected for the next launched sortie;
-- active selection cannot change in open water;
-- species movement, BOND actions, and mounted availability are visibly distinct;
-- Mica's deliberate Reveal Trace action exposes optional ecological evidence
-  without replacing scanner, light, equipment, or access gates;
-- the inactive individual remains visible and meaningful without passive yield,
-  chores, or offscreen simulation; and
-- deterministic migration, rescue, selection, failure, capture, Web, and owner
-  evidence answer the two-individual exit question.
-
-Detailed plan: `docs/current/LIVING_EXPEDITION_02_PLAN.md`.
+No implementation milestone is currently committed. The next audit may create
+one planning decision for Living Expedition 03, but it must define a bounded
+ecological field-role proof before creating implementation issues or adding a
+third species.
 
 ### Directional
 
@@ -161,9 +151,9 @@ habitats, deeper combat, more region production, final art/audio, accessibility,
 controller support, balance, and save hardening. They remain intentionally
 unticketed.
 
-## Committed Milestone Batch
+## Completed Milestone Batch
 
-Freeze one bounded issue batch for Living Expedition 02 in this order:
+Living Expedition 02 completed one bounded issue batch in this order:
 
 1. Lock source, state, habitat, selection, and failure contracts.
 2. Extend catalog/schema validation and migrate profile state to a bounded
@@ -221,8 +211,8 @@ Control/combat decision:
 - Keep current-runtime truth separate from target-game plans.
 - Historical Phase 2 docs remain implementation records, not active direction.
 - Use one focused issue batch and close with GO, HOLD, or bounded correction.
-- Living Expedition 01 received GO; add only the one committed Veil Cuttle before
-  the next player gate.
+- Living Expeditions 01 and 02 received GO; keep Kite and Mica as the complete
+  current roster until a later reviewed plan selects another species.
 - Do not use automation to claim fun, attachment, or replay motivation.
 - Keep #52/#53 deferred unless slice-03 presentation becomes the selected goal.
 - Preserve the 500-line agent-efficiency target without harmful runtime splits.
@@ -233,5 +223,6 @@ Control/combat decision:
 > partners for different expeditions, did the inactive individual still matter
 > at the boat, and did that choice make another day more interesting?
 
-If the result feels like two ability slots, inventory entries, or a generic
-roster, HOLD before creating Living Expedition 03 or a third species.
+The owner supplied GO on the exact verified Living Expedition 02 checkpoint.
+No separate subquestion notes were supplied; the combined verdict and bounded
+limitations are recorded in `docs/current/LIVING_EXPEDITION_02_CLOSEOUT.md`.

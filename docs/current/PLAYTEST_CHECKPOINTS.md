@@ -1,6 +1,6 @@
 # Playtest Checkpoints
 
-Last updated: 2026-08-05
+Last updated: 2026-08-06
 
 ## Purpose
 
@@ -39,7 +39,9 @@ https://joeypshell.github.io/oceangame2/?review=b639dcfeb2e65f8b6e99412b6649c898
 The Pages workflow and independent desktop/mobile checker passed for exact SHA
 `b639dcfeb2e65f8b6e99412b6649c898f8cdd945`. Technical evidence is recorded in
 [Living Expedition 02 Web Verification](LIVING_EXPEDITION_02_WEB_VERIFICATION.md).
-Player-experience acceptance remains the separate owner gate.
+The owner subsequently supplied GO; the result and bounded limitations are
+recorded in [Living Expedition 02 Closeout](LIVING_EXPEDITION_02_CLOSEOUT.md).
+The checkpoint remains a focused regression path rather than the next plan.
 
 ## Living Expedition 01 Replay
 

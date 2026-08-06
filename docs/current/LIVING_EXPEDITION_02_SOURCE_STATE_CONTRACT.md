@@ -1,7 +1,7 @@
 # Living Expedition 02 Source And State Contract
 
-Status: implementation contract for milestone #46; target behavior only until
-the linked issues merge.
+Status: implemented contract for completed milestone #46; owner GO recorded in
+`LIVING_EXPEDITION_02_CLOSEOUT.md`.
 
 ## Purpose
 
