@@ -33,15 +33,13 @@ isolated profile.
 Exact public Web candidate:
 
 ```text
-https://joeypshell.github.io/oceangame2/?review=c0c7b4ef7b295e97e5eb417bbec8555db42ebea4&checkpoint=living_expedition_01_start
+https://joeypshell.github.io/oceangame2/?review=b639dcfeb2e65f8b6e99412b6649c898f8cdd945&checkpoint=living_expedition_02_start
 ```
 
-The latest deployed checkpoint verification remains Living Expedition 01 until
-the Living Expedition 02 exact-Web issue closes. The Pages workflow and
-independent desktop/mobile checker passed for corrected
-exact SHA `c0c7b4ef7b295e97e5eb417bbec8555db42ebea4`. Technical evidence and the
-owner GO are recorded in
-[Living Expedition 01 Technical Review](LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md).
+The Pages workflow and independent desktop/mobile checker passed for exact SHA
+`b639dcfeb2e65f8b6e99412b6649c898f8cdd945`. Technical evidence is recorded in
+[Living Expedition 02 Web Verification](LIVING_EXPEDITION_02_WEB_VERIFICATION.md).
+Player-experience acceptance remains the separate owner gate.
 
 ## Living Expedition 01 Replay
 
