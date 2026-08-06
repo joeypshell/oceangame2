@@ -9,6 +9,7 @@ const RegionalJourneyPresentation := preload("res://scripts/main/regional_journe
 const ScannerConeTargeting := preload("res://scripts/main/scanner_cone_targeting.gd")
 const ScannerCutterJourneyPresentation := preload("res://scripts/main/scanner_cutter_journey_presentation.gd")
 const ScannerFeedbackText := preload("res://scripts/main/scanner_feedback_text.gd")
+const ScannerIdentificationRuntime := preload("res://scripts/main/scanner_identification_runtime.gd")
 const ToolTargetRewardRuntime := preload("res://scripts/main/tool_target_reward_runtime.gd")
 
 const SCANNER_CAPABILITY_ID := ProgressionContract.SCANNER_CAPABILITY_ID
@@ -28,6 +29,7 @@ var _regional_presentation
 var _scanner_targeting
 var _scanner_cutter_presentation
 var _scanner_feedback
+var _identification
 var _tool_target_rewards
 var _last_targeting_report := {}
 var _scanner_use_held := false
@@ -48,7 +50,12 @@ func _init(progression_runtime, persist_profile := true, profile_state = null) -
 	_scanner_targeting = ScannerConeTargeting.new()
 	_scanner_cutter_presentation = ScannerCutterJourneyPresentation.new()
 	_scanner_feedback = ScannerFeedbackText.new(_regional_presentation)
+	_identification = ScannerIdentificationRuntime.new()
 	_tool_target_rewards = ToolTargetRewardRuntime.new(_profile, _expedition)
+
+
+func bind_ecological_identification_sink(completion_sink: Callable) -> void:
+	_identification.bind_completion_sink(completion_sink)
 
 
 func scanner_action(world, player) -> Dictionary:
@@ -64,12 +71,15 @@ func scanner_action(world, player) -> Dictionary:
 	var target_id := str(target.get("id", ""))
 	if str(target.get("scanner_subject_mode", "")) == "identify":
 		_interaction.reset()
-		_mark_identified_source(world, target)
+		var identification: Dictionary = _identification.activate(world, target)
+		var identification_note := str(identification.get("note", ""))
+		if identification_note.is_empty():
+			identification_note = _scanner_feedback.identification_note(target)
 		return _note_result(
-			false,
-			"identified",
-			_scanner_feedback.identification_note(target),
-			{"target_id": target_id, "identified": true}
+			bool(identification.get("changed", false)),
+			str(identification.get("reason", "identified")),
+			identification_note,
+			{"target_id": target_id, "identified": bool(identification.get("identified", false))}
 		)
 	var discovery_id := str(target.get("discovery_id", ""))
 	if _profile.has_completed_discovery(discovery_id):
@@ -97,6 +107,7 @@ func scanner_action(world, player) -> Dictionary:
 		_interaction.reset()
 		_set_target_state(world, target_id, "locked")
 		return _note_result(false, "pressure_required", _pressure_required_note(target))
+	_identification.reset()
 	var activation: Dictionary = _interaction.activate(target)
 	if str(activation.get("state", "")) != "activated":
 		return _note_result(false, "invalid", "Survey signal unavailable")
@@ -117,13 +128,19 @@ func update(world, player, delta: float) -> Dictionary:
 	if bool(commit_result.get("committed", false)):
 		return commit_result
 
-	var active_target_id := str(_interaction.report().get("active_target_id", ""))
+	var identification_target_id: String = str(_identification.active_target_id())
+	var survey_target_id: String = str(_interaction.report().get("active_target_id", ""))
+	var active_target_id: String = identification_target_id if not identification_target_id.is_empty() else survey_target_id
 	if not active_target_id.is_empty() and not _scanner_use_held:
 		cancel_active_interaction(world)
 		return {"state": "canceled", "note": _last_note}
 	var required_mode := "progression" if active_target_id.is_empty() and not _scanner_use_held else ""
 	var target := _target_for_player(world, player, active_target_id, required_mode)
 	if target.is_empty():
+		if not identification_target_id.is_empty():
+			var identification_canceled: Dictionary = _identification.update(world, {}, delta)
+			_last_note = str(identification_canceled.get("note", "Scanner interrupted"))
+			return {"state": "canceled", "note": _last_note}
 		var canceled: Dictionary = _interaction.update({}, delta)
 		if str(canceled.get("state", "")) == "canceled":
 			_last_note = str(canceled.get("note", "Survey interrupted"))
@@ -133,12 +150,17 @@ func update(world, player, delta: float) -> Dictionary:
 
 	var target_id := str(target.get("id", ""))
 	if str(target.get("scanner_subject_mode", "")) == "identify":
-		_mark_identified_source(world, target)
+		var identification: Dictionary = _identification.update(world, target, delta)
+		if identification.is_empty():
+			return {}
+		var identification_note := str(identification.get("note", ""))
+		if identification_note.is_empty():
+			identification_note = _scanner_feedback.identification_note(target)
 		return _note_result(
-			false,
-			"identified",
-			_scanner_feedback.identification_note(target),
-			{"target_id": target_id, "identified": true}
+			bool(identification.get("changed", false)),
+			str(identification.get("reason", "progress")),
+			identification_note,
+			{"target_id": target_id, "identified": bool(identification.get("identified", false))}
 		)
 	var discovery_id := str(target.get("discovery_id", ""))
 	if _profile.has_completed_discovery(discovery_id):
@@ -192,6 +214,7 @@ func update(world, player, delta: float) -> Dictionary:
 func on_map_loaded(world) -> void:
 	_scanner_use_held = false
 	_interaction.reset()
+	_identification.reset()
 	_dependencies.on_map_loaded(world)
 	_refresh_world_targets(world)
 
@@ -199,6 +222,7 @@ func on_map_loaded(world) -> void:
 func on_map_transition(destination_map_id: String) -> Dictionary:
 	_scanner_use_held = false
 	_interaction.reset()
+	_identification.reset()
 	return _expedition.on_map_transition(destination_map_id)
 
 
@@ -216,7 +240,8 @@ func scanner_release(world) -> Dictionary:
 func cancel_active_interaction(world) -> bool:
 	_scanner_use_held = false
 	var active_target_id := str(_interaction.report().get("active_target_id", ""))
-	if active_target_id.is_empty():
+	var identification_canceled: Dictionary = _identification.cancel()
+	if active_target_id.is_empty() and not bool(identification_canceled.get("changed", false)):
 		return false
 	_interaction.reset()
 	_last_note = "Scanner interrupted"
@@ -227,6 +252,7 @@ func cancel_active_interaction(world) -> bool:
 func clear_unbanked(reason: String, world = null) -> Dictionary:
 	_scanner_use_held = false
 	_interaction.reset()
+	_identification.reset()
 	_dependencies.clear_unbanked()
 	_last_result = ""
 	var result: Dictionary = _expedition.clear_pending(reason)
@@ -333,12 +359,14 @@ func record_tool_target_reward(target: Dictionary, world) -> Dictionary:
 
 
 func report() -> Dictionary:
+	var interaction_report: Dictionary = _identification.report() if _identification.is_active() else _interaction.report()
 	return {
 		"scanner_unlocked": has_scanner(),
 		"wallet": _progression_runtime.wallet() if _progression_runtime != null else 0,
 		"profile": _profile.report(),
 		"expedition": _expedition.report(),
-		"interaction": _interaction.report(),
+		"interaction": interaction_report,
+		"identification": _identification.report(),
 		"scanner_use_held": _scanner_use_held,
 		"dependencies": _dependencies.report(),
 		"targeting": _last_targeting_report.duplicate(true),
@@ -409,27 +437,9 @@ func _target_for_player(world, player, target_id := "", required_mode := "") -> 
 	return targeting.get("target", {}) if bool(targeting.get("eligible", false)) else {}
 
 
-func _mark_identified_source(world, target: Dictionary) -> void:
-	if (
-		str(target.get("source_type", "")) == "ecological_trace"
-		and world != null
-		and world.has_method("set_ecological_trace_state")
-	):
-		world.set_ecological_trace_state(str(target.get("source_id", "")), "identified")
-
-
 func _set_target_state(world, target_id: String, state: String) -> void:
 	if world != null and world.has_method("set_survey_target_state"):
 		world.set_survey_target_state(target_id, state)
-
-
-func _at_canonical_boat(world, player) -> bool:
-	return (
-		world != null
-		and player != null
-		and world.has_method("is_inside_boat")
-		and world.is_inside_boat(player.global_position)
-	)
 
 
 func _at_pending_commit_boat(world, player) -> bool:
@@ -477,18 +487,6 @@ func _has_required_pressure_protection(target: Dictionary) -> bool:
 func _pressure_required_note(target: Dictionary) -> String:
 	var clue := str(target.get("clue_label", "")).strip_edges()
 	return clue if not clue.is_empty() else "Abyssal signal | Pressure suit required"
-
-
-func _is_resource_target(target: Dictionary) -> bool:
-	return str(target.get("target_type", "")) == RESOURCE_TARGET_TYPE
-
-
-func _is_regional_target(target: Dictionary) -> bool:
-	return str(target.get("target_type", "")) == REGIONAL_TARGET_TYPE
-
-
-func _is_finding_target(target: Dictionary) -> bool:
-	return _is_resource_target(target) or _is_regional_target(target)
 
 
 func _pending_metadata(target: Dictionary) -> Dictionary:

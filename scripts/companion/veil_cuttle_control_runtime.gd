@@ -11,6 +11,7 @@ var _player
 var _companion
 var _status_sink := Callable()
 var _control_allowed := Callable()
+var _ecology_observation_sink := Callable()
 var _palette
 var _trace := VeilCuttleTraceRuntime.new()
 var _drift_lens := VeilCuttleDriftLensRuntime.new()
@@ -41,6 +42,10 @@ func bind_interface(status_sink: Callable, control_allowed: Callable) -> void:
 	_drift_lens.bind_interface(status_sink)
 
 
+func bind_ecology_observation_sink(observation_sink: Callable) -> void:
+	_ecology_observation_sink = observation_sink
+
+
 func bind_map(world, player, companion, moving_hazards = null) -> void:
 	clear_map()
 	_world = world
@@ -53,6 +58,7 @@ func bind_map(world, player, companion, moving_hazards = null) -> void:
 
 func clear_map() -> void:
 	reset_control("map_clear")
+	_set_ecology_interest(false)
 	_trace.clear_map()
 	_drift_lens.clear_map()
 	_world = null
@@ -184,6 +190,7 @@ func _process(delta: float) -> void:
 		return
 	if _command_mode:
 		_sync_command_preview()
+	_set_ecology_interest(not _command_mode and str(_trace.action().get("reason", "")) == "ready")
 	_refresh_presentation()
 
 
@@ -196,7 +203,12 @@ func _execute_command(command_id: String, command: Dictionary) -> Dictionary:
 		_notify("Mica recalled")
 		return {"changed": true, "reason": "recalled", "mounted": false}
 	if command_id == VeilCuttleTraceRuntime.ACTION_ID:
-		return _trace.dispatch(command_id)
+		var trace_result: Dictionary = _trace.dispatch(command_id)
+		if bool(trace_result.get("changed", false)) and _ecology_observation_sink.is_valid():
+			var observation: Dictionary = _ecology_observation_sink.call(str(trace_result.get("target_id", "")))
+			trace_result["observation"] = observation
+			_notify(str(observation.get("note", "")))
+		return trace_result
 	if command_id == VeilCuttleDriftLensRuntime.ACTION_ID:
 		return _drift_lens.dispatch(command_id)
 	return _deny("command_unavailable")
@@ -254,6 +266,11 @@ func _restore_time_scale() -> void:
 		return
 	Engine.time_scale = _prior_time_scale
 	_owns_time_scale = false
+
+
+func _set_ecology_interest(active: bool) -> void:
+	if _companion != null and is_instance_valid(_companion) and _companion.has_method("set_ecology_interest"):
+		_companion.set_ecology_interest(active)
 
 
 func _control_is_allowed() -> bool:

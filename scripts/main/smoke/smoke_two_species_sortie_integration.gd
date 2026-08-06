@@ -116,7 +116,17 @@ func _test_commit_and_species_sorties(world, player, profile, rescue, mica_sourc
 	var sortie := CompanionSortieRuntime.new()
 	get_root().add_child(sortie)
 	sortie.bind_interface(null, Callable(self, "_record_status"), Callable(), Callable(self, "_control_allowed"))
-	sortie.bind_map(world, player, profile, Callable(self, "_has_no_upgrade"), false)
+	sortie.bind_map(
+		world,
+		player,
+		profile,
+		Callable(self, "_has_no_upgrade"),
+		false,
+		false,
+		null,
+		null,
+		[BLOOM_CONDITION_ID]
+	)
 	var habitat: Dictionary = sortie.report().get("habitat", {})
 	_expect(int(habitat.get("individual_count", 0)) == 2, "boat habitat did not project both committed individuals")
 	_expect(sortie.handle_input(_action_event("companion_command")), "BOND did not open two-partner habitat selection")
@@ -184,14 +194,22 @@ func _test_commit_and_species_sorties(world, player, profile, rescue, mica_sourc
 
 func _test_scanner_identification(world, player, profile, guidance, sortie) -> void:
 	var survey := AnomalySurveyRuntime.new(null, false, profile)
+	survey.bind_ecological_identification_sink(Callable(sortie, "observe_ecological_identification"))
 	survey.on_map_loaded(world)
 	var profile_before: Dictionary = profile.companion_report()
-	var identified: Dictionary = survey.scanner_action(world, player)
-	_expect(str(identified.get("reason", "")) == "identified", "scanner did not identify Mica's revealed trace: %s" % [identified])
+	var activated: Dictionary = survey.scanner_action(world, player)
+	_expect(str(activated.get("reason", "")) == "activated", "scanner did not begin held migration identification: %s" % [activated])
+	var partial: Dictionary = survey.update(world, player, 0.75)
+	_expect(str(partial.get("reason", "")) == "progress", "held migration identification did not progress")
+	var identified: Dictionary = survey.update(world, player, 0.8)
+	_expect(str(identified.get("reason", "")) == "identified", "scanner did not complete Mica's revealed trace: %s" % [identified])
 	_expect(_trace_state(world) == "identified", "scanner result did not mark the transient trace identified")
 	_expect(profile.companion_report() == profile_before, "optional trace identification changed companion progression")
 	var text: String = guidance.objective_text(world, player, profile, sortie, DayState.new())
-	_expect(text.find("No cargo or access reward") != -1, "identified trace guidance implied a progression reward")
+	_expect(text.find("Return to the surface boat") != -1, "identified trace guidance did not explain pending boat return")
+	var ecology: Dictionary = sortie.memory_report().get("ecology", {})
+	_expect(str(ecology.get("pending_observation_id", "")) == "southwest_bloom_migration_observation", "integrated scanner result did not create the pending Mica observation")
+	sortie.discard_uncommitted_memories("smoke_cleanup")
 
 
 func _test_schema_v1_migration() -> void:

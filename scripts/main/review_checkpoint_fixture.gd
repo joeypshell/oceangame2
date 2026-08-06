@@ -9,12 +9,14 @@ const EXPANSION_17_START := "expansion_17_start"
 const EXPANSION_18_START := "expansion_18_start"
 const LIVING_EXPEDITION_01_START := "living_expedition_01_start"
 const LIVING_EXPEDITION_02_START := "living_expedition_02_start"
+const LIVING_EXPEDITION_03_START := "living_expedition_03_start"
 const EXPANSION_14_MAP_PATH := "res://maps/production_level_01.greybox.json"
 const EXPANSION_16_MAP_PATH := EXPANSION_14_MAP_PATH
 const EXPANSION_17_MAP_PATH := EXPANSION_14_MAP_PATH
 const EXPANSION_18_MAP_PATH := EXPANSION_14_MAP_PATH
 const LIVING_EXPEDITION_01_MAP_PATH := EXPANSION_14_MAP_PATH
 const LIVING_EXPEDITION_02_MAP_PATH := EXPANSION_14_MAP_PATH
+const LIVING_EXPEDITION_03_MAP_PATH := EXPANSION_14_MAP_PATH
 const PRIOR_PROJECT_IDS := [
 	ExpansionProfileState.PROPULSION_FINS_PROJECT_ID,
 	ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID,
@@ -100,6 +102,9 @@ const LIVING_EXPEDITION_01_PRIOR_DISCOVERY_IDS := EXPANSION_18_PRIOR_DISCOVERY_I
 ]
 const LIVING_EXPEDITION_02_PRIOR_PROJECT_IDS := LIVING_EXPEDITION_01_PRIOR_PROJECT_IDS
 const LIVING_EXPEDITION_02_PRIOR_DISCOVERY_IDS := LIVING_EXPEDITION_01_PRIOR_DISCOVERY_IDS
+const LIVING_EXPEDITION_03_PRIOR_PROJECT_IDS := LIVING_EXPEDITION_02_PRIOR_PROJECT_IDS
+const LIVING_EXPEDITION_03_PRIOR_DISCOVERY_IDS := LIVING_EXPEDITION_02_PRIOR_DISCOVERY_IDS
+const MICA_INDIVIDUAL_ID := "veil_cuttle_juvenile_01"
 const REBREATHER_RECIPE := {
 	ExpansionProfileState.TITANIUM_MATERIAL_ID: 1,
 	ExpansionProfileState.RUBBER_MATERIAL_ID: 1,
@@ -116,6 +121,7 @@ static func is_supported(checkpoint_id: String) -> bool:
 		EXPANSION_18_START,
 		LIVING_EXPEDITION_01_START,
 		LIVING_EXPEDITION_02_START,
+		LIVING_EXPEDITION_03_START,
 	]
 
 
@@ -150,7 +156,7 @@ static func apply(checkpoint_id: String, profile) -> Dictionary:
 		var banked: Dictionary = profile.bank_tool_target(target_id, false)
 		if not bool(banked.get("changed", false)):
 			return _result(false, checkpoint_id, "recorder_fixture_failed", banked)
-	if checkpoint_id == LIVING_EXPEDITION_02_START:
+	if checkpoint_id in [LIVING_EXPEDITION_02_START, LIVING_EXPEDITION_03_START]:
 		var committed: Dictionary = profile.commit_companion_rescue(
 			CompanionProfileState.FIRST_PROOF_INDIVIDUAL_ID,
 			"spark_ray",
@@ -159,6 +165,18 @@ static func apply(checkpoint_id: String, profile) -> Dictionary:
 		)
 		if not bool(committed.get("changed", false)):
 			return _result(false, checkpoint_id, "kite_fixture_failed", committed)
+	if checkpoint_id == LIVING_EXPEDITION_03_START:
+		var mica: Dictionary = profile.commit_companion_rescue(
+			MICA_INDIVIDUAL_ID,
+			"veil_cuttle",
+			"Mica",
+			false
+		)
+		if not bool(mica.get("changed", false)):
+			return _result(false, checkpoint_id, "mica_fixture_failed", mica)
+		var selected: Dictionary = profile.select_active_companion(MICA_INDIVIDUAL_ID, false)
+		if not bool(selected.get("changed", false)):
+			return _result(false, checkpoint_id, "mica_selection_failed", selected)
 	if not recipe.is_empty():
 		var deposit: Dictionary = profile.deposit_materials(recipe, false)
 		if not bool(deposit.get("changed", false)):
@@ -179,10 +197,16 @@ static func apply(checkpoint_id: String, profile) -> Dictionary:
 	elif checkpoint_id == LIVING_EXPEDITION_02_START:
 		result["active_objective_id"] = "veil_cuttle_rescue"
 		result["active_objective_label"] = "Mica rescue"
+	elif checkpoint_id == LIVING_EXPEDITION_03_START:
+		result["active_objective_id"] = "southwest_bloom_migration"
+		result["active_objective_label"] = "Southwest Jellyfish Bloom"
+		result["day_number"] = 2
 	return _result(true, checkpoint_id, "ready", result)
 
 
 static func _project_ids_for(checkpoint_id: String) -> Array:
+	if checkpoint_id == LIVING_EXPEDITION_03_START:
+		return LIVING_EXPEDITION_03_PRIOR_PROJECT_IDS
 	if checkpoint_id == LIVING_EXPEDITION_02_START:
 		return LIVING_EXPEDITION_02_PRIOR_PROJECT_IDS
 	if checkpoint_id == LIVING_EXPEDITION_01_START:
@@ -197,6 +221,8 @@ static func _project_ids_for(checkpoint_id: String) -> Array:
 
 
 static func _discovery_ids_for(checkpoint_id: String) -> Array:
+	if checkpoint_id == LIVING_EXPEDITION_03_START:
+		return LIVING_EXPEDITION_03_PRIOR_DISCOVERY_IDS
 	if checkpoint_id == LIVING_EXPEDITION_02_START:
 		return LIVING_EXPEDITION_02_PRIOR_DISCOVERY_IDS
 	if checkpoint_id == LIVING_EXPEDITION_01_START:
@@ -211,14 +237,14 @@ static func _discovery_ids_for(checkpoint_id: String) -> Array:
 
 
 static func _recipe_for(checkpoint_id: String) -> Dictionary:
-	if checkpoint_id in [EXPANSION_17_START, EXPANSION_18_START, LIVING_EXPEDITION_01_START, LIVING_EXPEDITION_02_START]:
+	if checkpoint_id in [EXPANSION_17_START, EXPANSION_18_START, LIVING_EXPEDITION_01_START, LIVING_EXPEDITION_02_START, LIVING_EXPEDITION_03_START]:
 		return {}
 	return REBREATHER_RECIPE if checkpoint_id == EXPANSION_16_START else STABILIZER_RECIPE
 
 
 static func _banked_target_ids_for(checkpoint_id: String) -> Array:
 	var target_ids: Array = [ExpansionProfileState.SOUTHEAST_WRECK_RECORDER_ID]
-	if checkpoint_id in [EXPANSION_17_START, EXPANSION_18_START, LIVING_EXPEDITION_01_START, LIVING_EXPEDITION_02_START]:
+	if checkpoint_id in [EXPANSION_17_START, EXPANSION_18_START, LIVING_EXPEDITION_01_START, LIVING_EXPEDITION_02_START, LIVING_EXPEDITION_03_START]:
 		target_ids.append(ExpansionProfileState.FAR_WEST_WRECK_RECORDER_ID)
 	return target_ids
 
@@ -294,6 +320,19 @@ static func _profile_is_empty(profile) -> bool:
 
 
 static func _boundary_is_ready(checkpoint_id: String, profile) -> bool:
+	if checkpoint_id == LIVING_EXPEDITION_03_START:
+		var companion: Dictionary = profile.companion_report()
+		var active: Dictionary = companion.get("individual", {})
+		return (
+			profile.has_completed_project(ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID)
+			and profile.has_capability(ExpansionProfileState.SURVEY_SCANNER_CAPABILITY_ID)
+			and (companion.get("individuals", []) as Array).size() == 2
+			and str(companion.get("active_individual_id", "")) == MICA_INDIVIDUAL_ID
+			and str(active.get("species_id", "")) == "veil_cuttle"
+			and (active.get("earned_memory_ids", []) as Array).is_empty()
+			and str(active.get("selected_adaptation_id", "")).is_empty()
+			and profile.material_inventory().is_empty()
+		)
 	if checkpoint_id == LIVING_EXPEDITION_02_START:
 		var companion: Dictionary = profile.companion_report()
 		return (

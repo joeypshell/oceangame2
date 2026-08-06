@@ -25,6 +25,7 @@ var _trace_cue_seconds := 0.0
 var _trace_path_points := PackedVector2Array()
 var _trace_current_center := Vector2.ZERO
 var _trace_movement_direction := Vector2.ZERO
+var _ecology_interest := false
 
 
 func sync(state: String, facing_sign: float, path_points: Array) -> void:
@@ -36,6 +37,13 @@ func sync(state: String, facing_sign: float, path_points: Array) -> void:
 
 func set_identity(callsign: String) -> void:
 	_callsign = callsign.strip_edges() if not callsign.strip_edges().is_empty() else "Mica"
+	queue_redraw()
+
+
+func set_ecology_interest(active: bool) -> void:
+	if _ecology_interest == active:
+		return
+	_ecology_interest = active
 	queue_redraw()
 
 
@@ -94,7 +102,8 @@ func report() -> Dictionary:
 		"callsign": _callsign,
 		"state": _state,
 		"facing_sign": _facing_sign,
-		"investigation_cue_visible": _state == STATE_INVESTIGATE,
+		"investigation_cue_visible": _state == STATE_INVESTIGATE or _ecology_interest,
+		"ecology_interest_visible": _ecology_interest,
 		"recovery_path_visible": _state in [STATE_SEPARATED, STATE_RECOVERY] and not _path_points.is_empty(),
 		"trace_state": _trace_state,
 		"trace_direction": _trace_direction,
@@ -160,7 +169,7 @@ func _draw_cuttle() -> void:
 
 
 func _draw_investigation_cue() -> void:
-	if _state != STATE_INVESTIGATE:
+	if _state != STATE_INVESTIGATE and not _ecology_interest:
 		return
 	var center := Vector2(24.0 * _facing_sign, -18.0)
 	draw_arc(center, 6.0 + sin(_pulse_seconds * TAU), 0.0, TAU, 18, COLOR_TRACE, 1.5, true)
