@@ -331,6 +331,26 @@ def render_svg(map_data: dict) -> str:
         )
         parts.append(text(cx + 34, cy - 20, rescue["id"], 22))
 
+    for habitat in map_data.get("companion_habitats", []):
+        cx, cy = record_center(habitat, tile_size)
+        parts.append(
+            f'<rect x="{cx - 24}" y="{cy - 16}" width="48" height="32" '
+            f'fill="none" stroke="{COLORS["adaptation"]}" stroke-width="6"/>'
+        )
+        parts.append(text(cx + 30, cy - 18, habitat["id"], 22))
+
+    for trace in map_data.get("ecological_traces", []):
+        cx, cy = record_center(trace, tile_size)
+        radius = float(trace.get("reveal_radius_tiles", 1)) * tile_size
+        parts.append(
+            f'<circle cx="{cx}" cy="{cy}" r="{radius}" fill="none" '
+            f'stroke="{COLORS["creature"]}" stroke-width="5" stroke-dasharray="12 10"/>'
+        )
+        parts.append(
+            f'<circle cx="{cx}" cy="{cy}" r="16" fill="{COLORS["creature"]}" fill-opacity="0.35"/>'
+        )
+        parts.append(text(cx + 24, cy - 24, trace["id"], 22))
+
     for context in map_data.get("companion_contexts", []):
         if context.get("context_kind") != "mounted_route_review":
             continue
@@ -386,7 +406,7 @@ def render_svg(map_data: dict) -> str:
             f'<rect x="0" y="0" width="{width_px}" height="{height_px}" fill="url(#grid)"/>',
             text(24, 42, f'{map_data["id"]} - greybox source preview', 30),
             text(24, height_px - 42, "cyan=open | gray=solid | tan=extraction | orange=boat/tool | green=start | yellow=salvage | teal=material/survey", 22),
-            text(24, height_px - 16, "red=hazard | pink=moving | coral=hostile | lime=biological | purple=container | cyan/gold=creature proof", 22),
+            text(24, height_px - 16, "red=hazard | pink=moving | coral=hostile | lime=biological | purple=container | cyan/gold=creature/rescue/habitat/trace", 22),
             "</svg>",
             "",
         ]

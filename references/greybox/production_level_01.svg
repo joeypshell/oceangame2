@@ -572,6 +572,14 @@
 <circle cx="3792.0" cy="1328.0" r="27" fill="#66f5ff" fill-opacity="0.24" stroke="#075d68" stroke-width="6"/>
 <path d="M 3774.0 1328.0 Q 3792.0 1310.0 3810.0 1328.0 Q 3792.0 1346.0 3774.0 1328.0" fill="none" stroke="#66f5ff" stroke-width="5"/>
 <text x="3826.0" y="1308.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">spark_ray_rescue_01</text>
+<circle cx="1232.0" cy="1584.0" r="27" fill="#66f5ff" fill-opacity="0.24" stroke="#075d68" stroke-width="6"/>
+<path d="M 1214.0 1584.0 Q 1232.0 1566.0 1250.0 1584.0 Q 1232.0 1602.0 1214.0 1584.0" fill="none" stroke="#66f5ff" stroke-width="5"/>
+<text x="1266.0" y="1564.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">veil_cuttle_rescue_01</text>
+<rect x="3032.0" y="128.0" width="48" height="32" fill="none" stroke="#ffd76a" stroke-width="6"/>
+<text x="3086.0" y="126.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">companion_habitat_01</text>
+<circle cx="1680.0" cy="1744.0" r="192.0" fill="none" stroke="#66f5ff" stroke-width="5" stroke-dasharray="12 10"/>
+<circle cx="1680.0" cy="1744.0" r="16" fill="#66f5ff" fill-opacity="0.35"/>
+<text x="1704.0" y="1720.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">veil_cuttle_trace_01</text>
 <polyline points="3056.0,272.0 3152.0,464.0 3280.0,624.0 3472.0,720.0" fill="none" stroke="#66f5ff" stroke-width="7" stroke-dasharray="18 10"/>
 <circle cx="3056.0" cy="272.0" r="9" fill="#66f5ff" stroke="#075d68" stroke-width="4"/>
 <circle cx="3152.0" cy="464.0" r="9" fill="#66f5ff" stroke="#075d68" stroke-width="4"/>
@@ -590,5 +598,5 @@
 <rect x="0" y="0" width="5056" height="5152" fill="url(#grid)"/>
 <text x="24.0" y="42.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="30" paint-order="stroke" stroke="#10384a" stroke-width="4">production_level_01 - greybox source preview</text>
 <text x="24.0" y="5110.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">cyan=open | gray=solid | tan=extraction | orange=boat/tool | green=start | yellow=salvage | teal=material/survey</text>
-<text x="24.0" y="5136.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">red=hazard | pink=moving | coral=hostile | lime=biological | purple=container | cyan/gold=creature proof</text>
+<text x="24.0" y="5136.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">red=hazard | pink=moving | coral=hostile | lime=biological | purple=container | cyan/gold=creature/rescue/habitat/trace</text>
 </svg>

@@ -7,6 +7,8 @@ from typing import Any
 
 COLLECTION_KINDS = {
     "creature_rescues": "creature_rescue",
+    "companion_habitats": "companion_habitat",
+    "ecological_traces": "ecological_trace",
     "companion_contexts": "companion_context",
     "creature_memory_opportunities": "creature_memory",
     "creature_adaptation_payoffs": "creature_payoff",
@@ -86,6 +88,9 @@ def add_creature_edges(graph: Any, map_data: dict[str, Any]) -> None:
         str(item.get("individual_id", "")): item
         for item in _items(map_data, "creature_rescues")
     }
+    rescue_ids_by_species: dict[str, list[str]] = {}
+    for individual_id, rescue in rescue_by_individual.items():
+        rescue_ids_by_species.setdefault(str(rescue.get("species_id", "")), []).append(individual_id)
     for collection, kind in COLLECTION_KINDS.items():
         for item in _items(map_data, collection):
             item_id = str(item.get("id", ""))
@@ -99,10 +104,23 @@ def add_creature_edges(graph: Any, map_data: dict[str, Any]) -> None:
                 graph.add_edge(individual, key, "requires", hard=True, note="committed rescue")
                 graph.add_edge(key, individual, "unlocks")
                 continue
+            if kind == "companion_habitat":
+                _requires(graph, key, str(item.get("entry_id", "")), map_id, "canonical boat")
+                for individual_id in _ids(item.get("individual_ids")):
+                    graph.add_edge(key, graph.resolve(individual_id), "houses")
+                continue
             individual_id = str(item.get("individual_id", ""))
-            if not individual_id and len(rescue_by_individual) == 1:
-                individual_id = next(iter(rescue_by_individual))
+            species_individuals = rescue_ids_by_species.get(str(item.get("species_id", "")), [])
+            if not individual_id and len(species_individuals) == 1:
+                individual_id = species_individuals[0]
             _requires(graph, key, individual_id, note="active companion")
+            if kind == "ecological_trace":
+                _requires(
+                    graph,
+                    key,
+                    str(item.get("scanner_capability_id", "")),
+                    note="trace identification",
+                )
             for access_id in _ids(item.get("required_access_ids")):
                 _requires(graph, key, access_id, note="equipment authority")
             _requires(graph, key, str(item.get("required_adaptation_id", "")), note="selected adaptation")
