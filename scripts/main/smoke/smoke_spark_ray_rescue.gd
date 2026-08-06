@@ -77,11 +77,16 @@ func _run() -> void:
 	await physics_frame
 
 	var rescues: Array = world.get_creature_rescues()
-	_expect(rescues.size() == 1, "full-level source did not expose exactly one rescue")
-	if rescues.is_empty():
+	_expect(rescues.size() == 2, "full-level source did not expose the bounded two-rescue set")
+	var rescue := {}
+	for candidate in rescues:
+		if str(candidate.get("id", "")) == RESCUE_ID:
+			rescue = candidate
+			break
+	_expect(not rescue.is_empty(), "full-level source omitted the Spark Ray rescue")
+	if rescue.is_empty():
 		_finish(world, player, null, null)
 		return
-	var rescue: Dictionary = rescues[0]
 	_expect(str(rescue.get("id", "")) == RESCUE_ID, "source rescue id drifted")
 	_expect(str(rescue.get("rescue_kind", "")) == "physical_aid", "source rescue stopped being physical aid")
 	_expect(str(rescue.get("required_capability_id", "")) == CUTTER_ID, "source rescue lost its Cutter requirement")
