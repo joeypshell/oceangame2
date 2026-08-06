@@ -50,7 +50,7 @@ Expansion 17 Wreck Network Triangulation is complete with owner GO through #1167
 
 Expansion 18 implements one exceptional `transfer_hub_interior_01` destination reached by swimming through the normal full level to a physical entrance. Its source/state contract, generated maps, continuous sortie, existing-cutter core recovery, deterministic evidence, and exact public build remain valid regression surfaces. It receives no player-experience GO and no further bounded correction pass.
 
-The active direction is one bonded active companion whose credible species roles and meaningful expedition experiences shape real-time independent or mounted play. Living Expedition 01 implements and owner-approves the juvenile Spark Ray rescue, riding, BOND palette, two memory paths, night choice, and independent/mounted payoff. Living Expedition 02 also has owner GO: Kite and Mica now occupy one compact canonical-boat habitat, one is selected for each launched sortie, and Mica's independent sensing role contrasts with Kite's mounted role. Diver equipment retains hard geographic access; companions cannot bypass it. No later implementation milestone is currently committed.
+The active direction is one bonded active companion whose credible species roles and meaningful expedition experiences shape real-time independent or mounted play. Living Expedition 01 implements and owner-approves the juvenile Spark Ray rescue, riding, BOND palette, two memory paths, night choice, and independent/mounted payoff. Living Expedition 02 also has owner GO: Kite and Mica now occupy one compact canonical-boat habitat, one is selected for each launched sortie, and Mica's independent sensing role contrasts with Kite's mounted role. Diver equipment retains hard geographic access; companions cannot bypass it. Living Expedition 03 is selected as one bounded Mica/jellyfish ecological field-role proof.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -106,7 +106,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
 - Latest owner decision: Living Expedition 02 received GO on exact reviewed runtime `b639dcf`; no additional correction notes were supplied
 - Latest completed direction: milestone #46 Living Expedition 02 Small Stable And Species Identity, implemented as #1253-#1262
-- Next direction boundary: a separate planning decision may define Living Expedition 03 ecological field roles; no implementation batch is committed
+- Selected next direction: `docs/current/LIVING_EXPEDITION_03_PLAN.md` defines one Mica/jellyfish ecological observation, boat-committed memory, night consolidation, and next-sortie Drift Lens proof; create only that scoped implementation milestone
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
 - Latest source contract: `docs/current/OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`
 - Latest visual decision: Living Expedition focused captures are generated review evidence only; all six configured accepted baseline sheets remain pixel-stable
@@ -394,7 +394,7 @@ Current issue state as of 2026-08-06:
 
 ## Recommended Next Work
 
-Living Expedition 02 is complete. The next audit should create only the planning decision needed to define a bounded Living Expedition 03 ecological field-role proof. Do not create its implementation batch, add a third species, or broaden the stable until that plan names its goal, ownership boundaries, non-goals, and player exit question. Keep #52/#53 deferred.
+Living Expedition 02 is complete and Living Expedition 03 is selected in `LIVING_EXPEDITION_03_PLAN.md`. Create and resolve only its bounded implementation milestone: Mica reveals the existing southwest jellyfish migration, the Scanner identifies it, canonical-boat return commits one exact-once memory, and night consolidation adds the deliberate Drift Lens field skill. Do not add a third species, change topology, disable hazards, broaden the stable, or replace equipment access. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 

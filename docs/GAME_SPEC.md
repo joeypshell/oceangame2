@@ -147,9 +147,10 @@ habitats, low counts, and non-circular dependencies.
 
 ### Stable And Individual History
 
-The implemented first proof has one individual. The next bounded milestone adds
-one Veil Cuttle so a compact boat habitat can present exactly two individuals
-with one active companion selected per launched expedition.
+The implemented stable has Kite the Spark Ray and Mica the Veil Cuttle in one
+compact boat habitat, with exactly one active companion selected per launched
+expedition. The selected next proof deepens Mica's ecological field role instead
+of adding another individual.
 
 The game should preserve individual names/callsigns, temperament, memories,
 adaptations, and important history. Large storage catalogs, breeding, fusion,
@@ -233,15 +234,19 @@ The repository currently implements:
 - one persistent Spark Ray individual with rescue, follow, BOND slow-time,
   committed-bond riding, two exact-once memories, night consolidation, and two
   mutually exclusive independent/mounted adaptations
+- one persistent Veil Cuttle individual with physical rescue, compact shared
+  boat habitat, next-sortie active selection, independent follow, and a
+  deliberate optional Reveal Trace handoff to the Scanner
 - deterministic validators, progression audit, smokes, captures, baselines, and
   public Web deployment
 
 The repository does not yet implement:
 
-- a bounded multi-individual profile or compact boat habitat
-- a second species, active-companion selection between individuals, or inactive
-  habitat presentation
-- generalized species runtime beyond the focused Spark Ray owners
+- a committed ecological observation, memory, or adaptation for Mica
+- a field skill that interprets real authored organism behavior across more than
+  one context
+- generalized species runtime beyond the focused Spark Ray and Veil Cuttle
+  owners
 - scalable creature art, animation, audio, behavior, or combat architecture
 
 Current runtime truth is documented in `docs/current/PROJECT_CONTEXT.md` and
@@ -267,8 +272,8 @@ Current runtime truth is documented in `docs/current/PROJECT_CONTEXT.md` and
 - giant creature roster or storage UI
 - turn-based three-creature party combat
 - more than one active expedition companion at a time
-- a third species or broad stable-management surface before the two-individual
-  proof receives GO
+- a third species or broad stable-management surface before the selected Mica
+  ecological field-role proof receives GO
 - breeding, fusion, genes, eggs, or inheritance
 - feeding chores, hidden loyalty, lifespan, forced retirement, or creature death
 - generalized ecosystem simulation
@@ -280,9 +285,9 @@ Current runtime truth is documented in `docs/current/PROJECT_CONTEXT.md` and
 
 The next proof succeeds when the player can answer yes:
 
-> Did choosing between Kite and Mica feel like choosing two recognizable
-> partners for different expeditions, did the inactive individual still matter
-> at the boat, and did that choice make another day more interesting?
+> Did Mica help you notice and understand a living migration that the Scanner
+> alone would not have found, and did turning that shared observation into a
+> useful next-day field skill make you want to choose Mica again?
 
-If not, add no third species. Correct identity, selection, and boat presence
-before expanding the roster.
+If not, add no third species. Correct the ecological relationship, observation
+journey, or practical adaptation before expanding the roster.

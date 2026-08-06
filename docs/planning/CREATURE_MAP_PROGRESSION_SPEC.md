@@ -2,9 +2,9 @@
 
 Date: 2026-08-05
 
-Status: Active source/planning contract. Living Expedition 01 implements the
-first rescue, memory, and payoff relationships; later habitat/species work must
-continue through the source pipeline.
+Status: Active source/planning contract. Living Expeditions 01 and 02 implement
+two rescues, one compact habitat, Spark Ray memory/payoff relationships, and one
+optional Veil Cuttle trace through the source pipeline.
 
 ## Purpose
 
@@ -195,6 +195,7 @@ Before accepting source changes:
 - Do not use mounted speed, size, or collision to bypass a diver capability gate.
 - Do not use a companion ability as an unexplained colored lock.
 - Do not add random required spawns.
-- Add only the committed Veil Cuttle during Living Expedition 02; do not add a third species before its owner gate.
+- Keep Kite and Mica as the complete roster during Living Expedition 03; do not
+  add a third species before the ecological field-role owner gate.
 - Do not change terrain merely to make the creature system easier to stage.
 - Keep #52/#53 deferred unless slice-03 presentation is deliberately selected.

@@ -4,7 +4,7 @@
 
 The current project is a Godot 4.7 side-view ocean expedition foundation with source-driven maps, terrain, validation, captures, gameplay, and Web deployment.
 
-The active product roadmap is `docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md`; `docs/planning/REAL_TIME_CREATURE_PARTNERSHIP_DIRECTION.md` owns the selected independent/mounted control decision, and `OCEANGAME_PHASE_2_ROADMAP.md` records the completed foundation. Expansion 18's Transfer Hub runtime remains an implemented regression surface after strategic player-experience HOLD. Living Expedition 01 has focused Spark Ray rescue, follow, control, memory, night-choice, adaptation, and journey-evidence owners and is complete with exact-Web evidence and owner GO. `LIVING_EXPEDITION_02_PLAN.md` selects the next bounded profile, habitat, and second-species extension; none of that runtime exists yet.
+The active product roadmap is `docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md`; `docs/planning/REAL_TIME_CREATURE_PARTNERSHIP_DIRECTION.md` owns the selected independent/mounted control decision, and `OCEANGAME_PHASE_2_ROADMAP.md` records the completed foundation. Expansion 18's Transfer Hub runtime remains an implemented regression surface after strategic player-experience HOLD. Living Expeditions 01 and 02 are complete with exact-Web evidence and owner GO: focused owners now cover Spark Ray rescue/adaptation plus a bounded two-individual profile, boat habitat, active selection, and Veil Cuttle Reveal Trace. `LIVING_EXPEDITION_03_PLAN.md` selects the next Mica ecological-observation and Drift Lens extension; that runtime does not exist yet.
 
 ## Source Of Truth
 

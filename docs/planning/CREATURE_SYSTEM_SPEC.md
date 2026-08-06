@@ -2,8 +2,9 @@
 
 Date: 2026-08-05
 
-Status: Active planning contract. Living Expedition 01 implements the focused
-Spark Ray runtime; broader multi-individual/species behavior remains planned.
+Status: Active planning contract. Living Expeditions 01 and 02 implement the
+focused Spark Ray and Veil Cuttle runtimes, bounded two-individual profile,
+compact habitat, and one active next-sortie selection.
 
 ## Purpose
 
@@ -17,10 +18,10 @@ into tools, quest rewards, or unvalidated state inside `main.gd`.
 
 ## Foundational Rules
 
-- The implemented first proof has one rescued individual and one active
-  companion slot.
-- The next proof adds exactly one contrasting individual and keeps the boat
-  habitat small enough that both remain recognizable.
+- The implemented roster has exactly two rescued individuals, one compact boat
+  habitat, and one active companion slot per launched sortie.
+- The selected next proof deepens Mica's ecological sensing and adaptation; it
+  does not add another individual or enlarge the habitat.
 - Acquisition begins through observation, aid, rescue, or trust, not an abstract
   capture device.
 - Species provide a body plan, instincts, possible memories, adaptations, and
@@ -36,7 +37,7 @@ into tools, quest rewards, or unvalidated state inside `main.gd`.
 
 ## Species And Individual State
 
-A future species definition should provide immutable data such as:
+A species definition provides immutable data such as:
 
 - `species_id`
 - display name and short ecological description
