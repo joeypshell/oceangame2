@@ -11,6 +11,7 @@ const CONTACT_KNOCKBACK_FORCE := 325.0
 const CONTACT_DISRUPTION_SECONDS := 0.45
 const WEAPON_HIT_RECOIL_PX := 44.0
 const WEAPON_HIT_REACTION_SECONDS := 0.35
+const SUPPORT_INTERRUPT_RECOIL_PX := 84.0
 
 var _states := {}
 var _defeated_ids := {}
@@ -53,19 +54,39 @@ func attack_target(
 	range_px: float,
 	half_angle_degrees := 35.0
 ) -> Dictionary:
+	var facing := 1.0 if facing_sign >= 0.0 else -1.0
+	return directional_target(
+		player_position,
+		Vector2(facing, 0.0),
+		range_px,
+		half_angle_degrees
+	)
+
+
+func directional_target(
+	origin: Vector2,
+	direction: Vector2,
+	range_px: float,
+	half_angle_degrees := 35.0,
+	target_id := ""
+) -> Dictionary:
 	var nearest := {}
 	var nearest_distance := maxf(0.0, range_px)
-	var facing := 1.0 if facing_sign >= 0.0 else -1.0
+	var aim_direction := direction.normalized()
+	if aim_direction == Vector2.ZERO:
+		return nearest
 	var minimum_forward_dot := cos(deg_to_rad(clampf(half_angle_degrees, 0.0, 90.0)))
 	for hostile_id in _sorted_state_ids():
+		if not target_id.is_empty() and hostile_id != target_id:
+			continue
 		var state: Dictionary = _states[hostile_id]
 		if str(state.get("phase", "")) == PHASE_DEFEATED:
 			continue
-		var offset: Vector2 = state.get("position", Vector2.ZERO) - player_position
+		var offset: Vector2 = state.get("position", Vector2.ZERO) - origin
 		var distance := offset.length()
 		if distance > range_px:
 			continue
-		if distance > 0.01 and offset.normalized().dot(Vector2(facing, 0.0)) < minimum_forward_dot:
+		if distance > 0.01 and offset.normalized().dot(aim_direction) < minimum_forward_dot:
 			continue
 		if nearest.is_empty() or distance < nearest_distance:
 			nearest = {
@@ -73,6 +94,8 @@ func attack_target(
 				"distance": distance,
 				"phase": state.get("phase", PHASE_HOME),
 				"position": state.get("position", Vector2.ZERO),
+				"health": int(state.get("health", 0)),
+				"max_health": int(state.get("max_health", 0)),
 			}
 			nearest_distance = distance
 	return nearest
@@ -137,6 +160,63 @@ func apply_weapon_hit(
 		"recoil_distance": pre_hit_position.distance_to(state.get("position", pre_hit_position)),
 		"reaction_seconds": reaction_seconds,
 		"recovery_seconds": float(state.get("recovery_seconds", 0.0)) if interrupted else 0.0,
+	}
+
+
+func apply_support_interrupt(world, hostile_id: String, attacker_position: Vector2) -> Dictionary:
+	if not _states.has(hostile_id):
+		return {"changed": false, "reason": "invalid_target", "defeated": false, "damage": 0}
+	var state: Dictionary = _states[hostile_id]
+	var pre_hit_phase := str(state.get("phase", PHASE_HOME))
+	var health_before := int(state.get("health", 0))
+	if pre_hit_phase == PHASE_DEFEATED:
+		return {
+			"changed": false,
+			"reason": "already_defeated",
+			"id": hostile_id,
+			"health": health_before,
+			"defeated": true,
+			"damage": 0,
+		}
+	if pre_hit_phase not in [PHASE_WARNING, PHASE_LUNGE]:
+		return {
+			"changed": false,
+			"reason": "not_threatening",
+			"id": hostile_id,
+			"health": health_before,
+			"defeated": false,
+			"damage": 0,
+			"pre_hit_phase": pre_hit_phase,
+		}
+	var pre_hit_position: Vector2 = state.get("position", Vector2.ZERO)
+	var recoil_direction := pre_hit_position - attacker_position
+	if recoil_direction.length_squared() <= 0.01:
+		recoil_direction = Vector2.RIGHT
+	state["position"] = _clamp_to_territory(
+		pre_hit_position + recoil_direction.normalized() * SUPPORT_INTERRUPT_RECOIL_PX,
+		state.get("territory_rect", Rect2())
+	)
+	state["phase"] = PHASE_RECOVERY
+	state["phase_seconds"] = float(state.get("recovery_seconds", 1.25))
+	state["contact_consumed"] = true
+	_current_prompt = "Guardian Pulse - recovery opening"
+	_states[hostile_id] = state
+	_sync_visual(world, state)
+	return {
+		"changed": true,
+		"reason": "interrupted",
+		"id": hostile_id,
+		"health": int(state.get("health", 0)),
+		"max_health": int(state.get("max_health", 0)),
+		"health_before": health_before,
+		"defeated": false,
+		"interrupted": true,
+		"damage": 0,
+		"pre_hit_phase": pre_hit_phase,
+		"pre_hit_position": pre_hit_position,
+		"recoil_position": state.get("position", pre_hit_position),
+		"recoil_distance": pre_hit_position.distance_to(state.get("position", pre_hit_position)),
+		"recovery_seconds": float(state.get("phase_seconds", 0.0)),
 	}
 
 

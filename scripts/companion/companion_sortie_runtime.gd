@@ -4,6 +4,7 @@ const SPARK_RAY_SCENE := preload("res://scenes/companion/SparkRayCompanion.tscn"
 const CompanionAdaptationDebrief := preload("res://scripts/companion/companion_adaptation_debrief.gd")
 const CompanionAnchorFinsRuntime := preload("res://scripts/companion/companion_anchor_fins_runtime.gd")
 const CompanionControlRuntime := preload("res://scripts/companion/companion_control_runtime.gd")
+const CompanionGuardianPulseRuntime := preload("res://scripts/companion/companion_guardian_pulse_runtime.gd")
 const CompanionMemoryRuntime := preload("res://scripts/companion/companion_memory_runtime.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
 const SHARED_EVENT_DISTANCE_PX := 240.0
@@ -16,6 +17,7 @@ var _companion
 var _control
 var _gate_access := CurrentGateController.new()
 var _anchor_fins := CompanionAnchorFinsRuntime.new()
+var _guardian_pulse := CompanionGuardianPulseRuntime.new()
 var _memory_runtime := CompanionMemoryRuntime.new()
 var _adaptation_debrief := CompanionAdaptationDebrief.new()
 
@@ -28,6 +30,7 @@ func bind_interface(active_tool_hud, status_sink: Callable, cancel_diver_tool: C
 	_ensure_control()
 	_control.bind_interface(active_tool_hud, status_sink, cancel_diver_tool, control_allowed)
 	_anchor_fins.bind_status_sink(status_sink)
+	_guardian_pulse.bind_status_sink(status_sink)
 
 
 func bind_map(
@@ -36,7 +39,8 @@ func bind_map(
 	profile,
 	has_upgrade: Callable,
 	sortie_active := false,
-	preserve_sortie := false
+	preserve_sortie := false,
+	hostiles = null
 ) -> Dictionary:
 	clear_map()
 	_world = world
@@ -46,6 +50,7 @@ func bind_map(
 	var has_capability := Callable(profile, "has_capability") if profile != null and profile.has_method("has_capability") else Callable()
 	_memory_runtime.bind_map(world, profile, has_upgrade, has_capability, preserve_sortie)
 	_anchor_fins.bind_map(world, player, profile, null, has_upgrade, has_capability)
+	_guardian_pulse.bind_map(world, player, profile, null, hostiles, has_upgrade, has_capability)
 	_adaptation_debrief.bind_profile(profile)
 	_adaptation_debrief.end()
 	return sync_spawn() if sortie_active else {"spawned": false, "reason": "sortie_not_launched"}
@@ -54,6 +59,7 @@ func bind_map(
 func sync_spawn() -> Dictionary:
 	if _companion != null and is_instance_valid(_companion):
 		_anchor_fins.bind_companion(_companion)
+		_guardian_pulse.bind_companion(_companion)
 		_bind_control_map()
 		return report()
 	if not _dependencies_valid() or not _profile.active_companion_available_on_sortie_launch():
@@ -67,12 +73,14 @@ func sync_spawn() -> Dictionary:
 		_profile.companion_report().get("individual", {})
 	)
 	_anchor_fins.bind_companion(_companion)
+	_guardian_pulse.bind_companion(_companion)
 	_bind_control_map()
 	return report()
 
 
 func clear_map() -> void:
 	_anchor_fins.clear_map()
+	_guardian_pulse.clear_map()
 	if _control != null:
 		_control.clear_map()
 	if _companion != null and is_instance_valid(_companion):
@@ -88,6 +96,7 @@ func clear_map() -> void:
 
 func recover_to_player() -> void:
 	_anchor_fins.reset("recovery")
+	_guardian_pulse.reset("recovery")
 	if _control != null:
 		_control.reset_control("recovery")
 	if _companion != null and is_instance_valid(_companion):
@@ -96,6 +105,7 @@ func recover_to_player() -> void:
 
 func reset_control(reason := "reset") -> void:
 	_anchor_fins.reset(reason)
+	_guardian_pulse.reset(reason)
 	if _control != null:
 		_control.reset_control(reason)
 
@@ -173,6 +183,7 @@ func hides_diver_hotbar() -> bool:
 
 func force_dismount_for_hit(source_position: Vector2) -> Dictionary:
 	_anchor_fins.reset("hostile_hit")
+	_guardian_pulse.reset("hostile_hit")
 	return _control.force_dismount_for_hit(source_position) if _control != null else {"changed": false, "reason": "control_unavailable"}
 
 
@@ -187,6 +198,10 @@ func control_runtime():
 
 func adaptation_runtime():
 	return _anchor_fins
+
+
+func guardian_pulse_runtime():
+	return _guardian_pulse
 
 
 func set_external_control_active(active: bool) -> bool:
@@ -212,18 +227,21 @@ func report() -> Dictionary:
 			"spawned": false,
 			"control": _control.report() if _control != null else {},
 			"memory": memory_report(),
-			"adaptation": _anchor_fins.report(),
+			"adaptation": _selected_adaptation_report(),
+			"adaptations": _adaptation_reports(),
 		}
 	var value: Dictionary = _companion.report()
 	value["spawned"] = true
 	value["control"] = _control.report() if _control != null else {}
 	value["memory"] = memory_report()
-	value["adaptation"] = _anchor_fins.report()
+	value["adaptation"] = _selected_adaptation_report()
+	value["adaptations"] = _adaptation_reports()
 	return value
 
 
 func _process(delta: float) -> void:
 	_anchor_fins.advance(delta, _control != null and _control.is_mounted())
+	_guardian_pulse.advance(delta, _control != null and _control.is_mounted())
 
 
 func _position_allowed(position: Vector2) -> bool:
@@ -278,9 +296,47 @@ func _ensure_control() -> void:
 		return
 	_control = CompanionControlRuntime.new()
 	add_child(_control)
-	_control.set_adaptation_hooks(Callable(_anchor_fins, "actions"), Callable(_anchor_fins, "dispatch"))
+	_guardian_pulse.bind_aim_provider(Callable(self, "_guardian_aim_direction"))
+	_control.set_adaptation_hooks(Callable(self, "_adaptation_actions"), Callable(self, "_dispatch_adaptation_action"))
 
 
 func _bind_control_map() -> void:
 	_ensure_control()
 	_control.bind_map(_world, _player, _companion, Callable(self, "_position_allowed"))
+
+
+func _adaptation_actions(context: String) -> Array:
+	var actions: Array = []
+	actions.append_array(_anchor_fins.actions(context))
+	actions.append_array(_guardian_pulse.actions(context))
+	return actions
+
+
+func _dispatch_adaptation_action(role: String, action_id: String) -> Dictionary:
+	if action_id == CompanionAnchorFinsRuntime.ACTION_ID:
+		return _anchor_fins.dispatch(role, action_id)
+	if action_id == CompanionGuardianPulseRuntime.ACTION_ID:
+		return _guardian_pulse.dispatch(role, action_id)
+	return {"changed": false, "reason": "action_unavailable"}
+
+
+func _guardian_aim_direction(role: String) -> Vector2:
+	if role == "mounted" and _control != null:
+		var mounted_direction: Vector2 = _control.report().get("last_move_direction", Vector2.ZERO)
+		if mounted_direction != Vector2.ZERO:
+			return mounted_direction.normalized()
+	if _player != null and is_instance_valid(_player) and _player.has_method("get_facing_sign"):
+		return Vector2(1.0 if float(_player.get_facing_sign()) >= 0.0 else -1.0, 0.0)
+	return Vector2.RIGHT
+
+
+func _adaptation_reports() -> Dictionary:
+	return {
+		"anchor_fins": _anchor_fins.report(),
+		"guardian_pulse": _guardian_pulse.report(),
+	}
+
+
+func _selected_adaptation_report() -> Dictionary:
+	var guardian := _guardian_pulse.report()
+	return guardian if not str(guardian.get("adaptation_id", "")).is_empty() else _anchor_fins.report()

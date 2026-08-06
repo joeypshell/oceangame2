@@ -15,6 +15,8 @@ const COLOR_DANGER := Color("ff6b6b")
 const COLOR_MEMORY := Color("b9f77c")
 const COLOR_ANCHOR := Color("7de2ad")
 const COLOR_ANCHOR_CANCEL := Color("ffd166")
+const COLOR_GUARDIAN := Color("79e7ff")
+const COLOR_GUARDIAN_MISS := Color("ffd166")
 
 var _state := STATE_NEAR
 var _facing_sign := 1.0
@@ -33,6 +35,12 @@ var _anchor_state := "idle"
 var _anchor_direction := Vector2.UP
 var _anchor_progress := 0.0
 var _anchor_cue_seconds := 0.0
+var _guardian_state := "idle"
+var _guardian_direction := Vector2.RIGHT
+var _guardian_range_px := 156.0
+var _guardian_target_distance := 156.0
+var _guardian_progress := 0.0
+var _guardian_cue_seconds := 0.0
 
 
 func sync(state: String, facing_sign: float, path_points: Array) -> void:
@@ -44,7 +52,17 @@ func sync(state: String, facing_sign: float, path_points: Array) -> void:
 
 func set_adaptation(adaptation_id: String, callsign: String) -> void:
 	_adaptation_id = adaptation_id
-	_variant_label = "%s | Anchor Fins" % callsign if adaptation_id == "anchor_fins" else callsign
+	match adaptation_id:
+		"anchor_fins":
+			_variant_label = "%s | Anchor Fins" % callsign
+		"guardian_pulse":
+			_variant_label = "%s | Guardian Pulse" % callsign
+		_:
+			_variant_label = callsign
+	if adaptation_id != "anchor_fins":
+		_anchor_state = "idle"
+	if adaptation_id != "guardian_pulse":
+		_guardian_state = "idle"
 	queue_redraw()
 
 
@@ -78,6 +96,22 @@ func show_anchor_brace(direction: Vector2, progress: float, cue_state: String) -
 	queue_redraw()
 
 
+func show_guardian_pulse(
+	direction: Vector2,
+	range_px: float,
+	target_distance: float,
+	progress: float,
+	cue_state: String
+) -> void:
+	_guardian_direction = direction.normalized() if direction != Vector2.ZERO else Vector2.RIGHT
+	_guardian_range_px = maxf(1.0, range_px)
+	_guardian_target_distance = clampf(target_distance, 12.0, _guardian_range_px)
+	_guardian_progress = clampf(progress, 0.0, 1.0)
+	_guardian_state = cue_state
+	_guardian_cue_seconds = 0.0 if cue_state == "charging" else 1.0 if cue_state != "idle" else 0.0
+	queue_redraw()
+
+
 func advance(delta: float) -> void:
 	var safe_delta := maxf(0.0, delta)
 	_pulse_seconds = fmod(_pulse_seconds + safe_delta, 1.0)
@@ -90,6 +124,10 @@ func advance(delta: float) -> void:
 		_anchor_cue_seconds = maxf(0.0, _anchor_cue_seconds - safe_delta)
 		if _anchor_cue_seconds == 0.0:
 			_anchor_state = "idle"
+	if _guardian_state != "charging" and _guardian_cue_seconds > 0.0:
+		_guardian_cue_seconds = maxf(0.0, _guardian_cue_seconds - safe_delta)
+		if _guardian_cue_seconds == 0.0:
+			_guardian_state = "idle"
 	queue_redraw()
 
 
@@ -109,6 +147,13 @@ func report() -> Dictionary:
 		"anchor_progress": _anchor_progress,
 		"anchor_direction": _anchor_direction,
 		"stable_posture": _anchor_state == "engaged",
+		"conductive_stripe": _adaptation_id == "guardian_pulse",
+		"guardian_state": _guardian_state,
+		"guardian_progress": _guardian_progress,
+		"guardian_direction": _guardian_direction,
+		"guardian_range_px": _guardian_range_px,
+		"guardian_target_distance": _guardian_target_distance,
+		"guardian_charging": _guardian_state == "charging",
 	}
 
 
@@ -119,6 +164,7 @@ func _draw() -> void:
 	_draw_rider()
 	_draw_glide_surge()
 	_draw_anchor_brace()
+	_draw_guardian_pulse()
 	_draw_state_cue()
 	_draw_context_cue()
 
@@ -152,6 +198,13 @@ func _draw_ray() -> void:
 	draw_colored_polygon(upper_fin, fin_color)
 	draw_colored_polygon(lower_fin, fin_color)
 	draw_colored_polygon(body, COLOR_BODY)
+	if _adaptation_id == "guardian_pulse":
+		draw_polyline(PackedVector2Array([
+			Vector2(-12.0 * direction, -3.0) + offset,
+			Vector2(-2.0 * direction, 1.5) + offset,
+			Vector2(9.0 * direction, -2.0) + offset,
+			Vector2(17.0 * direction, 1.0) + offset,
+		]), COLOR_GUARDIAN, 2.5, true)
 	draw_polyline(PackedVector2Array([
 		Vector2(-17.0 * direction, 0.0) + offset,
 		Vector2(-28.0 * direction, 3.0) + offset,
@@ -213,6 +266,36 @@ func _draw_anchor_brace() -> void:
 	draw_arc(Vector2.ZERO, 31.0, -PI * 0.5, -PI * 0.5 + TAU * _anchor_progress, 28, color, 3.0, true)
 	if _anchor_state == "success":
 		draw_circle(Vector2.ZERO, 5.0 + sin(_pulse_seconds * TAU), Color(color, 0.55))
+
+
+func _draw_guardian_pulse() -> void:
+	if _guardian_state == "idle" or _adaptation_id != "guardian_pulse":
+		return
+	var color := COLOR_GUARDIAN
+	if _guardian_state in ["miss", "cancelled", "cooldown"]:
+		color = COLOR_GUARDIAN_MISS
+	elif _guardian_state == "denied":
+		color = COLOR_DANGER
+	var direction := _guardian_direction.normalized()
+	var side := direction.orthogonal()
+	var display_scale := 0.52
+	var range_endpoint := direction * _guardian_range_px * display_scale
+	var target_endpoint := direction * _guardian_target_distance * display_scale
+	var cone_width := tan(deg_to_rad(35.0)) * _guardian_range_px * display_scale
+	draw_line(Vector2.ZERO, range_endpoint + side * cone_width, Color(color, 0.35), 1.5, true)
+	draw_line(Vector2.ZERO, range_endpoint - side * cone_width, Color(color, 0.35), 1.5, true)
+	draw_arc(Vector2.ZERO, 19.0 + _guardian_progress * 7.0, 0.0, TAU, 28, Color(color, 0.8), 2.0, true)
+	draw_line(direction * 15.0, target_endpoint, color, 2.5 if _guardian_state == "hit" else 1.5, true)
+	draw_line(target_endpoint - side * 8.0, target_endpoint + side * 8.0, color, 2.0, true)
+	draw_line(target_endpoint - direction * 8.0, target_endpoint + direction * 8.0, color, 2.0, true)
+	if _guardian_state == "charging":
+		for index in range(3):
+			var charge_position := direction * (8.0 + float(index) * 7.0)
+			draw_circle(charge_position, 1.5 + _guardian_progress, Color(color, 0.72))
+	elif _guardian_state == "hit":
+		draw_arc(target_endpoint, 10.0 + sin(_pulse_seconds * TAU) * 2.0, 0.0, TAU, 20, color, 3.0, true)
+	elif _guardian_state == "miss":
+		draw_arc(target_endpoint, 8.0, 0.0, TAU, 20, color, 2.0, true)
 
 
 func _draw_recovery_path() -> void:
