@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "implementation_status": "proposed",
+  "version": 2,
+  "implementation_status": "partial_runtime",
   "species": [
     {
       "id": "spark_ray",
@@ -29,6 +29,31 @@
         "anchor_fins",
         "guardian_pulse"
       ]
+    },
+    {
+      "id": "veil_cuttle",
+      "display_name": "Veil Cuttle",
+      "roles": [
+        "independent"
+      ],
+      "ride_capable": false,
+      "base_action_ids": [
+        "reveal_trace"
+      ],
+      "memory_ids": [],
+      "adaptation_ids": []
+    }
+  ],
+  "individuals": [
+    {
+      "id": "spark_ray_juvenile_01",
+      "species_id": "spark_ray",
+      "default_callsign": "Kite"
+    },
+    {
+      "id": "veil_cuttle_juvenile_01",
+      "species_id": "veil_cuttle",
+      "default_callsign": "Mica"
     }
   ],
   "actions": [
@@ -56,6 +81,14 @@
         "mounted"
       ],
       "effect_kind": "interrupt_knockback",
+      "damaging": false
+    },
+    {
+      "id": "reveal_trace",
+      "roles": [
+        "independent"
+      ],
+      "effect_kind": "trace_reveal",
       "damaging": false
     }
   ],

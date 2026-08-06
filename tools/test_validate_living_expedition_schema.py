@@ -199,9 +199,13 @@ class LivingExpeditionSchemaTests(unittest.TestCase):
         catalog = copy.deepcopy(load_creature_catalog())
         catalog["memories"][0]["adaptation_ids"] = ["guardian_pulse"]
         catalog["actions"][0]["id"] = "spark_ray"
+        next(item for item in catalog["species"] if item["id"] == "veil_cuttle")["base_action_ids"] = ["glide_surge"]
+        next(item for item in catalog["individuals"] if item["id"] == "veil_cuttle_juvenile_01")["species_id"] = "spark_ray"
         failures = validate_creature_catalog(catalog)
         self.assertTrue(any("Duplicate creature catalog id" in failure for failure in failures), failures)
         self.assertTrue(any("unsupported memory/adaptation" in failure for failure in failures), failures)
+        self.assertTrue(any("species veil_cuttle.base_action_ids" in failure for failure in failures), failures)
+        self.assertTrue(any("individual veil_cuttle_juvenile_01.species_id" in failure for failure in failures), failures)
 
     def test_rejects_dangling_and_circular_memory_payoff_links(self) -> None:
         map_data = valid_map()
