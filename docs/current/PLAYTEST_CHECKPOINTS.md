@@ -29,11 +29,18 @@ The checkpoint forces `production_level_01` and identifies itself in the
 review overlay. The ordinary `?review=<sha>` URL remains a completely empty,
 isolated profile.
 
-The exact public Web candidate and deployment evidence are intentionally
-pending issue #1232 after the journey-evidence change merges. Do not reuse an
-older build URL as Living Expedition evidence.
+Exact public Web candidate:
 
-## Current Owner Replay
+```text
+https://joeypshell.github.io/oceangame2/?review=c0c7b4ef7b295e97e5eb417bbec8555db42ebea4&checkpoint=living_expedition_01_start
+```
+
+The Pages workflow and independent desktop/mobile checker passed for corrected
+exact SHA `c0c7b4ef7b295e97e5eb417bbec8555db42ebea4`. Technical evidence and the
+owner GO are recorded in
+[Living Expedition 01 Technical Review](LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md).
+
+## Living Expedition 01 Replay
 
 1. Select the Cutter and hold `Space/USE` at the trapped juvenile Spark Ray;
    return together to the canonical surface boat to commit the bond.

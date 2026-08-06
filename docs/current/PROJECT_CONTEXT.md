@@ -80,6 +80,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Creature system contract: `docs/planning/CREATURE_SYSTEM_SPEC.md`
 - Creature/map progression contract: `docs/planning/CREATURE_MAP_PROGRESSION_SPEC.md`
 - First-proof source/state contract: `docs/current/LIVING_EXPEDITION_01_SOURCE_STATE_CONTRACT.md`
+- First-proof technical/Web evidence and owner GO: `docs/current/LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md`
 - Foundation history: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - First adaptation proof: `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
@@ -99,13 +100,13 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Focused player-review workflow: `docs/current/PLAYTEST_CHECKPOINTS.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
 - Latest owner decision: Expansion 18 is technically complete but strategically HOLD because the old cadence does not provide enough attachment or another-day motivation
-- Latest committed direction: milestone #45 Living Expedition 01 Spark Ray Adaptation Proof, revised as #1223-#1232 plus focused command/riding issue #1235
+- Latest completed direction: milestone #45 Living Expedition 01 Spark Ray Adaptation Proof, implemented as #1223-#1232 plus focused command/riding issue #1235
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
 - Latest source contract: `docs/current/OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`
-- Latest visual decision: corrected Expansion 17 focused states are accepted for review while the 14-view full-level and slice baselines remain pixel-stable
+- Latest visual decision: Living Expedition focused captures are generated review evidence only; all six configured accepted baseline sheets remain pixel-stable
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: corrected Expansion 17 owner candidate `075a450`, recorded in `docs/current/OCEANGAME_EXPANSION_17_WEB_PREVIEW_VERIFICATION.md`.
+- Latest Web verification: corrected Living Expedition candidate `c0c7b4e`, recorded with owner GO in `docs/current/LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md` after bounded post-rescue guidance correction #1249.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -172,7 +173,7 @@ Current map-loading helper:
 
 ## Web Preview Status
 
-The public preview was technically verified and owner-approved after the bounded Expansion 15 corrections at exact build `23f4172`:
+The public preview is technically verified and owner-approved for Living Expedition 01 at corrected gameplay build `c0c7b4e`. The first run's unclear post-rescue handoff was corrected by #1249 with persistent state-derived partnership guidance; the exact-candidate retest received GO:
 
 ```text
 https://joeypshell.github.io/oceangame2/
@@ -248,7 +249,7 @@ Current issue state as of 2026-08-05:
 - Closed planning: #1190 selected Expansion 18 Transfer Hub Interior Expedition.
 - Closed direction gate: #1201 records Expansion 18's strategic HOLD and transition; #1192-#1200 plus bounded corrections remain technically complete.
 - Closed planning: #1219 documents the first Expedition Adaptation proof; #1221 realigns the target game, creature contracts, roadmap, and milestone state through merged PR #1222.
-- Active implementation: milestone #45 has playable work and deterministic journey/checkpoint/capture evidence complete through #1231/#1235. #1232 remains the exact-Web owner closeout.
+- Closed: milestone #45 Living Expedition 01 has playable work, deterministic journey/checkpoint/capture evidence, exact-Web verification, bounded guidance correction #1249, and owner GO through #1232.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -386,7 +387,7 @@ Current issue state as of 2026-08-05:
 
 ## Recommended Next Work
 
-Continue Living Expedition 01 with #1232 exact-Web owner closeout. The playable rescue, follow, command/riding, memory/night, both adaptation branches, and deterministic journey/checkpoint/capture evidence are complete through #1231/#1235. Milestone #45 is the only active implementation milestone. Keep #52/#53 deferred.
+Living Expedition 01 is complete with owner GO. Next, evaluate and name one bounded Living Expedition milestone from the active roadmap before creating or implementing another batch; do not assume a second species is automatically next. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 
