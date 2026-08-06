@@ -15,6 +15,7 @@ run_godot oxygen-consumption-zone-state 120 --headless --path . --script res://s
 run_godot expansion-16-integration-state 180 --headless --path . --script res://scripts/main/smoke/smoke_expansion_16_integration_state.gd
 run_godot companion-profile-state 120 --headless --path . --script res://scripts/main/smoke/smoke_companion_profile_state.gd
 run_godot companion-memory-night 180 --headless --path . --script res://scripts/main/smoke/smoke_companion_memory_night.gd
+run_godot companion-ecology-observation 180 --headless --path . --script res://scripts/main/smoke/smoke_companion_ecology_observation.gd
 run_godot spark-ray-follow 180 --headless --path . --script res://scripts/main/smoke/smoke_spark_ray_follow.gd
 run_godot spark-ray-rescue 180 --headless --path . --script res://scripts/main/smoke/smoke_spark_ray_rescue.gd
 run_godot spark-ray-riding 180 --headless --path . --script res://scripts/main/smoke/smoke_spark_ray_riding.gd
