@@ -10,6 +10,7 @@ const ExpansionProfileState := preload("res://scripts/main/expansion_profile_sta
 const MAP_PATH := "res://maps/production_level_01.greybox.json"
 const INDIVIDUAL_ID := "spark_ray_juvenile_01"
 const SPECIES_ID := "spark_ray"
+const POST_DISMOUNT_MIN_SEPARATION := 56.0
 
 var _failures: Array[String] = []
 var _status_notes: Array[String] = []
@@ -110,6 +111,12 @@ func _test_mount_and_hotbar(control, player, ray, hud) -> void:
 	_expect(bool(dismount.get("changed", false)), "clear normal dismount was denied")
 	_expect(hud.visible and not control.hides_diver_hotbar(), "normal dismount did not restore the diver hotbar")
 	_expect(not player.mounted_control_active(), "normal dismount did not restore diver movement authority")
+	_expect_dismount_handoff(player, ray, "normal")
+	for cycle in range(2):
+		_place_pair(player, ray, player.global_position)
+		_expect(bool(control.request_mount().get("changed", false)), "repeat dismount cycle %d could not mount" % (cycle + 1))
+		_expect(bool(control.request_dismount().get("changed", false)), "repeat dismount cycle %d could not dismount" % (cycle + 1))
+		_expect_dismount_handoff(player, ray, "repeat cycle %d" % (cycle + 1))
 	_place_pair(player, ray, player.global_position)
 	_expect(bool(control.request_mount().get("changed", false)), "movement fixture could not remount after normal dismount")
 
@@ -238,6 +245,14 @@ func _place_pair(player, ray, position: Vector2) -> void:
 	ray.advance(0.0)
 
 
+func _expect_dismount_handoff(player, ray, label: String) -> void:
+	var report: Dictionary = ray.report()
+	_expect(not bool(report.get("external_control_active", true)), "%s dismount retained external control" % label)
+	_expect(not bool(report.get("presentation", {}).get("mounted", true)), "%s dismount retained mounted presentation" % label)
+	_expect(str(report.get("state", "")) == "near", "%s dismount did not restore independent near-follow state" % label)
+	_expect(player.global_position.distance_to(ray.global_position) >= POST_DISMOUNT_MIN_SEPARATION, "%s dismount left Kite overlapping the diver" % label)
+
+
 func _record_status(note: String) -> void:
 	_status_notes.append(note)
 
@@ -271,7 +286,7 @@ func _finish(world, player, runtime, hud, original_time_scale: float) -> void:
 			push_error("Spark Ray riding smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("PASS: Spark Ray riding shift_bond=true slow_time=0.2 restored=release+selection+retry+failure+scene_exit commands<=3 mount_clearance=true movement_owner=ray camera_owner=diver hotbar=creature glide_surge=directional+cooldown+no_damage gate_bypass=false forced_dismount=true mobile_action=companion_command profile_unchanged=true.")
+	print("PASS: Spark Ray riding shift_bond=true slow_time=0.2 restored=release+selection+retry+failure+scene_exit commands<=3 mount_clearance=true dismount_handoff=independent+separated+repeatable movement_owner=ray camera_owner=diver hotbar=creature glide_surge=directional+cooldown+no_damage gate_bypass=false forced_dismount=true mobile_action=companion_command profile_unchanged=true.")
 	quit(0)
 
 

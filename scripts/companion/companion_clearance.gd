@@ -2,12 +2,8 @@ extends RefCounted
 
 const BODY_SIZE := Vector2(26.0, 18.0)
 const MOUNT_DISTANCE := 96.0
-const DISMOUNT_OFFSETS := [
-	Vector2(38.0, 0.0),
-	Vector2(-38.0, 0.0),
-	Vector2(0.0, 34.0),
-	Vector2(0.0, -34.0),
-]
+const HORIZONTAL_DISMOUNT_DISTANCE := 64.0
+const VERTICAL_DISMOUNT_DISTANCE := 58.0
 
 
 func mount_report(world, player, companion, position_allowed: Callable) -> Dictionary:
@@ -27,7 +23,7 @@ func mount_report(world, player, companion, position_allowed: Callable) -> Dicti
 func dismount_report(world, player, companion, position_allowed: Callable) -> Dictionary:
 	if not _nodes_valid(world, player, companion):
 		return _denied("companion_unavailable")
-	for offset in DISMOUNT_OFFSETS:
+	for offset in _dismount_offsets(companion):
 		var candidate: Vector2 = companion.global_position + (offset as Vector2)
 		if not _position_allowed(candidate, position_allowed):
 			continue
@@ -43,6 +39,18 @@ func emergency_dismount_position(world, player, companion, position_allowed: Cal
 	if bool(report.get("allowed", false)):
 		return report.get("position", companion.global_position)
 	return companion.global_position if companion != null and is_instance_valid(companion) else player.global_position
+
+
+func _dismount_offsets(companion) -> Array:
+	var facing_sign := 1.0
+	if companion.has_method("report"):
+		facing_sign = 1.0 if float(companion.report().get("facing_sign", 1.0)) >= 0.0 else -1.0
+	return [
+		Vector2(HORIZONTAL_DISMOUNT_DISTANCE * facing_sign, 0.0),
+		Vector2(0.0, VERTICAL_DISMOUNT_DISTANCE),
+		Vector2(0.0, -VERTICAL_DISMOUNT_DISTANCE),
+		Vector2(-HORIZONTAL_DISMOUNT_DISTANCE * facing_sign, 0.0),
+	]
 
 
 func _body_clear(world, position: Vector2, player, companion) -> bool:
