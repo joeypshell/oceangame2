@@ -86,6 +86,28 @@ class CreatureProgressionGraphTests(unittest.TestCase):
         requirements = {edge.target for edge in graph.requirements(trace)}
         self.assertTrue({mica, scanner} <= requirements)
 
+    def test_mica_path_is_optional_and_cannot_satisfy_equipment_gates(self) -> None:
+        graph = build_progression_graph([valid_map()], contract())
+        result = audit_graph(graph, check_canonical=False)
+        self.assertEqual((), result.failures)
+        rescue = graph.resolve("veil_cuttle_rescue_01")
+        trace = graph.resolve("veil_cuttle_trace_01")
+        self.assertFalse(graph.nodes[rescue].mandatory)
+        self.assertFalse(graph.nodes[trace].mandatory)
+        self.assertIn(rescue, result.stages)
+        self.assertIn(trace, result.stages)
+        self.assertFalse([
+            edge for edge in graph.outgoing(trace)
+            if edge.relation in {"unlocks", "rewards", "guards", "funds"}
+        ])
+        equipment_dependents = [
+            node.key
+            for node in graph.nodes.values()
+            if node.kind in {"capability", "upgrade", "gate", "pressure", "project"}
+            and any(edge.target in {rescue, trace} for edge in graph.requirements(node.key))
+        ]
+        self.assertEqual([], equipment_dependents)
+
 
 if __name__ == "__main__":
     unittest.main()

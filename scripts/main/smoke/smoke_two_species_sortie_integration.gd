@@ -4,9 +4,13 @@ const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const AnomalySurveyRuntime := preload("res://scripts/main/anomaly_survey_runtime.gd")
 const CompanionJourneyGuidance := preload("res://scripts/companion/companion_journey_guidance.gd")
+const CompanionProfileState := preload("res://scripts/main/companion_profile_state.gd")
 const CompanionRescueRuntime := preload("res://scripts/companion/companion_rescue_runtime.gd")
 const CompanionSortieRuntime := preload("res://scripts/companion/companion_sortie_runtime.gd")
+const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+const ReviewCheckpointFixture := preload("res://scripts/main/review_checkpoint_fixture.gd")
+const ReviewProfileMode := preload("res://scripts/main/review_profile_mode.gd")
 const SortieState := preload("res://scripts/main/sortie_state.gd")
 
 const MAP_PATH := "res://maps/production_level_01.greybox.json"
@@ -15,6 +19,7 @@ const KITE_ID := "spark_ray_juvenile_01"
 const MICA_ID := "veil_cuttle_juvenile_01"
 const MICA_RESCUE_ID := "veil_cuttle_rescue_01"
 const TRACE_ID := "veil_cuttle_trace_01"
+const PROTECTED_GATE_ID := "upper_right_current_pocket_gate"
 
 var _failures: Array[String] = []
 var _status_notes: Array[String] = []
@@ -32,6 +37,9 @@ func _initialize() -> void:
 
 func _run() -> void:
 	_cleanup_profile()
+	var checkpoint_id := ReviewProfileMode.checkpoint_id(OS.get_cmdline_user_args(), OS.get_cmdline_args())
+	_expect(checkpoint_id == ReviewCheckpointFixture.LIVING_EXPEDITION_02_START, "journey requires the isolated Living Expedition 02 checkpoint")
+	_test_schema_v1_migration()
 	var world := WORLD_SCENE.instantiate()
 	world.map_path = MAP_PATH
 	get_root().add_child(world)
@@ -42,9 +50,13 @@ func _run() -> void:
 
 	var profile := ExpansionProfileState.new(PROFILE_PATH, true)
 	profile.load_profile()
-	_seed_required_tools(profile, world)
-	var kite_commit: Dictionary = profile.commit_companion_rescue(KITE_ID, "spark_ray", "Kite", true)
-	_expect(bool(kite_commit.get("changed", false)), "fixture could not commit Kite")
+	var checkpoint: Dictionary = ReviewCheckpointFixture.apply(checkpoint_id, profile)
+	_expect(bool(checkpoint.get("ready", false)), "Living Expedition 02 checkpoint was rejected: %s" % checkpoint)
+	_expect(profile.save_profile(), "checkpoint profile could not be persisted for reload coverage")
+	var checkpoint_companion: Dictionary = profile.companion_report()
+	_expect((checkpoint_companion.get("individuals", []) as Array).size() == 1, "checkpoint did not begin with exactly one committed partner")
+	_expect(str(checkpoint_companion.get("active_individual_id", "")) == KITE_ID, "checkpoint did not begin with Kite selected")
+	_test_gate_protection(world)
 	var rescue := CompanionRescueRuntime.new()
 	get_root().add_child(rescue)
 	rescue.bind_map(
@@ -125,23 +137,25 @@ func _test_commit_and_species_sorties(world, player, profile, rescue, mica_sourc
 	var mica_guidance: String = guidance.objective_text(world, player, profile, sortie, DayState.new())
 	_expect(mica_guidance.find("Reveal Trace") != -1 and mica_guidance.find("Mount") == -1, "Mica field guidance did not explain her first action")
 
-	mica.global_position = trace.get("center", Vector2.ZERO) + Vector2(-40.0, 0.0)
-	player.global_position = mica.global_position + Vector2(-20.0, 0.0)
-	mica.advance(0.0)
-	var control = sortie.control_runtime()
-	control.begin_command_mode()
-	control.cycle_context_command()
-	var reveal: Dictionary = control.confirm_context_command()
+	var reveal: Dictionary = _reveal_trace(sortie, mica, player, trace)
 	_expect(bool(reveal.get("changed", false)), "integrated Mica BOND action did not reveal the trace")
+	_expect(str(profile.companion_report().get("active_individual_id", "")) == MICA_ID, "field command changed the selected companion mid-sortie")
 	var revealed_guidance: String = guidance.objective_text(world, player, profile, sortie, DayState.new())
 	_expect(revealed_guidance.find("Scanner") != -1, "revealed trace guidance did not hand control back to the scanner")
 	_test_scanner_identification(world, player, profile, guidance, sortie)
 
 	var profile_before_failure: Dictionary = profile.companion_report()
-	sortie.recover_to_player("oxygen_failure")
-	_expect(_trace_state(world) == "hidden", "failure recovery retained transient trace visibility")
-	_expect(not sortie.control_runtime().report().get("command_mode", true) and is_equal_approx(Engine.time_scale, 1.0), "failure recovery retained BOND state or slow time")
-	_expect(profile.companion_report() == profile_before_failure, "failure recovery changed committed individuals or active selection")
+	for reason in ["oxygen_failure", "combat_defeat", "hazard", "retry"]:
+		var reset_reveal: Dictionary = _reveal_trace(sortie, mica, player, trace)
+		_expect(bool(reset_reveal.get("changed", false)), "%s fixture could not prepare a revealed trace" % reason)
+		if reason == "retry":
+			sortie.reset_control(reason)
+		else:
+			sortie.recover_to_player(reason)
+		var reset_report: Dictionary = sortie.control_runtime().report()
+		_expect(_trace_state(world) == "hidden", "%s retained transient trace visibility" % reason)
+		_expect(not reset_report.get("command_mode", true) and is_zero_approx(float(reset_report.get("trace", {}).get("cooldown_seconds", -1.0))) and is_equal_approx(Engine.time_scale, 1.0), "%s retained command, cooldown, or slow-time state" % reason)
+		_expect(profile.companion_report() == profile_before_failure, "%s changed committed individuals or active selection" % reason)
 
 	player.global_position = world.get_entry_position("surface_boat_entry")
 	await process_frame
@@ -178,34 +192,59 @@ func _test_scanner_identification(world, player, profile, guidance, sortie) -> v
 	_expect(text.find("No cargo or access reward") != -1, "identified trace guidance implied a progression reward")
 
 
-func _seed_required_tools(profile, world) -> void:
-	_complete_project(profile, world, ExpansionProfileState.SALVAGE_CUTTER_PROJECT_ID, ExpansionProfileState.SALVAGE_CUTTER_BLUEPRINT_ID)
-	_complete_project(profile, world, ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID, ExpansionProfileState.SURVEY_SCANNER_BLUEPRINT_ID)
+func _test_schema_v1_migration() -> void:
+	var state := CompanionProfileState.new()
+	var failures: Array[String] = state.load_payload({
+		"schema_version": CompanionProfileState.LEGACY_PROFILE_SCHEMA_VERSION,
+		"individual": {
+			"individual_id": KITE_ID,
+			"species_id": "spark_ray",
+			"callsign": "Kite",
+			"rescue_committed": true,
+			"earned_memory_ids": [],
+			"selected_adaptation_id": "",
+		},
+		"active_individual_id": KITE_ID,
+	})
+	var report: Dictionary = state.report()
+	_expect(failures.is_empty(), "schema-v1 migration failed: %s" % [failures])
+	_expect(int(report.get("schema_version", 0)) == CompanionProfileState.PROFILE_SCHEMA_VERSION, "schema-v1 migration did not produce profile schema v2")
+	_expect((report.get("individuals", []) as Array).size() == 1 and str(report.get("active_individual_id", "")) == KITE_ID, "schema-v1 migration duplicated or deselected Kite")
 
 
-func _complete_project(profile, world, project_id: String, discovery_id: String) -> void:
-	var discovery: Dictionary = profile.complete_discovery(discovery_id, false)
-	_expect(
-		bool(discovery.get("changed", false)) or discovery.get("reason") == "already_completed",
-		"could not seed discovery %s: %s" % [discovery_id, discovery]
-	)
-	var project := _record_by_id(world.get_material_projects(), project_id)
-	_expect(not project.is_empty(), "map omitted project %s" % project_id)
-	if project.is_empty():
+func _test_gate_protection(world) -> void:
+	var gate_profile := ExpansionProfileState.new("", false)
+	gate_profile.load_profile()
+	gate_profile.commit_companion_rescue(MICA_ID, "veil_cuttle", "Mica", false)
+	var gate := _record_by_id(world.get_current_gates(), PROTECTED_GATE_ID)
+	_expect(not gate.is_empty(), "protected current gate fixture was missing")
+	if gate.is_empty():
 		return
-	var deposit_quantities := {}
-	for material_id in project.get("required_materials", {}):
-		var missing: int = int(project["required_materials"][material_id]) - profile.material_quantity(str(material_id))
-		if missing > 0:
-			deposit_quantities[str(material_id)] = missing
-	var deposit: Dictionary = {"changed": true, "reason": "already_sufficient"}
-	if not deposit_quantities.is_empty():
-		deposit = profile.deposit_materials(deposit_quantities, false)
-	var built: Dictionary = profile.complete_material_project(project, false)
-	_expect(
-		bool(deposit.get("changed", false)) and (bool(built.get("changed", false)) or built.get("reason") == "already_completed"),
-		"could not seed project %s: deposit=%s build=%s" % [project_id, deposit, built]
+	var blocked: Dictionary = CurrentGateController.new().gate_blocks_position(
+		world,
+		gate.get("center", Vector2.ZERO),
+		Callable(self, "_has_no_upgrade"),
+		Callable(gate_profile, "has_capability")
 	)
+	_expect(str(blocked.get("id", "")) == PROTECTED_GATE_ID, "committed Mica bypassed the propulsion-fins current gate")
+
+
+func _reveal_trace(sortie, mica, player, trace: Dictionary) -> Dictionary:
+	var control = sortie.control_runtime()
+	control.reset_transient("smoke_prepare")
+	mica.global_position = trace.get("center", Vector2.ZERO) + Vector2(-40.0, 0.0)
+	player.global_position = mica.global_position + Vector2(-20.0, 0.0)
+	mica.advance(0.0)
+	control.begin_command_mode()
+	var commands: Array = control.report().get("context_commands", [])
+	for index in range(commands.size()):
+		if str(commands[index].get("id", "")) != "reveal_trace":
+			continue
+		for _step in range(index):
+			control.cycle_context_command()
+		return control.confirm_context_command()
+	control.end_command_mode()
+	return {"changed": false, "reason": "missing_reveal_trace"}
 
 
 func _record_by_id(records: Array, record_id: String) -> Dictionary:
@@ -269,10 +308,10 @@ func _finish(world, player, rescue, sortie) -> void:
 	_cleanup_profile()
 	if not _failures.is_empty():
 		for failure in _failures:
-			push_error("Two-species integration smoke failed: %s" % failure)
+			push_error("Living Expedition 02 journey smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("PASS: two-species rescue=Kite+Mica full_cargo_safe=true failure_restore=true boat_commit=exact_once selection=boat_only active_instance=one Mica_actions=recall+reveal_trace scanner_required=true trace_reward=false transient_reset=true Kite_mount_restored=true reload=exact.")
+	print("PASS: Living Expedition 02 journey checkpoint=living_expedition_02_start profile_schema=2 migration=v1_exact individuals=spark_ray_juvenile_01,veil_cuttle_juvenile_01 rescue=available>pending>committed selected=Kite>Mica>Kite active_species=spark_ray>veil_cuttle>spark_ray actions=Mica:recall+reveal_trace,Kite:mount full_cargo_safe=true mid_sortie_switch=false scanner_required=true trace_reward=false failures=oxygen+combat+hazard+retry reload=exact protected_gate=upper_right_current_pocket_gate.")
 	quit(0)
 
 

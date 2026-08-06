@@ -13,6 +13,7 @@ This is the compact index for current project commands. Keep detailed command bl
 - [Asset Generation](tooling/asset_generation.md): terrain tileset, props, player sprite, terrain-kit processing, and generated-file warnings.
 - [Agent Skills](tooling/agent_skills.md): project-local Codex skills for repo drift evaluation and issue-resolution workflows.
 - [Living Expedition 01 Evidence](tooling/living_expedition_01.md): pre-rescue checkpoint, three-day journey smoke, and generated desktop/mobile review captures.
+- [Living Expedition 02 Evidence](tooling/living_expedition_02.md): two-partner checkpoint, deterministic species-selection journey, and focused source/progression checks.
 
 ## Critical Warnings
 

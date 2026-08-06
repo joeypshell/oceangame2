@@ -65,6 +65,7 @@ class ProductionLevelLivingExpedition02Tests(unittest.TestCase):
         self.assertEqual(HABITAT_ID, rescue["habitat_id"])
         self.assertEqual(TRACE_ID, rescue["trace_id"])
         self.assertEqual(REVIEW_CAMERA_ID, rescue["review_camera_id"])
+        self.assertTrue(rescue["optional"])
         self.assertNotIn(ACTION_ID, rescue.values())
         self.assertEqual(AVAILABILITY, rescue["availability"])
 
