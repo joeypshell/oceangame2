@@ -2,6 +2,7 @@ extends RefCounted
 
 const OPTIONS := [
 	{
+		"species_id": "spark_ray",
 		"adaptation_id": "anchor_fins",
 		"memory_id": "held_the_flow",
 		"adaptation_label": "Anchor Fins",
@@ -11,6 +12,7 @@ const OPTIONS := [
 		"exclusive_label": "Guardian Pulse",
 	},
 	{
+		"species_id": "spark_ray",
 		"adaptation_id": "guardian_pulse",
 		"memory_id": "stood_ground",
 		"adaptation_label": "Guardian Pulse",
@@ -18,6 +20,16 @@ const OPTIONS := [
 		"visible_change": "Charged wing arcs beside diver or under mounted control",
 		"payoff": "Aim an interrupt/knockback pulse; Shock Prod still required",
 		"exclusive_label": "Anchor Fins",
+	},
+	{
+		"species_id": "veil_cuttle",
+		"adaptation_id": "drift_lens",
+		"memory_id": "followed_the_bloom",
+		"adaptation_label": "Drift Lens",
+		"memory_label": "Followed the Bloom - traced the Southwest Jellyfish Bloom together",
+		"visible_change": "A lens shimmer follows Mica's gaze toward migrating wildlife",
+		"payoff": "Read a jellyfish patrol's path and direction; the hazard remains active",
+		"exclusive_label": "",
 	},
 ]
 
@@ -63,22 +75,25 @@ func debrief_lines() -> Array[String]:
 		if selected.is_empty():
 			return []
 		return [
-			"Spark Ray adaptation: %s" % selected["adaptation_label"],
+			"%s adaptation: %s" % [_active_callsign(), selected["adaptation_label"]],
 			"Memory consolidated | %s" % selected["payoff"],
 		]
 	var eligible := _eligible_options()
 	if eligible.is_empty():
 		return []
 	var option: Dictionary = eligible[clampi(_highlighted_index, 0, eligible.size() - 1)]
-	return [
-		"Spark Ray adaptation %d/%d" % [_highlighted_index + 1, eligible.size()],
+	var lines: Array[String] = [
+		"%s adaptation %d/%d" % [_active_callsign(), _highlighted_index + 1, eligible.size()],
 		"Memory: %s" % option["memory_label"],
 		"Choice: %s" % option["adaptation_label"],
 		"Visible: %s" % option["visible_change"],
 		"Payoff: %s" % option["payoff"],
-		"Exclusive with %s" % option["exclusive_label"],
-		"Shift/BOND: Choose | Space/USE: Consolidate",
 	]
+	var exclusive_label := str(option.get("exclusive_label", ""))
+	if not exclusive_label.is_empty():
+		lines.append("Exclusive with %s" % exclusive_label)
+	lines.append("Shift/BOND: Choose | Space/USE: Consolidate")
+	return lines
 
 
 func report() -> Dictionary:
@@ -128,7 +143,7 @@ func _consolidate() -> Dictionary:
 		"note": (
 			"%s consolidated | Begins next day" % option["adaptation_label"]
 			if changed
-			else "Spark Ray adaptation could not be saved"
+			else "%s adaptation could not be saved" % _active_callsign()
 		),
 	}
 
@@ -138,9 +153,10 @@ func _eligible_options() -> Array:
 	if individual.is_empty() or not str(individual.get("selected_adaptation_id", "")).is_empty():
 		return []
 	var earned: Array = individual.get("earned_memory_ids", [])
+	var species_id := str(individual.get("species_id", ""))
 	var eligible := []
 	for option in OPTIONS:
-		if earned.has(str(option["memory_id"])):
+		if str(option.get("species_id", "")) == species_id and earned.has(str(option["memory_id"])):
 			eligible.append(option)
 	return eligible
 
@@ -157,6 +173,10 @@ func _active_individual() -> Dictionary:
 
 func _selected_adaptation_id() -> String:
 	return str(_active_individual().get("selected_adaptation_id", ""))
+
+
+func _active_callsign() -> String:
+	return str(_active_individual().get("callsign", "Companion"))
 
 
 func _option_by_adaptation(adaptation_id: String) -> Dictionary:

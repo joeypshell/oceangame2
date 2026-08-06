@@ -47,7 +47,7 @@ static func handle_day_key(main) -> Dictionary:
 			}
 	var companion_sortie = _companion_sortie_for(main)
 	if companion_sortie != null and companion_sortie.requires_adaptation_selection():
-		main._last_status_note = "Consolidate one Spark Ray adaptation before starting the next day"
+		main._last_status_note = "Consolidate one companion adaptation before starting the next day"
 		main._update_status_label()
 		return {
 			"changed": false,
