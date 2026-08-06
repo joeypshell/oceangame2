@@ -2,7 +2,8 @@
 
 Date: 2026-08-05
 
-Status: Target-game planning contract. No general companion runtime exists yet.
+Status: Active planning contract. Living Expedition 01 implements the focused
+Spark Ray runtime; broader multi-individual/species behavior remains planned.
 
 ## Purpose
 
@@ -16,8 +17,10 @@ into tools, quest rewards, or unvalidated state inside `main.gd`.
 
 ## Foundational Rules
 
-- The first proof has one rescued individual and one active companion slot.
-- A later stable stays small enough that individuals remain recognizable.
+- The implemented first proof has one rescued individual and one active
+  companion slot.
+- The next proof adds exactly one contrasting individual and keeps the boat
+  habitat small enough that both remain recognizable.
 - Acquisition begins through observation, aid, rescue, or trust, not an abstract
   capture device.
 - Species provide a body plan, instincts, possible memories, adaptations, and
@@ -282,7 +285,7 @@ close those questions.
 
 ## Deferred Systems
 
-- additional species and stable management
+- third and later species or broad stable management
 - free-form naming UI
 - feeding, care schedules, bond meters, and personality conflicts
 - eggs, breeding, fusion, genes, and inherited techniques

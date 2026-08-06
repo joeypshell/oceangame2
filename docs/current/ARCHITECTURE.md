@@ -4,7 +4,7 @@
 
 The current project is a Godot 4.7 side-view ocean expedition foundation with source-driven maps, terrain, validation, captures, gameplay, and Web deployment.
 
-The active product roadmap is `docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md`; `docs/planning/REAL_TIME_CREATURE_PARTNERSHIP_DIRECTION.md` owns the selected independent/mounted control decision, and `OCEANGAME_PHASE_2_ROADMAP.md` records the completed foundation. Expansion 18's Transfer Hub runtime remains an implemented regression surface after strategic player-experience HOLD. Living Expedition 01 has focused Spark Ray rescue, follow, control, memory, night-choice, adaptation, and journey-evidence owners and is complete with exact-Web evidence and owner GO.
+The active product roadmap is `docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md`; `docs/planning/REAL_TIME_CREATURE_PARTNERSHIP_DIRECTION.md` owns the selected independent/mounted control decision, and `OCEANGAME_PHASE_2_ROADMAP.md` records the completed foundation. Expansion 18's Transfer Hub runtime remains an implemented regression surface after strategic player-experience HOLD. Living Expedition 01 has focused Spark Ray rescue, follow, control, memory, night-choice, adaptation, and journey-evidence owners and is complete with exact-Web evidence and owner GO. `LIVING_EXPEDITION_02_PLAN.md` selects the next bounded profile, habitat, and second-species extension; none of that runtime exists yet.
 
 ## Source Of Truth
 
@@ -228,6 +228,12 @@ Committed rescue/profile state derives riding availability; mounted state,
 position, targets, palette selection, and cooldowns remain transient. The first
 proof adds no creature-health owner.
 
+The current profile owner intentionally stores one `individual` plus one active
+id. Living Expedition 02 plans a schema-v2 bounded `individuals` collection,
+exact schema-v1 migration, one active sortie instance, and a read-only compact
+boat habitat. Preserve Kite's focused adaptation owners; do not generalize them
+into a broad creature framework or add habitat state to `main.gd`.
+
 ## Current Limits
 
 - Terrain tile art is a first-pass structural placeholder, not final production art.
@@ -277,6 +283,7 @@ proof adds no creature-health owner.
 - Expansion 17 ownership is locked in `OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`. It reuses `ExpansionProfileState`, `ExpeditionDiscoveryState`, `ExpeditionLeadResolver`, `ExpeditionPlanState`, scanner owners, and night debrief/presentation. One focused investigation state derives the two-fragment aggregate; entering night with both committed halves performs one automatic no-cost comparison and records the final discovery exactly once. Source owns physical artifacts and relationships; mutable selection, pending state, committed fragments, comparison readiness, and UI visibility are not authored in JSON or added directly to `main.gd`.
 - Expansion 18 uses `interior_expedition_transition_state.gd` to coordinate one paired Transfer Hub round trip without adopting the historical reset-style connector contract. `navigation_core_recovery_state.gd` owns the full-cargo guard, live consumed state, and pending core transaction; existing oxygen, daylight, health, cargo, active-tool, profile, and boat owners retain their state and authority. `transfer_hub_mission_guidance.gd`, focused smoke, and captures project the route and review state while the canonical boat remains the only bank, commit, refill, night, and completion owner.
 - Living Expedition 01 is implemented through both mutually exclusive Spark Ray adaptation branches. Its milestone journey evidence protects rescue, bond commitment, follow, BOND slow-time, riding, memories, night choice, independent/mounted payoff, isolation, and equipment gates; corrected gameplay build `c0c7b4e` received owner GO. Do not enlarge `main.gd` or generalize the one-off eel controller into the companion framework.
+- Living Expedition 02 is planning-only until its implementation issues merge. The selected extension is exactly one non-mounted Veil Cuttle, a compact canonical-boat habitat, next-sortie active selection, and one optional Reveal Trace affordance that cannot replace scanning or equipment access.
 - Expansion 06 source/state ownership is locked in `OCEANGAME_EXPANSION_06_SOURCE_CONTRACT.md` and corrected by `OCEANGAME_EXPANSION_07_PLAYER_GATE_CORRECTION.md`: one immutable deep-cache territorial-lunge encounter, one durable non-circular shock-prod project, focused day-local hostile state, and player health separate from oxygen. The eel cache declares a behavioral guard link but no capability collection lock; contact and knockback interrupt normal timed salvage until the encounter is controlled.
 - `shock_prod_presentation.gd` is a read-only player-local effect: each real discharge consumes the controller result and authoritative 72px range to show a directional field, connected electrical bolt/hit impact, or forward endpoint miss without owning targeting, damage, recoil, or cooldown state. The hostile controller owns world-local health, hit recoil/separation, recovery cadence, and defeat.
 - `--smoke-expansion-06-combat-foundation` protects the attemptable unarmed cache, active-eel interruption, contact damage/invulnerability, continuing oxygen/daylight pressure, exact project build/reload, three-hit no-reward victory, guarded cache collection/banking, connector/day state, combat cleanup, and failure resets.

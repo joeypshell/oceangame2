@@ -147,8 +147,9 @@ habitats, low counts, and non-circular dependencies.
 
 ### Stable And Individual History
 
-The first proof has one individual. A later compact boat habitat may hold a
-small stable with one active companion selected per expedition.
+The implemented first proof has one individual. The next bounded milestone adds
+one Veil Cuttle so a compact boat habitat can present exactly two individuals
+with one active companion selected per launched expedition.
 
 The game should preserve individual names/callsigns, temperament, memories,
 adaptations, and important history. Large storage catalogs, breeding, fusion,
@@ -229,15 +230,18 @@ The repository currently implements:
   Prod progression
 - current, darkness, pressure, wreck, hostile, research, and interior journeys
 - one territorial eel and bounded biological resources
+- one persistent Spark Ray individual with rescue, follow, BOND slow-time,
+  committed-bond riding, two exact-once memories, night consolidation, and two
+  mutually exclusive independent/mounted adaptations
 - deterministic validators, progression audit, smokes, captures, baselines, and
   public Web deployment
 
 The repository does not yet implement:
 
-- a general creature/species model
-- persistent individual companions or a stable
-- follow, command, mounting, context, memory, or adaptation runtime
-- creature-focused night care or consolidation
+- a bounded multi-individual profile or compact boat habitat
+- a second species, active-companion selection between individuals, or inactive
+  habitat presentation
+- generalized species runtime beyond the focused Spark Ray owners
 - scalable creature art, animation, audio, behavior, or combat architecture
 
 Current runtime truth is documented in `docs/current/PROJECT_CONTEXT.md` and
@@ -262,8 +266,10 @@ Current runtime truth is documented in `docs/current/PROJECT_CONTEXT.md` and
 - Emergency Week or overnight survival-resource taxes
 - giant creature roster or storage UI
 - turn-based three-creature party combat
-- more than one active expedition companion in the first proof
-- breeding, fusion, genes, eggs, or inheritance in the first proof
+- more than one active expedition companion at a time
+- a third species or broad stable-management surface before the two-individual
+  proof receives GO
+- breeding, fusion, genes, eggs, or inheritance
 - feeding chores, hidden loyalty, lifespan, forced retirement, or creature death
 - generalized ecosystem simulation
 - broad economy, inventory grid, or unrestricted crafting tree
@@ -274,7 +280,9 @@ Current runtime truth is documented in `docs/current/PROJECT_CONTEXT.md` and
 
 The next proof succeeds when the player can answer yes:
 
-> Did this creature feel like an individual shaped by what happened during our
-> expedition, and did seeing its adaptation make me want to begin another day?
+> Did choosing between Kite and Mica feel like choosing two recognizable
+> partners for different expeditions, did the inactive individual still matter
+> at the boat, and did that choice make another day more interesting?
 
-If not, add no second species. Correct the relationship and loop first.
+If not, add no third species. Correct identity, selection, and boat presence
+before expanding the roster.
