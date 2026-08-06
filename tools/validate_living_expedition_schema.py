@@ -7,6 +7,12 @@ import re
 from typing import Any
 
 from creature_catalog_contract import STATE_FIELDS, load_creature_catalog, validate_creature_catalog
+from living_expedition_03_contract import (
+    expected_memory_records,
+    expected_payoff_records,
+    expected_trace_id,
+    validate_living_expedition_03_relationship,
+)
 from validate_full_level_traversal import CollisionField, PlayerBody, map_point, rect_cells, solid_cells
 
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
@@ -28,21 +34,12 @@ VEIL_SPECIES_ID = "veil_cuttle"
 VEIL_INDIVIDUAL_ID = "veil_cuttle_juvenile_01"
 VEIL_RESCUE_ID = "veil_cuttle_rescue_01"
 HABITAT_ID = "companion_habitat_01"
-TRACE_ID = "veil_cuttle_trace_01"
 VEIL_REVIEW_CAMERA_ID = "veil_cuttle_review_01"
 RESCUE_IDENTITIES = {
     RESCUE_ID: (SPECIES_ID, INDIVIDUAL_ID),
     VEIL_RESCUE_ID: (VEIL_SPECIES_ID, VEIL_INDIVIDUAL_ID),
 }
-MEMORY_RECORDS = {
-    "spark_ray_current_memory_01": "held_the_flow",
-    "spark_ray_eel_memory_01": "stood_ground",
-}
-PAYOFF_RECORDS = {
-    "spark_ray_anchor_current_01": "anchor_fins",
-    "spark_ray_guardian_eel_01": "guardian_pulse",
-}
-SEED_FIELDS = {"daily_condition_id", "day_seed", "seed", "spawn_chance", "spawn_weight"}
+SEED_FIELDS = {"day_seed", "seed", "spawn_chance", "spawn_weight"}
 ACCESS_FIELDS = (
     "required_capability_id",
     "required_upgrade_id",
@@ -123,7 +120,15 @@ def _validate_collection_shapes(map_data: dict[str, Any]) -> tuple[dict[str, dic
 
 
 def _map_index(map_data: dict[str, Any]) -> dict[str, dict[str, Any]]:
-    fields = ("entities", "zones", "hostile_encounters", "survey_targets", "regional_journeys")
+    fields = (
+        "entities",
+        "zones",
+        "hostile_encounters",
+        "survey_targets",
+        "regional_journeys",
+        "daily_conditions",
+        "moving_hazards",
+    )
     return {str(item.get("id", "")): item for field in fields for item in _items(map_data, field)}
 
 
@@ -210,18 +215,21 @@ def validate_living_expedition_schema(
     contexts = _items(map_data, "companion_contexts")
     opportunities = _items(map_data, "creature_memory_opportunities")
     payoffs = _items(map_data, "creature_adaptation_payoffs")
+    trace_id = expected_trace_id(map_data)
+    memory_records = expected_memory_records(map_data)
+    payoff_records = expected_payoff_records(map_data)
     if [item.get("id") for item in rescues] != list(RESCUE_IDENTITIES):
         failures.append(
             f"Living Expedition requires ordered rescues {list(RESCUE_IDENTITIES)!r}."
         )
     if [item.get("id") for item in habitats] != [HABITAT_ID]:
         failures.append(f"Second proof requires exactly one habitat {HABITAT_ID!r}.")
-    if [item.get("id") for item in traces] != [TRACE_ID]:
-        failures.append(f"Second proof requires exactly one trace {TRACE_ID!r}.")
-    if {item.get("id") for item in opportunities} != set(MEMORY_RECORDS):
-        failures.append(f"First proof memory records must be exactly {sorted(MEMORY_RECORDS)}.")
-    if {item.get("id") for item in payoffs} != set(PAYOFF_RECORDS):
-        failures.append(f"First proof payoff records must be exactly {sorted(PAYOFF_RECORDS)}.")
+    if [item.get("id") for item in traces] != [trace_id]:
+        failures.append(f"Living Expedition requires exactly one current trace {trace_id!r}.")
+    if {item.get("id") for item in opportunities} != set(memory_records):
+        failures.append(f"Memory records must be exactly {sorted(memory_records)}.")
+    if {item.get("id") for item in payoffs} != set(payoff_records):
+        failures.append(f"Payoff records must be exactly {sorted(payoff_records)}.")
     for rescue in rescues:
         label = str(rescue.get("id", "creature rescue"))
         required = ("species_id", "individual_id", "x", "y", "rescue_kind", "required_capability_id", "commit_map_id", "commit_entry_id")
@@ -254,7 +262,7 @@ def validate_living_expedition_schema(
                 failures.append(f"{label} must remain optional progression.")
             expected_links = {
                 "habitat_id": HABITAT_ID,
-                "trace_id": TRACE_ID,
+                "trace_id": trace_id,
                 "review_camera_id": VEIL_REVIEW_CAMERA_ID,
             }
             for field, expected in expected_links.items():
@@ -303,8 +311,9 @@ def validate_living_expedition_schema(
             failures.append(f"{label} must remain optional, rewardless, and non-progression.")
     for context in contexts:
         label = str(context.get("id", "companion context"))
-        if context.get("species_id") != SPECIES_ID or context.get("species_id") not in species:
-            failures.append(f"{label}.species_id must reference {SPECIES_ID!r}.")
+        context_species = species.get(str(context.get("species_id", "")), {})
+        if not context_species:
+            failures.append(f"{label}.species_id must reference a catalog species.")
         kind = context.get("context_kind")
         if kind not in CONTEXT_KINDS:
             failures.append(f"{label}.context_kind must be one of {sorted(CONTEXT_KINDS)}.")
@@ -316,9 +325,9 @@ def validate_living_expedition_schema(
         if role not in actions[action_id].get("roles", []):
             failures.append(f"{label} action {action_id!r} does not support role {role!r}.")
         if kind == "mounted_route_review":
-            if action_id not in species[SPECIES_ID].get("base_action_ids", []):
+            if action_id not in context_species.get("base_action_ids", []):
                 failures.append(f"{label} must review a base mounted action.")
-            failures.extend(_validate_mounted_route(map_data, context, species[SPECIES_ID]))
+            failures.extend(_validate_mounted_route(map_data, context, context_species))
             continue
         adaptation_id = context.get("required_adaptation_id")
         if adaptation_id not in adaptations:
@@ -330,11 +339,16 @@ def validate_living_expedition_schema(
     for opportunity in opportunities:
         label = str(opportunity.get("id", "memory opportunity"))
         memory_id = opportunity.get("memory_id")
-        if MEMORY_RECORDS.get(label) != memory_id or memory_id not in memories:
+        if memory_records.get(label) != memory_id or memory_id not in memories:
             failures.append(f"{label}.memory_id is not the contracted memory relationship.")
             continue
-        if opportunity.get("species_id") != SPECIES_ID or opportunity.get("individual_id") != INDIVIDUAL_ID:
-            failures.append(f"{label} must belong to the rescued Spark Ray individual.")
+        opportunity_species = species.get(str(opportunity.get("species_id", "")), {})
+        opportunity_individual = individuals.get(str(opportunity.get("individual_id", "")), {})
+        if (
+            memory_id not in opportunity_species.get("memory_ids", [])
+            or opportunity_individual.get("species_id") != opportunity.get("species_id")
+        ):
+            failures.append(f"{label} must belong to a catalog individual eligible for {memory_id!r}.")
         if opportunity.get("event_kind") != memories[memory_id].get("event_kind"):
             failures.append(f"{label}.event_kind does not match memory {memory_id!r}.")
         adaptation_ids, item_failures = _id_list(opportunity.get("adaptation_ids"), f"{label}.adaptation_ids", allow_empty=False)
@@ -343,7 +357,7 @@ def validate_living_expedition_schema(
             failures.append(f"{label} has an unsupported memory/adaptation pair.")
         if opportunity.get("required_adaptation_id") in adaptation_ids:
             failures.append(f"{label} circularly requires the adaptation it awards.")
-        target = map_items.get(str(opportunity.get("target_id", "")), {})
+        target = map_items.get(str(opportunity.get("target_id", "")), records.get(str(opportunity.get("target_id", "")), {}))
         if not target:
             failures.append(f"{label}.target_id does not resolve to a map source record.")
         if memory_id == "held_the_flow" and target.get("current_gate") is not True:
@@ -356,11 +370,12 @@ def validate_living_expedition_schema(
     for payoff in payoffs:
         label = str(payoff.get("id", "adaptation payoff"))
         adaptation_id = payoff.get("adaptation_id")
-        if PAYOFF_RECORDS.get(label) != adaptation_id or adaptation_id not in adaptations:
+        if payoff_records.get(label) != adaptation_id or adaptation_id not in adaptations:
             failures.append(f"{label}.adaptation_id is not the contracted payoff relationship.")
             continue
-        if payoff.get("species_id") != SPECIES_ID:
-            failures.append(f"{label}.species_id must reference {SPECIES_ID!r}.")
+        payoff_species = species.get(str(payoff.get("species_id", "")), {})
+        if adaptation_id not in payoff_species.get("adaptation_ids", []):
+            failures.append(f"{label}.species_id is not eligible for {adaptation_id!r}.")
         target = map_items.get(str(payoff.get("target_id", "")), {})
         if not target:
             failures.append(f"{label}.target_id does not resolve to a map source record.")
@@ -370,8 +385,9 @@ def validate_living_expedition_schema(
         if missing:
             failures.append(f"{label} would bypass target equipment requirements {sorted(missing)}.")
         expected_contexts = {
-            "independent_context_id": "independent_action_review",
-            "mounted_context_id": "mounted_action_review",
+            f"{role}_context_id": f"{role}_action_review"
+            for role in ("independent", "mounted")
+            if f"{role}_action_id" in adaptations[adaptation_id]
         }
         for field, expected_kind in expected_contexts.items():
             context = records.get(str(payoff.get(field, "")), {})
@@ -379,6 +395,9 @@ def validate_living_expedition_schema(
                 failures.append(f"{label}.{field} must reference its {expected_kind} for {adaptation_id!r}.")
             elif context.get("target_id") != payoff.get("target_id"):
                 failures.append(f"{label}.{field} and payoff target_id must agree.")
+            elif context.get("species_id") != payoff.get("species_id"):
+                failures.append(f"{label}.{field} and payoff species_id must agree.")
+    failures.extend(validate_living_expedition_03_relationship(map_data))
     return failures
 
 
