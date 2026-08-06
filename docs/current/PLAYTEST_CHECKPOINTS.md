@@ -1,6 +1,6 @@
 # Playtest Checkpoints
 
-Last updated: 2026-07-24
+Last updated: 2026-08-05
 
 ## Purpose
 
@@ -17,50 +17,38 @@ the routine end-to-end regression layer.
 
 | ID | Starts with | Deliberately incomplete |
 | --- | --- | --- |
-| `expansion_14_start` | Earlier projects and discoveries complete; southeast archive and recorder committed; Ti2 + Coil1 banked | Current Stabilizer build, advanced-current crossing, relay core, relay survey, and boat commitment |
+| `living_expedition_01_start` | Prior required projects/discoveries committed; Cutter, Fins, and Shock Prod available; empty cargo; no companion | Spark Ray rescue, boat commitment, command/riding proof, shared memory, night adaptation, and Day 3 payoff |
 
 Local:
 
 ```powershell
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=expansion_14_start
-```
-
-Verified public Web candidate:
-
-```text
-https://joeypshell.github.io/oceangame2/?review=1f148ebd9766ae18be48f0c14368c83d62375d05&checkpoint=expansion_14_start
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=living_expedition_01_start
 ```
 
 The checkpoint forces `production_level_01` and identifies itself in the
 review overlay. The ordinary `?review=<sha>` URL remains a completely empty,
 isolated profile.
 
-The current candidate includes the bottom active-tool hotbar, top passive
-equipment strip, visible Northwest Wreck Relay, held scanner progression with
-a target-local readout, and readable Shock Prod hit/miss feedback. Checkpoint
-progression semantics are unchanged.
-
-Public verification passed for exact SHA `1f148ebd9766ae18be48f0c14368c83d62375d05`
-in [Godot Web Export run 30129321057](https://github.com/joeypshell/oceangame2/actions/runs/30129321057).
-The independent checker confirmed the checkpoint marker, full-level map,
-fresh-profile fallback, retained slice fallback, viewport framing, mobile touch
-alignment, and clean browser/resource startup.
+The exact public Web candidate and deployment evidence are intentionally
+pending issue #1232 after the journey-evidence change merges. Do not reuse an
+older build URL as Living Expedition evidence.
 
 ## Current Owner Replay
 
-1. Build the Current Stabilizer and pass through the left advanced current by
-   swimming; no `E` interaction is expected.
-2. Find the visible Northwest Wreck Relay, equip Scanner, and hold `Space/USE`.
-   The field must remain visible for the full hold; releasing the input or
-   switching tools must clear it and cancel partial progress.
-3. Aim the Scanner at ordinary subjects and confirm the temporary local card
-   identifies them without awarding progression.
-4. Use the Shock Prod against the eel and confirm forward miss/fizzle feedback,
-   connected-hit bolt, eel health, recoil separation, cadence, and defeat.
-5. Confirm passive upgrades appear under top `EQUIPPED` slots while Scanner,
-   Cutter, and Shock Prod remain in the bottom active-tool hotbar.
-6. Allow oxygen to deplete and confirm movement is frozen behind the retry
-   result, then use `R/RESET` and confirm movement returns.
+1. Select the Cutter and hold `Space/USE` at the trapped juvenile Spark Ray;
+   return together to the canonical surface boat to commit the bond.
+2. On the following sortie, hold `Shift/BOND`, mount, move as the Spark Ray,
+   use `Tab/TOOL` and `Space/USE` for creature actions, then dismount and confirm
+   diver tools return.
+3. Earn either `held_the_flow` against the authored current or `stood_ground`
+   through the territorial eel cycle, then return to the boat.
+4. End Night 2, deliberately consolidate the matching adaptation, and begin
+   Day 3.
+5. Confirm the selected adaptation has a readable independent and mounted
+   payoff without bypassing the diver's equipment gates.
+
+The retained `expansion_14_start` fixture remains available for targeted legacy
+regressions, but it is no longer the current owner checkpoint.
 
 ## Guardrails
 

@@ -69,6 +69,7 @@ func _run() -> void:
 	_test_hostile_dismount(control, player, ray)
 	_test_reset_and_inactive_restore(control, player, original_time_scale)
 	_expect(profile.companion_report() == profile_before, "command or riding state mutated the persistent companion profile")
+	_test_scene_exit_restore(runtime, control, original_time_scale)
 	_finish(world, player, runtime, hud, original_time_scale)
 
 
@@ -199,6 +200,12 @@ func _test_reset_and_inactive_restore(control, player, original_time_scale: floa
 	_control_allowed = true
 
 
+func _test_scene_exit_restore(runtime, control, original_time_scale: float) -> void:
+	control.begin_command_mode()
+	runtime.clear_map()
+	_expect(is_equal_approx(Engine.time_scale, original_time_scale), "scene exit did not restore normal time")
+
+
 func _find_open_route(world, start: Vector2) -> Array:
 	for salvage in world.get_salvage_centers():
 		var path: Array = world.find_open_path(start, salvage.get("center", Vector2.ZERO))
@@ -264,7 +271,7 @@ func _finish(world, player, runtime, hud, original_time_scale: float) -> void:
 			push_error("Spark Ray riding smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("PASS: Spark Ray riding shift_bond=true slow_time=0.2 restored=true commands<=3 mount_clearance=true movement_owner=ray camera_owner=diver hotbar=creature glide_surge=directional+cooldown+no_damage gate_bypass=false forced_dismount=true mobile_action=companion_command profile_unchanged=true.")
+	print("PASS: Spark Ray riding shift_bond=true slow_time=0.2 restored=release+selection+retry+failure+scene_exit commands<=3 mount_clearance=true movement_owner=ray camera_owner=diver hotbar=creature glide_surge=directional+cooldown+no_damage gate_bypass=false forced_dismount=true mobile_action=companion_command profile_unchanged=true.")
 	quit(0)
 
 

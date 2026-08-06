@@ -6,10 +6,12 @@ const EXPANSION_14_START := "expansion_14_start"
 const EXPANSION_16_START := "expansion_16_start"
 const EXPANSION_17_START := "expansion_17_start"
 const EXPANSION_18_START := "expansion_18_start"
+const LIVING_EXPEDITION_01_START := "living_expedition_01_start"
 const EXPANSION_14_MAP_PATH := "res://maps/production_level_01.greybox.json"
 const EXPANSION_16_MAP_PATH := EXPANSION_14_MAP_PATH
 const EXPANSION_17_MAP_PATH := EXPANSION_14_MAP_PATH
 const EXPANSION_18_MAP_PATH := EXPANSION_14_MAP_PATH
+const LIVING_EXPEDITION_01_MAP_PATH := EXPANSION_14_MAP_PATH
 const PRIOR_PROJECT_IDS := [
 	ExpansionProfileState.PROPULSION_FINS_PROJECT_ID,
 	ExpansionProfileState.SURVEY_SCANNER_PROJECT_ID,
@@ -89,6 +91,10 @@ const EXPANSION_18_PRIOR_DISCOVERY_IDS := EXPANSION_17_PRIOR_DISCOVERY_IDS + [
 	ExpansionProfileState.ABYSSAL_SHELF_FRAGMENT_DISCOVERY_ID,
 	ExpansionProfileState.WRECK_NETWORK_TRIANGULATION_DISCOVERY_ID,
 ]
+const LIVING_EXPEDITION_01_PRIOR_PROJECT_IDS := EXPANSION_18_PRIOR_PROJECT_IDS
+const LIVING_EXPEDITION_01_PRIOR_DISCOVERY_IDS := EXPANSION_18_PRIOR_DISCOVERY_IDS + [
+	ExpansionProfileState.TRANSFER_HUB_NAVIGATION_CORE_DISCOVERY_ID,
+]
 const REBREATHER_RECIPE := {
 	ExpansionProfileState.TITANIUM_MATERIAL_ID: 1,
 	ExpansionProfileState.RUBBER_MATERIAL_ID: 1,
@@ -98,7 +104,13 @@ const REBREATHER_RECIPE := {
 
 
 static func is_supported(checkpoint_id: String) -> bool:
-	return checkpoint_id in [EXPANSION_14_START, EXPANSION_16_START, EXPANSION_17_START, EXPANSION_18_START]
+	return checkpoint_id in [
+		EXPANSION_14_START,
+		EXPANSION_16_START,
+		EXPANSION_17_START,
+		EXPANSION_18_START,
+		LIVING_EXPEDITION_01_START,
+	]
 
 
 static func required_map_path(checkpoint_id: String) -> String:
@@ -146,10 +158,15 @@ static func apply(checkpoint_id: String, profile) -> Dictionary:
 	if checkpoint_id == EXPANSION_18_START:
 		result["active_objective_id"] = "transfer_hub_core_recovery"
 		result["active_objective_label"] = "Transfer Hub"
+	elif checkpoint_id == LIVING_EXPEDITION_01_START:
+		result["active_objective_id"] = "spark_ray_rescue"
+		result["active_objective_label"] = "Spark Ray rescue"
 	return _result(true, checkpoint_id, "ready", result)
 
 
 static func _project_ids_for(checkpoint_id: String) -> Array:
+	if checkpoint_id == LIVING_EXPEDITION_01_START:
+		return LIVING_EXPEDITION_01_PRIOR_PROJECT_IDS
 	if checkpoint_id == EXPANSION_18_START:
 		return EXPANSION_18_PRIOR_PROJECT_IDS
 	if checkpoint_id == EXPANSION_17_START:
@@ -160,6 +177,8 @@ static func _project_ids_for(checkpoint_id: String) -> Array:
 
 
 static func _discovery_ids_for(checkpoint_id: String) -> Array:
+	if checkpoint_id == LIVING_EXPEDITION_01_START:
+		return LIVING_EXPEDITION_01_PRIOR_DISCOVERY_IDS
 	if checkpoint_id == EXPANSION_18_START:
 		return EXPANSION_18_PRIOR_DISCOVERY_IDS
 	if checkpoint_id == EXPANSION_17_START:
@@ -170,14 +189,14 @@ static func _discovery_ids_for(checkpoint_id: String) -> Array:
 
 
 static func _recipe_for(checkpoint_id: String) -> Dictionary:
-	if checkpoint_id in [EXPANSION_17_START, EXPANSION_18_START]:
+	if checkpoint_id in [EXPANSION_17_START, EXPANSION_18_START, LIVING_EXPEDITION_01_START]:
 		return {}
 	return REBREATHER_RECIPE if checkpoint_id == EXPANSION_16_START else STABILIZER_RECIPE
 
 
 static func _banked_target_ids_for(checkpoint_id: String) -> Array:
 	var target_ids: Array = [ExpansionProfileState.SOUTHEAST_WRECK_RECORDER_ID]
-	if checkpoint_id in [EXPANSION_17_START, EXPANSION_18_START]:
+	if checkpoint_id in [EXPANSION_17_START, EXPANSION_18_START, LIVING_EXPEDITION_01_START]:
 		target_ids.append(ExpansionProfileState.FAR_WEST_WRECK_RECORDER_ID)
 	return target_ids
 
@@ -248,10 +267,19 @@ static func _profile_is_empty(profile) -> bool:
 		and report.get("completed_projects", []).is_empty()
 		and report.get("material_inventory", {}).is_empty()
 		and report.get("banked_tool_target_ids", []).is_empty()
+		and not profile.has_committed_companion()
 	)
 
 
 static func _boundary_is_ready(checkpoint_id: String, profile) -> bool:
+	if checkpoint_id == LIVING_EXPEDITION_01_START:
+		return (
+			profile.has_completed_project(ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_PROJECT_ID)
+			and profile.has_capability(ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_CAPABILITY_ID)
+			and profile.has_completed_discovery(ExpansionProfileState.TRANSFER_HUB_NAVIGATION_CORE_DISCOVERY_ID)
+			and not profile.has_committed_companion()
+			and profile.material_inventory().is_empty()
+		)
 	if checkpoint_id == EXPANSION_18_START:
 		return (
 			profile.has_completed_project(ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_PROJECT_ID)

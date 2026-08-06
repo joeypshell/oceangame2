@@ -90,7 +90,7 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 
 Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Milestone #45 is the only open implementation milestone.
 
-1. [Living Expedition 01: Spark Ray Adaptation Proof](https://github.com/joeypshell/oceangame2/milestone/45) - active through revised issues #1223-#1232 plus command/riding issue #1235; foundation work is complete through #1223-#1226 and #1235, with map-source authoring #1227 next.
+1. [Living Expedition 01: Spark Ray Adaptation Proof](https://github.com/joeypshell/oceangame2/milestone/45) - playable work and deterministic evidence are complete through #1231/#1235; #1232 exact-Web owner closeout remains.
 2. [Expansion 17: Wreck Network Triangulation](https://github.com/joeypshell/oceangame2/milestone/43) - complete with owner GO through #1167 after technical corrections #1175/#1178 and bounded HOLD corrections #1181-#1184; exact reviewed runtime `075a450`.
 3. [Expansion 16: Deeper Wreck Oxygen Return](https://github.com/joeypshell/oceangame2/milestone/42) - complete with owner GO after corrections #1143/#1144/#1151/#1153; exact reviewed runtime `05b482e`.
 4. [Expansion 15: Expedition Planning And Choice](https://github.com/joeypshell/oceangame2/milestone/41) - complete with owner GO after corrections #1113/#1117/#1119; exact reviewed runtime `23f4172`.
