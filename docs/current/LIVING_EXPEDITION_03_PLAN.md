@@ -94,8 +94,8 @@ may substitute for those outcomes.
 ### Persistent profile
 
 - `CompanionProfileState` remains the versioned owner of individual memories and
-  selected adaptations. A schema migration may add only the fields required for
-  the exact-once Mica memory/adaptation.
+  selected adaptations. Its schema-v2 individual shape already supports the
+  exact-once Mica memory/adaptation, so no profile-shape migration is planned.
 - Committed observation is represented by Mica's earned memory; do not create a
   parallel generic research wallet or unrelated discovery reward.
 - Kite's memories, selected adaptation, riding availability, and active

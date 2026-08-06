@@ -49,6 +49,7 @@ Core sources and operating docs:
 - [Living Expedition 02 Web Verification](docs/current/LIVING_EXPEDITION_02_WEB_VERIFICATION.md)
 - [Living Expedition 02 Closeout](docs/current/LIVING_EXPEDITION_02_CLOSEOUT.md)
 - [Living Expedition 03 Plan](docs/current/LIVING_EXPEDITION_03_PLAN.md)
+- [Living Expedition 03 Source And State Contract](docs/current/LIVING_EXPEDITION_03_SOURCE_STATE_CONTRACT.md)
 - [Historical OceanGame Phase 2 Foundation Roadmap](docs/planning/OCEANGAME_PHASE_2_ROADMAP.md)
 - [Expedition Adaptation Direction](docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md)
 - [Capability And Resource Progression Framework](docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md)
