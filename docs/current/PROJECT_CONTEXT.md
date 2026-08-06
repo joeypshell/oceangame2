@@ -248,7 +248,7 @@ Current issue state as of 2026-08-05:
 - Closed planning: #1190 selected Expansion 18 Transfer Hub Interior Expedition.
 - Closed direction gate: #1201 records Expansion 18's strategic HOLD and transition; #1192-#1200 plus bounded corrections remain technically complete.
 - Closed planning: #1219 documents the first Expedition Adaptation proof; #1221 realigns the target game, creature contracts, roadmap, and milestone state through merged PR #1222.
-- Active implementation: milestone #45 has completed its contract, schema, profile, follow, and command/riding foundation through #1223-#1226 and #1235; map-source authoring #1227 is next.
+- Active implementation: milestone #45 has playable work and deterministic journey/checkpoint/capture evidence complete through #1231/#1235. #1232 remains the exact-Web owner closeout.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -386,7 +386,7 @@ Current issue state as of 2026-08-05:
 
 ## Recommended Next Work
 
-Continue Living Expedition 01 with #1227 map source -> #1228 memory/night -> #1229/#1230 adaptations -> #1231 evidence -> #1232 exact-Web owner closeout. The contract, schema, profile, follow, and command/riding foundation is complete through #1223-#1226 and #1235. Milestone #45 is the only active implementation milestone. Keep #52/#53 deferred.
+Continue Living Expedition 01 with #1232 exact-Web owner closeout. The playable rescue, follow, command/riding, memory/night, both adaptation branches, and deterministic journey/checkpoint/capture evidence are complete through #1231/#1235. Milestone #45 is the only active implementation milestone. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 
