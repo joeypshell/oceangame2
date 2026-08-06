@@ -77,6 +77,7 @@ func _run_branch(main, adaptation_id: String) -> String:
 	if rescue.is_empty():
 		return "branch=%s missing_rescue" % adaptation_id
 
+	main._expedition_day_state.record_sortie_started()
 	main._sortie_state.collect_salvage("journey_full_cargo_a", 0)
 	main._sortie_state.collect_salvage("journey_full_cargo_b", 0)
 	main._player.global_position = rescue.get("center", Vector2.ZERO)
@@ -88,13 +89,25 @@ func _run_branch(main, adaptation_id: String) -> String:
 	main._companion_rescue.update(CompanionRescueRuntime.RELEASE_SECONDS)
 	main._active_tool_runtime.release_use()
 	_expect(main._companion_rescue.pending_companion() != null, "%s rescue did not free a sortie-local juvenile" % adaptation_id)
+	_expect(
+		main._companion_rescue.prompt() == "PARTNER: Kite is free | Return together to the yellow surface boat",
+		"%s completed rescue did not persistently direct Kite to the surface boat" % adaptation_id
+	)
 	main._sortie_state.clear_held()
 	main._player.global_position = main._world.get_entry_position(BOAT_ENTRY_ID)
 	main._cargo_collection.update(0.0)
 	_expect(profile.has_committed_companion(), "%s canonical boat did not commit the bond" % adaptation_id)
 	_expect(main._companion_sortie.companion() == null, "%s riding unlocked on the rescue sortie" % adaptation_id)
+	_expect(
+		_guidance(main).find("Press N at the boat to end the day") != -1,
+		"%s boat commitment did not explain the next-day handoff" % adaptation_id
+	)
 
 	main._expedition_day_state.begin_next_day()
+	_expect(
+		_guidance(main).find("Leave the boat to begin a dive together") != -1,
+		"%s next day did not tell the player how to launch with Kite" % adaptation_id
+	)
 	main._expedition_day_state.record_sortie_started()
 	var spawned: Dictionary = main._companion_sortie.sync_spawn()
 	var ray = main._companion_sortie.companion()
@@ -103,16 +116,28 @@ func _run_branch(main, adaptation_id: String) -> String:
 		return "branch=%s no_companion" % adaptation_id
 	_disable_companion_processing(main, ray)
 	_place_pair(main._player, ray, main._world.get_entry_position(BOAT_ENTRY_ID) + Vector2(100.0, 80.0))
+	_expect(
+		_guidance(main).find("hold Shift/BOND") != -1 and _guidance(main).find("Tab selects Mount") != -1,
+		"%s first partnered dive did not introduce BOND and Mount" % adaptation_id
+	)
 
 	var control = main._companion_sortie.control_runtime()
 	var command_opened: Dictionary = control.begin_command_mode()
 	_expect(is_equal_approx(Engine.time_scale, 0.2), "%s BOND did not slow complete simulation to 20 percent" % adaptation_id)
 	_expect((command_opened.get("context_commands", []) as Array).size() <= 3, "%s command palette exceeded three actions" % adaptation_id)
+	_expect(
+		_guidance(main).find("Tab/TOOL selects a command") != -1 and _guidance(main).find("Space/USE confirms") != -1,
+		"%s open BOND palette did not explain selection and confirmation" % adaptation_id
+	)
 	control.end_command_mode()
 	_expect(is_equal_approx(Engine.time_scale, 1.0), "%s command close did not restore simulation speed" % adaptation_id)
 	_expect(bool(control.request_mount().get("changed", false)), "%s base riding did not unlock on Day 2" % adaptation_id)
 	var hotbar: Array = control.report().get("mounted_actions", [])
 	_expect(not hotbar.is_empty() and str(hotbar[0].get("id", "")) == "glide_surge", "%s mounted hotbar omitted Glide Surge" % adaptation_id)
+	_expect(
+		_guidance(main).find("Glide Surge") != -1 and _guidance(main).find("lower-right current or eel") != -1,
+		"%s mounted guidance did not connect the action to a shared-event destination" % adaptation_id
+	)
 	var before: Vector2 = ray.global_position
 	control.activate_mounted_action()
 	control.advance_mounted_movement(0.12, Vector2.RIGHT)
@@ -122,10 +147,12 @@ func _run_branch(main, adaptation_id: String) -> String:
 	var memory_id := FLOW_MEMORY_ID if adaptation_id == "anchor_fins" else GROUND_MEMORY_ID
 	var memory_result := _qualify_memory(main, ray, memory_id)
 	_expect(memory_result.get("memory_id") == memory_id, "%s branch did not qualify %s" % [adaptation_id, memory_id])
+	_expect(_guidance(main).find("formed a memory") != -1, "%s qualified memory did not direct a boat return" % adaptation_id)
 	main._player.global_position = main._world.get_entry_position(BOAT_ENTRY_ID)
 	var committed: Dictionary = main._companion_sortie.commit_memories_at_boat()
 	_expect(bool(committed.get("changed", false)), "%s memory did not commit at the canonical boat" % adaptation_id)
 	_expect((profile.companion_report().get("individual", {}).get("earned_memory_ids", []) as Array).has(memory_id), "%s profile omitted committed memory" % adaptation_id)
+	_expect(_guidance(main).find("choose Kite's adaptation tonight") != -1, "%s committed memory did not explain the night choice" % adaptation_id)
 
 	main._expedition_day_state.end_day("journey_smoke")
 	main._companion_sortie.begin_debrief()
@@ -189,6 +216,16 @@ func _qualify_memory(main, ray, memory_id: String) -> Dictionary:
 	hostiles.state["phase"] = "lunge"
 	main._companion_sortie.observe_hostiles(hostiles, {"id": HOSTILE_ID, "kind": "lunge"})
 	return main._companion_sortie.observe_hostiles(hostiles, {"id": HOSTILE_ID, "kind": "contact"})
+
+
+func _guidance(main) -> String:
+	return main._companion_journey_guidance.objective_text(
+		main._world,
+		main._player,
+		main._anomaly_survey.profile_state(),
+		main._companion_sortie,
+		main._expedition_day_state
+	)
 
 
 func _prove_payoff(main, ray, adaptation_id: String) -> Dictionary:

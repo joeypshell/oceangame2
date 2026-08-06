@@ -12,6 +12,7 @@ const PassiveEquipmentContext := preload("res://scripts/main/passive_equipment_c
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const CargoCollectionController := preload("res://scripts/main/cargo_collection_controller.gd")
 const BiologicalResourceController := preload("res://scripts/main/biological_resource_controller.gd")
+const CompanionJourneyGuidance := preload("res://scripts/companion/companion_journey_guidance.gd")
 const CompanionRescueRuntime := preload("res://scripts/companion/companion_rescue_runtime.gd")
 const CompanionSortieRuntime := preload("res://scripts/companion/companion_sortie_runtime.gd")
 const CutterSalvageController := preload("res://scripts/main/cutter_salvage_controller.gd")
@@ -230,6 +231,7 @@ var _active_tool_runtime
 var _capture_controller
 var _cargo_collection
 var _biological_resources
+var _companion_journey_guidance
 var _companion_rescue
 var _companion_sortie
 var _current_gate
@@ -330,6 +332,7 @@ func _ready() -> void:
 	_active_tools = ActiveToolController.new()
 	_active_tool_runtime = ActiveToolRuntime.new(self, _active_tools)
 	_capture_controller = CaptureController.new(self)
+	_companion_journey_guidance = CompanionJourneyGuidance.new()
 	_current_gate = CurrentGateController.new()
 	_destination_payoff_feedback = DestinationPayoffFeedback.new()
 	_final_dive_objective_seed = FinalDiveObjectiveSeed.new()
@@ -2203,6 +2206,13 @@ func _update_status_label() -> void:
 	var current_gate_prompt := _current_gate_prompt()
 	var progression_container_prompt := _progression_container_prompt()
 	var creature_rescue_prompt: String = _companion_rescue.prompt() if _companion_rescue != null else ""
+	var companion_journey_text: String = _companion_journey_guidance.objective_text(
+		_world,
+		_player,
+		_anomaly_survey.profile_state(),
+		_companion_sortie,
+		_expedition_day_state
+	)
 	var pre_pickup_route_cue := _pre_pickup_route_cue_prompt()
 	var world_connector_prompt := _world_connector_prompt()
 	if _run_complete:
@@ -2306,6 +2316,8 @@ func _update_status_label() -> void:
 	]
 	if not mission_text.is_empty():
 		_status_label.text += "\n%s" % mission_text
+	if not companion_journey_text.is_empty():
+		_status_label.text += "\n%s" % companion_journey_text
 	if not objective_text.is_empty():
 		_status_label.text += "\n%s" % objective_text
 	if not anomaly_text.is_empty():
@@ -2314,7 +2326,7 @@ func _update_status_label() -> void:
 		_status_label.text += "\n%s" % wreck_network_text
 	if not material_text.is_empty():
 		_status_label.text += "\n%s" % material_text
-	if not prompt.is_empty() and prompt != anomaly_text:
+	if not prompt.is_empty() and prompt != anomaly_text and prompt != companion_journey_text:
 		_status_label.text += "\n%s" % prompt
 	_status_label.text = ExpeditionDayPresentation.decorate_status(self, _status_label.text)
 	_update_result_panel()
