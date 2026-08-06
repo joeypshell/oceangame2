@@ -29,9 +29,16 @@ The checkpoint forces `production_level_01` and identifies itself in the
 review overlay. The ordinary `?review=<sha>` URL remains a completely empty,
 isolated profile.
 
-The exact public Web candidate and deployment evidence are intentionally
-pending issue #1232 after the journey-evidence change merges. Do not reuse an
-older build URL as Living Expedition evidence.
+Exact public Web candidate:
+
+```text
+https://joeypshell.github.io/oceangame2/?review=0b6c1c8fb845a184cc7eb62f386c7d15656bca09&checkpoint=living_expedition_01_start
+```
+
+The Pages workflow and independent desktop/mobile checker passed for exact SHA
+`0b6c1c8fb845a184cc7eb62f386c7d15656bca09`. Technical evidence is recorded in
+[Living Expedition 01 Technical Review](LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md);
+the owner-experience verdict remains pending #1232.
 
 ## Current Owner Replay
 

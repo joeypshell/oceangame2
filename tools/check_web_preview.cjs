@@ -3,35 +3,9 @@
 const { chromium } = require("playwright");
 const fs = require("fs");
 const path = require("path");
+const { parseArgs } = require("./check_web_preview_args.cjs");
 
-function parseArgs(argv) {
-	const parsed = {
-		targetUrl: "http://127.0.0.1:8060/",
-		expectedSha: process.env.WEB_PREVIEW_EXPECTED_SHA || "",
-	};
-	let targetSet = false;
-	for (let index = 0; index < argv.length; index += 1) {
-		const value = argv[index];
-		if (value === "--expected-sha") {
-			index += 1;
-			if (index >= argv.length) {
-				throw new Error("--expected-sha requires a value.");
-			}
-			parsed.expectedSha = argv[index];
-		} else if (value.startsWith("--expected-sha=")) {
-			parsed.expectedSha = value.slice("--expected-sha=".length);
-		} else if (!targetSet) {
-			parsed.targetUrl = value;
-			targetSet = true;
-		} else {
-			throw new Error(`Unexpected argument: ${value}`);
-		}
-	}
-	parsed.expectedSha = parsed.expectedSha.trim().toLowerCase();
-	return parsed;
-}
-
-const { targetUrl, expectedSha } = parseArgs(process.argv.slice(2));
+const { targetUrl, expectedSha, checkpoint } = parseArgs(process.argv.slice(2));
 const screenshotPath = process.env.WEB_PREVIEW_SCREENSHOT || "exports/web-preview-check.png";
 const mobileScreenshotPath = process.env.WEB_PREVIEW_MOBILE_SCREENSHOT || "";
 const primaryViewport = { width: 1280, height: 720 };
@@ -41,7 +15,6 @@ const framingThreshold = 18;
 const canvasPositionTolerance = 1;
 const mobileTouchThreshold = 2;
 const logicalGameSize = { width: 1280, height: 720 };
-const expansion14Checkpoint = "expansion_14_start";
 
 const failurePatterns = [
 	/SCRIPT ERROR/i,
@@ -93,6 +66,14 @@ async function main() {
 		const freshReview = await inspectPreview(browser, freshReviewUrl, primaryViewport, "");
 		const checkpointReviewUrl = buildCheckpointReviewUrl(targetUrl);
 		const checkpointReview = await inspectPreview(browser, checkpointReviewUrl, primaryViewport, "");
+		const checkpointMobile = await inspectPreview(
+			browser,
+			checkpointReviewUrl,
+			mobileViewport,
+			"",
+			{ deviceScaleFactor: 3, hasTouch: true, isMobile: true },
+			true
+		);
 		const referenceSliceUrl = buildReferenceSliceReviewUrl(targetUrl);
 		const referenceDesktop = await inspectPreview(browser, referenceSliceUrl, primaryViewport, "");
 		const referenceMobile = await inspectPreview(
@@ -117,6 +98,7 @@ async function main() {
 			wide.messages,
 			freshReview.messages,
 			checkpointReview.messages,
+			checkpointMobile.messages,
 			referenceDesktop.messages,
 			referenceMobile.messages,
 			mobile.messages
@@ -125,6 +107,7 @@ async function main() {
 			wide.failedRequests,
 			freshReview.failedRequests,
 			checkpointReview.failedRequests,
+			checkpointMobile.failedRequests,
 			referenceDesktop.failedRequests,
 			referenceMobile.failedRequests,
 			mobile.failedRequests
@@ -136,7 +119,10 @@ async function main() {
 			message.text.includes("Fresh review profile active: persistence=false propulsion_fins=false.")
 		);
 		const checkpointMarker = checkpointReview.messages.find((message) =>
-			message.text.includes(`Review checkpoint active: id=${expansion14Checkpoint} persistence=false propulsion_fins=true.`)
+			message.text.includes(`Review checkpoint active: id=${checkpoint} persistence=false propulsion_fins=true.`)
+		);
+		const checkpointMobileMarker = checkpointMobile.messages.find((message) =>
+			message.text.includes(`Review checkpoint active: id=${checkpoint} persistence=false propulsion_fins=true.`)
 		);
 		const defaultMapMarker = primary.messages.find((message) =>
 			message.text.includes("Web map active: map=production_level_01 review=false.")
@@ -145,6 +131,9 @@ async function main() {
 			message.text.includes("Web map active: map=production_level_01 review=true.")
 		);
 		const checkpointMapMarker = checkpointReview.messages.find((message) =>
+			message.text.includes("Web map active: map=production_level_01 review=true.")
+		);
+		const checkpointMobileMapMarker = checkpointMobile.messages.find((message) =>
 			message.text.includes("Web map active: map=production_level_01 review=true.")
 		);
 		const referenceDesktopMarker = referenceDesktop.messages.find((message) =>
@@ -160,6 +149,14 @@ async function main() {
 		console.log(`Checked ${targetUrl}`);
 		console.log(`Fresh-profile review ${freshReviewUrl}`);
 		console.log(`Checkpoint review ${checkpointReviewUrl}`);
+		console.log(
+			`Checkpoint mobile canvas ${checkpointMobile.canvasSize.width}x${checkpointMobile.canvasSize.height} (${checkpointMobile.canvasRect.width}x${checkpointMobile.canvasRect.height} CSS at ${checkpointMobile.canvasRect.left},${checkpointMobile.canvasRect.top})`
+		);
+		console.log(
+			`Checkpoint mobile touch alignment ${Object.entries(checkpointMobile.touchDiffs)
+				.map(([name, difference]) => `${name}=${difference.toFixed(2)}`)
+				.join(" ")} (min ${mobileTouchThreshold})`
+		);
 		console.log(`Reference slice review ${referenceSliceUrl}`);
 		console.log(
 			`Canvas ${primary.canvasSize.width}x${primary.canvasSize.height} (${primary.canvasSize.clientWidth}x${primary.canvasSize.clientHeight} CSS)`
@@ -206,11 +203,14 @@ async function main() {
 		if (checkpointReview.canvasSize.width <= 0 || checkpointReview.canvasSize.height <= 0) {
 			throw new Error("Godot canvas did not initialize in checkpoint review mode.");
 		}
+		if (checkpointMobile.canvasSize.width <= 0 || checkpointMobile.canvasSize.height <= 0) {
+			throw new Error("Godot canvas did not initialize in mobile checkpoint review mode.");
+		}
 		if (!freshReviewMarker) {
 			throw new Error("Fresh-profile review URL did not report isolated state with propulsion fins unowned.");
 		}
-		if (!checkpointMarker || !checkpointMapMarker) {
-			throw new Error("Expansion 14 checkpoint URL did not report its isolated seeded state on production_level_01.");
+		if (!checkpointMarker || !checkpointMobileMarker || !checkpointMapMarker || !checkpointMobileMapMarker) {
+			throw new Error(`${checkpoint} did not report its isolated seeded state on production_level_01 at desktop and mobile sizes.`);
 		}
 		if (!defaultMapMarker || !freshReviewMapMarker) {
 			throw new Error("The Web root or map-unspecified review URL did not load production_level_01.");
@@ -277,7 +277,7 @@ function buildFreshReviewUrl(url) {
 
 function buildCheckpointReviewUrl(url) {
 	const reviewUrl = new URL(buildFreshReviewUrl(url));
-	reviewUrl.searchParams.set("checkpoint", expansion14Checkpoint);
+	reviewUrl.searchParams.set("checkpoint", checkpoint);
 	return reviewUrl.toString();
 }
 

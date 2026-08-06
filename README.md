@@ -42,6 +42,7 @@ Core sources and operating docs:
 - [Creature System Spec](docs/planning/CREATURE_SYSTEM_SPEC.md)
 - [Creature Map Progression Spec](docs/planning/CREATURE_MAP_PROGRESSION_SPEC.md)
 - [Living Expedition 01 Source And State Contract](docs/current/LIVING_EXPEDITION_01_SOURCE_STATE_CONTRACT.md)
+- [Living Expedition 01 Technical Review](docs/current/LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md)
 - [Historical OceanGame Phase 2 Foundation Roadmap](docs/planning/OCEANGAME_PHASE_2_ROADMAP.md)
 - [Expedition Adaptation Direction](docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md)
 - [Capability And Resource Progression Framework](docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md)

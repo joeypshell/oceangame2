@@ -8,7 +8,7 @@ python tools/write_build_info.py
 
 This writes ignored `build_info.json`. The web export workflow generates that file from `GITHUB_SHA` before export, so the public preview can identify the deployed commit.
 
-The latest exact-SHA Pages and checkpoint verification is recorded in [OceanGame Expansion 18 Web Preview Verification](../OCEANGAME_EXPANSION_18_WEB_PREVIEW_VERIFICATION.md). The [OceanGame Expansion 18 Visual Baseline Decision](../OCEANGAME_EXPANSION_18_VISUAL_BASELINE_DECISION.md) is the latest visual-baseline decision, and the older [Simple Diver Game 08 Web Export Handoff](../SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md) remains the release-candidate foundation.
+The latest exact-SHA Pages and checkpoint verification is recorded in [Living Expedition 01 Technical Review](../LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md). The [OceanGame Expansion 18 Visual Baseline Decision](../OCEANGAME_EXPANSION_18_VISUAL_BASELINE_DECISION.md) remains the latest accepted visual-baseline decision, and the older [Simple Diver Game 08 Web Export Handoff](../SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md) remains the release-candidate foundation.
 
 Build a local Web export preview:
 
@@ -33,6 +33,9 @@ npm install --prefix "$env:TEMP\oceangame2-web-preview-check" playwright@1.55.0
 & "$env:TEMP\oceangame2-web-preview-check\node_modules\.bin\playwright.cmd" install chromium
 node tools/check_web_preview.cjs http://127.0.0.1:8060/ --expected-sha (git rev-parse HEAD)
 ```
+
+The checker uses `living_expedition_01_start` as the current named checkpoint.
+Pass `--checkpoint <id>` to verify a retained checkpoint instead.
 
 The check fails if the web preview logs missing texture warnings such as `Unable to open texture asset`, `Unable to create cave TileSet`, `SCRIPT ERROR`, `ERROR:`, failed resource requests, a missing Godot canvas, a framing/readability mismatch between 1280x720 and 1920x1080 browser viewports, a touch-enabled 844x390 canvas that is not top anchored or does not cover the visual viewport, visible mobile controls that do not respond at their rendered touch positions, or an external `build_info.json` whose `git_sha` does not match the expected commit. Omit `--expected-sha` when checking an older export that does not include external build metadata.
 
@@ -69,5 +72,13 @@ For focused Expansion 18 review, use
 This isolated checkpoint starts at the boat after the wreck-network coordinates
 are committed, with the Transfer Hub entrance available and its navigation core
 unresolved. Use `E`/`ACT` at the entrance and `Space`/`USE` with the Cutter.
+
+For focused Living Expedition 01 review, use
+`https://joeypshell.github.io/oceangame2/?review=<sha>&checkpoint=living_expedition_01_start`.
+This isolated checkpoint starts immediately before the Spark Ray rescue with
+the required prior projects complete, Cutter/Fins/Shock Prod available, empty
+cargo, and no companion committed. It is the fresh isolated milestone start
+for the three-day owner journey; a blank historical profile remains a separate
+whole-game progression review.
 
 The public root and `https://joeypshell.github.io/oceangame2/?review=<sha>` now load `production_level_01`; the review query still isolates profile state. To review a retained slice fixture, add an explicit supported map, for example `?review=<sha>&map=production_slice_01`. A bare `map` query without `review` does not override the default. The Web checker verifies the full-level default and explicit slice-01 fallback at desktop and mobile browser sizes.

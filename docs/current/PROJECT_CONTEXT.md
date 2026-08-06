@@ -80,6 +80,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Creature system contract: `docs/planning/CREATURE_SYSTEM_SPEC.md`
 - Creature/map progression contract: `docs/planning/CREATURE_MAP_PROGRESSION_SPEC.md`
 - First-proof source/state contract: `docs/current/LIVING_EXPEDITION_01_SOURCE_STATE_CONTRACT.md`
+- First-proof technical/Web evidence: `docs/current/LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md`; owner verdict pending #1232
 - Foundation history: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - First adaptation proof: `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
@@ -102,10 +103,10 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Latest committed direction: milestone #45 Living Expedition 01 Spark Ray Adaptation Proof, revised as #1223-#1232 plus focused command/riding issue #1235
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
 - Latest source contract: `docs/current/OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`
-- Latest visual decision: corrected Expansion 17 focused states are accepted for review while the 14-view full-level and slice baselines remain pixel-stable
+- Latest visual decision: Living Expedition focused captures are generated review evidence only; all six configured accepted baseline sheets remain pixel-stable
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: corrected Expansion 17 owner candidate `075a450`, recorded in `docs/current/OCEANGAME_EXPANSION_17_WEB_PREVIEW_VERIFICATION.md`.
+- Latest Web verification: Living Expedition technical candidate `0b6c1c8`, recorded in `docs/current/LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md`; owner GO/HOLD remains pending.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -172,7 +173,7 @@ Current map-loading helper:
 
 ## Web Preview Status
 
-The public preview was technically verified and owner-approved after the bounded Expansion 15 corrections at exact build `23f4172`:
+The public preview is technically verified for Living Expedition 01 at exact build `0b6c1c8`; its owner GO/HOLD verdict remains pending #1232. The last owner-approved build remains the bounded Expansion 17 runtime `075a450`:
 
 ```text
 https://joeypshell.github.io/oceangame2/
