@@ -128,8 +128,7 @@ class ProgressionGraphBuilder:
 
     def _add_map_nodes(self, map_data: dict[str, Any]) -> None:
         map_id = str(map_data.get("id", ""))
-        start = self.contract["canonical_start"]
-        self.graph.add_node(Node(f"map:{map_id}", map_id, "map", map_id, attrs={"start": map_id == start["map_id"]}), map_id)
+        self.graph.add_node(Node(f"map:{map_id}", map_id, "map", map_id, attrs={"start": map_id == self.contract["canonical_start"]["map_id"]}), map_id)
         collections = (
             "entities",
             "zones",
@@ -143,6 +142,7 @@ class ProgressionGraphBuilder:
             "material_candidate_pools",
             "material_projects",
             "hostile_encounters",
+            "moving_hazards",
             "biological_resource_sources",
         )
         for collection in collections:
@@ -152,8 +152,7 @@ class ProgressionGraphBuilder:
                     continue
                 raw_id = str(item.get("id", ""))
                 key = f"{kind}:{map_id}/{raw_id}"
-                attrs = dict(item)
-                attrs["collection"] = collection
+                attrs = {**item, "collection": collection}
                 if kind in WALLET_ENTITY_TYPES:
                     tier = str(item.get("tier", "common"))
                     attrs["wallet_reward"] = int(self.contract["salvage_score_by_tier"].get(tier, 0))
@@ -222,6 +221,7 @@ class ProgressionGraphBuilder:
             "material_candidate_pools": "material_pool",
             "material_projects": "project",
             "hostile_encounters": "hostile",
+            "moving_hazards": "moving_hazard",
             "biological_resource_sources": "biological_source",
         }.get(collection, "")
 

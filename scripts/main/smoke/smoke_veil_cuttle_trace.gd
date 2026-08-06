@@ -6,8 +6,8 @@ const CUTTLE_SCENE := preload("res://scenes/companion/VeilCuttleCompanion.tscn")
 const VeilCuttleControlRuntime := preload("res://scripts/companion/veil_cuttle_control_runtime.gd")
 const ScannerSubjectCatalog := preload("res://scripts/main/scanner_subject_catalog.gd")
 const MAP_PATH := "res://maps/production_level_01.greybox.json"
-const TRACE_ID := "veil_cuttle_trace_01"
-const TRACE_SCAN_ID := "identify_ecological_trace_veil_cuttle_trace_01"
+const TRACE_ID := "southwest_bloom_migration_trace"
+const TRACE_SCAN_ID := "identify_ecological_trace_southwest_bloom_migration_trace"
 
 var _failures: Array[String] = []
 var _status_notes: Array[String] = []

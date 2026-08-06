@@ -21,8 +21,9 @@ from production_level_01_living_expedition_02 import (
     RESCUE_ID,
     REVIEW_CAMERA_ID,
     SPECIES_ID,
-    TRACE_ID,
+    TRACE_ID as RETIRED_TRACE_ID,
 )
+from production_level_01_living_expedition_03 import TRACE_ID
 from validate_full_level_traversal import (
     CollisionField,
     load_player_body,
@@ -82,7 +83,6 @@ class ProductionLevelLivingExpedition02Tests(unittest.TestCase):
 
     def test_trace_is_optional_rewardless_and_requires_scanner_identification(self) -> None:
         trace = _by_id(self.map_data, "ecological_traces", TRACE_ID)
-        self.assertEqual((52, 54), (trace["x"], trace["y"]))
         self.assertEqual(ACTION_ID, trace["action_id"])
         self.assertEqual("survey_scanner_1", trace["scanner_capability_id"])
         self.assertEqual([], trace["required_access_ids"])
@@ -122,7 +122,10 @@ class ProductionLevelLivingExpedition02Tests(unittest.TestCase):
         provenance = self.map_data["source"]["living_expedition_02"]
         self.assertEqual([RESCUE_ID], provenance["rescue_ids"])
         self.assertEqual([HABITAT_ID], provenance["habitat_ids"])
-        self.assertEqual([TRACE_ID], provenance["trace_ids"])
+        self.assertEqual([], provenance["trace_ids"])
+        self.assertEqual([RETIRED_TRACE_ID], provenance["retired_trace_ids"])
+        self.assertEqual("living_expedition_03", provenance["trace_transition_owner"])
+        self.assertNotIn(RETIRED_TRACE_ID, provenance["target_ids"])
         self.assertEqual([REVIEW_CAMERA_ID], provenance["camera_test_ids"])
         self.assertEqual([], provenance["terrain_changes"])
 

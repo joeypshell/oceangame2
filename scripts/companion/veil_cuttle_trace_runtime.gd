@@ -1,7 +1,7 @@
 extends RefCounted
 
 const ACTION_ID := "reveal_trace"
-const TARGET_ID := "veil_cuttle_trace_01"
+const TARGET_ID := "southwest_bloom_migration_trace"
 const SPECIES_ID := "veil_cuttle"
 const COOLDOWN_SECONDS := 1.8
 

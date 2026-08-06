@@ -4,7 +4,7 @@ const ACTIVE_PHASE := "active"
 const ANCHOR_FINS := "anchor_fins"
 const GUARDIAN_PULSE := "guardian_pulse"
 const VEIL_CUTTLE := "veil_cuttle"
-const VEIL_CUTTLE_TRACE_ID := "veil_cuttle_trace_01"
+const VEIL_CUTTLE_TRACE_ID := "southwest_bloom_migration_trace"
 
 
 func objective_text(world, player, profile, sortie_runtime, day_state) -> String:

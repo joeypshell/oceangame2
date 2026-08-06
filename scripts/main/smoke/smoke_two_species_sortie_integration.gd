@@ -18,7 +18,7 @@ const PROFILE_PATH := "user://smoke_two_species_sortie_profile.json"
 const KITE_ID := "spark_ray_juvenile_01"
 const MICA_ID := "veil_cuttle_juvenile_01"
 const MICA_RESCUE_ID := "veil_cuttle_rescue_01"
-const TRACE_ID := "veil_cuttle_trace_01"
+const TRACE_ID := "southwest_bloom_migration_trace"
 const PROTECTED_GATE_ID := "upper_right_current_pocket_gate"
 
 var _failures: Array[String] = []

@@ -9,8 +9,8 @@ Status: **PASS**
 
 | View | Sources | Status | Graph |
 | --- | --- | --- | --- |
-| `slice_provenance` (Production slice provenance) | `maps/production_slice_01.greybox.json`, `maps/production_slice_02.greybox.json`, `maps/production_slice_03.greybox.json`, `maps/production_slice_04.greybox.json` | **PASS** | 93 nodes / 297 edges |
-| `promoted_full_level` (Promoted production level) | `maps/production_level_01.greybox.json`, `maps/transfer_hub_interior_01.greybox.json` | **PASS** | 139 nodes / 546 edges |
+| `slice_provenance` (Production slice provenance) | `maps/production_slice_01.greybox.json`, `maps/production_slice_02.greybox.json`, `maps/production_slice_03.greybox.json`, `maps/production_slice_04.greybox.json` | **PASS** | 95 nodes / 301 edges |
+| `promoted_full_level` (Promoted production level) | `maps/production_level_01.greybox.json`, `maps/transfer_hub_interior_01.greybox.json` | **PASS** | 146 nodes / 571 edges |
 
 ## Detailed Canonical View
 
@@ -84,21 +84,24 @@ The table and dependency diagram below describe the promoted full-level view.
 | 16 | `[proposed] Spark Ray Riding Review 01` | production_level_01 | [proposed] Spark Ray Juvenile 01 | production_level_01, [proposed] Spark Ray Juvenile 01 | state/payoff | stage 16 |
 | 16 | `[proposed] Spark Ray Current Memory 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, Propulsion Fins, Signal Reef current | production_level_01, [proposed] Spark Ray Juvenile 01, Propulsion Fins | [proposed] Held The Flow, [proposed] Anchor Fins | stage 16 |
 | 16 | `[proposed] Spark Ray Eel Memory 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, Shock Prod, Deep Cache Territorial Eel | production_level_01, [proposed] Spark Ray Juvenile 01, Shock Prod | [proposed] Stood Ground, [proposed] Guardian Pulse | stage 16 |
-| 16 | `[proposed] Veil Cuttle Trace 01` | production_level_01 | [proposed] Veil Cuttle Juvenile 01, Survey Scanner 1 | production_level_01, [proposed] Veil Cuttle Juvenile 01, Survey Scanner 1 | state/payoff | stage 16 |
+| 16 | `[proposed] Southwest Bloom Migration Trace` | production_level_01 | [proposed] Veil Cuttle Juvenile 01, Survey Scanner 1 | production_level_01, [proposed] Veil Cuttle Juvenile 01, Survey Scanner 1 | state/payoff | stage 16 |
 | 16 | `Pressure suit project` | production_level_01 | Signal Reef Deep Harmonic Discovery, Titanium Scrap, Rubber Sheet, Insulating Gel | production_level_01, Signal Reef Deep Harmonic Discovery, Titanium Scrap | Pressure Suit 1 | stage 16 |
 | 16 | `deep cache` | production_level_01 | Defeat Deep Cache Territorial Eel | production_level_01, Defeat Deep Cache Territorial Eel | state/payoff | stage 16 |
 | 17 | `Pressure Suit 1` | global | Pressure suit project | Pressure suit project | Abyssal Basin Pressure Zone, Abyssal Shelf Pressure Seam | stage 17 |
 | 17 | `[proposed] Held The Flow` | global | [proposed] Spark Ray Current Memory 01 | [proposed] Spark Ray Current Memory 01 | state/payoff | stage 17 |
 | 17 | `[proposed] Stood Ground` | global | [proposed] Spark Ray Eel Memory 01 | [proposed] Spark Ray Eel Memory 01 | state/payoff | stage 17 |
 | 17 | `Eel Electrocyte` | global | none | Eel electrocyte | state/payoff | stage 17 |
+| 17 | `[proposed] Veil Cuttle Bloom Memory 01` | production_level_01 | [proposed] Veil Cuttle Juvenile 01, [proposed] Southwest Bloom Migration Trace | production_level_01, [proposed] Veil Cuttle Juvenile 01, [proposed] Southwest Bloom Migration Trace | [proposed] Followed The Bloom, [proposed] Drift Lens | stage 17 |
 | 18 | `[proposed] Anchor Fins` | global | [proposed] Held The Flow | [proposed] Held The Flow | state/payoff | stage 18 |
 | 18 | `[proposed] Guardian Pulse` | global | [proposed] Stood Ground | [proposed] Stood Ground | state/payoff | stage 18 |
+| 18 | `[proposed] Followed The Bloom` | global | [proposed] Veil Cuttle Bloom Memory 01 | [proposed] Veil Cuttle Bloom Memory 01 | state/payoff | stage 18 |
 | 18 | `Abyssal Basin Pressure Zone` | production_level_01 / deep_harmonic_abyssal_basin_route | Pressure Suit 1 | production_level_01, Pressure Suit 1 | state/payoff | stage 18 |
 | 18 | `Abyssal Shelf Pressure Seam` | production_level_01 / abyssal_shelf_wreck_fragment_journey | Pressure Suit 1 | production_level_01, Pressure Suit 1 | state/payoff | stage 18 |
 | 18 | `Shock-prod capacitor project` | production_level_01 | Shock prod project, Lower Right Anomaly Discovery, Conductive Coil, Insulating Gel, Eel Electrocyte | production_level_01, Shock prod project, Lower Right Anomaly Discovery | Shock Prod Capacitor | stage 18 |
 | 18 | `Abyssal basin route` | production_level_01 / deep_harmonic_abyssal_basin_route | Pressure Suit 1 | production_level_01, Pressure Suit 1 | Survey abyssal source | stage 18 |
 | 18 | `Southeast wreck archive route` | production_level_01 / southeast_wreck_archive_route | Pressure Suit 1, Southeast Wreck Navigation Data | production_level_01, Pressure Suit 1, Southeast Wreck Navigation Data | Survey wreck archive | stage 18 |
 | 19 | `Shock Prod Capacitor` | global | Shock-prod capacitor project | Shock-prod capacitor project | state/payoff | stage 19 |
+| 19 | `[proposed] Drift Lens` | global | [proposed] Followed The Bloom | [proposed] Followed The Bloom | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Anchor Independent Review 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Anchor Fins | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Anchor Fins | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Anchor Mounted Review 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Anchor Fins | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Anchor Fins | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Guardian Independent Review 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | state/payoff | stage 19 |
@@ -107,6 +110,8 @@ The table and dependency diagram below describe the promoted full-level view.
 | 19 | `[proposed] Spark Ray Guardian Eel 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, Shock Prod, Deep Cache Territorial Eel, [proposed] Guardian Pulse | production_level_01, [proposed] Spark Ray Juvenile 01, Shock Prod | state/payoff | stage 19 |
 | 19 | `Survey abyssal source` | production_level_01 / deep_harmonic_abyssal_basin_route | Survey Scanner 1, Pressure Suit 1, Abyssal basin route | production_level_01, Survey Scanner 1, Pressure Suit 1 | Abyssal Basin Harmonic Source Discovery | stage 19 |
 | 19 | `Survey wreck archive` | production_level_01 / southeast_wreck_archive_route | wreck recorder, Survey Scanner 1, Pressure Suit 1, Southeast wreck archive route | wreck recorder, production_level_01, Survey Scanner 1 | Southeast Wreck Archive Discovery | stage 19 |
+| 20 | `[proposed] Veil Cuttle Drift Review 01` | production_level_01 | [proposed] Veil Cuttle Juvenile 01, [proposed] Drift Lens | production_level_01, [proposed] Veil Cuttle Juvenile 01, [proposed] Drift Lens | state/payoff | stage 20 |
+| 20 | `[proposed] Veil Cuttle Drift Lens Payoff 01` | production_level_01 | [proposed] Veil Cuttle Juvenile 01, Jellyfish patrol, [proposed] Drift Lens | production_level_01, [proposed] Veil Cuttle Juvenile 01, Jellyfish patrol | state/payoff | stage 20 |
 | 20 | `Abyssal Basin Harmonic Source Discovery` | production_level_01 / deep_harmonic_abyssal_basin_route | Survey abyssal source, Surface Boat Entry | Survey abyssal source, production_level_01, Surface Boat Entry | state/payoff | stage 20 |
 | 20 | `Southeast Wreck Archive Discovery` | production_level_01 / southeast_wreck_archive_route | Survey wreck archive, Surface Boat Entry | Survey wreck archive, production_level_01, Surface Boat Entry | state/payoff | stage 20 |
 | 21 | `Current Stabilizer Project` | production_level_01 | Salvage Cutter Project, Southeast Wreck Archive Discovery, Titanium Scrap, Conductive Coil | production_level_01, Salvage Cutter Project, Southeast Wreck Archive Discovery | Current Stabilizer | stage 21 |
