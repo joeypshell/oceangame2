@@ -40,8 +40,12 @@
       "base_action_ids": [
         "reveal_trace"
       ],
-      "memory_ids": [],
-      "adaptation_ids": []
+      "memory_ids": [
+        "followed_the_bloom"
+      ],
+      "adaptation_ids": [
+        "drift_lens"
+      ]
     }
   ],
   "individuals": [
@@ -90,6 +94,14 @@
       ],
       "effect_kind": "trace_reveal",
       "damaging": false
+    },
+    {
+      "id": "read_drift",
+      "roles": [
+        "independent"
+      ],
+      "effect_kind": "moving_hazard_read",
+      "damaging": false
     }
   ],
   "memories": [
@@ -105,6 +117,13 @@
       "event_kind": "territorial_threat_cycle_resolved",
       "adaptation_ids": [
         "guardian_pulse"
+      ]
+    },
+    {
+      "id": "followed_the_bloom",
+      "event_kind": "ecological_observation_committed",
+      "adaptation_ids": [
+        "drift_lens"
       ]
     }
   ],
@@ -126,6 +145,12 @@
       "mutually_exclusive_with": [
         "anchor_fins"
       ]
+    },
+    {
+      "id": "drift_lens",
+      "required_memory_id": "followed_the_bloom",
+      "independent_action_id": "read_drift",
+      "mutually_exclusive_with": []
     }
   ]
 }

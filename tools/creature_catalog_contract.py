@@ -18,9 +18,9 @@ INDIVIDUAL_VALUES = {
     "veil_cuttle_juvenile_01": {"species_id": "veil_cuttle", "default_callsign": "Mica"},
 }
 CATALOG_IDS = {
-    "actions": {"glide_surge", "anchor_brace", "guardian_pulse_action", "reveal_trace"},
-    "memories": {"held_the_flow", "stood_ground"},
-    "adaptations": {"anchor_fins", "guardian_pulse"},
+    "actions": {"glide_surge", "anchor_brace", "guardian_pulse_action", "reveal_trace", "read_drift"},
+    "memories": {"held_the_flow", "stood_ground", "followed_the_bloom"},
+    "adaptations": {"anchor_fins", "guardian_pulse", "drift_lens"},
 }
 SPECIES_VALUES = {
     "spark_ray": {
@@ -34,8 +34,8 @@ SPECIES_VALUES = {
         "roles": ["independent"],
         "ride_capable": False,
         "base_action_ids": ["reveal_trace"],
-        "memory_ids": [],
-        "adaptation_ids": [],
+        "memory_ids": ["followed_the_bloom"],
+        "adaptation_ids": ["drift_lens"],
     },
 }
 ACTION_VALUES = {
@@ -47,12 +47,17 @@ ACTION_VALUES = {
         "damaging": False,
     },
     "reveal_trace": {"roles": ["independent"], "effect_kind": "trace_reveal", "damaging": False},
+    "read_drift": {"roles": ["independent"], "effect_kind": "moving_hazard_read", "damaging": False},
 }
 MEMORY_VALUES = {
     "held_the_flow": {"event_kind": "current_cycle_completed", "adaptation_ids": ["anchor_fins"]},
     "stood_ground": {
         "event_kind": "territorial_threat_cycle_resolved",
         "adaptation_ids": ["guardian_pulse"],
+    },
+    "followed_the_bloom": {
+        "event_kind": "ecological_observation_committed",
+        "adaptation_ids": ["drift_lens"],
     },
 }
 ADAPTATION_VALUES = {
@@ -67,6 +72,11 @@ ADAPTATION_VALUES = {
         "independent_action_id": "guardian_pulse_action",
         "mounted_action_id": "guardian_pulse_action",
         "mutually_exclusive_with": ["anchor_fins"],
+    },
+    "drift_lens": {
+        "required_memory_id": "followed_the_bloom",
+        "independent_action_id": "read_drift",
+        "mutually_exclusive_with": [],
     },
 }
 STATE_FIELDS = {
@@ -214,6 +224,16 @@ def validate_creature_catalog(catalog: dict[str, Any]) -> list[str]:
             failures.extend(item_failures)
             if unknown := sorted(set(ids) - set(known)):
                 failures.append(f"species {species_id}.{field} references unknown ids {unknown}.")
+            if field == "adaptation_ids":
+                for adaptation_id in ids:
+                    adaptation_roles = {
+                        role for role in ROLES
+                        if f"{role}_action_id" in adaptations.get(adaptation_id, {})
+                    }
+                    if unsupported := sorted(adaptation_roles - set(roles)):
+                        failures.append(
+                            f"species {species_id} adaptation {adaptation_id!r} has unsupported roles {unsupported}."
+                        )
         failures.extend(_contract_drift(item, SPECIES_VALUES.get(species_id, {}), f"species {species_id}"))
     for individual_id, item in individuals.items():
         failures.extend(_contract_drift(item, INDIVIDUAL_VALUES.get(individual_id, {}), f"individual {individual_id}"))
@@ -243,13 +263,18 @@ def validate_creature_catalog(catalog: dict[str, Any]) -> list[str]:
         failures.extend(_id_failure(memory_id, f"adaptation {adaptation_id}.required_memory_id"))
         if memory_id not in memories or adaptation_id not in memories.get(str(memory_id), {}).get("adaptation_ids", []):
             failures.append(f"adaptation {adaptation_id} has an unsupported memory/adaptation relationship.")
-        for role in ROLES:
+        action_roles = [role for role in sorted(ROLES) if f"{role}_action_id" in item]
+        if not action_roles:
+            failures.append(f"adaptation {adaptation_id} must define at least one role action.")
+        for role in action_roles:
             action_id = item.get(f"{role}_action_id")
             failures.extend(_id_failure(action_id, f"adaptation {adaptation_id}.{role}_action_id"))
             if action_id not in actions or role not in actions.get(str(action_id), {}).get("roles", []):
                 failures.append(f"adaptation {adaptation_id} references an invalid {role} action {action_id!r}.")
         exclusions, item_failures = _id_list(
-            item.get("mutually_exclusive_with"), f"adaptation {adaptation_id}.mutually_exclusive_with"
+            item.get("mutually_exclusive_with"),
+            f"adaptation {adaptation_id}.mutually_exclusive_with",
+            allow_empty=True,
         )
         failures.extend(item_failures)
         for other in exclusions:
