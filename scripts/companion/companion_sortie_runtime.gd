@@ -5,6 +5,7 @@ const CompanionAdaptationDebrief := preload("res://scripts/companion/companion_a
 const CompanionAnchorFinsRuntime := preload("res://scripts/companion/companion_anchor_fins_runtime.gd")
 const CompanionControlRuntime := preload("res://scripts/companion/companion_control_runtime.gd")
 const CompanionGuardianPulseRuntime := preload("res://scripts/companion/companion_guardian_pulse_runtime.gd")
+const CompanionHabitatSelection := preload("res://scripts/companion/companion_habitat_selection.gd")
 const CompanionMemoryRuntime := preload("res://scripts/companion/companion_memory_runtime.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
 const SHARED_EVENT_DISTANCE_PX := 240.0
@@ -18,12 +19,15 @@ var _control
 var _gate_access := CurrentGateController.new()
 var _anchor_fins := CompanionAnchorFinsRuntime.new()
 var _guardian_pulse := CompanionGuardianPulseRuntime.new()
+var _habitat
 var _memory_runtime := CompanionMemoryRuntime.new()
 var _adaptation_debrief := CompanionAdaptationDebrief.new()
 
 
 func _ready() -> void:
 	_ensure_control()
+	_habitat = CompanionHabitatSelection.new()
+	add_child(_habitat)
 
 
 func bind_interface(active_tool_hud, status_sink: Callable, cancel_diver_tool: Callable, control_allowed: Callable) -> void:
@@ -31,6 +35,7 @@ func bind_interface(active_tool_hud, status_sink: Callable, cancel_diver_tool: C
 	_control.bind_interface(active_tool_hud, status_sink, cancel_diver_tool, control_allowed)
 	_anchor_fins.bind_status_sink(status_sink)
 	_guardian_pulse.bind_status_sink(status_sink)
+	_habitat.bind_interface(status_sink, control_allowed)
 
 
 func bind_map(
@@ -47,6 +52,7 @@ func bind_map(
 	_player = player
 	_profile = profile
 	_has_upgrade = has_upgrade
+	_habitat.bind_map(world, player, profile, Callable(self, "release_to_habitat"))
 	var has_capability := Callable(profile, "has_capability") if profile != null and profile.has_method("has_capability") else Callable()
 	_memory_runtime.bind_map(world, profile, has_upgrade, has_capability, preserve_sortie)
 	_anchor_fins.bind_map(world, player, profile, null, has_upgrade, has_capability)
@@ -83,11 +89,9 @@ func clear_map() -> void:
 	_guardian_pulse.clear_map()
 	if _control != null:
 		_control.clear_map()
-	if _companion != null and is_instance_valid(_companion):
-		if _companion.get_parent() != null:
-			_companion.get_parent().remove_child(_companion)
-		_companion.queue_free()
-	_companion = null
+	if _habitat != null:
+		_habitat.clear_map()
+	_free_companion()
 	_world = null
 	_player = null
 	_profile = null
@@ -174,7 +178,21 @@ func memory_report() -> Dictionary:
 
 
 func handle_input(event: InputEvent) -> bool:
+	if _habitat != null and _habitat.handle_input(event):
+		return true
 	return _control != null and bool(_control.handle_input(event))
+
+
+func release_to_habitat() -> bool:
+	if _companion == null or not is_instance_valid(_companion):
+		return false
+	reset_control("boat_habitat")
+	if _control != null:
+		_control.clear_map()
+	_anchor_fins.bind_companion(null)
+	_guardian_pulse.bind_companion(null)
+	_free_companion()
+	return true
 
 
 func hides_diver_hotbar() -> bool:
@@ -229,6 +247,7 @@ func report() -> Dictionary:
 			"memory": memory_report(),
 			"adaptation": _selected_adaptation_report(),
 			"adaptations": _adaptation_reports(),
+			"habitat": _habitat.report() if _habitat != null else {},
 		}
 	var value: Dictionary = _companion.report()
 	value["spawned"] = true
@@ -236,6 +255,7 @@ func report() -> Dictionary:
 	value["memory"] = memory_report()
 	value["adaptation"] = _selected_adaptation_report()
 	value["adaptations"] = _adaptation_reports()
+	value["habitat"] = _habitat.report() if _habitat != null else {}
 	return value
 
 
@@ -298,6 +318,14 @@ func _ensure_control() -> void:
 	add_child(_control)
 	_guardian_pulse.bind_aim_provider(Callable(self, "_guardian_aim_direction"))
 	_control.set_adaptation_hooks(Callable(self, "_adaptation_actions"), Callable(self, "_dispatch_adaptation_action"))
+
+
+func _free_companion() -> void:
+	if _companion != null and is_instance_valid(_companion):
+		if _companion.get_parent() != null:
+			_companion.get_parent().remove_child(_companion)
+		_companion.queue_free()
+	_companion = null
 
 
 func _bind_control_map() -> void:
