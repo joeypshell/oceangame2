@@ -313,6 +313,9 @@ wildlife or waiting for a random spawn.
 
 ## Art And Animation Contract
 
+- The initial four-species silhouette review lives in
+  `references/creatures/core_species/README.md`; its sheets are directional
+  concept references, not approved runtime sprites.
 - Begin with monochrome silhouette sheets at diver gameplay scale.
 - Review the base, follow, separated, action, and adaptation silhouettes before
   color or texture work.
