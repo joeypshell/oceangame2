@@ -12,6 +12,8 @@ from validate_full_level_traversal import CollisionField, PlayerBody, map_point,
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 COLLECTIONS = (
     "creature_rescues",
+    "companion_habitats",
+    "ecological_traces",
     "companion_contexts",
     "creature_memory_opportunities",
     "creature_adaptation_payoffs",
@@ -22,6 +24,16 @@ SPECIES_ID = "spark_ray"
 INDIVIDUAL_ID = "spark_ray_juvenile_01"
 RESCUE_ID = "spark_ray_rescue_01"
 RIDING_REVIEW_ID = "spark_ray_riding_review_01"
+VEIL_SPECIES_ID = "veil_cuttle"
+VEIL_INDIVIDUAL_ID = "veil_cuttle_juvenile_01"
+VEIL_RESCUE_ID = "veil_cuttle_rescue_01"
+HABITAT_ID = "companion_habitat_01"
+TRACE_ID = "veil_cuttle_trace_01"
+VEIL_REVIEW_CAMERA_ID = "veil_cuttle_review_01"
+RESCUE_IDENTITIES = {
+    RESCUE_ID: (SPECIES_ID, INDIVIDUAL_ID),
+    VEIL_RESCUE_ID: (VEIL_SPECIES_ID, VEIL_INDIVIDUAL_ID),
+}
 MEMORY_RECORDS = {
     "spark_ray_current_memory_01": "held_the_flow",
     "spark_ray_eel_memory_01": "stood_ground",
@@ -187,28 +199,42 @@ def validate_living_expedition_schema(
     records, shape_failures = _validate_collection_shapes(map_data)
     failures.extend(shape_failures)
     species = _catalog_index(catalog, "species")
+    individuals = _catalog_index(catalog, "individuals")
     actions = _catalog_index(catalog, "actions")
     memories = _catalog_index(catalog, "memories")
     adaptations = _catalog_index(catalog, "adaptations")
     map_items = _map_index(map_data)
     rescues = _items(map_data, "creature_rescues")
+    habitats = _items(map_data, "companion_habitats")
+    traces = _items(map_data, "ecological_traces")
     contexts = _items(map_data, "companion_contexts")
     opportunities = _items(map_data, "creature_memory_opportunities")
     payoffs = _items(map_data, "creature_adaptation_payoffs")
-    if [item.get("id") for item in rescues] != [RESCUE_ID]:
-        failures.append(f"First proof requires exactly one creature rescue {RESCUE_ID!r}.")
+    if [item.get("id") for item in rescues] != list(RESCUE_IDENTITIES):
+        failures.append(
+            f"Living Expedition requires ordered rescues {list(RESCUE_IDENTITIES)!r}."
+        )
+    if [item.get("id") for item in habitats] != [HABITAT_ID]:
+        failures.append(f"Second proof requires exactly one habitat {HABITAT_ID!r}.")
+    if [item.get("id") for item in traces] != [TRACE_ID]:
+        failures.append(f"Second proof requires exactly one trace {TRACE_ID!r}.")
     if {item.get("id") for item in opportunities} != set(MEMORY_RECORDS):
         failures.append(f"First proof memory records must be exactly {sorted(MEMORY_RECORDS)}.")
     if {item.get("id") for item in payoffs} != set(PAYOFF_RECORDS):
         failures.append(f"First proof payoff records must be exactly {sorted(PAYOFF_RECORDS)}.")
     for rescue in rescues:
         label = str(rescue.get("id", "creature rescue"))
-        required = ("species_id", "individual_id", "x", "y", "rescue_kind", "required_capability_id", "commit_map_id", "commit_entry_id", "riding_review_context_id")
+        required = ("species_id", "individual_id", "x", "y", "rescue_kind", "required_capability_id", "commit_map_id", "commit_entry_id")
         for field in required:
             if field not in rescue:
                 failures.append(f"{label} is missing required field {field}.")
-        if rescue.get("species_id") != SPECIES_ID or rescue.get("individual_id") != INDIVIDUAL_ID:
-            failures.append(f"{label} must introduce {INDIVIDUAL_ID!r} as species {SPECIES_ID!r}.")
+        expected_identity = RESCUE_IDENTITIES.get(label)
+        actual_identity = (rescue.get("species_id"), rescue.get("individual_id"))
+        if expected_identity != actual_identity:
+            failures.append(f"{label} has unsupported species/individual identity {actual_identity!r}.")
+        individual = individuals.get(str(rescue.get("individual_id", "")), {})
+        if individual.get("species_id") != rescue.get("species_id"):
+            failures.append(f"{label} species/individual relationship does not match the catalog.")
         if rescue.get("rescue_kind") != "physical_aid":
             failures.append(f"{label}.rescue_kind must be 'physical_aid'.")
         if rescue.get("commit_map_id") != map_data.get("id"):
@@ -216,12 +242,63 @@ def validate_living_expedition_schema(
         entry = map_items.get(str(rescue.get("commit_entry_id", "")), {})
         if entry.get("type") != "boat_spawn":
             failures.append(f"{label}.commit_entry_id must reference the canonical boat_spawn.")
-        riding = records.get(str(rescue.get("riding_review_context_id", "")), {})
-        if rescue.get("riding_review_context_id") != RIDING_REVIEW_ID:
-            failures.append(f"{label}.riding_review_context_id must be {RIDING_REVIEW_ID!r}.")
-        if riding.get("context_kind") != "mounted_route_review":
-            failures.append(f"{label}.riding_review_context_id must reference a mounted_route_review.")
         failures.extend(_id_failure(rescue.get("required_capability_id"), f"{label}.required_capability_id"))
+        if label == RESCUE_ID:
+            riding = records.get(str(rescue.get("riding_review_context_id", "")), {})
+            if rescue.get("riding_review_context_id") != RIDING_REVIEW_ID:
+                failures.append(f"{label}.riding_review_context_id must be {RIDING_REVIEW_ID!r}.")
+            if riding.get("context_kind") != "mounted_route_review":
+                failures.append(f"{label}.riding_review_context_id must reference a mounted_route_review.")
+        elif label == VEIL_RESCUE_ID:
+            expected_links = {
+                "habitat_id": HABITAT_ID,
+                "trace_id": TRACE_ID,
+                "review_camera_id": VEIL_REVIEW_CAMERA_ID,
+            }
+            for field, expected in expected_links.items():
+                if rescue.get(field) != expected:
+                    failures.append(f"{label}.{field} must be {expected!r}.")
+            camera_ids = {item.get("id") for item in _items(map_data, "camera_tests")}
+            if rescue.get("review_camera_id") not in camera_ids:
+                failures.append(f"{label}.review_camera_id does not resolve to camera_tests.")
+    for habitat in habitats:
+        label = str(habitat.get("id", "companion habitat"))
+        if habitat.get("habitat_kind") != "canonical_boat":
+            failures.append(f"{label}.habitat_kind must be 'canonical_boat'.")
+        entry = map_items.get(str(habitat.get("entry_id", "")), {})
+        if entry.get("type") != "boat_spawn":
+            failures.append(f"{label}.entry_id must reference the canonical boat_spawn.")
+        individual_ids, item_failures = _id_list(
+            habitat.get("individual_ids"), f"{label}.individual_ids", allow_empty=False
+        )
+        failures.extend(item_failures)
+        if individual_ids != [INDIVIDUAL_ID, VEIL_INDIVIDUAL_ID]:
+            failures.append(f"{label}.individual_ids must preserve the two catalog individuals in order.")
+        for field in ("x", "y"):
+            if not isinstance(habitat.get(field), int):
+                failures.append(f"{label}.{field} must be an integer tile coordinate.")
+    for trace in traces:
+        label = str(trace.get("id", "ecological trace"))
+        if trace.get("trace_kind") != "concealed_ecological_trace":
+            failures.append(f"{label}.trace_kind must be 'concealed_ecological_trace'.")
+        if (trace.get("species_id"), trace.get("individual_id")) != (
+            VEIL_SPECIES_ID,
+            VEIL_INDIVIDUAL_ID,
+        ):
+            failures.append(f"{label} must belong to Mica.")
+        action = actions.get(str(trace.get("action_id", "")), {})
+        if trace.get("action_id") != "reveal_trace" or "independent" not in action.get("roles", []):
+            failures.append(f"{label}.action_id must be the Veil Cuttle independent Reveal Trace action.")
+        if not isinstance(trace.get("reveal_radius_tiles"), (int, float)) or trace.get("reveal_radius_tiles", 0) <= 0:
+            failures.append(f"{label}.reveal_radius_tiles must be positive.")
+        if trace.get("scanner_capability_id") != "survey_scanner_1":
+            failures.append(f"{label}.scanner_capability_id must remain 'survey_scanner_1'.")
+        access_ids, item_failures = _id_list(trace.get("required_access_ids"), f"{label}.required_access_ids")
+        failures.extend(item_failures)
+        if access_ids:
+            failures.append(f"{label} must stay in already accessible terrain.")
+        if trace.get("optional") is not True or trace.get("reward_ids") != [] or trace.get("progression_effect") != "none":
+            failures.append(f"{label} must remain optional, rewardless, and non-progression.")
     for context in contexts:
         label = str(context.get("id", "companion context"))
         if context.get("species_id") != SPECIES_ID or context.get("species_id") not in species:
@@ -322,6 +399,13 @@ def validate_living_expedition_reachability(
     for rescue in _items(map_data, "creature_rescues"):
         if not (_record_cells(rescue) & reachable):
             failures.append(f"{rescue.get('id')} rescue site is unreachable.")
+    for field, label in (
+        ("companion_habitats", "habitat"),
+        ("ecological_traces", "trace"),
+    ):
+        for item in _items(map_data, field):
+            if not (_record_cells(item) & reachable):
+                failures.append(f"{item.get('id')} {label} is unreachable.")
     for context in _items(map_data, "companion_contexts"):
         for point in context.get("route_points", []) if isinstance(context.get("route_points"), list) else []:
             if isinstance(point, dict) and not (_record_cells(point) & reachable):

@@ -46,18 +46,71 @@ def valid_map() -> dict:
             "territory": {"x": 13, "y": 4, "w": 3, "h": 3},
             "required_weapon_capability_id": "shock_prod",
         }],
-        "creature_rescues": [{
-            "id": "spark_ray_rescue_01",
-            "species_id": "spark_ray",
-            "individual_id": "spark_ray_juvenile_01",
-            "x": 3,
-            "y": 3,
-            "rescue_kind": "physical_aid",
-            "required_capability_id": "salvage_cutter",
-            "commit_map_id": "production_level_01",
-            "commit_entry_id": "surface_boat_entry",
-            "riding_review_context_id": "spark_ray_riding_review_01",
+        "creature_rescues": [
+            {
+                "id": "spark_ray_rescue_01",
+                "species_id": "spark_ray",
+                "individual_id": "spark_ray_juvenile_01",
+                "x": 3,
+                "y": 3,
+                "rescue_kind": "physical_aid",
+                "required_capability_id": "salvage_cutter",
+                "commit_map_id": "production_level_01",
+                "commit_entry_id": "surface_boat_entry",
+                "riding_review_context_id": "spark_ray_riding_review_01",
+                "availability": "all_supported_seeds",
+            },
+            {
+                "id": "veil_cuttle_rescue_01",
+                "species_id": "veil_cuttle",
+                "individual_id": "veil_cuttle_juvenile_01",
+                "x": 7,
+                "y": 7,
+                "rescue_kind": "physical_aid",
+                "required_capability_id": "salvage_cutter",
+                "commit_map_id": "production_level_01",
+                "commit_entry_id": "surface_boat_entry",
+                "habitat_id": "companion_habitat_01",
+                "trace_id": "veil_cuttle_trace_01",
+                "review_camera_id": "veil_cuttle_review_01",
+                "availability": "all_supported_seeds",
+            },
+        ],
+        "companion_habitats": [{
+            "id": "companion_habitat_01",
+            "habitat_kind": "canonical_boat",
+            "x": 2,
+            "y": 2,
+            "entry_id": "surface_boat_entry",
+            "individual_ids": ["spark_ray_juvenile_01", "veil_cuttle_juvenile_01"],
             "availability": "all_supported_seeds",
+        }],
+        "ecological_traces": [{
+            "id": "veil_cuttle_trace_01",
+            "trace_kind": "concealed_ecological_trace",
+            "species_id": "veil_cuttle",
+            "individual_id": "veil_cuttle_juvenile_01",
+            "x": 9,
+            "y": 7,
+            "action_id": "reveal_trace",
+            "reveal_radius_tiles": 6,
+            "scanner_capability_id": "survey_scanner_1",
+            "required_access_ids": [],
+            "optional": True,
+            "reward_ids": [],
+            "progression_effect": "none",
+            "availability": "all_supported_seeds",
+        }],
+        "camera_tests": [{
+            "id": "veil_cuttle_review_01",
+            "center_x": 8,
+            "center_y": 7,
+            "zoom": 0.6,
+        }],
+        "material_projects": [{
+            "id": "scanner_fixture_project",
+            "required_materials": {},
+            "unlocks_capability_id": "survey_scanner_1",
         }],
         "companion_contexts": [
             {
@@ -167,7 +220,7 @@ def validate_all(map_data: dict) -> list[str]:
 
 
 class LivingExpeditionSchemaTests(unittest.TestCase):
-    def test_catalog_and_complete_first_proof_fixture_pass(self) -> None:
+    def test_catalog_and_complete_two_individual_fixture_pass(self) -> None:
         self.assertEqual([], validate_creature_catalog(load_creature_catalog()))
         self.assertEqual([], validate_all(valid_map()))
 
@@ -175,6 +228,8 @@ class LivingExpeditionSchemaTests(unittest.TestCase):
         map_data = valid_map()
         for field in (
             "creature_rescues",
+            "companion_habitats",
+            "ecological_traces",
             "companion_contexts",
             "creature_memory_opportunities",
             "creature_adaptation_payoffs",
@@ -224,6 +279,16 @@ class LivingExpeditionSchemaTests(unittest.TestCase):
         failures = validate_all(map_data)
         self.assertTrue(any("day_seed" in failure for failure in failures), failures)
         self.assertTrue(any("all_supported_seeds" in failure for failure in failures), failures)
+
+    def test_rejects_rewarding_or_gated_optional_trace(self) -> None:
+        map_data = valid_map()
+        trace = map_data["ecological_traces"][0]
+        trace["required_access_ids"] = ["pressure_suit"]
+        trace["reward_ids"] = ["progression_reward"]
+        trace["progression_effect"] = "unlock"
+        failures = validate_all(map_data)
+        self.assertTrue(any("already accessible terrain" in failure for failure in failures), failures)
+        self.assertTrue(any("optional, rewardless, and non-progression" in failure for failure in failures), failures)
 
     def test_rejects_rider_footprint_clipping_and_missing_dismount(self) -> None:
         map_data = valid_map()

@@ -24,7 +24,9 @@ def contract() -> dict:
             {"id": "propulsion_fins", "cost": 0, "mandatory": False},
             {"id": "shock_prod", "cost": 0, "mandatory": False},
         ],
-        "durable_capabilities": [],
+        "durable_capabilities": [
+            {"id": "survey_scanner_1", "mandatory": False},
+        ],
         "durable_purchases": [],
     }
 
@@ -72,6 +74,17 @@ class CreatureProgressionGraphTests(unittest.TestCase):
         self.assertTrue(any(edge.target == fins for edge in graph.requirements(memory)))
         self.assertTrue(any(edge.target == gate for edge in graph.requirements(payoff)))
         self.assertTrue(any(edge.target == adaptation for edge in graph.requirements(payoff)))
+
+    def test_optional_trace_requires_mica_and_scanner_without_becoming_mandatory(self) -> None:
+        graph = build_progression_graph([valid_map()], contract())
+        result = audit_graph(graph, check_canonical=False)
+        self.assertEqual((), result.failures)
+        trace = graph.resolve("veil_cuttle_trace_01")
+        mica = graph.resolve("veil_cuttle_juvenile_01")
+        scanner = graph.resolve("survey_scanner_1")
+        self.assertFalse(graph.nodes[trace].mandatory)
+        requirements = {edge.target for edge in graph.requirements(trace)}
+        self.assertTrue({mica, scanner} <= requirements)
 
 
 if __name__ == "__main__":

@@ -1658,6 +1658,29 @@
       "availability": "all_supported_seeds",
       "terrain_changes": [],
       "intent": "Guaranteed one-individual rescue, riding review, memory, and payoff records layered onto existing topology and equipment-gated routes."
+    },
+    "living_expedition_02": {
+      "source": "tools/production_level_01_living_expedition_02.py",
+      "rescue_ids": [
+        "veil_cuttle_rescue_01"
+      ],
+      "habitat_ids": [
+        "companion_habitat_01"
+      ],
+      "trace_ids": [
+        "veil_cuttle_trace_01"
+      ],
+      "camera_test_ids": [
+        "veil_cuttle_review_01"
+      ],
+      "target_ids": [
+        "surface_boat_entry",
+        "veil_cuttle_rescue_01",
+        "veil_cuttle_trace_01"
+      ],
+      "availability": "all_supported_seeds",
+      "terrain_changes": [],
+      "intent": "One guaranteed second-individual rescue, canonical-boat habitat relationship, and optional no-reward trace in existing topology."
     }
   },
   "units": {
@@ -6779,6 +6802,13 @@
       "center_y": 74,
       "zoom": 0.62,
       "intent": "Guardian Pulse payoff against the same resettable eel threat."
+    },
+    {
+      "id": "veil_cuttle_review_01",
+      "center_x": 45,
+      "center_y": 52,
+      "zoom": 0.58,
+      "intent": "Mica rescue, close-follow identity, and optional Reveal Trace review."
     }
   ],
   "review_questions": [
@@ -6811,7 +6841,9 @@
     "Can the unchanged route from the canonical boat reach the entrance and return entry with the player footprint?",
     "Does the cable rescue read as physical aid rather than a pickup or generic scan?",
     "Can the rider complete the entry-shaft route and dismount without clipping, bypass, or stranding?",
-    "Do both memory events retain their diver-equipment requirements and lead to distinct day-3 payoffs?"
+    "Do both memory events retain their diver-equipment requirements and lead to distinct day-3 payoffs?",
+    "Does Mica's rescue read as physical aid in a reachable existing chamber?",
+    "Does the optional trace remain clearly separate from scanner identification and progression?"
   ],
   "wreck_network_investigations": [
     {
@@ -6844,6 +6876,22 @@
       "riding_review_context_id": "spark_ray_riding_review_01",
       "availability": "all_supported_seeds",
       "intent": "Free the juvenile Spark Ray from loose maintenance cable beside the upper wreck, then return together to the surface boat."
+    },
+    {
+      "id": "veil_cuttle_rescue_01",
+      "species_id": "veil_cuttle",
+      "individual_id": "veil_cuttle_juvenile_01",
+      "x": 38,
+      "y": 49,
+      "rescue_kind": "physical_aid",
+      "required_capability_id": "salvage_cutter",
+      "commit_map_id": "production_level_01",
+      "commit_entry_id": "surface_boat_entry",
+      "habitat_id": "companion_habitat_01",
+      "trace_id": "veil_cuttle_trace_01",
+      "review_camera_id": "veil_cuttle_review_01",
+      "availability": "all_supported_seeds",
+      "intent": "Cut Mica free from a discarded survey net in the accessible upper-west chamber, then return together to the surface boat."
     }
   ],
   "companion_contexts": [
@@ -6978,6 +7026,40 @@
       "mounted_context_id": "spark_ray_guardian_mounted_review_01",
       "availability": "all_supported_seeds",
       "intent": "Review Guardian Pulse as a deliberate interruption in both roles; the shock prod remains the required weapon."
+    }
+  ],
+  "companion_habitats": [
+    {
+      "id": "companion_habitat_01",
+      "habitat_kind": "canonical_boat",
+      "x": 95,
+      "y": 4,
+      "entry_id": "surface_boat_entry",
+      "individual_ids": [
+        "spark_ray_juvenile_01",
+        "veil_cuttle_juvenile_01"
+      ],
+      "availability": "all_supported_seeds",
+      "intent": "Project both committed individuals beside the canonical boat; the active choice remains profile-owned."
+    }
+  ],
+  "ecological_traces": [
+    {
+      "id": "veil_cuttle_trace_01",
+      "trace_kind": "concealed_ecological_trace",
+      "species_id": "veil_cuttle",
+      "individual_id": "veil_cuttle_juvenile_01",
+      "x": 52,
+      "y": 54,
+      "action_id": "reveal_trace",
+      "reveal_radius_tiles": 6,
+      "scanner_capability_id": "survey_scanner_1",
+      "required_access_ids": [],
+      "optional": true,
+      "reward_ids": [],
+      "progression_effect": "none",
+      "availability": "all_supported_seeds",
+      "intent": "Mica may reveal this concealed environmental trace in already accessible water; the diver must still scan it to identify it."
     }
   ]
 }
