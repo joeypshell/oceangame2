@@ -8,6 +8,10 @@ Capture the current greybox screenshot baseline:
 
 Do not use `--headless` for screenshot capture on this local setup. Headless uses Godot's dummy renderer here, so the viewport texture is unavailable. Use headless for smoke checks and non-headless for visual capture.
 
+Living Expedition capture runners and their named checkpoint commands are kept
+in [Living Expedition 01 Evidence](living_expedition_01.md) and
+[Living Expedition 02 Evidence](living_expedition_02.md).
+
 Capture the current named camera test views:
 
 ```powershell
