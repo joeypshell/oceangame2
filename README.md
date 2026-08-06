@@ -22,11 +22,11 @@ Build a distinctive side-view ocean game in which:
 - Current map: one contiguous source-authored production cave
 - Current core loop: choose and prepare, make multiple oxygen sorties under daylight, bank and learn at the boat, build at night, and return changed
 - Target signature loop: rescue, bond, command or ride, share meaningful experience, consolidate at night, and feel a visible next-day adaptation
-- Primary next risk: whether commanding and riding one adapting individual creates attachment, build curiosity, and genuine another-day motivation
+- Primary next risk: whether choosing between two recognizable individuals changes expedition preparation and makes the inactive partner still matter at the boat
 
 ## Planning Docs
 
-The Simple Diver and Phase 2 expansion roadmaps now describe the completed runtime foundation. The active product roadmap is Living Expedition. Its first implementation milestone is one Spark Ray direction proof; later species, stable, ecology, combat, and regional growth remain directional until that player gate succeeds.
+The Simple Diver and Phase 2 expansion roadmaps describe the completed runtime foundation. Living Expedition 01's Spark Ray proof is implemented and owner-approved. The next committed plan adds exactly one contrasting Veil Cuttle, a compact two-individual boat habitat, and one active selection; broader ecology, combat, and regional growth remain directional.
 
 Core sources and operating docs:
 
@@ -43,6 +43,7 @@ Core sources and operating docs:
 - [Creature Map Progression Spec](docs/planning/CREATURE_MAP_PROGRESSION_SPEC.md)
 - [Living Expedition 01 Source And State Contract](docs/current/LIVING_EXPEDITION_01_SOURCE_STATE_CONTRACT.md)
 - [Living Expedition 01 Technical Review](docs/current/LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md)
+- [Living Expedition 02 Plan](docs/current/LIVING_EXPEDITION_02_PLAN.md)
 - [Historical OceanGame Phase 2 Foundation Roadmap](docs/planning/OCEANGAME_PHASE_2_ROADMAP.md)
 - [Expedition Adaptation Direction](docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md)
 - [Capability And Resource Progression Framework](docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md)

@@ -50,7 +50,7 @@ Expansion 17 Wreck Network Triangulation is complete with owner GO through #1167
 
 Expansion 18 implements one exceptional `transfer_hub_interior_01` destination reached by swimming through the normal full level to a physical entrance. Its source/state contract, generated maps, continuous sortie, existing-cutter core recovery, deterministic evidence, and exact public build remain valid regression surfaces. It receives no player-experience GO and no further bounded correction pass.
 
-The active direction is one bonded active companion whose credible species roles and meaningful expedition experiences shape real-time independent or mounted play. Shared events become memories; one selected memory becomes a visible adaptation during night debrief. The first proof uses one juvenile Spark Ray, committed-bond riding, a dedicated slow-time command palette, two experience paths, one mutually exclusive adaptation choice, and an immediate independent/mounted exploration or protection payoff. Diver equipment retains hard geographic access; riding cannot bypass it.
+The active direction is one bonded active companion whose credible species roles and meaningful expedition experiences shape real-time independent or mounted play. Living Expedition 01 implements and owner-approves the juvenile Spark Ray rescue, riding, BOND palette, two memory paths, night choice, and independent/mounted payoff. Living Expedition 02 is the next committed plan: exactly two total individuals, a compact canonical-boat habitat, and one selected active companion. Diver equipment retains hard geographic access; companions cannot bypass it.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -81,6 +81,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Creature/map progression contract: `docs/planning/CREATURE_MAP_PROGRESSION_SPEC.md`
 - First-proof source/state contract: `docs/current/LIVING_EXPEDITION_01_SOURCE_STATE_CONTRACT.md`
 - First-proof technical/Web evidence and owner GO: `docs/current/LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md`
+- Next committed milestone plan: `docs/current/LIVING_EXPEDITION_02_PLAN.md`
 - Foundation history: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - First adaptation proof: `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
@@ -99,8 +100,9 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Tooling: `docs/current/TOOLING.md`
 - Focused player-review workflow: `docs/current/PLAYTEST_CHECKPOINTS.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest owner decision: Expansion 18 is technically complete but strategically HOLD because the old cadence does not provide enough attachment or another-day motivation
+- Latest owner decision: Living Expedition 01 received GO after bounded post-rescue guidance correction #1249
 - Latest completed direction: milestone #45 Living Expedition 01 Spark Ray Adaptation Proof, implemented as #1223-#1232 plus focused command/riding issue #1235
+- Latest committed direction: Living Expedition 02 Small Stable And Species Identity, scoped to Kite plus one non-mounted Veil Cuttle
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
 - Latest source contract: `docs/current/OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`
 - Latest visual decision: Living Expedition focused captures are generated review evidence only; all six configured accepted baseline sheets remain pixel-stable
@@ -250,6 +252,7 @@ Current issue state as of 2026-08-05:
 - Closed direction gate: #1201 records Expansion 18's strategic HOLD and transition; #1192-#1200 plus bounded corrections remain technically complete.
 - Closed planning: #1219 documents the first Expedition Adaptation proof; #1221 realigns the target game, creature contracts, roadmap, and milestone state through merged PR #1222.
 - Closed: milestone #45 Living Expedition 01 has playable work, deterministic journey/checkpoint/capture evidence, exact-Web verification, bounded guidance correction #1249, and owner GO through #1232.
+- Selected planning: #1251 defines Living Expedition 02 as a bounded two-individual habitat/selection proof; implementation issue creation follows its merge.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -387,14 +390,14 @@ Current issue state as of 2026-08-05:
 
 ## Recommended Next Work
 
-Living Expedition 01 is complete with owner GO. Next, evaluate and name one bounded Living Expedition milestone from the active roadmap before creating or implementing another batch; do not assume a second species is automatically next. Keep #52/#53 deferred.
+Use `docs/current/LIVING_EXPEDITION_02_PLAN.md` to create and execute one bounded milestone for Kite, Mica, the compact boat habitat, and next-sortie active selection. Add no third species or broad stable/ecology framework before the player gate. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 
 - Treat Living Expedition as the active product direction and a bounded current runtime proof. Preserve one active companion, species-plus-experience roles, deliberate real-time commands, committed-bond riding, meaningful experience rather than XP grinding, night consolidation, visible adaptation, and the equipment-versus-companion boundary.
 - Use `Shift/BOND` and a maximum-three-action 20-percent slow-time palette. Mounted play transfers movement and hotbar ownership to creature actions; dismount restores diver tools. Do not reuse `Q` or `E/ACT` for the companion.
 - Riding cannot bypass fins, darkness, pressure, collision, oxygen, daylight, health, cargo, boat, or failure authority.
-- Do not add a second species, stable UI, turn-based or broad combat framework, creature health/death, or ecosystem simulation before the Spark Ray player gate.
+- Add only the selected Veil Cuttle and compact two-entry habitat; do not add a third species, broad stable UI, turn-based or broad combat framework, creature health/death, or ecosystem simulation before the next player gate.
 - Keep the implemented held-cargo strip, selectable active tools, persistent vitals/objectives, and temporary prompts as distinct HUD responsibilities; a broad production HUD replacement remains directional.
 - Keep `production_level_01` as the default preview map unless a separate reviewed decision changes it.
 - Preserve `maps/full_cave_sketch_01.greybox.json` as the generated topology draft and source for a separately named `production_level_01` output.

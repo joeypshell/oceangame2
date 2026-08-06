@@ -1,6 +1,8 @@
 # Real-Time Creature Partnership Direction
 
-Status: selected product direction; not current runtime.
+Status: selected product direction. Living Expedition 01 implements the focused
+Spark Ray command/riding proof; broader species and combat direction remains
+planned.
 
 ## Decision
 
@@ -113,7 +115,7 @@ replacing the Shock Prod. The proof changes no terrain topology.
 
 - turn-based or party combat
 - more than one active companion
-- a second species or stable-management UI
+- a third species or broad stable-management UI before the two-individual proof
 - broad weapon, ability, or combat-framework replacement
 - creature health, permanent injury, death, breeding, fusion, or lineage
 - general ecosystem simulation

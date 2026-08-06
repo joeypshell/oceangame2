@@ -78,18 +78,20 @@ Living Expedition is the active product phase. It retains real-time daylight sor
 
 **[Living Expedition 01: Spark Ray Adaptation Proof](https://github.com/joeypshell/oceangame2/milestone/45)** is complete with owner GO. Its revised batch rescues one juvenile Spark Ray, commits the bond, proves deliberate commands and seamless riding, records one of two meaningful shared memories, consolidates it at night, and shows an immediate visible exploration or protection payoff.
 
+**Living Expedition 02: Small Stable And Species Identity** is the next committed milestone plan. It adds one non-mounted Veil Cuttle so the canonical boat holds exactly two named individuals, one selected for each launched sortie, with distinct movement and BOND affordances and no passive stable bonus or equipment-gate bypass.
+
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
 - Completed: milestone #45 Living Expedition 01 Spark Ray Adaptation Proof, implemented as #1223-#1232 plus focused command/riding issue #1235.
-- Committed: no implementation milestone is selected; the next action is a bounded Living Expedition planning decision.
-- Directional: small stable/species identity, ecological field roles, duo combat, habitat legacy, and regional creature journeys.
+- Committed: Living Expedition 02 Small Stable And Species Identity, defined in `docs/current/LIVING_EXPEDITION_02_PLAN.md` for one scoped implementation milestone.
+- Directional: ecological field roles, duo combat, habitat legacy, and regional creature journeys.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Living Expedition 01 and milestone #45 are complete with owner GO. No implementation milestone is currently selected.
+Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Living Expedition 01 and milestone #45 are complete with owner GO. Living Expedition 02 is the next committed milestone plan; its GitHub batch follows the merged plan.
 
 1. [Living Expedition 01: Spark Ray Adaptation Proof](https://github.com/joeypshell/oceangame2/milestone/45) - complete through #1232/#1235 with exact-Web evidence, bounded guidance correction #1249, and owner GO on corrected gameplay build `c0c7b4e`.
 2. [Expansion 17: Wreck Network Triangulation](https://github.com/joeypshell/oceangame2/milestone/43) - complete with owner GO through #1167 after technical corrections #1175/#1178 and bounded HOLD corrections #1181-#1184; exact reviewed runtime `075a450`.
@@ -149,7 +151,7 @@ Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 mileston
 
 - Do not reopen completed expansion batches merely to keep the queue full.
 - Run a separate direction audit before selecting or batching the next expansion.
-- Do not add a second species before the Spark Ray proof receives its owner verdict.
+- Add only the committed Veil Cuttle before the Living Expedition 02 owner gate; do not add a third species.
 - Do not replace real-time exploration with party battles. Adapt build synergy through one companion's independent, support, and mounted roles.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.

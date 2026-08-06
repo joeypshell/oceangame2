@@ -102,45 +102,52 @@ Every day should leave at least one personal reason to return:
 
 ## Planning Horizons
 
+### Completed
+
+**Living Expedition 01: Spark Ray Adaptation Proof** is implemented and closed
+with owner GO. It proves one physical rescue, persistent individual identity,
+follow, slow-time commands, riding, two meaningful memories, night
+consolidation, mutually exclusive visible adaptations, equipment-gate safety,
+and deterministic journey/Web evidence.
+
 ### Committed
 
-**Living Expedition 01: Spark Ray Adaptation Proof** receives one issue-level
-implementation batch after this roadmap lands.
+**Living Expedition 02: Small Stable And Species Identity** is the next bounded
+milestone. It adds one Veil Cuttle to create exactly two total individuals: Kite
+as the mounted Spark Ray and Mica as a non-mounted sensing partner.
 
 It must prove:
 
-- one physical rescue and stable individual identity
-- one active companion with readable follow and context behavior
-- one dedicated slow-time command surface with at most three contextual actions
-- one committed-bond riding unlock, seamless mount/dismount, and direct mounted
-  movement/action ownership
-- two meaningful memories earned through real expedition events
-- one deliberate night consolidation choice
-- one visible adaptation on the following day
-- one exploration branch and one protection branch
-- no bypass of existing diver-equipment access gates
-- deterministic persistence, failure, capture, and Web evidence
-- an owner verdict on attachment and another-day motivation
+- schema-v1 Spark Ray profiles migrate without identity, memory, or adaptation
+  loss;
+- one compact canonical-boat habitat presents both named individuals;
+- exactly one companion is selected for the next launched sortie;
+- active selection cannot change in open water;
+- species movement, BOND actions, and mounted availability are visibly distinct;
+- Mica's deliberate Reveal Trace action exposes optional ecological evidence
+  without replacing scanner, light, equipment, or access gates;
+- the inactive individual remains visible and meaningful without passive yield,
+  chores, or offscreen simulation; and
+- deterministic migration, rescue, selection, failure, capture, Web, and owner
+  evidence answer the two-individual exit question.
+
+Detailed plan: `docs/current/LIVING_EXPEDITION_02_PLAN.md`.
 
 ### Directional
 
-Only milestone-level goals are selected beyond the first proof:
+Only milestone-level goals are selected beyond the committed proof:
 
-1. **Living Expedition 02: Small Stable And Species Identity**
-   Add two contrasting species, a compact boat habitat, one active selection,
-   clear individual records, contrasting independent/mounted affordances, and
-   reasons to care about inactive companions.
-2. **Living Expedition 03: Field Roles And Ecological Discovery**
+1. **Living Expedition 03: Field Roles And Ecological Discovery**
    Make species perception and behavior reveal real habitats, organisms,
    resources, and mysteries while deepening support, direct-control, and mounted
    roles without turning creatures into keys.
-3. **Living Expedition 04: Duo Combat And Wildlife Consequences**
+2. **Living Expedition 04: Duo Combat And Wildlife Consequences**
    Expand real-time diver-and-companion tactics, enemy behavior, nonlethal
    responses, and bounded wildlife resources.
-4. **Living Expedition 05: Growth, Release, And Habitat Legacy**
+3. **Living Expedition 05: Growth, Release, And Habitat Legacy**
    Test voluntary retirement or release, one bounded legacy trait, and visible
    habitat consequences without forced death or a simulation rewrite.
-5. **Living Expedition 06: Regional Creature Journeys**
+4. **Living Expedition 06: Regional Creature Journeys**
    Add memorable regions whose equipment access, species ecology, mysteries,
    and return reasons are planned together through the JSON map pipeline.
 
@@ -156,23 +163,25 @@ unticketed.
 
 ## Committed Milestone Batch
 
-Freeze one bounded issue batch for Living Expedition 01 in this order:
+Freeze one bounded issue batch for Living Expedition 02 in this order:
 
-1. Lock companion experience, controls, source, state, and failure contracts.
-2. Add species, rescue, memory, adaptation, and payoff schema validation.
-3. Add versioned individual companion state and profile migration.
-4. Implement deterministic Spark Ray follow, separation, and context behavior.
-5. Implement the slow-time command palette, bonded riding, mounted movement, and
-   creature-action hotbar projection.
-6. Author one rescue and two memory opportunities through the map source path.
-7. Implement exact-once memory qualification and night consolidation.
-8. Implement Anchor Fins independent and mounted payoff.
-9. Implement Guardian Pulse independent and mounted payoff.
-10. Add deterministic journey smoke, review checkpoint, and focused captures.
-11. Verify the exact public Web build and run the three-day owner closeout.
+1. Lock source, state, habitat, selection, and failure contracts.
+2. Extend catalog/schema validation and migrate profile state to a bounded
+   two-individual collection.
+3. Implement the compact boat habitat and next-sortie active selection.
+4. Author one Veil Cuttle rescue, habitat, optional trace, and review camera.
+5. Implement Veil Cuttle presentation, follow identity, and Reveal Trace.
+6. Integrate species-specific sortie instantiation, commands, guidance, failure,
+   and reload while preserving all Kite behavior and access gates.
+7. Add deterministic journey, migration, selection, isolation, and progression
+   audit coverage.
+8. Add focused desktop/mobile captures and record the visual decision.
+9. Verify the exact public Web build and named checkpoint.
+10. Run the owner closeout and record GO, HOLD, or bounded corrections.
 
-Do not combine the two adaptations with a second creature, roster UI, turn-based
-or broad combat framework, map expansion, or accepted-baseline sweep.
+Do not combine the compact habitat with a third species, broad stable UI,
+Mica adaptation tree, turn-based or broad combat framework, map expansion, or
+accepted-baseline sweep.
 
 ## Map And Progression Rules
 
@@ -212,16 +221,17 @@ Control/combat decision:
 - Keep current-runtime truth separate from target-game plans.
 - Historical Phase 2 docs remain implementation records, not active direction.
 - Use one focused issue batch and close with GO, HOLD, or bounded correction.
-- Do not add species until the Spark Ray proof answers its attachment question.
+- Living Expedition 01 received GO; add only the one committed Veil Cuttle before
+  the next player gate.
 - Do not use automation to claim fun, attachment, or replay motivation.
 - Keep #52/#53 deferred unless slice-03 presentation becomes the selected goal.
 - Preserve the 500-line agent-efficiency target without harmful runtime splits.
 
-## Living Expedition 01 Exit Question
+## Living Expedition 02 Exit Question
 
-> Did commanding and riding the Spark Ray feel like a partnership shaped by what
-> happened during the expedition, and did seeing its adaptation make the player
-> want to begin another day to discover what the partnership could become?
+> Did choosing between Kite and Mica feel like choosing two recognizable
+> partners for different expeditions, did the inactive individual still matter
+> at the boat, and did that choice make another day more interesting?
 
-If the result feels like another tool, gate key, passive follower, checklist,
-or skill-tree token, HOLD before creating a second species.
+If the result feels like two ability slots, inventory entries, or a generic
+roster, HOLD before creating Living Expedition 03 or a third species.
