@@ -4,7 +4,7 @@ Date: 2026-08-05
 
 Issue: #1251 `Plan Living Expedition 02 around a two-individual stable and active choice`
 
-Status: Selected next milestone plan; implementation not started.
+Status: Completed through #1253-#1262 with owner GO.
 
 ## Decision
 

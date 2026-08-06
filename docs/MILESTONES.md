@@ -1,6 +1,6 @@
 # Milestones
 
-Last updated: 2026-08-05
+Last updated: 2026-08-06
 
 This is the compact milestone index. Detailed direction lives in:
 
@@ -59,6 +59,12 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/OCEANGAME_EXPANSION_17_CLOSEOUT.md`
 - `docs/current/OCEANGAME_EXPANSION_18_PLAN.md`
 - `docs/current/OCEANGAME_EXPANSION_18_SOURCE_STATE_CONTRACT.md`
+- `docs/current/LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md`
+- `docs/current/LIVING_EXPEDITION_02_PLAN.md`
+- `docs/current/LIVING_EXPEDITION_02_SOURCE_STATE_CONTRACT.md`
+- `docs/current/LIVING_EXPEDITION_02_VISUAL_DECISION.md`
+- `docs/current/LIVING_EXPEDITION_02_WEB_VERIFICATION.md`
+- `docs/current/LIVING_EXPEDITION_02_CLOSEOUT.md`
 
 ## Current State
 
@@ -78,26 +84,26 @@ Living Expedition is the active product phase. It retains real-time daylight sor
 
 **[Living Expedition 01: Spark Ray Adaptation Proof](https://github.com/joeypshell/oceangame2/milestone/45)** is complete with owner GO. Its revised batch rescues one juvenile Spark Ray, commits the bond, proves deliberate commands and seamless riding, records one of two meaningful shared memories, consolidates it at night, and shows an immediate visible exploration or protection payoff.
 
-**Living Expedition 02: Small Stable And Species Identity** is the next committed milestone plan. It adds one non-mounted Veil Cuttle so the canonical boat holds exactly two named individuals, one selected for each launched sortie, with distinct movement and BOND affordances and no passive stable bonus or equipment-gate bypass.
+**[Living Expedition 02: Small Stable And Species Identity](https://github.com/joeypshell/oceangame2/milestone/46)** is complete with owner GO. Kite and Mica now occupy one compact canonical-boat habitat, exactly one is selected for a launched sortie, and their mounted mobility/protection versus independent sensing roles remain distinct without passive bonuses or equipment-gate bypass.
 
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
-- Completed: milestone #45 Living Expedition 01 Spark Ray Adaptation Proof, implemented as #1223-#1232 plus focused command/riding issue #1235.
-- Committed: Living Expedition 02 Small Stable And Species Identity, defined in `docs/current/LIVING_EXPEDITION_02_PLAN.md` for one scoped implementation milestone.
-- Directional: ecological field roles, duo combat, habitat legacy, and regional creature journeys.
+- Completed: milestones #45 and #46 prove one adapted Spark Ray, then a bounded two-individual habitat and active species choice.
+- Committed: none; a separate planning decision must precede the next implementation milestone.
+- Directional: ecological field roles, duo combat, habitat legacy, and regional creature journeys, beginning with a possible Living Expedition 03 planning gate.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Living Expedition 01 and milestone #45 are complete with owner GO. Living Expedition 02 is the next committed milestone plan; its GitHub batch follows the merged plan.
+Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Living Expedition milestones #45 and #46 are complete with owner GO. No later implementation milestone is committed.
 
-1. [Living Expedition 01: Spark Ray Adaptation Proof](https://github.com/joeypshell/oceangame2/milestone/45) - complete through #1232/#1235 with exact-Web evidence, bounded guidance correction #1249, and owner GO on corrected gameplay build `c0c7b4e`.
-2. [Expansion 17: Wreck Network Triangulation](https://github.com/joeypshell/oceangame2/milestone/43) - complete with owner GO through #1167 after technical corrections #1175/#1178 and bounded HOLD corrections #1181-#1184; exact reviewed runtime `075a450`.
-3. [Expansion 16: Deeper Wreck Oxygen Return](https://github.com/joeypshell/oceangame2/milestone/42) - complete with owner GO after corrections #1143/#1144/#1151/#1153; exact reviewed runtime `05b482e`.
-4. [Expansion 15: Expedition Planning And Choice](https://github.com/joeypshell/oceangame2/milestone/41) - complete with owner GO after corrections #1113/#1117/#1119; exact reviewed runtime `23f4172`.
-5. [Expansion 14: Archive Current Return](https://github.com/joeypshell/oceangame2/milestone/40) - complete with owner GO after bounded corrections; exact reviewed runtime `1f148eb`.
+1. [Living Expedition 02: Small Stable And Species Identity](https://github.com/joeypshell/oceangame2/milestone/46) - complete through #1253-#1262 with focused visual evidence, exact-Web runtime `b639dcf`, and owner GO.
+2. [Living Expedition 01: Spark Ray Adaptation Proof](https://github.com/joeypshell/oceangame2/milestone/45) - complete through #1232/#1235 with exact-Web evidence, bounded guidance correction #1249, and owner GO on corrected gameplay build `c0c7b4e`.
+3. [Expansion 17: Wreck Network Triangulation](https://github.com/joeypshell/oceangame2/milestone/43) - complete with owner GO through #1167 after technical corrections #1175/#1178 and bounded HOLD corrections #1181-#1184; exact reviewed runtime `075a450`.
+4. [Expansion 16: Deeper Wreck Oxygen Return](https://github.com/joeypshell/oceangame2/milestone/42) - complete with owner GO after corrections #1143/#1144/#1151/#1153; exact reviewed runtime `05b482e`.
+5. [Expansion 15: Expedition Planning And Choice](https://github.com/joeypshell/oceangame2/milestone/41) - complete with owner GO after corrections #1113/#1117/#1119; exact reviewed runtime `23f4172`.
 
 ## Completed Expansion 04
 
@@ -151,7 +157,7 @@ Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 mileston
 
 - Do not reopen completed expansion batches merely to keep the queue full.
 - Run a separate direction audit before selecting or batching the next expansion.
-- Add only the committed Veil Cuttle before the Living Expedition 02 owner gate; do not add a third species.
+- Keep Kite and Mica as the complete current roster; a third species requires a later reviewed plan and player gate.
 - Do not replace real-time exploration with party battles. Adapt build synergy through one companion's independent, support, and mounted roles.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
