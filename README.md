@@ -22,11 +22,11 @@ Build a distinctive side-view ocean game in which:
 - Current map: one contiguous source-authored production cave
 - Current core loop: choose and prepare, make multiple oxygen sorties under daylight, bank and learn at the boat, build at night, and return changed
 - Target signature loop: rescue, bond, command or ride, share meaningful experience, consolidate at night, and feel a visible next-day adaptation
-- Primary next decision: whether ecological field roles can make distinct companions reveal useful world knowledge without becoming generic keys or scan rewards
+- Committed next proof: Mica reads one real jellyfish migration, returns the observation to the boat, and develops a deliberate hazard-reading field skill without becoming a key
 
 ## Planning Docs
 
-The Simple Diver and Phase 2 expansion roadmaps describe the completed runtime foundation. Living Expeditions 01 and 02 are implemented and owner-approved: Kite and Mica now prove two recognizable species roles, one active next-sortie selection, and an inhabited canonical boat. No implementation milestone is currently committed; the next planning decision is bounded ecological field roles and discovery.
+The Simple Diver and Phase 2 expansion roadmaps describe the completed runtime foundation. Living Expeditions 01 and 02 are implemented and owner-approved: Kite and Mica now prove two recognizable species roles, one active next-sortie selection, and an inhabited canonical boat. Living Expedition 03 is the selected next proof: one source-authored ecological observation becomes Mica's useful next-day Drift Lens adaptation without adding a third species or changing hard access.
 
 Core sources and operating docs:
 
@@ -48,6 +48,7 @@ Core sources and operating docs:
 - [Living Expedition 02 Visual Decision](docs/current/LIVING_EXPEDITION_02_VISUAL_DECISION.md)
 - [Living Expedition 02 Web Verification](docs/current/LIVING_EXPEDITION_02_WEB_VERIFICATION.md)
 - [Living Expedition 02 Closeout](docs/current/LIVING_EXPEDITION_02_CLOSEOUT.md)
+- [Living Expedition 03 Plan](docs/current/LIVING_EXPEDITION_03_PLAN.md)
 - [Historical OceanGame Phase 2 Foundation Roadmap](docs/planning/OCEANGAME_PHASE_2_ROADMAP.md)
 - [Expedition Adaptation Direction](docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md)
 - [Capability And Resource Progression Framework](docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md)

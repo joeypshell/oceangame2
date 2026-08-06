@@ -118,26 +118,24 @@ safety, and deterministic journey/visual/Web evidence.
 
 ### Committed
 
-No implementation milestone is currently committed. The next audit may create
-one planning decision for Living Expedition 03, but it must define a bounded
-ecological field-role proof before creating implementation issues or adding a
-third species.
+**Living Expedition 03: Field Roles And Ecological Discovery** is selected in
+`docs/current/LIVING_EXPEDITION_03_PLAN.md`. It uses the existing Mica and
+southwest jellyfish bloom to prove one deliberate observation, canonical-boat
+commitment, exact-once memory, night consolidation, and next-sortie Drift Lens
+field skill. It changes no topology, roster, hard access, hazard authority, or
+reward economy.
 
 ### Directional
 
 Only milestone-level goals are selected beyond the committed proof:
 
-1. **Living Expedition 03: Field Roles And Ecological Discovery**
-   Make species perception and behavior reveal real habitats, organisms,
-   resources, and mysteries while deepening support, direct-control, and mounted
-   roles without turning creatures into keys.
-2. **Living Expedition 04: Duo Combat And Wildlife Consequences**
+1. **Living Expedition 04: Duo Combat And Wildlife Consequences**
    Expand real-time diver-and-companion tactics, enemy behavior, nonlethal
    responses, and bounded wildlife resources.
-3. **Living Expedition 05: Growth, Release, And Habitat Legacy**
+2. **Living Expedition 05: Growth, Release, And Habitat Legacy**
    Test voluntary retirement or release, one bounded legacy trait, and visible
    habitat consequences without forced death or a simulation rewrite.
-4. **Living Expedition 06: Regional Creature Journeys**
+3. **Living Expedition 06: Regional Creature Journeys**
    Add memorable regions whose equipment access, species ecology, mysteries,
    and return reasons are planned together through the JSON map pipeline.
 
@@ -150,6 +148,13 @@ Long-term possibilities include a larger stable, lineage systems, richer boat
 habitats, deeper combat, more region production, final art/audio, accessibility,
 controller support, balance, and save hardening. They remain intentionally
 unticketed.
+
+## Selected Milestone Batch
+
+Living Expedition 03 uses the ten-stage dependency order in
+`docs/current/LIVING_EXPEDITION_03_PLAN.md`: contract, schema, source authoring,
+observation/memory state, Drift Lens runtime, integration, deterministic
+evidence, visual decision, exact Web verification, and owner closeout.
 
 ## Completed Milestone Batch
 
@@ -217,12 +222,11 @@ Control/combat decision:
 - Keep #52/#53 deferred unless slice-03 presentation becomes the selected goal.
 - Preserve the 500-line agent-efficiency target without harmful runtime splits.
 
-## Living Expedition 02 Exit Question
+## Living Expedition 03 Exit Question
 
-> Did choosing between Kite and Mica feel like choosing two recognizable
-> partners for different expeditions, did the inactive individual still matter
-> at the boat, and did that choice make another day more interesting?
+> Did Mica help you notice and understand a living migration that the Scanner
+> alone would not have found, and did turning that shared observation into a
+> useful next-day field skill make you want to choose Mica again?
 
-The owner supplied GO on the exact verified Living Expedition 02 checkpoint.
-No separate subquestion notes were supplied; the combined verdict and bounded
-limitations are recorded in `docs/current/LIVING_EXPEDITION_02_CLOSEOUT.md`.
+Do not use automation to answer this question. Keep Living Expedition 04
+directional until the exact-Web Living Expedition 03 owner gate closes.

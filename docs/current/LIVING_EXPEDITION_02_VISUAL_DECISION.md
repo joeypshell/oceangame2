@@ -71,5 +71,5 @@ python tools/check_file_lengths.py
 git diff --check
 ```
 
-Exact public Web and touch verification remains #1261. Player-experience
-judgment remains the #1262 owner gate.
+Exact public Web and touch verification passed in #1261. The owner supplied GO
+in #1262; `LIVING_EXPEDITION_02_CLOSEOUT.md` records the final decision.

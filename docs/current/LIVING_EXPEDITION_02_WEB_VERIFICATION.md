@@ -91,9 +91,10 @@ isolated profile behavior, or named checkpoint selection. No runtime, map,
 topology, asset, accepted baseline, generated capture, or export-workflow
 change was made while recording this evidence.
 
-This technical PASS does not answer whether two recognizable partners create a
-meaningful choice, attachment, or another-day motivation. That remains the
-owner gate in #1262.
+This technical PASS did not by itself answer whether two recognizable partners
+create a meaningful choice, attachment, or another-day motivation. The owner
+subsequently supplied GO in #1262; `LIVING_EXPEDITION_02_CLOSEOUT.md` records
+that player-experience decision.
 
 ## Verification
 

@@ -86,18 +86,20 @@ Living Expedition is the active product phase. It retains real-time daylight sor
 
 **[Living Expedition 02: Small Stable And Species Identity](https://github.com/joeypshell/oceangame2/milestone/46)** is complete with owner GO. Kite and Mica now occupy one compact canonical-boat habitat, exactly one is selected for a launched sortie, and their mounted mobility/protection versus independent sensing roles remain distinct without passive bonuses or equipment-gate bypass.
 
+**Living Expedition 03: Field Roles And Ecological Discovery** is selected in `docs/current/LIVING_EXPEDITION_03_PLAN.md`. It will test whether Mica can reveal the existing southwest jellyfish migration, carry that shared observation through boat return and night consolidation, and deliberately read authored jellyfish patrols later without disabling hazards or replacing equipment access.
+
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
 - Completed: milestones #45 and #46 prove one adapted Spark Ray, then a bounded two-individual habitat and active species choice.
-- Committed: none; a separate planning decision must precede the next implementation milestone.
-- Directional: ecological field roles, duo combat, habitat legacy, and regional creature journeys, beginning with a possible Living Expedition 03 planning gate.
+- Committed: Living Expedition 03, one bounded Mica ecology journey and Drift Lens field-skill proof; create its implementation milestone from the selected plan.
+- Directional: duo combat, habitat legacy, and regional creature journeys remain milestone-level goals only.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Living Expedition milestones #45 and #46 are complete with owner GO. No later implementation milestone is committed.
+Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Living Expedition milestones #45 and #46 are complete with owner GO. Living Expedition 03 is the selected next plan; its implementation milestone follows that planning gate.
 
 1. [Living Expedition 02: Small Stable And Species Identity](https://github.com/joeypshell/oceangame2/milestone/46) - complete through #1253-#1262 with focused visual evidence, exact-Web runtime `b639dcf`, and owner GO.
 2. [Living Expedition 01: Spark Ray Adaptation Proof](https://github.com/joeypshell/oceangame2/milestone/45) - complete through #1232/#1235 with exact-Web evidence, bounded guidance correction #1249, and owner GO on corrected gameplay build `c0c7b4e`.
