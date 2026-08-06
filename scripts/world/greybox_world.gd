@@ -25,6 +25,7 @@ const GreyboxMaterialCandidates := preload("res://scripts/world/greybox_material
 const GreyboxToolTargets := preload("res://scripts/world/greybox_tool_targets.gd")
 const GreyboxHostileRenderer := preload("res://scripts/world/greybox_hostile_renderer.gd")
 const GreyboxBiologicalResources := preload("res://scripts/world/greybox_biological_resources.gd")
+const GreyboxCreatureRescues := preload("res://scripts/world/greybox_creature_rescues.gd")
 const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
 
 const SALVAGE_TIER_SCORES := ProgressionContract.SALVAGE_SCORE_BY_TIER
@@ -85,6 +86,7 @@ var _material_candidate_runtime
 var _tool_target_runtime
 var _hostile_renderer
 var _biological_resource_runtime
+var _creature_rescue_runtime
 
 
 func _ready() -> void:
@@ -104,6 +106,7 @@ func _ready() -> void:
 	_tool_target_runtime = GreyboxToolTargets.new()
 	_hostile_renderer = GreyboxHostileRenderer.new()
 	_biological_resource_runtime = GreyboxBiologicalResources.new()
+	_creature_rescue_runtime = GreyboxCreatureRescues.new()
 	load_greybox()
 
 
@@ -162,6 +165,12 @@ func load_greybox() -> void:
 	_marker_root = Node2D.new()
 	_marker_root.name = "Markers"
 	add_child(_marker_root)
+	_creature_rescue_helper().build(
+		_marker_root,
+		map_data.get("creature_rescues", []),
+		tile_size,
+		show_debug_overlay
+	)
 	_survey_target_runtime.build(_marker_root, map_data.get("survey_targets", []), tile_size, show_debug_overlay)
 	_material_candidate_runtime.build(
 		_marker_root,
@@ -257,6 +266,22 @@ func get_creature_memory_opportunities() -> Array:
 
 func get_creature_adaptation_payoffs() -> Array:
 	return _duplicate_dictionary_array(_map_data.get("creature_adaptation_payoffs", []))
+
+
+func get_creature_rescues() -> Array:
+	return _creature_rescue_helper().rescues()
+
+
+func get_creature_rescue_near(position: Vector2, radius_px: float) -> Dictionary:
+	return _creature_rescue_helper().rescue_near(position, radius_px)
+
+
+func set_creature_rescue_state(rescue_id: String, state: String) -> bool:
+	return _creature_rescue_helper().set_state(rescue_id, state)
+
+
+func get_creature_rescue_report() -> Dictionary:
+	return _creature_rescue_helper().report()
 
 
 func get_wreck_network_investigations() -> Array:
@@ -1036,6 +1061,12 @@ func _biological_resource_helper():
 	if _biological_resource_runtime == null:
 		_biological_resource_runtime = GreyboxBiologicalResources.new()
 	return _biological_resource_runtime
+
+
+func _creature_rescue_helper():
+	if _creature_rescue_runtime == null:
+		_creature_rescue_runtime = GreyboxCreatureRescues.new()
+	return _creature_rescue_runtime
 
 
 func _extraction_renderer_helper():

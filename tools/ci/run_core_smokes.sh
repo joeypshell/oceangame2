@@ -16,6 +16,7 @@ run_godot expansion-16-integration-state 180 --headless --path . --script res://
 run_godot companion-profile-state 120 --headless --path . --script res://scripts/main/smoke/smoke_companion_profile_state.gd
 run_godot companion-memory-night 180 --headless --path . --script res://scripts/main/smoke/smoke_companion_memory_night.gd
 run_godot spark-ray-follow 180 --headless --path . --script res://scripts/main/smoke/smoke_spark_ray_follow.gd
+run_godot spark-ray-rescue 180 --headless --path . --script res://scripts/main/smoke/smoke_spark_ray_rescue.gd
 run_godot spark-ray-riding 180 --headless --path . --script res://scripts/main/smoke/smoke_spark_ray_riding.gd
 run_godot anchor-fins-payoff 180 --headless --path . --script res://scripts/main/smoke/smoke_anchor_fins_payoff.gd
 run_godot guardian-pulse-payoff 180 --headless --path . --script res://scripts/main/smoke/smoke_guardian_pulse_payoff.gd

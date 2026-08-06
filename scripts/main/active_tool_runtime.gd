@@ -70,12 +70,19 @@ func use() -> Dictionary:
 
 
 func release_use() -> Dictionary:
-	if _selection == null or _selection.selected_tool_id() != ActiveToolController.SCANNER_TOOL_ID or _main._anomaly_survey == null:
+	if _selection == null:
 		return {"changed": false, "reason": "idle"}
-	var result: Dictionary = _main._anomaly_survey.scanner_release(_main._world)
-	_main._player.sync_scanner_presentation(_main._anomaly_survey.report())
+	var selected_tool_id: String = _selection.selected_tool_id()
+	var result: Dictionary = {}
+	if selected_tool_id == ActiveToolController.CUTTER_TOOL_ID and _main._companion_rescue != null:
+		result = _main._companion_rescue.release_use()
+	elif selected_tool_id == ActiveToolController.SCANNER_TOOL_ID and _main._anomaly_survey != null:
+		result = _main._anomaly_survey.scanner_release(_main._world)
+		_main._player.sync_scanner_presentation(_main._anomaly_survey.report())
+	else:
+		return {"changed": false, "reason": "idle"}
 	if bool(result.get("changed", false)):
-		_main._last_status_note = str(result.get("note", "Scanner interrupted"))
+		_main._last_status_note = str(result.get("note", "Tool interaction interrupted"))
 		_main._update_status_label()
 	return result
 
@@ -124,7 +131,7 @@ func _has_context(tool_id: String) -> bool:
 		ActiveToolController.SCANNER_TOOL_ID:
 			return not _main._anomaly_survey.active_tool_target(_main._world, _main._player).is_empty()
 		ActiveToolController.CUTTER_TOOL_ID:
-			return not _cutter_target().is_empty()
+			return not _rescue_target().is_empty() or not _cutter_target().is_empty()
 		ActiveToolController.SHOCK_PROD_TOOL_ID:
 			return not _hostile_target().is_empty()
 	return false
@@ -139,6 +146,8 @@ func _use_scanner() -> Dictionary:
 
 
 func _use_cutter() -> Dictionary:
+	if not _rescue_target().is_empty() and _main._companion_rescue != null:
+		return _main._companion_rescue.activate()
 	var result: Dictionary = _main._cutter_salvage.activate(
 		_cutter_target(),
 		_main._held_cargo_count(),
@@ -150,6 +159,8 @@ func _use_cutter() -> Dictionary:
 
 
 func _wrong_context(tool_id: String) -> Dictionary:
+	if not _rescue_target().is_empty() and tool_id != ActiveToolController.CUTTER_TOOL_ID and _main._cutter_salvage.has_cutter():
+		return {"status": "wrong_context", "note": "Trapped Spark Ray | Tab Cutter | Hold Space/USE"}
 	var cutter_target := _cutter_target()
 	if not cutter_target.is_empty() and tool_id != ActiveToolController.CUTTER_TOOL_ID and _main._cutter_salvage.has_cutter():
 		return {"status": "wrong_context", "note": "%s | Tab Cutter | Space/USE" % _target_label(cutter_target, "Sealed wreck")}
@@ -165,6 +176,12 @@ func _wrong_context(tool_id: String) -> Dictionary:
 
 func _cutter_target() -> Dictionary:
 	return _main._world.get_tool_target_near(_main._player.global_position, _main.SALVAGE_COLLECTION_RADIUS)
+
+
+func _rescue_target() -> Dictionary:
+	if _main._companion_rescue == null:
+		return {}
+	return _main._companion_rescue.target_near()
 
 
 func _hostile_target() -> Dictionary:
@@ -189,6 +206,8 @@ func _cancel_interaction(tool_id: String) -> void:
 		_main._anomaly_survey.cancel_active_interaction(_main._world)
 	elif tool_id == ActiveToolController.CUTTER_TOOL_ID and _main._cutter_salvage != null:
 		_main._cutter_salvage.reset()
+		if _main._companion_rescue != null:
+			_main._companion_rescue.cancel_interaction("tool_changed")
 
 
 func _capability_query() -> Callable:
