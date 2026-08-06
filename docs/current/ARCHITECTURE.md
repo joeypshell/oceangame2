@@ -229,10 +229,11 @@ position, targets, palette selection, and cooldowns remain transient. The first
 proof adds no creature-health owner.
 
 The current profile owner intentionally stores one `individual` plus one active
-id. Living Expedition 02 plans a schema-v2 bounded `individuals` collection,
-exact schema-v1 migration, one active sortie instance, and a read-only compact
-boat habitat. Preserve Kite's focused adaptation owners; do not generalize them
-into a broad creature framework or add habitat state to `main.gd`.
+id. `LIVING_EXPEDITION_02_SOURCE_STATE_CONTRACT.md` locks a schema-v2 bounded
+`individuals` collection, exact schema-v1 migration, one active sortie instance,
+and a read-only compact boat habitat. Preserve Kite's focused adaptation owners;
+do not generalize them into a broad creature framework or add habitat state to
+`main.gd`.
 
 ## Current Limits
 
