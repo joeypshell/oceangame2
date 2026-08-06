@@ -32,15 +32,15 @@ isolated profile.
 Exact public Web candidate:
 
 ```text
-https://joeypshell.github.io/oceangame2/?review=0b6c1c8fb845a184cc7eb62f386c7d15656bca09&checkpoint=living_expedition_01_start
+https://joeypshell.github.io/oceangame2/?review=c0c7b4ef7b295e97e5eb417bbec8555db42ebea4&checkpoint=living_expedition_01_start
 ```
 
-The Pages workflow and independent desktop/mobile checker passed for exact SHA
-`0b6c1c8fb845a184cc7eb62f386c7d15656bca09`. Technical evidence is recorded in
-[Living Expedition 01 Technical Review](LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md);
-the owner-experience verdict remains pending #1232.
+The Pages workflow and independent desktop/mobile checker passed for corrected
+exact SHA `c0c7b4ef7b295e97e5eb417bbec8555db42ebea4`. Technical evidence and the
+owner GO are recorded in
+[Living Expedition 01 Technical Review](LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md).
 
-## Current Owner Replay
+## Living Expedition 01 Replay
 
 1. Select the Cutter and hold `Space/USE` at the trapped juvenile Spark Ray;
    return together to the canonical surface boat to commit the bond.

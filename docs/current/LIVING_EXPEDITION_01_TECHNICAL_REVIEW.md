@@ -4,7 +4,7 @@ Date: 2026-08-05
 
 Issue: #1232 `Verify Living Expedition 01 Web build and run partnership owner closeout`
 
-Status: **TECHNICAL PASS; OWNER HOLD CORRECTION DEPLOYED; RETEST PENDING**
+Status: **GO; TECHNICAL AND OWNER REVIEW COMPLETE**
 
 ## Exact Candidate
 
@@ -72,21 +72,21 @@ day transition, the next dive, BOND/Mount controls, a meaningful current-or-eel
 shared event, memory return, and the night adaptation choice. It adds no saved
 tutorial state, topology change, second species, or broader HUD redesign.
 
-## Owner Review Boundary
+## Owner Verdict
 
-Automation cannot decide whether Kite feels like an individual partner, BOND is understandable, mounted movement feels embodied, the memories read as earned experiences, the adaptation changes play, or the result motivates another day.
+Automation cannot decide whether Kite feels like an individual partner, BOND is understandable, mounted movement feels embodied, the memories read as earned experiences, the adaptation changes play, or the result motivates another day. The owner supplied the required **GO** after retesting corrected exact candidate `c0c7b4e`.
 
 The checkpoint is a fresh isolated **milestone** profile. It commits prior progression through normal profile transactions, then leaves rescue and all partnership state incomplete. A literally empty historical profile cannot reach the Cutter-gated rescue on its first day; use the empty URL for startup/progression regression and the checkpoint for the natural three-day partnership proof.
 
-For the owner review:
+The completed review path was:
 
 1. Open the checkpoint URL in an incognito/private tab and play without external instructions until Day 3 or the first unclear/broken moment.
 2. Rescue Kite, return to the canonical boat, and test BOND/riding on the following sortie.
 3. Earn one shared memory, choose its night adaptation, and test its independent and mounted payoff.
 4. Restart the isolated checkpoint and test the other memory/adaptation branch.
-5. Report GO, HOLD, or the smallest bounded corrections, especially whether the proof creates attachment, build curiosity, and a desire to begin another day.
+5. Record GO, HOLD, or the smallest bounded corrections against attachment, build curiosity, and another-day motivation.
 
-Issue #1232 and milestone #45 remain open until that verdict is recorded. Do not create Living Expedition 02 or a second species before GO.
+The GO clears the player-experience gate for #1232 and milestone #45. It authorizes a separate planning decision for the next bounded Living Expedition milestone; it does not add a second species or begin that milestone in this closeout.
 
 ## Commands
 
