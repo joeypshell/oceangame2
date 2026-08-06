@@ -16,6 +16,11 @@ This contract separates species possibility, individual history, live behavior,
 and persistent development so future implementations do not turn companions
 into tools, quest rewards, or unvalidated state inside `main.gd`.
 
+The provisional roster, species-review template, and regional ecology-cluster
+direction live in `docs/planning/MONSTER_SPECIES_DESIGN_BIBLE.md`. That planning
+document does not authorize a third-species implementation before a later
+owner-approved milestone selects one.
+
 ## Foundational Rules
 
 - The implemented roster has exactly two rescued individuals, one compact boat
