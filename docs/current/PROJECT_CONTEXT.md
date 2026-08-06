@@ -107,6 +107,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Latest owner decision: Living Expedition 02 received GO on exact reviewed runtime `b639dcf`; no additional correction notes were supplied
 - Latest completed direction: milestone #46 Living Expedition 02 Small Stable And Species Identity, implemented as #1253-#1262
 - Selected next direction: `docs/current/LIVING_EXPEDITION_03_PLAN.md` defines one Mica/jellyfish ecological observation, boat-committed memory, night consolidation, and next-sortie Drift Lens proof; create only that scoped implementation milestone
+- Active implementation contract: `docs/current/LIVING_EXPEDITION_03_SOURCE_STATE_CONTRACT.md`; milestone #47 is frozen as #1276-#1285 in contract, schema, source, state, field runtime, integration, evidence, visual, Web, and owner-gate order
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
 - Latest source contract: `docs/current/OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`
 - Latest visual decision: Living Expedition focused captures are generated review evidence only; all six configured accepted baseline sheets remain pixel-stable
