@@ -12,6 +12,7 @@ const PassiveEquipmentContext := preload("res://scripts/main/passive_equipment_c
 const CaptureController := preload("res://scripts/main/capture_controller.gd")
 const CargoCollectionController := preload("res://scripts/main/cargo_collection_controller.gd")
 const BiologicalResourceController := preload("res://scripts/main/biological_resource_controller.gd")
+const CompanionRescueRuntime := preload("res://scripts/companion/companion_rescue_runtime.gd")
 const CompanionSortieRuntime := preload("res://scripts/companion/companion_sortie_runtime.gd")
 const CutterSalvageController := preload("res://scripts/main/cutter_salvage_controller.gd")
 const CurrentGateCapture := preload("res://scripts/main/captures/current_gate_capture.gd")
@@ -229,6 +230,7 @@ var _active_tool_runtime
 var _capture_controller
 var _cargo_collection
 var _biological_resources
+var _companion_rescue
 var _companion_sortie
 var _current_gate
 var _cutter_salvage
@@ -358,6 +360,8 @@ func _ready() -> void:
 	add_child(_audio_cues)
 	_companion_sortie = CompanionSortieRuntime.new()
 	add_child(_companion_sortie)
+	_companion_rescue = CompanionRescueRuntime.new()
+	add_child(_companion_rescue)
 	_smoke_feedback_audio_checks = SmokeFeedbackAudioChecks.new(self)
 	_smoke_active_tool_checks = SmokeActiveToolChecks.new(self)
 	_smoke_final_dive_objective_checks = SmokeFinalDiveObjectiveChecks.new(self)
@@ -1348,6 +1352,14 @@ func _load_playable_map(
 	_navigation_core.on_map_loaded(world)
 	player.position = world.get_entry_position(entry_id) if not entry_id.is_empty() and world.has_method("get_entry_position") else world.spawn_position
 	add_child(player)
+	_companion_rescue.bind_map(
+		world,
+		player,
+		_anomaly_survey.profile_state(),
+		Callable(self, "_has_upgrade_id"),
+		Callable(_anomaly_survey.profile_state(), "has_capability"),
+		SALVAGE_COLLECTION_RADIUS
+	)
 	_companion_sortie.bind_map(
 		world,
 		player,
@@ -1399,6 +1411,8 @@ func _load_playable_map(
 	_update_status_label()
 
 func _clear_loaded_review_nodes() -> void:
+	if _companion_rescue != null:
+		_companion_rescue.clear_map("scene_exit")
 	if _companion_sortie != null:
 		_companion_sortie.clear_map()
 	for node in [_review_canvas, _player, _world]:
@@ -1494,6 +1508,9 @@ func _process(delta: float) -> void:
 			_last_status_note = str(investigation_result["note"])
 		_refresh_expedition_plan()
 	_update_hazard_warning(delta)
+	var rescue_result: Dictionary = _companion_rescue.update(delta)
+	if str(rescue_result.get("state", "")) in ["releasing", "complete", "canceled"] and rescue_result.has("note"):
+		_last_status_note = str(rescue_result["note"])
 
 	_cargo_collection.update(delta)
 
@@ -1628,6 +1645,7 @@ func _reset_run() -> void:
 		return
 	_companion_sortie.reset_control("retry")
 	_companion_sortie.discard_uncommitted_memories("retry")
+	_companion_rescue.reset_for_failure("retry")
 	_refresh_active_tools()
 
 	_world.reset_salvage()
@@ -1690,6 +1708,7 @@ func _reset_interior_expedition_to_boat() -> void:
 	)
 	_sortie_state.clear_held()
 	_companion_sortie.discard_uncommitted_memories("retry")
+	_companion_rescue.reset_for_failure("retry")
 	_interior_expedition_transition.reset()
 	_load_playable_map(
 		origin_map_path,
@@ -1876,6 +1895,7 @@ func _handle_oxygen_depleted() -> void:
 	if _sortie_state.failed:
 		return
 	_companion_sortie.discard_uncommitted_memories("oxygen_failure")
+	_companion_rescue.reset_for_failure("oxygen_failure")
 	_anomaly_survey.clear_unbanked("oxygen_failure", _world)
 	_clear_navigation_core_unbanked("oxygen_failure")
 	_pressure_zone.reset()
@@ -1926,6 +1946,7 @@ func _apply_combat_damage(amount: int, source_id: String) -> Dictionary:
 
 func _handle_combat_defeat(_source_id: String) -> void:
 	_companion_sortie.discard_uncommitted_memories("combat_defeat")
+	_companion_rescue.reset_for_failure("combat_defeat")
 	_anomaly_survey.clear_unbanked("combat_defeat", _world)
 	_clear_navigation_core_unbanked("combat_defeat")
 	_pressure_zone.reset()
@@ -1966,6 +1987,7 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 	_cutter_salvage.reset()
 	_hostiles.reset_for_failure(_world)
 	_shock_prod.reset()
+	_companion_rescue.reset_for_failure("hazard")
 	_combat_feedback_seconds = 0.0
 	_anomaly_survey.clear_unbanked("hazard", _world)
 	_clear_navigation_core_unbanked("hazard")
@@ -2180,6 +2202,7 @@ func _update_status_label() -> void:
 	var oxygen_zone_prompt: String = _oxygen_consumption_zone.overlay_text()
 	var current_gate_prompt := _current_gate_prompt()
 	var progression_container_prompt := _progression_container_prompt()
+	var creature_rescue_prompt: String = _companion_rescue.prompt() if _companion_rescue != null else ""
 	var pre_pickup_route_cue := _pre_pickup_route_cue_prompt()
 	var world_connector_prompt := _world_connector_prompt()
 	if _run_complete:
@@ -2202,6 +2225,9 @@ func _update_status_label() -> void:
 		objective_step_cue_blocked = true
 	elif not oxygen_rest_prompt.is_empty():
 		prompt = oxygen_rest_prompt
+		objective_step_cue_blocked = true
+	elif not creature_rescue_prompt.is_empty():
+		prompt = creature_rescue_prompt
 		objective_step_cue_blocked = true
 	elif not current_gate_prompt.is_empty():
 		prompt = current_gate_prompt
