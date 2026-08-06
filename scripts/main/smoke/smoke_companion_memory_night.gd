@@ -63,7 +63,14 @@ func _run() -> void:
 	get_root().add_child(world)
 	await process_frame
 	var opportunities: Array = world.get_creature_memory_opportunities()
-	_expect(opportunities.size() == 2, "full level did not expose both source-authored memory opportunities")
+	var opportunity_ids: Array[String] = []
+	for opportunity in opportunities:
+		opportunity_ids.append(str((opportunity as Dictionary).get("id", "")))
+	_expect(
+		opportunity_ids.has("spark_ray_current_memory_01")
+		and opportunity_ids.has("spark_ray_eel_memory_01"),
+		"full level did not preserve both source-authored Spark Ray memory opportunities"
+	)
 
 	var profile := ExpansionProfileState.new(PROFILE_PATH, true)
 	profile.load_profile()
@@ -97,7 +104,7 @@ func _run() -> void:
 		quit(1)
 		return
 	print(
-		"Companion memory/night smoke passed: source_opportunities=2 current_independent=true current_mounted=true territorial_independent=true territorial_mounted=true trivial_actions_blocked=true failure_reload_rollback=true canonical_boat_commit=true night_earned_only=true adaptation=%s mutual_exclusion=true profile_reload=true." % GUARDIAN_ADAPTATION_ID
+		"Companion memory/night smoke passed: source_opportunities=%d current_independent=true current_mounted=true territorial_independent=true territorial_mounted=true trivial_actions_blocked=true failure_reload_rollback=true canonical_boat_commit=true night_earned_only=true adaptation=%s mutual_exclusion=true profile_reload=true." % [opportunities.size(), GUARDIAN_ADAPTATION_ID]
 	)
 	quit(0)
 
