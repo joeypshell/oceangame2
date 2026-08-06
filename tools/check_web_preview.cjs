@@ -360,29 +360,7 @@ async function inspectPreview(browser, url, viewport, outputPath, pageOptions = 
 }
 
 async function probeMobileControls(page, canvasRect) {
-	// These logical points mirror the eight-command grid in mobile_test_controls.gd.
-	const probes = [
-		{
-			name: "stick_down",
-			point: { x: 142, y: 604.8 },
-			region: { left: 30, top: 392, width: 224, height: 224 },
-		},
-		{
-			name: "oxygen_button",
-			point: { x: 910, y: 396 },
-			region: { left: 846, top: 356, width: 128, height: 80 },
-		},
-		{
-			name: "project_button",
-			point: { x: 910, y: 486 },
-			region: { left: 846, top: 446, width: 128, height: 80 },
-		},
-		{
-			name: "use_button",
-			point: { x: 1048, y: 576 },
-			region: { left: 984, top: 536, width: 128, height: 80 },
-		},
-	];
+	const probes = mobileControlProbes();
 	const client = await page.context().newCDPSession(page);
 	const differences = {};
 	try {
@@ -407,6 +385,44 @@ async function probeMobileControls(page, canvasRect) {
 		await client.detach();
 	}
 	return differences;
+}
+
+function mobileControlProbes() {
+	// These logical regions mirror the 3x3 command grid in mobile_test_controls.gd.
+	const probes = [
+		{
+			name: "stick_down",
+			point: { x: 142, y: 604.8 },
+			region: { left: 30, top: 392, width: 224, height: 224 },
+		},
+	];
+	const commandNames = [
+		"oxygen_button",
+		"cargo_button",
+		"tool_button",
+		"project_button",
+		"day_button",
+		"reset_button",
+		"interact_button",
+		"use_button",
+		"bond_button",
+	];
+	for (let index = 0; index < commandNames.length; index += 1) {
+		const column = index % 3;
+		const row = Math.floor(index / 3);
+		const region = {
+			left: 846 + column * 138,
+			top: 356 + row * 90,
+			width: 128,
+			height: 80,
+		};
+		probes.push({
+			name: commandNames[index],
+			point: { x: region.left + 64, y: region.top + 40 },
+			region,
+		});
+	}
+	return probes;
 }
 
 function projectLogicalPoint(canvasRect, point) {
