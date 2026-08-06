@@ -8,7 +8,7 @@ python tools/write_build_info.py
 
 This writes ignored `build_info.json`. The web export workflow generates that file from `GITHUB_SHA` before export, so the public preview can identify the deployed commit.
 
-The latest exact-SHA Pages and checkpoint verification is recorded in [Living Expedition 01 Technical Review](../LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md). The [OceanGame Expansion 18 Visual Baseline Decision](../OCEANGAME_EXPANSION_18_VISUAL_BASELINE_DECISION.md) remains the latest accepted visual-baseline decision, and the older [Simple Diver Game 08 Web Export Handoff](../SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md) remains the release-candidate foundation.
+The latest exact-SHA Pages and checkpoint verification is recorded in [Living Expedition 02 Web Verification](../LIVING_EXPEDITION_02_WEB_VERIFICATION.md). The [Living Expedition 02 Visual Decision](../LIVING_EXPEDITION_02_VISUAL_DECISION.md) records the current focused capture review; accepted production-slice baselines remain unchanged. The older [Simple Diver Game 08 Web Export Handoff](../SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md) remains the release-candidate foundation.
 
 Build a local Web export preview:
 
