@@ -177,6 +177,7 @@ func load_greybox() -> void:
 	_ecological_trace_helper().build(
 		_marker_root,
 		map_data.get("ecological_traces", []),
+		map_data.get("moving_hazards", []),
 		tile_size,
 		show_debug_overlay
 	)

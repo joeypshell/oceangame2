@@ -19,6 +19,7 @@ const KITE_ID := "spark_ray_juvenile_01"
 const MICA_ID := "veil_cuttle_juvenile_01"
 const MICA_RESCUE_ID := "veil_cuttle_rescue_01"
 const TRACE_ID := "southwest_bloom_migration_trace"
+const BLOOM_CONDITION_ID := "southwest_jellyfish_bloom"
 const PROTECTED_GATE_ID := "upper_right_current_pocket_gate"
 
 var _failures: Array[String] = []
@@ -43,6 +44,7 @@ func _run() -> void:
 	var world := WORLD_SCENE.instantiate()
 	world.map_path = MAP_PATH
 	get_root().add_child(world)
+	world.configure_moving_hazards([BLOOM_CONDITION_ID])
 	var player := PLAYER_SCENE.instantiate() as CharacterBody2D
 	get_root().add_child(player)
 	player.set_physics_process(false)

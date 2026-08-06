@@ -22,6 +22,9 @@ var _trace_direction := Vector2.RIGHT
 var _trace_range_px := 192.0
 var _trace_target_distance := 192.0
 var _trace_cue_seconds := 0.0
+var _trace_path_points := PackedVector2Array()
+var _trace_current_center := Vector2.ZERO
+var _trace_movement_direction := Vector2.ZERO
 
 
 func sync(state: String, facing_sign: float, path_points: Array) -> void:
@@ -46,6 +49,23 @@ func show_reveal_trace(
 	_trace_range_px = maxf(1.0, range_px)
 	_trace_target_distance = clampf(target_distance, 18.0, _trace_range_px)
 	_trace_state = cue_state
+	_trace_path_points = PackedVector2Array()
+	_trace_cue_seconds = 0.16 if cue_state == "aiming" else 1.15
+	queue_redraw()
+
+
+func show_migration_trace(
+	path_points: Array,
+	current_center: Vector2,
+	movement_direction: Vector2,
+	cue_state: String
+) -> void:
+	_trace_path_points = PackedVector2Array()
+	for point in path_points:
+		_trace_path_points.append(point as Vector2)
+	_trace_current_center = current_center
+	_trace_movement_direction = movement_direction.normalized()
+	_trace_state = cue_state
 	_trace_cue_seconds = 0.16 if cue_state == "aiming" else 1.15
 	queue_redraw()
 
@@ -54,6 +74,7 @@ func clear_reveal_preview() -> void:
 	if _trace_state == "aiming":
 		_trace_state = "idle"
 		_trace_cue_seconds = 0.0
+		_trace_path_points = PackedVector2Array()
 		queue_redraw()
 
 
@@ -79,6 +100,9 @@ func report() -> Dictionary:
 		"trace_direction": _trace_direction,
 		"trace_range_px": _trace_range_px,
 		"trace_target_distance": _trace_target_distance,
+		"trace_path_point_count": _trace_path_points.size(),
+		"trace_current_center": _trace_current_center,
+		"trace_movement_direction": _trace_movement_direction,
 		"mounted": false,
 	}
 
@@ -147,6 +171,14 @@ func _draw_trace_cue() -> void:
 	if _trace_state == "idle":
 		return
 	var color := COLOR_TRACE if _trace_state in ["aiming", "revealed", "already_revealed"] else COLOR_MISS
+	if _trace_path_points.size() >= 2:
+		draw_polyline(_trace_path_points, Color(color, 0.22), 7.0, true)
+		draw_polyline(_trace_path_points, Color(color, 0.86), 2.25, true)
+		draw_arc(_trace_current_center, 10.0, 0.0, TAU, 20, color, 2.0, true)
+		if _trace_movement_direction != Vector2.ZERO:
+			var tip := _trace_current_center + _trace_movement_direction * 22.0
+			draw_line(_trace_current_center, tip, color, 2.0, true)
+		return
 	var direction := _trace_direction.normalized()
 	var side := direction.orthogonal()
 	var range_endpoint := direction * _trace_range_px

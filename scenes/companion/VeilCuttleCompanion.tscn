@@ -1,7 +1,8 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/companion/veil_cuttle_companion.gd" id="1_companion"]
 [ext_resource type="Script" path="res://scripts/companion/veil_cuttle_companion_presentation.gd" id="2_presentation"]
+[ext_resource type="Script" path="res://scripts/companion/veil_cuttle_drift_projection.gd" id="3_drift_projection"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_companion"]
 size = Vector2(24, 20)
@@ -17,3 +18,8 @@ shape = SubResource("RectangleShape2D_companion")
 
 [node name="Presentation" type="Node2D" parent="."]
 script = ExtResource("2_presentation")
+
+[node name="DriftProjection" type="Node2D" parent="."]
+top_level = true
+z_index = 15
+script = ExtResource("3_drift_projection")

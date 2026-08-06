@@ -68,6 +68,26 @@ func hazard_by_id(hazard_id: String) -> Dictionary:
 	return {}
 
 
+func snapshot() -> Array:
+	var values := []
+	for hazard in _hazards:
+		var source := hazard as Dictionary
+		var value: Dictionary = source.duplicate(true)
+		var center := _position_for_hazard(source)
+		var next_center := _position_for_hazard_at(source, _elapsed_seconds + 0.05)
+		value["center"] = center
+		value["movement_direction"] = center.direction_to(next_center)
+		values.append(value)
+	return values
+
+
+func snapshot_for(hazard_id: String) -> Dictionary:
+	for hazard in snapshot():
+		if str(hazard.get("id", "")) == hazard_id:
+			return (hazard as Dictionary).duplicate(true)
+	return {}
+
+
 func _apply_positions(world) -> void:
 	if world == null or not world.has_method("set_moving_hazard_center"):
 		return
@@ -92,6 +112,10 @@ func _nearest_hazard(position: Vector2, radius: float) -> Dictionary:
 
 
 func _position_for_hazard(hazard: Dictionary) -> Vector2:
+	return _position_for_hazard_at(hazard, _elapsed_seconds)
+
+
+func _position_for_hazard_at(hazard: Dictionary, elapsed_seconds: float) -> Vector2:
 	var path: Array = hazard.get("path", [])
 	if path.size() < 2:
 		return hazard.get("center", Vector2.ZERO)
@@ -104,7 +128,7 @@ func _position_for_hazard(hazard: Dictionary) -> Vector2:
 	if total_length <= 0.0:
 		return path[0]
 
-	var distance := fposmod((_elapsed_seconds + phase_seconds) * speed, total_length * 2.0)
+	var distance := fposmod((elapsed_seconds + phase_seconds) * speed, total_length * 2.0)
 	if distance > total_length:
 		distance = total_length * 2.0 - distance
 

@@ -16,6 +16,7 @@ const FACING_SPEED_THRESHOLD := 12.0
 const FACING_COMMIT_SECONDS := 0.14
 
 @onready var _presentation := $Presentation
+@onready var _drift_projection := $DriftProjection
 
 var _world
 var _player
@@ -92,9 +93,43 @@ func show_reveal_trace(direction: Vector2, range_px: float, target_distance: flo
 		_presentation.show_reveal_trace(direction, range_px, target_distance, cue_state)
 
 
+func show_migration_trace(
+	path_points: Array,
+	current_center: Vector2,
+	movement_direction: Vector2,
+	cue_state: String
+) -> void:
+	if _presentation == null:
+		return
+	var local_path := []
+	for point in path_points:
+		local_path.append((point as Vector2) - global_position)
+	_presentation.show_migration_trace(
+		local_path,
+		current_center - global_position,
+		movement_direction,
+		cue_state
+	)
+
+
 func clear_reveal_preview() -> void:
 	if _presentation != null:
 		_presentation.clear_reveal_preview()
+
+
+func show_drift_projection(
+	path_points: Array,
+	current_center: Vector2,
+	movement_direction: Vector2,
+	approaching: bool
+) -> void:
+	if _drift_projection != null:
+		_drift_projection.show_projection(path_points, current_center, movement_direction, approaching)
+
+
+func clear_drift_projection() -> void:
+	if _drift_projection != null:
+		_drift_projection.clear_projection()
 
 
 func report() -> Dictionary:
@@ -109,6 +144,7 @@ func report() -> Dictionary:
 	value["can_receive_command"] = can_receive_command()
 	value["mounted"] = false
 	value["presentation"] = _presentation.report() if _presentation != null else {}
+	value["drift_projection"] = _drift_projection.report() if _drift_projection != null else {}
 	return value
 
 

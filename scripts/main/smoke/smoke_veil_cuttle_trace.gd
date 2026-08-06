@@ -4,10 +4,13 @@ const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const CUTTLE_SCENE := preload("res://scenes/companion/VeilCuttleCompanion.tscn")
 const VeilCuttleControlRuntime := preload("res://scripts/companion/veil_cuttle_control_runtime.gd")
+const MovingHazardController := preload("res://scripts/main/moving_hazard_controller.gd")
 const ScannerSubjectCatalog := preload("res://scripts/main/scanner_subject_catalog.gd")
 const MAP_PATH := "res://maps/production_level_01.greybox.json"
 const TRACE_ID := "southwest_bloom_migration_trace"
 const TRACE_SCAN_ID := "identify_ecological_trace_southwest_bloom_migration_trace"
+const CONDITION_ID := "southwest_jellyfish_bloom"
+const HAZARD_ID := "southwest_bloom_jellyfish_patrol"
 
 var _failures: Array[String] = []
 var _status_notes: Array[String] = []
@@ -35,8 +38,10 @@ func _run() -> void:
 	cuttle.set_physics_process(false)
 	var control := VeilCuttleControlRuntime.new()
 	get_root().add_child(control)
+	var moving_hazards := MovingHazardController.new()
+	moving_hazards.reset(world, [CONDITION_ID])
 	control.bind_interface(Callable(self, "_record_status"), Callable(self, "_control_allowed"))
-	control.bind_map(world, player, cuttle)
+	control.bind_map(world, player, cuttle, moving_hazards)
 	await physics_frame
 
 	var trace := _trace_by_id(world, TRACE_ID)
@@ -85,9 +90,16 @@ func _test_deliberate_reveal(world, player, cuttle, control) -> void:
 	_expect(not bool(result.get("gate_access_changed", true)), "Reveal Trace changed equipment-gate access")
 	_expect(str(_trace_by_id(world, TRACE_ID).get("state", "")) == "revealed", "trace runtime state did not retain the reveal")
 	_expect(_trace_marker(world).visible, "revealed trace marker remained concealed")
+	var migration_line := _trace_marker(world).get_node("MigrationPath") as Line2D
+	var linked_hazard := _hazard_by_id(world, HAZARD_ID)
+	_expect(migration_line.points.size() == (linked_hazard.get("path", []) as Array).size(), "revealed trace did not draw the linked patrol path")
+	if migration_line.points.size() >= 2:
+		var first_world_point: Vector2 = migration_line.points[0] + center
+		_expect(first_world_point.is_equal_approx(linked_hazard.get("path", [Vector2.ZERO])[0]), "migration path projection drifted from linked hazard source")
 	_expect(_subject_ids(world).has(TRACE_SCAN_ID), "scanner catalog did not expose the revealed trace for identification")
 	var presentation: Dictionary = cuttle.report().get("presentation", {})
 	_expect(str(presentation.get("trace_state", "")) == "revealed", "Mica did not show readable Reveal Trace result feedback")
+	_expect(int(presentation.get("trace_path_point_count", 0)) >= 2, "Mica retained the generic Reveal Trace ring instead of the linked trail")
 	_expect(float(presentation.get("trace_range_px", 0.0)) == float(trace.get("reveal_radius_tiles", 0.0)) * float(world.tile_size), "Reveal Trace presentation range drifted from source")
 	_expect(_status_notes.has("Mica revealed an ecological trace | Scanner required"), "Reveal Trace omitted scanner-required feedback")
 
@@ -101,6 +113,13 @@ func _trace_by_id(world, trace_id: String) -> Dictionary:
 
 func _trace_marker(world) -> CanvasItem:
 	return world.get_node("Markers/%s" % TRACE_ID) as CanvasItem
+
+
+func _hazard_by_id(world, hazard_id: String) -> Dictionary:
+	for hazard in world.get_moving_hazards():
+		if str(hazard.get("id", "")) == hazard_id:
+			return hazard
+	return {}
 
 
 func _subject_ids(world) -> Array[String]:
@@ -137,7 +156,7 @@ func _finish(world, player, cuttle, control) -> void:
 			push_error("Veil Cuttle trace smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("PASS: Veil Cuttle BOND commands=recall,reveal_trace mount=false range=source direction=visible result=visible authored_target=1 scanner_required=true reward=false progression=false gate_bypass=false.")
+	print("PASS: Veil Cuttle BOND commands=recall,reveal_trace mount=false range=source trail=linked_patrol_path generic_ring=false direction=visible result=visible authored_target=1 scanner_required=true reward=false progression=false gate_bypass=false.")
 	quit(0)
 
 

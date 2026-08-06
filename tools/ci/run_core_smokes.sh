@@ -22,6 +22,7 @@ run_godot spark-ray-riding 180 --headless --path . --script res://scripts/main/s
 run_godot companion-habitat-selection 120 --headless --path . --script res://scripts/main/smoke/smoke_companion_habitat_selection.gd
 run_godot veil-cuttle-follow 120 --headless --path . --script res://scripts/main/smoke/smoke_veil_cuttle_follow.gd
 run_godot veil-cuttle-trace 120 --headless --path . --script res://scripts/main/smoke/smoke_veil_cuttle_trace.gd
+run_godot veil-cuttle-drift-lens 120 --headless --path . --script res://scripts/main/smoke/smoke_veil_cuttle_drift_lens.gd
 run_godot anchor-fins-payoff 180 --headless --path . --script res://scripts/main/smoke/smoke_anchor_fins_payoff.gd
 run_godot guardian-pulse-payoff 180 --headless --path . --script res://scripts/main/smoke/smoke_guardian_pulse_payoff.gd
 run_godot wreck-network-investigation-state 120 --headless --path . --script res://scripts/main/smoke/smoke_wreck_network_investigation_state.gd
