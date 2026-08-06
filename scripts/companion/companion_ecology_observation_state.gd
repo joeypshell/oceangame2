@@ -7,12 +7,16 @@ var _traces_by_id := {}
 var _opportunities_by_id := {}
 var _revealed_trace_ids: Array[String] = []
 var _identified_trace_ids: Array[String] = []
+var _active_condition_ids: Array[String] = []
 var _pending_observation := {}
 var _last_result := {}
 
 
-func bind_map(world, profile, preserve_sortie := false) -> void:
+func bind_map(world, profile, preserve_sortie := false, active_condition_ids := []) -> void:
 	_profile = profile
+	_active_condition_ids.clear()
+	for condition_id in active_condition_ids:
+		_active_condition_ids.append(str(condition_id))
 	_traces_by_id = _index_records(
 		world.get_ecological_traces()
 		if world != null and world.has_method("get_ecological_traces")
@@ -27,6 +31,15 @@ func bind_map(world, profile, preserve_sortie := false) -> void:
 		discard_uncommitted("map_reload")
 	else:
 		_last_result = {}
+
+
+func clear_map() -> void:
+	discard_uncommitted("map_clear")
+	_profile = null
+	_traces_by_id = {}
+	_opportunities_by_id = {}
+	_active_condition_ids.clear()
+	_last_result = {}
 
 
 func record_reveal(trace_id: String) -> Dictionary:
@@ -90,6 +103,15 @@ func record_identification(
 	return _remember(value)
 
 
+func record_scanner_identification(trace_id: String) -> Dictionary:
+	var trace := _trace(trace_id)
+	return record_identification(
+		trace_id,
+		str(trace.get("observation_id", "")),
+		_active_condition_ids
+	)
+
+
 func commit_at_boat(at_canonical_boat: bool) -> Dictionary:
 	if _pending_observation.is_empty():
 		return _remember(_result(false, "nothing_pending"))
@@ -136,6 +158,7 @@ func report() -> Dictionary:
 	return {
 		"revealed_trace_ids": _revealed_trace_ids.duplicate(),
 		"identified_trace_ids": _identified_trace_ids.duplicate(),
+		"active_condition_ids": _active_condition_ids.duplicate(),
 		"pending_observation_id": str(_pending_observation.get("observation_id", "")),
 		"pending_memory_id": str(_pending_observation.get("memory_id", "")),
 		"last_result": _last_result.duplicate(true),

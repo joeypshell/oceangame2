@@ -67,7 +67,7 @@ func public_report(report: Dictionary) -> Dictionary:
 	result["scan_presentation_id"] = str(target.get("scan_presentation_id", ""))
 	result["source_id"] = str(target.get("source_id", ""))
 	result["source_type"] = str(target.get("source_type", "survey"))
-	result["requires_hold"] = str(target.get("scanner_subject_mode", "progression")) == "progression"
+	result["requires_hold"] = bool(target.get("requires_hold", str(target.get("scanner_subject_mode", "progression")) == "progression"))
 	result.erase("target")
 	return result
 

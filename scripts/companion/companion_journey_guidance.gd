@@ -51,7 +51,7 @@ func objective_text(world, player, profile, sortie_runtime, day_state) -> String
 	if bool(control_report.get("mounted", false)):
 		return _mounted_text(callsign, adaptation_id)
 	if species_id == VEIL_CUTTLE:
-		return _veil_cuttle_text(world, callsign)
+		return _veil_cuttle_text(world, callsign, individual, memory_report.get("ecology", {}), at_boat)
 	return _independent_text(callsign, adaptation_id)
 
 
@@ -71,14 +71,26 @@ func _mounted_text(callsign: String, adaptation_id: String) -> String:
 	return "PARTNER: Riding %s | Tab/TOOL selects Glide Surge | Space/USE activates | seek lower-right current or eel" % callsign
 
 
-func _veil_cuttle_text(world, callsign: String) -> String:
+func _veil_cuttle_text(world, callsign: String, individual: Dictionary, ecology: Dictionary, at_boat: bool) -> String:
+	if not str(ecology.get("pending_observation_id", "")).is_empty():
+		return "PARTNER: Jellyfish migration identified with %s | Return to the surface boat together" % callsign
+	var earned_memory_ids: Array = individual.get("earned_memory_ids", [])
+	var adaptation_id := str(individual.get("selected_adaptation_id", ""))
+	if earned_memory_ids.has("followed_the_bloom") and adaptation_id.is_empty():
+		return (
+			"PARTNER: Shared bloom memory secured | Press N | consolidate Drift Lens tonight"
+			if at_boat
+			else "PARTNER: Shared bloom memory secured | Return to the boat, then press N"
+		)
+	if adaptation_id == "drift_lens":
+		return "PARTNER: Drift Lens ready | Near moving jellyfish hold Shift/BOND | Tab Read Drift | Space/USE"
 	var trace_state := _ecological_trace_state(world)
 	if trace_state == "identified":
-		return "PARTNER: %s's optional ecological trace is identified | No cargo or access reward" % callsign
+		return "PARTNER: Southwest Jellyfish Bloom identified | Return to the surface boat with %s" % callsign
 	if trace_state == "revealed":
-		return "PARTNER: %s revealed a trace | Tab Scanner | Hold Space/USE to identify it" % callsign
+		return "PARTNER: Migration trail revealed | Tab Scanner | Hold Space/USE to identify it"
 	if trace_state == "hidden":
-		return "PARTNER: %s senses a concealed trace | Stay close, hold Shift/BOND | Tab Reveal Trace | Space/USE" % callsign
+		return "PARTNER: Find the Southwest Jellyfish Bloom | Near it hold Shift/BOND | Tab Reveal Trace | Space/USE"
 	return "PARTNER: %s is investigating nearby water | Hold Shift/BOND for Recall or Reveal Trace" % callsign
 
 

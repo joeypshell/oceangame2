@@ -117,6 +117,11 @@ func clear_reveal_preview() -> void:
 		_presentation.clear_reveal_preview()
 
 
+func set_ecology_interest(active: bool) -> void:
+	if _presentation != null:
+		_presentation.set_ecology_interest(active)
+
+
 func show_drift_projection(
 	path_points: Array,
 	current_center: Vector2,

@@ -908,8 +908,11 @@ func _ready() -> void:
 	elif smoke_expansion_11_light_return or smoke_expansion_12_pressure_return or smoke_expansion_13_southeast_wreck_return or smoke_expansion_14_archive_current_return or smoke_expansion_16_deeper_wreck:
 		profile_state = SmokeExpansion11LightReturnChecks.create_clean_profile()
 	_anomaly_survey = AnomalySurveyRuntime.new(_progression_runtime, profile_persistence_enabled, profile_state)
+	_anomaly_survey.bind_ecological_identification_sink(Callable(_companion_sortie, "observe_ecological_identification"))
 	if not _review_checkpoint_id.is_empty():
 		_review_checkpoint_report = ReviewCheckpointFixture.apply(_review_checkpoint_id, _anomaly_survey.profile_state())
+		if bool(_review_checkpoint_report.get("ready", false)) and int(_review_checkpoint_report.get("day_number", 0)) > 0:
+			_expedition_day_state.begin_day(int(_review_checkpoint_report["day_number"]))
 	_wreck_network_investigation = WreckNetworkInvestigationRuntime.new(_anomaly_survey.profile_state())
 	_pressure_zone = PressureZoneController.new()
 	_progression_runtime.set_profile_state(_anomaly_survey.profile_state())
@@ -1371,7 +1374,8 @@ func _load_playable_map(
 		_sortie_state.active,
 		preserve_sortie,
 		_hostiles,
-		_moving_hazards
+		_moving_hazards,
+		_daily_conditions.current_ids()
 	)
 	_apply_durable_light_profile()
 
@@ -1992,6 +1996,7 @@ func _handle_hazard_hit(hazard_id: String) -> void:
 	_hostiles.reset_for_failure(_world)
 	_shock_prod.reset()
 	_companion_rescue.reset_for_failure("hazard")
+	_companion_sortie.discard_uncommitted_memories("hazard")
 	_combat_feedback_seconds = 0.0
 	_anomaly_survey.clear_unbanked("hazard", _world)
 	_clear_navigation_core_unbanked("hazard")

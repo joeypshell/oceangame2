@@ -2,6 +2,7 @@ extends Node
 
 const CompanionAdaptationDebrief := preload("res://scripts/companion/companion_adaptation_debrief.gd")
 const CompanionAnchorFinsRuntime := preload("res://scripts/companion/companion_anchor_fins_runtime.gd")
+const CompanionEcologyObservationState := preload("res://scripts/companion/companion_ecology_observation_state.gd")
 const CompanionGuardianPulseRuntime := preload("res://scripts/companion/companion_guardian_pulse_runtime.gd")
 const CompanionHabitatSelection := preload("res://scripts/companion/companion_habitat_selection.gd")
 const CompanionMemoryRuntime := preload("res://scripts/companion/companion_memory_runtime.gd")
@@ -27,6 +28,7 @@ var _anchor_fins := CompanionAnchorFinsRuntime.new()
 var _guardian_pulse := CompanionGuardianPulseRuntime.new()
 var _habitat
 var _memory_runtime := CompanionMemoryRuntime.new()
+var _ecology_observation := CompanionEcologyObservationState.new()
 var _adaptation_debrief := CompanionAdaptationDebrief.new()
 
 
@@ -56,7 +58,8 @@ func bind_map(
 	sortie_active := false,
 	preserve_sortie := false,
 	hostiles = null,
-	moving_hazards = null
+	moving_hazards = null,
+	active_condition_ids := []
 ) -> Dictionary:
 	clear_map()
 	_world = world
@@ -64,6 +67,7 @@ func bind_map(
 	_profile = profile
 	_moving_hazards = moving_hazards
 	_has_upgrade = has_upgrade
+	_ecology_observation.bind_map(world, profile, preserve_sortie, active_condition_ids)
 	_ensure_control(_selected_species_id())
 	_habitat.bind_map(world, player, profile, Callable(self, "release_to_habitat"))
 	var has_capability := Callable(profile, "has_capability") if profile != null and profile.has_method("has_capability") else Callable()
@@ -108,6 +112,7 @@ func clear_map() -> void:
 	_reset_species_transient("map_clear")
 	_anchor_fins.clear_map()
 	_guardian_pulse.clear_map()
+	_ecology_observation.clear_map()
 	if _control != null:
 		_control.clear_map()
 	if _habitat != null:
@@ -172,11 +177,25 @@ func commit_memories_at_boat() -> Dictionary:
 		and _world.has_method("is_inside_boat")
 		and _world.is_inside_boat(_player.global_position)
 	)
-	return _memory_runtime.commit_at_boat(at_boat)
+	var memory: Dictionary = _memory_runtime.commit_at_boat(at_boat)
+	var ecology: Dictionary = _ecology_observation.commit_at_boat(at_boat)
+	var result: Dictionary = (ecology if str(ecology.get("reason", "")) != "nothing_pending" else memory).duplicate(true)
+	result["companion_memory"] = memory
+	result["ecology"] = ecology
+	return result
 
 
 func discard_uncommitted_memories(reason := "failure") -> Dictionary:
-	return _memory_runtime.discard_uncommitted(reason)
+	var memory: Dictionary = _memory_runtime.discard_uncommitted(reason)
+	var ecology: Dictionary = _ecology_observation.discard_uncommitted(reason)
+	var result: Dictionary = (ecology if bool(ecology.get("changed", false)) else memory).duplicate(true)
+	result["companion_memory"] = memory
+	result["ecology"] = ecology
+	return result
+
+
+func observe_ecological_identification(trace_id: String) -> Dictionary:
+	return _ecology_observation.record_scanner_identification(trace_id)
 
 
 func begin_debrief() -> void:
@@ -202,6 +221,7 @@ func debrief_lines() -> Array[String]:
 
 func memory_report() -> Dictionary:
 	var value := _memory_runtime.report()
+	value["ecology"] = _ecology_observation.report()
 	value["debrief"] = _adaptation_debrief.report()
 	return value
 
@@ -384,6 +404,8 @@ func _bind_control_interface() -> void:
 		_control.bind_interface(_active_tool_hud, _status_sink, _cancel_diver_tool, _control_allowed)
 	else:
 		_control.bind_interface(_status_sink, _control_allowed)
+		if _control.has_method("bind_ecology_observation_sink"):
+			_control.bind_ecology_observation_sink(Callable(_ecology_observation, "record_reveal"))
 
 
 func _bind_species_companion() -> void:

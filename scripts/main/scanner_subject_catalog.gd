@@ -64,7 +64,7 @@ func _append_ecological_traces(values: Array[Dictionary], seen: Dictionary, worl
 			seen,
 			"ecological_trace",
 			source,
-			_first_label(source, ["display_label", "trace_label"], "Veil Cuttle trace"),
+			_ecological_trace_label(source),
 			"Revealed environmental evidence",
 			"environment"
 		)
@@ -271,6 +271,7 @@ func _append_identification(
 		"scan_subject_description": description,
 		"scan_presentation_id": "identify_%s" % source_type,
 		"scan_anchor_world": center,
+		"requires_hold": source_type == "ecological_trace",
 	}
 	_append_unique(values, seen, target)
 
@@ -289,6 +290,12 @@ func _first_label(source: Dictionary, fields: Array, fallback: String) -> String
 		if not value.is_empty():
 			return value
 	return _humanize(fallback)
+
+
+func _ecological_trace_label(source: Dictionary) -> String:
+	if str(source.get("daily_condition_id", "")) == "southwest_jellyfish_bloom":
+		return "Southwest Jellyfish Bloom migration trail"
+	return _first_label(source, ["display_label", "trace_label"], "Ecological trace")
 
 
 func _humanize(value: String) -> String:
