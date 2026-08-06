@@ -82,6 +82,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - First-proof source/state contract: `docs/current/LIVING_EXPEDITION_01_SOURCE_STATE_CONTRACT.md`
 - First-proof technical/Web evidence and owner GO: `docs/current/LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md`
 - Next committed milestone plan: `docs/current/LIVING_EXPEDITION_02_PLAN.md`
+- Living Expedition 02 ownership contract: `docs/current/LIVING_EXPEDITION_02_SOURCE_STATE_CONTRACT.md`
 - Foundation history: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - First adaptation proof: `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
