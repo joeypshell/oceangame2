@@ -1354,7 +1354,8 @@ func _load_playable_map(
 		_anomaly_survey.profile_state(),
 		Callable(self, "_has_upgrade_id"),
 		_sortie_state.active,
-		preserve_sortie
+		preserve_sortie,
+		_hostiles
 	)
 	_apply_durable_light_profile()
 

@@ -26,6 +26,7 @@ var _position_allowed := Callable()
 var _identity := {}
 var _follow := SparkRayFollowController.new()
 var _anchor_braced := false
+var _guardian_charging := false
 var _facing_sign := 1.0
 var _pending_facing_sign := 1.0
 var _pending_facing_seconds := 0.0
@@ -46,9 +47,14 @@ func configure(world, player, position_allowed: Callable, identity: Dictionary) 
 
 func apply_identity(identity: Dictionary) -> void:
 	_identity = identity.duplicate(true)
+	var adaptation_id := str(_identity.get("selected_adaptation_id", ""))
+	if adaptation_id != "anchor_fins":
+		_anchor_braced = false
+	if adaptation_id != "guardian_pulse":
+		_guardian_charging = false
 	if _presentation != null:
 		_presentation.set_adaptation(
-			str(_identity.get("selected_adaptation_id", "")),
+			adaptation_id,
 			str(_identity.get("callsign", "Spark Ray"))
 		)
 	_sync_presentation()
@@ -89,6 +95,18 @@ func move_under_external_control(direction: Vector2, delta: float, speed_multipl
 		return {
 			"changed": false,
 			"reason": "anchor_brace",
+			"position": global_position,
+			"velocity": velocity,
+			"direction": Vector2.ZERO,
+			"blocked_by_gate": false,
+			"blocked_by_terrain": false,
+		}
+	if _guardian_charging:
+		velocity = Vector2.ZERO
+		_sync_presentation()
+		return {
+			"changed": false,
+			"reason": "guardian_charge",
 			"position": global_position,
 			"velocity": velocity,
 			"direction": Vector2.ZERO,
@@ -150,6 +168,22 @@ func set_anchor_brace(active: bool, direction: Vector2, progress: float, cue_sta
 	_sync_presentation()
 
 
+func set_guardian_pulse(
+	active: bool,
+	direction: Vector2,
+	range_px: float,
+	target_distance: float,
+	progress: float,
+	cue_state: String
+) -> void:
+	_guardian_charging = active
+	if active:
+		velocity = Vector2.ZERO
+	if _presentation != null:
+		_presentation.show_guardian_pulse(direction, range_px, target_distance, progress, cue_state)
+	_sync_presentation()
+
+
 func can_handoff_control(maximum_distance := 96.0) -> bool:
 	if not _dependencies_valid():
 		return false
@@ -183,6 +217,7 @@ func report() -> Dictionary:
 	value["maximum_step_distance"] = _maximum_step_distance
 	value["can_handoff_control"] = can_handoff_control()
 	value["anchor_braced"] = _anchor_braced
+	value["guardian_charging"] = _guardian_charging
 	value["presentation"] = _presentation.report() if _presentation != null else {}
 	return value
 
@@ -197,7 +232,7 @@ func _advance_step(delta: float) -> void:
 		_position_allowed,
 		delta
 	)
-	if _anchor_braced:
+	if _anchor_braced or _guardian_charging:
 		velocity = Vector2.ZERO
 		_presentation.advance(delta)
 		_sync_presentation()

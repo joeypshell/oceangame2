@@ -22,6 +22,8 @@ func _draw() -> void:
 		_draw_glide(center, color)
 	elif _action_id == "anchor_brace":
 		_draw_anchor(center, color)
+	elif _action_id == "guardian_pulse_action":
+		_draw_guardian_pulse(center, color)
 	else:
 		draw_circle(center, minf(size.x, size.y) * 0.18, color)
 	if _cooldown_ratio > 0.0:
@@ -47,3 +49,10 @@ func _draw_anchor(center: Vector2, color: Color) -> void:
 	draw_line(center + Vector2(0.0, -17.0) * scale_factor, center + Vector2(0.0, 13.0) * scale_factor, color, 3.0, true)
 	draw_arc(center + Vector2(0.0, 9.0) * scale_factor, 10.0 * scale_factor, 0.0, PI, 18, color, 3.0, true)
 	draw_line(center + Vector2(-15.0, -7.0) * scale_factor, center + Vector2(15.0, -7.0) * scale_factor, Color(color, 0.58), 2.0, true)
+
+
+func _draw_guardian_pulse(center: Vector2, color: Color) -> void:
+	var scale_factor := minf(size.x, size.y) / 56.0
+	for radius in [7.0, 13.0, 19.0]:
+		draw_arc(center, radius * scale_factor, -0.85, 0.85, 14, Color(color, 0.82), 2.0, true)
+	draw_circle(center + Vector2(5.0, 0.0) * scale_factor, 3.0 * scale_factor, color)
