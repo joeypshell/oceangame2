@@ -4,21 +4,22 @@ Date: 2026-08-05
 
 Issue: #1232 `Verify Living Expedition 01 Web build and run partnership owner closeout`
 
-Status: **TECHNICAL PASS; OWNER GO/HOLD VERDICT PENDING**
+Status: **TECHNICAL PASS; OWNER HOLD CORRECTION DEPLOYED; RETEST PENDING**
 
 ## Exact Candidate
 
-- runtime/evidence SHA: `0b6c1c8fb845a184cc7eb62f386c7d15656bca09`
-- build version: `0b6c1c8`
+- runtime/evidence SHA: `c0c7b4ef7b295e97e5eb417bbec8555db42ebea4`
+- build version: `c0c7b4e`
 - evidence PR: [#1247](https://github.com/joeypshell/oceangame2/pull/1247)
-- [Godot Smoke run 31067443655](https://github.com/joeypshell/oceangame2/actions/runs/31067443655): core, regional journey, and source/map jobs passed
-- [Progression Audit run 31067443654](https://github.com/joeypshell/oceangame2/actions/runs/31067443654): passed
-- [Godot Web Export run 31067443686](https://github.com/joeypshell/oceangame2/actions/runs/31067443686): browser verification and Pages deployment passed
+- owner-HOLD correction PR: [#1250](https://github.com/joeypshell/oceangame2/pull/1250)
+- [Godot Smoke run 31070389202](https://github.com/joeypshell/oceangame2/actions/runs/31070389202): core, regional journey, and source/map jobs passed
+- [Progression Audit run 31070389199](https://github.com/joeypshell/oceangame2/actions/runs/31070389199): passed
+- [Godot Web Export run 31070389200](https://github.com/joeypshell/oceangame2/actions/runs/31070389200): browser verification and Pages deployment passed
 
 Public review URLs:
 
-- fresh empty profile: `https://joeypshell.github.io/oceangame2/?review=0b6c1c8fb845a184cc7eb62f386c7d15656bca09`
-- pre-rescue milestone checkpoint: `https://joeypshell.github.io/oceangame2/?review=0b6c1c8fb845a184cc7eb62f386c7d15656bca09&checkpoint=living_expedition_01_start`
+- fresh empty profile: `https://joeypshell.github.io/oceangame2/?review=c0c7b4ef7b295e97e5eb417bbec8555db42ebea4`
+- pre-rescue milestone checkpoint: `https://joeypshell.github.io/oceangame2/?review=c0c7b4ef7b295e97e5eb417bbec8555db42ebea4&checkpoint=living_expedition_01_start`
 
 The `review` query selects isolated state; it does not pin Pages history. Confirm public `build_info.json` still reports the exact SHA before treating the URL as owner evidence.
 
@@ -47,7 +48,7 @@ No baseline was accepted or replaced. The only new visual evidence is the ignore
 
 The independent checker confirmed:
 
-- external build metadata matches exact SHA `0b6c1c8fb845a184cc7eb62f386c7d15656bca09`
+- external build metadata matches exact SHA `c0c7b4ef7b295e97e5eb417bbec8555db42ebea4`
 - root and fresh review load `production_level_01`
 - the Living Expedition checkpoint reports isolated state on desktop and landscape mobile
 - explicit slice fallback still loads `production_slice_01`
@@ -58,6 +59,18 @@ The independent checker confirmed:
 - no failed requests, page errors, Godot `SCRIPT ERROR`, or Godot `ERROR:` occurred
 
 Chromium emitted only the accepted WebGL `ReadPixels` performance warning.
+
+## First Owner Hold And Correction
+
+The first owner run on `0b6c1c8` completed the physical rescue without trouble,
+but the purpose afterward was unclear and exploration with Kite became aimless.
+That is a player-experience HOLD, not a rescue-runtime failure.
+
+Issue #1249 corrected only that handoff. A persistent state-derived `PARTNER:`
+objective now carries the player from cable release to the surface boat, the
+day transition, the next dive, BOND/Mount controls, a meaningful current-or-eel
+shared event, memory return, and the night adaptation choice. It adds no saved
+tutorial state, topology change, second species, or broader HUD redesign.
 
 ## Owner Review Boundary
 
@@ -81,7 +94,7 @@ Issue #1232 and milestone #45 remain open until that verdict is recorded. Do not
 python tools/manage_production_slice_baseline.py compare-all
 python tools/manage_production_slice_baseline.py check-clean --all-slices
 $env:NODE_PATH = 'C:\Users\pirat\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\node_modules'
-& 'C:\Users\pirat\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha 0b6c1c8fb845a184cc7eb62f386c7d15656bca09 --checkpoint living_expedition_01_start
+& 'C:\Users\pirat\.cache\codex-runtimes\codex-primary-runtime\dependencies\node\bin\node.exe' tools/check_web_preview.cjs https://joeypshell.github.io/oceangame2/ --expected-sha c0c7b4ef7b295e97e5eb417bbec8555db42ebea4 --checkpoint living_expedition_01_start
 python tools/check_file_lengths.py
 git diff --check
 ```

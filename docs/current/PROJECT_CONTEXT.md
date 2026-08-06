@@ -106,7 +106,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Latest visual decision: Living Expedition focused captures are generated review evidence only; all six configured accepted baseline sheets remain pixel-stable
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: Living Expedition technical candidate `0b6c1c8`, recorded in `docs/current/LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md`; owner GO/HOLD remains pending.
+- Latest Web verification: corrected Living Expedition candidate `c0c7b4e`, recorded in `docs/current/LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md`; the first owner run placed post-rescue guidance on HOLD and exact-candidate retest remains pending.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -173,7 +173,7 @@ Current map-loading helper:
 
 ## Web Preview Status
 
-The public preview is technically verified for Living Expedition 01 at exact build `0b6c1c8`; its owner GO/HOLD verdict remains pending #1232. The last owner-approved build remains the bounded Expansion 17 runtime `075a450`:
+The public preview is technically verified for Living Expedition 01 at corrected exact build `c0c7b4e`; the first owner run passed rescue but placed the unclear post-rescue handoff on HOLD. Issue #1249 added persistent state-derived partnership guidance, and #1232 remains open for owner retest. The last owner-approved build remains the bounded Expansion 17 runtime `075a450`:
 
 ```text
 https://joeypshell.github.io/oceangame2/
