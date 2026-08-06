@@ -64,6 +64,7 @@ func scanner_action(world, player) -> Dictionary:
 	var target_id := str(target.get("id", ""))
 	if str(target.get("scanner_subject_mode", "")) == "identify":
 		_interaction.reset()
+		_mark_identified_source(world, target)
 		return _note_result(
 			false,
 			"identified",
@@ -132,6 +133,7 @@ func update(world, player, delta: float) -> Dictionary:
 
 	var target_id := str(target.get("id", ""))
 	if str(target.get("scanner_subject_mode", "")) == "identify":
+		_mark_identified_source(world, target)
 		return _note_result(
 			false,
 			"identified",
@@ -405,6 +407,15 @@ func _target_for_player(world, player, target_id := "", required_mode := "") -> 
 		targeting = _scanner_targeting.evaluate_target(world, player.global_position, facing_sign, target)
 	_last_targeting_report = _scanner_targeting.public_report(targeting)
 	return targeting.get("target", {}) if bool(targeting.get("eligible", false)) else {}
+
+
+func _mark_identified_source(world, target: Dictionary) -> void:
+	if (
+		str(target.get("source_type", "")) == "ecological_trace"
+		and world != null
+		and world.has_method("set_ecological_trace_state")
+	):
+		world.set_ecological_trace_state(str(target.get("source_id", "")), "identified")
 
 
 func _set_target_state(world, target_id: String, state: String) -> void:
