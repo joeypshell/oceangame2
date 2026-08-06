@@ -2,6 +2,8 @@
 
 Use the isolated `living_expedition_01_start` checkpoint for the Spark Ray proof. It loads `production_level_01` immediately before the source-authored rescue with prior required projects and discoveries committed, the Cutter/Fins/Shock Prod available, no companion committed, and no carried materials.
 
+The persistent `PARTNER:` objective carries the owner from cable release to the boat, the next dive, BOND/Mount controls, and either meaningful shared-event route. It is state-derived and does not add tutorial state to the saved profile.
+
 ## Local Review
 
 ```powershell

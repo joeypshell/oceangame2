@@ -138,7 +138,7 @@ func commit_at_boat() -> Dictionary:
 	_pending_rescue = {}
 	_free_pending_companion()
 	_set_source_state(rescue_id, COMMITTED)
-	result["note"] = "%s bonded at the boat | Riding unlocks next sortie" % DEFAULT_CALLSIGN
+	result["note"] = "PARTNER: %s bonded | Press N at the boat to end the day | %s joins next dive" % [DEFAULT_CALLSIGN, DEFAULT_CALLSIGN]
 	result["commit_entry_id"] = commit_entry_id
 	return result
 
@@ -276,7 +276,7 @@ func _release_note() -> String:
 
 
 func _pending_note() -> String:
-	return "Spark Ray freed | Return together to the surface boat"
+	return "PARTNER: Kite is free | Return together to the yellow surface boat"
 
 
 func _result(state: String, note: String, changed: bool, reason: String) -> Dictionary:
