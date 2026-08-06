@@ -41,6 +41,7 @@ Core sources and operating docs:
 - [Real-Time Creature Partnership Direction](docs/planning/REAL_TIME_CREATURE_PARTNERSHIP_DIRECTION.md)
 - [Creature System Spec](docs/planning/CREATURE_SYSTEM_SPEC.md)
 - [Creature Map Progression Spec](docs/planning/CREATURE_MAP_PROGRESSION_SPEC.md)
+- [Monster Species Design Bible](docs/planning/MONSTER_SPECIES_DESIGN_BIBLE.md)
 - [Living Expedition 01 Source And State Contract](docs/current/LIVING_EXPEDITION_01_SOURCE_STATE_CONTRACT.md)
 - [Living Expedition 01 Technical Review](docs/current/LIVING_EXPEDITION_01_TECHNICAL_REVIEW.md)
 - [Living Expedition 02 Plan](docs/current/LIVING_EXPEDITION_02_PLAN.md)
