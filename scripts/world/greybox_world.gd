@@ -26,6 +26,7 @@ const GreyboxToolTargets := preload("res://scripts/world/greybox_tool_targets.gd
 const GreyboxHostileRenderer := preload("res://scripts/world/greybox_hostile_renderer.gd")
 const GreyboxBiologicalResources := preload("res://scripts/world/greybox_biological_resources.gd")
 const GreyboxCreatureRescues := preload("res://scripts/world/greybox_creature_rescues.gd")
+const GreyboxEcologicalTraces := preload("res://scripts/world/greybox_ecological_traces.gd")
 const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
 
 const SALVAGE_TIER_SCORES := ProgressionContract.SALVAGE_SCORE_BY_TIER
@@ -87,6 +88,7 @@ var _tool_target_runtime
 var _hostile_renderer
 var _biological_resource_runtime
 var _creature_rescue_runtime
+var _ecological_trace_runtime
 
 
 func _ready() -> void:
@@ -107,6 +109,7 @@ func _ready() -> void:
 	_hostile_renderer = GreyboxHostileRenderer.new()
 	_biological_resource_runtime = GreyboxBiologicalResources.new()
 	_creature_rescue_runtime = GreyboxCreatureRescues.new()
+	_ecological_trace_runtime = GreyboxEcologicalTraces.new()
 	load_greybox()
 
 
@@ -168,6 +171,12 @@ func load_greybox() -> void:
 	_creature_rescue_helper().build(
 		_marker_root,
 		map_data.get("creature_rescues", []),
+		tile_size,
+		show_debug_overlay
+	)
+	_ecological_trace_helper().build(
+		_marker_root,
+		map_data.get("ecological_traces", []),
 		tile_size,
 		show_debug_overlay
 	)
@@ -282,6 +291,18 @@ func set_creature_rescue_state(rescue_id: String, state: String) -> bool:
 
 func get_creature_rescue_report() -> Dictionary:
 	return _creature_rescue_helper().report()
+
+
+func get_ecological_traces() -> Array:
+	return _ecological_trace_helper().traces()
+
+
+func set_ecological_trace_state(trace_id: String, state: String) -> bool:
+	return _ecological_trace_helper().set_state(trace_id, state)
+
+
+func get_ecological_trace_report() -> Dictionary:
+	return _ecological_trace_helper().report()
 
 
 func get_wreck_network_investigations() -> Array:
@@ -1067,6 +1088,12 @@ func _creature_rescue_helper():
 	if _creature_rescue_runtime == null:
 		_creature_rescue_runtime = GreyboxCreatureRescues.new()
 	return _creature_rescue_runtime
+
+
+func _ecological_trace_helper():
+	if _ecological_trace_runtime == null:
+		_ecological_trace_runtime = GreyboxEcologicalTraces.new()
+	return _ecological_trace_runtime
 
 
 func _extraction_renderer_helper():

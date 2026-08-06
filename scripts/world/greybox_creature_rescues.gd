@@ -75,6 +75,9 @@ func _add_rescue_marker(parent: Node2D, rescue: Dictionary) -> Node2D:
 	root.position = rescue.get("center", Vector2.ZERO)
 	root.z_index = 17
 	parent.add_child(root)
+	if str(rescue.get("species_id", "")) == "veil_cuttle":
+		_add_veil_cuttle_marker(root)
+		return root
 
 	var glow := Polygon2D.new()
 	glow.name = "JuvenileGlow"
@@ -130,6 +133,71 @@ func _add_rescue_marker(parent: Node2D, rescue: Dictionary) -> Node2D:
 	cutter_notch.width = 2.0
 	root.add_child(cutter_notch)
 	return root
+
+
+func _add_veil_cuttle_marker(root: Node2D) -> void:
+	var glow := Polygon2D.new()
+	glow.name = "JuvenileGlow"
+	glow.polygon = _ellipse_points(29.0, 22.0, 24)
+	glow.color = Color(0.34, 0.93, 0.76, 0.16)
+	root.add_child(glow)
+
+	var mantle := Polygon2D.new()
+	mantle.name = "VeilCuttleMantle"
+	mantle.polygon = PackedVector2Array([
+		Vector2(20, 0), Vector2(11, -12), Vector2(-8, -13), Vector2(-20, -6),
+		Vector2(-22, 1), Vector2(-17, 9), Vector2(-5, 13), Vector2(12, 10),
+	])
+	mantle.color = Color(0.25, 0.33, 0.50, 1.0)
+	root.add_child(mantle)
+
+	for points in [
+		PackedVector2Array([Vector2(12, -8), Vector2(-4, -21), Vector2(-18, -10)]),
+		PackedVector2Array([Vector2(12, 8), Vector2(-4, 21), Vector2(-18, 10)]),
+	]:
+		var fin := Polygon2D.new()
+		fin.polygon = points
+		fin.color = Color(0.49, 0.47, 0.74, 0.94)
+		root.add_child(fin)
+
+	for index in range(5):
+		var tentacle := Line2D.new()
+		tentacle.name = "VeilTentacle%d" % (index + 1)
+		var root_y := -7.0 + float(index) * 3.5
+		tentacle.points = PackedVector2Array([
+			Vector2(-18, root_y),
+			Vector2(-28, root_y + (2.0 if index % 2 == 0 else -2.0)),
+			Vector2(-38 - float(index % 2) * 4.0, root_y + float(index - 2) * 2.0),
+		])
+		tentacle.default_color = Color(0.47, 0.84, 0.82, 0.9)
+		tentacle.width = 2.0
+		tentacle.antialiased = true
+		root.add_child(tentacle)
+
+	var eye := Polygon2D.new()
+	eye.name = "VeilCuttleEye"
+	eye.polygon = _ellipse_points(3.2, 3.2, 14)
+	eye.position = Vector2(13, -2)
+	eye.color = Color(0.85, 1.0, 0.95, 1.0)
+	root.add_child(eye)
+
+	var net := Line2D.new()
+	net.name = "DiscardedSurveyNet"
+	net.points = PackedVector2Array([
+		Vector2(-33, -23), Vector2(31, 19), Vector2(-35, 17), Vector2(29, -22),
+		Vector2(-33, -23), Vector2(-35, 17), Vector2(31, 19), Vector2(29, -22),
+	])
+	net.default_color = Color(1.0, 0.70, 0.24, 0.92)
+	net.width = 2.4
+	net.antialiased = true
+	root.add_child(net)
+
+	var cutter_notch := Line2D.new()
+	cutter_notch.name = "CutterNotch"
+	cutter_notch.points = PackedVector2Array([Vector2(27, -12), Vector2(34, -5), Vector2(27, 2)])
+	cutter_notch.default_color = Color(0.77, 1.0, 0.96, 1.0)
+	cutter_notch.width = 2.0
+	root.add_child(cutter_notch)
 
 
 func _apply_node_state(rescue_id: String, state: String) -> void:

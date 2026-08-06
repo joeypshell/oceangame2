@@ -16,6 +16,7 @@ func subjects(world, required_mode := "") -> Array[Dictionary]:
 		_append_progression_subjects(values, seen, world)
 	if str(required_mode) == "progression":
 		return values
+	_append_ecological_traces(values, seen, world)
 	_append_tool_targets(values, seen, world)
 	_append_salvage(values, seen, world)
 	_append_materials(values, seen, world)
@@ -52,6 +53,21 @@ func _append_progression_subjects(values: Array[Dictionary], seen: Dictionary, w
 		)
 		target["scan_presentation_id"] = str(target.get("scan_presentation_id", "survey_signal"))
 		_append_unique(values, seen, target)
+
+
+func _append_ecological_traces(values: Array[Dictionary], seen: Dictionary, world) -> void:
+	for source in _world_array(world, &"get_ecological_traces"):
+		if str(source.get("state", "hidden")) not in ["revealed", "identified"]:
+			continue
+		_append_identification(
+			values,
+			seen,
+			"ecological_trace",
+			source,
+			_first_label(source, ["display_label", "trace_label"], "Veil Cuttle trace"),
+			"Revealed environmental evidence",
+			"environment"
+		)
 
 
 func _append_salvage(values: Array[Dictionary], seen: Dictionary, world) -> void:
