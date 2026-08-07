@@ -108,12 +108,13 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Latest completed direction: milestone #46 Living Expedition 02 Small Stable And Species Identity, implemented as #1253-#1262
 - Selected next direction: `docs/current/LIVING_EXPEDITION_03_PLAN.md` defines one Mica/jellyfish ecological observation, boat-committed memory, night consolidation, and next-sortie Drift Lens proof; create only that scoped implementation milestone
 - Active implementation contract: `docs/current/LIVING_EXPEDITION_03_SOURCE_STATE_CONTRACT.md`; milestone #47 is frozen as #1276-#1285 in contract, schema, source, state, field runtime, integration, evidence, visual, Web, and owner-gate order
+- Living Expedition 03 technical evidence: `docs/current/LIVING_EXPEDITION_03_VISUAL_DECISION.md` and `docs/current/LIVING_EXPEDITION_03_WEB_VERIFICATION.md`; exact public runtime `61b4745` passed focused visual, responsive Web, touch, and deterministic journey verification and now awaits owner GO/HOLD in #1285
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
 - Latest source contract: `docs/current/OCEANGAME_EXPANSION_17_SOURCE_STATE_CONTRACT.md`
 - Latest visual decision: Living Expedition focused captures are generated review evidence only; all six configured accepted baseline sheets remain pixel-stable
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: Living Expedition 02 runtime `b639dcf`, recorded in `docs/current/LIVING_EXPEDITION_02_WEB_VERIFICATION.md`; owner GO and limitations are in `docs/current/LIVING_EXPEDITION_02_CLOSEOUT.md`.
+- Latest Web verification: Living Expedition 03 runtime `61b4745`, recorded in `docs/current/LIVING_EXPEDITION_03_WEB_VERIFICATION.md`; #1285 still owns the human GO/HOLD decision.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
