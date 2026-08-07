@@ -198,7 +198,7 @@ func _process(delta: float) -> void:
 	_discovery_lead["active"] = not _command_mode and bool(_discovery_lead.get("active", false))
 	if bool(_discovery_lead.get("active", false)) and not _lead_announced:
 		_lead_announced = true
-		_notify("MICA FOUND A LIVING TRACE | Follow her signal, then hold BOND")
+		_notify("MICA FOUND A TRACE HERE | Hold BOND now | choose Reveal Trace")
 	elif not bool(_discovery_lead.get("active", false)) and str(_trace.action().get("reason", "")) != "ready":
 		_lead_announced = false
 	_set_ecology_interest(_discovery_lead)

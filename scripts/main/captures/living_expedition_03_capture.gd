@@ -93,7 +93,7 @@ func _prepare_mica_reaction() -> bool:
 	mica.global_position = focus + Vector2(-40.0, 0.0)
 	mica.advance(0.0)
 	_main._companion_sortie.control_runtime()._process(0.0)
-	_main._last_status_note = "MICA FOUND A LIVING TRACE | Follow her signal, then hold BOND"
+	_main._last_status_note = "MICA FOUND A TRACE HERE | Hold BOND now | choose Reveal Trace"
 	_main._update_status_label()
 	return _expect(
 		bool(mica.report().get("presentation", {}).get("ecology_interest_visible", false)),
