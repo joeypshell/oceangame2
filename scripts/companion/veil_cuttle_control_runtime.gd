@@ -21,6 +21,8 @@ var _palette_feedback := ""
 var _prior_time_scale := 1.0
 var _owns_time_scale := false
 var _last_denial := ""
+var _discovery_lead := {"active": false}
+var _lead_announced := false
 
 
 func _ready() -> void:
@@ -59,6 +61,8 @@ func bind_map(world, player, companion, moving_hazards = null) -> void:
 func clear_map() -> void:
 	reset_control("map_clear")
 	_set_ecology_interest(false)
+	_discovery_lead = {"active": false}
+	_lead_announced = false
 	_trace.clear_map()
 	_drift_lens.clear_map()
 	_world = null
@@ -190,7 +194,14 @@ func _process(delta: float) -> void:
 		return
 	if _command_mode:
 		_sync_command_preview()
-	_set_ecology_interest(not _command_mode and str(_trace.action().get("reason", "")) == "ready")
+	_discovery_lead = _trace.discovery_lead()
+	_discovery_lead["active"] = not _command_mode and bool(_discovery_lead.get("active", false))
+	if bool(_discovery_lead.get("active", false)) and not _lead_announced:
+		_lead_announced = true
+		_notify("MICA FOUND A LIVING TRACE | Follow her signal, then hold BOND")
+	elif not bool(_discovery_lead.get("active", false)) and str(_trace.action().get("reason", "")) != "ready":
+		_lead_announced = false
+	_set_ecology_interest(_discovery_lead)
 	_refresh_presentation()
 
 
@@ -230,9 +241,14 @@ func _refresh_presentation() -> void:
 	if _palette == null:
 		return
 	if _command_mode:
+		_palette.hide_discovery_prompt()
 		_palette.sync(_context_commands(), _selected_command_index, _palette_feedback)
 	else:
 		_palette.hide_palette()
+		if bool(_discovery_lead.get("active", false)):
+			_palette.show_discovery_prompt()
+		else:
+			_palette.hide_discovery_prompt()
 
 
 func _sync_command_preview() -> void:
@@ -268,9 +284,9 @@ func _restore_time_scale() -> void:
 	_owns_time_scale = false
 
 
-func _set_ecology_interest(active: bool) -> void:
+func _set_ecology_interest(lead) -> void:
 	if _companion != null and is_instance_valid(_companion) and _companion.has_method("set_ecology_interest"):
-		_companion.set_ecology_interest(active)
+		_companion.set_ecology_interest(lead)
 
 
 func _control_is_allowed() -> bool:

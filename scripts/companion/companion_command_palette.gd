@@ -4,6 +4,8 @@ const MAX_COMMANDS := 3
 const COMPACT_VIEWPORT_WIDTH := 900.0
 
 var _panel: PanelContainer
+var _discovery_prompt: PanelContainer
+var _discovery_label: Label
 var _stack: VBoxContainer
 var _header: Label
 var _commands: Array = []
@@ -36,6 +38,17 @@ func hide_palette() -> void:
 		_panel.visible = false
 
 
+func show_discovery_prompt() -> void:
+	if _discovery_prompt != null:
+		_discovery_prompt.visible = true
+		_layout()
+
+
+func hide_discovery_prompt() -> void:
+	if _discovery_prompt != null:
+		_discovery_prompt.visible = false
+
+
 func get_test_report() -> Dictionary:
 	return {
 		"visible": _panel != null and _panel.visible,
@@ -44,6 +57,9 @@ func get_test_report() -> Dictionary:
 		"commands": _commands.duplicate(true),
 		"selected_index": _selected_index,
 		"feedback": _last_feedback,
+		"discovery_prompt_visible": _discovery_prompt != null and _discovery_prompt.visible,
+		"discovery_prompt_text": _discovery_label.text if _discovery_label != null else "",
+		"discovery_prompt_rect": Rect2(_discovery_prompt.position, _discovery_prompt.size) if _discovery_prompt != null else Rect2(),
 	}
 
 
@@ -71,6 +87,24 @@ func _build_ui() -> void:
 	_header.add_theme_font_size_override("font_size", 13)
 	_stack.add_child(_header)
 	_panel.visible = false
+	_discovery_prompt = PanelContainer.new()
+	_discovery_prompt.name = "CompanionDiscoveryPrompt"
+	_discovery_prompt.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var discovery_style := StyleBoxFlat.new()
+	discovery_style.bg_color = Color(0.015, 0.06, 0.08, 0.94)
+	discovery_style.border_color = Color(0.66, 0.94, 0.78, 0.92)
+	discovery_style.set_border_width_all(2)
+	discovery_style.set_corner_radius_all(6)
+	discovery_style.set_content_margin_all(10.0)
+	_discovery_prompt.add_theme_stylebox_override("panel", discovery_style)
+	add_child(_discovery_prompt)
+	_discovery_label = Label.new()
+	_discovery_label.text = "MICA FOUND A LIVING TRACE\nFollow her signal, then hold BOND"
+	_discovery_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_discovery_label.add_theme_color_override("font_color", Color(0.82, 1.0, 0.9, 1.0))
+	_discovery_label.add_theme_font_size_override("font_size", 15)
+	_discovery_prompt.add_child(_discovery_label)
+	_discovery_prompt.visible = false
 
 
 func _rebuild_rows() -> void:
@@ -127,3 +161,10 @@ func _layout() -> void:
 		_panel.position = Vector2(floor((_last_viewport_size.x - _panel.size.x) * 0.5), _last_viewport_size.y - _panel.size.y - 6.0)
 	else:
 		_panel.position = Vector2(_last_viewport_size.x - _panel.size.x - 24.0, 86.0)
+	_discovery_prompt.custom_minimum_size.x = 285.0 if compact else 330.0
+	_discovery_label.add_theme_font_size_override("font_size", 12 if compact else 15)
+	_discovery_prompt.reset_size()
+	_discovery_prompt.position = Vector2(
+		_last_viewport_size.x - _discovery_prompt.size.x - (10.0 if compact else 24.0),
+		8.0 if compact else 110.0
+	)

@@ -80,6 +80,10 @@ func _prepare_mica_reaction() -> bool:
 	var focus: Vector2 = trace.get("center", Vector2.ZERO)
 	_main._player.global_position = focus + Vector2(-64.0, 0.0)
 	_main._sortie_state.update_offload_presence(false, _main._oxygen_capacity_seconds())
+	_main._sortie_state.oxygen_seconds = maxf(
+		_main._sortie_state.oxygen_seconds,
+		float(_main._review_checkpoint_report.get("review_oxygen_seconds", 0.0))
+	)
 	_main._expedition_day_state.record_sortie_started()
 	var launched: Dictionary = _main._companion_sortie.sync_spawn()
 	var mica = _main._companion_sortie.companion()
@@ -89,7 +93,7 @@ func _prepare_mica_reaction() -> bool:
 	mica.global_position = focus + Vector2(-40.0, 0.0)
 	mica.advance(0.0)
 	_main._companion_sortie.control_runtime()._process(0.0)
-	_main._last_status_note = "Mica senses a living migration | Hold BOND"
+	_main._last_status_note = "MICA FOUND A LIVING TRACE | Follow her signal, then hold BOND"
 	_main._update_status_label()
 	return _expect(
 		bool(mica.report().get("presentation", {}).get("ecology_interest_visible", false)),
