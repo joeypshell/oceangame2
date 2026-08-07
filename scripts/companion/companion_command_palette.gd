@@ -99,7 +99,7 @@ func _build_ui() -> void:
 	_discovery_prompt.add_theme_stylebox_override("panel", discovery_style)
 	add_child(_discovery_prompt)
 	_discovery_label = Label.new()
-	_discovery_label.text = "MICA FOUND A LIVING TRACE\nFollow her signal, then hold BOND"
+	_discovery_label.text = "MICA FOUND A TRACE HERE\nHold BOND now | choose Reveal Trace"
 	_discovery_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_discovery_label.add_theme_color_override("font_color", Color(0.82, 1.0, 0.9, 1.0))
 	_discovery_label.add_theme_font_size_override("font_size", 15)

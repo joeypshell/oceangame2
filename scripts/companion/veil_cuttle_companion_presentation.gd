@@ -115,7 +115,7 @@ func report() -> Dictionary:
 		"ecology_interest_visible": _ecology_interest,
 		"ecology_lead_direction": _ecology_lead_direction,
 		"ecology_lead_distance": _ecology_lead_distance,
-		"ecology_lead_label": "MICA FOUND A TRACE" if _ecology_interest else "",
+		"ecology_lead_label": "MICA FOUND A TRACE HERE" if _ecology_interest else "",
 		"recovery_path_visible": _state in [STATE_SEPARATED, STATE_RECOVERY] and not _path_points.is_empty(),
 		"trace_state": _trace_state,
 		"trace_direction": _trace_direction,
@@ -187,19 +187,24 @@ func _draw_investigation_cue() -> void:
 	if direction == Vector2.ZERO:
 		direction = Vector2.RIGHT * _facing_sign
 	var side := direction.orthogonal()
-	var lead_length := clampf(_ecology_lead_distance, 72.0, 128.0)
-	var start := direction * 28.0
-	var endpoint := direction * lead_length
-	draw_line(start, endpoint, Color(COLOR_TRACE, 0.72), 3.0, true)
-	for fraction in [0.42, 0.68, 0.94]:
-		var tip := direction * lead_length * float(fraction)
-		draw_polyline(PackedVector2Array([
-			tip - direction * 10.0 + side * 7.0,
-			tip,
-			tip - direction * 10.0 - side * 7.0,
-		]), COLOR_TRACE, 2.5, true)
+	var endpoint := direction * _ecology_lead_distance
+	var start := direction * minf(28.0, _ecology_lead_distance * 0.4)
+	var segment_count := maxi(1, int(start.distance_to(endpoint) / 14.0))
+	for index in range(segment_count):
+		var from_fraction := float(index) / float(segment_count)
+		var to_fraction := minf(1.0, from_fraction + 0.52 / float(segment_count))
+		draw_line(start.lerp(endpoint, from_fraction), start.lerp(endpoint, to_fraction), Color(COLOR_TRACE, 0.82), 3.0, true)
 	draw_arc(Vector2.ZERO, 34.0 + sin(_pulse_seconds * TAU) * 4.0, 0.0, TAU, 28, Color(COLOR_TRACE, 0.72), 3.0, true)
-	draw_arc(endpoint, 10.0 + sin(_pulse_seconds * TAU) * 2.0, 0.0, TAU, 20, COLOR_TRACE, 2.5, true)
+	var marker_radius := 13.0 + sin(_pulse_seconds * TAU) * 2.0
+	draw_arc(endpoint, marker_radius, 0.0, TAU, 24, COLOR_TRACE, 3.0, true)
+	draw_polyline(PackedVector2Array([
+		endpoint + Vector2(0.0, -20.0),
+		endpoint + Vector2(20.0, 0.0),
+		endpoint + Vector2(0.0, 20.0),
+		endpoint + Vector2(-20.0, 0.0),
+		endpoint + Vector2(0.0, -20.0),
+	]), Color(COLOR_TRACE, 0.9), 2.5, true)
+	draw_line(endpoint - side * 8.0, endpoint + side * 8.0, COLOR_TRACE, 2.0, true)
 
 
 func _draw_trace_cue() -> void:
