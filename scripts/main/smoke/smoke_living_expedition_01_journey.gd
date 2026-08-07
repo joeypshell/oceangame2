@@ -117,7 +117,7 @@ func _run_branch(main, adaptation_id: String) -> String:
 	_disable_companion_processing(main, ray)
 	_place_pair(main._player, ray, main._world.get_entry_position(BOAT_ENTRY_ID) + Vector2(100.0, 80.0))
 	_expect(
-		_guidance(main).find("hold Shift/BOND") != -1 and _guidance(main).find("Tab selects Mount") != -1,
+		_guidance(main).find("Press B, then 1 to Mount") != -1,
 		"%s first partnered dive did not introduce BOND and Mount" % adaptation_id
 	)
 
@@ -126,8 +126,8 @@ func _run_branch(main, adaptation_id: String) -> String:
 	_expect(is_equal_approx(Engine.time_scale, 0.2), "%s BOND did not slow complete simulation to 20 percent" % adaptation_id)
 	_expect((command_opened.get("context_commands", []) as Array).size() <= 3, "%s command palette exceeded three actions" % adaptation_id)
 	_expect(
-		_guidance(main).find("Tab/TOOL selects a command") != -1 and _guidance(main).find("Space/USE confirms") != -1,
-		"%s open BOND palette did not explain selection and confirmation" % adaptation_id
+		_guidance(main).find("Press 1, 2, or 3 to activate") != -1 and _guidance(main).find("B/Esc closes") != -1,
+		"%s open BOND palette did not explain direct activation and close" % adaptation_id
 	)
 	control.end_command_mode()
 	_expect(is_equal_approx(Engine.time_scale, 1.0), "%s command close did not restore simulation speed" % adaptation_id)

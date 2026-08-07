@@ -89,13 +89,23 @@ func set_adaptation_hooks(action_provider: Callable, action_dispatch: Callable) 
 func handle_input(event: InputEvent) -> bool:
 	var repeated := event is InputEventKey and (event as InputEventKey).echo
 	if event.is_action_pressed("companion_command") and not repeated:
-		begin_command_mode()
+		if _command_mode:
+			end_command_mode()
+		else:
+			begin_command_mode()
 		return true
 	if event.is_action_released("companion_command"):
-		end_command_mode()
 		return true
 	if not _command_mode and not _mounted:
 		return false
+	if _command_mode:
+		for index in range(MAX_CONTEXT_COMMANDS):
+			if event.is_action_pressed("companion_action_%d" % (index + 1)) and not repeated:
+				activate_context_command(index)
+				return true
+		if event is InputEventKey and event.pressed and not repeated and (event as InputEventKey).keycode == KEY_ESCAPE:
+			end_command_mode()
+			return true
 	if event.is_action_pressed("active_tool_cycle_next") and not repeated:
 		if _command_mode:
 			cycle_context_command()
@@ -162,6 +172,14 @@ func confirm_context_command() -> Dictionary:
 	var result := _execute_command(str(command.get("id", "")), command)
 	end_command_mode()
 	return result
+
+
+func activate_context_command(index: int) -> Dictionary:
+	var commands := _context_commands()
+	if not _command_mode or index < 0 or index >= commands.size():
+		return _result(false, "command_unavailable", "Command unavailable")
+	_selected_command_index = index
+	return confirm_context_command()
 
 
 func request_mount() -> Dictionary:

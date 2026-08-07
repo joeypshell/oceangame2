@@ -142,7 +142,7 @@ func commit_at_boat() -> Dictionary:
 	result["note"] = (
 		"PARTNER: %s bonded | Leave the boat to begin a dive together" % callsign
 		if now_active
-		else "PARTNER: %s bonded | Hold Shift/BOND at the boat to choose the next partner" % callsign
+		else "PARTNER: %s bonded | Press B at the boat to choose the next partner" % callsign
 	)
 	result["commit_entry_id"] = commit_entry_id
 	return result

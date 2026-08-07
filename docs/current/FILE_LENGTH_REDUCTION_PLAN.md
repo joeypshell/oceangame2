@@ -12,6 +12,7 @@ The 2026-07-09 audit reports two oversized human-authored files with different p
 
 - `scripts/main/main.gd`: 2040 lines, actionable temporary debt in the gameplay/application orchestration shell.
 - `scripts/world/greybox_world.gd`: 984 lines, a documented cohesive-owner exception for map and top-level node state.
+- `scripts/companion/companion_control_runtime.gd`: a documented cohesive-owner exception for tightly coupled command, riding, and transient hotbar state; keep it growth guarded and split only when a stable owner boundary is proven.
 
 `docs/current/TOOLING.md` is now a compact index with focused child docs, and `docs/current/PROJECT_CONTEXT.md` is under 500 lines. Neither remains allowlist debt.
 

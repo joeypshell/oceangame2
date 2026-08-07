@@ -120,8 +120,9 @@ The proof includes:
 - no feeding schedule, lifespan, breeding, fusion, roster management, or death
 
 The companion is not placed in the diver tool hotbar. Unmounted tools retain
-their existing cycle and `Space/USE` action. `Shift/BOND` opens a bounded
-slow-time companion palette. While mounted, the bottom hotbar deliberately
+their existing cycle and `Space/USE` action. `B/BOND` toggles a bounded
+slow-time companion palette, with desktop `1`-`3` activating its numbered rows.
+While mounted, the bottom hotbar deliberately
 projects creature actions instead of diver tools; dismount restores the tool
 surface.
 

@@ -47,7 +47,7 @@ The checkpoint remains a focused regression path rather than the next plan.
 
 1. Select the Cutter and hold `Space/USE` at the trapped juvenile Spark Ray;
    return together to the canonical surface boat to commit the bond.
-2. On the following sortie, hold `Shift/BOND`, mount, move as the Spark Ray,
+2. On the following sortie, press `B`, then `1` to mount; move as the Spark Ray,
    use `Tab/TOOL` and `Space/USE` for creature actions, then dismount and confirm
    diver tools return.
 3. Earn either `held_the_flow` against the authored current or `stood_ground`
@@ -64,9 +64,9 @@ regressions, but it is no longer the current owner checkpoint.
 
 1. Find Mica in the accessible upper-west chamber, select the Cutter, and hold
    `Space/USE` to free her; return together to the canonical boat.
-2. Hold `Shift/BOND` at the boat, use `Tab/TOOL` to choose Mica, and confirm with
+2. Press `B` at the boat, use `Tab/TOOL` to choose Mica, and confirm with
    `Space/USE`; leave the boat to launch the Mica sortie.
-3. Near Mica's authored trace, use BOND to select `Reveal Trace`, then identify
+3. Near Mica's authored trace, press `B`, then `2` for `Reveal Trace`; identify
    the revealed evidence with the Scanner. It grants no cargo or access.
 4. Return to the boat, select Kite for the next sortie, and confirm Kite's
    Mount action and mounted hotbar return.

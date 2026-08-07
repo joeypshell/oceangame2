@@ -54,17 +54,18 @@ command or make progression random.
 
 ## Companion Command
 
-`companion_command` is the dedicated `Shift/BOND` action. It does not reuse `Q`,
+`companion_command` is the dedicated toggle `B/BOND` action. It does not reuse `Q`,
 `E/ACT`, the diver tool cycle, or `Space/USE`.
 
-Holding `BOND` slows the complete simulation to 20 percent and presents at most
-three contextual commands. World movement, enemies, cooldowns, oxygen, and
-daylight use the same scaled time so the palette cannot desynchronize systems.
-Releasing or confirming a command restores normal speed.
+Pressing `BOND` opens a numbered palette, slows the complete simulation to 20
+percent, and presents at most three contextual commands. Desktop `1`-`3`
+activates the matching row; `B` or `Esc` closes. World movement, enemies,
+cooldowns, oxygen, and daylight use the same scaled time so the palette cannot
+desynchronize systems. Activating or closing restores normal speed.
 
-The mobile test surface presents a contextual `BOND` control during an active
-dive without crowding `TOOL` or `USE`. Desktop and touch invoke the same input
-action and command rules.
+The mobile test surface presents a contextual toggle `BOND` control during an
+active dive without crowding `TOOL` or `USE`; touch selection and activation are
+sequential, never a held chord.
 
 ## Mounted Control
 

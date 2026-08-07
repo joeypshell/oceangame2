@@ -92,7 +92,7 @@ func debrief_lines() -> Array[String]:
 	var exclusive_label := str(option.get("exclusive_label", ""))
 	if not exclusive_label.is_empty():
 		lines.append("Exclusive with %s" % exclusive_label)
-	lines.append("Shift/BOND: Choose | Space/USE: Consolidate")
+	lines.append("B: Choose | Space/USE: Consolidate")
 	return lines
 
 

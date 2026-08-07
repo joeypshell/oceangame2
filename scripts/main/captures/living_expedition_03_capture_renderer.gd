@@ -122,6 +122,7 @@ func _verify_state(expectation: Dictionary, touch_visible: bool) -> bool:
 		"mica_reaction":
 			var report: Dictionary = _mica_report().get("presentation", {})
 			var palette: Dictionary = _main._companion_sortie.control_runtime().report().get("palette", {})
+			var expected_prompt := "Tap BOND" if touch_visible else "Press B, then 2"
 			return _expect(
 				bool(report.get("ecology_interest_visible", false))
 				and str(report.get("ecology_lead_label", "")) == "MICA FOUND A TRACE HERE"
@@ -129,9 +130,19 @@ func _verify_state(expectation: Dictionary, touch_visible: bool) -> bool:
 				"Mica reaction did not provide a readable directional lead"
 			) and _expect(
 				bool(palette.get("discovery_prompt_visible", false))
-				and str(palette.get("discovery_prompt_text", "")).find("Hold BOND now") != -1,
+				and str(palette.get("discovery_prompt_text", "")).find(expected_prompt) != -1,
 				"Mica reaction omitted the screen-space BOND handoff"
 			)
+		"bond_palette":
+			var palette: Dictionary = _main._companion_sortie.control_runtime().report().get("palette", {})
+			var commands: Array = palette.get("commands", [])
+			return _expect(
+				bool(palette.get("visible", false))
+				and commands.size() > 1
+				and str((commands[1] as Dictionary).get("label", "")) == "Reveal Trace"
+				and str(palette.get("footer_text", "")).find("ACTIVATE") != -1,
+				"BOND palette did not show Reveal Trace on number 2 with activation controls"
+			) and _verify_report_rect(palette, "BOND palette", touch_visible)
 		"migration_filament":
 			var report: Dictionary = _mica_report().get("presentation", {})
 			return _expect(
@@ -176,6 +187,15 @@ func _verify_control_rect(control: Control, label: String, touch_visible: bool) 
 	if control == null or not control.visible:
 		return _fail("%s was not visible" % label)
 	var rect := control.get_global_rect()
+	if not _bounded(rect, _viewport_rect()):
+		return _fail("%s escaped the visible canvas: %s" % [label, str(rect)])
+	if touch_visible and not _avoids_touch_controls(rect):
+		return _fail("%s overlapped landscape-mobile controls" % label)
+	return true
+
+
+func _verify_report_rect(report: Dictionary, label: String, touch_visible: bool) -> bool:
+	var rect: Rect2 = report.get("rect", Rect2())
 	if not _bounded(rect, _viewport_rect()):
 		return _fail("%s escaped the visible canvas: %s" % [label, str(rect)])
 	if touch_visible and not _avoids_touch_controls(rect):

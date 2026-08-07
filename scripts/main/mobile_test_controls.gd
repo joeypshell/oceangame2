@@ -24,7 +24,7 @@ const COMMANDS := [
 	{"id": &"reset", "label": "RESET", "keycode": KEY_R},
 	{"id": &"interact", "label": "ACT", "keycode": KEY_E},
 	{"id": &"use", "label": "USE", "action": &"active_tool_use", "hold": true},
-	{"id": &"bond", "label": "BOND", "action": &"companion_command", "hold": true},
+	{"id": &"bond", "label": "BOND", "action": &"companion_command"},
 ]
 
 @export var force_visible := false

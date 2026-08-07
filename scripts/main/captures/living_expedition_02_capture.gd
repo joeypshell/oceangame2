@@ -167,7 +167,7 @@ func _prepare_mica_follow() -> bool:
 	mica.global_position = focus + Vector2(-42.0, 0.0)
 	_main._player.global_position = focus + Vector2(20.0, 0.0)
 	mica.advance(0.0)
-	_main._last_status_note = "Mica active | Close sensing partner | Hold BOND for commands"
+	_main._last_status_note = "Mica active | Close sensing partner | Press B for commands"
 	_main._update_status_label()
 	return _expect(
 		str(mica.report().get("state", "")) in ["hover", "investigate"],
@@ -317,7 +317,7 @@ func _write_manifest(capture_dir: String) -> bool:
 		"baseline_accepted": false,
 		"states": CAPTURE_STATES,
 		"sizes": ["1280x720", "mobile_844x390"],
-		"controls": "Shift/BOND + Tab/TOOL + Space/USE",
+		"controls": "B toggles BOND | 1-3 activate commands",
 	}, "  ") + "\n")
 	file.close()
 	return true

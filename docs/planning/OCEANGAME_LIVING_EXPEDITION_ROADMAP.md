@@ -199,8 +199,8 @@ Detailed contract:
 - Species define possibilities; individual history defines the selected build.
 - A capable individual may alternate between independent and mounted play during
   the same dive; mounted control is a role, not an equipment-gate bypass.
-- Significant companion actions are deliberate through `Shift/BOND` and a
-  bounded slow-time palette, not hidden autonomous damage.
+- Significant companion actions are deliberate through toggle `B/BOND` and a
+  bounded numbered slow-time palette, not hidden autonomous damage.
 - Meaningful events create memories; repetition does not create major growth.
 - The player chooses permanent adaptations with predictable consequences.
 - Temperament affects expression, not critical command reliability.

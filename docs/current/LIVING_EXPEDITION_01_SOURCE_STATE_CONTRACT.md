@@ -68,15 +68,16 @@ fields must not be added directly to `main.gd`.
 
 ## Control Contract
 
-- `Shift/BOND` maps to `companion_command`; `Q` remains unused by this system.
-- Holding `BOND` slows all gameplay simulation consistently to 20 percent and
-  shows at most three valid contextual commands.
+- `B/BOND` maps to `companion_command`; `Q` remains unused by this system.
+- Pressing `B` toggles a palette that slows all gameplay simulation consistently
+  to 20 percent and shows at most three numbered contextual commands.
+- Desktop `1`-`3` directly activates the matching row; `B` or `Esc` closes it.
 - The first-proof independent palette may expose recall, mount, and the selected
   adaptation action when each is valid.
 - Unmounted diver controls remain `Tab/TOOL` and `Space/USE`.
 - Mounted `Tab/TOOL` selects creature actions and mounted `Space/USE` activates
   them; diver tools are unavailable until dismount.
-- Touch uses the same logical actions through a contextual `BOND` control.
+- Touch taps `BOND` to toggle, then uses `TOOL` and `USE` sequentially.
 - Invalid mount, dismount, target, range, clearance, or cooldown states return
   immediate visible feedback and do not silently change state.
 

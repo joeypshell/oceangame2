@@ -144,7 +144,7 @@ func _prepare_command_palette() -> bool:
 	var ray = _main._companion_sortie.companion()
 	_place_pair(_main._player, ray, _camera_world_position("living_expedition_01_mounted_route"))
 	var opened: Dictionary = _main._companion_sortie.control_runtime().begin_command_mode()
-	_main._last_status_note = "Hold BOND | Choose how Kite helps"
+	_main._last_status_note = "Press B | Choose how Kite helps"
 	_main._update_status_label()
 	return _expect(
 		is_equal_approx(Engine.time_scale, 0.2)
@@ -416,7 +416,7 @@ func _write_manifest(capture_dir: String) -> bool:
 		"baseline_accepted": false,
 		"states": CAPTURE_STATES,
 		"sizes": ["1280x720", "mobile_844x390"],
-		"controls": "Shift/BOND + Tab/TOOL + Space/USE",
+		"controls": "B toggles BOND | 1-3 activate commands",
 	}, "  ") + "\n")
 	file.close()
 	return true
