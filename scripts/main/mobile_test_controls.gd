@@ -11,6 +11,10 @@ const BOTTOM_INTERACTION_INSET := 104.0
 const BUTTON_SIZE := Vector2(128, 80)
 const BUTTON_GAP := 10.0
 const GRID_COLUMNS := 3
+const DEBRIEF_GRID_COLUMNS := 2
+const CONTEXT_DIVE := "dive"
+const CONTEXT_DEBRIEF := "debrief"
+const DEBRIEF_COMMAND_IDS := [&"tool", &"project", &"day", &"use"]
 const COMMANDS := [
 	{"id": &"oxygen", "label": "O2", "keycode": KEY_U},
 	{"id": &"cargo", "label": "BAG", "keycode": KEY_C},
@@ -36,6 +40,7 @@ var _stick_touch_index := -1
 var _touch_roles := {}
 var _command_rects := {}
 var _command_panels := {}
+var _context_mode := CONTEXT_DIVE
 
 
 func _ready() -> void:
@@ -54,11 +59,16 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
+	_release_all_inputs()
+
+
+func _release_all_inputs() -> void:
 	for role_value in _touch_roles.values():
 		var role := StringName(role_value)
 		if role == &"stick":
 			continue
 		var command := _command_by_id(role)
+		_set_command_pressed(role, false)
 		if command.has("action") and bool(command.get("hold", false)):
 			_dispatch_command(command, false)
 	_touch_roles.clear()
@@ -91,12 +101,22 @@ func _input(event: InputEvent) -> void:
 func get_test_report() -> Dictionary:
 	return {
 		"enabled": _controls_enabled,
+		"context_mode": _context_mode,
 		"bottom_inset": BOTTOM_INTERACTION_INSET,
 		"viewport_size": get_viewport().get_visible_rect().size,
 		"stick_rect": _stick_rect,
 		"commands": COMMANDS.duplicate(true),
 		"command_rects": _command_rects.duplicate(true),
 	}
+
+
+func set_context_mode(mode: String) -> void:
+	var next_mode := mode if mode in [CONTEXT_DIVE, CONTEXT_DEBRIEF] else CONTEXT_DIVE
+	if _context_mode == next_mode:
+		return
+	_release_all_inputs()
+	_context_mode = next_mode
+	_layout_controls()
 
 
 func _build_visuals() -> void:
@@ -132,15 +152,22 @@ func _layout_controls() -> void:
 	if _root == null:
 		return
 	var viewport_size := get_viewport().get_visible_rect().size
-	var stick_position := Vector2(SIDE_MARGIN, viewport_size.y - STICK_SIZE - BOTTOM_INTERACTION_INSET)
-	_stick_rect = Rect2(stick_position, Vector2(STICK_SIZE, STICK_SIZE))
-	_stick_panel.position = stick_position
-	_stick_panel.size = _stick_rect.size
-	_center_stick_knob(Vector2.ZERO)
+	var debrief := _context_mode == CONTEXT_DEBRIEF
+	_stick_panel.visible = not debrief
+	if debrief:
+		_stick_rect = Rect2()
+	else:
+		var stick_position := Vector2(SIDE_MARGIN, viewport_size.y - STICK_SIZE - BOTTOM_INTERACTION_INSET)
+		_stick_rect = Rect2(stick_position, Vector2(STICK_SIZE, STICK_SIZE))
+		_stick_panel.position = stick_position
+		_stick_panel.size = _stick_rect.size
+		_center_stick_knob(Vector2.ZERO)
 
-	var rows := ceili(float(COMMANDS.size()) / float(GRID_COLUMNS))
+	var visible_commands := _commands_for_context()
+	var columns := DEBRIEF_GRID_COLUMNS if debrief else GRID_COLUMNS
+	var rows := ceili(float(visible_commands.size()) / float(columns))
 	var grid_size := Vector2(
-		BUTTON_SIZE.x * GRID_COLUMNS + BUTTON_GAP * (GRID_COLUMNS - 1),
+		BUTTON_SIZE.x * columns + BUTTON_GAP * (columns - 1),
 		BUTTON_SIZE.y * rows + BUTTON_GAP * (rows - 1)
 	)
 	var grid_origin := Vector2(
@@ -148,10 +175,13 @@ func _layout_controls() -> void:
 		viewport_size.y - grid_size.y - BOTTOM_INTERACTION_INSET
 	)
 	_command_rects.clear()
-	for index in range(COMMANDS.size()):
-		var command_id := StringName(COMMANDS[index]["id"])
-		var column := index % GRID_COLUMNS
-		var row := index / GRID_COLUMNS
+	for panel in _command_panels.values():
+		(panel as Panel).visible = false
+	for index in range(visible_commands.size()):
+		var command: Dictionary = visible_commands[index]
+		var command_id := StringName(command["id"])
+		var column := index % columns
+		var row := index / columns
 		var position := grid_origin + Vector2(
 			column * (BUTTON_SIZE.x + BUTTON_GAP),
 			row * (BUTTON_SIZE.y + BUTTON_GAP)
@@ -159,8 +189,18 @@ func _layout_controls() -> void:
 		var rect := Rect2(position, BUTTON_SIZE)
 		_command_rects[command_id] = rect
 		var panel := _command_panels[command_id] as Panel
+		panel.visible = true
 		panel.position = rect.position
 		panel.size = rect.size
+
+
+func _commands_for_context() -> Array[Dictionary]:
+	var commands: Array[Dictionary] = []
+	for command in COMMANDS:
+		if _context_mode == CONTEXT_DEBRIEF and not DEBRIEF_COMMAND_IDS.has(command["id"]):
+			continue
+		commands.append(command)
+	return commands
 
 
 func _begin_pointer(index: int, position: Vector2) -> void:

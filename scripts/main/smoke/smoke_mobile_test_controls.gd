@@ -98,6 +98,22 @@ func _run() -> void:
 		else:
 			_expect(event is InputEventKey and (event as InputEventKey).keycode == expected, "%s dispatched the wrong key" % command_id)
 
+	controls._input(_touch(30, (command_rects.get(&"bond", Rect2()) as Rect2).get_center(), true))
+	await process_frame
+	_expect(Input.is_action_pressed(&"companion_command"), "BOND was not held before context transition")
+	controls.set_context_mode(MobileTestControls.CONTEXT_DEBRIEF)
+	await process_frame
+	_expect(not Input.is_action_pressed(&"companion_command"), "debrief transition retained held BOND input")
+	var debrief_report: Dictionary = controls.get_test_report()
+	var debrief_rects: Dictionary = debrief_report.get("command_rects", {})
+	_expect(str(debrief_report.get("context_mode", "")) == "debrief", "debrief context was not reported")
+	_expect(not (debrief_report.get("stick_rect", Rect2()) as Rect2).has_area(), "debrief retained the movement stick")
+	_expect(debrief_rects.keys() == [&"tool", &"project", &"day", &"use"], "debrief exposed the wrong command set: %s" % [debrief_rects.keys()])
+	for command_rect in debrief_rects.values():
+		_expect((command_rect as Rect2).end.y <= reachable_bottom, "debrief command escaped the interaction region")
+	controls.set_context_mode(MobileTestControls.CONTEXT_DIVE)
+	_expect((controls.get_test_report().get("stick_rect", Rect2()) as Rect2).has_area(), "dive context did not restore movement")
+
 	var hud := ActiveToolHud.new()
 	get_root().add_child(hud)
 	await process_frame
@@ -141,7 +157,7 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: mobile test controls auto_hidden=headless stick=8_direction down_reachable=true bottom_inset=104 commands=9 simultaneous_input=true keyboard_events=U,C,P,N,R,E actions=TOOL+USE+BOND hold_until_release=true active_tool_hotbar=bottom_icons+desktop+844x390.")
+	print("PASS: mobile test controls auto_hidden=headless dive=stick+9_commands debrief=TOOL+BUILD+DAY+USE down_reachable=true bottom_inset=104 simultaneous_input=true hold_until_release=true active_tool_hotbar=bottom_icons+desktop+844x390.")
 	quit(0)
 
 
