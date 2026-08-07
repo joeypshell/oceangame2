@@ -117,9 +117,9 @@ func clear_reveal_preview() -> void:
 		_presentation.clear_reveal_preview()
 
 
-func set_ecology_interest(active: bool) -> void:
+func set_ecology_interest(lead) -> void:
 	if _presentation != null:
-		_presentation.set_ecology_interest(active)
+		_presentation.set_ecology_interest(lead)
 
 
 func show_drift_projection(

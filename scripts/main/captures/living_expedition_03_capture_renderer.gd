@@ -121,7 +121,17 @@ func _verify_state(expectation: Dictionary, touch_visible: bool) -> bool:
 	match kind:
 		"mica_reaction":
 			var report: Dictionary = _mica_report().get("presentation", {})
-			return _expect(bool(report.get("ecology_interest_visible", false)), "Mica reaction cue was not visible")
+			var palette: Dictionary = _main._companion_sortie.control_runtime().report().get("palette", {})
+			return _expect(
+				bool(report.get("ecology_interest_visible", false))
+				and str(report.get("ecology_lead_label", "")) == "MICA FOUND A TRACE"
+				and (report.get("ecology_lead_direction", Vector2.ZERO) as Vector2) != Vector2.ZERO,
+				"Mica reaction did not provide a readable directional lead"
+			) and _expect(
+				bool(palette.get("discovery_prompt_visible", false))
+				and str(palette.get("discovery_prompt_text", "")).find("hold BOND") != -1,
+				"Mica reaction omitted the screen-space BOND handoff"
+			)
 		"migration_filament":
 			var report: Dictionary = _mica_report().get("presentation", {})
 			return _expect(

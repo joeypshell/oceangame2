@@ -1352,11 +1352,29 @@ func _load_playable_map(
 		_sortie_state.begin_continuous_map_leg(str(world.map_id), entry_id)
 	else:
 		_sortie_state.begin_map_leg(str(world.map_id), entry_id, _oxygen_capacity_seconds(), preserve_sortie)
+	if (
+		_review_checkpoint_id == ReviewCheckpointFixture.LIVING_EXPEDITION_03_START
+		and float(_review_checkpoint_report.get("review_oxygen_seconds", 0.0)) > 0.0
+	):
+		_sortie_state.oxygen_seconds = maxf(
+			_sortie_state.oxygen_seconds,
+			float(_review_checkpoint_report["review_oxygen_seconds"])
+		)
 	_player_health.begin_map_leg(preserve_sortie)
 	if continuous_sortie:
 		_interior_expedition_transition.apply_consumed(world)
 	_navigation_core.on_map_loaded(world)
 	player.position = world.get_entry_position(entry_id) if not entry_id.is_empty() and world.has_method("get_entry_position") else world.spawn_position
+	if (
+		_review_checkpoint_id == ReviewCheckpointFixture.LIVING_EXPEDITION_03_START
+		and _review_checkpoint_report.get("review_start_tile", {}) is Dictionary
+	):
+		var review_start_tile: Dictionary = _review_checkpoint_report.get("review_start_tile", {})
+		if review_start_tile.has("x") and review_start_tile.has("y"):
+			player.position = Vector2(
+				(float(review_start_tile["x"]) + 0.5) * float(world.tile_size),
+				(float(review_start_tile["y"]) + 0.5) * float(world.tile_size)
+			)
 	add_child(player)
 	_companion_rescue.bind_map(
 		world,

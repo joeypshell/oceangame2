@@ -201,6 +201,8 @@ static func apply(checkpoint_id: String, profile) -> Dictionary:
 		result["active_objective_id"] = "southwest_bloom_migration"
 		result["active_objective_label"] = "Southwest Jellyfish Bloom"
 		result["day_number"] = 2
+		result["review_oxygen_seconds"] = 180.0
+		result["review_start_tile"] = {"x": 70.0, "y": 78.0}
 	return _result(true, checkpoint_id, "ready", result)
 
 

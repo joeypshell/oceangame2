@@ -122,6 +122,19 @@ func report() -> Dictionary:
 	}
 
 
+func discovery_lead() -> Dictionary:
+	var trace := _authored_trace()
+	if _availability_reason() != "ready" or trace.is_empty() or not _companion_valid():
+		return {"active": false}
+	var center: Vector2 = trace.get("center", _companion.global_position)
+	return {
+		"active": true,
+		"direction": _companion.global_position.direction_to(center),
+		"distance": _companion.global_position.distance_to(center),
+		"target_id": str(trace.get("id", "")),
+	}
+
+
 func _availability_reason() -> String:
 	if not _dependencies_valid():
 		return "unavailable"

@@ -26,6 +26,8 @@ var _trace_path_points := PackedVector2Array()
 var _trace_current_center := Vector2.ZERO
 var _trace_movement_direction := Vector2.ZERO
 var _ecology_interest := false
+var _ecology_lead_direction := Vector2.RIGHT
+var _ecology_lead_distance := 0.0
 
 
 func sync(state: String, facing_sign: float, path_points: Array) -> void:
@@ -40,10 +42,17 @@ func set_identity(callsign: String) -> void:
 	queue_redraw()
 
 
-func set_ecology_interest(active: bool) -> void:
-	if _ecology_interest == active:
+func set_ecology_interest(lead) -> void:
+	var value: Dictionary = lead if lead is Dictionary else {"active": bool(lead)}
+	var active := bool(value.get("active", false))
+	var direction: Vector2 = value.get("direction", _ecology_lead_direction)
+	var distance := float(value.get("distance", _ecology_lead_distance))
+	if _ecology_interest == active and _ecology_lead_direction.is_equal_approx(direction) and is_equal_approx(_ecology_lead_distance, distance):
 		return
 	_ecology_interest = active
+	if direction != Vector2.ZERO:
+		_ecology_lead_direction = direction.normalized()
+	_ecology_lead_distance = distance
 	queue_redraw()
 
 
@@ -104,6 +113,9 @@ func report() -> Dictionary:
 		"facing_sign": _facing_sign,
 		"investigation_cue_visible": _state == STATE_INVESTIGATE or _ecology_interest,
 		"ecology_interest_visible": _ecology_interest,
+		"ecology_lead_direction": _ecology_lead_direction,
+		"ecology_lead_distance": _ecology_lead_distance,
+		"ecology_lead_label": "MICA FOUND A TRACE" if _ecology_interest else "",
 		"recovery_path_visible": _state in [STATE_SEPARATED, STATE_RECOVERY] and not _path_points.is_empty(),
 		"trace_state": _trace_state,
 		"trace_direction": _trace_direction,
@@ -171,9 +183,23 @@ func _draw_cuttle() -> void:
 func _draw_investigation_cue() -> void:
 	if _state != STATE_INVESTIGATE and not _ecology_interest:
 		return
-	var center := Vector2(24.0 * _facing_sign, -18.0)
-	draw_arc(center, 6.0 + sin(_pulse_seconds * TAU), 0.0, TAU, 18, COLOR_TRACE, 1.5, true)
-	draw_circle(center, 1.5, COLOR_TRACE)
+	var direction := _ecology_lead_direction.normalized()
+	if direction == Vector2.ZERO:
+		direction = Vector2.RIGHT * _facing_sign
+	var side := direction.orthogonal()
+	var lead_length := clampf(_ecology_lead_distance, 72.0, 128.0)
+	var start := direction * 28.0
+	var endpoint := direction * lead_length
+	draw_line(start, endpoint, Color(COLOR_TRACE, 0.72), 3.0, true)
+	for fraction in [0.42, 0.68, 0.94]:
+		var tip := direction * lead_length * float(fraction)
+		draw_polyline(PackedVector2Array([
+			tip - direction * 10.0 + side * 7.0,
+			tip,
+			tip - direction * 10.0 - side * 7.0,
+		]), COLOR_TRACE, 2.5, true)
+	draw_arc(Vector2.ZERO, 34.0 + sin(_pulse_seconds * TAU) * 4.0, 0.0, TAU, 28, Color(COLOR_TRACE, 0.72), 3.0, true)
+	draw_arc(endpoint, 10.0 + sin(_pulse_seconds * TAU) * 2.0, 0.0, TAU, 20, COLOR_TRACE, 2.5, true)
 
 
 func _draw_trace_cue() -> void:
