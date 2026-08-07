@@ -8,6 +8,7 @@ var _discovery_prompt: PanelContainer
 var _discovery_label: Label
 var _stack: VBoxContainer
 var _header: Label
+var _footer: Label
 var _commands: Array = []
 var _selected_index := 0
 var _last_feedback := ""
@@ -57,6 +58,7 @@ func get_test_report() -> Dictionary:
 		"commands": _commands.duplicate(true),
 		"selected_index": _selected_index,
 		"feedback": _last_feedback,
+		"footer_text": _footer.text if _footer != null else "",
 		"discovery_prompt_visible": _discovery_prompt != null and _discovery_prompt.visible,
 		"discovery_prompt_text": _discovery_label.text if _discovery_label != null else "",
 		"discovery_prompt_rect": Rect2(_discovery_prompt.position, _discovery_prompt.size) if _discovery_prompt != null else Rect2(),
@@ -82,10 +84,16 @@ func _build_ui() -> void:
 	_stack.add_theme_constant_override("separation", 5)
 	_panel.add_child(_stack)
 	_header = Label.new()
-	_header.text = "BOND  20%"
+	_header.text = "BOND MODE  20%"
 	_header.add_theme_color_override("font_color", Color(0.62, 0.95, 1.0, 1.0))
 	_header.add_theme_font_size_override("font_size", 13)
 	_stack.add_child(_header)
+	_footer = Label.new()
+	_footer.text = "1-3: ACTIVATE   B/ESC: CLOSE"
+	_footer.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_footer.add_theme_color_override("font_color", Color(0.65, 0.78, 0.8, 0.95))
+	_footer.add_theme_font_size_override("font_size", 11)
+	_stack.add_child(_footer)
 	_panel.visible = false
 	_discovery_prompt = PanelContainer.new()
 	_discovery_prompt.name = "CompanionDiscoveryPrompt"
@@ -99,7 +107,7 @@ func _build_ui() -> void:
 	_discovery_prompt.add_theme_stylebox_override("panel", discovery_style)
 	add_child(_discovery_prompt)
 	_discovery_label = Label.new()
-	_discovery_label.text = "MICA FOUND A TRACE HERE\nHold BOND now | choose Reveal Trace"
+	_discovery_label.text = "MICA FOUND A TRACE HERE\nPress B, then 2: Reveal Trace"
 	_discovery_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	_discovery_label.add_theme_color_override("font_color", Color(0.82, 1.0, 0.9, 1.0))
 	_discovery_label.add_theme_font_size_override("font_size", 15)
@@ -109,7 +117,7 @@ func _build_ui() -> void:
 
 func _rebuild_rows() -> void:
 	for child in _stack.get_children():
-		if child != _header:
+		if child != _header and child != _footer:
 			_stack.remove_child(child)
 			child.queue_free()
 	for index in range(_commands.size()):
@@ -117,7 +125,7 @@ func _rebuild_rows() -> void:
 		var enabled := bool(command.get("enabled", true))
 		var label := Label.new()
 		label.custom_minimum_size = Vector2(210, 28)
-		label.text = "%s  %s" % [">" if index == _selected_index else " ", str(command.get("label", "Command"))]
+		label.text = "%s  %d  %s" % [">" if index == _selected_index else " ", index + 1, str(command.get("label", "Command"))]
 		if not enabled and command.has("denial"):
 			label.text += " - %s" % str(command["denial"])
 		label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
@@ -133,6 +141,7 @@ func _rebuild_rows() -> void:
 		feedback.add_theme_color_override("font_color", Color(1.0, 0.78, 0.34, 0.98))
 		feedback.add_theme_font_size_override("font_size", 12)
 		_stack.add_child(feedback)
+	_stack.move_child(_footer, _stack.get_child_count() - 1)
 
 
 func _row_color(selected: bool, enabled: bool) -> Color:
@@ -145,16 +154,22 @@ func _layout() -> void:
 	if _panel == null or not is_inside_tree():
 		return
 	_last_viewport_size = get_viewport().get_visible_rect().size
-	var compact := _last_viewport_size.x <= COMPACT_VIEWPORT_WIDTH
+	var compact := minf(_last_viewport_size.x, float(get_window().size.x)) <= COMPACT_VIEWPORT_WIDTH
 	var width := 230.0 if compact else 260.0
 	_header.visible = not compact
+	_footer.text = "TOOL: CHOOSE   USE: ACTIVATE   BOND: CLOSE" if compact else "1-3: ACTIVATE   B/ESC: CLOSE"
+	_discovery_label.text = (
+		"MICA FOUND A TRACE HERE\nTap BOND | TOOL: Reveal Trace | USE"
+		if compact
+		else "MICA FOUND A TRACE HERE\nPress B, then 2: Reveal Trace"
+	)
 	_stack.add_theme_constant_override("separation", 2 if compact else 5)
 	for child in _stack.get_children():
 		if child == _header:
 			continue
 		var label := child as Label
 		label.custom_minimum_size = Vector2(210, 24 if compact else 28)
-		label.add_theme_font_size_override("font_size", 12 if compact else 14)
+		label.add_theme_font_size_override("font_size", 10 if child == _footer else (12 if compact else 14))
 	_panel.custom_minimum_size.x = width
 	_panel.reset_size()
 	if compact:

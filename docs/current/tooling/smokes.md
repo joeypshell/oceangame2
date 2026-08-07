@@ -83,7 +83,7 @@ The integrated Expansion 03 smoke verifies deterministic recipe selection, conne
 
 The integrated Expansion 06 smoke verifies source territory/timing, normal unarmed cache progress, active-eel contact/knockback interruption, health/oxygen separation, exact-once non-enemy shock-prod construction, selected-tool `Space` attacks, blocked legacy attack input, profile reload, reward-free armed victory, guarded-cache collection/banking, connector/day persistence, and combat/hazard/oxygen restoration. CI and release validation run it as `--smoke-expansion-06-combat-foundation`.
 
-The Spark Ray riding smoke protects the dedicated Shift/BOND action, global 20-percent command time, explicit mount/dismount clearance, mounted collision and camera ownership, creature-only hotbar, directional non-damaging Glide Surge, equipment-gate denial, hostile forced dismount, reset restoration, and profile immutability. CI runs it directly as `smoke_spark_ray_riding.gd`.
+The Spark Ray riding smoke protects toggle `B/BOND`, direct desktop `1`-`3` commands, global 20-percent command time, explicit mount/dismount clearance, mounted collision and camera ownership, creature-only hotbar, directional non-damaging Glide Surge, equipment-gate denial, hostile forced dismount, reset restoration, and profile immutability. CI runs it directly as `smoke_spark_ray_riding.gd`.
 
 The mobile-control smoke protects the accepted nine-region landscape layout, 104 px bottom interaction inset, simultaneous stick/command input, shared `TOOL`/`USE`/`BOND` actions, and non-overlapping active-tool HUD states at 1280x720 and 844x390. CI runs it directly as `smoke_mobile_test_controls.gd`.
 

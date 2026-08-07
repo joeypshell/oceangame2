@@ -165,7 +165,8 @@ not a one-lock companion key.
 
 ## Controls And Presentation
 
-- `Shift/BOND` or touch `BOND` opens Mica's existing slow-time palette.
+- `B/BOND` toggles Mica's slow-time palette; desktop `1`-`3` activates the
+  matching labeled row, while touch uses sequential `BOND`, `TOOL`, and `USE`.
 - Before adaptation, valid Mica actions remain Recall and Reveal Trace.
 - After adaptation, the contextual palette may show Recall, Reveal Trace, and
   Read Drift, never more than three actions and never Mount.

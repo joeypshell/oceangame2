@@ -100,10 +100,11 @@ func _run() -> void:
 
 	controls._input(_touch(30, (command_rects.get(&"bond", Rect2()) as Rect2).get_center(), true))
 	await process_frame
-	_expect(Input.is_action_pressed(&"companion_command"), "BOND was not held before context transition")
+	_expect(not Input.is_action_pressed(&"companion_command"), "BOND tap latched a held action")
+	controls._input(_touch(30, (command_rects.get(&"bond", Rect2()) as Rect2).get_center(), false))
 	controls.set_context_mode(MobileTestControls.CONTEXT_DEBRIEF)
 	await process_frame
-	_expect(not Input.is_action_pressed(&"companion_command"), "debrief transition retained held BOND input")
+	_expect(not Input.is_action_pressed(&"companion_command"), "debrief transition retained BOND input")
 	var debrief_report: Dictionary = controls.get_test_report()
 	var debrief_rects: Dictionary = debrief_report.get("command_rects", {})
 	_expect(str(debrief_report.get("context_mode", "")) == "debrief", "debrief context was not reported")
@@ -157,7 +158,7 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: mobile test controls auto_hidden=headless dive=stick+9_commands debrief=TOOL+BUILD+DAY+USE down_reachable=true bottom_inset=104 simultaneous_input=true hold_until_release=true active_tool_hotbar=bottom_icons+desktop+844x390.")
+	print("PASS: mobile test controls auto_hidden=headless dive=stick+9_commands debrief=TOOL+BUILD+DAY+USE down_reachable=true bottom_inset=104 simultaneous_input=true BOND=tap USE=hold active_tool_hotbar=bottom_icons+desktop+844x390.")
 	quit(0)
 
 

@@ -203,7 +203,7 @@ arenas. Detailed direction:
 
 The first companion is a rescued juvenile bioelectric Spark Ray. Day 1 rescues
 and commits the individual at the canonical boat. Its first subsequently launched
-sortie proves follow, a dedicated `Shift/BOND` command palette, seamless
+sortie proves follow, a dedicated toggle `B/BOND` command palette, seamless
 mount/dismount, direct mounted movement, and one non-damaging Glide Surge.
 
 It records two meaningful memories:

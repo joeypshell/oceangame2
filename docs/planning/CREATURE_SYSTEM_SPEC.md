@@ -109,10 +109,11 @@ The active companion should:
 - react visibly to memory opportunities and danger
 - never fail a critical command because of hidden temperament or loyalty
 
-The companion is not a diver hotbar item. `companion_command` is a dedicated
-`Shift/BOND` action. Holding it slows the complete gameplay simulation to 20
-percent and presents no more than three currently valid commands. Desktop and
-mobile dispatch the same action; the system does not reuse `Q` or `E/ACT`.
+The companion is not a diver hotbar item. `companion_command` is the dedicated
+toggle `B/BOND` action. Its open palette slows the complete gameplay simulation
+to 20 percent and presents no more than three numbered valid commands. Desktop
+`1`-`3` activates the matching row and `B` or `Esc` closes; touch uses sequential
+`BOND`, `TOOL`, and `USE`. The system does not reuse `Q` or `E/ACT`.
 
 The first-proof independent palette may show recall, mount, and the selected
 adaptation action. It must communicate invalid target, range, clearance, or

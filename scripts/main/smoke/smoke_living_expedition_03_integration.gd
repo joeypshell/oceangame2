@@ -103,8 +103,16 @@ func _run() -> void:
 	_expect(float(lead.get("ecology_lead_distance", 0.0)) > 0.0, "Mica's reaction omitted trace distance")
 	var palette: Dictionary = sortie.control_runtime().report().get("palette", {})
 	_expect(bool(palette.get("discovery_prompt_visible", false)), "Mica's reaction omitted the persistent screen-space prompt")
-	_expect(str(palette.get("discovery_prompt_text", "")).find("Hold BOND now") != -1, "Mica's prompt omitted the immediate BOND handoff")
-	_expect(_status_notes.has("MICA FOUND A TRACE HERE | Hold BOND now | choose Reveal Trace"), "Mica's local trace discovery was not announced")
+	var discovery_prompt := str(palette.get("discovery_prompt_text", ""))
+	_expect(
+		discovery_prompt.find("Press B, then 2") != -1 or discovery_prompt.find("Tap BOND") != -1,
+		"Mica's prompt omitted the responsive BOND handoff"
+	)
+	_expect(_status_notes.has("MICA FOUND A TRACE HERE | Press B, then 2: Reveal Trace"), "Mica's local trace discovery was not announced")
+	var bond_report: Dictionary = sortie.control_runtime().begin_command_mode()
+	var bond_commands: Array = bond_report.get("context_commands", [])
+	_expect(bond_commands.size() > 1 and str((bond_commands[1] as Dictionary).get("id", "")) == "reveal_trace", "BOND number 2 did not map to Reveal Trace")
+	sortie.control_runtime().end_command_mode()
 	var first: Dictionary = _reveal_and_identify(world, player, sortie, survey, hazards, oxygen, daylight)
 	_expect(bool(first.get("ready", false)), "first observation setup failed: %s" % first)
 	_expect(bool(first.get("reveal_only", false)), "Reveal Trace identified or committed the relationship by itself")
@@ -249,14 +257,12 @@ func _test_read_drift(player, sortie, hazards, patrol_id: String) -> void:
 
 func _dispatch_command(sortie, action_id: String) -> Dictionary:
 	var control = sortie.control_runtime()
-	control.begin_command_mode()
-	var commands: Array = control.report().get("context_commands", [])
+	var open_report: Dictionary = control.begin_command_mode()
+	var commands: Array = open_report.get("context_commands", [])
 	for index in range(commands.size()):
 		if str(commands[index].get("id", "")) != action_id:
 			continue
-		for _step in range(index):
-			control.cycle_context_command()
-		return control.confirm_context_command()
+		return control.activate_context_command(index)
 	control.end_command_mode()
 	return {"changed": false, "reason": "command_missing"}
 

@@ -18,7 +18,7 @@ func objective_text(world, player, profile, sortie_runtime, day_state) -> String
 		return ""
 	var individual: Dictionary = profile_report.get("individual", {})
 	if individual.is_empty():
-		return "PARTNERS: Hold Shift/BOND at the boat to select the next companion" if world.is_inside_boat(player.global_position) else "PARTNERS: Return to the surface boat to select a companion"
+		return "PARTNERS: Press B at the boat to select the next companion" if world.is_inside_boat(player.global_position) else "PARTNERS: Return to the surface boat to select a companion"
 	var callsign := str(individual.get("callsign", "Kite"))
 	var species_id := str(individual.get("species_id", "spark_ray"))
 	var at_boat := bool(world.is_inside_boat(player.global_position))
@@ -47,7 +47,7 @@ func objective_text(world, player, profile, sortie_runtime, day_state) -> String
 	var control = sortie_runtime.control_runtime()
 	var control_report: Dictionary = control.report() if control != null else {}
 	if bool(control_report.get("command_mode", false)):
-		return "PARTNER: BOND open | Tab/TOOL selects a command | Space/USE confirms"
+		return "PARTNER: BOND open | Press 1, 2, or 3 to activate | B/Esc closes"
 	if bool(control_report.get("mounted", false)):
 		return _mounted_text(callsign, adaptation_id)
 	if species_id == VEIL_CUTTLE:
@@ -57,10 +57,10 @@ func objective_text(world, player, profile, sortie_runtime, day_state) -> String
 
 func _independent_text(callsign: String, adaptation_id: String) -> String:
 	if adaptation_id == ANCHOR_FINS:
-		return "PARTNER: Anchor Fins ready | Hold Shift/BOND to Brace Flow or Mount | test the lower-right current"
+		return "PARTNER: Anchor Fins ready | Press B | 1 Mount | 3 Brace Flow"
 	if adaptation_id == GUARDIAN_PULSE:
-		return "PARTNER: Guardian Pulse ready | Hold Shift/BOND to Pulse or Mount | face the deep-cache eel"
-	return "PARTNER: %s is following | Move close, hold Shift/BOND | Tab selects Mount | Space/USE confirms" % callsign
+		return "PARTNER: Guardian Pulse ready | Press B | 1 Mount | 3 Guardian Pulse"
+	return "PARTNER: %s is following | Move close | Press B, then 1 to Mount" % callsign
 
 
 func _mounted_text(callsign: String, adaptation_id: String) -> String:
@@ -83,15 +83,15 @@ func _veil_cuttle_text(world, callsign: String, individual: Dictionary, ecology:
 			else "PARTNER: Shared bloom memory secured | Return to the boat, then press N"
 		)
 	if adaptation_id == "drift_lens":
-		return "PARTNER: Drift Lens ready | Near moving jellyfish hold Shift/BOND | Tab Read Drift | Space/USE"
+		return "PARTNER: Drift Lens ready | Near moving jellyfish press B, then 3: Read Drift"
 	var trace_state := _ecological_trace_state(world)
 	if trace_state == "identified":
 		return "PARTNER: Southwest Jellyfish Bloom identified | Return to the surface boat with %s" % callsign
 	if trace_state == "revealed":
 		return "PARTNER: Migration trail revealed | Tab Scanner | Hold Space/USE to identify it"
 	if trace_state == "hidden":
-		return "PARTNER: Find the Southwest Jellyfish Bloom | Near it hold Shift/BOND | Tab Reveal Trace | Space/USE"
-	return "PARTNER: %s is investigating nearby water | Hold Shift/BOND for Recall or Reveal Trace" % callsign
+		return "PARTNER: Find the Southwest Jellyfish Bloom | Near it press B, then 2: Reveal Trace"
+	return "PARTNER: %s is investigating nearby water | Press B | 1 Recall | 2 Reveal Trace" % callsign
 
 
 func _ecological_trace_state(world) -> String:

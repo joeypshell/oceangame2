@@ -74,13 +74,22 @@ func clear_map() -> void:
 func handle_input(event: InputEvent) -> bool:
 	var repeated := event is InputEventKey and (event as InputEventKey).echo
 	if event.is_action_pressed("companion_command") and not repeated:
-		begin_command_mode()
+		if _command_mode:
+			end_command_mode()
+		else:
+			begin_command_mode()
 		return true
 	if event.is_action_released("companion_command"):
-		end_command_mode()
 		return true
 	if not _command_mode:
 		return false
+	for index in range(CompanionCommandPalette.MAX_COMMANDS):
+		if event.is_action_pressed("companion_action_%d" % (index + 1)) and not repeated:
+			activate_context_command(index)
+			return true
+	if event is InputEventKey and event.pressed and not repeated and (event as InputEventKey).keycode == KEY_ESCAPE:
+		end_command_mode()
+		return true
 	if event.is_action_pressed("active_tool_cycle_next") and not repeated:
 		cycle_context_command()
 		return true
@@ -143,6 +152,14 @@ func confirm_context_command() -> Dictionary:
 	return result
 
 
+func activate_context_command(index: int) -> Dictionary:
+	var commands := _context_commands()
+	if not _command_mode or index < 0 or index >= commands.size():
+		return {"changed": false, "reason": "command_unavailable", "mounted": false}
+	_selected_command_index = index
+	return confirm_context_command()
+
+
 func reset_control(_reason := "reset") -> void:
 	end_command_mode()
 	_selected_command_index = 0
@@ -198,7 +215,7 @@ func _process(delta: float) -> void:
 	_discovery_lead["active"] = not _command_mode and bool(_discovery_lead.get("active", false))
 	if bool(_discovery_lead.get("active", false)) and not _lead_announced:
 		_lead_announced = true
-		_notify("MICA FOUND A TRACE HERE | Hold BOND now | choose Reveal Trace")
+		_notify("MICA FOUND A TRACE HERE | Press B, then 2: Reveal Trace")
 	elif not bool(_discovery_lead.get("active", false)) and str(_trace.action().get("reason", "")) != "ready":
 		_lead_announced = false
 	_set_ecology_interest(_discovery_lead)

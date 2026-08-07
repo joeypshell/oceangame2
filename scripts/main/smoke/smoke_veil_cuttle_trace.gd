@@ -79,9 +79,12 @@ func _test_deliberate_reveal(world, player, cuttle, control) -> void:
 	cuttle.global_position = center + Vector2(-48.0, 0.0)
 	player.global_position = cuttle.global_position + Vector2(-24.0, 0.0)
 	cuttle.advance(0.0)
-	control.begin_command_mode()
-	control.cycle_context_command()
-	var result: Dictionary = control.confirm_context_command()
+	var open_report: Dictionary = control.begin_command_mode()
+	var commands: Array = open_report.get("context_commands", [])
+	_expect(commands.size() > 1 and str((commands[1] as Dictionary).get("id", "")) == "reveal_trace", "number 2 did not map to Reveal Trace")
+	_expect(str(open_report.get("palette", {}).get("commands", [])[1].get("label", "")) == "Reveal Trace", "palette did not label number 2 as Reveal Trace")
+	_expect(control.handle_input(_action(&"companion_action_2")), "number 2 did not dispatch Reveal Trace")
+	var result: Dictionary = control.trace_runtime().report().get("last_result", {})
 	_expect(bool(result.get("changed", false)) and str(result.get("reason", "")) == "revealed", "deliberate Reveal Trace did not reveal its authored target")
 	_expect(str(result.get("target_id", "")) == TRACE_ID, "Reveal Trace affected an unexpected target")
 	_expect(not bool(result.get("identified", true)), "Mica identified the trace without the scanner")
@@ -138,6 +141,13 @@ func _command_ids(commands: Array) -> Array[String]:
 
 func _record_status(note: String) -> void:
 	_status_notes.append(note)
+
+
+func _action(action: StringName, pressed := true) -> InputEventAction:
+	var event := InputEventAction.new()
+	event.action = action
+	event.pressed = pressed
+	return event
 
 
 func _control_allowed() -> bool:

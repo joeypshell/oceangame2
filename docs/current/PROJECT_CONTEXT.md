@@ -401,7 +401,7 @@ Living Expedition 02 is complete and Living Expedition 03 is selected in `LIVING
 Accepted constraints for next work:
 
 - Treat Living Expedition as the active product direction and a bounded current runtime proof. Preserve one active companion, species-plus-experience roles, deliberate real-time commands, committed-bond riding, meaningful experience rather than XP grinding, night consolidation, visible adaptation, and the equipment-versus-companion boundary.
-- Use `Shift/BOND` and a maximum-three-action 20-percent slow-time palette. Mounted play transfers movement and hotbar ownership to creature actions; dismount restores diver tools. Do not reuse `Q` or `E/ACT` for the companion.
+- Use toggle `B/BOND` and a maximum-three-action 20-percent slow-time palette. Desktop `1`-`3` directly activates the matching labeled command; `B` or `Esc` closes. Touch uses sequential `BOND`, `TOOL`, and `USE` taps. Mounted play transfers movement and hotbar ownership to creature actions; dismount restores diver tools. Do not reuse `Q` or `E/ACT` for the companion.
 - Riding cannot bypass fins, darkness, pressure, collision, oxygen, daylight, health, cargo, boat, or failure authority.
 - Keep Kite and Mica as the complete current roster and the habitat compact; do not add a third species, broad stable UI, turn-based or broad combat framework, creature health/death, or ecosystem simulation without a later reviewed plan.
 - Keep the implemented held-cargo strip, selectable active tools, persistent vitals/objectives, and temporary prompts as distinct HUD responsibilities; a broad production HUD replacement remains directional.

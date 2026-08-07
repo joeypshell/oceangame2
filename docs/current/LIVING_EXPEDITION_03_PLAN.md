@@ -40,8 +40,8 @@ ids after runtime lands requires an explicit migration.
    selected, the Scanner available, and the southwest bloom active.
 2. Existing forecast or route guidance names the **Southwest Jellyfish Bloom**;
    it does not tell the player to scan a generic circle.
-3. Near the moving bloom patrol, Mica visibly reacts. Holding `Shift/BOND` offers
-   the contextual Reveal Trace command.
+3. Near the moving bloom patrol, Mica visibly reacts. Pressing `B/BOND` opens the
+   palette and desktop `2` directly activates Reveal Trace.
 4. Reveal Trace draws a living migration filament derived from the authored
    patrol relationship. It does not duplicate or invent patrol geometry.
 5. The diver deliberately holds `Space/USE` with the Scanner to identify the
@@ -127,8 +127,8 @@ may substitute for those outcomes.
 
 ## Runtime And UI Boundaries
 
-- Use the existing `Shift/BOND` slow-time palette with at most three contextual
-  commands. Do not reuse `Q` or `E/ACT`.
+- Use the toggle `B/BOND` slow-time palette with at most three contextual
+  commands. Desktop `1`-`3` activates matching rows; do not reuse `Q` or `E/ACT`.
 - Mica remains independent and non-mounted. Kite retains all mounted behavior.
 - Before identification, world feedback should resemble a directional migration
   filament/path, not a generic circle or unexplained marker.

@@ -77,27 +77,41 @@ func _run() -> void:
 func _test_input_contract() -> void:
 	_expect(InputMap.has_action("companion_command"), "companion_command input action is missing")
 	var events := InputMap.action_get_events("companion_command")
-	var shift_bound := events.any(func(event): return event is InputEventKey and ((event as InputEventKey).keycode == KEY_SHIFT or (event as InputEventKey).physical_keycode == KEY_SHIFT))
-	_expect(shift_bound, "companion_command is not bound to Shift/BOND")
+	var b_bound := events.any(func(event): return event is InputEventKey and ((event as InputEventKey).keycode == KEY_B or (event as InputEventKey).physical_keycode == KEY_B))
+	_expect(b_bound, "companion_command is not bound to B")
 	_expect(not events.any(func(event): return event is InputEventKey and (event as InputEventKey).keycode in [KEY_Q, KEY_E]), "companion_command reused Q or E")
+	for index in range(3):
+		var action := "companion_action_%d" % (index + 1)
+		_expect(InputMap.has_action(action), "%s input action is missing" % action)
+		var expected_key := KEY_1 + index
+		_expect(
+			InputMap.action_get_events(action).any(
+				func(event): return event is InputEventKey and ((event as InputEventKey).keycode == expected_key or (event as InputEventKey).physical_keycode == expected_key)
+			),
+			"%s is not bound to %d" % [action, index + 1]
+		)
 
 
 func _test_command_slow_time(control, original_time_scale: float) -> void:
-	var opened: Dictionary = control.begin_command_mode()
+	_expect(control.handle_input(_action(&"companion_command")), "B did not open command mode")
+	var opened: Dictionary = control.report()
 	_expect(bool(opened.get("command_mode", false)), "BOND did not open command mode")
 	_expect(is_equal_approx(Engine.time_scale, 0.2), "BOND did not set complete simulation time scale to 20 percent")
 	var commands: Array = opened.get("context_commands", [])
 	_expect(commands.size() > 0 and commands.size() <= 3, "BOND palette did not expose one to three contextual commands")
 	_expect(commands.map(func(command): return str(command.get("id", ""))).has("mount"), "near unmounted palette omitted Mount")
 	_expect(bool(opened.get("palette", {}).get("visible", false)), "BOND palette was not visible")
-	control.end_command_mode()
-	_expect(is_equal_approx(Engine.time_scale, original_time_scale), "releasing BOND did not restore normal time")
+	control.handle_input(_action(&"companion_command", false))
+	_expect(bool(control.report().get("command_mode", false)), "releasing B closed toggle command mode")
+	control.handle_input(_action(&"companion_command"))
+	_expect(not bool(control.report().get("command_mode", true)), "second B press did not close command mode")
+	_expect(is_equal_approx(Engine.time_scale, original_time_scale), "closing BOND did not restore normal time")
 
 
 func _test_mount_and_hotbar(control, player, ray, hud) -> void:
-	control.begin_command_mode()
-	var result: Dictionary = control.confirm_context_command()
-	_expect(bool(result.get("changed", false)) and control.is_mounted(), "confirming Mount did not transfer control")
+	control.handle_input(_action(&"companion_command"))
+	control.handle_input(_action(&"companion_action_1"))
+	_expect(control.is_mounted(), "pressing 1 for Mount did not transfer control")
 	_expect(is_equal_approx(Engine.time_scale, 1.0), "confirming Mount left slow time active")
 	_expect(player.mounted_control_active(), "mounted player controller retained movement authority")
 	_expect(not hud.visible and control.hides_diver_hotbar(), "mounted mode did not hide the diver hotbar")
@@ -286,8 +300,15 @@ func _finish(world, player, runtime, hud, original_time_scale: float) -> void:
 			push_error("Spark Ray riding smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("PASS: Spark Ray riding shift_bond=true slow_time=0.2 restored=release+selection+retry+failure+scene_exit commands<=3 mount_clearance=true dismount_handoff=independent+separated+repeatable movement_owner=ray camera_owner=diver hotbar=creature glide_surge=directional+cooldown+no_damage gate_bypass=false forced_dismount=true mobile_action=companion_command profile_unchanged=true.")
+	print("PASS: Spark Ray riding BOND_toggle=B direct_commands=1-3 slow_time=0.2 restored=toggle+selection+retry+failure+scene_exit commands<=3 mount_clearance=true dismount_handoff=independent+separated+repeatable movement_owner=ray camera_owner=diver hotbar=creature glide_surge=directional+cooldown+no_damage gate_bypass=false forced_dismount=true mobile_action=companion_command profile_unchanged=true.")
 	quit(0)
+
+
+func _action(action: StringName, pressed := true) -> InputEventAction:
+	var event := InputEventAction.new()
+	event.action = action
+	event.pressed = pressed
+	return event
 
 
 func _expect(condition: bool, message: String) -> void:

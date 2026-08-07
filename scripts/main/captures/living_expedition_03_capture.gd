@@ -16,6 +16,7 @@ const BOAT_CAMERA_ID := "living_expedition_01_night_choice"
 const DRIFT_CAMERA_ID := "living_expedition_01_guardian_payoff"
 const CAPTURE_STATES := [
 	{"id": "mica_reaction", "camera": BLOOM_CAMERA_ID},
+	{"id": "reveal_trace_ready", "camera": BLOOM_CAMERA_ID},
 	{"id": "migration_filament", "camera": BLOOM_CAMERA_ID},
 	{"id": "held_scanner_identification", "camera": BLOOM_CAMERA_ID},
 	{"id": "pending_return", "camera": BLOOM_CAMERA_ID},
@@ -36,6 +37,8 @@ func capture_and_quit(capture_dir: String) -> void:
 		return
 	_renderer = LivingExpedition03CaptureRenderer.new(_main)
 	if not _prepare_mica_reaction() or not await _capture(capture_dir, "mica_reaction", {"kind": "mica_reaction"}):
+		return
+	if not _prepare_reveal_palette() or not await _capture(capture_dir, "reveal_trace_ready", {"kind": "bond_palette"}):
 		return
 	if not _reveal_migration() or not await _capture(capture_dir, "migration_filament", {"kind": "migration_filament"}):
 		return
@@ -93,7 +96,7 @@ func _prepare_mica_reaction() -> bool:
 	mica.global_position = focus + Vector2(-40.0, 0.0)
 	mica.advance(0.0)
 	_main._companion_sortie.control_runtime()._process(0.0)
-	_main._last_status_note = "MICA FOUND A TRACE HERE | Hold BOND now | choose Reveal Trace"
+	_main._last_status_note = "MICA FOUND A TRACE HERE | Press B, then 2: Reveal Trace"
 	_main._update_status_label()
 	return _expect(
 		bool(mica.report().get("presentation", {}).get("ecology_interest_visible", false)),
@@ -115,6 +118,18 @@ func _reveal_migration() -> bool:
 		and int(presentation.get("trace_path_point_count", 0)) >= 2
 		and (presentation.get("trace_movement_direction", Vector2.ZERO) as Vector2) != Vector2.ZERO,
 		"Reveal Trace did not draw the source-derived migration filament"
+	)
+
+
+func _prepare_reveal_palette() -> bool:
+	var report: Dictionary = _main._companion_sortie.control_runtime().begin_command_mode()
+	var commands: Array = report.get("context_commands", [])
+	_main._update_status_label()
+	return _expect(
+		commands.size() > 1
+		and str((commands[1] as Dictionary).get("id", "")) == "reveal_trace"
+		and bool(report.get("palette", {}).get("visible", false)),
+		"BOND did not open with Reveal Trace on number 2"
 	)
 
 
@@ -208,14 +223,12 @@ func _prepare_read_drift() -> bool:
 
 func _dispatch_command(action_id: String) -> Dictionary:
 	var control = _main._companion_sortie.control_runtime()
-	control.begin_command_mode()
-	var commands: Array = control.report().get("context_commands", [])
+	var open_report: Dictionary = control.begin_command_mode()
+	var commands: Array = open_report.get("context_commands", [])
 	for index in range(commands.size()):
 		if str((commands[index] as Dictionary).get("id", "")) != action_id:
 			continue
-		for _step in range(index):
-			control.cycle_context_command()
-		return control.confirm_context_command()
+		return control.activate_context_command(index)
 	control.end_command_mode()
 	return {"changed": false, "reason": "command_missing", "action_id": action_id}
 

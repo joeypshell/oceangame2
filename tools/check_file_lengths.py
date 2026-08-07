@@ -69,6 +69,11 @@ ALLOWLIST: tuple[AllowlistEntry, ...] = (
         "cohesive world-state coordinator; split only at stable ownership boundaries",
     ),
     AllowlistEntry(
+        "scripts/companion/companion_control_runtime.gd",
+        CATEGORY_COHESIVE_OWNER,
+        "cohesive command, riding, and transient-control state machine; growth guarded",
+    ),
+    AllowlistEntry(
         "docs/current/PROJECT_CONTEXT.md",
         CATEGORY_TEMPORARY_DEBT,
         "known large session handoff; follow-up split/archive target",
