@@ -1,6 +1,6 @@
 # Game Spec
 
-Date: 2026-08-05
+Date: 2026-08-08
 
 ## Working Title
 
@@ -149,8 +149,9 @@ habitats, low counts, and non-circular dependencies.
 
 The implemented stable has Kite the Spark Ray and Mica the Veil Cuttle in one
 compact boat habitat, with exactly one active companion selected per launched
-expedition. The selected next proof deepens Mica's ecological field role instead
-of adding another individual.
+expedition. Mica's first ecological field proof is complete. The selected next
+proof compares how Guardian-Pulse Kite and Drift-Lens Mica change one existing
+territorial eel encounter without adding another individual.
 
 The game should preserve individual names/callsigns, temperament, memories,
 adaptations, and important history. Large storage catalogs, breeding, fusion,
@@ -236,15 +237,17 @@ The repository currently implements:
   mutually exclusive independent/mounted adaptations
 - one persistent Veil Cuttle individual with physical rescue, compact shared
   boat habitat, next-sortie active selection, independent follow, and a
-  deliberate optional Reveal Trace handoff to the Scanner
+  deliberate Reveal Trace handoff to the Scanner
+- one exact-once Mica ecological observation, night-consolidated Drift Lens
+  adaptation, and deliberate Read Drift field skill for authored jellyfish
+  patrols
 - deterministic validators, progression audit, smokes, captures, baselines, and
   public Web deployment
 
 The repository does not yet implement:
 
-- a committed ecological observation, memory, or adaptation for Mica
-- a field skill that interprets real authored organism behavior across more than
-  one context
+- the selected comparison of Mica information, Kite interruption, ordinary
+  evade, and Shock-Prod defeat/resource outcomes in one wildlife encounter
 - generalized species runtime beyond the focused Spark Ray and Veil Cuttle
   owners
 - scalable creature art, animation, audio, behavior, or combat architecture
@@ -272,8 +275,8 @@ Current runtime truth is documented in `docs/current/PROJECT_CONTEXT.md` and
 - giant creature roster or storage UI
 - turn-based three-creature party combat
 - more than one active expedition companion at a time
-- a third species or broad stable-management surface before the selected Mica
-  ecological field-role proof receives GO
+- a third species or broad stable-management surface before the selected Living
+  Expedition 04 encounter receives a player verdict
 - breeding, fusion, genes, eggs, or inheritance
 - feeding chores, hidden loyalty, lifespan, forced retirement, or creature death
 - generalized ecosystem simulation
@@ -281,13 +284,13 @@ Current runtime truth is documented in `docs/current/PROJECT_CONTEXT.md` and
 - vehicles, final art/audio, broad accessibility, balance, and save hardening
   before their selected milestones
 
-## Product Success Question
+## Selected Next Proof
 
-The next proof succeeds when the player can answer yes:
+Living Expedition 04 succeeds when the player can answer yes:
 
-> Did Mica help you notice and understand a living migration that the Scanner
-> alone would not have found, and did turning that shared observation into a
-> useful next-day field skill make you want to choose Mica again?
+> Did choosing Kite or Mica give you a different, understandable way to handle
+> the same eel, and did choosing between a nonlethal opening and a Shock-Prod
+> harvest feel like a real expedition decision?
 
-If not, add no third species. Correct the ecological relationship, observation
-journey, or practical adaptation before expanding the roster.
+If not, add no enemy or species. Correct the current encounter or its feedback
+before expanding combat, wildlife systems, or the roster.

@@ -2,7 +2,7 @@
 
 `oceangame2` is a side-view underwater expedition-raising game built on a controlled diver-expedition foundation.
 
-The existing runtime proves contiguous authored exploration, oxygen/daylight pressure, equipment progression, limited combat, night projects, and stable validation/deployment. Expansion 18 is technically complete but closes with a strategic player-experience HOLD: extending the old clue, recipe, gate, and scan cadence would not solve its generic motivation. Living Expeditions 01-03 now have owner GO and establish the active direction: one bonded creature can support or be ridden in real time, while meaningful shared memories become deliberate visible adaptations at night.
+The existing runtime proves contiguous authored exploration, oxygen/daylight pressure, equipment progression, limited combat, night projects, and stable validation/deployment. Expansion 18 is technically complete but closes with a strategic player-experience HOLD: extending the old clue, recipe, gate, and scan cadence would not solve its generic motivation. Living Expeditions 01-03 now have owner GO and establish the active direction: one bonded creature can support or be ridden in real time, while meaningful shared memories become deliberate visible adaptations at night. Living Expedition 04 is selected as a planning contract for one companion-shaped eel encounter; its implementation milestone is not created yet.
 
 ## Project Goal
 
@@ -26,7 +26,7 @@ Build a distinctive side-view ocean game in which:
 
 ## Planning Docs
 
-The Simple Diver and Phase 2 expansion roadmaps describe the completed runtime foundation. Living Expeditions 01-03 are implemented and owner-approved: Kite and Mica prove distinct mounted and sensing roles, one active next-sortie selection, an inhabited canonical boat, and one source-authored ecological observation that becomes Mica's useful next-day Drift Lens adaptation. No next implementation milestone is committed; a separate direction audit must select it.
+The Simple Diver and Phase 2 expansion roadmaps describe the completed runtime foundation. Living Expeditions 01-03 are implemented and owner-approved: Kite and Mica prove distinct mounted and sensing roles, one active next-sortie selection, an inhabited canonical boat, and one source-authored ecological observation that becomes Mica's useful next-day Drift Lens adaptation. Living Expedition 04 now has one bounded planning contract; create its implementation milestone and issue batch in a later audit.
 
 Core sources and operating docs:
 
@@ -54,6 +54,7 @@ Core sources and operating docs:
 - [Living Expedition 03 Visual Decision](docs/current/LIVING_EXPEDITION_03_VISUAL_DECISION.md)
 - [Living Expedition 03 Web Verification](docs/current/LIVING_EXPEDITION_03_WEB_VERIFICATION.md)
 - [Living Expedition 03 Closeout](docs/current/LIVING_EXPEDITION_03_CLOSEOUT.md)
+- [Living Expedition 04 Plan](docs/current/LIVING_EXPEDITION_04_PLAN.md)
 - [Historical OceanGame Phase 2 Foundation Roadmap](docs/planning/OCEANGAME_PHASE_2_ROADMAP.md)
 - [Expedition Adaptation Direction](docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md)
 - [Capability And Resource Progression Framework](docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md)

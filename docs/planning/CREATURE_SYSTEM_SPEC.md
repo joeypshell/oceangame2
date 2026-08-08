@@ -1,10 +1,10 @@
 # Creature System Spec
 
-Date: 2026-08-05
+Date: 2026-08-08
 
-Status: Active planning contract. Living Expeditions 01 and 02 implement the
-focused Spark Ray and Veil Cuttle runtimes, bounded two-individual profile,
-compact habitat, and one active next-sortie selection.
+Status: Active planning contract. Living Expeditions 01-03 implement the focused
+Spark Ray and Veil Cuttle runtimes, bounded two-individual profile, compact
+habitat, active next-sortie selection, and Mica's first ecological adaptation.
 
 ## Purpose
 
@@ -25,8 +25,9 @@ owner-approved milestone selects one.
 
 - The implemented roster has exactly two rescued individuals, one compact boat
   habitat, and one active companion slot per launched sortie.
-- The selected next proof deepens Mica's ecological sensing and adaptation; it
-  does not add another individual or enlarge the habitat.
+- The selected next proof compares how existing Kite and Mica builds change one
+  territorial eel encounter; it does not add another individual or enlarge the
+  habitat.
 - Acquisition begins through observation, aid, rescue, or trust, not an abstract
   capture device.
 - Species provide a body plan, instincts, possible memories, adaptations, and
@@ -265,6 +266,18 @@ reviewed variant for each adaptation. Before adaptation, committed riding provid
 direct movement and one non-damaging `glide_surge`. The two branches are mutually
 exclusive for this individual.
 
+## Selected Encounter Proof
+
+Living Expedition 04 reuses the existing eel to compare companion roles. Drift-
+Lens Mica may read threat phase, direction, territory, and recovery without
+mutating the hostile. Guardian-Pulse Kite may create a temporary non-damaging
+opening without changing health or exposing a harvest. The Shock Prod remains
+the direct-damage owner, and only defeat exposes the existing electrocyte.
+
+Anchor-Fins Kite receives no invented combat action. The proof adds no new
+memory, adaptation, individual, hostile, resource, or hard-access capability.
+Detailed boundaries live in `docs/current/LIVING_EXPEDITION_04_PLAN.md`.
+
 ## Validation Surface
 
 Deterministic checks should prove:
@@ -292,7 +305,8 @@ close those questions.
 
 ## Deferred Systems
 
-- third and later species or broad stable management
+- third and later species or broad stable management before the selected Living
+  Expedition 04 encounter receives a player verdict
 - free-form naming UI
 - feeding, care schedules, bond meters, and personality conflicts
 - eggs, breeding, fusion, genes, and inherited techniques
