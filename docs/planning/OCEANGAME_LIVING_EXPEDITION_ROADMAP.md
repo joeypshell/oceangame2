@@ -1,6 +1,6 @@
 # OceanGame Living Expedition Roadmap
 
-Date: 2026-08-05
+Date: 2026-08-08
 
 Status: Active product roadmap. The completed diver-expedition work remains the
 runtime foundation; this roadmap owns future product direction.
@@ -116,14 +116,17 @@ boat habitat, one active next-sortie selection, Mica's independent sensing role,
 Kite's retained mounted role, optional Reveal Trace evidence, equipment-gate
 safety, and deterministic journey/visual/Web evidence.
 
+**Living Expedition 03: Field Roles And Ecological Discovery** is implemented
+and closed with owner GO on corrected exact-Web runtime `0e92dd7`. It proves one
+Mica-revealed jellyfish migration, held Scanner identification, exact-once boat
+commitment, deliberate night consolidation, and next-sortie Drift Lens without
+changing topology, hard access, hazard authority, or rewards.
+
 ### Committed
 
-**Living Expedition 03: Field Roles And Ecological Discovery** is selected in
-`docs/current/LIVING_EXPEDITION_03_PLAN.md`. It uses the existing Mica and
-southwest jellyfish bloom to prove one deliberate observation, canonical-boat
-commitment, exact-once memory, night consolidation, and next-sortie Drift Lens
-field skill. It changes no topology, roster, hard access, hazard authority, or
-reward economy.
+None. The next repository audit may select one bounded directional milestone.
+Do not create an implementation batch until that audit records its goal,
+boundaries, ownership, and player exit question.
 
 ### Directional
 
@@ -149,14 +152,17 @@ habitats, deeper combat, more region production, final art/audio, accessibility,
 controller support, balance, and save hardening. They remain intentionally
 unticketed.
 
-## Selected Milestone Batch
+## Latest Completed Milestone Batch
 
-Living Expedition 03 uses the ten-stage dependency order in
+Living Expedition 03 completed the ten-stage dependency order in
 `docs/current/LIVING_EXPEDITION_03_PLAN.md`: contract, schema, source authoring,
 observation/memory state, Drift Lens runtime, integration, deterministic
-evidence, visual decision, exact Web verification, and owner closeout.
+evidence, visual decision, exact Web verification, and owner closeout. Bounded
+owner-feedback corrections clarified the initial lead, replaced misleading
+travel guidance with a local marker, simplified BOND controls, and stopped
+completed migration scans from replaying.
 
-## Completed Milestone Batch
+## Prior Completed Milestone Batch
 
 Living Expedition 02 completed one bounded issue batch in this order:
 
@@ -216,7 +222,7 @@ Control/combat decision:
 - Keep current-runtime truth separate from target-game plans.
 - Historical Phase 2 docs remain implementation records, not active direction.
 - Use one focused issue batch and close with GO, HOLD, or bounded correction.
-- Living Expeditions 01 and 02 received GO; keep Kite and Mica as the complete
+- Living Expeditions 01-03 received GO; keep Kite and Mica as the complete
   current roster until a later reviewed plan selects another species.
 - Do not use automation to claim fun, attachment, or replay motivation.
 - Keep #52/#53 deferred unless slice-03 presentation becomes the selected goal.
@@ -228,5 +234,6 @@ Control/combat decision:
 > alone would not have found, and did turning that shared observation into a
 > useful next-day field skill make you want to choose Mica again?
 
-Do not use automation to answer this question. Keep Living Expedition 04
-directional until the exact-Web Living Expedition 03 owner gate closes.
+Owner GO is recorded in #1285 after the corrected exact-Web review. This closes
+the question for Living Expedition 03 without committing Living Expedition 04;
+the next direction still requires a separate audit.

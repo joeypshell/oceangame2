@@ -1,6 +1,6 @@
 # Milestones
 
-Last updated: 2026-08-06
+Last updated: 2026-08-08
 
 This is the compact milestone index. Detailed direction lives in:
 
@@ -65,6 +65,11 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/LIVING_EXPEDITION_02_VISUAL_DECISION.md`
 - `docs/current/LIVING_EXPEDITION_02_WEB_VERIFICATION.md`
 - `docs/current/LIVING_EXPEDITION_02_CLOSEOUT.md`
+- `docs/current/LIVING_EXPEDITION_03_PLAN.md`
+- `docs/current/LIVING_EXPEDITION_03_SOURCE_STATE_CONTRACT.md`
+- `docs/current/LIVING_EXPEDITION_03_VISUAL_DECISION.md`
+- `docs/current/LIVING_EXPEDITION_03_WEB_VERIFICATION.md`
+- `docs/current/LIVING_EXPEDITION_03_CLOSEOUT.md`
 
 ## Current State
 
@@ -86,26 +91,26 @@ Living Expedition is the active product phase. It retains real-time daylight sor
 
 **[Living Expedition 02: Small Stable And Species Identity](https://github.com/joeypshell/oceangame2/milestone/46)** is complete with owner GO. Kite and Mica now occupy one compact canonical-boat habitat, exactly one is selected for a launched sortie, and their mounted mobility/protection versus independent sensing roles remain distinct without passive bonuses or equipment-gate bypass.
 
-**Living Expedition 03: Field Roles And Ecological Discovery** is selected in `docs/current/LIVING_EXPEDITION_03_PLAN.md`. It will test whether Mica can reveal the existing southwest jellyfish migration, carry that shared observation through boat return and night consolidation, and deliberately read authored jellyfish patrols later without disabling hazards or replacing equipment access.
+**[Living Expedition 03: Field Roles And Ecological Discovery](https://github.com/joeypshell/oceangame2/milestone/47)** is complete with owner GO on corrected exact-Web runtime `0e92dd7`. Mica reveals the existing southwest jellyfish migration, carries that shared observation through boat return and night consolidation, and deliberately reads authored jellyfish patrols later without disabling hazards or replacing equipment access.
 
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
-- Completed: milestones #45 and #46 prove one adapted Spark Ray, then a bounded two-individual habitat and active species choice.
-- Committed: Living Expedition 03, one bounded Mica ecology journey and Drift Lens field-skill proof; create its implementation milestone from the selected plan.
+- Completed: milestones #45-#47 prove one adapted Spark Ray, a bounded two-individual habitat and active species choice, then one Mica ecology journey and Drift Lens field-skill payoff.
+- Committed: none. A separate direction audit must choose the next bounded milestone after this closeout.
 - Directional: duo combat, habitat legacy, and regional creature journeys remain milestone-level goals only.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Living Expedition milestones #45 and #46 are complete with owner GO. Living Expedition 03 is the selected next plan; its implementation milestone follows that planning gate.
+Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Living Expedition milestones #45-#47 are complete with owner GO. No later milestone or implementation batch is committed.
 
-1. [Living Expedition 02: Small Stable And Species Identity](https://github.com/joeypshell/oceangame2/milestone/46) - complete through #1253-#1262 with focused visual evidence, exact-Web runtime `b639dcf`, and owner GO.
-2. [Living Expedition 01: Spark Ray Adaptation Proof](https://github.com/joeypshell/oceangame2/milestone/45) - complete through #1232/#1235 with exact-Web evidence, bounded guidance correction #1249, and owner GO on corrected gameplay build `c0c7b4e`.
-3. [Expansion 17: Wreck Network Triangulation](https://github.com/joeypshell/oceangame2/milestone/43) - complete with owner GO through #1167 after technical corrections #1175/#1178 and bounded HOLD corrections #1181-#1184; exact reviewed runtime `075a450`.
-4. [Expansion 16: Deeper Wreck Oxygen Return](https://github.com/joeypshell/oceangame2/milestone/42) - complete with owner GO after corrections #1143/#1144/#1151/#1153; exact reviewed runtime `05b482e`.
-5. [Expansion 15: Expedition Planning And Choice](https://github.com/joeypshell/oceangame2/milestone/41) - complete with owner GO after corrections #1113/#1117/#1119; exact reviewed runtime `23f4172`.
+1. [Living Expedition 03: Field Roles And Ecological Discovery](https://github.com/joeypshell/oceangame2/milestone/47) - complete through #1276-#1285 plus bounded corrections #1301/#1303/#1305/#1307/#1308, exact-Web runtime `0e92dd7`, and owner GO.
+2. [Living Expedition 02: Small Stable And Species Identity](https://github.com/joeypshell/oceangame2/milestone/46) - complete through #1253-#1262 with focused visual evidence, exact-Web runtime `b639dcf`, and owner GO.
+3. [Living Expedition 01: Spark Ray Adaptation Proof](https://github.com/joeypshell/oceangame2/milestone/45) - complete through #1232/#1235 with exact-Web evidence, bounded guidance correction #1249, and owner GO on corrected gameplay build `c0c7b4e`.
+4. [Expansion 17: Wreck Network Triangulation](https://github.com/joeypshell/oceangame2/milestone/43) - complete with owner GO through #1167 after technical corrections #1175/#1178 and bounded HOLD corrections #1181-#1184; exact reviewed runtime `075a450`.
+5. [Expansion 16: Deeper Wreck Oxygen Return](https://github.com/joeypshell/oceangame2/milestone/42) - complete with owner GO after corrections #1143/#1144/#1151/#1153; exact reviewed runtime `05b482e`.
 
 ## Completed Expansion 04
 
