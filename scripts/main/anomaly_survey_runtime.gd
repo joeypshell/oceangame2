@@ -72,12 +72,15 @@ func scanner_action(world, player) -> Dictionary:
 	if str(target.get("scanner_subject_mode", "")) == "identify":
 		_interaction.reset()
 		var identification: Dictionary = _identification.activate(world, target)
+		var identification_reason := str(identification.get("reason", "identified"))
+		if identification_reason == "already_identified":
+			_scanner_use_held = false
 		var identification_note := str(identification.get("note", ""))
 		if identification_note.is_empty():
 			identification_note = _scanner_feedback.identification_note(target)
 		return _note_result(
 			bool(identification.get("changed", false)),
-			str(identification.get("reason", "identified")),
+			identification_reason,
 			identification_note,
 			{"target_id": target_id, "identified": bool(identification.get("identified", false))}
 		)

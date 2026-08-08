@@ -52,7 +52,7 @@ func show_scanner_action(action_result: Dictionary, runtime_report: Dictionary, 
 	if not _scanner_unlocked:
 		return
 	var reason := str(action_result.get("reason", ""))
-	if reason in ["blueprint_required", "project_required", "scanner_required"]:
+	if reason in ["blueprint_required", "project_required", "scanner_required", "already_identified"]:
 		return
 	if not _active and not _held:
 		_pulse_remaining = MISS_PULSE_SECONDS

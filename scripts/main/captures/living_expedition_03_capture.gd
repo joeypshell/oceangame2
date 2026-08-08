@@ -159,6 +159,7 @@ func _complete_identification() -> bool:
 	var identified: Dictionary = _main._anomaly_survey.update(_main._world, _main._player, 0.8)
 	_main._player.sync_scanner_presentation(_main._anomaly_survey.report())
 	_main._active_tool_runtime.release_use()
+	_main._companion_sortie.control_runtime()._process(0.0)
 	_main._last_status_note = "Migration identified | Return to the surface boat with Mica"
 	_main._update_status_label()
 	var ecology: Dictionary = _main._companion_sortie.memory_report().get("ecology", {})

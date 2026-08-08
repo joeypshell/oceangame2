@@ -18,6 +18,7 @@ EXPECTED_CHECKPOINT = "living_expedition_03_start"
 EXPECTED_SUBJECT = "source-derived moving-hazard migration filament"
 EXPECTED_STATES = (
     "mica_reaction",
+    "reveal_trace_ready",
     "migration_filament",
     "held_scanner_identification",
     "pending_return",

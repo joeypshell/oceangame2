@@ -99,7 +99,7 @@ func record_identification(
 		"species_id": str(opportunity.get("species_id", "")),
 	}
 	var value := _result(true, "observation_pending", trace, opportunity)
-	value["note"] = "Bloom migration identified | Return to the canonical boat"
+	value["note"] = "Migration identified with Mica | Return to surface boat"
 	return _remember(value)
 
 
