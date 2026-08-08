@@ -16,6 +16,12 @@ func bind_completion_sink(completion_sink: Callable) -> void:
 func activate(world, target: Dictionary) -> Dictionary:
 	if not _requires_hold(target):
 		return _complete(world, target)
+	if _is_already_identified(world, target):
+		_interaction.reset()
+		_active_target = {}
+		var identified := _result(false, "already_identified", target)
+		identified["note"] = "Migration already identified with Mica | Return to surface boat"
+		return identified
 	_active_target = target.duplicate(true)
 	var result: Dictionary = _interaction.activate(_timed_target(target))
 	result["reason"] = "activated"
@@ -103,6 +109,16 @@ func _timed_target(target: Dictionary) -> Dictionary:
 
 func _requires_hold(target: Dictionary) -> bool:
 	return str(target.get("source_type", "")) == ECOLOGICAL_TRACE_TYPE
+
+
+func _is_already_identified(world, target: Dictionary) -> bool:
+	if world == null or not world.has_method("get_ecological_traces"):
+		return false
+	var source_id := str(target.get("source_id", ""))
+	for trace in world.get_ecological_traces():
+		if str(trace.get("id", "")) == source_id:
+			return str(trace.get("state", "hidden")) == "identified"
+	return false
 
 
 func _label(target: Dictionary) -> String:

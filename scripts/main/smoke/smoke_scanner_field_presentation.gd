@@ -37,6 +37,13 @@ func _run() -> void:
 	player.sync_scanner_presentation(_runtime_report(false, 0.0, "", Vector2.ZERO, "progression", false))
 	presentation = player.get_scanner_presentation_report()
 	_expect(not bool(presentation.get("visible", true)), "scanner field remained visible after input release")
+	player.show_scanner_action(
+		{"reason": "already_identified"},
+		_runtime_report(false, 0.0, "", Vector2.ZERO, "identify", false)
+	)
+	presentation = player.get_scanner_presentation_report()
+	_expect(not bool(presentation.get("visible", true)), "already-identified ecology result showed another Scanner pulse")
+	_expect(is_zero_approx(float(presentation.get("pulse_remaining", 1.0))), "already-identified ecology result retained a miss pulse")
 
 	var right_anchor: Vector2 = player.global_position + Vector2(120.0, 18.0)
 	var active_report := _runtime_report(true, 0.42, "artifact_subject", right_anchor)
@@ -94,7 +101,7 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: scanner field range_tiles=6 half_angle=30 held=continuous release=clear active=progression subject=bracketed card=name+type+hold progress=compact identify=held_no_reward mobile_use=held_action generic_rings=removed completed_transponders=badge+signal_off debug_outline=available.")
+	print("PASS: scanner field range_tiles=6 half_angle=30 held=continuous release=clear repeat_identification=no_pulse active=progression subject=bracketed card=name+type+hold progress=compact identify=held_no_reward mobile_use=held_action generic_rings=removed completed_transponders=badge+signal_off debug_outline=available.")
 	quit(0)
 
 
