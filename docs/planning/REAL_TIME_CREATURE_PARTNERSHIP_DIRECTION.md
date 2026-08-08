@@ -1,8 +1,9 @@
 # Real-Time Creature Partnership Direction
 
-Status: selected product direction. Living Expeditions 01 and 02 implement the
-focused Spark Ray command/riding proof plus a bounded two-individual stable and
-Veil Cuttle sensing role; broader ecology and combat direction remains planned.
+Status: selected product direction. Living Expeditions 01-03 implement the
+focused Spark Ray command/riding proof, a bounded two-individual stable, and
+Mica's first ecological sensing adaptation. Living Expedition 04 selects one
+companion-shaped wildlife encounter as the next proof.
 
 ## Decision
 
@@ -93,6 +94,11 @@ actions may answer with movement, defense, control, rescue, or damage according
 to the individual's build. Enemy intent, target, range, action, hit or miss,
 knockback, recovery, and cooldown must remain readable.
 
+The selected Living Expedition 04 proof applies that rule to the existing eel:
+Mica reads intent without mutating it, Guardian-Pulse Kite creates a temporary
+non-damaging opening, and only the diver's Shock Prod can defeat it and expose
+the existing electrocyte harvest. The proof does not add a general combat layer.
+
 Small familiarity gains may later improve handling, but major growth comes from
 exact-once meaningful memories and deliberate night consolidation. Repetition or
 button spam cannot create major adaptations.
@@ -116,14 +122,14 @@ replacing the Shock Prod. The proof changes no terrain topology.
 
 - turn-based or party combat
 - more than one active companion
-- a third species or broad stable-management UI before the selected Mica
-  ecological field-role proof
+- a third species or broad stable-management UI before the selected Living
+  Expedition 04 encounter receives a player verdict
 - broad weapon, ability, or combat-framework replacement
 - creature health, permanent injury, death, breeding, fusion, or lineage
 - general ecosystem simulation
 
-## Success Question
+## Selected Next Question
 
-Does commanding and riding the same visibly adapting individual create enough
-attachment, build curiosity, and mechanical difference to make the player want
-another expedition?
+Does choosing Kite or Mica create a different, understandable way to handle the
+same eel, and does the nonlethal-opening versus Shock-Prod-harvest choice feel
+like a real expedition decision?

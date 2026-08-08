@@ -124,21 +124,23 @@ changing topology, hard access, hazard authority, or rewards.
 
 ### Committed
 
-None. The next repository audit may select one bounded directional milestone.
-Do not create an implementation batch until that audit records its goal,
-boundaries, ownership, and player exit question.
+**Living Expedition 04: Companion-Shaped Wildlife Encounter** is selected in
+`docs/current/LIVING_EXPEDITION_04_PLAN.md`. It will compare Mica's informational
+read, Kite's non-damaging interruption, ordinary evade, and Shock-Prod
+defeat/harvest against the existing territorial eel without adding another
+enemy, species, resource, region, or combat framework.
+
+The implementation milestone and issue batch are intentionally not created by
+the planning-gate run. A later audit may create only that bounded batch.
 
 ### Directional
 
 Only milestone-level goals are selected beyond the committed proof:
 
-1. **Living Expedition 04: Duo Combat And Wildlife Consequences**
-   Expand real-time diver-and-companion tactics, enemy behavior, nonlethal
-   responses, and bounded wildlife resources.
-2. **Living Expedition 05: Growth, Release, And Habitat Legacy**
+1. **Living Expedition 05: Growth, Release, And Habitat Legacy**
    Test voluntary retirement or release, one bounded legacy trait, and visible
    habitat consequences without forced death or a simulation rewrite.
-3. **Living Expedition 06: Regional Creature Journeys**
+2. **Living Expedition 06: Regional Creature Journeys**
    Add memorable regions whose equipment access, species ecology, mysteries,
    and return reasons are planned together through the JSON map pipeline.
 
@@ -228,12 +230,12 @@ Control/combat decision:
 - Keep #52/#53 deferred unless slice-03 presentation becomes the selected goal.
 - Preserve the 500-line agent-efficiency target without harmful runtime splits.
 
-## Living Expedition 03 Exit Question
+## Living Expedition 04 Exit Question
 
-> Did Mica help you notice and understand a living migration that the Scanner
-> alone would not have found, and did turning that shared observation into a
-> useful next-day field skill make you want to choose Mica again?
+> Did choosing Kite or Mica give you a different, understandable way to handle
+> the same eel, and did choosing between a nonlethal opening and a Shock-Prod
+> harvest feel like a real expedition decision?
 
-Owner GO is recorded in #1285 after the corrected exact-Web review. This closes
-the question for Living Expedition 03 without committing Living Expedition 04;
-the next direction still requires a separate audit.
+The planning contract is selected through #1312. Its implementation milestone
+and issue batch must be created by a later audit, then closed only after exact
+Web evidence and a human owner verdict.

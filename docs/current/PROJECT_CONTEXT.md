@@ -50,7 +50,7 @@ Expansion 17 Wreck Network Triangulation is complete with owner GO through #1167
 
 Expansion 18 implements one exceptional `transfer_hub_interior_01` destination reached by swimming through the normal full level to a physical entrance. Its source/state contract, generated maps, continuous sortie, existing-cutter core recovery, deterministic evidence, and exact public build remain valid regression surfaces. It receives no player-experience GO and no further bounded correction pass.
 
-The active direction is one bonded active companion whose credible species roles and meaningful expedition experiences shape real-time independent or mounted play. Living Expeditions 01-03 have owner GO: Kite proves rescue, riding, memory, and adaptation; Kite and Mica occupy one compact canonical-boat habitat with one active sortie selection; and Mica turns one source-authored jellyfish migration observation into the next-day Drift Lens field skill. Diver equipment retains hard geographic access; companions cannot bypass it.
+The active direction is one bonded active companion whose credible species roles and meaningful expedition experiences shape real-time independent or mounted play. Living Expeditions 01-03 have owner GO: Kite proves rescue, riding, memory, and adaptation; Kite and Mica occupy one compact canonical-boat habitat with one active sortie selection; and Mica turns one source-authored jellyfish migration observation into the next-day Drift Lens field skill. Living Expedition 04 is selected as a planning contract for one companion-shaped encounter with the existing eel. Diver equipment retains hard geographic access; companions cannot bypass it.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -87,6 +87,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Living Expedition 02 exact Web evidence: `docs/current/LIVING_EXPEDITION_02_WEB_VERIFICATION.md`
 - Living Expedition 02 owner-GO closeout: `docs/current/LIVING_EXPEDITION_02_CLOSEOUT.md`
 - Living Expedition 03 owner-GO closeout: `docs/current/LIVING_EXPEDITION_03_CLOSEOUT.md`
+- Selected Living Expedition 04 plan: `docs/current/LIVING_EXPEDITION_04_PLAN.md`
 - Foundation history: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - First adaptation proof: `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
@@ -107,7 +108,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
 - Latest owner decision: Living Expedition 03 received GO on corrected exact-Web runtime `0e92dd7` after bounded guidance, local-cue, BOND-control, and repeat-scan corrections
 - Latest completed direction: milestone #47 Living Expedition 03 Field Roles And Ecological Discovery, implemented through #1276-#1285 and corrections #1301/#1303/#1305/#1307/#1308
-- Selected next direction: none. A separate direction audit must choose one bounded milestone; do not create issues directly from the directional roadmap entries
+- Selected next direction: Living Expedition 04 Companion-Shaped Wildlife Encounter, documented in `docs/current/LIVING_EXPEDITION_04_PLAN.md`; create its implementation milestone and issue batch only in a later audit
 - Completed implementation contract: `docs/current/LIVING_EXPEDITION_03_SOURCE_STATE_CONTRACT.md`; source, transient observation, Scanner, profile, hazard, and Drift Lens ownership remain regression boundaries
 - Living Expedition 03 evidence: `docs/current/LIVING_EXPEDITION_03_VISUAL_DECISION.md`, `docs/current/LIVING_EXPEDITION_03_WEB_VERIFICATION.md`, and `docs/current/LIVING_EXPEDITION_03_CLOSEOUT.md`; exact runtime `0e92dd7` passed focused visual, responsive Web, touch, deterministic journey, and owner review
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
@@ -398,11 +399,12 @@ Current issue state as of 2026-08-08:
 
 ## Recommended Next Work
 
-Living Expeditions 01-03 are complete with owner GO. No next implementation milestone is committed. Run a separate direction audit to choose at most one bounded milestone from the directional roadmap; do not extend the old clue/recipe/gate cadence or create detailed issues before that decision. Keep #52/#53 deferred.
+Living Expeditions 01-03 are complete with owner GO. Living Expedition 04 is the selected planning contract, but no implementation milestone or batch exists yet. The next audit should create only that bounded batch; do not extend the old clue/recipe/gate cadence or start later directional milestones. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 
 - Treat Living Expedition as the active product direction and a bounded current runtime proof. Preserve one active companion, species-plus-experience roles, deliberate real-time commands, committed-bond riding, meaningful experience rather than XP grinding, night consolidation, visible adaptation, and the equipment-versus-companion boundary.
+- Keep Living Expedition 04 to the existing eel: Mica reads behavior, Guardian-Pulse Kite creates a non-damaging opening, the Shock Prod owns damage, and only defeat exposes the existing electrocyte harvest.
 - Use toggle `B/BOND` and a maximum-three-action 20-percent slow-time palette. Desktop `1`-`3` directly activates the matching labeled command; `B` or `Esc` closes. Touch uses sequential `BOND`, `TOOL`, and `USE` taps. Mounted play transfers movement and hotbar ownership to creature actions; dismount restores diver tools. Do not reuse `Q` or `E/ACT` for the companion.
 - Riding cannot bypass fins, darkness, pressure, collision, oxygen, daylight, health, cargo, boat, or failure authority.
 - Keep Kite and Mica as the complete current roster and the habitat compact; do not add a third species, broad stable UI, turn-based or broad combat framework, creature health/death, or ecosystem simulation without a later reviewed plan.

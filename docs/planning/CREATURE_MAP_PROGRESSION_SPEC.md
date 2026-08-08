@@ -1,10 +1,11 @@
 # Creature Map Progression Spec
 
-Date: 2026-08-05
+Date: 2026-08-08
 
-Status: Active source/planning contract. Living Expeditions 01 and 02 implement
-two rescues, one compact habitat, Spark Ray memory/payoff relationships, and one
-optional Veil Cuttle trace through the source pipeline.
+Status: Active source/planning contract. Living Expeditions 01-03 implement two
+rescues, one compact habitat, Spark Ray memory/payoff relationships, and Mica's
+source-linked jellyfish migration observation and Drift Lens payoff. Living
+Expedition 04 selects one existing-eel relationship as its next source proof.
 
 ## Purpose
 
