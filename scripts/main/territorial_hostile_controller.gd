@@ -242,6 +242,35 @@ func state_for(hostile_id: String) -> Dictionary:
 	return (_states[hostile_id] as Dictionary).duplicate(true)
 
 
+func intent_snapshot_for(hostile_id: String, projected_target = null) -> Dictionary:
+	if not _states.has(hostile_id):
+		return {}
+	var state: Dictionary = _states[hostile_id]
+	var phase := str(state.get("phase", PHASE_HOME))
+	var position: Vector2 = state.get("position", Vector2.ZERO)
+	var territory: Rect2 = state.get("territory_rect", Rect2())
+	var lunge_target := position
+	if phase == PHASE_LUNGE:
+		lunge_target = state.get("lunge_target", position)
+	elif phase == PHASE_WARNING and projected_target is Vector2:
+		lunge_target = _clamp_to_territory(projected_target as Vector2, territory)
+	return {
+		"id": hostile_id,
+		"kind": str(state.get("kind", "territorial_hostile")),
+		"phase": phase,
+		"position": position,
+		"home_center": state.get("home_center", Vector2.ZERO),
+		"projected_lunge_target": lunge_target,
+		"movement_direction": position.direction_to(lunge_target),
+		"territory_rect": territory,
+		"phase_seconds": float(state.get("phase_seconds", 0.0)),
+		"warning_seconds": float(state.get("warning_seconds", 0.0)),
+		"lunge_seconds": float(state.get("lunge_seconds", 0.0)),
+		"recovery_seconds": float(state.get("recovery_seconds", 0.0)),
+		"defeated": phase == PHASE_DEFEATED,
+	}
+
+
 func _load_sources(world) -> void:
 	_states = {}
 	_current_prompt = ""

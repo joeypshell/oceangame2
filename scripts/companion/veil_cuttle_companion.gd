@@ -126,10 +126,29 @@ func show_drift_projection(
 	path_points: Array,
 	current_center: Vector2,
 	movement_direction: Vector2,
-	approaching: bool
+	approaching: bool,
+	details: Dictionary = {}
 ) -> void:
-	if _drift_projection != null:
-		_drift_projection.show_projection(path_points, current_center, movement_direction, approaching)
+	if _drift_projection == null:
+		return
+	var local_path := []
+	for point in path_points:
+		local_path.append((point as Vector2) - global_position)
+	var local_details := details.duplicate(true)
+	var territory: Rect2 = local_details.get("territory_rect", Rect2())
+	if territory.size != Vector2.ZERO:
+		local_details["territory_rect"] = Rect2(territory.position - global_position, territory.size)
+	if local_details.get("projected_lunge_target") is Vector2:
+		local_details["projected_lunge_target"] = (
+			local_details.get("projected_lunge_target", current_center) as Vector2
+		) - global_position
+	_drift_projection.show_projection(
+		local_path,
+		current_center - global_position,
+		movement_direction,
+		approaching,
+		local_details
+	)
 
 
 func clear_drift_projection() -> void:

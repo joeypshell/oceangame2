@@ -234,6 +234,12 @@ def godot_gates(godot: str) -> list[Gate]:
             fail_on_godot_error=True,
         ),
         Gate(
+            "smoke: Veil Cuttle hostile intent",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_veil_cuttle_hostile_intent.gd"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
             "smoke: Living Expedition 01 journey",
             [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_living_expedition_01_journey.gd", "--review-checkpoint=living_expedition_01_start"],
             godot_backed=True,

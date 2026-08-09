@@ -48,13 +48,13 @@ func bind_ecology_observation_sink(observation_sink: Callable) -> void:
 	_ecology_observation_sink = observation_sink
 
 
-func bind_map(world, player, companion, moving_hazards = null) -> void:
+func bind_map(world, player, companion, moving_hazards = null, hostiles = null) -> void:
 	clear_map()
 	_world = world
 	_player = player
 	_companion = companion
 	_trace.bind_map(world, player, companion, moving_hazards)
-	_drift_lens.bind_map(world, player, companion, moving_hazards)
+	_drift_lens.bind_map(world, player, companion, moving_hazards, hostiles)
 	_refresh_presentation()
 
 
