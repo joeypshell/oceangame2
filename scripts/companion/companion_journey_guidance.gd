@@ -1,10 +1,14 @@
 extends RefCounted
 
+const CompanionHostileJourneyGuidance := preload("res://scripts/companion/companion_hostile_journey_guidance.gd")
+
 const ACTIVE_PHASE := "active"
 const ANCHOR_FINS := "anchor_fins"
 const GUARDIAN_PULSE := "guardian_pulse"
 const VEIL_CUTTLE := "veil_cuttle"
 const VEIL_CUTTLE_TRACE_ID := "southwest_bloom_migration_trace"
+
+var _hostile_guidance := CompanionHostileJourneyGuidance.new()
 
 
 func objective_text(world, player, profile, sortie_runtime, day_state) -> String:
@@ -39,6 +43,9 @@ func objective_text(world, player, profile, sortie_runtime, day_state) -> String
 		if not at_boat:
 			return "PARTNER: Return to the surface boat to begin a new dive with %s" % callsign
 		if (profile_report.get("individuals", []) as Array).size() > 1:
+			var choice_text := _hostile_guidance.boat_choice_text(world, profile_report)
+			if not choice_text.is_empty():
+				return choice_text
 			return "PARTNERS: BOND opens habitat | Tab/TOOL chooses the next partner | Space/USE confirms"
 		if int(day_state.sortie_count) > 0:
 			return "PARTNER: %s bonded | Press N at the boat to end the day | %s joins next dive" % [callsign, callsign]
@@ -48,10 +55,14 @@ func objective_text(world, player, profile, sortie_runtime, day_state) -> String
 	var control_report: Dictionary = control.report() if control != null else {}
 	if bool(control_report.get("command_mode", false)):
 		return "PARTNER: BOND open | Press 1, 2, or 3 to activate | B/Esc closes"
+	if species_id != VEIL_CUTTLE:
+		var encounter_text := _hostile_guidance.active_text(world, individual, sortie_runtime.report())
+		if not encounter_text.is_empty():
+			return encounter_text
 	if bool(control_report.get("mounted", false)):
 		return _mounted_text(callsign, adaptation_id)
 	if species_id == VEIL_CUTTLE:
-		return _veil_cuttle_text(world, callsign, individual, memory_report.get("ecology", {}), at_boat)
+		return _veil_cuttle_text(world, callsign, individual, memory_report.get("ecology", {}), at_boat, sortie_runtime.report())
 	return _independent_text(callsign, adaptation_id)
 
 
@@ -71,7 +82,14 @@ func _mounted_text(callsign: String, adaptation_id: String) -> String:
 	return "PARTNER: Riding %s | Tab/TOOL selects Glide Surge | Space/USE activates | seek lower-right current or eel" % callsign
 
 
-func _veil_cuttle_text(world, callsign: String, individual: Dictionary, ecology: Dictionary, at_boat: bool) -> String:
+func _veil_cuttle_text(
+	world,
+	callsign: String,
+	individual: Dictionary,
+	ecology: Dictionary,
+	at_boat: bool,
+	sortie_report: Dictionary
+) -> String:
 	if not str(ecology.get("pending_observation_id", "")).is_empty():
 		return "PARTNER: Jellyfish migration identified with %s | Return to the surface boat together" % callsign
 	var earned_memory_ids: Array = individual.get("earned_memory_ids", [])
@@ -83,6 +101,9 @@ func _veil_cuttle_text(world, callsign: String, individual: Dictionary, ecology:
 			else "PARTNER: Shared bloom memory secured | Return to the boat, then press N"
 		)
 	if adaptation_id == "drift_lens":
+		var encounter_text := _hostile_guidance.active_text(world, individual, sortie_report)
+		if not encounter_text.is_empty():
+			return encounter_text
 		return "PARTNER: Drift Lens ready | Near moving jellyfish press B, then 3: Read Drift"
 	var trace_state := _ecological_trace_state(world)
 	if trace_state == "identified":
@@ -112,6 +133,7 @@ func _dependencies_valid(world, player, profile, sortie_runtime, day_state) -> b
 		and sortie_runtime != null
 		and sortie_runtime.has_method("memory_report")
 		and sortie_runtime.has_method("companion")
+		and sortie_runtime.has_method("report")
 		and day_state != null
 		and world.has_method("is_inside_boat")
 	)
