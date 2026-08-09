@@ -31,7 +31,7 @@ The capacitor modifies the selected shock prod; it is not another tool.
 Create named Godot actions:
 
 - `active_tool_cycle_next`: keyboard `Tab`; mobile `TOOL`
-- `active_tool_use`: keyboard `Q`; mobile `USE`
+- `active_tool_use`: keyboard `Space`; mobile `USE`
 
 Future controller bindings attach to these actions rather than bypassing the
 active-tool controller. Direct numbered selection and reverse cycling are

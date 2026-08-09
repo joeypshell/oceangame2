@@ -71,7 +71,7 @@ func _smoke_expansion_06_combat_foundation_and_quit() -> void:
 	_press_key(KEY_P)
 	if not _require(profile.has_completed_project(PROJECT_ID) and profile.has_capability(CAPABILITY_ID), "debrief did not complete the shock prod transaction"):
 		return
-	if not _require(_main._result_label.text.find("Shock prod built") != -1 and _main._result_label.text.find("Tab select Shock prod") != -1 and _main._result_label.text.find("Q at short range") != -1 and _main._result_label.text.find("1 health damage") != -1, "debrief did not explain what P built or how the shock prod works"):
+	if not _require(_main._result_label.text.find("Shock prod built") != -1 and _main._result_label.text.find("Tab select Shock prod") != -1 and _main._result_label.text.find("Space/USE at short range") != -1 and _main._result_label.text.find("1 health damage") != -1, "debrief did not explain what P built or how the shock prod works"):
 		return
 	if not _require(profile.material_inventory().is_empty(), "shock prod transaction did not spend the exact recipe"):
 		return

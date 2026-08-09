@@ -166,7 +166,7 @@ func _wrong_context(tool_id: String) -> Dictionary:
 		return {"status": "wrong_context", "note": "%s | Tab Cutter | Space/USE" % _target_label(cutter_target, "Sealed wreck")}
 
 	if not _hostile_target().is_empty() and tool_id != ActiveToolController.SHOCK_PROD_TOOL_ID and _main._material_project.has_shock_prod():
-		return {"status": "wrong_context", "note": "Eel in range | Tab Shock prod | Q Use"}
+		return {"status": "wrong_context", "note": "Eel in range | Tab Shock prod | Space/USE"}
 
 	var survey_target: Dictionary = _main._anomaly_survey.active_tool_target(_main._world, _main._player)
 	if not survey_target.is_empty() and tool_id != ActiveToolController.SCANNER_TOOL_ID and _main._anomaly_survey.has_scanner():

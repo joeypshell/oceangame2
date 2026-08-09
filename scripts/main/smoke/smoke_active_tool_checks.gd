@@ -151,6 +151,14 @@ func smoke_checkpoint_shock_prod_and_quit() -> void:
 	if wrong_tool_prompt.find("Tab/TOOL select Shock prod") == -1 or wrong_tool_prompt.find("Space/USE") == -1:
 		_fail("Encounter did not explain selected-tool use: %s." % wrong_tool_prompt)
 		return
+	var wrong_tool_use: Dictionary = _main._active_tool_runtime.use()
+	if (
+		str(wrong_tool_use.get("status", "")) != "wrong_context"
+		or str(wrong_tool_use.get("note", "")).find("Space/USE") == -1
+		or str(wrong_tool_use.get("note", "")).find("Q Use") != -1
+	):
+		_fail("Wrong-tool handoff drifted from Space/USE: %s." % wrong_tool_use)
+		return
 	_main._update_status_label()
 	if _main._status_label.text.find(wrong_tool_prompt) == -1:
 		_fail("Selected-tool encounter guidance did not reach the status overlay: %s." % _main._status_label.text)
