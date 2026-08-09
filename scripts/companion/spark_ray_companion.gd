@@ -174,13 +174,21 @@ func set_guardian_pulse(
 	range_px: float,
 	target_distance: float,
 	progress: float,
-	cue_state: String
+	cue_state: String,
+	cue_duration := 1.0
 ) -> void:
 	_guardian_charging = active
 	if active:
 		velocity = Vector2.ZERO
 	if _presentation != null:
-		_presentation.show_guardian_pulse(direction, range_px, target_distance, progress, cue_state)
+		_presentation.show_guardian_pulse(
+			direction,
+			range_px,
+			target_distance,
+			progress,
+			cue_state,
+			cue_duration
+		)
 	_sync_presentation()
 
 
