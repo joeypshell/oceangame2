@@ -151,6 +151,10 @@ func smoke_checkpoint_shock_prod_and_quit() -> void:
 	if wrong_tool_prompt.find("Tab/TOOL select Shock prod") == -1 or wrong_tool_prompt.find("Space/USE") == -1:
 		_fail("Encounter did not explain selected-tool use: %s." % wrong_tool_prompt)
 		return
+	_press_action("active_tool_cycle_next")
+	if _main._active_tools.selected_tool_id() != ActiveToolController.CUTTER_TOOL_ID:
+		_fail("Wrong-tool handoff fixture did not select Cutter.")
+		return
 	var wrong_tool_use: Dictionary = _main._active_tool_runtime.use()
 	if (
 		str(wrong_tool_use.get("status", "")) != "wrong_context"
@@ -163,7 +167,6 @@ func smoke_checkpoint_shock_prod_and_quit() -> void:
 	if _main._status_label.text.find(wrong_tool_prompt) == -1:
 		_fail("Selected-tool encounter guidance did not reach the status overlay: %s." % _main._status_label.text)
 		return
-	_press_action("active_tool_cycle_next")
 	_press_action("active_tool_cycle_next")
 	if _main._active_tools.selected_tool_id() != ActiveToolController.SHOCK_PROD_TOOL_ID:
 		_fail("Real cycle input did not select Shock Prod: %s." % _main._active_tools.report(Callable(profile, "has_capability")))
