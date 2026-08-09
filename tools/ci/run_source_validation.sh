@@ -11,6 +11,7 @@ python tools/test_validate_expansion_14_contract.py
 python tools/test_validate_southeast_wreck_return.py
 python tools/test_validate_tool_target_rewards.py
 python tools/test_validate_living_expedition_schema.py
+python tools/test_living_expedition_04_contract.py
 python tools/test_progression_graph_creatures.py
 python tools/test_production_level_01_living_expedition_01.py
 python tools/test_production_level_01_living_expedition_02.py

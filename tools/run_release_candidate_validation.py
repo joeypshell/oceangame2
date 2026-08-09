@@ -63,6 +63,7 @@ def base_gates() -> list[Gate]:
         Gate("progression: graph fixtures", python_command("tools/test_progression_graph.py")),
         Gate("progression: source graph audit", python_command("tools/audit_progression_graph.py")),
         Gate("creatures: living expedition schema fixtures", python_command("tools/test_validate_living_expedition_schema.py")),
+        Gate("creatures: Living Expedition 04 relationship fixtures", python_command("tools/test_living_expedition_04_contract.py")),
         Gate("creatures: progression graph fixtures", python_command("tools/test_progression_graph_creatures.py")),
         Gate("creatures: Living Expedition 03 source", python_command("tools/test_production_level_01_living_expedition_03.py")),
         Gate("assets: manifest paths", python_command("tools/check_asset_manifest.py")),
