@@ -1720,6 +1720,38 @@
       "availability": "all_supported_seeds",
       "terrain_changes": [],
       "intent": "Replace the anonymous Mica trace with one source-linked bloom migration observation and independent next-sortie field payoff."
+    },
+    "living_expedition_04": {
+      "source": "tools/production_level_01_living_expedition_04.py",
+      "relationship_ids": [
+        "deep_cache_eel_companion_response"
+      ],
+      "hostile_ids": [
+        "deep_cache_territorial_eel"
+      ],
+      "guarded_salvage_ids": [
+        "salvage_deep_right_cache"
+      ],
+      "hostile_harvest_ids": [
+        "deep_cache_eel_electrocyte_harvest"
+      ],
+      "companion_action_ids": [
+        "read_drift",
+        "guardian_pulse_action"
+      ],
+      "review_context_ids": [
+        "living_expedition_04_eel_review_01"
+      ],
+      "camera_test_ids": [
+        "living_expedition_04_eel_review_camera_01"
+      ],
+      "derived_review_anchor": {
+        "x": 123.0,
+        "y": 75.0
+      },
+      "availability": "all_supported_seeds",
+      "terrain_changes": [],
+      "intent": "Reference existing encounter owners without copying geometry or mutable state."
     }
   },
   "units": {
@@ -6855,6 +6887,13 @@
       "center_y": 78,
       "zoom": 0.58,
       "intent": "Southwest bloom patrol, migration filament, and Mica observation review."
+    },
+    {
+      "id": "living_expedition_04_eel_review_camera_01",
+      "center_x": 123.0,
+      "center_y": 75.0,
+      "zoom": 0.64,
+      "intent": "Existing eel, guarded cache, diver, and active companion response review."
     }
   ],
   "review_questions": [
@@ -6891,7 +6930,10 @@
     "Does Mica's rescue read as physical aid in a reachable existing chamber?",
     "Does the optional trace remain clearly separate from scanner identification and progression?",
     "Does the migration trace read as evidence connected to the moving southwest bloom?",
-    "Does the relationship remain optional, rewardless, reachable, and separate from hazard authority?"
+    "Does the relationship remain optional, rewardless, reachable, and separate from hazard authority?",
+    "Does Mica make the eel's territorial phase and direction readable without changing it?",
+    "Does Guardian Pulse create a clear zero-damage opening while Shock Prod remains defeat authority?",
+    "Can the player still evade, attempt the cache, and understand that harvest requires defeat?"
   ],
   "wreck_network_investigations": [
     {
@@ -7150,6 +7192,39 @@
       "adaptation_payoff_id": "veil_cuttle_drift_lens_payoff_01",
       "availability": "all_supported_seeds",
       "intent": "Mica reveals a migration filament derived from the linked active jellyfish patrol; the Scanner identifies the relationship."
+    }
+  ],
+  "companion_hostile_responses": [
+    {
+      "id": "deep_cache_eel_companion_response",
+      "kind": "companion_hostile_response",
+      "hostile_id": "deep_cache_territorial_eel",
+      "guarded_salvage_id": "salvage_deep_right_cache",
+      "hostile_harvest_id": "deep_cache_eel_electrocyte_harvest",
+      "review_context_id": "living_expedition_04_eel_review_01",
+      "responses": [
+        {
+          "species_id": "veil_cuttle",
+          "individual_id": "veil_cuttle_juvenile_01",
+          "required_adaptation_id": "drift_lens",
+          "action_id": "read_drift",
+          "effect_kind": "hostile_intent_read",
+          "mutation": "none"
+        },
+        {
+          "species_id": "spark_ray",
+          "individual_id": "spark_ray_juvenile_01",
+          "required_adaptation_id": "guardian_pulse",
+          "action_id": "guardian_pulse_action",
+          "effect_kind": "support_interrupt",
+          "damage": 0,
+          "required_access_ids": [
+            "shock_prod"
+          ]
+        }
+      ],
+      "availability": "all_supported_seeds",
+      "intent": "Mica reads the existing eel without mutation; Guardian-Pulse Kite may create a zero-damage opening while Shock Prod remains defeat authority."
     }
   ]
 }
