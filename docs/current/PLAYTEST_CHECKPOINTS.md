@@ -1,6 +1,6 @@
 # Playtest Checkpoints
 
-Last updated: 2026-08-06
+Last updated: 2026-08-08
 
 ## Purpose
 
@@ -17,13 +17,15 @@ the routine end-to-end regression layer.
 
 | ID | Starts with | Deliberately incomplete |
 | --- | --- | --- |
+| `living_expedition_04_start` | Day 3 at the canonical boat; Kite and Mica committed and adapted; Mica active; Shock Prod and prior required progression available; empty cargo | Companion-shaped territorial-eel approach, defeat-only harvest, and owner verdict |
+| `living_expedition_03_start` | Kite and Mica committed; Mica active; prior required progression available | Mica migration observation, night consolidation, and next-sortie Read Drift |
 | `living_expedition_02_start` | Prior required projects/discoveries committed; Cutter and Scanner available; Kite committed and selected; empty cargo | Mica rescue/commitment, two-partner habitat selection, Mica Reveal Trace sortie, and return to Kite |
 | `living_expedition_01_start` | Prior required projects/discoveries committed; Cutter, Fins, and Shock Prod available; empty cargo; no companion | Spark Ray rescue, boat commitment, command/riding proof, shared memory, night adaptation, and Day 3 payoff |
 
 Local:
 
 ```powershell
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=living_expedition_02_start
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=living_expedition_04_start
 ```
 
 The checkpoint forces `production_level_01` and identifies itself in the
@@ -33,15 +35,14 @@ isolated profile.
 Exact public Web candidate:
 
 ```text
-https://joeypshell.github.io/oceangame2/?review=b639dcfeb2e65f8b6e99412b6649c898f8cdd945&checkpoint=living_expedition_02_start
+https://joeypshell.github.io/oceangame2/?review=ce6f23f2fd72939de40bfa78c70d7344da00de46&checkpoint=living_expedition_04_start
 ```
 
 The Pages workflow and independent desktop/mobile checker passed for exact SHA
-`b639dcfeb2e65f8b6e99412b6649c898f8cdd945`. Technical evidence is recorded in
-[Living Expedition 02 Web Verification](LIVING_EXPEDITION_02_WEB_VERIFICATION.md).
-The owner subsequently supplied GO; the result and bounded limitations are
-recorded in [Living Expedition 02 Closeout](LIVING_EXPEDITION_02_CLOSEOUT.md).
-The checkpoint remains a focused regression path rather than the next plan.
+`ce6f23f2fd72939de40bfa78c70d7344da00de46`. Technical evidence is recorded in
+[Living Expedition 04 Web Verification](LIVING_EXPEDITION_04_WEB_VERIFICATION.md).
+The owner verdict remains issue #1323; automation does not decide whether the
+encounter is understandable or motivating.
 
 ## Living Expedition 01 Replay
 
