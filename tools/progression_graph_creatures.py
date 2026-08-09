@@ -12,6 +12,7 @@ COLLECTION_KINDS = {
     "companion_contexts": "companion_context",
     "creature_memory_opportunities": "creature_memory",
     "creature_adaptation_payoffs": "creature_payoff",
+    "companion_hostile_responses": "companion_hostile_response",
 }
 
 
@@ -112,6 +113,9 @@ def add_creature_edges(graph: Any, map_data: dict[str, Any]) -> None:
                 for individual_id in _ids(item.get("individual_ids")):
                     graph.add_edge(key, graph.resolve(individual_id), "houses")
                 continue
+            if kind == "companion_hostile_response":
+                _companion_hostile_response_edges(graph, key, item, map_id)
+                continue
             individual_id = str(item.get("individual_id", ""))
             species_individuals = rescue_ids_by_species.get(str(item.get("species_id", "")), [])
             if not individual_id and len(species_individuals) == 1:
@@ -146,3 +150,20 @@ def add_creature_edges(graph: Any, map_data: dict[str, Any]) -> None:
                     context_id = str(item.get(field, ""))
                     if context_id:
                         graph.add_edge(key, graph.resolve(context_id, map_id), "reviews")
+
+
+def _companion_hostile_response_edges(graph: Any, key: str, item: dict[str, Any], map_id: str) -> None:
+    for field, relation in (
+        ("hostile_id", "targets"),
+        ("guarded_salvage_id", "reviews"),
+        ("hostile_harvest_id", "reviews"),
+    ):
+        raw_id = str(item.get(field, ""))
+        if raw_id:
+            graph.add_edge(key, graph.resolve(raw_id, map_id), relation)
+    for response in _items(item, "responses"):
+        species_id = str(response.get("species_id", ""))
+        _requires(graph, key, str(response.get("individual_id", "")), note=f"{species_id} companion response")
+        _requires(graph, key, str(response.get("required_adaptation_id", "")), note=f"{species_id} adaptation")
+        for access_id in _ids(response.get("required_access_ids")):
+            _requires(graph, key, access_id, note="equipment authority")
