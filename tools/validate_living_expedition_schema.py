@@ -13,6 +13,7 @@ from living_expedition_03_contract import (
     expected_trace_id,
     validate_living_expedition_03_relationship,
 )
+from living_expedition_04_contract import validate_living_expedition_04_relationship
 from validate_full_level_traversal import CollisionField, PlayerBody, map_point, rect_cells, solid_cells
 
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
@@ -23,6 +24,7 @@ COLLECTIONS = (
     "companion_contexts",
     "creature_memory_opportunities",
     "creature_adaptation_payoffs",
+    "companion_hostile_responses",
 )
 CONTEXT_KINDS = {"mounted_route_review", "independent_action_review", "mounted_action_review"}
 GUARANTEED = "all_supported_seeds"
@@ -398,6 +400,7 @@ def validate_living_expedition_schema(
             elif context.get("species_id") != payoff.get("species_id"):
                 failures.append(f"{label}.{field} and payoff species_id must agree.")
     failures.extend(validate_living_expedition_03_relationship(map_data))
+    failures.extend(validate_living_expedition_04_relationship(map_data, catalog))
     return failures
 
 
