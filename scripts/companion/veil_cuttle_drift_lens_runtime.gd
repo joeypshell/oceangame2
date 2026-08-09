@@ -6,6 +6,7 @@ const HOSTILE_RESPONSE_KIND := "companion_hostile_response"
 const HOSTILE_EFFECT_KIND := "hostile_intent_read"
 const HOSTILE_SUBJECT_KIND := "territorial_hostile"
 const MOVING_SUBJECT_KIND := "moving_hazard"
+const HOSTILE_ACTION_LABEL := "Predict Lunge"
 const SUPPORTED_HAZARD_IDS := [
 	"southwest_bloom_jellyfish_patrol",
 	"deep_route_jellyfish_patrol",
@@ -81,9 +82,10 @@ func is_learned() -> bool:
 func action() -> Dictionary:
 	var target_state := _target_state()
 	var reason := str(target_state.get("reason", "unavailable"))
+	var target: Dictionary = target_state.get("target", {})
 	return {
 		"id": ACTION_ID,
-		"label": "Read Drift",
+		"label": _action_label(target),
 		"enabled": reason == "ready",
 		"reason": reason,
 		"denial": _denial_label(reason),
@@ -107,6 +109,7 @@ func dispatch(action_id: String) -> Dictionary:
 	_show_projection(target)
 	var value := _result(true, "projected", target)
 	value["projection_seconds"] = PROJECTION_SECONDS
+	value["command_label"] = _action_label(target)
 	value["note"] = _result_note(target, bool(value.get("approaching", false)))
 	_notify(str(value["note"]))
 	return _remember(value)
@@ -310,17 +313,25 @@ func _result_note(target: Dictionary, approaching: bool) -> String:
 	var direction: Vector2 = target.get("movement_direction", Vector2.ZERO)
 	var direction_label := _direction_label(direction)
 	if str(target.get("subject_kind", "")) == HOSTILE_SUBJECT_KIND:
-		return "Mica reads %s | %s | Lunge %s | Recovery %.1fs" % [
-			label,
-			str(target.get("phase", "home")).replace("_", " ").to_upper(),
-			direction_label,
-			float(target.get("recovery_seconds", 0.0)),
-		]
+		var phase := str(target.get("phase", "home"))
+		var phase_seconds := float(target.get("phase_seconds", 0.0))
+		match phase:
+			"warning":
+				return "Mica: LUNGE %s IN %.1fs | MOVE ASIDE | NO DAMAGE" % [direction_label.to_upper(), phase_seconds]
+			"lunge":
+				return "Mica: LUNGING %s | EVADE | NO DAMAGE" % direction_label.to_upper()
+			"recovery":
+				return "Mica: SAFE OPENING %.1fs | PASS OR RETREAT | NO DAMAGE" % phase_seconds
+		return "Mica predicts eel lunges | WAIT FOR WARNING | NO DAMAGE"
 	return "Mica reads %s | Moving %s%s" % [
 		label,
 		direction_label,
 		" | Approaching" if approaching else "",
 	]
+
+
+func _action_label(target: Dictionary) -> String:
+	return HOSTILE_ACTION_LABEL if str(target.get("subject_kind", "")) == HOSTILE_SUBJECT_KIND else "Read Drift"
 
 
 func _direction_label(direction: Vector2) -> String:

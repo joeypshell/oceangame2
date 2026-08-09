@@ -1,10 +1,11 @@
 # Living Expedition 04 Visual Decision
 
-Date: 2026-08-08
+Date: 2026-08-09
 
-Issue: #1321 `Review Living Expedition 04 desktop and mobile visual evidence`
+Issues: #1321 `Review Living Expedition 04 desktop and mobile visual evidence`;
+#1333 `Clarify Mica's territorial-eel prediction`
 
-Status: **FOCUSED EVIDENCE ACCEPTED; NO BASELINE REPLACEMENT**
+Status: **FOCUSED EVIDENCE CORRECTED; NO BASELINE REPLACEMENT**
 
 ## Decision
 
@@ -12,10 +13,17 @@ Accept the focused companion-shaped eel encounter evidence for exact-Web
 verification. The generated frames show the intended Mica, Kite, Shock Prod,
 and defeat-only harvest states without accepting a new production baseline.
 
+Owner review found that Mica's original bubble and generic `Read Drift` copy
+did not explain what Mica contributed. Correction #1333 keeps the stable action
+id but labels the eel context `Predict Lunge`. A dark eel-anchored card now
+states `MICA PREDICTION - NO DAMAGE`, the lunge direction and countdown, and the
+immediate response (`MOVE ASIDE`, `EVADE NOW`, or `PASS OR RETREAT`). Moving-
+hazard ecology retains the existing `Read Drift` label and behavior.
+
 ## Intentional Differences
 
 - Mica projects the territorial eel's warning phase and lunge direction before
-  the player commits to an approach.
+  the player commits to an approach, with explicit response and no-damage copy.
 - Guardian Pulse creates a visible opening and knockback while leaving the
   eel at full health.
 - A connected Shock Prod discharge leaves the eel at one of three health and
@@ -34,15 +42,16 @@ The ignored `visual_captures/living_expedition_04/` set contains four states at
 desktop `1280x720` and an `844x390` landscape-mobile window (`693x390` logical
 game canvas):
 
-1. Mica reading the eel's warning intent.
+1. Mica predicting the eel's warning, lunge direction, and player response.
 2. Guardian Pulse creating a no-damage recovery opening.
 3. Shock Prod damage with the eel at one health.
 4. Defeat with electrocyte harvesting available.
 
 The runner verifies the player, eel, and active companion stay in frame and
-clear of the active-tool hotbar and touch controls. It also checks warning and
-action feedback, the three owned tools, selected Shock Prod ownership where
-relevant, exact encounter state, and bounded mobile `BOND`, `TOOL`, `USE`, and
+clear of the active-tool hotbar and touch controls. It also checks the exact
+Mica heading, direction, response, and bounded prediction card; warning and
+action feedback; the three owned tools; selected Shock Prod ownership where
+relevant; exact encounter state; and bounded mobile `BOND`, `TOOL`, `USE`, and
 movement controls. A standalone checker requires all eight PNGs, exact logical
 dimensions, the isolated checkpoint, runtime bounds verification, and
 `baseline_accepted=false`.

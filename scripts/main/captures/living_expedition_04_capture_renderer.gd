@@ -54,7 +54,7 @@ func capture_pair(capture_dir: String, state_id: String, camera_test: Dictionary
 		await _settle_frames()
 		if not _verify_controls(touch_visible) or not _verify_hud(expectation, touch_visible):
 			return false
-		if not _verify_state(expectation) or not _verify_world_subjects(touch_visible):
+		if not _verify_state(expectation, touch_visible) or not _verify_world_subjects(touch_visible):
 			return false
 		var image: Image = _main.get_viewport().get_texture().get_image()
 		if not _image_is_usable(image, canvas_size):
@@ -141,7 +141,7 @@ func _verify_hud(expectation: Dictionary, touch_visible: bool) -> bool:
 	return true
 
 
-func _verify_state(expectation: Dictionary) -> bool:
+func _verify_state(expectation: Dictionary, touch_visible: bool) -> bool:
 	var kind := str(expectation.get("kind", ""))
 	var hostile := _hostile_state()
 	var companion = _main._companion_sortie.companion()
@@ -154,13 +154,25 @@ func _verify_state(expectation: Dictionary) -> bool:
 	match kind:
 		"mica_intent":
 			var projection: Dictionary = companion_report.get("drift_projection", {})
+			var card_readable := _projection_card_is_readable(projection, touch_visible)
 			return _expect(
 				str(companion_report.get("species_id", "")) == "veil_cuttle"
 				and bool(projection.get("visible", false))
 				and str(projection.get("subject_kind", "")) == "territorial_hostile"
 				and str(projection.get("phase", "")) == "warning"
-				and _status_contains("Mica reads"),
-				"Mica intent projection was not readable"
+				and str(projection.get("heading_text", "")) == "MICA PREDICTION - NO DAMAGE"
+				and str(projection.get("primary_text", "")).begins_with("LUNGE WEST IN ")
+				and str(projection.get("response_text", "")) == "MOVE ASIDE"
+				and card_readable
+				and _status_contains("Mica prediction shown beside eel"),
+				"Mica intent projection did not explain the attack or response: heading=%s primary=%s response=%s card=%s readable=%s status=%s" % [
+					str(projection.get("heading_text", "")),
+					str(projection.get("primary_text", "")),
+					str(projection.get("response_text", "")),
+					str(projection.get("card_rect", Rect2())),
+					str(card_readable),
+					str(_status_contains("Mica prediction shown beside eel")),
+				]
 			)
 		"guardian_opening":
 			var guardian: Dictionary = _main._companion_sortie.guardian_pulse_runtime().report()
@@ -195,6 +207,16 @@ func _verify_state(expectation: Dictionary) -> bool:
 				"defeat and explicit harvest availability were not readable"
 			)
 	return true
+
+
+func _projection_card_is_readable(projection: Dictionary, touch_visible: bool) -> bool:
+	var screen_rect: Rect2 = projection.get("card_rect", Rect2())
+	if not screen_rect.has_area():
+		return false
+	return (
+		_bounded(screen_rect, _viewport_rect())
+		and (not touch_visible or _avoids_touch_controls(screen_rect))
+	)
 
 
 func _verify_world_subjects(touch_visible: bool) -> bool:

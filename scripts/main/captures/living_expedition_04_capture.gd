@@ -83,10 +83,11 @@ func _prepare_mica_intent() -> bool:
 	return _expect(
 		bool(result.get("changed", false))
 		and str(result.get("target_id", "")) == HOSTILE_ID
+		and str(result.get("command_label", "")) == "Predict Lunge"
 		and str(result.get("phase", "")) == "warning"
 		and bool(projection.get("visible", false))
 		and str(projection.get("subject_kind", "")) == "territorial_hostile",
-		"Mica intent capture did not project the warned eel"
+		"Mica intent capture did not explain Predict Lunge against the warned eel"
 	)
 
 
@@ -231,7 +232,17 @@ func _capture(capture_dir: String, state_id: String, expectation: Dictionary) ->
 	var camera_test := _camera_test(_state_camera(state_id))
 	if camera_test.is_empty():
 		return _fail("missing authored camera for %s" % state_id)
-	return await _renderer.capture_pair(capture_dir, state_id, camera_test, expectation)
+	var defeat_timer: Timer = null
+	if str(expectation.get("kind", "")) == "defeat_harvest":
+		var hostile_root: Node = _main._world.find_child(HOSTILE_ID, true, false)
+		if hostile_root != null:
+			defeat_timer = hostile_root.get_node_or_null("DefeatTimer") as Timer
+			if defeat_timer != null:
+				defeat_timer.paused = true
+	var captured: bool = await _renderer.capture_pair(capture_dir, state_id, camera_test, expectation)
+	if defeat_timer != null and is_instance_valid(defeat_timer):
+		defeat_timer.paused = false
+	return captured
 
 
 func _state_camera(state_id: String) -> String:

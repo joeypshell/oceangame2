@@ -68,7 +68,7 @@ func _run() -> void:
 		quit(1)
 		return
 	print(
-		"PASS: Mica Read Drift target=%s relationship=%s phase=warning+lunge direction=true territory=true recovery=1.25s bounded_context=true mutation=false cooldown=true failure_reset=true unadapted=false jellyfish_regression=separate." % [
+		"PASS: Mica Predict Lunge target=%s relationship=%s phase=warning+lunge direction=true response=true no_damage=true territory=true recovery=1.25s bounded_context=true mutation=false cooldown=true failure_reset=true unadapted=false jellyfish_regression=separate." % [
 			TARGET_ID,
 			RELATIONSHIP_ID,
 		]
@@ -81,23 +81,26 @@ func _test_warning_projection(world, hostiles, player, cuttle, control) -> void:
 	var warning: Dictionary = hostiles.state_for(TARGET_ID)
 	_expect(warning.get("phase") == "warning", "eel fixture did not enter warning phase")
 	var before := warning.duplicate(true)
+	_expect(drift.action().get("label") == "Predict Lunge", "eel context did not relabel Mica's stable action")
 	var commands: Array = control.begin_command_mode().get("context_commands", [])
 	_expect(_command_ids(commands) == ["recall", "reveal_trace", "read_drift"], "adapted Mica palette changed while reading the eel")
 	var result := _activate_command(control, "read_drift")
 	_expect(bool(result.get("changed", false)) and result.get("target_id") == TARGET_ID, "Read Drift did not select the source-linked eel")
+	_expect(result.get("command_label") == "Predict Lunge", "eel result did not explain Mica's prediction role")
 	_expect(result.get("subject_kind") == "territorial_hostile" and result.get("phase") == "warning", "Read Drift omitted the current hostile phase")
 	_expect((result.get("movement_direction", Vector2.ZERO) as Vector2) != Vector2.ZERO, "warning read omitted projected lunge direction")
 	_expect((result.get("projected_lunge_target", Vector2.ZERO) as Vector2).is_equal_approx(player.global_position), "warning read did not project the bounded lunge target")
 	_expect((result.get("territory_rect", Rect2()) as Rect2).size != Vector2.ZERO, "warning read omitted the territory edge")
 	_expect(is_equal_approx(float(result.get("recovery_seconds", 0.0)), 1.25), "warning read omitted the recovery interval")
 	var note := str(result.get("note", ""))
-	_expect(note.contains("WARNING") and note.contains("Lunge") and note.contains("Recovery"), "warning feedback did not explain phase, direction, and opening")
+	_expect(note.contains("LUNGE WEST IN") and note.contains("MOVE ASIDE") and note.contains("NO DAMAGE"), "warning feedback did not explain direction, response, and no-damage role")
 	_expect(not bool(result.get("hostile_changed", true)) and not bool(result.get("access_changed", true)) and (result.get("reward_ids", []) as Array).is_empty(), "Read Drift claimed hostile, access, or reward mutation")
 	_expect(hostiles.state_for(TARGET_ID) == before, "Read Drift mutated hostile authority")
 	_expect(not result.has("health") and not result.has("damage"), "read-only result leaked combat authority fields")
 	var projection: Dictionary = cuttle.report().get("drift_projection", {})
 	_expect(bool(projection.get("visible", false)) and projection.get("phase") == "warning", "world-local warning projection was not visible")
 	_expect((projection.get("territory_rect", Rect2()) as Rect2).size != Vector2.ZERO, "world-local projection omitted the territory boundary")
+	_expect(projection.get("heading_text") == "MICA PREDICTION - NO DAMAGE" and projection.get("response_text") == "MOVE ASIDE", "warning projection did not explain Mica's role or player response")
 	_expect(drift.action().get("reason") == "cooldown", "eel read ignored Drift Lens cooldown")
 	control.reset_transient("failure")
 	_expect(not bool(cuttle.report().get("drift_projection", {}).get("visible", true)), "failure reset retained eel projection")

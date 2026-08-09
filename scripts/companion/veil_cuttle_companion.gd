@@ -131,6 +131,7 @@ func show_drift_projection(
 ) -> void:
 	if _drift_projection == null:
 		return
+	_drift_projection.global_position = global_position
 	var local_path := []
 	for point in path_points:
 		local_path.append((point as Vector2) - global_position)
