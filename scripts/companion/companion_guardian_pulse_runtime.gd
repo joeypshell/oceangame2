@@ -34,8 +34,8 @@ var _last_result := "idle"
 var _last_denial := ""
 var _last_miss := ""
 var _last_recoil_distance := 0.0
-var _last_health_before := -1
-var _last_health_after := -1
+var _last_damage := -1
+var _last_opening_seconds := 0.0
 
 
 func bind_status_sink(status_sink: Callable) -> void:
@@ -108,6 +108,9 @@ func dispatch(role: String, action_id: String) -> Dictionary:
 	_last_denial = ""
 	_last_miss = ""
 	_last_result = "charging"
+	_last_recoil_distance = 0.0
+	_last_damage = -1
+	_last_opening_seconds = 0.0
 	_direction = _aim_direction(role)
 	_origin = _companion.global_position
 	_target_id = str(_payoff().get("target_id", ""))
@@ -155,8 +158,8 @@ func report() -> Dictionary:
 		"last_denial": _last_denial,
 		"last_miss": _last_miss,
 		"last_recoil_distance": _last_recoil_distance,
-		"last_health_before": _last_health_before,
-		"last_health_after": _last_health_after,
+		"last_damage": _last_damage,
+		"last_opening_seconds": _last_opening_seconds,
 	}
 
 
@@ -220,15 +223,14 @@ func _discharge() -> void:
 	_last_result = "hit"
 	_last_miss = ""
 	_last_recoil_distance = float(interruption.get("recoil_distance", 0.0))
-	_last_health_before = int(interruption.get("health_before", -1))
-	_last_health_after = int(interruption.get("health", -1))
+	_last_damage = int(interruption.get("damage", 0))
+	_last_opening_seconds = float(interruption.get("recovery_seconds", 0.0))
 	_target_position = interruption.get("recoil_position", _target_position)
-	_set_companion_pulse(false, 1.0, "hit")
+	_set_companion_pulse(false, 1.0, "opening", _last_opening_seconds)
 	_notify(
-		"Guardian Pulse hit | eel interrupted, health %d/%d | recovery %.1fs" % [
-			_last_health_after,
-			int(interruption.get("max_health", _last_health_after)),
-			float(interruption.get("recovery_seconds", 0.0)),
+		"Guardian Pulse opening | eel knocked back %.0fpx | %.1fs to act | no damage" % [
+			_last_recoil_distance,
+			_last_opening_seconds,
 		]
 	)
 
@@ -237,9 +239,8 @@ func _finish_miss(reason: String) -> void:
 	_last_result = "miss:%s" % reason
 	_last_miss = reason
 	_last_recoil_distance = 0.0
-	var state := _target_state()
-	_last_health_before = int(state.get("health", -1))
-	_last_health_after = _last_health_before
+	_last_damage = 0
+	_last_opening_seconds = 0.0
 	_set_companion_pulse(false, 1.0, "miss")
 	_notify("Guardian Pulse miss | %s" % _reason_label(reason))
 
@@ -365,7 +366,7 @@ func _sync_companion_adaptation() -> void:
 		_companion.apply_identity(_individual())
 
 
-func _set_companion_pulse(active: bool, progress: float, cue_state: String) -> void:
+func _set_companion_pulse(active: bool, progress: float, cue_state: String, cue_duration := 1.0) -> void:
 	if _companion != null and is_instance_valid(_companion) and _companion.has_method("set_guardian_pulse"):
 		var target_distance := PULSE_RANGE_PX
 		var state := _target_state()
@@ -381,7 +382,8 @@ func _set_companion_pulse(active: bool, progress: float, cue_state: String) -> v
 			PULSE_RANGE_PX,
 			target_distance,
 			progress,
-			cue_state
+			cue_state,
+			cue_duration
 		)
 
 
@@ -400,8 +402,8 @@ func _reset_transient(reason: String) -> void:
 	_last_denial = ""
 	_last_miss = ""
 	_last_recoil_distance = 0.0
-	_last_health_before = -1
-	_last_health_after = -1
+	_last_damage = -1
+	_last_opening_seconds = 0.0
 
 
 func _dependencies_valid() -> bool:

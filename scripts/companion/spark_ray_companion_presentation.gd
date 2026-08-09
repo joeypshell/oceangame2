@@ -16,6 +16,7 @@ const COLOR_MEMORY := Color("b9f77c")
 const COLOR_ANCHOR := Color("7de2ad")
 const COLOR_ANCHOR_CANCEL := Color("ffd166")
 const COLOR_GUARDIAN := Color("79e7ff")
+const COLOR_GUARDIAN_OPENING := Color("99edba")
 const COLOR_GUARDIAN_MISS := Color("ffd166")
 
 var _state := STATE_NEAR
@@ -41,6 +42,7 @@ var _guardian_range_px := 156.0
 var _guardian_target_distance := 156.0
 var _guardian_progress := 0.0
 var _guardian_cue_seconds := 0.0
+var _guardian_cue_duration := 0.0
 
 
 func sync(state: String, facing_sign: float, path_points: Array) -> void:
@@ -63,6 +65,8 @@ func set_adaptation(adaptation_id: String, callsign: String) -> void:
 		_anchor_state = "idle"
 	if adaptation_id != "guardian_pulse":
 		_guardian_state = "idle"
+		_guardian_cue_seconds = 0.0
+		_guardian_cue_duration = 0.0
 	queue_redraw()
 
 
@@ -101,14 +105,16 @@ func show_guardian_pulse(
 	range_px: float,
 	target_distance: float,
 	progress: float,
-	cue_state: String
+	cue_state: String,
+	cue_duration := 1.0
 ) -> void:
 	_guardian_direction = direction.normalized() if direction != Vector2.ZERO else Vector2.RIGHT
 	_guardian_range_px = maxf(1.0, range_px)
 	_guardian_target_distance = clampf(target_distance, 12.0, _guardian_range_px)
 	_guardian_progress = clampf(progress, 0.0, 1.0)
 	_guardian_state = cue_state
-	_guardian_cue_seconds = 0.0 if cue_state == "charging" else 1.0 if cue_state != "idle" else 0.0
+	_guardian_cue_duration = 0.0 if cue_state in ["charging", "idle"] else maxf(0.1, cue_duration)
+	_guardian_cue_seconds = _guardian_cue_duration
 	queue_redraw()
 
 
@@ -128,6 +134,7 @@ func advance(delta: float) -> void:
 		_guardian_cue_seconds = maxf(0.0, _guardian_cue_seconds - safe_delta)
 		if _guardian_cue_seconds == 0.0:
 			_guardian_state = "idle"
+			_guardian_cue_duration = 0.0
 	queue_redraw()
 
 
@@ -154,6 +161,8 @@ func report() -> Dictionary:
 		"guardian_range_px": _guardian_range_px,
 		"guardian_target_distance": _guardian_target_distance,
 		"guardian_charging": _guardian_state == "charging",
+		"guardian_opening": _guardian_state == "opening",
+		"guardian_opening_seconds": _guardian_cue_seconds if _guardian_state == "opening" else 0.0,
 	}
 
 
@@ -274,6 +283,8 @@ func _draw_guardian_pulse() -> void:
 	var color := COLOR_GUARDIAN
 	if _guardian_state in ["miss", "cancelled", "cooldown"]:
 		color = COLOR_GUARDIAN_MISS
+	elif _guardian_state == "opening":
+		color = COLOR_GUARDIAN_OPENING
 	elif _guardian_state == "denied":
 		color = COLOR_DANGER
 	var direction := _guardian_direction.normalized()
@@ -292,10 +303,34 @@ func _draw_guardian_pulse() -> void:
 		for index in range(3):
 			var charge_position := direction * (8.0 + float(index) * 7.0)
 			draw_circle(charge_position, 1.5 + _guardian_progress, Color(color, 0.72))
-	elif _guardian_state == "hit":
+	elif _guardian_state in ["hit", "opening"]:
 		draw_arc(target_endpoint, 10.0 + sin(_pulse_seconds * TAU) * 2.0, 0.0, TAU, 20, color, 3.0, true)
+		if _guardian_state == "opening":
+			_draw_guardian_opening(target_endpoint, direction, side, color)
 	elif _guardian_state == "miss":
 		draw_arc(target_endpoint, 8.0, 0.0, TAU, 20, color, 2.0, true)
+
+
+func _draw_guardian_opening(target: Vector2, direction: Vector2, side: Vector2, color: Color) -> void:
+	var remaining_ratio := clampf(
+		_guardian_cue_seconds / maxf(0.01, _guardian_cue_duration),
+		0.0,
+		1.0
+	)
+	draw_arc(target, 16.0, -PI * 0.5, -PI * 0.5 + TAU * remaining_ratio, 24, color, 3.0, true)
+	for index in range(2):
+		var tip := target + direction * (18.0 + float(index) * 12.0)
+		draw_line(tip - direction * 9.0 + side * 5.0, tip, color, 2.0, true)
+		draw_line(tip - direction * 9.0 - side * 5.0, tip, color, 2.0, true)
+	draw_string(
+		ThemeDB.fallback_font,
+		target + Vector2(-38.0, -22.0),
+		"OPEN %.1fs" % _guardian_cue_seconds,
+		HORIZONTAL_ALIGNMENT_LEFT,
+		86.0,
+		12,
+		color
+	)
 
 
 func _draw_recovery_path() -> void:

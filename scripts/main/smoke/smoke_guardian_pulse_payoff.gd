@@ -3,6 +3,7 @@ extends SceneTree
 const WORLD_SCENE := preload("res://scenes/world/GreyboxWorld.tscn")
 const PLAYER_SCENE := preload("res://scenes/player/Player.tscn")
 const ActiveToolHud := preload("res://scripts/main/active_tool_hud.gd")
+const BiologicalResourceController := preload("res://scripts/main/biological_resource_controller.gd")
 const CompanionGuardianPulseRuntime := preload("res://scripts/companion/companion_guardian_pulse_runtime.gd")
 const CompanionProfileState := preload("res://scripts/main/companion_profile_state.gd")
 const CompanionSortieRuntime := preload("res://scripts/companion/companion_sortie_runtime.gd")
@@ -14,6 +15,8 @@ const PROFILE_PATH := "user://oceangame2_guardian_pulse_smoke.json"
 const TARGET_ID := "deep_cache_territorial_eel"
 const PAYOFF_ID := "spark_ray_guardian_eel_01"
 const ACTION_ID := "guardian_pulse_action"
+const HARVEST_ID := "deep_cache_eel_electrocyte_harvest"
+const CACHE_ID := "salvage_deep_right_cache"
 
 var _failures: Array[String] = []
 var _status_notes: Array[String] = []
@@ -65,7 +68,7 @@ func _run() -> void:
 	control.set_process(false)
 	control.set_physics_process(false)
 	_test_visible_variant(ray)
-	_test_independent_hit(world, hostiles, control, guardian, player, ray)
+	_test_independent_hit(world, hostiles, control, guardian, player, ray, profile)
 	_test_miss_feedback(world, hostiles, guardian, player, ray)
 	_test_retry_and_forced_dismount(world, hostiles, runtime, control, guardian, player, ray)
 	_test_mounted_hit(world, hostiles, control, guardian, player, ray)
@@ -82,8 +85,12 @@ func _test_visible_variant(ray) -> void:
 	_expect(not bool(ray.report().get("guardian_charging", true)), "Guardian Spark Ray spawned in transient charge state")
 
 
-func _test_independent_hit(world, hostiles, control, guardian, player, ray) -> void:
+func _test_independent_hit(world, hostiles, control, guardian, player, ray, profile) -> void:
 	var home := _reset_warning_fixture(world, hostiles, player, ray, Vector2(-100.0, 0.0))
+	var health_before := int(hostiles.state_for(TARGET_ID).get("health", -1))
+	var progression_before := _progression_snapshot(profile)
+	var companion_before: Dictionary = profile.companion_report()
+	var cache_before: bool = world.is_salvage_collected(CACHE_ID)
 	var opened: Dictionary = control.begin_command_mode()
 	var commands: Array = opened.get("context_commands", [])
 	_expect(commands.map(func(command): return str(command.get("id", ""))).has(ACTION_ID), "independent BOND palette omitted Guardian Pulse")
@@ -99,11 +106,23 @@ func _test_independent_hit(world, hostiles, control, guardian, player, ray) -> v
 	var hostile: Dictionary = hostiles.state_for(TARGET_ID)
 	_expect(hit.get("last_result") == "hit" and hit.get("success_count") == 1, "independent pulse did not hit exactly once")
 	_expect(hostile.get("phase") == "recovery", "Guardian Pulse did not interrupt the warning")
-	_expect(int(hostile.get("health", -1)) == 3 and hit.get("last_health_before") == 3 and hit.get("last_health_after") == 3, "Guardian Pulse changed eel health")
+	_expect(int(hostile.get("health", -1)) == health_before and hit.get("last_damage") == 0, "Guardian Pulse changed eel health")
+	_expect(not hit.has("last_health_before") and not hit.has("last_health_after"), "Guardian Pulse report retained attack-like health copy")
 	_expect(float(hit.get("last_recoil_distance", 0.0)) > 0.0, "Guardian Pulse did not separate the eel")
-	_expect(ray.report().get("presentation", {}).get("guardian_state") == "hit", "hit discharge cue was missing")
-	_expect(_status_notes.any(func(note): return str(note).find("health 3/3") != -1), "hit feedback did not disclose non-damaging health")
+	_expect(is_equal_approx(float(hit.get("last_opening_seconds", 0.0)), 1.25), "Guardian Pulse omitted the temporary opening duration")
+	var presentation: Dictionary = ray.report().get("presentation", {})
+	_expect(presentation.get("guardian_state") == "opening" and bool(presentation.get("guardian_opening", false)), "opening cue was missing after recoil")
+	_expect(float(presentation.get("guardian_opening_seconds", 0.0)) > 1.0, "opening cue did not retain the recovery window")
+	_expect(_status_notes.any(func(note): return str(note).contains("eel knocked back") and str(note).contains("to act") and str(note).contains("no damage")), "hit feedback did not explain the non-damaging opening")
+	_expect(_status_notes.all(func(note): return not str(note).contains("health")), "Guardian Pulse feedback still implied health damage")
 	_expect(not _contains_reward_key(hit), "Guardian Pulse produced a reward")
+	var biological := BiologicalResourceController.new(profile)
+	biological.on_map_loaded(world, false)
+	var harvest: Dictionary = biological.update(world, hostiles, null, hostile.get("position", Vector2.ZERO), 34.0, 2.0, 0, 2)
+	_expect(harvest.get("reason") == "hostile_not_defeated" and not biological.is_collected(HARVEST_ID), "Guardian opening exposed or collected the defeat-only harvest")
+	_expect(world.get_biological_resource_visual_report().get("states", {}).get(HARVEST_ID) == "hidden", "Guardian opening revealed the electrocyte source")
+	_expect(world.is_salvage_collected(CACHE_ID) == cache_before, "Guardian opening collected the guarded cache")
+	_expect(_progression_snapshot(profile) == progression_before and profile.companion_report() == companion_before, "Guardian opening changed profile progression or companion memory")
 	var cooldown: Dictionary = guardian.dispatch("independent", ACTION_ID)
 	_expect(cooldown.get("reason") == "pulse_cooling_down", "Guardian Pulse ignored cooldown")
 	_expect(ray.report().get("presentation", {}).get("guardian_state") == "cooldown", "cooldown cue was missing")
@@ -309,6 +328,17 @@ func _contains_reward_key(value: Dictionary) -> bool:
 	return false
 
 
+func _progression_snapshot(profile) -> Dictionary:
+	var report: Dictionary = profile.report()
+	return {
+		"completed_discoveries": report.get("completed_discoveries", []).duplicate(),
+		"unlocked_capabilities": report.get("unlocked_capabilities", []).duplicate(),
+		"material_inventory": (report.get("material_inventory", {}) as Dictionary).duplicate(true),
+		"completed_projects": report.get("completed_projects", []).duplicate(),
+		"banked_tool_target_ids": report.get("banked_tool_target_ids", []).duplicate(),
+	}
+
+
 func _record_status(note: String) -> void:
 	_status_notes.append(note)
 
@@ -349,7 +379,7 @@ func _finish(world, player, runtime, hud, original_time_scale: float) -> void:
 			push_error("Guardian Pulse smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("PASS: Guardian Pulse individual=Kite persisted=true target=deep_cache_territorial_eel independent=aim+charge+hit mounted=aim+charge+hit damage=0 health=3/3 recoil=true miss=range+direction+timing cooldown=true shock_prod_required=true base_anchor_unavailable=true rewards=none reset=true.")
+	print("PASS: Guardian Pulse individual=Kite persisted=true target=deep_cache_territorial_eel independent=aim+charge+opening mounted=aim+charge+opening damage=0 health_unchanged=true recoil=true opening=1.25s harvest=hidden cache=unchanged profile=unchanged miss=range+direction+timing cooldown=true shock_prod_required=true base_anchor_unavailable=true rewards=none reset=true.")
 	quit(0)
 
 
