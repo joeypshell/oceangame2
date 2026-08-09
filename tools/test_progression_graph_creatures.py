@@ -8,6 +8,7 @@ import unittest
 
 from progression_audit import audit_graph, render_review_doc
 from progression_graph import build_progression_graph
+from test_living_expedition_04_contract import valid_living_expedition_04_map
 from test_validate_living_expedition_schema import valid_living_expedition_03_map, valid_map
 
 
@@ -118,6 +119,47 @@ class CreatureProgressionGraphTests(unittest.TestCase):
         self.assertTrue(any(edge.target == patrol for edge in graph.requirements(payoff)))
         self.assertFalse([
             edge for edge in graph.outgoing(patrol)
+            if edge.relation in {"unlocks", "rewards", "guards", "funds"}
+        ])
+
+    def test_companion_eel_relationship_preserves_defeat_only_resource_authority(self) -> None:
+        map_data = valid_living_expedition_03_map()
+        le04 = valid_living_expedition_04_map()
+        map_data["entities"].extend(item for item in le04["entities"] if item["id"] == "salvage_deep_right_cache")
+        map_data["entities"].append({"id": "starter_salvage", "type": "salvage", "x": 4, "y": 4, "tier": "common"})
+        map_data["hostile_encounters"].extend(le04["hostile_encounters"])
+        map_data["biological_resource_sources"] = copy.deepcopy(le04["biological_resource_sources"])
+        map_data["biological_resource_sources"][0]["material_quantity"] = 1
+        map_data["companion_hostile_responses"] = copy.deepcopy(le04["companion_hostile_responses"])
+        test_contract = contract()
+        test_contract["session_upgrades"][2]["funding_source_ids"] = ["starter_salvage"]
+        graph = build_progression_graph([map_data], test_contract)
+        result = audit_graph(graph, check_canonical=False)
+        self.assertEqual((), result.failures)
+        relationship = graph.resolve("deep_cache_eel_companion_response")
+        hostile = graph.resolve("deep_cache_territorial_eel")
+        harvest = graph.resolve("deep_cache_eel_electrocyte_harvest")
+        cache = graph.resolve("salvage_deep_right_cache")
+        defeat = f"defeat:production_level_01/deep_cache_territorial_eel"
+        shock_prod = graph.resolve("shock_prod")
+        requirements = {edge.target for edge in graph.requirements(relationship)}
+        self.assertEqual("companion_hostile_response", graph.nodes[relationship].kind)
+        self.assertTrue({
+            graph.resolve("spark_ray_juvenile_01"),
+            graph.resolve("veil_cuttle_juvenile_01"),
+            graph.resolve("guardian_pulse"),
+            graph.resolve("drift_lens"),
+            shock_prod,
+        } <= requirements)
+        self.assertTrue(any(edge.target == hostile and edge.relation == "targets" for edge in graph.outgoing(relationship)))
+        self.assertTrue(any(edge.target == harvest and edge.relation == "reviews" for edge in graph.outgoing(relationship)))
+        self.assertTrue(any(edge.target == cache and edge.relation == "reviews" for edge in graph.outgoing(relationship)))
+        self.assertIn(defeat, {edge.target for edge in graph.requirements(harvest)})
+        self.assertIn(shock_prod, {edge.target for edge in graph.requirements(defeat)})
+        self.assertNotIn(relationship, {edge.target for edge in graph.requirements(harvest)})
+        self.assertNotIn(relationship, {edge.target for edge in graph.requirements(defeat)})
+        self.assertFalse([
+            edge for edge in graph.outgoing(relationship)
             if edge.relation in {"unlocks", "rewards", "guards", "funds"}
         ])
 
