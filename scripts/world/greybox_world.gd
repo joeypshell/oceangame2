@@ -278,6 +278,10 @@ func get_creature_adaptation_payoffs() -> Array:
 	return _duplicate_dictionary_array(_map_data.get("creature_adaptation_payoffs", []))
 
 
+func get_companion_hostile_responses() -> Array:
+	return _duplicate_dictionary_array(_map_data.get("companion_hostile_responses", []))
+
+
 func get_creature_rescues() -> Array:
 	return _creature_rescue_helper().rescues()
 

@@ -14,6 +14,7 @@ var _world
 var _player
 var _profile
 var _moving_hazards
+var _hostiles
 var _has_upgrade := Callable()
 var _companion
 var _control
@@ -66,6 +67,7 @@ func bind_map(
 	_player = player
 	_profile = profile
 	_moving_hazards = moving_hazards
+	_hostiles = hostiles
 	_has_upgrade = has_upgrade
 	_ecology_observation.bind_map(world, profile, preserve_sortie, active_condition_ids)
 	_ensure_control(_selected_species_id())
@@ -122,6 +124,7 @@ func clear_map() -> void:
 	_player = null
 	_profile = null
 	_moving_hazards = null
+	_hostiles = null
 	_has_upgrade = Callable()
 
 
@@ -394,7 +397,7 @@ func _bind_control_map() -> void:
 	if _spark_active():
 		_control.bind_map(_world, _player, _companion, Callable(self, "_position_allowed"))
 	else:
-		_control.bind_map(_world, _player, _companion, _moving_hazards)
+		_control.bind_map(_world, _player, _companion, _moving_hazards, _hostiles)
 
 
 func _bind_control_interface() -> void:
