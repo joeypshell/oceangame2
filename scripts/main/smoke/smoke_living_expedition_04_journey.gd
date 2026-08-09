@@ -204,7 +204,16 @@ func _test_mica_path(world, player, profile, sortie, hostiles, biological, acces
 	var cache_before: bool = world.is_salvage_collected(CACHE_ID)
 	var result: Dictionary = _dispatch_command(sortie, "read_drift")
 	_expect(bool(result.get("changed", false)) and result.get("target_id") == HOSTILE_ID, "Mica did not read the source-linked eel")
+	_expect(result.get("command_label") == "Predict Lunge", "eel-context command did not identify Mica's prediction role")
 	_expect(result.get("phase") == "warning" and (result.get("movement_direction", Vector2.ZERO) as Vector2) != Vector2.ZERO, "Mica projection omitted phase or direction")
+	var projection: Dictionary = sortie.companion().report().get("drift_projection", {})
+	_expect(
+		projection.get("heading_text") == "MICA PREDICTION - NO DAMAGE"
+		and str(projection.get("primary_text", "")).begins_with("LUNGE WEST IN ")
+		and projection.get("response_text") == "MOVE ASIDE"
+		and (projection.get("card_rect", Rect2()) as Rect2).has_area(),
+		"Mica projection did not explain the predicted attack and player response"
+	)
 	_expect(hostiles.state_for(HOSTILE_ID) == hostile_before, "Mica read mutated hostile state")
 	_expect(biological.report() == biological_before and world.get_biological_resource_visual_report() == visual_before, "Mica read mutated resource state")
 	_expect(world.is_salvage_collected(CACHE_ID) == cache_before and _access_snapshot(world) == access_before, "Mica read changed cache or access state")

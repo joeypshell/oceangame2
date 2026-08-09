@@ -79,7 +79,7 @@ func _run() -> void:
 	profile.value = _profile_report(mica, [kite, mica])
 	world.at_boat = true
 	_expect(
-		guidance.objective_text(world, player, profile, sortie, DayState.new()).contains("TOOL picks Mica to read or Kite to open"),
+		guidance.objective_text(world, player, profile, sortie, DayState.new()).contains("TOOL picks Mica to predict or Kite to open"),
 		"boat guidance did not explain the companion-shaped choice"
 	)
 
@@ -87,16 +87,27 @@ func _run() -> void:
 	sortie.live_companion = RefCounted.new()
 	sortie.report_value = {"control": {"command_mode": false, "drift_lens": {"projection_seconds": 0.0}}}
 	_expect(
-		guidance.objective_text(world, player, profile, sortie, DayState.new()).contains("B, then 3: Read Drift"),
-		"Mica guidance did not lead to the eel read"
+		guidance.objective_text(world, player, profile, sortie, DayState.new()).contains("Mica predicts lunges; no damage")
+		and guidance.objective_text(world, player, profile, sortie, DayState.new()).contains("B, then 3: Predict Lunge"),
+		"Mica guidance did not explain her role or lead to Predict Lunge"
 	)
 
 	sortie.report_value["control"]["drift_lens"] = {
 		"projection_seconds": 2.0,
-		"last_result": {"target_id": "deep_cache_territorial_eel", "phase": "warning"},
+		"last_result": {
+			"target_id": "deep_cache_territorial_eel",
+			"phase": "warning",
+			"movement_direction": Vector2.LEFT,
+			"phase_seconds": 0.8,
+		},
 	}
 	var read_text := guidance.objective_text(world, player, profile, sortie, DayState.new())
-	_expect(read_text.contains("Mica reads eel: WARNING") and read_text.contains("Only Shock Prod defeat exposes electrocyte"), "Mica result did not explain information versus harvest")
+	_expect(
+		read_text.contains("Mica prediction shown beside eel")
+		and read_text.contains("No damage")
+		and read_text.contains("Shock Prod required for harvest"),
+		"Mica result did not point to the prediction card or distinguish harvest"
+	)
 
 	profile.value = _profile_report(kite, [kite, mica])
 	sortie.report_value = {
@@ -129,7 +140,7 @@ func _run() -> void:
 			push_error("Companion-hostile journey guidance smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("PASS: companion-hostile journey guidance boat=Mica_read_or_Kite_open Mica=read+evade+defeat_only_harvest Kite=warning_or_lunge+opening+no_damage mounted=Space_USE Anchor=isolated.")
+	print("PASS: companion-hostile journey guidance boat=Mica_predict_or_Kite_open Mica=Predict_Lunge+MOVE_ASIDE+no_damage+defeat_only_harvest Kite=warning_or_lunge+opening+no_damage mounted=Space_USE Anchor=isolated.")
 	quit(0)
 
 

@@ -44,9 +44,11 @@ action, adaptation, and resource ids remain unchanged.
    profile.
 2. At the canonical boat, the player selects exactly one companion for the next
    sortie. The inactive individual remains in the habitat.
-3. With Mica active, `Read Drift` near the eel shows the current threat phase,
-   projected lunge direction, territory edge, and recovery interval in the
-   world. The player still moves, evades, and decides when to approach.
+3. With Mica active, the stable `read_drift` action is labeled `Predict Lunge`
+   near the eel and shows the current threat phase, projected lunge direction,
+   territory edge, and recovery interval in the world. It remains `Read Drift`
+   for moving-hazard ecology. The player still moves, evades, and decides when
+   to approach.
 4. Mica's read cannot stun, move, damage, slow, pacify, or despawn the eel. It
    cannot open the cache, grant a resource, or change equipment access.
 5. With Guardian-Pulse Kite active, the player aims and dispatches the existing
@@ -144,8 +146,9 @@ or a generic combat-stat layer fails this filter.
 - Preserve toggle `B/BOND`, the numbered slow-time palette, direct numbered
   commands, and sequential mobile controls. Do not reintroduce held key chords.
 - Mica's projection should show source-derived direction, territory, and phase
-  timing close to the eel. It must not become a permanent quest panel or exact
-  route arrow.
+  timing close to the eel. A compact eel-anchored card should state the lunge
+  direction, immediate response, and that Mica deals no damage. It must not
+  become a permanent quest panel or exact route arrow.
 - Guardian Pulse should communicate charge, direction, hit or miss, knockback,
   recovery opening, and cooldown. Because it deals no damage, its result copy
   should not imply that eel health changed.

@@ -17,7 +17,7 @@ func boat_choice_text(world, profile_report: Dictionary) -> String:
 		return ""
 	if not _has_ready_individual(individuals, relationship, KITE_ID, GUARDIAN_PULSE):
 		return ""
-	return "PARTNERS: Deep Cache Eel | BOND opens habitat | TOOL picks Mica to read or Kite to open | USE confirms"
+	return "PARTNERS: Deep Cache Eel | BOND opens habitat | TOOL picks Mica to predict or Kite to open | USE confirms"
 
 
 func active_text(world, individual: Dictionary, sortie_report: Dictionary) -> String:
@@ -41,9 +41,8 @@ func _mica_text(relationship: Dictionary, sortie_report: Dictionary) -> String:
 		float(lens.get("projection_seconds", 0.0)) > 0.0
 		and str(result.get("target_id", "")) == str(relationship.get("hostile_id", ""))
 	):
-		var phase := str(result.get("phase", "home")).replace("_", " ").to_upper()
-		return "PARTNER: Mica reads eel: %s | Evade for cache | Only Shock Prod defeat exposes electrocyte" % phase
-	return "PARTNER: Mica can read the Deep Cache Eel | Enter its territory | B, then 3: Read Drift"
+		return "PARTNER: Mica prediction shown beside eel | No damage; Shock Prod required for harvest"
+	return "PARTNER: Mica predicts lunges; no damage | Enter territory | B, then 3: Predict Lunge"
 
 
 func _kite_text(sortie_report: Dictionary) -> String:

@@ -1,5 +1,7 @@
 extends Node2D
 
+const VeilCuttleIntentCard := preload("res://scripts/companion/veil_cuttle_intent_card.gd")
+
 const COLOR_PATH := Color("72e6d1")
 const COLOR_DIRECTION := Color("d9fff2")
 const COLOR_APPROACH := Color("ffd166")
@@ -19,6 +21,18 @@ var _projected_lunge_target := Vector2.ZERO
 var _phase_seconds := 0.0
 var _recovery_seconds := 0.0
 var _visible := false
+var _intent_layer: CanvasLayer
+var _intent_card
+
+
+func _ready() -> void:
+	_intent_layer = CanvasLayer.new()
+	_intent_layer.name = "MicaIntentLayer"
+	_intent_layer.layer = 20
+	add_child(_intent_layer)
+	_intent_card = VeilCuttleIntentCard.new()
+	_intent_card.name = "MicaIntentCard"
+	_intent_layer.add_child(_intent_card)
 
 
 func show_projection(
@@ -41,6 +55,7 @@ func show_projection(
 	_phase_seconds = float(details.get("phase_seconds", 0.0))
 	_recovery_seconds = float(details.get("recovery_seconds", 0.0))
 	_visible = _path_points.size() >= 2 or _subject_kind == "territorial_hostile"
+	_sync_intent_card()
 	queue_redraw()
 
 
@@ -56,10 +71,13 @@ func clear_projection() -> void:
 	_phase_seconds = 0.0
 	_recovery_seconds = 0.0
 	_visible = false
+	if _intent_card != null:
+		_intent_card.clear_prediction()
 	queue_redraw()
 
 
 func report() -> Dictionary:
+	var card: Dictionary = _intent_card.report() if _intent_card != null else {}
 	return {
 		"visible": _visible,
 		"path_point_count": _path_points.size(),
@@ -72,6 +90,10 @@ func report() -> Dictionary:
 		"projected_lunge_target": _projected_lunge_target,
 		"phase_seconds": _phase_seconds,
 		"recovery_seconds": _recovery_seconds,
+		"heading_text": str(card.get("heading_text", "")),
+		"primary_text": str(card.get("primary_text", "")),
+		"response_text": str(card.get("response_text", "")),
+		"card_rect": card.get("rect", Rect2()),
 	}
 
 
@@ -104,26 +126,34 @@ func _draw() -> void:
 func _draw_hostile_intent() -> void:
 	var color := _phase_color()
 	if _territory_rect.size != Vector2.ZERO:
-		draw_rect(_territory_rect, Color(color, 0.12), true)
-		draw_rect(_territory_rect, Color(color, 0.78), false, 2.5, true)
+		draw_rect(_territory_rect, Color(color, 0.07), true)
+		draw_rect(_territory_rect, Color(color, 0.72), false, 2.0, true)
 	if _projected_lunge_target.distance_to(_current_center) > 0.01:
-		draw_line(_current_center, _projected_lunge_target, Color(color, 0.86), 2.5, true)
-		draw_arc(_projected_lunge_target, 10.0, 0.0, TAU, 20, color, 2.0, true)
-		draw_line(_projected_lunge_target - Vector2(6.0, 0.0), _projected_lunge_target + Vector2(6.0, 0.0), color, 1.5, true)
-		draw_line(_projected_lunge_target - Vector2(0.0, 6.0), _projected_lunge_target + Vector2(0.0, 6.0), color, 1.5, true)
-	var label_origin := _current_center + Vector2(-54.0, -28.0)
-	var phase_detail := _phase.to_upper()
-	if _phase_seconds > 0.0:
-		phase_detail += " %.1fs" % _phase_seconds
-	draw_string(ThemeDB.fallback_font, label_origin, phase_detail, HORIZONTAL_ALIGNMENT_LEFT, 132.0, 14, color)
-	draw_string(
-		ThemeDB.fallback_font,
-		label_origin + Vector2(0.0, 17.0),
-		"OPENING %.1fs" % _recovery_seconds,
-		HORIZONTAL_ALIGNMENT_LEFT,
-		132.0,
-		12,
-		Color(COLOR_DIRECTION, 0.92)
+		_draw_lunge_arrow(color)
+
+
+func _draw_lunge_arrow(color: Color) -> void:
+	var direction := _current_center.direction_to(_projected_lunge_target)
+	var side := direction.orthogonal()
+	draw_line(_current_center, _projected_lunge_target, Color(color, 0.92), 5.0, true)
+	draw_colored_polygon(PackedVector2Array([
+		_projected_lunge_target,
+		_projected_lunge_target - direction * 15.0 + side * 9.0,
+		_projected_lunge_target - direction * 15.0 - side * 9.0,
+	]), color)
+
+
+func _sync_intent_card() -> void:
+	if _intent_card == null:
+		return
+	if _subject_kind != "territorial_hostile" or not _visible:
+		_intent_card.clear_prediction()
+		return
+	_intent_card.show_prediction(
+		global_transform * _current_center,
+		_phase,
+		_movement_direction,
+		_phase_seconds
 	)
 
 
