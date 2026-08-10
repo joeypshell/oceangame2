@@ -66,7 +66,7 @@ supports care/projects, and ends the day.
 - Species define possibilities; individual history defines development.
 - The companion can remain independent or transfer movement/action control while
   mounted when its anatomy and bond support that role.
-- A small slow-time command palette makes deliberate real-time coordination
+- A small tactical-pause command palette makes deliberate real-time coordination
   readable without turning expeditions into party battles.
 - Meaningful events create memories; repetition does not create major growth.
 - Night consolidation turns one understood memory into a visible adaptation.
@@ -182,7 +182,7 @@ Combat and exploration remain real-time inside the shared side-view world.
 - One active companion may support independently, fight beside the diver, or be
   ridden and directly controlled according to species and learned skills.
 - Unmounted, the diver owns movement, tools, weapons, positioning, and retreat;
-  deliberate companion actions use a bounded slow-time command palette.
+  deliberate companion actions use a bounded tactical-pause command palette.
 - Mounted, movement and the action hotbar transfer to the creature until the
   player dismounts; diver tools are unavailable in that mode.
 - The active companion provides readable movement, warning, distraction,
@@ -233,7 +233,7 @@ The repository currently implements:
   Prod progression
 - current, darkness, pressure, wreck, hostile, research, and interior journeys
 - one territorial eel and bounded biological resources
-- one persistent Spark Ray individual with rescue, follow, BOND slow-time,
+- one persistent Spark Ray individual with rescue, follow, BOND tactical pause,
   committed-bond riding, two exact-once memories, night consolidation, and two
   mutually exclusive independent/mounted adaptations
 - one persistent Veil Cuttle individual with physical rescue, compact shared

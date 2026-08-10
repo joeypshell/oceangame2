@@ -93,20 +93,20 @@ Living Expedition is the active product phase. It retains real-time daylight sor
 
 **[Living Expedition 03: Field Roles And Ecological Discovery](https://github.com/joeypshell/oceangame2/milestone/47)** is complete with owner GO on corrected exact-Web runtime `0e92dd7`. Mica reveals the existing southwest jellyfish migration, carries that shared observation through boat return and night consolidation, and deliberately reads authored jellyfish patrols later without disabling hazards or replacing equipment access.
 
-**[Living Expedition 04: Companion-Shaped Wildlife Encounter](https://github.com/joeypshell/oceangame2/milestone/48)** reached exact-Web owner review. Guardian-Pulse Kite, ordinary evade, Shock-Prod defeat, and explicit harvest remain valid, but the owner rejected Mica's eel prediction as non-useful. #1335 retires that active response, #1336 corrects BOND timing, and #1323 records the bounded HOLD closeout.
+**[Living Expedition 04: Companion-Shaped Wildlife Encounter](https://github.com/joeypshell/oceangame2/milestone/48)** reached exact-Web owner review. Guardian-Pulse Kite, ordinary evade, Shock-Prod defeat, and explicit harvest remain valid, but the owner rejected Mica's eel prediction as non-useful. #1335 retired that response, #1336 makes BOND a whole-simulation tactical pause, and #1323 records the bounded HOLD closeout.
 
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
 - Completed: milestones #45-#47 prove one adapted Spark Ray, a bounded two-individual habitat and active species choice, then one Mica ecology journey and Drift Lens field-skill payoff.
-- Committed: finish only Living Expedition 04's retirement, BOND timing, and HOLD closeout issues; do not begin another encounter or species in this milestone.
+- Committed: finish only Living Expedition 04's HOLD closeout in #1323; do not begin another encounter or species in this milestone.
 - Directional: habitat legacy and regional creature journeys remain milestone-level goals only.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Living Expedition milestones #45-#47 are complete with owner GO. Living Expedition 04 has a committed plan but no GitHub milestone or implementation batch yet.
+Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Living Expedition milestones #45-#47 are complete with owner GO. Living Expedition 04 milestone #48 is at bounded HOLD closeout after its Mica-response retirement and BOND timing correction.
 
 1. [Living Expedition 03: Field Roles And Ecological Discovery](https://github.com/joeypshell/oceangame2/milestone/47) - complete through #1276-#1285 plus bounded corrections #1301/#1303/#1305/#1307/#1308, exact-Web runtime `0e92dd7`, and owner GO.
 2. [Living Expedition 02: Small Stable And Species Identity](https://github.com/joeypshell/oceangame2/milestone/46) - complete through #1253-#1262 with focused visual evidence, exact-Web runtime `b639dcf`, and owner GO.
@@ -165,7 +165,7 @@ Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 mileston
 ## Roadmap Rules
 
 - Do not reopen completed expansion batches merely to keep the queue full.
-- Create the Living Expedition 04 milestone and one bounded implementation batch in a separate audit after its planning contract lands.
+- Close Living Expedition 04 honestly at HOLD before selecting another creature encounter or species.
 - Keep Kite and Mica as the complete current roster; a third species requires a later reviewed plan and player gate.
 - Do not replace real-time exploration with party battles. Adapt build synergy through one companion's independent, support, and mounted roles.
 - Keep controlled passes as validation/review structure, not as the product roadmap.

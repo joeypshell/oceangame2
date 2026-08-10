@@ -59,18 +59,21 @@ func _run() -> void:
 
 func _test_palette_and_range_miss(world, control) -> void:
 	var before_time_scale := Engine.time_scale
+	var before_paused := paused
 	var open_report: Dictionary = control.begin_command_mode()
 	var commands: Array = open_report.get("context_commands", [])
 	var ids := _command_ids(commands)
 	_expect(ids == ["recall", "reveal_trace"], "Mica BOND palette drifted: %s" % [ids])
 	_expect(not ids.has("mount") and not ids.has("dismount"), "Mica BOND palette exposed riding")
-	_expect(is_equal_approx(Engine.time_scale, 0.2), "Mica BOND mode did not use shared slow time")
+	_expect(paused and bool(open_report.get("simulation_paused", false)), "Mica BOND mode did not use shared tactical pause")
+	_expect(str(open_report.get("timing_policy", "")) == "tactical_pause", "Mica BOND mode reported the wrong timing policy")
+	_expect(is_equal_approx(Engine.time_scale, before_time_scale), "Mica BOND mode changed time scale")
 	_expect(bool(open_report.get("palette", {}).get("visible", false)), "Mica BOND palette was not visible")
 	control.cycle_context_command()
 	var miss: Dictionary = control.confirm_context_command()
 	_expect(str(miss.get("reason", "")) == "out_of_range", "out-of-range Reveal Trace did not report its bounded range")
 	_expect(str(_trace_by_id(world, TRACE_ID).get("state", "")) == "hidden", "range miss revealed the trace")
-	_expect(is_equal_approx(Engine.time_scale, before_time_scale), "closing Mica BOND mode did not restore time")
+	_expect(paused == before_paused, "closing Mica BOND mode did not restore the prior pause state")
 
 
 func _test_deliberate_reveal(world, player, cuttle, control) -> void:
@@ -156,6 +159,7 @@ func _control_allowed() -> bool:
 
 func _finish(world, player, cuttle, control) -> void:
 	control.clear_map()
+	paused = false
 	control.queue_free()
 	cuttle.queue_free()
 	player.queue_free()
@@ -166,7 +170,7 @@ func _finish(world, player, cuttle, control) -> void:
 			push_error("Veil Cuttle trace smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("PASS: Veil Cuttle BOND commands=recall,reveal_trace mount=false range=source trail=linked_patrol_path generic_ring=false direction=visible result=visible authored_target=1 scanner_required=true reward=false progression=false gate_bypass=false.")
+	print("PASS: Veil Cuttle BOND commands=recall,reveal_trace timing=tactical_pause mount=false range=source trail=linked_patrol_path generic_ring=false direction=visible result=visible authored_target=1 scanner_required=true reward=false progression=false gate_bypass=false.")
 	quit(0)
 
 

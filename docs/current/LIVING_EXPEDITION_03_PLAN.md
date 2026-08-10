@@ -127,7 +127,7 @@ may substitute for those outcomes.
 
 ## Runtime And UI Boundaries
 
-- Use the toggle `B/BOND` slow-time palette with at most three contextual
+- Use the toggle `B/BOND` tactical-pause palette with at most three contextual
   commands. Desktop `1`-`3` activates matching rows; do not reuse `Q` or `E/ACT`.
 - Mica remains independent and non-mounted. Kite retains all mounted behavior.
 - Before identification, world feedback should resemble a directional migration

@@ -1626,6 +1626,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		ExpeditionDayDebrief.handle_debrief_input(self, event)
 		return
 	if _companion_sortie != null and _companion_sortie.handle_input(event):
+		get_viewport().set_input_as_handled()
 		return
 	if event.is_action_released("active_tool_use"):
 		_release_active_tool()

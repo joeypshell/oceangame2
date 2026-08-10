@@ -44,6 +44,7 @@ var _context_mode := CONTEXT_DIVE
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	layer = 90
 	var touch_available := DisplayServer.is_touchscreen_available()
 	var forced := force_visible or _has_arg(FORCE_FLAG)

@@ -147,9 +147,10 @@ func _prepare_command_palette() -> bool:
 	_main._last_status_note = "Press B | Choose how Kite helps"
 	_main._update_status_label()
 	return _expect(
-		is_equal_approx(Engine.time_scale, 0.2)
+		_main.get_tree().paused
+		and bool(opened.get("simulation_paused", false))
 		and (opened.get("context_commands", []) as Array).size() <= 3,
-		"command palette did not own bounded slow time"
+		"command palette did not own tactical pause"
 	)
 
 
@@ -249,6 +250,8 @@ func _prepare_anchor(mounted: bool) -> bool:
 
 
 func _reset_for_guardian_branch() -> bool:
+	_main._companion_sortie.reset_control("capture_branch_reset")
+	_main.get_tree().paused = false
 	Engine.time_scale = 1.0
 	var profile = _main._anomaly_survey.profile_state()
 	profile.load_profile()

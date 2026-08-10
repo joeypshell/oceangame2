@@ -112,7 +112,7 @@ The proof includes:
 - one active companion at a time
 - deterministic follow, separation recovery, and context response
 - one committed-bond riding unlock with seamless mount/dismount
-- one dedicated slow-time command palette and direct mounted action surface
+- one dedicated tactical-pause command palette and direct mounted action surface
 - two meaningful expedition memories
 - one mutually exclusive night adaptation choice
 - one changed silhouette or body-pattern detail
@@ -121,7 +121,7 @@ The proof includes:
 
 The companion is not placed in the diver tool hotbar. Unmounted tools retain
 their existing cycle and `Space/USE` action. `B/BOND` toggles a bounded
-slow-time companion palette, with desktop `1`-`3` activating its numbered rows.
+tactical-pause companion palette, with desktop `1`-`3` activating its numbered rows.
 While mounted, the bottom hotbar deliberately
 projects creature actions instead of diver tools; dismount restores the tool
 surface.

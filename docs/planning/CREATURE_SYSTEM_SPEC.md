@@ -111,8 +111,8 @@ The active companion should:
 - never fail a critical command because of hidden temperament or loyalty
 
 The companion is not a diver hotbar item. `companion_command` is the dedicated
-toggle `B/BOND` action. Its open palette slows the complete gameplay simulation
-to 20 percent and presents no more than three numbered valid commands. Desktop
+toggle `B/BOND` action. Its open palette pauses the complete gameplay simulation
+and presents no more than three numbered valid commands. Desktop
 `1`-`3` activates the matching row and `B` or `Esc` closes; touch uses sequential
 `BOND`, `TOOL`, and `USE`. The system does not reuse `Q` or `E/ACT`.
 
@@ -285,7 +285,8 @@ Deterministic checks should prove:
 - rescue and commitment occur once
 - follow and separation recovery work through the selected route
 - riding unlocks only after canonical-boat commitment
-- command slow-time scales world, cooldown, oxygen, and daylight consistently
+- command tactical pause freezes hostile phases, movement, cooldowns, oxygen,
+  daylight, hazards, and companion motion consistently while input remains live
 - mount/dismount, rider clearance, movement authority, and hotbar ownership switch
   cleanly on desktop and landscape mobile
 - `glide_surge` moves visibly, cools down, causes no damage, and bypasses no gate

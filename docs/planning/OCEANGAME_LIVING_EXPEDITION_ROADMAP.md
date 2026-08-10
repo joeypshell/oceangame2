@@ -106,7 +106,7 @@ Every day should leave at least one personal reason to return:
 
 **Living Expedition 01: Spark Ray Adaptation Proof** is implemented and closed
 with owner GO. It proves one physical rescue, persistent individual identity,
-follow, slow-time commands, riding, two meaningful memories, night
+follow, tactical-pause commands, riding, two meaningful memories, night
 consolidation, mutually exclusive visible adaptations, equipment-gate safety,
 and deterministic journey/Web evidence.
 
@@ -208,7 +208,7 @@ Detailed contract:
 - A capable individual may alternate between independent and mounted play during
   the same dive; mounted control is a role, not an equipment-gate bypass.
 - Significant companion actions are deliberate through toggle `B/BOND` and a
-  bounded numbered slow-time palette, not hidden autonomous damage.
+  bounded numbered tactical-pause palette, not hidden autonomous damage.
 - Meaningful events create memories; repetition does not create major growth.
 - The player chooses permanent adaptations with predictable consequences.
 - Temperament affects expression, not critical command reliability.

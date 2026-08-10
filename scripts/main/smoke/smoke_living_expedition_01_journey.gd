@@ -32,6 +32,7 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var original_time_scale := Engine.time_scale
+	var original_paused := paused
 	var branch_reports: Array[String] = []
 	for adaptation_id in ["anchor_fins", "guardian_pulse"]:
 		var main = await _spawn_main()
@@ -39,11 +40,13 @@ func _run() -> void:
 			break
 		var report := await _run_branch(main, adaptation_id)
 		branch_reports.append(report)
+		paused = false
 		Engine.time_scale = 1.0
 		main.queue_free()
 		await process_frame
 		await process_frame
 	Engine.time_scale = original_time_scale
+	paused = original_paused
 	if not _failures.is_empty():
 		for failure in _failures:
 			push_error("Living Expedition 01 journey smoke failed: %s" % failure)
@@ -123,14 +126,15 @@ func _run_branch(main, adaptation_id: String) -> String:
 
 	var control = main._companion_sortie.control_runtime()
 	var command_opened: Dictionary = control.begin_command_mode()
-	_expect(is_equal_approx(Engine.time_scale, 0.2), "%s BOND did not slow complete simulation to 20 percent" % adaptation_id)
+	_expect(paused and bool(command_opened.get("simulation_paused", false)), "%s BOND did not pause the complete simulation" % adaptation_id)
+	_expect(str(command_opened.get("timing_policy", "")) == "tactical_pause", "%s BOND reported the wrong timing policy" % adaptation_id)
 	_expect((command_opened.get("context_commands", []) as Array).size() <= 3, "%s command palette exceeded three actions" % adaptation_id)
 	_expect(
 		_guidance(main).find("Press 1, 2, or 3 to activate") != -1 and _guidance(main).find("B/Esc closes") != -1,
 		"%s open BOND palette did not explain direct activation and close" % adaptation_id
 	)
 	control.end_command_mode()
-	_expect(is_equal_approx(Engine.time_scale, 1.0), "%s command close did not restore simulation speed" % adaptation_id)
+	_expect(not paused, "%s command close did not restore simulation" % adaptation_id)
 	_expect(bool(control.request_mount().get("changed", false)), "%s base riding did not unlock on Day 2" % adaptation_id)
 	var hotbar: Array = control.report().get("mounted_actions", [])
 	_expect(not hotbar.is_empty() and str(hotbar[0].get("id", "")) == "glide_surge", "%s mounted hotbar omitted Glide Surge" % adaptation_id)
@@ -172,7 +176,7 @@ func _run_branch(main, adaptation_id: String) -> String:
 	_expect(bool(payoff.get("independent", false)) and bool(payoff.get("mounted", false)), "%s did not work in both roles" % adaptation_id)
 
 	main._companion_sortie.reset_control("retry")
-	_expect(not main._companion_sortie.control_runtime().is_mounted() and is_equal_approx(Engine.time_scale, 1.0), "%s Retry retained mounted or slow-time state" % adaptation_id)
+	_expect(not main._companion_sortie.control_runtime().is_mounted() and not paused, "%s Retry retained mounted or tactical-pause state" % adaptation_id)
 	var profile_report: Dictionary = profile.companion_report()
 	var individual: Dictionary = profile_report.get("individual", {})
 	var day: Dictionary = main._expedition_day_state.report()

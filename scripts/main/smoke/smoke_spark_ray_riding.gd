@@ -34,6 +34,7 @@ func _initialize() -> void:
 
 func _run() -> void:
 	var original_time_scale := Engine.time_scale
+	var original_paused := paused
 	var world := WORLD_SCENE.instantiate()
 	world.map_path = MAP_PATH
 	get_root().add_child(world)
@@ -58,20 +59,20 @@ func _run() -> void:
 	var control = runtime.control_runtime()
 	_expect(ray != null and bool(spawn_report.get("spawned", false)), "committed active Spark Ray did not create the riding fixture")
 	if ray == null or control == null:
-		_finish(world, player, runtime, hud, original_time_scale)
+		_finish(world, player, runtime, hud, original_time_scale, original_paused)
 		return
 	ray.set_physics_process(false)
 	_test_input_contract()
-	_test_command_slow_time(control, original_time_scale)
+	_test_command_tactical_pause(control, original_time_scale, original_paused)
 	_test_mount_and_hotbar(control, player, ray, hud)
 	_test_mounted_movement_and_glide(world, control, player, ray)
 	_test_gate_protection(world, control, player, ray)
 	_test_clearance_denials(world, control, player, ray)
 	_test_hostile_dismount(control, player, ray)
-	_test_reset_and_inactive_restore(control, player, original_time_scale)
+	_test_reset_and_inactive_restore(control, player, original_time_scale, original_paused)
 	_expect(profile.companion_report() == profile_before, "command or riding state mutated the persistent companion profile")
-	_test_scene_exit_restore(runtime, control, original_time_scale)
-	_finish(world, player, runtime, hud, original_time_scale)
+	_test_scene_exit_restore(runtime, control, original_paused)
+	_finish(world, player, runtime, hud, original_time_scale, original_paused)
 
 
 func _test_input_contract() -> void:
@@ -92,27 +93,35 @@ func _test_input_contract() -> void:
 		)
 
 
-func _test_command_slow_time(control, original_time_scale: float) -> void:
+func _test_command_tactical_pause(control, original_time_scale: float, original_paused: bool) -> void:
 	_expect(control.handle_input(_action(&"companion_command")), "B did not open command mode")
 	var opened: Dictionary = control.report()
 	_expect(bool(opened.get("command_mode", false)), "BOND did not open command mode")
-	_expect(is_equal_approx(Engine.time_scale, 0.2), "BOND did not set complete simulation time scale to 20 percent")
+	_expect(paused and bool(opened.get("simulation_paused", false)), "BOND did not pause the complete simulation")
+	_expect(str(opened.get("timing_policy", "")) == "tactical_pause", "BOND reported the wrong timing policy")
+	_expect(is_equal_approx(Engine.time_scale, original_time_scale), "BOND changed time scale instead of owning tactical pause")
 	var commands: Array = opened.get("context_commands", [])
 	_expect(commands.size() > 0 and commands.size() <= 3, "BOND palette did not expose one to three contextual commands")
 	_expect(commands.map(func(command): return str(command.get("id", ""))).has("mount"), "near unmounted palette omitted Mount")
 	_expect(bool(opened.get("palette", {}).get("visible", false)), "BOND palette was not visible")
+	control._glide_cooldown_seconds = 1.0
+	control._process(0.4)
+	_expect(is_equal_approx(float(control.report().get("glide_cooldown_seconds", 0.0)), 1.0), "creature action cooldown advanced during tactical pause")
 	control.handle_input(_action(&"companion_command", false))
 	_expect(bool(control.report().get("command_mode", false)), "releasing B closed toggle command mode")
 	control.handle_input(_action(&"companion_command"))
 	_expect(not bool(control.report().get("command_mode", true)), "second B press did not close command mode")
-	_expect(is_equal_approx(Engine.time_scale, original_time_scale), "closing BOND did not restore normal time")
+	_expect(paused == original_paused, "closing BOND did not restore the prior pause state")
+	control._process(0.4)
+	_expect(is_equal_approx(float(control.report().get("glide_cooldown_seconds", 0.0)), 0.6), "creature action cooldown did not resume after tactical pause")
+	control._glide_cooldown_seconds = 0.0
 
 
 func _test_mount_and_hotbar(control, player, ray, hud) -> void:
 	control.handle_input(_action(&"companion_command"))
 	control.handle_input(_action(&"companion_action_1"))
 	_expect(control.is_mounted(), "pressing 1 for Mount did not transfer control")
-	_expect(is_equal_approx(Engine.time_scale, 1.0), "confirming Mount left slow time active")
+	_expect(not paused, "confirming Mount left tactical pause active")
 	_expect(player.mounted_control_active(), "mounted player controller retained movement authority")
 	_expect(not hud.visible and control.hides_diver_hotbar(), "mounted mode did not hide the diver hotbar")
 	var report: Dictionary = control.report()
@@ -208,23 +217,24 @@ func _test_hostile_dismount(control, player, ray) -> void:
 	_expect(str(ray_report.get("presentation", {}).get("context_kind", "")) == "danger", "major hostile hit omitted the danger cue")
 
 
-func _test_reset_and_inactive_restore(control, player, original_time_scale: float) -> void:
+func _test_reset_and_inactive_restore(control, player, original_time_scale: float, original_paused: bool) -> void:
 	control.begin_command_mode()
 	control.reset_control("retry")
-	_expect(is_equal_approx(Engine.time_scale, original_time_scale), "Retry reset did not restore normal time")
+	_expect(paused == original_paused, "Retry reset did not restore the prior pause state")
+	_expect(is_equal_approx(Engine.time_scale, original_time_scale), "Retry reset changed the existing time scale")
 	_expect(not control.is_mounted() and not player.mounted_control_active(), "Retry reset retained mounted state")
 	control.begin_command_mode()
 	_control_allowed = false
 	control._process(0.0)
 	_expect(not bool(control.report().get("command_mode", true)), "failure/debrief transition retained BOND control")
-	_expect(is_equal_approx(Engine.time_scale, original_time_scale), "failure/debrief transition did not restore normal time")
+	_expect(paused == original_paused, "failure/debrief transition did not restore the prior pause state")
 	_control_allowed = true
 
 
-func _test_scene_exit_restore(runtime, control, original_time_scale: float) -> void:
+func _test_scene_exit_restore(runtime, control, original_paused: bool) -> void:
 	control.begin_command_mode()
 	runtime.clear_map()
-	_expect(is_equal_approx(Engine.time_scale, original_time_scale), "scene exit did not restore normal time")
+	_expect(paused == original_paused, "scene exit did not restore the prior pause state")
 
 
 func _find_open_route(world, start: Vector2) -> Array:
@@ -288,7 +298,8 @@ func _allow_position(_position: Vector2) -> bool:
 	return true
 
 
-func _finish(world, player, runtime, hud, original_time_scale: float) -> void:
+func _finish(world, player, runtime, hud, original_time_scale: float, original_paused: bool) -> void:
+	paused = original_paused
 	Engine.time_scale = original_time_scale
 	runtime.clear_map()
 	runtime.queue_free()
@@ -300,7 +311,7 @@ func _finish(world, player, runtime, hud, original_time_scale: float) -> void:
 			push_error("Spark Ray riding smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("PASS: Spark Ray riding BOND_toggle=B direct_commands=1-3 slow_time=0.2 restored=toggle+selection+retry+failure+scene_exit commands<=3 mount_clearance=true dismount_handoff=independent+separated+repeatable movement_owner=ray camera_owner=diver hotbar=creature glide_surge=directional+cooldown+no_damage gate_bypass=false forced_dismount=true mobile_action=companion_command profile_unchanged=true.")
+	print("PASS: Spark Ray riding BOND_toggle=B direct_commands=1-3 timing=tactical_pause restored=toggle+selection+retry+failure+scene_exit commands<=3 mount_clearance=true dismount_handoff=independent+separated+repeatable movement_owner=ray camera_owner=diver hotbar=creature glide_surge=directional+cooldown+no_damage gate_bypass=false forced_dismount=true mobile_action=companion_command profile_unchanged=true.")
 	quit(0)
 
 

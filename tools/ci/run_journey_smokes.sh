@@ -19,6 +19,7 @@ run_godot living-expedition-01 300 --headless --path . --script res://scripts/ma
 run_godot living-expedition-02 180 --headless --path . --script res://scripts/main/smoke/smoke_two_species_sortie_integration.gd --review-checkpoint=living_expedition_02_start
 run_godot living-expedition-03 180 --headless --path . --script res://scripts/main/smoke/smoke_living_expedition_03_integration.gd --review-checkpoint=living_expedition_03_start
 run_godot living-expedition-04 240 --headless --path . --script res://scripts/main/smoke/smoke_living_expedition_04_journey.gd --review-checkpoint=living_expedition_04_start
+run_godot companion-command-tactical-pause 180 --headless --path . --script res://scripts/main/smoke/smoke_companion_command_tactical_pause.gd --review-checkpoint=living_expedition_04_start
 run_godot active-tool-selection 60 --headless --path . --smoke-active-tool-selection
 run_godot cutter-salvage-state 60 --headless --path . --script res://scripts/main/smoke/smoke_cutter_salvage_state.gd
 run_godot sealed-wreck-reward-state 60 --headless --path . --script res://scripts/main/smoke/smoke_sealed_wreck_reward_state.gd
