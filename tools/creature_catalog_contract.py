@@ -12,13 +12,16 @@ ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATH = ROOT / "config" / "creature_catalog.json"
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
 ROLES = {"independent", "mounted"}
-SPECIES_IDS = {"spark_ray", "veil_cuttle"}
+SPECIES_IDS = {"spark_ray", "veil_cuttle", "silt_hound"}
 INDIVIDUAL_VALUES = {
     "spark_ray_juvenile_01": {"species_id": "spark_ray", "default_callsign": "Kite"},
     "veil_cuttle_juvenile_01": {"species_id": "veil_cuttle", "default_callsign": "Mica"},
+    "silt_hound_juvenile_01": {"species_id": "silt_hound", "default_callsign": "Marl"},
 }
 CATALOG_IDS = {
-    "actions": {"glide_surge", "anchor_brace", "guardian_pulse_action", "reveal_trace", "read_drift"},
+    "actions": {
+        "glide_surge", "anchor_brace", "guardian_pulse_action", "reveal_trace", "read_drift", "excavate",
+    },
     "memories": {"held_the_flow", "stood_ground", "followed_the_bloom"},
     "adaptations": {"anchor_fins", "guardian_pulse", "drift_lens"},
 }
@@ -37,6 +40,13 @@ SPECIES_VALUES = {
         "memory_ids": ["followed_the_bloom"],
         "adaptation_ids": ["drift_lens"],
     },
+    "silt_hound": {
+        "roles": ["independent"],
+        "ride_capable": False,
+        "base_action_ids": ["excavate"],
+        "memory_ids": [],
+        "adaptation_ids": [],
+    },
 }
 ACTION_VALUES = {
     "glide_surge": {"roles": ["mounted"], "effect_kind": "movement", "damaging": False},
@@ -48,6 +58,7 @@ ACTION_VALUES = {
     },
     "reveal_trace": {"roles": ["independent"], "effect_kind": "trace_reveal", "damaging": False},
     "read_drift": {"roles": ["independent"], "effect_kind": "moving_hazard_read", "damaging": False},
+    "excavate": {"roles": ["independent"], "effect_kind": "material_reveal", "damaging": False},
 }
 MEMORY_VALUES = {
     "held_the_flow": {"event_kind": "current_cycle_completed", "adaptation_ids": ["anchor_fins"]},
@@ -168,10 +179,10 @@ def _contract_drift(item: dict[str, Any], expected: dict[str, Any], label: str) 
 
 def validate_creature_catalog(catalog: dict[str, Any]) -> list[str]:
     failures: list[str] = []
-    if catalog.get("version") != 2:
-        failures.append("creature catalog version must be 2.")
+    if catalog.get("version") != 3:
+        failures.append("creature catalog version must be 3.")
     if catalog.get("implementation_status") != "partial_runtime":
-        failures.append("creature catalog implementation_status must be 'partial_runtime' during the two-species build.")
+        failures.append("creature catalog implementation_status must be 'partial_runtime' during the bounded build.")
     if forbidden := _forbidden_paths(catalog):
         failures.append(f"creature catalog contains mutable state fields: {forbidden}.")
     seen: dict[str, str] = {}
