@@ -339,6 +339,10 @@ func get_material_candidates() -> Array:
 	return _material_candidate_runtime.candidates()
 
 
+func get_companion_contexts() -> Array:
+	return _duplicate_dictionary_array(_map_data.get("companion_contexts", []))
+
+
 func configure_material_candidates(selected_ids: Array, depleted_ids: Array) -> void:
 	_material_candidate_runtime.configure(selected_ids, depleted_ids)
 
@@ -353,6 +357,22 @@ func collect_material_candidate(candidate_id: String) -> bool:
 
 func restore_material_candidate(candidate_id: String) -> void:
 	_material_candidate_runtime.restore(candidate_id)
+
+
+func get_material_candidate_state(candidate_id: String) -> Dictionary:
+	return _material_candidate_runtime.candidate_state(candidate_id)
+
+
+func reveal_buried_material_candidate(candidate_id: String) -> bool:
+	return _material_candidate_runtime.reveal_buried(candidate_id)
+
+
+func conceal_buried_material_candidate(candidate_id: String) -> bool:
+	return _material_candidate_runtime.conceal_buried(candidate_id)
+
+
+func set_buried_material_state(candidate_id: String, state: String, progress := 0.0) -> bool:
+	return _material_candidate_runtime.set_buried_state(candidate_id, state, progress)
 
 
 func get_material_candidate_report() -> Dictionary:

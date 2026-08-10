@@ -26,6 +26,8 @@ var _movement_speed := 0.0
 var _context_kind := ""
 var _context_direction := Vector2.RIGHT
 var _context_seconds := 0.0
+var _excavate_state := "idle"
+var _excavate_progress := 0.0
 
 
 func sync(state: String, facing_sign: float, path_points: Array, floor_distance: float, movement_speed: float) -> void:
@@ -52,6 +54,12 @@ func show_context_response(context_kind: String, direction: Vector2, duration :=
 	return true
 
 
+func set_excavate_state(state: String, progress: float) -> void:
+	_excavate_state = state
+	_excavate_progress = clampf(progress, 0.0, 1.0)
+	queue_redraw()
+
+
 func advance(delta: float) -> void:
 	_pulse_seconds = fmod(_pulse_seconds + maxf(0.0, delta), 1.0)
 	if _context_seconds > 0.0:
@@ -75,6 +83,9 @@ func report() -> Dictionary:
 		"context_kind": _context_kind,
 		"context_seconds": _context_seconds,
 		"mounted": false,
+		"excavate_state": _excavate_state,
+		"excavate_progress": _excavate_progress,
+		"excavate_visible": _excavate_state not in ["idle", "revealed"],
 	}
 
 
@@ -85,6 +96,7 @@ func _draw() -> void:
 	_draw_floor_attention()
 	_draw_separation_cue()
 	_draw_context_cue()
+	_draw_excavate_cue()
 
 
 func _draw_hound() -> void:
@@ -207,3 +219,25 @@ func _draw_context_cue() -> void:
 	else:
 		draw_line(center + Vector2(-4.0, -4.0), center + Vector2(4.0, 4.0), color, 2.0, true)
 		draw_line(center + Vector2(-4.0, 4.0), center + Vector2(4.0, -4.0), color, 2.0, true)
+
+
+func _draw_excavate_cue() -> void:
+	if _excavate_state in ["idle", "revealed"]:
+		return
+	var direction := _facing_sign
+	var ground := Vector2(29.0 * direction, 23.0)
+	if _excavate_state == "approaching":
+		draw_line(ground + Vector2(-10.0 * direction, 0.0), ground + Vector2(10.0 * direction, 0.0), Color(COLOR_WHISKER, 0.82), 2.0, true)
+		return
+	if _excavate_state == "anticipating":
+		var brace := 7.0 + _excavate_progress * 8.0
+		draw_arc(ground, brace, PI, TAU, 18, COLOR_EYE, 2.0, true)
+		return
+	if _excavate_state == "digging":
+		for index in range(4):
+			var angle := float(index) * 1.1 + _excavate_progress * 5.0
+			var offset := Vector2(cos(angle) * 17.0, sin(angle) * 7.0)
+			draw_circle(ground + offset, 2.6, Color(COLOR_SILT, 0.82))
+		return
+	if _excavate_state == "impact":
+		draw_arc(ground, 9.0 + 26.0 * _excavate_progress, 0.0, TAU, 24, Color(COLOR_WHISKER, 1.0 - _excavate_progress * 0.55), 3.0, true)

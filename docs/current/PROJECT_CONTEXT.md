@@ -50,7 +50,7 @@ Expansion 17 Wreck Network Triangulation is complete with owner GO through #1167
 
 Expansion 18 implements one exceptional `transfer_hub_interior_01` destination reached by swimming through the normal full level to a physical entrance. Its source/state contract, generated maps, continuous sortie, existing-cutter core recovery, deterministic evidence, and exact public build remain valid regression surfaces. It receives no player-experience GO and no further bounded correction pass.
 
-The active direction is one bonded active companion whose credible species roles and meaningful expedition experiences shape real-time independent or mounted play. Living Expeditions 01-03 have owner GO: Kite proves rescue, riding, memory, and adaptation; Kite and Mica occupy one compact canonical-boat habitat with one active sortie selection; and Mica turns one source-authored jellyfish migration observation into the next-day Drift Lens field skill. Living Expedition 04 is technically complete and closed on HOLD: Mica's eel prediction was not useful, so Drift Lens remains moving-ecology-only and Guardian-Pulse Kite is the eel's sole active companion response. Living Expedition 05 now defines Silt Hound Marl, profile-v3 migration, a compact three-row habitat, one lower-loop rescue, one source-authored optional excavation mound, and Marl's distinct six-fin rescue/follow/recovery presentation; deliberate excavation remains the active implementation work. Diver equipment retains hard geographic access; companions cannot bypass it.
+The active direction is one bonded active companion whose credible species roles and meaningful expedition experiences shape real-time independent or mounted play. Living Expeditions 01-03 have owner GO: Kite proves rescue, riding, memory, and adaptation; Kite and Mica occupy one compact canonical-boat habitat with one active sortie selection; and Mica turns one source-authored jellyfish migration observation into the next-day Drift Lens field skill. Living Expedition 04 is technically complete and closed on HOLD: Mica's eel prediction was not useful, so Drift Lens remains moving-ecology-only and Guardian-Pulse Kite is the eel's sole active companion response. Living Expedition 05 now defines Silt Hound Marl, profile-v3 migration, a compact three-row habitat, one lower-loop rescue, one source-authored optional excavation mound, Marl's distinct six-fin rescue/follow/recovery presentation, and a deliberate approach/dig/reveal handoff into the existing material-cargo path. Diver equipment retains hard geographic access; companions cannot bypass it.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -264,7 +264,7 @@ Current issue state as of 2026-08-10:
 - Closed: milestone #46 and #1253-#1262 implement the bounded Kite/Mica habitat, active selection, Mica sensing role, deterministic evidence, exact Web checkpoint, and owner GO.
 - Closed: milestone #47 and #1276-#1285 plus bounded corrections #1301/#1303/#1305/#1307/#1308 implement Mica's ecology journey, exact-Web runtime `0e92dd7`, and owner GO.
 - Closed on owner HOLD: milestone #48 and #1314-#1323 plus bounded corrections #1333/#1335/#1336 retain Kite's eel opening, retire Mica's non-useful prediction, and verify corrected runtime `bbcc255`.
-- Active batch: Living Expedition 05 follows the dependency order in its plan; source/state/schema, profile-v3/habitat, source authoring, and focused Silt Hound rescue/follow presentation are current. Deliberate excavation and integrated journey evidence remain next.
+- Active batch: Living Expedition 05 follows the dependency order in its plan; source/state/schema, profile-v3/habitat, source authoring, Silt Hound rescue/follow presentation, and deliberate Excavate runtime are current. Integrated journey, deterministic evidence, visual review, and owner closeout remain next.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -402,7 +402,7 @@ Current issue state as of 2026-08-10:
 
 ## Recommended Next Work
 
-Living Expeditions 01-03 are complete with owner GO. Living Expedition 04 is technically complete and closed on owner HOLD: Mica's eel prediction is retired, Guardian-Pulse Kite remains the only active companion response, and BOND uses a whole-simulation tactical pause. Living Expedition 05 is the committed next proof: rescue, select, and deliberately command one Silt Hound to excavate one visible source-authored optional typed-material deposit. Keep #52/#53 deferred.
+Living Expeditions 01-03 are complete with owner GO. Living Expedition 04 is technically complete and closed on owner HOLD: Mica's eel prediction is retired, Guardian-Pulse Kite remains the only active companion response, and BOND uses a whole-simulation tactical pause. Living Expedition 05 has its focused rescue, selection, follow, and deliberate Excavate material handoff; the integrated rescue-to-bank journey and review evidence are next. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 
