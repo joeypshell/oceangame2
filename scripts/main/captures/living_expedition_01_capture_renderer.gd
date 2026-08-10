@@ -57,6 +57,8 @@ func capture_pair(capture_dir: String, state_id: String, camera_test: Dictionary
 
 
 func prepare_to_quit() -> void:
+	_main._companion_sortie.reset_control("capture_complete")
+	_main.get_tree().paused = false
 	Engine.time_scale = 1.0
 	_main.get_window().size = Vector2i(1280, 720)
 	_mobile_controls.visible = false

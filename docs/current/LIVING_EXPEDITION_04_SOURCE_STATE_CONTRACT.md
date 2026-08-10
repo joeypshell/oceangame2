@@ -2,7 +2,7 @@
 
 Date: 2026-08-08
 
-Amended: 2026-08-09 by #1335 after owner HOLD
+Amended: 2026-08-09 by #1335/#1336 after owner HOLD
 
 Status: current implementation contract for milestone #48.
 
@@ -159,7 +159,7 @@ survive Retry, day transition, and reload.
 - Guardian Pulse shows aim, charge, hit/miss, recoil, opening, and cooldown.
 - Eel health feedback changes only after Shock Prod damage.
 - Existing diver/mounted hotbar ownership remains authoritative.
-- #1336 must verify and correct complete-simulation timing while BOND is open.
+- BOND uses one whole-simulation tactical pause while command input remains live.
 
 ## Validation And Review
 

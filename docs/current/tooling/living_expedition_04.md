@@ -25,6 +25,16 @@ restoration, connector reload, and fresh-day restoration without changing
 access or the guarded cache. Living Expedition 03 separately protects Mica's
 moving-ecology `Read Drift` behavior.
 
+Run the focused command-timing regression separately:
+
+```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --headless --path . --script res://scripts/main/smoke/smoke_companion_command_tactical_pause.gd --review-checkpoint=living_expedition_04_start
+```
+
+It observes the real eel phase and position plus player, companion, oxygen,
+daylight, and moving-hazard state across the paused command window, then proves
+keyboard selection and all restoration paths.
+
 ## Focused Visual Review
 
 Run the non-headless capture runner, then check its ignored output:

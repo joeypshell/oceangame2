@@ -82,10 +82,10 @@ failed experiment as active content would be drift, not iteration.
 ## BOND Timing Correction
 
 The owner also reported that opening the BOND palette appeared to slow only the
-player while the eel continued. #1336 owns that separate control defect. It
-must verify effective player and hostile motion, not merely the
-`Engine.time_scale` value, then make command selection pause or slow the whole
-simulation consistently across keyboard and mobile controls.
+player while the eel continued. #1336 corrects that separate control defect with
+a whole-simulation tactical pause. Palette input remains live on keyboard and
+mobile while player, eel, oxygen, daylight, hazards, companion movement, and
+action cooldowns remain frozen until selection closes.
 
 This timing correction must not restore Mica's eel action or change Guardian
 Pulse, Shock Prod, map, reward, profile, or progression behavior.

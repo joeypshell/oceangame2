@@ -166,7 +166,7 @@ func _test_commit_and_species_sorties(world, player, profile, rescue, mica_sourc
 			sortie.recover_to_player(reason)
 		var reset_report: Dictionary = sortie.control_runtime().report()
 		_expect(_trace_state(world) == "hidden", "%s retained transient trace visibility" % reason)
-		_expect(not reset_report.get("command_mode", true) and is_zero_approx(float(reset_report.get("trace", {}).get("cooldown_seconds", -1.0))) and is_equal_approx(Engine.time_scale, 1.0), "%s retained command, cooldown, or slow-time state" % reason)
+		_expect(not reset_report.get("command_mode", true) and not paused and is_zero_approx(float(reset_report.get("trace", {}).get("cooldown_seconds", -1.0))), "%s retained command, cooldown, or tactical-pause state" % reason)
 		_expect(profile.companion_report() == profile_before_failure, "%s changed committed individuals or active selection" % reason)
 
 	player.global_position = world.get_entry_position("surface_boat_entry")
@@ -316,6 +316,7 @@ func _cleanup_profile() -> void:
 
 
 func _finish(world, player, rescue, sortie) -> void:
+	paused = false
 	if sortie != null:
 		sortie.clear_map()
 		sortie.queue_free()

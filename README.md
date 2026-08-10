@@ -2,7 +2,7 @@
 
 `oceangame2` is a side-view underwater expedition-raising game built on a controlled diver-expedition foundation.
 
-The existing runtime proves contiguous authored exploration, oxygen/daylight pressure, equipment progression, limited combat, night projects, and stable validation/deployment. Expansion 18 is technically complete but closes with a strategic player-experience HOLD: extending the old clue, recipe, gate, and scan cadence would not solve its generic motivation. Living Expeditions 01-03 have owner GO and establish the active direction: one bonded creature can support or be ridden in real time, while meaningful shared memories become deliberate visible adaptations at night. Living Expedition 04 reached exact-Web review, but the owner rejected Mica's eel prediction as non-useful; Mica remains an ecology reader and Guardian-Pulse Kite is now the eel's sole active companion response while the milestone closes its control correction.
+The existing runtime proves contiguous authored exploration, oxygen/daylight pressure, equipment progression, limited combat, night projects, and stable validation/deployment. Expansion 18 is technically complete but closes with a strategic player-experience HOLD: extending the old clue, recipe, gate, and scan cadence would not solve its generic motivation. Living Expeditions 01-03 have owner GO and establish the active direction: one bonded creature can support or be ridden in real time, while meaningful shared memories become deliberate visible adaptations at night. Living Expedition 04 reached exact-Web review, but the owner rejected Mica's eel prediction as non-useful; Mica remains an ecology reader, Guardian-Pulse Kite is the eel's sole active companion response, and BOND now pauses the whole simulation while commands are selected.
 
 ## Project Goal
 
@@ -26,7 +26,7 @@ Build a distinctive side-view ocean game in which:
 
 ## Planning Docs
 
-The Simple Diver and Phase 2 expansion roadmaps describe the completed runtime foundation. Living Expeditions 01-03 are implemented and owner-approved: Kite and Mica prove distinct mounted and sensing roles, one active next-sortie selection, an inhabited canonical boat, and one source-authored ecological observation that becomes Mica's useful next-day Drift Lens adaptation. Living Expedition 04 is active in milestone #48 with an owner HOLD: preserve Guardian Pulse, retire Mica's eel prediction, correct BOND timing, then close without adding another species or encounter.
+The Simple Diver and Phase 2 expansion roadmaps describe the completed runtime foundation. Living Expeditions 01-03 are implemented and owner-approved: Kite and Mica prove distinct mounted and sensing roles, one active next-sortie selection, an inhabited canonical boat, and one source-authored ecological observation that becomes Mica's useful next-day Drift Lens adaptation. Living Expedition 04 is at bounded HOLD closeout in milestone #48: Guardian Pulse remains, Mica's eel prediction is retired, BOND timing is corrected, and #1323 must close the verdict without adding another species or encounter.
 
 Core sources and operating docs:
 

@@ -73,6 +73,7 @@ func _run() -> void:
 	_test_denials(world, player, cuttle, moving_hazards, control)
 
 	control.clear_map()
+	paused = false
 	control.queue_free()
 	cuttle.queue_free()
 	player.queue_free()
@@ -84,7 +85,7 @@ func _run() -> void:
 		quit(1)
 		return
 	print(
-		"PASS: Veil Cuttle Drift Lens action=read_drift role=independent subjects=%s,%s path=true direction=true approach_warning=true bounded=%.1fs denials=no_subject,out_of_range,occluded,cooldown hazard_mutation=false access=false reward=false Kite_unchanged=existing_regression." % [
+		"PASS: Veil Cuttle Drift Lens action=read_drift role=independent timing=tactical_pause subjects=%s,%s path=true direction=true approach_warning=true bounded=%.1fs denials=no_subject,out_of_range,occluded,cooldown hazard_mutation=false access=false reward=false Kite_unchanged=existing_regression." % [
 			SOUTHWEST_ID,
 			DEEP_ID,
 			VeilCuttleDriftLensRuntime.PROJECTION_SECONDS,
@@ -105,7 +106,8 @@ func _test_projection(control, moving_hazards, player, cuttle, target_id: String
 	var before: Array = moving_hazards.snapshot()
 	_expect(control.drift_lens_runtime().action().get("label") == "Read Drift", "moving-hazard ecology lost the Read Drift label")
 	var open: Dictionary = control.begin_command_mode()
-	_expect(is_equal_approx(float(open.get("time_scale", 0.0)), 0.2), "Read Drift BOND mode did not use shared slow time")
+	_expect(paused and bool(open.get("simulation_paused", false)), "Read Drift BOND mode did not use shared tactical pause")
+	_expect(str(open.get("timing_policy", "")) == "tactical_pause", "Read Drift BOND mode reported the wrong timing policy")
 	control.cycle_context_command()
 	control.cycle_context_command()
 	var result: Dictionary = control.confirm_context_command()

@@ -1,10 +1,9 @@
 extends Node
 
 const CompanionCommandPalette := preload("res://scripts/companion/companion_command_palette.gd")
+const CompanionCommandPause := preload("res://scripts/companion/companion_command_pause.gd")
 const VeilCuttleTraceRuntime := preload("res://scripts/companion/veil_cuttle_trace_runtime.gd")
 const VeilCuttleDriftLensRuntime := preload("res://scripts/companion/veil_cuttle_drift_lens_runtime.gd")
-
-const COMMAND_TIME_SCALE := 0.2
 
 var _world
 var _player
@@ -12,14 +11,13 @@ var _companion
 var _status_sink := Callable()
 var _control_allowed := Callable()
 var _ecology_observation_sink := Callable()
+var _command_pause := CompanionCommandPause.new()
 var _palette
 var _trace := VeilCuttleTraceRuntime.new()
 var _drift_lens := VeilCuttleDriftLensRuntime.new()
 var _command_mode := false
 var _selected_command_index := 0
 var _palette_feedback := ""
-var _prior_time_scale := 1.0
-var _owns_time_scale := false
 var _last_denial := ""
 var _discovery_lead := {"active": false}
 var _lead_announced := false
@@ -34,7 +32,7 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	_command_mode = false
-	_restore_time_scale()
+	_command_pause.end()
 
 
 func bind_interface(status_sink: Callable, control_allowed: Callable) -> void:
@@ -111,9 +109,7 @@ func begin_command_mode() -> Dictionary:
 	_command_mode = true
 	_selected_command_index = 0
 	_palette_feedback = ""
-	_prior_time_scale = Engine.time_scale
-	_owns_time_scale = true
-	Engine.time_scale = COMMAND_TIME_SCALE
+	_command_pause.begin(get_tree())
 	_sync_command_preview()
 	_refresh_presentation()
 	return report()
@@ -121,12 +117,12 @@ func begin_command_mode() -> Dictionary:
 
 func end_command_mode() -> Dictionary:
 	if not _command_mode:
-		_restore_time_scale()
+		_command_pause.end()
 		return report()
 	_command_mode = false
 	_palette_feedback = ""
 	_trace.end_preview()
-	_restore_time_scale()
+	_command_pause.end()
 	_refresh_presentation()
 	return report()
 
@@ -193,6 +189,8 @@ func report() -> Dictionary:
 	return {
 		"command_mode": _command_mode,
 		"time_scale": Engine.time_scale,
+		"timing_policy": CompanionCommandPause.POLICY_ID,
+		"simulation_paused": _command_pause.is_active(),
 		"mounted": false,
 		"selected_command_index": _selected_command_index,
 		"context_commands": _context_commands(),
@@ -204,13 +202,15 @@ func report() -> Dictionary:
 
 
 func _process(delta: float) -> void:
-	_trace.advance(delta)
-	_drift_lens.advance(delta)
 	if _command_mode and (not _control_is_allowed() or not _dependencies_valid()):
 		reset_control("inactive")
 		return
 	if _command_mode:
 		_sync_command_preview()
+		_refresh_presentation()
+		return
+	_trace.advance(delta)
+	_drift_lens.advance(delta)
 	_discovery_lead = _trace.discovery_lead()
 	_discovery_lead["active"] = not _command_mode and bool(_discovery_lead.get("active", false))
 	if bool(_discovery_lead.get("active", false)) and not _lead_announced:
@@ -292,13 +292,6 @@ func _deny(reason: String, command := {}) -> Dictionary:
 func _notify(note: String) -> void:
 	if _status_sink.is_valid() and not note.is_empty():
 		_status_sink.call(note)
-
-
-func _restore_time_scale() -> void:
-	if _command_mode or not _owns_time_scale:
-		return
-	Engine.time_scale = _prior_time_scale
-	_owns_time_scale = false
 
 
 func _set_ecology_interest(lead) -> void:

@@ -83,7 +83,9 @@ The integrated Expansion 03 smoke verifies deterministic recipe selection, conne
 
 The integrated Expansion 06 smoke verifies source territory/timing, normal unarmed cache progress, active-eel contact/knockback interruption, health/oxygen separation, exact-once non-enemy shock-prod construction, selected-tool `Space` attacks, blocked legacy attack input, profile reload, reward-free armed victory, guarded-cache collection/banking, connector/day persistence, and combat/hazard/oxygen restoration. CI and release validation run it as `--smoke-expansion-06-combat-foundation`.
 
-The Spark Ray riding smoke protects toggle `B/BOND`, direct desktop `1`-`3` commands, global 20-percent command time, explicit mount/dismount clearance, mounted collision and camera ownership, creature-only hotbar, directional non-damaging Glide Surge, equipment-gate denial, hostile forced dismount, reset restoration, and profile immutability. CI runs it directly as `smoke_spark_ray_riding.gd`.
+The Spark Ray riding smoke protects toggle `B/BOND`, direct desktop `1`-`3` commands, whole-simulation tactical pause, explicit mount/dismount clearance, mounted collision and camera ownership, creature-only hotbar, directional non-damaging Glide Surge, equipment-gate denial, hostile forced dismount, reset restoration, and profile immutability. CI runs it directly as `smoke_spark_ray_riding.gd`.
+
+The companion tactical-pause smoke loads the Living Expedition 04 checkpoint and observes the real eel warning phase while `BOND` is open. It protects frozen hostile phase/position, player and companion positions, oxygen, daylight, moving hazards, live keyboard selection, and close/Retry/debrief/map/scene restoration. The mobile-control smoke separately proves `BOND` dispatch remains available while paused.
 
 The mobile-control smoke protects the accepted nine-region landscape layout, 104 px bottom interaction inset, simultaneous stick/command input, shared `TOOL`/`USE`/`BOND` actions, and non-overlapping active-tool HUD states at 1280x720 and 844x390. CI runs it directly as `smoke_mobile_test_controls.gd`.
 
@@ -192,6 +194,6 @@ The Pass 27 facing-transition smoke loads `production_slice_01`, drives repeated
 
 The movement-feel smoke loads `production_slice_01`, places the player in the first-route-choice open-water area, drives the real controller through start, stop, horizontal reversal, and diagonal input phases, and reports measured velocities for movement tuning review.
 
-The Living Expedition 01 journey smoke starts at the isolated pre-rescue checkpoint and runs both mutually exclusive Spark Ray branches through rescue, boat commitment, BOND slow-time, riding, one exact-once memory, night consolidation, and independent/mounted adaptation payoff. Its commands and focused capture workflow are kept in [Living Expedition 01 Evidence](living_expedition_01.md).
+The Living Expedition 01 journey smoke starts at the isolated pre-rescue checkpoint and runs both mutually exclusive Spark Ray branches through rescue, boat commitment, BOND tactical pause, riding, one exact-once memory, night consolidation, and independent/mounted adaptation payoff. Its commands and focused capture workflow are kept in [Living Expedition 01 Evidence](living_expedition_01.md).
 
 The feedback-overlay capture loads `production_slice_01`, collects one salvage item, forces the overlay into a low-oxygen held-salvage review state, and writes `visual_captures/feedback_overlay/production_slice_01_feedback_overlay.png` without changing map source data or accepted baselines.

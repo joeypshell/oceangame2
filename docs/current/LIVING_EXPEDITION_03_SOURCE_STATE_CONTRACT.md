@@ -165,7 +165,7 @@ not a one-lock companion key.
 
 ## Controls And Presentation
 
-- `B/BOND` toggles Mica's slow-time palette; desktop `1`-`3` activates the
+- `B/BOND` toggles Mica's tactical-pause palette; desktop `1`-`3` activates the
   matching labeled row, while touch uses sequential `BOND`, `TOOL`, and `USE`.
 - Before adaptation, valid Mica actions remain Recall and Reveal Trace.
 - After adaptation, the contextual palette may show Recall, Reveal Trace, and
@@ -224,7 +224,7 @@ Existing owners remain authoritative for terrain/collision, fins/light/pressure
 and tool access, oxygen, daylight, health, moving-hazard contact, cargo, banking,
 boat detection, day transition, active companion selection, Scanner interaction,
 and Kite riding/adaptations. Mica cannot cross a blocked route, protect the diver
-from contact, stop time outside the existing BOND slow-time contract, or turn
+from contact, stop time outside the existing BOND tactical-pause contract, or turn
 knowledge into access.
 
 ## Validation And Review

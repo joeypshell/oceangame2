@@ -69,8 +69,8 @@ fields must not be added directly to `main.gd`.
 ## Control Contract
 
 - `B/BOND` maps to `companion_command`; `Q` remains unused by this system.
-- Pressing `B` toggles a palette that slows all gameplay simulation consistently
-  to 20 percent and shows at most three numbered contextual commands.
+- Pressing `B` toggles a palette that pauses all gameplay simulation consistently
+  while input remains live and shows at most three numbered contextual commands.
 - Desktop `1`-`3` directly activates the matching row; `B` or `Esc` closes it.
 - The first-proof independent palette may expose recall, mount, and the selected
   adaptation action when each is valid.
@@ -141,7 +141,7 @@ become an autonomous damage engine.
 
 Automation must prove stable IDs, legal relationships, exact-once state,
 follow/separation, mount clearance, mode switching, hotbar ownership, consistent
-slow-time, both adaptation branches, equipment-gate authority, failure, reload,
+tactical pause, both adaptation branches, equipment-gate authority, failure, reload,
 desktop controls, and landscape-mobile controls.
 
 The owner review must complete the three-day path and judge attachment, command

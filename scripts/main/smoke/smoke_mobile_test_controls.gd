@@ -17,6 +17,7 @@ const EXPECTED_COMMANDS := {
 
 var _failures: Array[String] = []
 var _dispatched := {}
+var _dispatch_counts := {}
 
 
 func _initialize() -> void:
@@ -39,6 +40,7 @@ func _run() -> void:
 
 	var report: Dictionary = controls.get_test_report()
 	_expect(bool(report.get("enabled", false)), "forced controls did not enable")
+	_expect(controls.process_mode == Node.PROCESS_MODE_ALWAYS, "mobile controls cannot dispatch while tactical pause is active")
 	var commands: Array = report.get("commands", [])
 	var command_rects: Dictionary = report.get("command_rects", {})
 	var viewport_size: Vector2 = report.get("viewport_size", Vector2.ZERO)
@@ -97,6 +99,12 @@ func _run() -> void:
 			_expect(event is InputEventAction and (event as InputEventAction).action == expected, "%s dispatched the wrong action" % command_id)
 		else:
 			_expect(event is InputEventKey and (event as InputEventKey).keycode == expected, "%s dispatched the wrong key" % command_id)
+	var bond_dispatches_before := int(_dispatch_counts.get(&"bond", 0))
+	paused = true
+	controls._input(_touch(29, (command_rects.get(&"bond", Rect2()) as Rect2).get_center(), true))
+	_expect(int(_dispatch_counts.get(&"bond", 0)) == bond_dispatches_before + 1, "BOND did not dispatch during tactical pause")
+	controls._input(_touch(29, (command_rects.get(&"bond", Rect2()) as Rect2).get_center(), false))
+	paused = false
 
 	controls._input(_touch(30, (command_rects.get(&"bond", Rect2()) as Rect2).get_center(), true))
 	await process_frame
@@ -158,7 +166,7 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: mobile test controls auto_hidden=headless dive=stick+9_commands debrief=TOOL+BUILD+DAY+USE down_reachable=true bottom_inset=104 simultaneous_input=true BOND=tap USE=hold active_tool_hotbar=bottom_icons+desktop+844x390.")
+	print("PASS: mobile test controls auto_hidden=headless dive=stick+9_commands debrief=TOOL+BUILD+DAY+USE down_reachable=true bottom_inset=104 simultaneous_input=true BOND=tap+tactical_pause USE=hold active_tool_hotbar=bottom_icons+desktop+844x390.")
 	quit(0)
 
 
@@ -172,6 +180,7 @@ func _touch(index: int, position: Vector2, pressed: bool) -> InputEventScreenTou
 
 func _on_command_dispatched(command_id: StringName, event: InputEvent) -> void:
 	_dispatched[command_id] = event
+	_dispatch_counts[command_id] = int(_dispatch_counts.get(command_id, 0)) + 1
 
 
 func _expect(condition: bool, message: String) -> void:

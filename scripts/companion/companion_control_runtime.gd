@@ -2,9 +2,9 @@ extends Node
 
 const CompanionActionHud := preload("res://scripts/companion/companion_action_hud.gd")
 const CompanionClearance := preload("res://scripts/companion/companion_clearance.gd")
+const CompanionCommandPause := preload("res://scripts/companion/companion_command_pause.gd")
 const CompanionCommandPalette := preload("res://scripts/companion/companion_command_palette.gd")
 
-const COMMAND_TIME_SCALE := 0.2
 const MAX_CONTEXT_COMMANDS := 3
 const MAX_MOUNTED_ACTIONS := 3
 const GLIDE_SURGE_ACTION_ID := "glide_surge"
@@ -23,6 +23,7 @@ var _control_allowed := Callable()
 var _adaptation_action_provider := Callable()
 var _adaptation_action_dispatch := Callable()
 var _clearance := CompanionClearance.new()
+var _command_pause := CompanionCommandPause.new()
 var _palette
 var _action_hud
 var _command_mode := false
@@ -30,8 +31,6 @@ var _mounted := false
 var _selected_command_index := 0
 var _selected_action_index := 0
 var _palette_feedback := ""
-var _prior_time_scale := 1.0
-var _owns_time_scale := false
 var _glide_cooldown_seconds := 0.0
 var _glide_surge_seconds := 0.0
 var _glide_direction := Vector2.RIGHT
@@ -52,7 +51,7 @@ func _ready() -> void:
 
 func _exit_tree() -> void:
 	_command_mode = false
-	_restore_time_scale()
+	_command_pause.end()
 	if _mounted and _player != null and is_instance_valid(_player) and _player.has_method("set_mounted_control_active"):
 		_player.set_mounted_control_active(false)
 
@@ -133,20 +132,18 @@ func begin_command_mode() -> Dictionary:
 	_command_mode = true
 	_selected_command_index = 0
 	_palette_feedback = ""
-	_prior_time_scale = Engine.time_scale
-	_owns_time_scale = true
-	Engine.time_scale = COMMAND_TIME_SCALE
+	_command_pause.begin(get_tree())
 	_refresh_presentation()
 	return report()
 
 
 func end_command_mode() -> Dictionary:
 	if not _command_mode:
-		_restore_time_scale()
+		_command_pause.end()
 		return report()
 	_command_mode = false
 	_palette_feedback = ""
-	_restore_time_scale()
+	_command_pause.end()
 	_refresh_presentation()
 	return report()
 
@@ -297,6 +294,8 @@ func report() -> Dictionary:
 	return {
 		"command_mode": _command_mode,
 		"time_scale": Engine.time_scale,
+		"timing_policy": CompanionCommandPause.POLICY_ID,
+		"simulation_paused": _command_pause.is_active(),
 		"mounted": _mounted,
 		"selected_command_index": _selected_command_index,
 		"context_commands": _context_commands(),
@@ -316,6 +315,9 @@ func report() -> Dictionary:
 func _process(delta: float) -> void:
 	if (_command_mode or _mounted) and (not _control_is_allowed() or not _dependencies_valid()):
 		reset_control("inactive")
+		return
+	if _command_mode:
+		_refresh_presentation()
 		return
 	_glide_cooldown_seconds = maxf(0.0, _glide_cooldown_seconds - maxf(0.0, delta))
 	_glide_surge_seconds = maxf(0.0, _glide_surge_seconds - maxf(0.0, delta))
@@ -486,11 +488,6 @@ func _cancel_active_diver_tool() -> void:
 		_cancel_diver_tool.call()
 
 
-func _restore_time_scale() -> void:
-	if _command_mode or not _owns_time_scale:
-		return
-	Engine.time_scale = _prior_time_scale
-	_owns_time_scale = false
 func _control_is_allowed() -> bool:
 	return not _control_allowed.is_valid() or bool(_control_allowed.call())
 func _dependencies_valid() -> bool:

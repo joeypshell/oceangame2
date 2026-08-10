@@ -34,6 +34,7 @@ var _adaptation_debrief := CompanionAdaptationDebrief.new()
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_ensure_control(CompanionSpeciesRuntimeFactory.SPARK_RAY)
 	_habitat = CompanionHabitatSelection.new()
 	add_child(_habitat)
@@ -233,6 +234,16 @@ func handle_input(event: InputEvent) -> bool:
 	if _habitat != null and _habitat.handle_input(event):
 		return true
 	return _control != null and bool(_control.handle_input(event))
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if not get_tree().paused or _control == null:
+		return
+	var control_report: Dictionary = _control.report()
+	if not bool(control_report.get("command_mode", false)):
+		return
+	if handle_input(event):
+		get_viewport().set_input_as_handled()
 
 
 func release_to_habitat() -> bool:
