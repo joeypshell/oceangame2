@@ -1736,7 +1736,6 @@
         "deep_cache_eel_electrocyte_harvest"
       ],
       "companion_action_ids": [
-        "read_drift",
         "guardian_pulse_action"
       ],
       "review_context_ids": [
@@ -6931,7 +6930,6 @@
     "Does the optional trace remain clearly separate from scanner identification and progression?",
     "Does the migration trace read as evidence connected to the moving southwest bloom?",
     "Does the relationship remain optional, rewardless, reachable, and separate from hazard authority?",
-    "Does Mica make the eel's territorial phase and direction readable without changing it?",
     "Does Guardian Pulse create a clear zero-damage opening while Shock Prod remains defeat authority?",
     "Can the player still evade, attempt the cache, and understand that harvest requires defeat?"
   ],
@@ -7204,14 +7202,6 @@
       "review_context_id": "living_expedition_04_eel_review_01",
       "responses": [
         {
-          "species_id": "veil_cuttle",
-          "individual_id": "veil_cuttle_juvenile_01",
-          "required_adaptation_id": "drift_lens",
-          "action_id": "read_drift",
-          "effect_kind": "hostile_intent_read",
-          "mutation": "none"
-        },
-        {
           "species_id": "spark_ray",
           "individual_id": "spark_ray_juvenile_01",
           "required_adaptation_id": "guardian_pulse",
@@ -7224,7 +7214,7 @@
         }
       ],
       "availability": "all_supported_seeds",
-      "intent": "Mica reads the existing eel without mutation; Guardian-Pulse Kite may create a zero-damage opening while Shock Prod remains defeat authority."
+      "intent": "Guardian-Pulse Kite may create a zero-damage opening while Shock Prod remains defeat authority."
     }
   ]
 }

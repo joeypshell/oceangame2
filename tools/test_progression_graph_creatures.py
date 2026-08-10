@@ -146,9 +146,7 @@ class CreatureProgressionGraphTests(unittest.TestCase):
         self.assertEqual("companion_hostile_response", graph.nodes[relationship].kind)
         self.assertTrue({
             graph.resolve("spark_ray_juvenile_01"),
-            graph.resolve("veil_cuttle_juvenile_01"),
             graph.resolve("guardian_pulse"),
-            graph.resolve("drift_lens"),
             shock_prod,
         } <= requirements)
         self.assertTrue(any(edge.target == hostile and edge.relation == "targets" for edge in graph.outgoing(relationship)))

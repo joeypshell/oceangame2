@@ -124,10 +124,10 @@ changing topology, hard access, hazard authority, or rewards.
 
 ### Committed
 
-**Living Expedition 04: Companion-Shaped Wildlife Encounter** is selected in
-`docs/current/LIVING_EXPEDITION_04_PLAN.md`. It will compare Mica's informational
-read, Kite's non-damaging interruption, ordinary evade, and Shock-Prod
-defeat/harvest against the existing territorial eel without adding another
+**Living Expedition 04: Companion-Shaped Wildlife Encounter** is in bounded
+owner-HOLD closeout. It retains Kite's non-damaging interruption, ordinary
+evade, and Shock-Prod defeat/harvest against the existing territorial eel. The
+owner rejected Mica's eel prediction, so it is retired without adding another
 enemy, species, resource, region, or combat framework.
 
 The implementation milestone and issue batch are intentionally not created by
@@ -230,11 +230,11 @@ Control/combat decision:
 - Keep #52/#53 deferred unless slice-03 presentation becomes the selected goal.
 - Preserve the 500-line agent-efficiency target without harmful runtime splits.
 
-## Living Expedition 04 Exit Question
+## Living Expedition 04 Outcome
 
-> Did choosing Kite or Mica give you a different, understandable way to handle
-> the same eel, and did choosing between a nonlethal opening and a Shock-Prod
-> harvest feel like a real expedition decision?
+The answer to the original companion-choice question was HOLD: Mica's prediction
+did not produce a useful eel decision. Preserve her ecology role, retain Kite's
+opening, fix BOND timing, and close the bounded experiment before expansion.
 
 The planning contract is selected through #1312. Its implementation milestone
 and issue batch must be created by a later audit, then closed only after exact

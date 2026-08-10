@@ -150,8 +150,9 @@ habitats, low counts, and non-circular dependencies.
 The implemented stable has Kite the Spark Ray and Mica the Veil Cuttle in one
 compact boat habitat, with exactly one active companion selected per launched
 expedition. Mica's first ecological field proof is complete. The selected next
-proof compares how Guardian-Pulse Kite and Drift-Lens Mica change one existing
-territorial eel encounter without adding another individual.
+encounter proved Guardian-Pulse Kite's non-damaging eel interruption. The owner
+rejected Mica's eel prediction as non-useful, so Drift Lens remains focused on
+moving ecology and is not an active eel solution.
 
 The game should preserve individual names/callsigns, temperament, memories,
 adaptations, and important history. Large storage catalogs, breeding, fusion,
@@ -246,8 +247,8 @@ The repository currently implements:
 
 The repository does not yet implement:
 
-- the selected comparison of Mica information, Kite interruption, ordinary
-  evade, and Shock-Prod defeat/resource outcomes in one wildlife encounter
+- an owner-approved second companion approach to the territorial eel; the
+  attempted Mica prediction was deliberately retired
 - generalized species runtime beyond the focused Spark Ray and Veil Cuttle
   owners
 - scalable creature art, animation, audio, behavior, or combat architecture
@@ -275,8 +276,8 @@ Current runtime truth is documented in `docs/current/PROJECT_CONTEXT.md` and
 - giant creature roster or storage UI
 - turn-based three-creature party combat
 - more than one active expedition companion at a time
-- a third species or broad stable-management surface before the selected Living
-  Expedition 04 encounter receives a player verdict
+- a third species or broad stable-management surface before Living Expedition
+  04 closes its owner-HOLD corrections
 - breeding, fusion, genes, eggs, or inheritance
 - feeding chores, hidden loyalty, lifespan, forced retirement, or creature death
 - generalized ecosystem simulation
@@ -284,13 +285,11 @@ Current runtime truth is documented in `docs/current/PROJECT_CONTEXT.md` and
 - vehicles, final art/audio, broad accessibility, balance, and save hardening
   before their selected milestones
 
-## Selected Next Proof
+## Current Proof Outcome
 
-Living Expedition 04 succeeds when the player can answer yes:
-
-> Did choosing Kite or Mica give you a different, understandable way to handle
-> the same eel, and did choosing between a nonlethal opening and a Shock-Prod
-> harvest feel like a real expedition decision?
-
-If not, add no enemy or species. Correct the current encounter or its feedback
-before expanding combat, wildlife systems, or the roster.
+Living Expedition 04 received an owner HOLD. Guardian Pulse creates a useful
+non-damaging opening, ordinary evade remains viable, and Shock Prod alone owns
+defeat and harvest. Mica's prediction did not create a useful decision and is
+retired from this eel while her moving-ecology Read Drift role remains intact.
+Finish the bounded BOND timing correction and closeout before expanding the
+enemy set, wildlife systems, or roster.

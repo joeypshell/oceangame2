@@ -41,7 +41,7 @@ class ProductionLevelLivingExpedition04Tests(unittest.TestCase):
         self.assertEqual(SALVAGE_ID, relationship["guarded_salvage_id"])
         self.assertEqual(HARVEST_ID, relationship["hostile_harvest_id"])
         self.assertEqual(REVIEW_CONTEXT_ID, relationship["review_context_id"])
-        self.assertEqual(["veil_cuttle", "spark_ray"], [item["species_id"] for item in relationship["responses"]])
+        self.assertEqual(["spark_ray"], [item["species_id"] for item in relationship["responses"]])
         for forbidden in (
             "territory", "health", "phase", "position", "reward_ids", "profile_state", "defeated"
         ):
@@ -64,8 +64,8 @@ class ProductionLevelLivingExpedition04Tests(unittest.TestCase):
         responses = _by_id(
             self.map_data, "companion_hostile_responses", RELATIONSHIP_ID
         )["responses"]
-        mica, kite = responses
-        self.assertEqual(("hostile_intent_read", "none"), (mica["effect_kind"], mica["mutation"]))
+        self.assertEqual(1, len(responses))
+        kite = responses[0]
         self.assertEqual(("support_interrupt", 0), (kite["effect_kind"], kite["damage"]))
         self.assertEqual(["shock_prod"], kite["required_access_ids"])
 
@@ -80,6 +80,7 @@ class ProductionLevelLivingExpedition04Tests(unittest.TestCase):
         provenance = self.map_data["source"]["living_expedition_04"]
         self.assertEqual([RELATIONSHIP_ID], provenance["relationship_ids"])
         self.assertEqual([REVIEW_CAMERA_ID], provenance["camera_test_ids"])
+        self.assertEqual(["guardian_pulse_action"], provenance["companion_action_ids"])
         self.assertEqual([], provenance["terrain_changes"])
         self.assertEqual(
             candidate_terrain(self.source, global_gameplay_clearance_cells()),

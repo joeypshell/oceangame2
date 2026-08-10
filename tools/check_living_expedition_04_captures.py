@@ -15,9 +15,8 @@ CAPTURE_DIR = ROOT / "visual_captures" / "living_expedition_04"
 MANIFEST_PATH = CAPTURE_DIR / "capture_manifest.json"
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
 EXPECTED_CHECKPOINT = "living_expedition_04_start"
-EXPECTED_SUBJECT = "companion-shaped territorial eel encounter"
+EXPECTED_SUBJECT = "Guardian-Pulse territorial eel encounter"
 EXPECTED_STATES = (
-    "mica_intent_read",
     "guardian_opening",
     "shock_prod_damage",
     "defeat_harvest_available",
@@ -59,7 +58,7 @@ def main() -> int:
     if manifest.get("bounds_verified") is not True:
         return fail("runtime bounds verification was not recorded")
     if manifest.get("subject") != EXPECTED_SUBJECT:
-        return fail("manifest does not identify the companion-shaped encounter")
+        return fail("manifest does not identify the Guardian-Pulse encounter")
 
     expected_files = {
         f"production_level_01_{state}_{suffix}.png": size

@@ -18,17 +18,15 @@ class FakeWorld:
 			"hostile_id": "deep_cache_territorial_eel",
 			"responses": [
 				{
-					"species_id": "veil_cuttle",
-					"individual_id": "veil_cuttle_juvenile_01",
-					"required_adaptation_id": "drift_lens",
-				},
-				{
 					"species_id": "spark_ray",
 					"individual_id": "spark_ray_juvenile_01",
 					"required_adaptation_id": "guardian_pulse",
 				},
 			],
 		}]
+
+	func get_ecological_traces() -> Array:
+		return []
 
 
 class FakeProfile:
@@ -79,34 +77,20 @@ func _run() -> void:
 	profile.value = _profile_report(mica, [kite, mica])
 	world.at_boat = true
 	_expect(
-		guidance.objective_text(world, player, profile, sortie, DayState.new()).contains("TOOL picks Mica to predict or Kite to open"),
-		"boat guidance did not explain the companion-shaped choice"
+		guidance.objective_text(world, player, profile, sortie, DayState.new()).contains("TOOL picks Kite for Guardian Pulse"),
+		"boat guidance did not identify Kite as the active eel response"
 	)
 
 	world.at_boat = false
 	sortie.live_companion = RefCounted.new()
 	sortie.report_value = {"control": {"command_mode": false, "drift_lens": {"projection_seconds": 0.0}}}
+	var mica_text := guidance.objective_text(world, player, profile, sortie, DayState.new())
 	_expect(
-		guidance.objective_text(world, player, profile, sortie, DayState.new()).contains("Mica predicts lunges; no damage")
-		and guidance.objective_text(world, player, profile, sortie, DayState.new()).contains("B, then 3: Predict Lunge"),
-		"Mica guidance did not explain her role or lead to Predict Lunge"
-	)
-
-	sortie.report_value["control"]["drift_lens"] = {
-		"projection_seconds": 2.0,
-		"last_result": {
-			"target_id": "deep_cache_territorial_eel",
-			"phase": "warning",
-			"movement_direction": Vector2.LEFT,
-			"phase_seconds": 0.8,
-		},
-	}
-	var read_text := guidance.objective_text(world, player, profile, sortie, DayState.new())
-	_expect(
-		read_text.contains("Mica prediction shown beside eel")
-		and read_text.contains("No damage")
-		and read_text.contains("Shock Prod required for harvest"),
-		"Mica result did not point to the prediction card or distinguish harvest"
+		mica_text.contains("Near moving jellyfish")
+		and mica_text.contains("Read Drift")
+		and not mica_text.contains("eel")
+		and not mica_text.contains("Predict Lunge"),
+		"Mica guidance still presented an eel solution instead of moving ecology"
 	)
 
 	profile.value = _profile_report(kite, [kite, mica])
@@ -140,7 +124,7 @@ func _run() -> void:
 			push_error("Companion-hostile journey guidance smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("PASS: companion-hostile journey guidance boat=Mica_predict_or_Kite_open Mica=Predict_Lunge+MOVE_ASIDE+no_damage+defeat_only_harvest Kite=warning_or_lunge+opening+no_damage mounted=Space_USE Anchor=isolated.")
+	print("PASS: companion-hostile journey guidance boat=Kite_Guardian_Pulse Mica=ecology_only+no_eel_solution Kite=warning_or_lunge+opening+no_damage mounted=Space_USE Anchor=isolated.")
 	quit(0)
 
 

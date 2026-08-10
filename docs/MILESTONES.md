@@ -93,14 +93,14 @@ Living Expedition is the active product phase. It retains real-time daylight sor
 
 **[Living Expedition 03: Field Roles And Ecological Discovery](https://github.com/joeypshell/oceangame2/milestone/47)** is complete with owner GO on corrected exact-Web runtime `0e92dd7`. Mica reveals the existing southwest jellyfish migration, carries that shared observation through boat return and night consolidation, and deliberately reads authored jellyfish patrols later without disabling hazards or replacing equipment access.
 
-**Living Expedition 04: Companion-Shaped Wildlife Encounter** is selected as a planning contract through #1312. It will compare Mica's informational read, Kite's non-damaging interruption, ordinary evade, and Shock-Prod defeat/harvest against the existing eel. Its implementation milestone and issues must be created by a later audit.
+**[Living Expedition 04: Companion-Shaped Wildlife Encounter](https://github.com/joeypshell/oceangame2/milestone/48)** reached exact-Web owner review. Guardian-Pulse Kite, ordinary evade, Shock-Prod defeat, and explicit harvest remain valid, but the owner rejected Mica's eel prediction as non-useful. #1335 retires that active response, #1336 corrects BOND timing, and #1323 records the bounded HOLD closeout.
 
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
 - Completed: milestones #45-#47 prove one adapted Spark Ray, a bounded two-individual habitat and active species choice, then one Mica ecology journey and Drift Lens field-skill payoff.
-- Committed: the Living Expedition 04 planning contract selects one companion-shaped eel encounter; no implementation milestone or batch exists yet.
+- Committed: finish only Living Expedition 04's retirement, BOND timing, and HOLD closeout issues; do not begin another encounter or species in this milestone.
 - Directional: habitat legacy and regional creature journeys remain milestone-level goals only.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 

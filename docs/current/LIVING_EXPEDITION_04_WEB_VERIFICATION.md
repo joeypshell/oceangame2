@@ -2,12 +2,16 @@
 
 Date: 2026-08-08
 
+Amended: 2026-08-09 after owner HOLD
+
 Issue: #1322 `Verify Living Expedition 04 exact Web build and review checkpoint`
 
 ## Result
 
-**PASS for the exact deployment, checkpoint startup, responsive framing, touch
-dispatch, and deterministic companion-shaped encounter contract.**
+**HISTORICAL TECHNICAL PASS for the exact deployment, checkpoint startup,
+responsive framing, touch dispatch, and original encounter contract.** The
+owner later rejected Mica's eel prediction as non-useful. This SHA remains
+reproducible evidence, not the current accepted product result.
 
 - exact runtime SHA: `ce6f23f2fd72939de40bfa78c70d7344da00de46`
 - build version: `ce6f23f`
@@ -61,8 +65,8 @@ Chromium emitted only the accepted WebGL `ReadPixels` performance warning.
 The exact deployed SHA is also the head SHA of the passing regional journey
 job. A focused deterministic replay at that revision confirmed:
 
-1. Mica reads the existing eel's warning phase, westward lunge direction, and
-   retreat response without moving, damaging, slowing, or pacifying it.
+1. The now-rejected Mica experiment read the eel's warning phase and lunge
+   direction without mutating it; #1335 removes that response from active source.
 2. Ordinary retreat remains viable without a companion action.
 3. Guardian Pulse recoils the eel by `84px`, creates a `1.25s` opening, and
    leaves its health at `3/3`.
@@ -79,10 +83,11 @@ profile and does not read, delete, or write the normal durable profile.
 
 ## Known Limits
 
-This is a technical PASS, not a claim that the encounter is understandable,
-interesting, or motivating. The inherited full status panel also remains dense
-on mobile; no HUD baseline or presentation change was accepted here. Issue
-#1323 remains the required human owner GO/HOLD gate.
+This technical PASS did not prove that the encounter was useful or motivating.
+The owner supplied HOLD: Mica's prediction was not useful, and BOND appeared to
+leave hostile timing inconsistent. #1335 retires the response, #1336 corrects
+effective command timing, and #1323 records the bounded closeout. A corrected
+exact-Web verification must replace this historical candidate before closeout.
 
 ## Verification
 

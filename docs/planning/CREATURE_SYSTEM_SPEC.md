@@ -25,9 +25,9 @@ owner-approved milestone selects one.
 
 - The implemented roster has exactly two rescued individuals, one compact boat
   habitat, and one active companion slot per launched sortie.
-- The selected next proof compares how existing Kite and Mica builds change one
-  territorial eel encounter; it does not add another individual or enlarge the
-  habitat.
+- The current eel proof retains Guardian-Pulse Kite as its sole useful companion
+  response. Mica's rejected eel prediction is retired while her moving-ecology
+  role remains intact; the proof adds no individual or habitat growth.
 - Acquisition begins through observation, aid, rescue, or trust, not an abstract
   capture device.
 - Species provide a body plan, instincts, possible memories, adaptations, and
@@ -268,11 +268,11 @@ exclusive for this individual.
 
 ## Selected Encounter Proof
 
-Living Expedition 04 reuses the existing eel to compare companion roles. Drift-
-Lens Mica may read threat phase, direction, territory, and recovery without
-mutating the hostile. Guardian-Pulse Kite may create a temporary non-damaging
-opening without changing health or exposing a harvest. The Shock Prod remains
-the direct-damage owner, and only defeat exposes the existing electrocyte.
+Living Expedition 04 reuses the existing eel for Guardian-Pulse Kite's temporary
+non-damaging opening without changing health or exposing a harvest. The owner
+rejected Mica's eel prediction; generic hostile reading remains dormant and
+source-gated while Drift Lens still reads authored moving ecology. The Shock
+Prod remains the direct-damage owner, and only defeat exposes the electrocyte.
 
 Anchor-Fins Kite receives no invented combat action. The proof adds no new
 memory, adaptation, individual, hostile, resource, or hard-access capability.
