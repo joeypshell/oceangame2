@@ -103,11 +103,9 @@ var _completed_projects := {}
 var _banked_tool_target_ids := {}
 var _companion_profile := CompanionProfileState.new()
 var _last_storage_report := {"status": "not_loaded"}
-
 func _init(storage_path := DEFAULT_STORAGE_PATH, persistence_enabled := true) -> void:
 	_storage_path = str(storage_path)
 	_persistence_enabled = persistence_enabled
-
 
 func load_profile() -> Dictionary:
 	_reset_memory()
@@ -130,6 +128,7 @@ func load_profile() -> Dictionary:
 		return _last_storage_report.duplicate(true)
 	var payload := json.data as Dictionary
 	var migrations: Dictionary = ExpansionProfileMigrations.apply(payload, _migration_ids())
+	var loaded_companion_version := int((payload.get("companion_profile", {}) as Dictionary).get("schema_version", 0)) if typeof(payload.get("companion_profile")) == TYPE_DICTIONARY else 0
 	var failures := _validate_payload(payload)
 	if not failures.is_empty():
 		_last_storage_report = _report("invalid_schema", {"failures": failures})
@@ -163,13 +162,13 @@ func load_profile() -> Dictionary:
 		status = "migrated_v3"
 	elif loaded_version == TOOL_TARGET_SCHEMA_VERSION:
 		status = "migrated_v4"
-	elif loaded_version == SCHEMA_VERSION and int((payload["companion_profile"] as Dictionary).get("schema_version", 0)) == CompanionProfileState.LEGACY_PROFILE_SCHEMA_VERSION:
-		status = "migrated_companion_v2"
+	elif loaded_version == SCHEMA_VERSION and loaded_companion_version != CompanionProfileState.PROFILE_SCHEMA_VERSION:
+		status = "migrated_companion_v%d_to_v3" % loaded_companion_version
 	elif bool(migrations.get("scanner_purchase", false)):
 		status = "migrated_scanner_purchase"
 	elif bool(migrations.get("wreck_navigation", false)):
 		status = "migrated_wreck_navigation"
-	var migration_changed: bool = loaded_version == TOOL_TARGET_SCHEMA_VERSION or (loaded_version == SCHEMA_VERSION and int((payload["companion_profile"] as Dictionary).get("schema_version", 0)) == CompanionProfileState.LEGACY_PROFILE_SCHEMA_VERSION) or bool(migrations.get("cutter_blueprint", false)) or bool(migrations.get("scanner_purchase", false)) or bool(migrations.get("wreck_navigation", false))
+	var migration_changed: bool = loaded_version == TOOL_TARGET_SCHEMA_VERSION or (loaded_version == SCHEMA_VERSION and loaded_companion_version != CompanionProfileState.PROFILE_SCHEMA_VERSION) or bool(migrations.get("cutter_blueprint", false)) or bool(migrations.get("scanner_purchase", false)) or bool(migrations.get("wreck_navigation", false))
 	if migration_changed and not save_profile():
 		_last_storage_report = _report("migration_write_error")
 		return _last_storage_report.duplicate(true)
@@ -425,8 +424,9 @@ func _validate_payload(payload: Dictionary) -> Array[String]:
 		var allowed_keys := PROFILE_KEYS if schema == SCHEMA_VERSION else TOOL_TARGET_PROFILE_KEYS
 		var failures := _validate_version(payload, allowed_keys, SUPPORTED_CAPABILITY_IDS, SUPPORTED_PROJECT_IDS, true)
 		failures.append_array(ExpansionProfileValidator.validate_id_array(payload.get("banked_tool_target_ids"), SUPPORTED_BANKED_TOOL_TARGET_IDS, "banked_tool_target_ids"))
-		if schema == SCHEMA_VERSION and typeof(payload.get("companion_profile")) == TYPE_DICTIONARY:
-			failures.append_array(_companion_profile.validate_payload(payload["companion_profile"]))
+		if schema == SCHEMA_VERSION:
+			if typeof(payload.get("companion_profile")) != TYPE_DICTIONARY: failures.append("companion_profile must be an object")
+			else: failures.append_array(_companion_profile.validate_payload(payload["companion_profile"]))
 		return failures
 	return ["unsupported schema_version"]
 
