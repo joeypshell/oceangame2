@@ -93,8 +93,8 @@ For focused Living Expedition 04 review, use
 `https://joeypshell.github.io/oceangame2/?review=<sha>&checkpoint=living_expedition_04_start`.
 This isolated checkpoint starts on Day 3 at the canonical boat with both
 companions adapted, Mica selected, and the Shock Prod available. It is the
-current owner path for selecting Kite's non-damaging Guardian Pulse opening,
-ordinary retreat, and Shock-Prod defeat/harvest. Mica remains available for her
-moving-ecology role but is not an eel solution.
+current regression path for selecting Kite's non-damaging Guardian Pulse
+opening, ordinary retreat, Shock-Prod defeat/harvest, and corrected BOND timing.
+Mica remains available for her moving-ecology role but is not an eel solution.
 
 The public root and `https://joeypshell.github.io/oceangame2/?review=<sha>` now load `production_level_01`; the review query still isolates profile state. To review a retained slice fixture, add an explicit supported map, for example `?review=<sha>&map=production_slice_01`. A bare `map` query without `review` does not override the default. The Web checker verifies the full-level default and explicit slice-01 fallback at desktop and mobile browser sizes.

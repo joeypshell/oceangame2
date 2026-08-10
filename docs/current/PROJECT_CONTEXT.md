@@ -50,7 +50,7 @@ Expansion 17 Wreck Network Triangulation is complete with owner GO through #1167
 
 Expansion 18 implements one exceptional `transfer_hub_interior_01` destination reached by swimming through the normal full level to a physical entrance. Its source/state contract, generated maps, continuous sortie, existing-cutter core recovery, deterministic evidence, and exact public build remain valid regression surfaces. It receives no player-experience GO and no further bounded correction pass.
 
-The active direction is one bonded active companion whose credible species roles and meaningful expedition experiences shape real-time independent or mounted play. Living Expeditions 01-03 have owner GO: Kite proves rescue, riding, memory, and adaptation; Kite and Mica occupy one compact canonical-boat habitat with one active sortie selection; and Mica turns one source-authored jellyfish migration observation into the next-day Drift Lens field skill. Living Expedition 04 reached exact-Web owner review and received HOLD: Mica's eel prediction was not useful, so Drift Lens remains moving-ecology-only and Guardian-Pulse Kite is the eel's sole active companion response. Diver equipment retains hard geographic access; companions cannot bypass it.
+The active direction is one bonded active companion whose credible species roles and meaningful expedition experiences shape real-time independent or mounted play. Living Expeditions 01-03 have owner GO: Kite proves rescue, riding, memory, and adaptation; Kite and Mica occupy one compact canonical-boat habitat with one active sortie selection; and Mica turns one source-authored jellyfish migration observation into the next-day Drift Lens field skill. Living Expedition 04 is technically complete and closed on HOLD: Mica's eel prediction was not useful, so Drift Lens remains moving-ecology-only and Guardian-Pulse Kite is the eel's sole active companion response. Diver equipment retains hard geographic access; companions cannot bypass it.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -88,6 +88,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Living Expedition 02 owner-GO closeout: `docs/current/LIVING_EXPEDITION_02_CLOSEOUT.md`
 - Living Expedition 03 owner-GO closeout: `docs/current/LIVING_EXPEDITION_03_CLOSEOUT.md`
 - Selected Living Expedition 04 plan: `docs/current/LIVING_EXPEDITION_04_PLAN.md`
+- Living Expedition 04 HOLD closeout: `docs/current/LIVING_EXPEDITION_04_CLOSEOUT.md`
 - Foundation history: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - First adaptation proof: `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
@@ -107,8 +108,8 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Focused player-review workflow: `docs/current/PLAYTEST_CHECKPOINTS.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
 - Latest owner decision: Living Expedition 04 received HOLD; Mica's eel prediction is non-useful, Guardian Pulse remains valid, and the reported BOND timing defect is corrected through whole-simulation tactical pause
-- Latest completed direction: milestone #47 Living Expedition 03 Field Roles And Ecological Discovery, implemented through #1276-#1285 and corrections #1301/#1303/#1305/#1307/#1308
-- Active closeout: milestone #48 Living Expedition 04, documented in `docs/current/LIVING_EXPEDITION_04_PLAN.md`; #1335/#1336 are complete corrective work and only #1323 remains before selecting later work
+- Latest completed direction: milestone #48 Living Expedition 04 closed on owner HOLD; #1335 retired Mica's active eel response, #1336 corrected BOND timing, and #1323 records the verdict
+- Current closeout: `docs/current/LIVING_EXPEDITION_04_CLOSEOUT.md`; corrected exact-Web runtime `bbcc255` is technically green without claiming player GO
 - Current implementation contract: `docs/current/LIVING_EXPEDITION_04_SOURCE_STATE_CONTRACT.md`; Kite interruption, Shock Prod damage, harvest authority, dormant hostile reading, and Mica ecology remain regression boundaries
 - Living Expedition 03 evidence: `docs/current/LIVING_EXPEDITION_03_VISUAL_DECISION.md`, `docs/current/LIVING_EXPEDITION_03_WEB_VERIFICATION.md`, and `docs/current/LIVING_EXPEDITION_03_CLOSEOUT.md`; exact runtime `0e92dd7` passed focused visual, responsive Web, touch, deterministic journey, and owner review
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
@@ -116,7 +117,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Latest visual decision: Living Expedition focused captures are generated review evidence only; all six configured accepted baseline sheets remain pixel-stable
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: corrected Living Expedition 03 runtime `0e92dd7`, recorded in `docs/current/LIVING_EXPEDITION_03_WEB_VERIFICATION.md`; #1285 records owner GO.
+- Latest Web verification: corrected Living Expedition 04 HOLD runtime `bbcc255`, recorded in `docs/current/LIVING_EXPEDITION_04_WEB_VERIFICATION.md`; #1323 records the owner verdict.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -232,7 +233,7 @@ For map changes, run the relevant generator, SVG renderer, validator, parity che
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Each issue needs acceptance criteria, relevant files, implementation notes, and verification steps.
 
-Current issue state as of 2026-08-08:
+Current issue state as of 2026-08-09:
 
 - Closed: #662-#671 completed Expansion 01 with a GO.
 - Closed: #685-#694 completed Expansion 02 with a GO.
@@ -262,6 +263,7 @@ Current issue state as of 2026-08-08:
 - Closed: milestone #45 Living Expedition 01 has playable work, deterministic journey/checkpoint/capture evidence, exact-Web verification, bounded guidance correction #1249, and owner GO through #1232.
 - Closed: milestone #46 and #1253-#1262 implement the bounded Kite/Mica habitat, active selection, Mica sensing role, deterministic evidence, exact Web checkpoint, and owner GO.
 - Closed: milestone #47 and #1276-#1285 plus bounded corrections #1301/#1303/#1305/#1307/#1308 implement Mica's ecology journey, exact-Web runtime `0e92dd7`, and owner GO.
+- Closed on owner HOLD: milestone #48 and #1314-#1323 plus bounded corrections #1333/#1335/#1336 retain Kite's eel opening, retire Mica's non-useful prediction, and verify corrected runtime `bbcc255`.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -399,7 +401,7 @@ Current issue state as of 2026-08-08:
 
 ## Recommended Next Work
 
-Living Expeditions 01-03 are complete with owner GO. Living Expedition 04 milestone #48 is at bounded owner-HOLD closeout: #1335 retired Mica's active eel response, #1336 corrected BOND timing, and #1323 must record the verdict. Do not extend the old clue/recipe/gate cadence or start a later milestone. Keep #52/#53 deferred.
+Living Expeditions 01-03 are complete with owner GO. Living Expedition 04 is technically complete and closed on owner HOLD: Mica's eel prediction is retired, Guardian-Pulse Kite remains the only active companion response, and BOND uses a whole-simulation tactical pause. No next implementation milestone is committed; run a separate direction audit before selecting one. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 

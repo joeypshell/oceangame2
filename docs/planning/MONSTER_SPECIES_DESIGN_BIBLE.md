@@ -4,8 +4,8 @@ Date: 2026-08-06
 
 Status: Directional planning draft. Spark Ray and Veil Cuttle are implemented.
 All other names, ids, abilities, habitats, and branches remain provisional until
-a later owner-approved milestone selects one. This document does not authorize a
-third-species implementation before the Living Expedition 03 player gate closes.
+a later reviewed milestone selects one. Living Expedition 04 closed on HOLD and
+does not authorize a third-species implementation.
 
 ## Purpose
 
@@ -330,14 +330,14 @@ wildlife or waiting for a random spawn.
 
 ## Recommended Production Order
 
-1. Finish the Living Expedition 03 visual, exact-Web, and owner gate with Kite
-   and Mica only.
-2. Review monochrome concept sheets for the four-species production core.
-3. Use Living Expedition 04 to establish real wildlife/combat consequences with
-   the current roster before adding a combat specialist.
-4. Select Silt Hound as the recommended third-species proof because prospecting
-   links creatures to the material/recipe loop and map revisits without
-   duplicating current roles.
+1. Keep Kite and Mica as the complete implemented roster after Living
+   Expedition 04's owner HOLD.
+2. Preserve the HOLD lesson: a companion action must create an immediately
+   legible option or outcome, not merely describe visible hostile behavior.
+3. Review monochrome concept sheets only as directional planning evidence.
+4. Use a separate direction audit to select the next bounded proof. Silt Hound
+   remains a candidate because prospecting could link creatures to materials and
+   map revisits, but it is not automatically selected.
 5. Add Breaker Mantis only after real-time combat, enemy health feedback,
    resource outcomes, and nonlethal/defeat rules have a stable owner.
 6. Keep Rivetback, Lumenjaw, Ribbon Drake, and Choir Bloom directional until the

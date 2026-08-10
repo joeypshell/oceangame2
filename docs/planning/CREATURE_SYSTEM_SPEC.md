@@ -2,9 +2,10 @@
 
 Date: 2026-08-08
 
-Status: Active planning contract. Living Expeditions 01-03 implement the focused
+Status: Active planning contract. Living Expeditions 01-04 implement the focused
 Spark Ray and Veil Cuttle runtimes, bounded two-individual profile, compact
-habitat, active next-sortie selection, and Mica's first ecological adaptation.
+habitat, active next-sortie selection, Mica's ecology adaptation, and one closed
+HOLD experiment that retains Kite as the eel's sole companion response.
 
 ## Purpose
 

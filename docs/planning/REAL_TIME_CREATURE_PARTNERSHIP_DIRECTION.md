@@ -2,8 +2,8 @@
 
 Status: selected product direction. Living Expeditions 01-03 implement the
 focused Spark Ray command/riding proof, a bounded two-individual stable, and
-Mica's first ecological sensing adaptation. Living Expedition 04 reached owner
-HOLD and now closes its rejected Mica eel experiment without roster growth.
+Mica's first ecological sensing adaptation. Living Expedition 04 is technically
+complete and closed on HOLD after retiring its rejected Mica eel experiment.
 
 ## Decision
 
@@ -58,11 +58,11 @@ command or make progression random.
 `companion_command` is the dedicated toggle `B/BOND` action. It does not reuse `Q`,
 `E/ACT`, the diver tool cycle, or `Space/USE`.
 
-Pressing `BOND` opens a numbered palette, slows the complete simulation to 20
-percent, and presents at most three contextual commands. Desktop `1`-`3`
-activates the matching row; `B` or `Esc` closes. World movement, enemies,
-cooldowns, oxygen, and daylight use the same scaled time so the palette cannot
-desynchronize systems. Activating or closing restores normal speed.
+Pressing `BOND` opens a numbered palette, pauses the complete gameplay
+simulation, and presents at most three contextual commands. Desktop `1`-`3`
+activates the matching row; `B` or `Esc` closes. Player and hostile movement,
+companion movement, hazards, cooldowns, oxygen, and daylight remain frozen
+while command input stays active. Activating or closing resumes simulation.
 
 The mobile test surface presents a contextual toggle `BOND` control during an
 active dive without crowding `TOOL` or `USE`; touch selection and activation are
@@ -122,8 +122,8 @@ replacing the Shock Prod. The proof changes no terrain topology.
 
 - turn-based or party combat
 - more than one active companion
-- a third species or broad stable-management UI before the selected Living
-  Expedition 04 encounter receives a player verdict
+- a third species or broad stable-management UI before a separate reviewed plan
+  selects a bounded reason for roster growth
 - broad weapon, ability, or combat-framework replacement
 - creature health, permanent injury, death, breeding, fusion, or lineage
 - general ecosystem simulation
@@ -131,5 +131,6 @@ replacing the Shock Prod. The proof changes no terrain topology.
 ## Current Verdict
 
 The companion-choice question received HOLD because Mica's prediction did not
-create a useful decision. Finish the bounded BOND timing correction and retain
-only Kite's eel response before selecting another creature proof.
+create a useful decision. That response is retired, the BOND timing correction
+is deployed, and only Kite's eel response remains. A separate audit must select
+the next bounded proof rather than assuming roster or encounter expansion.

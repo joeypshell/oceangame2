@@ -2,10 +2,10 @@
 
 Date: 2026-08-08
 
-Status: Active source/planning contract. Living Expeditions 01-03 implement two
-rescues, one compact habitat, Spark Ray memory/payoff relationships, and Mica's
-source-linked jellyfish migration observation and Drift Lens payoff. Living
-Expedition 04 selects one existing-eel relationship as its next source proof.
+Status: Active source/planning contract. Living Expeditions 01-04 implement two
+rescues, one compact habitat, Spark Ray memory/payoff relationships, Mica's
+source-linked jellyfish migration and Drift Lens payoff, and one existing-eel
+relationship that retains Kite's response while retiring Mica's failed one.
 
 ## Purpose
 
@@ -196,7 +196,7 @@ Before accepting source changes:
 - Do not use mounted speed, size, or collision to bypass a diver capability gate.
 - Do not use a companion ability as an unexplained colored lock.
 - Do not add random required spawns.
-- Keep Kite and Mica as the complete roster during Living Expedition 03; do not
-  add a third species before the ecological field-role owner gate.
+- Keep Kite and Mica as the complete implemented roster; a third species requires
+  a separate reviewed plan after the Living Expedition 04 HOLD.
 - Do not change terrain merely to make the creature system easier to stage.
 - Keep #52/#53 deferred unless slice-03 presentation is deliberately selected.
