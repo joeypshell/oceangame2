@@ -16,6 +16,7 @@ This is the compact index for current project commands. Keep detailed command bl
 - [Living Expedition 02 Evidence](tooling/living_expedition_02.md): two-partner checkpoint, deterministic journey, focused source/progression checks, and desktop/mobile visual review.
 - [Living Expedition 03 Evidence](tooling/living_expedition_03.md): Mica ecology journey, migration-filament review, held identification, night consolidation, and Read Drift evidence.
 - [Living Expedition 04 Evidence](tooling/living_expedition_04.md): Guardian-Pulse eel opening, defeat-only harvest, deterministic journey, and desktop/mobile evidence.
+- [Living Expedition 05 Evidence](tooling/living_expedition_05.md): Silt Hound rescue, three-partner selection, deliberate Excavate journey, and desktop/mobile evidence.
 
 ## Critical Warnings
 
