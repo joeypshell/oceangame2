@@ -15,6 +15,8 @@ const SPAWN_OFFSETS := [
 const FACING_SPEED_THRESHOLD := 11.0
 const FACING_COMMIT_SECONDS := 0.15
 const FLOOR_PROBE_DISTANCE := 48.0
+const EXCAVATE_APPROACH_SPEED := 118.0
+const EXCAVATE_STOP_DISTANCE := 34.0
 
 @onready var _presentation := $Presentation
 
@@ -28,6 +30,10 @@ var _pending_facing_sign := 1.0
 var _pending_facing_seconds := 0.0
 var _facing_change_count := 0
 var _maximum_step_distance := 0.0
+var _excavate_active := false
+var _excavate_target := Vector2.ZERO
+var _excavate_state := "idle"
+var _excavate_progress := 0.0
 
 
 func configure(world, player, position_allowed: Callable, identity: Dictionary) -> void:
@@ -61,6 +67,7 @@ func advance(delta: float) -> void:
 
 
 func request_recall() -> void:
+	cancel_excavate_action()
 	_follow.request_recall()
 	_sync_presentation()
 
@@ -77,6 +84,7 @@ func recover_to_player() -> void:
 	if not _dependencies_valid():
 		return
 	_follow.reset()
+	cancel_excavate_action()
 	velocity = Vector2.ZERO
 	global_position = _spawn_position()
 	_sync_presentation()
@@ -95,6 +103,62 @@ func show_context_response(context_kind: String, source_position: Vector2) -> bo
 	return bool(_presentation.show_context_response(context_kind, global_position.direction_to(source_position)))
 
 
+func begin_excavate_approach(target: Vector2) -> bool:
+	if not excavate_path_allowed(target):
+		return false
+	_excavate_active = true
+	_excavate_target = target
+	_excavate_state = "approaching"
+	_excavate_progress = 0.0
+	_follow.reset()
+	velocity = Vector2.ZERO
+	_sync_presentation()
+	return true
+
+
+func set_excavate_phase(state: String, progress: float) -> void:
+	if not _excavate_active:
+		return
+	_excavate_state = state
+	_excavate_progress = clampf(progress, 0.0, 1.0)
+	_sync_presentation()
+
+
+func complete_excavate_action() -> void:
+	_excavate_active = false
+	_excavate_state = "revealed"
+	_excavate_progress = 1.0
+	velocity = Vector2.ZERO
+	_follow.reset()
+	_sync_presentation()
+
+
+func cancel_excavate_action() -> void:
+	_excavate_active = false
+	_excavate_target = Vector2.ZERO
+	_excavate_state = "idle"
+	_excavate_progress = 0.0
+	velocity = Vector2.ZERO
+	_sync_presentation()
+
+
+func excavate_target_reached() -> bool:
+	return _excavate_active and global_position.distance_to(_excavate_target) <= EXCAVATE_STOP_DISTANCE
+
+
+func excavate_path_allowed(target: Vector2) -> bool:
+	if not _dependencies_valid() or not _is_open_position(target) or not _is_position_allowed(target):
+		return false
+	if _world.has_method("has_clear_terrain_line") and not _world.has_clear_terrain_line(global_position, target):
+		return false
+	var sample_count := maxi(1, int(ceil(global_position.distance_to(target) / 8.0)))
+	for index in range(sample_count + 1):
+		var sample := global_position.lerp(target, float(index) / float(sample_count))
+		if not _is_open_position(sample) or not _is_position_allowed(sample):
+			return false
+	return true
+
+
 func report() -> Dictionary:
 	var value := _follow.report()
 	value["identity"] = _identity.duplicate(true)
@@ -107,11 +171,21 @@ func report() -> Dictionary:
 	value["can_receive_command"] = can_receive_command()
 	value["mounted"] = false
 	value["floor_probe_distance"] = _floor_probe_distance()
+	value["excavate"] = {
+		"active": _excavate_active,
+		"target": _excavate_target,
+		"state": _excavate_state,
+		"progress": _excavate_progress,
+		"target_reached": excavate_target_reached(),
+	}
 	value["presentation"] = _presentation.report() if _presentation != null else {}
 	return value
 
 
 func _advance_step(delta: float) -> void:
+	if _excavate_active:
+		_advance_excavate_step(delta)
+		return
 	var movement: Dictionary = _follow.step(
 		global_position,
 		_player.global_position,
@@ -127,6 +201,26 @@ func _advance_step(delta: float) -> void:
 	var before := global_position
 	var proposed := before + velocity * delta
 	if delta > 0.0 and _is_position_allowed(proposed):
+		move_and_slide()
+	elif delta > 0.0:
+		velocity = Vector2.ZERO
+	_maximum_step_distance = maxf(_maximum_step_distance, before.distance_to(global_position))
+	_update_facing(delta)
+	if _presentation != null:
+		_presentation.advance(delta)
+	_sync_presentation()
+
+
+func _advance_excavate_step(delta: float) -> void:
+	var direction := Vector2.ZERO
+	if _excavate_state == "approaching" and not excavate_target_reached():
+		direction = global_position.direction_to(_excavate_target)
+	var desired_velocity := direction * EXCAVATE_APPROACH_SPEED
+	var change_rate := MOVEMENT_ACCELERATION if desired_velocity != Vector2.ZERO else MOVEMENT_DECELERATION
+	velocity = velocity.move_toward(desired_velocity, change_rate * delta)
+	var before := global_position
+	var proposed := before + velocity * delta
+	if delta > 0.0 and _is_position_allowed(proposed) and _is_open_position(proposed):
 		move_and_slide()
 	elif delta > 0.0:
 		velocity = Vector2.ZERO
@@ -230,6 +324,7 @@ func _sync_presentation() -> void:
 		_floor_probe_distance(),
 		velocity.length()
 	)
+	_presentation.set_excavate_state(_excavate_state, _excavate_progress)
 
 
 func _dependencies_valid() -> bool:
