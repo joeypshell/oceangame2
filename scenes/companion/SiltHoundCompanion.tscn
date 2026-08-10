@@ -1,0 +1,19 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/companion/silt_hound_companion.gd" id="1_companion"]
+[ext_resource type="Script" path="res://scripts/companion/silt_hound_companion_presentation.gd" id="2_presentation"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_companion"]
+size = Vector2(32, 20)
+
+[node name="SiltHoundCompanion" type="CharacterBody2D"]
+z_index = 18
+collision_layer = 0
+collision_mask = 1
+script = ExtResource("1_companion")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_companion")
+
+[node name="Presentation" type="Node2D" parent="."]
+script = ExtResource("2_presentation")
