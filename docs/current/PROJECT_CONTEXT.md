@@ -264,7 +264,7 @@ Current issue state as of 2026-08-10:
 - Closed: milestone #46 and #1253-#1262 implement the bounded Kite/Mica habitat, active selection, Mica sensing role, deterministic evidence, exact Web checkpoint, and owner GO.
 - Closed: milestone #47 and #1276-#1285 plus bounded corrections #1301/#1303/#1305/#1307/#1308 implement Mica's ecology journey, exact-Web runtime `0e92dd7`, and owner GO.
 - Closed on owner HOLD: milestone #48 and #1314-#1323 plus bounded corrections #1333/#1335/#1336 retain Kite's eel opening, retire Mica's non-useful prediction, and verify corrected runtime `bbcc255`.
-- Active batch: Living Expedition 05 follows the dependency order in its plan; source/state/schema, profile-v3/habitat, source authoring, Silt Hound rescue/follow presentation, deliberate Excavate runtime, and the isolated rescue/excavation review checkpoints with state-derived guidance are current. Deterministic end-to-end evidence, visual review, and owner closeout remain next.
+- Active batch: Living Expedition 05 follows the dependency order in its plan; implementation and deterministic source/profile/runtime/journey coverage are current through the rescue, selection, Excavate, reset/reload, pickup, and bank boundaries. Focused visual review and owner closeout remain next.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
