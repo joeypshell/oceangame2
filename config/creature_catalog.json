@@ -1,5 +1,5 @@
 {
-  "version": 2,
+  "version": 3,
   "implementation_status": "partial_runtime",
   "species": [
     {
@@ -46,6 +46,19 @@
       "adaptation_ids": [
         "drift_lens"
       ]
+    },
+    {
+      "id": "silt_hound",
+      "display_name": "Silt Hound",
+      "roles": [
+        "independent"
+      ],
+      "ride_capable": false,
+      "base_action_ids": [
+        "excavate"
+      ],
+      "memory_ids": [],
+      "adaptation_ids": []
     }
   ],
   "individuals": [
@@ -58,6 +71,11 @@
       "id": "veil_cuttle_juvenile_01",
       "species_id": "veil_cuttle",
       "default_callsign": "Mica"
+    },
+    {
+      "id": "silt_hound_juvenile_01",
+      "species_id": "silt_hound",
+      "default_callsign": "Marl"
     }
   ],
   "actions": [
@@ -101,6 +119,14 @@
         "independent"
       ],
       "effect_kind": "moving_hazard_read",
+      "damaging": false
+    },
+    {
+      "id": "excavate",
+      "roles": [
+        "independent"
+      ],
+      "effect_kind": "material_reveal",
       "damaging": false
     }
   ],

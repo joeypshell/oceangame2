@@ -4,6 +4,16 @@ from __future__ import annotations
 
 from typing import Any
 
+from living_expedition_05_contract import (
+    BOAT_ENTRY_ID as SILT_BOAT_ENTRY_ID,
+    CANDIDATE_ID as SILT_CANDIDATE_ID,
+    CONTEXT_KIND as SILT_CONTEXT_KIND,
+    HABITAT_ID as SILT_HABITAT_ID,
+    INDIVIDUAL_ID as SILT_INDIVIDUAL_ID,
+    MATERIAL_ID as SILT_MATERIAL_ID,
+    RESCUE_ID as SILT_RESCUE_ID,
+)
+
 
 COLLECTION_KINDS = {
     "creature_rescues": "creature_rescue",
@@ -33,6 +43,18 @@ def _key(kind: str, map_id: str, item_id: str) -> str:
     return f"{kind}:{map_id}/{item_id}"
 
 
+def _silt_commitment_key(map_id: str) -> str:
+    return _key("companion_commitment", map_id, SILT_INDIVIDUAL_ID)
+
+
+def _silt_selection_key(map_id: str) -> str:
+    return _key("companion_selection", map_id, SILT_INDIVIDUAL_ID)
+
+
+def _silt_bank_key(map_id: str) -> str:
+    return _key("companion_material_bank", map_id, SILT_CANDIDATE_ID)
+
+
 def add_creature_nodes(graph: Any, map_data: dict[str, Any], node_type: Any) -> None:
     map_id = str(map_data.get("id", ""))
     for collection, kind in COLLECTION_KINDS.items():
@@ -59,6 +81,33 @@ def add_creature_nodes(graph: Any, map_data: dict[str, Any], node_type: Any) -> 
                     "creature",
                     attrs={"implementation_status": "proposed", "species_id": item.get("species_id")},
                 ), individual_id)
+                if item_id == SILT_RESCUE_ID:
+                    graph.add_node(node_type(
+                        _silt_commitment_key(map_id),
+                        "[proposed] Commit Marl At Boat",
+                        "companion_commitment",
+                        map_id,
+                        attrs={"implementation_status": "proposed", "individual_id": SILT_INDIVIDUAL_ID},
+                    ), f"{SILT_INDIVIDUAL_ID}_commitment")
+                    graph.add_node(node_type(
+                        _silt_selection_key(map_id),
+                        "[proposed] Select Marl For Sortie",
+                        "companion_selection",
+                        map_id,
+                        attrs={"implementation_status": "proposed", "individual_id": SILT_INDIVIDUAL_ID},
+                    ), f"{SILT_INDIVIDUAL_ID}_active_selection")
+            if kind == "companion_context" and item.get("context_kind") == SILT_CONTEXT_KIND:
+                graph.add_node(node_type(
+                    _silt_bank_key(map_id),
+                    "[proposed] Bank Marl Excavation Material",
+                    "companion_material_bank",
+                    map_id,
+                    attrs={
+                        "implementation_status": "proposed",
+                        "candidate_id": SILT_CANDIDATE_ID,
+                        "material_id": SILT_MATERIAL_ID,
+                    },
+                ), f"{SILT_CANDIDATE_ID}_banked")
             if kind == "creature_memory":
                 memory_id = str(item.get("memory_id", ""))
                 graph.add_node(node_type(
@@ -107,6 +156,14 @@ def add_creature_edges(graph: Any, map_data: dict[str, Any]) -> None:
                 individual = graph.resolve(str(item.get("individual_id", "")))
                 graph.add_edge(individual, key, "requires", hard=True, note="committed rescue")
                 graph.add_edge(key, individual, "unlocks")
+                if item_id == SILT_RESCUE_ID:
+                    commitment = _silt_commitment_key(map_id)
+                    selection = _silt_selection_key(map_id)
+                    graph.add_edge(commitment, key, "requires", hard=True, note="physical rescue")
+                    _requires(graph, commitment, SILT_BOAT_ENTRY_ID, map_id, "canonical boat commitment")
+                    graph.add_edge(individual, commitment, "requires", hard=True, note="committed at boat")
+                    graph.add_edge(selection, commitment, "requires", hard=True, note="committed individual")
+                    _requires(graph, selection, SILT_HABITAT_ID, map_id, "next-sortie selection")
                 continue
             if kind == "companion_habitat":
                 _requires(graph, key, str(item.get("entry_id", "")), map_id, "canonical boat")
@@ -121,6 +178,14 @@ def add_creature_edges(graph: Any, map_data: dict[str, Any]) -> None:
             if not individual_id and len(species_individuals) == 1:
                 individual_id = species_individuals[0]
             _requires(graph, key, individual_id, note="active companion")
+            if kind == "companion_context" and item.get("context_kind") == SILT_CONTEXT_KIND:
+                graph.add_edge(
+                    key,
+                    _silt_selection_key(map_id),
+                    "requires",
+                    hard=True,
+                    note="active sortie selection",
+                )
             if kind == "ecological_trace":
                 _requires(
                     graph,
@@ -134,6 +199,13 @@ def add_creature_edges(graph: Any, map_data: dict[str, Any]) -> None:
             target_id = str(item.get("target_id", ""))
             if target_id:
                 graph.add_edge(key, graph.resolve(target_id, map_id), "targets")
+            if kind == "companion_context" and item.get("context_kind") == SILT_CONTEXT_KIND:
+                candidate = graph.resolve(target_id, map_id)
+                bank = _silt_bank_key(map_id)
+                graph.add_edge(candidate, key, "requires", hard=True, note="deliberate Excavate")
+                graph.add_edge(bank, candidate, "requires", hard=True, note="optional material pickup")
+                _requires(graph, bank, str(item.get("commit_entry_id", "")), map_id, "boat banking")
+                graph.add_edge(bank, f"material:{SILT_MATERIAL_ID}", "banks", quantity=1)
             if kind == "creature_memory":
                 _requires(graph, key, target_id, map_id, "meaningful shared event")
                 memory = graph.resolve(str(item.get("memory_id", "")))

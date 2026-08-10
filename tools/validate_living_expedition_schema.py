@@ -14,6 +14,15 @@ from living_expedition_03_contract import (
     validate_living_expedition_03_relationship,
 )
 from living_expedition_04_contract import validate_living_expedition_04_relationship
+from living_expedition_05_contract import (
+    CANDIDATE_ID as SILT_CANDIDATE_ID,
+    CONTEXT_KIND as SILT_CONTEXT_KIND,
+    INDIVIDUAL_ID as SILT_INDIVIDUAL_ID,
+    RESCUE_ID as SILT_RESCUE_ID,
+    SPECIES_ID as SILT_SPECIES_ID,
+    uses_living_expedition_05,
+    validate_living_expedition_05_relationship,
+)
 from validate_full_level_traversal import CollisionField, PlayerBody, map_point, rect_cells, solid_cells
 
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
@@ -26,7 +35,9 @@ COLLECTIONS = (
     "creature_adaptation_payoffs",
     "companion_hostile_responses",
 )
-CONTEXT_KINDS = {"mounted_route_review", "independent_action_review", "mounted_action_review"}
+CONTEXT_KINDS = {
+    "mounted_route_review", "independent_action_review", "mounted_action_review", SILT_CONTEXT_KIND,
+}
 GUARANTEED = "all_supported_seeds"
 SPECIES_ID = "spark_ray"
 INDIVIDUAL_ID = "spark_ray_juvenile_01"
@@ -201,7 +212,7 @@ def validate_living_expedition_schema(
     if catalog is None:
         catalog = load_creature_catalog()
     failures = validate_creature_catalog(catalog)
-    if not any(field in map_data for field in COLLECTIONS):
+    if not any(field in map_data for field in COLLECTIONS) and not uses_living_expedition_05(map_data):
         return failures
     records, shape_failures = _validate_collection_shapes(map_data)
     failures.extend(shape_failures)
@@ -220,9 +231,13 @@ def validate_living_expedition_schema(
     trace_id = expected_trace_id(map_data)
     memory_records = expected_memory_records(map_data)
     payoff_records = expected_payoff_records(map_data)
-    if [item.get("id") for item in rescues] != list(RESCUE_IDENTITIES):
+    includes_silt_hound = uses_living_expedition_05(map_data)
+    expected_rescues = dict(RESCUE_IDENTITIES)
+    if includes_silt_hound:
+        expected_rescues[SILT_RESCUE_ID] = (SILT_SPECIES_ID, SILT_INDIVIDUAL_ID)
+    if [item.get("id") for item in rescues] != list(expected_rescues):
         failures.append(
-            f"Living Expedition requires ordered rescues {list(RESCUE_IDENTITIES)!r}."
+            f"Living Expedition requires ordered rescues {list(expected_rescues)!r}."
         )
     if [item.get("id") for item in habitats] != [HABITAT_ID]:
         failures.append(f"Second proof requires exactly one habitat {HABITAT_ID!r}.")
@@ -238,7 +253,7 @@ def validate_living_expedition_schema(
         for field in required:
             if field not in rescue:
                 failures.append(f"{label} is missing required field {field}.")
-        expected_identity = RESCUE_IDENTITIES.get(label)
+        expected_identity = expected_rescues.get(label)
         actual_identity = (rescue.get("species_id"), rescue.get("individual_id"))
         if expected_identity != actual_identity:
             failures.append(f"{label} has unsupported species/individual identity {actual_identity!r}.")
@@ -284,8 +299,11 @@ def validate_living_expedition_schema(
             habitat.get("individual_ids"), f"{label}.individual_ids", allow_empty=False
         )
         failures.extend(item_failures)
-        if individual_ids != [INDIVIDUAL_ID, VEIL_INDIVIDUAL_ID]:
-            failures.append(f"{label}.individual_ids must preserve the two catalog individuals in order.")
+        expected_individual_ids = [INDIVIDUAL_ID, VEIL_INDIVIDUAL_ID]
+        if includes_silt_hound:
+            expected_individual_ids.append(SILT_INDIVIDUAL_ID)
+        if individual_ids != expected_individual_ids:
+            failures.append(f"{label}.individual_ids must preserve the active catalog proof order.")
         for field in ("x", "y"):
             if not isinstance(habitat.get(field), int):
                 failures.append(f"{label}.{field} must be an integer tile coordinate.")
@@ -323,13 +341,19 @@ def validate_living_expedition_schema(
         if action_id not in actions:
             failures.append(f"{label}.action_id references unknown action {action_id!r}.")
             continue
-        role = "independent" if kind == "independent_action_review" else "mounted"
+        role = "independent" if kind in {"independent_action_review", SILT_CONTEXT_KIND} else "mounted"
         if role not in actions[action_id].get("roles", []):
             failures.append(f"{label} action {action_id!r} does not support role {role!r}.")
         if kind == "mounted_route_review":
             if action_id not in context_species.get("base_action_ids", []):
                 failures.append(f"{label} must review a base mounted action.")
             failures.extend(_validate_mounted_route(map_data, context, context_species))
+            continue
+        if kind == SILT_CONTEXT_KIND:
+            if action_id not in context_species.get("base_action_ids", []):
+                failures.append(f"{label} must review a base independent action.")
+            if str(context.get("target_id", "")) not in map_items:
+                failures.append(f"{label}.target_id does not resolve to a map source record.")
             continue
         adaptation_id = context.get("required_adaptation_id")
         if adaptation_id not in adaptations:
@@ -401,6 +425,7 @@ def validate_living_expedition_schema(
                 failures.append(f"{label}.{field} and payoff species_id must agree.")
     failures.extend(validate_living_expedition_03_relationship(map_data))
     failures.extend(validate_living_expedition_04_relationship(map_data, catalog))
+    failures.extend(validate_living_expedition_05_relationship(map_data, catalog))
     return failures
 
 
@@ -416,7 +441,7 @@ def _record_cells(item: dict[str, Any]) -> set[tuple[int, int]]:
 def validate_living_expedition_reachability(
     map_data: dict[str, Any], _solid: set[tuple[int, int]], reachable: set[tuple[int, int]]
 ) -> list[str]:
-    if not any(field in map_data for field in COLLECTIONS):
+    if not any(field in map_data for field in COLLECTIONS) and not uses_living_expedition_05(map_data):
         return []
     failures: list[str] = []
     map_items = _map_index(map_data)
@@ -442,4 +467,12 @@ def validate_living_expedition_reachability(
             target = map_items.get(str(item.get("target_id", "")), {})
             if target and not (_record_cells(target) & reachable):
                 failures.append(f"{item.get('id')} target {target.get('id')!r} is unreachable.")
+    if uses_living_expedition_05(map_data):
+        candidate = map_items.get(SILT_CANDIDATE_ID, {})
+        boat = map_items.get("surface_boat_entry", {})
+        if not candidate or not (_record_cells(candidate) & reachable):
+            failures.append("Living Expedition 05 excavation deposit is unreachable.")
+        boat_point = (boat.get("entry_x", boat.get("x")), boat.get("entry_y", boat.get("y")))
+        if not boat or boat_point not in reachable:
+            failures.append("Living Expedition 05 canonical boat return is unreachable.")
     return failures
