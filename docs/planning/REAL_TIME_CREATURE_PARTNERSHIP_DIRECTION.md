@@ -4,6 +4,7 @@ Status: selected product direction. Living Expeditions 01-03 implement the
 focused Spark Ray command/riding proof, a bounded two-individual stable, and
 Mica's first ecological sensing adaptation. Living Expedition 04 is technically
 complete and closed on HOLD after retiring its rejected Mica eel experiment.
+Living Expedition 05 is selected as one bounded Silt Hound excavation proof.
 
 ## Decision
 
@@ -122,8 +123,8 @@ replacing the Shock Prod. The proof changes no terrain topology.
 
 - turn-based or party combat
 - more than one active companion
-- a third species or broad stable-management UI before a separate reviewed plan
-  selects a bounded reason for roster growth
+- a fourth species or broad stable-management UI before the bounded Silt Hound
+  proof receives an owner verdict
 - broad weapon, ability, or combat-framework replacement
 - creature health, permanent injury, death, breeding, fusion, or lineage
 - general ecosystem simulation
@@ -132,5 +133,7 @@ replacing the Shock Prod. The proof changes no terrain topology.
 
 The companion-choice question received HOLD because Mica's prediction did not
 create a useful decision. That response is retired, the BOND timing correction
-is deployed, and only Kite's eel response remains. A separate audit must select
-the next bounded proof rather than assuming roster or encounter expansion.
+is deployed, and only Kite's eel response remains. The following audit selected
+one Silt Hound whose deliberate excavation produces an immediate physical
+material payoff; it does not reopen the rejected prediction or authorize broad
+roster, encounter, economy, or map expansion.

@@ -95,18 +95,20 @@ Living Expedition is the active product phase. It retains real-time daylight sor
 
 **[Living Expedition 04: Companion-Shaped Wildlife Encounter](https://github.com/joeypshell/oceangame2/milestone/48)** is technically complete and closed on owner HOLD. Guardian-Pulse Kite, ordinary evade, Shock-Prod defeat, and explicit harvest remain valid; Mica's non-useful eel prediction is retired, and corrected runtime `bbcc255` makes BOND a whole-simulation tactical pause.
 
+**Living Expedition 05: Silt Hound Excavation Proof** is the selected next bounded milestone. It will test one third companion whose deliberate `Excavate` command visibly uncovers one source-authored optional typed-material deposit in existing geography. It includes explicit profile migration and a compact third habitat row, but no generic digging, new economy, topology expansion, release system, or fourth species.
+
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
 - Completed: milestones #45-#48 prove one adapted Spark Ray, a bounded two-individual habitat and active species choice, one Mica ecology journey, and one honestly rejected companion-combat experiment.
-- Committed: no implementation milestone. Run a separate direction audit before selecting another encounter, species, or growth proof.
-- Directional: habitat legacy and regional creature journeys remain milestone-level goals only.
+- Committed: Living Expedition 05, the bounded Silt Hound excavation proof selected by #1340.
+- Directional: regional creature journeys and later habitat legacy/release remain milestone-level goals only.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Living Expedition milestones #45-#47 are complete with owner GO. Living Expedition 04 milestone #48 is technically complete and closed on HOLD after its Mica-response retirement and BOND timing correction.
+Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Living Expedition milestones #45-#47 are complete with owner GO. Living Expedition 04 milestone #48 is technically complete and closed on HOLD after its Mica-response retirement and BOND timing correction. Living Expedition 05 is the next committed proof; its bounded issue batch follows the merged #1340 plan.
 
 1. [Living Expedition 04: Companion-Shaped Wildlife Encounter](https://github.com/joeypshell/oceangame2/milestone/48) - technically complete through #1314-#1323 plus corrections #1333/#1335/#1336, exact-Web runtime `bbcc255`, and owner HOLD.
 2. [Living Expedition 03: Field Roles And Ecological Discovery](https://github.com/joeypshell/oceangame2/milestone/47) - complete through #1276-#1285 plus bounded corrections #1301/#1303/#1305/#1307/#1308, exact-Web runtime `0e92dd7`, and owner GO.
@@ -167,7 +169,7 @@ Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 mileston
 
 - Do not reopen completed expansion batches merely to keep the queue full.
 - Preserve Living Expedition 04's HOLD lesson: a companion action must create an immediately legible choice or outcome, not merely describe visible hostile behavior.
-- Keep Kite and Mica as the complete current roster; a third species requires a later reviewed plan and player gate.
+- Keep Kite and Mica as the complete implemented roster until Living Expedition 05 deliberately adds one Silt Hound through profile migration, source-authored rescue, and an owner gate. Do not add a fourth species.
 - Do not replace real-time exploration with party battles. Adapt build synergy through one companion's independent, support, and mounted roles.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.

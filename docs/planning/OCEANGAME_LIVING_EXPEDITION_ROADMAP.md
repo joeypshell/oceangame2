@@ -1,6 +1,6 @@
 # OceanGame Living Expedition Roadmap
 
-Date: 2026-08-08
+Date: 2026-08-10
 
 Status: Active product roadmap. The completed diver-expedition work remains the
 runtime foundation; this roadmap owns future product direction.
@@ -124,26 +124,29 @@ changing topology, hard access, hazard authority, or rewards.
 
 ### Committed
 
-No new implementation milestone is currently committed. **Living Expedition
-04: Companion-Shaped Wildlife Encounter** is technically complete and closed on
-owner HOLD. It retains Kite's non-damaging interruption, ordinary evade, and
-Shock-Prod defeat/harvest against the existing territorial eel. The rejected
-Mica prediction is retired, and corrected runtime `bbcc255` uses a
-whole-simulation BOND tactical pause.
+**Living Expedition 05: Silt Hound Excavation Proof** is the next bounded
+milestone. It will rescue and commit one third individual, migrate the compact
+profile/habitat deliberately, and prove one commanded physical excavation that
+reveals an existing typed material through existing cargo and boat-banking
+owners. It does not authorize generic digging, passive detection, new economy,
+terrain expansion, release/legacy, or a fourth species. The detailed boundary
+is `docs/current/LIVING_EXPEDITION_05_PLAN.md`.
 
 ### Directional
 
 Only milestone-level goals are selected beyond the committed proof:
 
-1. **Living Expedition 05: Growth, Release, And Habitat Legacy**
-   Test voluntary retirement or release, one bounded legacy trait, and visible
-   habitat consequences without forced death or a simulation rewrite.
-2. **Living Expedition 06: Regional Creature Journeys**
+1. **Living Expedition 06: Regional Creature Journeys**
    Add memorable regions whose equipment access, species ecology, mysteries,
    and return reasons are planned together through the JSON map pipeline.
+2. **Later: Growth, Release, And Habitat Legacy**
+   Test voluntary retirement or release, one bounded legacy trait, and visible
+   habitat consequences only after enough individuals have reviewed history for
+   the choice to carry emotional weight, without forced death or a simulation
+   rewrite.
 
-These milestones do not receive detailed issue inventories until a separate
-direction audit selects one bounded proof after the Living Expedition 04 HOLD.
+These directions do not receive detailed issue inventories until a later audit
+selects one bounded proof after Living Expedition 05's owner verdict.
 
 ### Vision
 
@@ -160,6 +163,15 @@ non-damaging opening, Shock-Prod defeat, and defeat-only harvest. One clarity
 correction did not make Mica's prediction useful, so #1335 retired it and #1336
 corrected BOND to a complete-simulation tactical pause before exact-Web
 closeout. `docs/current/LIVING_EXPEDITION_04_CLOSEOUT.md` records the verdict.
+
+## Next Committed Milestone Batch
+
+Living Expedition 05 uses one dependency-ordered batch: contract, schema and
+progression validation, profile migration and three-row habitat, source-first
+rescue/deposit authoring, Silt Hound follow/presentation, deliberate Excavate
+runtime, integrated journey, deterministic evidence, focused visual decision,
+and exact-Web owner closeout. It stops at the owner's explicit GO, HOLD, or
+bounded correction and does not create the next milestone automatically.
 
 ## Prior Completed Milestone Batch
 

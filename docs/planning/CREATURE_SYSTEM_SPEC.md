@@ -5,7 +5,9 @@ Date: 2026-08-08
 Status: Active planning contract. Living Expeditions 01-04 implement the focused
 Spark Ray and Veil Cuttle runtimes, bounded two-individual profile, compact
 habitat, active next-sortie selection, Mica's ecology adaptation, and one closed
-HOLD experiment that retains Kite as the eel's sole companion response.
+HOLD experiment that retains Kite as the eel's sole companion response. Living
+Expedition 05 selects one versioned Silt Hound excavation proof; it is not yet
+implemented runtime truth.
 
 ## Purpose
 
@@ -19,13 +21,14 @@ into tools, quest rewards, or unvalidated state inside `main.gd`.
 
 The provisional roster, species-review template, and regional ecology-cluster
 direction live in `docs/planning/MONSTER_SPECIES_DESIGN_BIBLE.md`. That planning
-document does not authorize a third-species implementation before a later
-owner-approved milestone selects one.
+document authorizes a third species only through the boundaries and owner gate
+in `docs/current/LIVING_EXPEDITION_05_PLAN.md`.
 
 ## Foundational Rules
 
-- The implemented roster has exactly two rescued individuals, one compact boat
-  habitat, and one active companion slot per launched sortie.
+- The implemented roster has exactly two rescued individuals today. Living
+  Expedition 05 may migrate that same compact habitat to exactly three named
+  individuals while retaining one active companion slot per launched sortie.
 - The current eel proof retains Guardian-Pulse Kite as its sole useful companion
   response. Mica's rejected eel prediction is retired while her moving-ecology
   role remains intact; the proof adds no individual or habitat growth.
