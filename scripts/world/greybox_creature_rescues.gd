@@ -75,9 +75,13 @@ func _add_rescue_marker(parent: Node2D, rescue: Dictionary) -> Node2D:
 	root.position = rescue.get("center", Vector2.ZERO)
 	root.z_index = 17
 	parent.add_child(root)
-	if str(rescue.get("species_id", "")) == "veil_cuttle":
-		_add_veil_cuttle_marker(root)
-		return root
+	match str(rescue.get("species_id", "")):
+		"veil_cuttle":
+			_add_veil_cuttle_marker(root)
+			return root
+		"silt_hound":
+			_add_silt_hound_marker(root)
+			return root
 
 	var glow := Polygon2D.new()
 	glow.name = "JuvenileGlow"
@@ -195,6 +199,83 @@ func _add_veil_cuttle_marker(root: Node2D) -> void:
 	var cutter_notch := Line2D.new()
 	cutter_notch.name = "CutterNotch"
 	cutter_notch.points = PackedVector2Array([Vector2(27, -12), Vector2(34, -5), Vector2(27, 2)])
+	cutter_notch.default_color = Color(0.77, 1.0, 0.96, 1.0)
+	cutter_notch.width = 2.0
+	root.add_child(cutter_notch)
+
+
+func _add_silt_hound_marker(root: Node2D) -> void:
+	var glow := Polygon2D.new()
+	glow.name = "JuvenileGlow"
+	glow.polygon = _ellipse_points(35.0, 22.0, 24)
+	glow.color = Color(0.72, 0.82, 0.48, 0.16)
+	root.add_child(glow)
+
+	var body := Polygon2D.new()
+	body.name = "SiltHoundBody"
+	body.polygon = PackedVector2Array([
+		Vector2(31, -3), Vector2(20, -12), Vector2(-13, -13), Vector2(-29, -6),
+		Vector2(-30, 5), Vector2(-12, 13), Vector2(20, 10),
+	])
+	body.color = Color(0.37, 0.36, 0.26, 1.0)
+	root.add_child(body)
+
+	for index in range(3):
+		var root_x := 10.0 - float(index) * 13.0
+		for side in [-1.0, 1.0]:
+			var fin := Polygon2D.new()
+			fin.name = "SiltHoundFin%d" % (index * 2 + (1 if side < 0.0 else 2))
+			fin.polygon = PackedVector2Array([
+				Vector2(root_x, side * 8.0),
+				Vector2(root_x - 8.0, side * 20.0),
+				Vector2(root_x - 14.0, side * 9.0),
+			])
+			fin.color = Color(0.77, 0.66, 0.35, 0.94)
+			root.add_child(fin)
+
+	var eye := Polygon2D.new()
+	eye.name = "SiltHoundEye"
+	eye.polygon = _ellipse_points(3.2, 3.2, 14)
+	eye.position = Vector2(23, -3)
+	eye.color = Color(0.97, 0.89, 0.50, 1.0)
+	root.add_child(eye)
+
+	for index in range(3):
+		var whisker := Line2D.new()
+		whisker.name = "SiltWhisker%d" % (index + 1)
+		whisker.points = PackedVector2Array([
+			Vector2(31, 4),
+			Vector2(39 + float(index) * 3.0, 11 + float(index) * 4.0),
+			Vector2(44 + float(index) * 4.0, 21 + float(index) * 3.0),
+		])
+		whisker.default_color = Color(0.72, 0.94, 0.94, 0.88)
+		whisker.width = 1.5
+		whisker.antialiased = true
+		root.add_child(whisker)
+
+	var brood_stone := Polygon2D.new()
+	brood_stone.name = "BroodStone"
+	brood_stone.polygon = PackedVector2Array([
+		Vector2(-28, 14), Vector2(-16, 5), Vector2(3, 7), Vector2(14, 18), Vector2(8, 25), Vector2(-24, 25),
+	])
+	brood_stone.color = Color(0.30, 0.34, 0.31, 1.0)
+	root.add_child(brood_stone)
+
+	var cable := Line2D.new()
+	cable.name = "DredgeCable"
+	cable.points = PackedVector2Array([
+		Vector2(-40, -18), Vector2(-19, -8), Vector2(3, -17), Vector2(25, -7),
+		Vector2(42, -15), Vector2(29, 3), Vector2(40, 19), Vector2(14, 11),
+		Vector2(-7, 20), Vector2(-29, 8), Vector2(-42, 20),
+	])
+	cable.default_color = Color(0.94, 0.57, 0.19, 1.0)
+	cable.width = 3.2
+	cable.antialiased = true
+	root.add_child(cable)
+
+	var cutter_notch := Line2D.new()
+	cutter_notch.name = "CutterNotch"
+	cutter_notch.points = PackedVector2Array([Vector2(31, -10), Vector2(39, -3), Vector2(31, 4)])
 	cutter_notch.default_color = Color(0.77, 1.0, 0.96, 1.0)
 	cutter_notch.width = 2.0
 	root.add_child(cutter_notch)
