@@ -148,8 +148,10 @@ listens through the seafloor, and digs with sudden whole-body bursts.
   fans and false starts instead of glowing resource markers.
 - Bond path: the diver protects a nesting route during a silt surge and returns
   a displaced brood stone rather than capturing the animal.
-- Base role: `silt_read`, a deliberate nearby read of source-authored buried
-  candidates and recent underground movement.
+- Selected base proof: `excavate`, a deliberate physical dig at one visibly
+  authored buried deposit that exposes a normal typed-material pickup.
+- Future role space: `silt_read` may later interpret nearby authored buried
+  candidates or underground movement, but it is not part of the first proof.
 - Memory branch A: Followed the Seep -> **Vein Whiskers**, improving direction
   and confidence when prospecting guaranteed and daily material candidates.
 - Memory branch B: Guarded the Nest -> **Root Claws**, enabling one aimed pin or
@@ -330,14 +332,14 @@ wildlife or waiting for a random spawn.
 
 ## Recommended Production Order
 
-1. Keep Kite and Mica as the complete implemented roster after Living
-   Expedition 04's owner HOLD.
+1. Keep Kite and Mica as the complete implemented roster until Living Expedition
+   05 migrates the profile and commits one named Silt Hound.
 2. Preserve the HOLD lesson: a companion action must create an immediately
    legible option or outcome, not merely describe visible hostile behavior.
 3. Review monochrome concept sheets only as directional planning evidence.
-4. Use a separate direction audit to select the next bounded proof. Silt Hound
-   remains a candidate because prospecting could link creatures to materials and
-   map revisits, but it is not automatically selected.
+4. The separate #1340 direction audit selects one bounded Silt Hound excavation
+   proof because it creates a visible physical material payoff and map-revisit
+   reason. It does not authorize generic prospecting or another detector.
 5. Add Breaker Mantis only after real-time combat, enemy health feedback,
    resource outcomes, and nonlethal/defeat rules have a stable owner.
 6. Keep Rivetback, Lumenjaw, Ribbon Drake, and Choir Bloom directional until the
