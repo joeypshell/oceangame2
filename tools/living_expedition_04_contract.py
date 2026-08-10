@@ -37,13 +37,6 @@ RESPONSE_FIELDS = {
     "required_access_ids",
 }
 EXPECTED_RESPONSES = {
-    "veil_cuttle": {
-        "individual_id": "veil_cuttle_juvenile_01",
-        "required_adaptation_id": "drift_lens",
-        "action_id": "read_drift",
-        "effect_kind": "hostile_intent_read",
-        "mutation": "none",
-    },
     "spark_ray": {
         "individual_id": "spark_ray_juvenile_01",
         "required_adaptation_id": "guardian_pulse",
@@ -186,7 +179,7 @@ def validate_living_expedition_04_relationship(
     }, label))
     responses = relationship.get("responses")
     if not isinstance(responses, list) or len(responses) != len(EXPECTED_RESPONSES):
-        failures.append(f"{label}.responses must contain exactly the Mica and Kite responses.")
+        failures.append(f"{label}.responses must contain exactly one Guardian-Pulse Kite response.")
         return failures
     if not all(isinstance(response, dict) for response in responses):
         failures.append(f"{label}.responses must contain objects.")

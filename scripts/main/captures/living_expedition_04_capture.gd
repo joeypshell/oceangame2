@@ -12,7 +12,6 @@ const MICA_ID := "veil_cuttle_juvenile_01"
 const KITE_ID := "spark_ray_juvenile_01"
 const CAMERA_ID := "living_expedition_04_eel_review_camera_01"
 const CAPTURE_STATES := [
-	{"id": "mica_intent_read", "camera": CAMERA_ID},
 	{"id": "guardian_opening", "camera": CAMERA_ID},
 	{"id": "shock_prod_damage", "camera": CAMERA_ID},
 	{"id": "defeat_harvest_available", "camera": CAMERA_ID},
@@ -27,11 +26,10 @@ func _init(main_node) -> void:
 
 
 func capture_and_quit(capture_dir: String) -> void:
+	_remove_retired_captures(capture_dir)
 	if not _prepare_main():
 		return
 	_renderer = LivingExpedition04CaptureRenderer.new(_main)
-	if not _prepare_mica_intent() or not await _capture(capture_dir, "mica_intent_read", {"kind": "mica_intent"}):
-		return
 	if not _prepare_guardian_opening() or not await _capture(capture_dir, "guardian_opening", {"kind": "guardian_opening"}):
 		return
 	if not _prepare_shock_damage() or not await _capture(capture_dir, "shock_prod_damage", {"kind": "shock_damage", "replay_shock": true}):
@@ -65,29 +63,6 @@ func _prepare_main() -> bool:
 		and _adaptation_for(companion, KITE_ID) == "guardian_pulse"
 		and profile.has_capability(ExpansionProfileState.SHOCK_PROD_CAPABILITY_ID),
 		"checkpoint did not begin on Day 3 with both adapted companions and Shock Prod"
-	)
-
-
-func _prepare_mica_intent() -> bool:
-	if not _bind_active_companion(MICA_ID, "veil_cuttle"):
-		return false
-	_reset_encounter()
-	var home := _hostile_home()
-	_main._player.global_position = home + Vector2(-64.0, 0.0)
-	_main._player.swim_in_direction(Vector2.RIGHT, 0.0)
-	_place_companion(home + Vector2(-44.0, 0.0))
-	_main._hostiles.update(_main._world, _main._player.global_position, 0.0)
-	var result := _dispatch_command("read_drift")
-	_main._update_status_label()
-	var projection: Dictionary = _main._companion_sortie.companion().report().get("drift_projection", {})
-	return _expect(
-		bool(result.get("changed", false))
-		and str(result.get("target_id", "")) == HOSTILE_ID
-		and str(result.get("command_label", "")) == "Predict Lunge"
-		and str(result.get("phase", "")) == "warning"
-		and bool(projection.get("visible", false))
-		and str(projection.get("subject_kind", "")) == "territorial_hostile",
-		"Mica intent capture did not explain Predict Lunge against the warned eel"
 	)
 
 
@@ -304,10 +279,17 @@ func _write_manifest(capture_dir: String) -> bool:
 			"1280x720": [1280, 720],
 			"mobile_844x390": [693, 390],
 		},
-		"subject": "companion-shaped territorial eel encounter",
+		"subject": "Guardian-Pulse territorial eel encounter",
 	}, "  ") + "\n")
 	file.close()
 	return true
+
+
+func _remove_retired_captures(capture_dir: String) -> void:
+	for suffix in ["1280x720", "mobile_844x390"]:
+		var path := "%s/production_level_01_mica_intent_read_%s.png" % [capture_dir, suffix]
+		if FileAccess.file_exists(path):
+			DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 
 
 func _expect(condition: bool, message: String) -> bool:

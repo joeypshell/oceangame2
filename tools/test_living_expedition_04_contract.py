@@ -43,14 +43,6 @@ def valid_living_expedition_04_map() -> dict:
         "review_context_id": "living_expedition_04_eel_review_01",
         "responses": [
             {
-                "species_id": "veil_cuttle",
-                "individual_id": "veil_cuttle_juvenile_01",
-                "required_adaptation_id": "drift_lens",
-                "action_id": "read_drift",
-                "effect_kind": "hostile_intent_read",
-                "mutation": "none",
-            },
-            {
                 "species_id": "spark_ray",
                 "individual_id": "spark_ray_juvenile_01",
                 "required_adaptation_id": "guardian_pulse",
@@ -98,12 +90,12 @@ class LivingExpedition04ContractTests(unittest.TestCase):
 
     def test_rejects_damage_access_and_action_drift(self) -> None:
         map_data = valid_living_expedition_04_map()
-        mica, kite = map_data["companion_hostile_responses"][0]["responses"]
-        mica["action_id"] = "guardian_pulse_action"
+        kite = map_data["companion_hostile_responses"][0]["responses"][0]
+        kite["action_id"] = "read_drift"
         kite["damage"] = 1
         kite["required_access_ids"] = []
         failures = validate(map_data)
-        self.assertTrue(any("action_id must be 'read_drift'" in failure for failure in failures), failures)
+        self.assertTrue(any("action_id must be 'guardian_pulse_action'" in failure for failure in failures), failures)
         self.assertTrue(any("damage must be 0" in failure for failure in failures), failures)
         self.assertTrue(any("required_access_ids must be ['shock_prod']" in failure for failure in failures), failures)
 
@@ -112,7 +104,7 @@ class LivingExpedition04ContractTests(unittest.TestCase):
         relationship = map_data["companion_hostile_responses"][0]
         relationship.update({"territory": {"x": 1}, "reward_ids": ["loot"], "profile_state": {}})
         relationship["responses"][0].update({"phase": "warning", "defeated": True})
-        relationship["responses"][1]["exposes_harvest"] = True
+        relationship["responses"][0]["exposes_harvest"] = True
         failures = validate(map_data)
         self.assertTrue(any("copied state, reward, geometry" in failure for failure in failures), failures)
         self.assertTrue(any("unsupported authority fields" in failure for failure in failures), failures)
@@ -121,11 +113,12 @@ class LivingExpedition04ContractTests(unittest.TestCase):
     def test_rejects_duplicate_or_unsupported_companion_response(self) -> None:
         map_data = valid_living_expedition_04_map()
         relationship = map_data["companion_hostile_responses"][0]
-        relationship["responses"][1] = copy.deepcopy(relationship["responses"][0])
+        relationship["responses"].append(copy.deepcopy(relationship["responses"][0]))
         failures = validate(map_data)
-        self.assertTrue(any("ordered species" in failure for failure in failures), failures)
+        self.assertTrue(any("exactly one Guardian-Pulse Kite" in failure for failure in failures), failures)
 
-        relationship["responses"][1]["species_id"] = "unknown_species"
+        relationship["responses"] = [copy.deepcopy(relationship["responses"][0])]
+        relationship["responses"][0]["species_id"] = "unknown_species"
         failures = validate(map_data)
         self.assertTrue(any("no supported LE04 response" in failure for failure in failures), failures)
 

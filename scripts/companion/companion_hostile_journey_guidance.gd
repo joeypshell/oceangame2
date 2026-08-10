@@ -2,9 +2,7 @@ extends RefCounted
 
 const RELATIONSHIP_ID := "deep_cache_eel_companion_response"
 const HOSTILE_ID := "deep_cache_territorial_eel"
-const MICA_ID := "veil_cuttle_juvenile_01"
 const KITE_ID := "spark_ray_juvenile_01"
-const DRIFT_LENS := "drift_lens"
 const GUARDIAN_PULSE := "guardian_pulse"
 
 
@@ -13,11 +11,9 @@ func boat_choice_text(world, profile_report: Dictionary) -> String:
 	if relationship.is_empty():
 		return ""
 	var individuals: Array = profile_report.get("individuals", [])
-	if not _has_ready_individual(individuals, relationship, MICA_ID, DRIFT_LENS):
-		return ""
 	if not _has_ready_individual(individuals, relationship, KITE_ID, GUARDIAN_PULSE):
 		return ""
-	return "PARTNERS: Deep Cache Eel | BOND opens habitat | TOOL picks Mica to predict or Kite to open | USE confirms"
+	return "PARTNERS: Deep Cache Eel | BOND opens habitat | TOOL picks Kite for Guardian Pulse | USE confirms"
 
 
 func active_text(world, individual: Dictionary, sortie_report: Dictionary) -> String:
@@ -25,24 +21,7 @@ func active_text(world, individual: Dictionary, sortie_report: Dictionary) -> St
 	var response := _matching_response(relationship, individual)
 	if response.is_empty():
 		return ""
-	match str(individual.get("individual_id", "")):
-		MICA_ID:
-			return _mica_text(relationship, sortie_report)
-		KITE_ID:
-			return _kite_text(sortie_report)
-	return ""
-
-
-func _mica_text(relationship: Dictionary, sortie_report: Dictionary) -> String:
-	var control: Dictionary = sortie_report.get("control", {})
-	var lens: Dictionary = control.get("drift_lens", {})
-	var result: Dictionary = lens.get("last_result", {})
-	if (
-		float(lens.get("projection_seconds", 0.0)) > 0.0
-		and str(result.get("target_id", "")) == str(relationship.get("hostile_id", ""))
-	):
-		return "PARTNER: Mica prediction shown beside eel | No damage; Shock Prod required for harvest"
-	return "PARTNER: Mica predicts lunges; no damage | Enter territory | B, then 3: Predict Lunge"
+	return _kite_text(sortie_report) if str(individual.get("individual_id", "")) == KITE_ID else ""
 
 
 func _kite_text(sortie_report: Dictionary) -> String:

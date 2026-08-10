@@ -99,7 +99,7 @@ func _run() -> void:
 	sortie.bind_interface(null, Callable(self, "_record_status"), Callable(), Callable(self, "_control_allowed"))
 	var mica_launch: Dictionary = sortie.bind_map(world, player, profile, Callable(self, "_has_no_upgrade"), true, false, hostiles)
 	_expect(str(mica_launch.get("active_species_id", "")) == "veil_cuttle", "Mica did not launch from the checkpoint")
-	var mica_evidence := _test_mica_path(world, player, profile, sortie, hostiles, biological, access_before, progression_before)
+	var mica_retired := _test_mica_retired(world, player, profile, sortie, hostiles, biological, access_before, progression_before)
 	_advance_pressure(oxygen, day, 0.25)
 
 	var kite_selection: Dictionary = profile.select_active_companion(KITE_ID, true)
@@ -174,7 +174,7 @@ func _run() -> void:
 	_expect(profile.material_quantity(ExpansionProfileState.EEL_ELECTROCYTE_MATERIAL_ID) == 1, "fresh day changed banked electrocyte")
 
 	var final_report := {
-		"mica": mica_evidence,
+		"mica_retired": mica_retired,
 		"guardian": guardian_evidence,
 		"shock_first": first_defeat,
 		"shock_banked": bank_defeat,
@@ -193,7 +193,7 @@ func _run() -> void:
 	_finish(world, connector_world, player, sortie, original_time_scale, final_report)
 
 
-func _test_mica_path(world, player, profile, sortie, hostiles, biological, access_before: Dictionary, progression_before: Dictionary) -> Dictionary:
+func _test_mica_retired(world, player, profile, sortie, hostiles, biological, access_before: Dictionary, progression_before: Dictionary) -> Dictionary:
 	hostiles.reset_for_failure(world)
 	var home: Vector2 = hostiles.state_for(HOSTILE_ID).get("home_center", Vector2.ZERO)
 	_place_pair(player, sortie.companion(), home + Vector2(-64.0, 0.0))
@@ -203,16 +203,13 @@ func _test_mica_path(world, player, profile, sortie, hostiles, biological, acces
 	var visual_before: Dictionary = world.get_biological_resource_visual_report()
 	var cache_before: bool = world.is_salvage_collected(CACHE_ID)
 	var result: Dictionary = _dispatch_command(sortie, "read_drift")
-	_expect(bool(result.get("changed", false)) and result.get("target_id") == HOSTILE_ID, "Mica did not read the source-linked eel")
-	_expect(result.get("command_label") == "Predict Lunge", "eel-context command did not identify Mica's prediction role")
-	_expect(result.get("phase") == "warning" and (result.get("movement_direction", Vector2.ZERO) as Vector2) != Vector2.ZERO, "Mica projection omitted phase or direction")
+	_expect(not bool(result.get("changed", true)) and str(result.get("target_id", "")) != HOSTILE_ID, "Mica still received the source-linked eel as a Read Drift subject")
+	_expect(str(result.get("reason", "")) == "no_subject", "Mica's retired eel response did not report a bounded no-subject result")
 	var projection: Dictionary = sortie.companion().report().get("drift_projection", {})
 	_expect(
-		projection.get("heading_text") == "MICA PREDICTION - NO DAMAGE"
-		and str(projection.get("primary_text", "")).begins_with("LUNGE WEST IN ")
-		and projection.get("response_text") == "MOVE ASIDE"
-		and (projection.get("card_rect", Rect2()) as Rect2).has_area(),
-		"Mica projection did not explain the predicted attack and player response"
+		not bool(projection.get("visible", false))
+		and str(projection.get("subject_kind", "")) != "territorial_hostile",
+		"Mica retained a territorial-eel prediction projection"
 	)
 	_expect(hostiles.state_for(HOSTILE_ID) == hostile_before, "Mica read mutated hostile state")
 	_expect(biological.report() == biological_before and world.get_biological_resource_visual_report() == visual_before, "Mica read mutated resource state")
@@ -222,8 +219,7 @@ func _test_mica_path(world, player, profile, sortie, hostiles, biological, acces
 	var retreat: Dictionary = hostiles.update(world, player.global_position, 0.0)
 	_expect(retreat.get("kind") == "retreat" and hostiles.state_for(HOSTILE_ID).get("phase") == "returning", "ordinary retreat did not evade the warning")
 	sortie.reset_control("retry")
-	_expect(not bool(sortie.companion().report().get("drift_projection", {}).get("visible", true)), "Retry retained Mica projection")
-	return {"phase": result.get("phase"), "direction": result.get("movement_direction"), "evade": retreat.get("kind")}
+	return {"reason": result.get("reason"), "target_id": result.get("target_id"), "evade": retreat.get("kind")}
 
 
 func _test_guardian_path(world, player, profile, sortie, hostiles, biological, material_runtime) -> Dictionary:
@@ -390,7 +386,7 @@ func _finish(world, connector_world, player, sortie, original_time_scale: float,
 		quit(1)
 		return
 	var hostile: Dictionary = evidence.get("hostile", {})
-	print("PASS: Living Expedition 04 journey checkpoint=%s relationship=%s active=%s:drift_lens>%s:guardian_pulse hostile=%s phase=%s position=%s health=%d/3 mica=%s guardian=%s shock=%s cargo={full:%s held_after_harvest:%d banked_electrocyte:%d} failure={retry_restored:%d connector_preserved:%s map_reload_preserved:%s fresh_day:restored} cache_collected=%s anchor_combat=false oxygen=%.2f daylight=%.2f day=%d." % [
+	print("PASS: Living Expedition 04 journey checkpoint=%s relationship=%s active=%s:ecology_only>%s:guardian_pulse hostile=%s phase=%s position=%s health=%d/3 mica_retired=%s guardian=%s shock=%s cargo={full:%s held_after_harvest:%d banked_electrocyte:%d} failure={retry_restored:%d connector_preserved:%s map_reload_preserved:%s fresh_day:restored} cache_collected=%s anchor_combat=false oxygen=%.2f daylight=%.2f day=%d." % [
 		CHECKPOINT_ID,
 		RELATIONSHIP_ID,
 		MICA_ID,
@@ -399,7 +395,7 @@ func _finish(world, connector_world, player, sortie, original_time_scale: float,
 		str(hostile.get("phase", "")),
 		str(hostile.get("position", Vector2.ZERO)),
 		int(hostile.get("health", 0)),
-		str(evidence.get("mica", {})),
+		str(evidence.get("mica_retired", {})),
 		str(evidence.get("guardian", {})),
 		str(evidence.get("shock_banked", {})),
 		str(evidence.get("cargo_full", {})),

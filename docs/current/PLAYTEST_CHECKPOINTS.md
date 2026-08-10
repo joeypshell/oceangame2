@@ -17,7 +17,7 @@ the routine end-to-end regression layer.
 
 | ID | Starts with | Deliberately incomplete |
 | --- | --- | --- |
-| `living_expedition_04_start` | Day 3 at the canonical boat; Kite and Mica committed and adapted; Mica active; Shock Prod and prior required progression available; empty cargo | Companion-shaped territorial-eel approach, defeat-only harvest, and owner verdict |
+| `living_expedition_04_start` | Day 3 at the canonical boat; Kite and Mica committed and adapted; Mica active; Shock Prod and prior required progression available; empty cargo | Select Kite for the Guardian-Pulse eel opening, compare ordinary evade and defeat-only harvest, and verify Mica has no eel response |
 | `living_expedition_03_start` | Kite and Mica committed; Mica active; prior required progression available | Mica migration observation, night consolidation, and next-sortie Read Drift |
 | `living_expedition_02_start` | Prior required projects/discoveries committed; Cutter and Scanner available; Kite committed and selected; empty cargo | Mica rescue/commitment, two-partner habitat selection, Mica Reveal Trace sortie, and return to Kite |
 | `living_expedition_01_start` | Prior required projects/discoveries committed; Cutter, Fins, and Shock Prod available; empty cargo; no companion | Spark Ray rescue, boat commitment, command/riding proof, shared memory, night adaptation, and Day 3 payoff |

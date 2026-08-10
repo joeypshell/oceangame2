@@ -35,14 +35,6 @@ def relationship() -> dict[str, Any]:
         "review_context_id": REVIEW_CONTEXT_ID,
         "responses": [
             {
-                "species_id": "veil_cuttle",
-                "individual_id": "veil_cuttle_juvenile_01",
-                "required_adaptation_id": "drift_lens",
-                "action_id": "read_drift",
-                "effect_kind": "hostile_intent_read",
-                "mutation": "none",
-            },
-            {
                 "species_id": "spark_ray",
                 "individual_id": "spark_ray_juvenile_01",
                 "required_adaptation_id": "guardian_pulse",
@@ -54,8 +46,8 @@ def relationship() -> dict[str, Any]:
         ],
         "availability": AVAILABILITY,
         "intent": (
-            "Mica reads the existing eel without mutation; Guardian-Pulse Kite "
-            "may create a zero-damage opening while Shock Prod remains defeat authority."
+            "Guardian-Pulse Kite may create a zero-damage opening while Shock Prod "
+            "remains defeat authority."
         ),
     }
 
@@ -85,7 +77,6 @@ def camera_test(anchor: tuple[float, float]) -> dict[str, Any]:
 
 def review_questions() -> list[str]:
     return [
-        "Does Mica make the eel's territorial phase and direction readable without changing it?",
         "Does Guardian Pulse create a clear zero-damage opening while Shock Prod remains defeat authority?",
         "Can the player still evade, attempt the cache, and understand that harvest requires defeat?",
     ]
@@ -98,7 +89,7 @@ def source_provenance(anchor: tuple[float, float]) -> dict[str, Any]:
         "hostile_ids": [HOSTILE_ID],
         "guarded_salvage_ids": [SALVAGE_ID],
         "hostile_harvest_ids": [HARVEST_ID],
-        "companion_action_ids": ["read_drift", "guardian_pulse_action"],
+        "companion_action_ids": ["guardian_pulse_action"],
         "review_context_ids": [REVIEW_CONTEXT_ID],
         "camera_test_ids": [REVIEW_CAMERA_ID],
         "derived_review_anchor": {"x": anchor[0], "y": anchor[1]},

@@ -10,7 +10,7 @@ Status: **PASS**
 | View | Sources | Status | Graph |
 | --- | --- | --- | --- |
 | `slice_provenance` (Production slice provenance) | `maps/production_slice_01.greybox.json`, `maps/production_slice_02.greybox.json`, `maps/production_slice_03.greybox.json`, `maps/production_slice_04.greybox.json` | **PASS** | 95 nodes / 301 edges |
-| `promoted_full_level` (Promoted production level) | `maps/production_level_01.greybox.json`, `maps/transfer_hub_interior_01.greybox.json` | **PASS** | 147 nodes / 581 edges |
+| `promoted_full_level` (Promoted production level) | `maps/production_level_01.greybox.json`, `maps/transfer_hub_interior_01.greybox.json` | **PASS** | 147 nodes / 579 edges |
 
 ## Detailed Canonical View
 
@@ -106,12 +106,12 @@ The table and dependency diagram below describe the promoted full-level view.
 | 19 | `[proposed] Spark Ray Anchor Mounted Review 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Anchor Fins | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Anchor Fins | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Guardian Independent Review 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Guardian Mounted Review 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | state/payoff | stage 19 |
+| 19 | `[proposed] Deep Cache Eel Companion Response` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse, Shock Prod | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Anchor Current 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, Propulsion Fins, Signal Reef current, [proposed] Anchor Fins | production_level_01, [proposed] Spark Ray Juvenile 01, Propulsion Fins | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Guardian Eel 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, Shock Prod, Deep Cache Territorial Eel, [proposed] Guardian Pulse | production_level_01, [proposed] Spark Ray Juvenile 01, Shock Prod | state/payoff | stage 19 |
 | 19 | `Survey abyssal source` | production_level_01 / deep_harmonic_abyssal_basin_route | Survey Scanner 1, Pressure Suit 1, Abyssal basin route | production_level_01, Survey Scanner 1, Pressure Suit 1 | Abyssal Basin Harmonic Source Discovery | stage 19 |
 | 19 | `Survey wreck archive` | production_level_01 / southeast_wreck_archive_route | wreck recorder, Survey Scanner 1, Pressure Suit 1, Southeast wreck archive route | wreck recorder, production_level_01, Survey Scanner 1 | Southeast Wreck Archive Discovery | stage 19 |
 | 20 | `[proposed] Veil Cuttle Drift Review 01` | production_level_01 | [proposed] Veil Cuttle Juvenile 01, [proposed] Drift Lens | production_level_01, [proposed] Veil Cuttle Juvenile 01, [proposed] Drift Lens | state/payoff | stage 20 |
-| 20 | `[proposed] Deep Cache Eel Companion Response` | production_level_01 | [proposed] Veil Cuttle Juvenile 01, [proposed] Drift Lens, [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse, Shock Prod | production_level_01, [proposed] Veil Cuttle Juvenile 01, [proposed] Drift Lens | state/payoff | stage 20 |
 | 20 | `[proposed] Veil Cuttle Drift Lens Payoff 01` | production_level_01 | [proposed] Veil Cuttle Juvenile 01, Jellyfish patrol, [proposed] Drift Lens | production_level_01, [proposed] Veil Cuttle Juvenile 01, Jellyfish patrol | state/payoff | stage 20 |
 | 20 | `Abyssal Basin Harmonic Source Discovery` | production_level_01 / deep_harmonic_abyssal_basin_route | Survey abyssal source, Surface Boat Entry | Survey abyssal source, production_level_01, Surface Boat Entry | state/payoff | stage 20 |
 | 20 | `Southeast Wreck Archive Discovery` | production_level_01 / southeast_wreck_archive_route | Survey wreck archive, Surface Boat Entry | Survey wreck archive, production_level_01, Surface Boat Entry | state/payoff | stage 20 |

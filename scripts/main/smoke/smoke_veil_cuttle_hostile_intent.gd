@@ -22,6 +22,50 @@ class EmptySnapshotFixture:
 		return []
 
 
+class HostileIntentWorldFixture:
+	extends RefCounted
+
+	var tile_size := 32.0
+	var spawn_position := Vector2.ZERO
+	var _world
+
+	func _init(world) -> void:
+		_world = world
+		tile_size = float(world.tile_size)
+		spawn_position = world.spawn_position
+
+	func get_companion_hostile_responses() -> Array:
+		return [{
+			"id": "deep_cache_eel_companion_response_test_fixture",
+			"kind": "companion_hostile_response",
+			"hostile_id": "deep_cache_territorial_eel",
+			"review_context_id": "dormant_hostile_reader_test",
+			"responses": [{
+				"species_id": "veil_cuttle",
+				"individual_id": "veil_cuttle_juvenile_01",
+				"required_adaptation_id": "drift_lens",
+				"action_id": "read_drift",
+				"effect_kind": "hostile_intent_read",
+				"mutation": "none",
+			}],
+		}]
+
+	func has_clear_terrain_line(from: Vector2, to: Vector2) -> bool:
+		return _world.has_clear_terrain_line(from, to)
+
+	func find_open_path(from: Vector2, to: Vector2) -> Array:
+		return _world.find_open_path(from, to)
+
+	func get_ecological_traces() -> Array:
+		return _world.get_ecological_traces()
+
+	func set_ecological_trace_state(trace_id: String, state: String) -> bool:
+		return _world.set_ecological_trace_state(trace_id, state)
+
+	func get_moving_hazards() -> Array:
+		return _world.get_moving_hazards()
+
+
 func _initialize() -> void:
 	call_deferred("_run")
 
@@ -32,7 +76,8 @@ func _run() -> void:
 	world.map_path = MAP_PATH
 	get_root().add_child(world)
 	await process_frame
-	_expect(_relationship_by_id(world, RELATIONSHIP_ID).get("hostile_id") == TARGET_ID, "source-linked Mica/eel relationship was unavailable")
+	var source_world := HostileIntentWorldFixture.new(world)
+	_expect(_relationship_by_id(source_world, "%s_test_fixture" % RELATIONSHIP_ID).get("hostile_id") == TARGET_ID, "explicit dormant-reader fixture was unavailable")
 
 	var hostiles := TerritorialHostileController.new()
 	hostiles.on_map_loaded(world, false)
@@ -43,18 +88,18 @@ func _run() -> void:
 	player.global_position = home + Vector2(-64.0, 0.0)
 	var cuttle = CUTTLE_SCENE.instantiate()
 	get_root().add_child(cuttle)
-	_configure_mica(cuttle, world, player, true)
+	_configure_mica(cuttle, source_world, player, true)
 	cuttle.set_physics_process(false)
 	var control := VeilCuttleControlRuntime.new()
 	get_root().add_child(control)
 	control.set_process(false)
 	control.bind_interface(Callable(self, "_record_status"), Callable(self, "_control_allowed"))
-	control.bind_map(world, player, cuttle, EmptySnapshotFixture.new(), hostiles)
+	control.bind_map(source_world, player, cuttle, EmptySnapshotFixture.new(), hostiles)
 	hostiles.update(world, player.global_position, 0.0)
 
 	_test_warning_projection(world, hostiles, player, cuttle, control)
 	_test_lunge_projection(world, hostiles, player, control)
-	_test_context_and_adaptation_boundaries(world, hostiles, player, cuttle, control)
+	_test_context_and_adaptation_boundaries(world, source_world, hostiles, player, cuttle, control)
 
 	control.clear_map()
 	control.queue_free()
@@ -68,7 +113,7 @@ func _run() -> void:
 		quit(1)
 		return
 	print(
-		"PASS: Mica Predict Lunge target=%s relationship=%s phase=warning+lunge direction=true response=true no_damage=true territory=true recovery=1.25s bounded_context=true mutation=false cooldown=true failure_reset=true unadapted=false jellyfish_regression=separate." % [
+		"PASS: dormant Mica hostile reader fixture target=%s relationship=%s production_source=false phase=warning+lunge direction=true response=true no_damage=true territory=true recovery=1.25s bounded_context=true mutation=false cooldown=true failure_reset=true unadapted=false jellyfish_regression=separate." % [
 			TARGET_ID,
 			RELATIONSHIP_ID,
 		]
@@ -120,14 +165,14 @@ func _test_lunge_projection(world, hostiles, player, control) -> void:
 	control.reset_transient("failure")
 
 
-func _test_context_and_adaptation_boundaries(world, hostiles, player, cuttle, control) -> void:
+func _test_context_and_adaptation_boundaries(world, source_world, hostiles, player, cuttle, control) -> void:
 	player.global_position = world.spawn_position
 	cuttle.global_position = player.global_position
 	cuttle.advance(0.0)
 	_expect(control.drift_lens_runtime().action().get("reason") == "no_subject", "eel intent remained globally readable outside its bounded context")
 
-	_configure_mica(cuttle, world, player, false)
-	control.bind_map(world, player, cuttle, EmptySnapshotFixture.new(), hostiles)
+	_configure_mica(cuttle, source_world, player, false)
+	control.bind_map(source_world, player, cuttle, EmptySnapshotFixture.new(), hostiles)
 	_expect(not _command_ids(control.report().get("context_commands", [])).has("read_drift"), "unadapted Mica received Read Drift")
 	_expect(not bool(control.drift_lens_runtime().report().get("learned", true)), "unadapted Mica reported Drift Lens learned")
 

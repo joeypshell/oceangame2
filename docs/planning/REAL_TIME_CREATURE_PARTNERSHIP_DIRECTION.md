@@ -2,8 +2,8 @@
 
 Status: selected product direction. Living Expeditions 01-03 implement the
 focused Spark Ray command/riding proof, a bounded two-individual stable, and
-Mica's first ecological sensing adaptation. Living Expedition 04 selects one
-companion-shaped wildlife encounter as the next proof.
+Mica's first ecological sensing adaptation. Living Expedition 04 reached owner
+HOLD and now closes its rejected Mica eel experiment without roster growth.
 
 ## Decision
 
@@ -94,10 +94,10 @@ actions may answer with movement, defense, control, rescue, or damage according
 to the individual's build. Enemy intent, target, range, action, hit or miss,
 knockback, recovery, and cooldown must remain readable.
 
-The selected Living Expedition 04 proof applies that rule to the existing eel:
-Mica reads intent without mutating it, Guardian-Pulse Kite creates a temporary
-non-damaging opening, and only the diver's Shock Prod can defeat it and expose
-the existing electrocyte harvest. The proof does not add a general combat layer.
+Living Expedition 04 applies that rule to the existing eel through Guardian-
+Pulse Kite's temporary non-damaging opening; only the diver's Shock Prod can
+defeat it and expose the electrocyte harvest. Mica's prediction was not useful
+in this encounter and is retired while generic reading remains source-gated.
 
 Small familiarity gains may later improve handling, but major growth comes from
 exact-once meaningful memories and deliberate night consolidation. Repetition or
@@ -128,8 +128,8 @@ replacing the Shock Prod. The proof changes no terrain topology.
 - creature health, permanent injury, death, breeding, fusion, or lineage
 - general ecosystem simulation
 
-## Selected Next Question
+## Current Verdict
 
-Does choosing Kite or Mica create a different, understandable way to handle the
-same eel, and does the nonlethal-opening versus Shock-Prod-harvest choice feel
-like a real expedition decision?
+The companion-choice question received HOLD because Mica's prediction did not
+create a useful decision. Finish the bounded BOND timing correction and retain
+only Kite's eel response before selecting another creature proof.
