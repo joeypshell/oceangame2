@@ -264,7 +264,7 @@ Current issue state as of 2026-08-10:
 - Closed: milestone #46 and #1253-#1262 implement the bounded Kite/Mica habitat, active selection, Mica sensing role, deterministic evidence, exact Web checkpoint, and owner GO.
 - Closed: milestone #47 and #1276-#1285 plus bounded corrections #1301/#1303/#1305/#1307/#1308 implement Mica's ecology journey, exact-Web runtime `0e92dd7`, and owner GO.
 - Closed on owner HOLD: milestone #48 and #1314-#1323 plus bounded corrections #1333/#1335/#1336 retain Kite's eel opening, retire Mica's non-useful prediction, and verify corrected runtime `bbcc255`.
-- Active batch: Living Expedition 05 follows the dependency order in its plan; implementation and deterministic source/profile/runtime/journey coverage are current through the rescue, selection, Excavate, reset/reload, pickup, and bank boundaries. Focused visual review and owner closeout remain next.
+- Active batch: Living Expedition 05 implementation, deterministic rescue-to-bank journey coverage, and focused desktop/mobile visual review are complete through the rescue, selection, Excavate, reset/reload, pickup, and bank boundaries. Exact-Web verification and the owner closeout remain under #1351.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -402,7 +402,7 @@ Current issue state as of 2026-08-10:
 
 ## Recommended Next Work
 
-Living Expeditions 01-03 are complete with owner GO. Living Expedition 04 is technically complete and closed on owner HOLD: Mica's eel prediction is retired, Guardian-Pulse Kite remains the only active companion response, and BOND uses a whole-simulation tactical pause. Living Expedition 05 has its focused rescue, selection, follow, and deliberate Excavate material handoff; the integrated rescue-to-bank journey and review evidence are next. Keep #52/#53 deferred.
+Living Expeditions 01-03 are complete with owner GO. Living Expedition 04 is technically complete and closed on owner HOLD: Mica's eel prediction is retired, Guardian-Pulse Kite remains the only active companion response, and BOND uses a whole-simulation tactical pause. Living Expedition 05 has complete focused rescue, selection, follow, deliberate Excavate, integrated rescue-to-bank journey, and visual evidence. Exact-Web verification and an owner playtest verdict are next under #1351. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 
