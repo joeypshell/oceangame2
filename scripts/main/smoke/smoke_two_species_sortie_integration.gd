@@ -228,7 +228,7 @@ func _test_schema_v1_migration() -> void:
 	})
 	var report: Dictionary = state.report()
 	_expect(failures.is_empty(), "schema-v1 migration failed: %s" % [failures])
-	_expect(int(report.get("schema_version", 0)) == CompanionProfileState.PROFILE_SCHEMA_VERSION, "schema-v1 migration did not produce profile schema v2")
+	_expect(int(report.get("schema_version", 0)) == CompanionProfileState.PROFILE_SCHEMA_VERSION, "schema-v1 migration did not produce the current profile schema")
 	_expect((report.get("individuals", []) as Array).size() == 1 and str(report.get("active_individual_id", "")) == KITE_ID, "schema-v1 migration duplicated or deselected Kite")
 
 
@@ -332,7 +332,7 @@ func _finish(world, player, rescue, sortie) -> void:
 			push_error("Living Expedition 02 journey smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("PASS: Living Expedition 02 journey checkpoint=living_expedition_02_start profile_schema=2 migration=v1_exact individuals=spark_ray_juvenile_01,veil_cuttle_juvenile_01 rescue=available>pending>committed selected=Kite>Mica>Kite active_species=spark_ray>veil_cuttle>spark_ray actions=Mica:recall+reveal_trace,Kite:mount full_cargo_safe=true mid_sortie_switch=false scanner_required=true trace_reward=false failures=oxygen+combat+hazard+retry reload=exact protected_gate=upper_right_current_pocket_gate.")
+	print("PASS: Living Expedition 02 journey checkpoint=living_expedition_02_start profile_schema=3 migration=v1_exact individuals=spark_ray_juvenile_01,veil_cuttle_juvenile_01 rescue=available>pending>committed selected=Kite>Mica>Kite active_species=spark_ray>veil_cuttle>spark_ray actions=Mica:recall+reveal_trace,Kite:mount full_cargo_safe=true mid_sortie_switch=false scanner_required=true trace_reward=false failures=oxygen+combat+hazard+retry reload=exact protected_gate=upper_right_current_pocket_gate.")
 	quit(0)
 
 

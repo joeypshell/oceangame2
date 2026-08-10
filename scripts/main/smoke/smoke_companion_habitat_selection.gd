@@ -35,7 +35,7 @@ func _init() -> void:
 
 
 func _run() -> void:
-	var profile = _two_individual_profile()
+	var profile = _three_individual_profile()
 	var world := FakeWorld.new()
 	var player := Node2D.new()
 	var release_probe := ReleaseProbe.new()
@@ -51,23 +51,29 @@ func _run() -> void:
 	habitat.sync_presence()
 	var initial: Dictionary = habitat.report()
 	_expect(bool(initial.get("at_boat", false)), "habitat did not recognize canonical boat presence")
-	_expect(int(initial.get("individual_count", 0)) == 2, "habitat did not project both committed individuals")
+	_expect(int(initial.get("individual_count", 0)) == 3, "habitat did not project all three committed individuals")
 	_expect(bool(initial.get("panel", {}).get("visible", false)), "habitat panel was not visible at the boat")
-	_expect((initial.get("panel", {}).get("rows", []) as Array).size() == 2, "habitat panel did not render two named rows")
+	var rows: Array = initial.get("panel", {}).get("rows", [])
+	_expect(rows.size() == 3, "habitat panel did not render three named rows")
+	if rows.size() == 3:
+		_expect(str(rows[0].get("history_label", "")).contains("Anchor Fins"), "Kite history disappeared from the habitat")
+		_expect(str(rows[1].get("history_label", "")).contains("sensing partner"), "Mica role disappeared from the habitat")
+		_expect(str(rows[2].get("history_label", "")).contains("excavation partner"), "Marl role was not readable in the habitat")
 	_expect(release_probe.count == 1, "boat entry did not release the live companion exactly once")
 
-	_expect(habitat.handle_input(_action(&"companion_command", true)), "BOND did not open two-individual selection")
+	_expect(habitat.handle_input(_action(&"companion_command", true)), "BOND did not open three-individual selection")
 	_expect(bool(habitat.report().get("selection_open", false)), "selection did not remain open after BOND press")
 	_expect(not player.is_physics_processing(), "open selection did not lock player movement")
 	_expect(habitat.handle_input(_action(&"companion_command", false)), "mobile-style BOND release escaped selection routing")
 	_expect(bool(habitat.report().get("selection_open", false)), "BOND release closed the selector before confirmation")
 	_expect(habitat.handle_input(_action(&"active_tool_cycle_next", true)), "TOOL did not cycle companion selection")
+	_expect(habitat.handle_input(_action(&"active_tool_cycle_next", true)), "TOOL did not reach the third companion")
 	_expect(habitat.handle_input(_action(&"active_tool_use", true)), "USE did not confirm companion selection")
-	var mica_id := CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID
-	_expect(profile.companion_report().get("active_individual_id") == mica_id, "Mica was not selected for the next sortie")
+	var marl_id := CompanionProfileState.THIRD_PROOF_INDIVIDUAL_ID
+	_expect(profile.companion_report().get("active_individual_id") == marl_id, "Marl was not selected for the next sortie")
 	_expect(not bool(habitat.report().get("selection_open", true)), "selector remained open after confirmation")
 	_expect(player.is_physics_processing(), "confirmation did not restore player movement")
-	_expect(note_probe.notes.has("Next sortie: Mica"), "selection did not emit concise next-sortie feedback")
+	_expect(note_probe.notes.has("Next sortie: Marl"), "selection did not emit concise next-sortie feedback")
 
 	world.at_boat = false
 	habitat.sync_presence()
@@ -83,6 +89,16 @@ func _run() -> void:
 	_expect(not habitat.handle_input(_action(&"companion_command", true)), "blocked game state opened habitat selection")
 	_interaction_allowed = true
 
+	await process_frame
+	habitat.layout_for_size(Vector2(1280, 720))
+	var desktop_rect: Rect2 = habitat.report().get("panel", {}).get("rect", Rect2())
+	_expect(desktop_rect.position.x >= 960.0 and desktop_rect.end.x <= 1280.0, "three-row desktop habitat escaped its right-side region: %s" % desktop_rect)
+	_expect(desktop_rect.position.y >= 0.0 and desktop_rect.end.y <= 720.0, "three-row desktop habitat clipped vertically: %s" % desktop_rect)
+	habitat.layout_for_size(Vector2(844, 390))
+	var compact_rect: Rect2 = habitat.report().get("panel", {}).get("rect", Rect2())
+	_expect(compact_rect.position.x >= 592.0, "three-row compact habitat overlapped the accepted cargo HUD region: %s" % compact_rect)
+	_expect(compact_rect.position.y >= 0.0 and compact_rect.end.x <= 844.0 and compact_rect.end.y <= 390.0, "three-row compact habitat exceeded the viewport: %s" % compact_rect)
+
 	var one_profile := ExpansionProfileState.new("user://unused_habitat_single.json", false)
 	one_profile.load_profile()
 	one_profile.commit_companion_rescue(CompanionProfileState.FIRST_PROOF_INDIVIDUAL_ID, "spark_ray", "Kite", false)
@@ -92,15 +108,6 @@ func _run() -> void:
 	_expect(not bool(habitat.report().get("selection_open", true)), "single-companion habitat opened a meaningless selector")
 	_expect(note_probe.notes.has("Kite is ready for the next sortie"), "single-companion habitat feedback was unclear")
 
-	await process_frame
-	habitat.layout_for_size(Vector2(844, 390))
-	var rect: Rect2 = habitat.report().get("panel", {}).get("rect", Rect2())
-	_expect(rect.position.x >= 0.0 and rect.position.y >= 0.0, "compact habitat panel started outside the viewport")
-	_expect(rect.position.x >= 592.0, "compact habitat panel overlapped the accepted cargo HUD region: %s" % rect)
-	_expect(
-		rect.end.x <= 844.0 and rect.end.y <= 390.0,
-		"compact habitat panel exceeded the viewport: %s" % rect
-	)
 	habitat.queue_free()
 	player.queue_free()
 	world.queue_free()
@@ -108,11 +115,14 @@ func _run() -> void:
 	_finish()
 
 
-func _two_individual_profile():
-	var profile := ExpansionProfileState.new("user://unused_habitat_two.json", false)
+func _three_individual_profile():
+	var profile := ExpansionProfileState.new("user://unused_habitat_three.json", false)
 	profile.load_profile()
 	profile.commit_companion_rescue(CompanionProfileState.FIRST_PROOF_INDIVIDUAL_ID, "spark_ray", "Kite", false)
+	profile.earn_companion_memory("held_the_flow", false)
+	profile.select_companion_adaptation("anchor_fins", false)
 	profile.commit_companion_rescue(CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID, "veil_cuttle", "Mica", false)
+	profile.commit_companion_rescue(CompanionProfileState.THIRD_PROOF_INDIVIDUAL_ID, "silt_hound", "Marl", false)
 	return profile
 
 
@@ -133,7 +143,7 @@ func _finish() -> void:
 			push_error("Companion habitat smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("PASS: Companion habitat individuals=2 boat_only=true release_on_return=true BOND_open=true TOOL_cycle=true USE_confirm=true active=mica mid_sortie_switch=false mobile_actions=true single_selector=false compact_bounds=true.")
+	print("PASS: Companion habitat individuals=3 history=true boat_only=true release_on_return=true BOND_open=true TOOL_cycle=true USE_confirm=true active=marl mid_sortie_switch=false mobile_actions=true single_selector=false desktop_mobile_bounds=true.")
 	quit(0)
 
 

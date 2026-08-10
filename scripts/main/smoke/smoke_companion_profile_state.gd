@@ -6,10 +6,12 @@ const ExpansionProfileState := preload("res://scripts/main/expansion_profile_sta
 const PROFILE_PATH := "user://oceangame2_companion_profile_smoke.json"
 const LEGACY_PATH := "user://oceangame2_companion_profile_v4_smoke.json"
 const COMPANION_V1_PATH := "user://oceangame2_companion_profile_v1_smoke.json"
+const COMPANION_V2_PATH := "user://oceangame2_companion_profile_v2_smoke.json"
 const ISOLATED_PATH := "user://oceangame2_companion_profile_isolated_smoke.json"
 const BLOCKED_PATH := "user://oceangame2_companion_profile_blocked"
 const SPECIES_ID := "spark_ray"
 const SECOND_SPECIES_ID := "veil_cuttle"
+const THIRD_SPECIES_ID := "silt_hound"
 const CALLSIGN := "Test Ray"
 const FLOW_MEMORY_ID := "held_the_flow"
 const GROUND_MEMORY_ID := "stood_ground"
@@ -38,11 +40,12 @@ func _run() -> void:
 		quit(1)
 		return
 	print(
-		"Companion profile smoke passed: outer_schema=%d companion_schema=%d individuals=%s,%s migration_exact=true active_selection=mica riding_derived=false rescue_exact_once=true memories_exact_once=true adaptation=%s reload_unmounted=true v4_migration=true review_isolated=true." % [
+		"Companion profile smoke passed: outer_schema=%d companion_schema=%d individuals=%s,%s,%s v1_v2_migration_exact=true active_selection=marl riding_derived=false rescue_exact_once=true memories_exact_once=true adaptation=%s reload_unmounted=true v4_migration=true review_isolated=true." % [
 			ExpansionProfileState.SCHEMA_VERSION,
 			CompanionProfileState.PROFILE_SCHEMA_VERSION,
 			CompanionProfileState.FIRST_PROOF_INDIVIDUAL_ID,
 			CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID,
+			CompanionProfileState.THIRD_PROOF_INDIVIDUAL_ID,
 			ANCHOR_ADAPTATION_ID,
 		]
 	)
@@ -72,12 +75,15 @@ func _test_fresh_and_v4_migration() -> void:
 
 
 func _test_companion_v1_migration_and_collection() -> void:
+	var empty_v1 := CompanionProfileState.new()
+	_expect(empty_v1.load_payload({"schema_version": 1, "individual": {}, "active_individual_id": ""}).is_empty(), "empty schema v1 profile did not migrate")
+	_expect(empty_v1.payload().get("schema_version") == 3 and empty_v1.individuals().is_empty(), "empty schema v1 migration invented a companion")
 	_write_json(COMPANION_V1_PATH, _outer_payload_with_companion_v1())
 	var profile := ExpansionProfileState.new(COMPANION_V1_PATH, true)
 	var migration: Dictionary = profile.load_profile()
-	_expect(migration.get("status") == "migrated_companion_v2", "companion v1 payload did not report migration: %s" % migration)
+	_expect(migration.get("status") == "migrated_companion_v1_to_v3", "companion v1 payload did not report migration: %s" % migration)
 	var persisted: Dictionary = _read_json(COMPANION_V1_PATH).get("companion_profile", {})
-	_expect(persisted.get("schema_version") == CompanionProfileState.PROFILE_SCHEMA_VERSION, "companion migration did not write schema v2")
+	_expect(persisted.get("schema_version") == CompanionProfileState.PROFILE_SCHEMA_VERSION, "companion migration did not write schema v3")
 	var persisted_individuals: Array = persisted.get("individuals", [])
 	_expect(persisted_individuals.size() == 1, "companion migration duplicated or lost Kite")
 	_expect(persisted.get("active_individual_id") == "", "companion migration changed empty active selection")
@@ -87,6 +93,7 @@ func _test_companion_v1_migration_and_collection() -> void:
 	_expect(migrated_kite.get("callsign") == CALLSIGN, "companion migration changed Kite callsign")
 	_expect(migrated_kite.get("earned_memory_ids", []).has(FLOW_MEMORY_ID), "companion migration lost Kite memory")
 	_expect(migrated_kite.get("selected_adaptation_id") == ANCHOR_ADAPTATION_ID, "companion migration lost Kite adaptation")
+	_test_companion_v2_migration()
 	var second_load := ExpansionProfileState.new(COMPANION_V1_PATH, true)
 	_expect(second_load.load_profile().get("status") == "loaded", "companion migration was not idempotent")
 	_expect((second_load.companion_report().get("individuals", []) as Array).size() == 1, "second load duplicated Kite")
@@ -102,31 +109,63 @@ func _test_companion_v1_migration_and_collection() -> void:
 	_expect((two_report.get("individuals", []) as Array).size() == 2, "two-individual collection did not persist")
 	_expect(two_report.get("active_individual_id") == CompanionProfileState.FIRST_PROOF_INDIVIDUAL_ID, "second commitment replaced Kite selection")
 	_expect(second_load.commit_companion_rescue(CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID, SECOND_SPECIES_ID, "Again", true).get("reason") == "already_committed", "duplicate Mica commitment was not idempotent")
-	_expect(bool(second_load.select_active_companion(CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID, true).get("changed", false)), "could not select Mica")
-	var mica_report: Dictionary = second_load.companion_report()
-	_expect(mica_report.get("individual", {}).get("individual_id") == CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID, "active compatibility projection did not follow Mica selection")
-	_expect(not bool(mica_report.get("riding_available_on_sortie_launch", true)), "Mica incorrectly derived riding availability")
-	_expect(second_load.earn_companion_memory(FLOW_MEMORY_ID, false).get("reason") == "unsupported_memory", "Mica accepted Spark Ray memory")
+	var marl: Dictionary = second_load.commit_companion_rescue(
+		CompanionProfileState.THIRD_PROOF_INDIVIDUAL_ID, THIRD_SPECIES_ID, "Marl", true
+	)
+	_expect(bool(marl.get("changed", false)), "third companion commitment failed")
+	_expect(second_load.commit_companion_rescue(CompanionProfileState.THIRD_PROOF_INDIVIDUAL_ID, THIRD_SPECIES_ID, "Again", true).get("reason") == "already_committed", "duplicate Marl commitment was not idempotent")
+	var three_report := second_load.companion_report()
+	_expect((three_report.get("individuals", []) as Array).size() == 3, "three-individual collection did not persist")
+	_expect(three_report.get("active_individual_id") == CompanionProfileState.FIRST_PROOF_INDIVIDUAL_ID, "third commitment replaced Kite selection")
+	_expect(bool(second_load.select_active_companion(CompanionProfileState.THIRD_PROOF_INDIVIDUAL_ID, true).get("changed", false)), "could not select Marl")
+	var marl_report: Dictionary = second_load.companion_report()
+	_expect(marl_report.get("individual", {}).get("individual_id") == CompanionProfileState.THIRD_PROOF_INDIVIDUAL_ID, "active compatibility projection did not follow Marl selection")
+	_expect(not bool(marl_report.get("riding_available_on_sortie_launch", true)), "Marl incorrectly derived riding availability")
+	_expect(second_load.earn_companion_memory(FLOW_MEMORY_ID, false).get("reason") == "unsupported_memory", "Marl accepted Spark Ray memory")
 	var reloaded := ExpansionProfileState.new(COMPANION_V1_PATH, true)
 	reloaded.load_profile()
-	_expect((reloaded.companion_report().get("individuals", []) as Array).size() == 2, "reload lost two-individual collection")
-	_expect(reloaded.companion_report().get("active_individual_id") == CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID, "reload lost Mica selection")
+	_expect((reloaded.companion_report().get("individuals", []) as Array).size() == 3, "reload lost three-individual collection")
+	_expect(reloaded.companion_report().get("active_individual_id") == CompanionProfileState.THIRD_PROOF_INDIVIDUAL_ID, "reload lost Marl selection")
 	_test_invalid_collection_payloads()
+
+
+func _test_companion_v2_migration() -> void:
+	_write_json(COMPANION_V2_PATH, _outer_payload_with_companion_v2())
+	var profile := ExpansionProfileState.new(COMPANION_V2_PATH, true)
+	var migration: Dictionary = profile.load_profile()
+	_expect(migration.get("status") == "migrated_companion_v2_to_v3", "companion v2 payload did not report migration: %s" % migration)
+	var report: Dictionary = profile.companion_report()
+	var values: Array = report.get("individuals", [])
+	_expect(values.size() == 2, "v2 migration duplicated, lost, or invented an individual")
+	if values.size() == 2:
+		_expect(values[0].get("callsign") == CALLSIGN and values[0].get("earned_memory_ids", []).has(FLOW_MEMORY_ID), "v2 migration changed Kite identity or memory")
+		_expect(values[0].get("selected_adaptation_id") == ANCHOR_ADAPTATION_ID and values[1].get("callsign") == "Mica", "v2 migration changed Kite adaptation or Mica identity")
+		_expect(values[1].get("earned_memory_ids", []).has("followed_the_bloom") and values[1].get("selected_adaptation_id") == "drift_lens", "v2 migration changed Mica memory or adaptation")
+	_expect(not profile.companion_report().get("individuals", []).any(func(value): return str(value.get("individual_id", "")) == CompanionProfileState.THIRD_PROOF_INDIVIDUAL_ID), "v2 migration silently committed Marl")
+	_expect(report.get("active_individual_id") == CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID, "v2 migration changed active selection")
+	var persisted: Dictionary = _read_json(COMPANION_V2_PATH).get("companion_profile", {})
+	_expect(persisted.get("schema_version") == CompanionProfileState.PROFILE_SCHEMA_VERSION, "v2 migration did not persist schema v3")
+	_expect(ExpansionProfileState.new(COMPANION_V2_PATH, true).load_profile().get("status") == "loaded", "v2 migration was not idempotent")
 
 
 func _test_invalid_collection_payloads() -> void:
 	var state := CompanionProfileState.new()
 	var kite := _individual(CompanionProfileState.FIRST_PROOF_INDIVIDUAL_ID, SPECIES_ID, "Kite")
 	var mica := _individual(CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID, SECOND_SPECIES_ID, "Mica")
-	var duplicate := {"schema_version": 2, "individuals": [kite, kite.duplicate(true)], "active_individual_id": CompanionProfileState.FIRST_PROOF_INDIVIDUAL_ID}
+	var marl := _individual(CompanionProfileState.THIRD_PROOF_INDIVIDUAL_ID, THIRD_SPECIES_ID, "Marl")
+	var duplicate := {"schema_version": 3, "individuals": [kite, kite.duplicate(true)], "active_individual_id": CompanionProfileState.FIRST_PROOF_INDIVIDUAL_ID}
 	_expect(_has_failure(state.validate_payload(duplicate), "duplicate individual_id"), "duplicate individual ids passed validation")
-	var mismatch := {"schema_version": 2, "individuals": [mica], "active_individual_id": CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID}
+	var mismatch := {"schema_version": 3, "individuals": [mica], "active_individual_id": CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID}
 	mismatch["individuals"][0]["species_id"] = SPECIES_ID
 	_expect(_has_failure(state.validate_payload(mismatch), "does not match"), "individual/species mismatch passed validation")
-	var invalid_active := {"schema_version": 2, "individuals": [kite], "active_individual_id": "missing_companion"}
+	var invalid_active := {"schema_version": 3, "individuals": [kite], "active_individual_id": "missing_companion"}
 	_expect(_has_failure(state.validate_payload(invalid_active), "reference a committed"), "unknown active id passed validation")
-	var over_capacity := {"schema_version": 2, "individuals": [kite, mica, kite.duplicate(true)], "active_individual_id": ""}
-	_expect(_has_failure(state.validate_payload(over_capacity), "at most 2"), "over-capacity collection passed validation")
+	var over_capacity := {"schema_version": 3, "individuals": [kite, mica, marl, kite.duplicate(true)], "active_individual_id": ""}
+	_expect(_has_failure(state.validate_payload(over_capacity), "at most 3"), "over-capacity collection passed validation")
+	var v2_with_marl := {"schema_version": 2, "individuals": [kite, marl], "active_individual_id": ""}
+	_expect(_has_failure(state.validate_payload(v2_with_marl), "cannot contain the third"), "schema v2 accepted Marl")
+	_expect(state.commit_rescue("unknown_companion", THIRD_SPECIES_ID, "Unknown").get("reason") == "unsupported_individual", "unknown individual commitment was accepted")
+	_expect(state.commit_rescue(CompanionProfileState.THIRD_PROOF_INDIVIDUAL_ID, SPECIES_ID, "Wrong").get("reason") == "individual_species_mismatch", "Marl accepted the wrong species")
 
 
 func _individual(individual_id: String, species_id: String, callsign: String) -> Dictionary:
@@ -206,6 +245,10 @@ func _test_transient_state_rejection() -> void:
 	var report: Dictionary = invalid.load_profile()
 	_expect(report.get("status") == "invalid_schema", "persisted mounted state was accepted")
 	_expect(not invalid.has_committed_companion(), "invalid transient profile leaked committed state")
+	payload["companion_profile"] = []
+	_write_json(PROFILE_PATH, payload)
+	var wrong_shape := ExpansionProfileState.new(PROFILE_PATH, true)
+	_expect(wrong_shape.load_profile().get("status") == "invalid_schema", "non-object companion profile was accepted")
 
 
 func _test_storage_rollback() -> void:
@@ -272,6 +315,28 @@ func _outer_payload_with_companion_v1() -> Dictionary:
 	}
 
 
+func _outer_payload_with_companion_v2() -> Dictionary:
+	var kite := _individual(CompanionProfileState.FIRST_PROOF_INDIVIDUAL_ID, SPECIES_ID, CALLSIGN)
+	kite["earned_memory_ids"] = [FLOW_MEMORY_ID]
+	kite["selected_adaptation_id"] = ANCHOR_ADAPTATION_ID
+	var mica := _individual(CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID, SECOND_SPECIES_ID, "Mica")
+	mica["earned_memory_ids"] = ["followed_the_bloom"]
+	mica["selected_adaptation_id"] = "drift_lens"
+	return {
+		"schema_version": ExpansionProfileState.SCHEMA_VERSION,
+		"completed_discoveries": [],
+		"unlocked_capabilities": [],
+		"material_inventory": {},
+		"completed_projects": [],
+		"banked_tool_target_ids": [],
+		"companion_profile": {
+			"schema_version": CompanionProfileState.COLLECTION_PROFILE_SCHEMA_VERSION,
+			"individuals": [kite, mica],
+			"active_individual_id": CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID,
+		},
+	}
+
+
 func _contains_transient_state(value) -> bool:
 	var forbidden := ["position", "velocity", "control_mode", "mounted", "target", "palette_selection", "cooldown", "animation", "encounter_progress"]
 	if typeof(value) == TYPE_DICTIONARY:
@@ -307,7 +372,7 @@ func _write_json(path: String, payload: Dictionary) -> void:
 
 
 func _cleanup() -> void:
-	for base_path in [PROFILE_PATH, LEGACY_PATH, COMPANION_V1_PATH, ISOLATED_PATH]:
+	for base_path in [PROFILE_PATH, LEGACY_PATH, COMPANION_V1_PATH, COMPANION_V2_PATH, ISOLATED_PATH]:
 		for suffix in ["", ".tmp", ".bak"]:
 			var path := "%s%s" % [base_path, suffix]
 			if FileAccess.file_exists(path):

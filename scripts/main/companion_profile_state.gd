@@ -1,11 +1,13 @@
 extends RefCounted
 
-const PROFILE_SCHEMA_VERSION := 2
+const PROFILE_SCHEMA_VERSION := 3
+const COLLECTION_PROFILE_SCHEMA_VERSION := 2
 const LEGACY_PROFILE_SCHEMA_VERSION := 1
 const CATALOG_PATH := "res://config/creature_catalog.json"
-const MAX_INDIVIDUALS := 2
+const MAX_INDIVIDUALS := 3
 const FIRST_PROOF_INDIVIDUAL_ID := "spark_ray_juvenile_01"
 const SECOND_PROOF_INDIVIDUAL_ID := "veil_cuttle_juvenile_01"
+const THIRD_PROOF_INDIVIDUAL_ID := "silt_hound_juvenile_01"
 const LEGACY_PROFILE_KEYS := {
 	"schema_version": true,
 	"individual": true,
@@ -180,8 +182,8 @@ func validate_payload(payload: Dictionary) -> Array[String]:
 	if _catalog.is_empty():
 		failures.append("creature catalog could not be loaded")
 	var schema := int(payload.get("schema_version", 0))
-	if schema not in [LEGACY_PROFILE_SCHEMA_VERSION, PROFILE_SCHEMA_VERSION]:
-		return ["companion_profile schema_version must be %d or %d" % [LEGACY_PROFILE_SCHEMA_VERSION, PROFILE_SCHEMA_VERSION]]
+	if schema not in [LEGACY_PROFILE_SCHEMA_VERSION, COLLECTION_PROFILE_SCHEMA_VERSION, PROFILE_SCHEMA_VERSION]:
+		return ["companion_profile schema_version must be 1, 2, or %d" % PROFILE_SCHEMA_VERSION]
 	_append_key_failures(
 		payload,
 		LEGACY_PROFILE_KEYS if schema == LEGACY_PROFILE_SCHEMA_VERSION else PROFILE_KEYS,
@@ -200,8 +202,9 @@ func validate_payload(payload: Dictionary) -> Array[String]:
 	elif typeof(raw_individuals) != TYPE_ARRAY:
 		failures.append("companion_profile individuals must be an array")
 		return failures
-	if (raw_individuals as Array).size() > MAX_INDIVIDUALS:
-		failures.append("companion_profile supports at most %d individuals" % MAX_INDIVIDUALS)
+	var schema_capacity := schema
+	if (raw_individuals as Array).size() > schema_capacity:
+		failures.append("companion_profile schema v%d supports at most %d individuals" % [schema, schema_capacity])
 	var ids: Array[String] = []
 	for index in range((raw_individuals as Array).size()):
 		var value = raw_individuals[index]
@@ -216,7 +219,9 @@ func validate_payload(payload: Dictionary) -> Array[String]:
 		ids.append(individual_id)
 	if schema == LEGACY_PROFILE_SCHEMA_VERSION and not ids.is_empty() and ids[0] != FIRST_PROOF_INDIVIDUAL_ID:
 		failures.append("legacy companion_profile supports only %s" % FIRST_PROOF_INDIVIDUAL_ID)
-	if schema == PROFILE_SCHEMA_VERSION and ids != _canonical_order(ids):
+	if schema == COLLECTION_PROFILE_SCHEMA_VERSION and ids.has(THIRD_PROOF_INDIVIDUAL_ID):
+		failures.append("companion_profile schema v2 cannot contain the third proof individual")
+	if schema >= COLLECTION_PROFILE_SCHEMA_VERSION and ids != _canonical_order(ids):
 		failures.append("companion_profile individuals must use canonical catalog order")
 	if typeof(active_id) == TYPE_STRING and not str(active_id).is_empty() and not ids.has(str(active_id)):
 		failures.append("companion_profile active_individual_id must be empty or reference a committed individual")

@@ -142,6 +142,8 @@ func _snapshot_rows(individuals: Array) -> Array[Dictionary]:
 			history += " | %s" % adaptation_id.replace("_", " ").capitalize()
 		elif str(individual.get("species_id", "")) == "veil_cuttle":
 			history += " | sensing partner"
+		elif str(individual.get("species_id", "")) == "silt_hound":
+			history += " | excavation partner"
 		rows.append({
 			"individual_id": str(individual.get("individual_id", "")),
 			"callsign": str(individual.get("callsign", "Companion")),
@@ -157,6 +159,8 @@ func _species_label(species_id: String) -> String:
 			return "Spark Ray"
 		"veil_cuttle":
 			return "Veil Cuttle"
+		"silt_hound":
+			return "Silt Hound"
 	return species_id.replace("_", " ").capitalize()
 
 
