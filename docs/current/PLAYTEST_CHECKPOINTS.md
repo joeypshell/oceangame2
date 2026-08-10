@@ -1,6 +1,6 @@
 # Playtest Checkpoints
 
-Last updated: 2026-08-08
+Last updated: 2026-08-09
 
 ## Purpose
 
@@ -32,17 +32,18 @@ The checkpoint forces `production_level_01` and identifies itself in the
 review overlay. The ordinary `?review=<sha>` URL remains a completely empty,
 isolated profile.
 
-Exact public Web candidate:
+Exact public Web closeout build:
 
 ```text
-https://joeypshell.github.io/oceangame2/?review=ce6f23f2fd72939de40bfa78c70d7344da00de46&checkpoint=living_expedition_04_start
+https://joeypshell.github.io/oceangame2/?review=bbcc255fb35339bb62aa5b2626526490b33d596b&checkpoint=living_expedition_04_start
 ```
 
 The Pages workflow and independent desktop/mobile checker passed for exact SHA
-`ce6f23f2fd72939de40bfa78c70d7344da00de46`. Technical evidence is recorded in
+`bbcc255fb35339bb62aa5b2626526490b33d596b`. Technical evidence is recorded in
 [Living Expedition 04 Web Verification](LIVING_EXPEDITION_04_WEB_VERIFICATION.md).
-The owner verdict remains issue #1323; automation does not decide whether the
-encounter is understandable or motivating.
+The owner verdict is HOLD: Mica's eel prediction was not useful and is retired.
+This checkpoint remains a focused regression path for Kite, ordinary evade,
+Shock-Prod defeat/harvest, and complete-simulation BOND timing.
 
 ## Living Expedition 01 Replay
 

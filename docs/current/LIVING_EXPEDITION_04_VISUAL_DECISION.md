@@ -70,5 +70,5 @@ git diff --check
 ```
 
 The prior exact-Web evidence remains historical evidence for the rejected
-experiment. The corrected exact build is verified after #1335/#1336 land and
-is recorded by #1323 without claiming owner GO.
+experiment. The corrected exact build `bbcc255` is verified after #1335/#1336
+and recorded by #1323 without claiming owner GO.

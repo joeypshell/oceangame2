@@ -7,8 +7,9 @@ Amended: 2026-08-09 after owner HOLD
 Issues: #1312 original plan; #1335 Mica-response retirement; #1336 BOND timing;
 #1323 owner closeout
 
-Status: active bounded closeout in milestone #48. Do not extend this milestone
-with another enemy, species, adaptation, map change, or progression reward.
+Status: complete at owner HOLD in milestone #48. The rejected Mica experiment
+is retired and the BOND timing correction is deployed. Do not extend this
+milestone with another enemy, species, adaptation, map change, or reward.
 
 ## Decision
 

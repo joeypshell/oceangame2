@@ -124,14 +124,12 @@ changing topology, hard access, hazard authority, or rewards.
 
 ### Committed
 
-**Living Expedition 04: Companion-Shaped Wildlife Encounter** is in bounded
-owner-HOLD closeout. It retains Kite's non-damaging interruption, ordinary
-evade, and Shock-Prod defeat/harvest against the existing territorial eel. The
-owner rejected Mica's eel prediction, so it is retired without adding another
-enemy, species, resource, region, or combat framework.
-
-The implementation milestone and issue batch are intentionally not created by
-the planning-gate run. A later audit may create only that bounded batch.
+No new implementation milestone is currently committed. **Living Expedition
+04: Companion-Shaped Wildlife Encounter** is technically complete and closed on
+owner HOLD. It retains Kite's non-damaging interruption, ordinary evade, and
+Shock-Prod defeat/harvest against the existing territorial eel. The rejected
+Mica prediction is retired, and corrected runtime `bbcc255` uses a
+whole-simulation BOND tactical pause.
 
 ### Directional
 
@@ -144,8 +142,8 @@ Only milestone-level goals are selected beyond the committed proof:
    Add memorable regions whose equipment access, species ecology, mysteries,
    and return reasons are planned together through the JSON map pipeline.
 
-These milestones do not receive detailed issue inventories until the preceding
-player gate closes.
+These milestones do not receive detailed issue inventories until a separate
+direction audit selects one bounded proof after the Living Expedition 04 HOLD.
 
 ### Vision
 
@@ -156,13 +154,12 @@ unticketed.
 
 ## Latest Completed Milestone Batch
 
-Living Expedition 03 completed the ten-stage dependency order in
-`docs/current/LIVING_EXPEDITION_03_PLAN.md`: contract, schema, source authoring,
-observation/memory state, Drift Lens runtime, integration, deterministic
-evidence, visual decision, exact Web verification, and owner closeout. Bounded
-owner-feedback corrections clarified the initial lead, replaced misleading
-travel guidance with a local marker, simplified BOND controls, and stopped
-completed migration scans from replaying.
+Living Expedition 04 completed its bounded eel encounter batch and then closed
+on owner HOLD. The retained result is ordinary evade, Guardian-Pulse Kite's
+non-damaging opening, Shock-Prod defeat, and defeat-only harvest. One clarity
+correction did not make Mica's prediction useful, so #1335 retired it and #1336
+corrected BOND to a complete-simulation tactical pause before exact-Web
+closeout. `docs/current/LIVING_EXPEDITION_04_CLOSEOUT.md` records the verdict.
 
 ## Prior Completed Milestone Batch
 
@@ -233,9 +230,6 @@ Control/combat decision:
 ## Living Expedition 04 Outcome
 
 The answer to the original companion-choice question was HOLD: Mica's prediction
-did not produce a useful eel decision. Preserve her ecology role, retain Kite's
-opening, fix BOND timing, and close the bounded experiment before expansion.
-
-The planning contract is selected through #1312. Its implementation milestone
-and issue batch must be created by a later audit, then closed only after exact
-Web evidence and a human owner verdict.
+did not produce a useful eel decision. Her ecology role and Kite's opening are
+preserved, BOND timing is corrected, exact Web evidence is green, and the
+bounded experiment is closed. No later milestone is selected by that closeout.
