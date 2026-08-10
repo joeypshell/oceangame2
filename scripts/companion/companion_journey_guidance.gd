@@ -1,6 +1,7 @@
 extends RefCounted
 
 const CompanionHostileJourneyGuidance := preload("res://scripts/companion/companion_hostile_journey_guidance.gd")
+const SiltHoundJourneyGuidance := preload("res://scripts/companion/silt_hound_journey_guidance.gd")
 
 const ACTIVE_PHASE := "active"
 const ANCHOR_FINS := "anchor_fins"
@@ -9,6 +10,7 @@ const VEIL_CUTTLE := "veil_cuttle"
 const VEIL_CUTTLE_TRACE_ID := "southwest_bloom_migration_trace"
 
 var _hostile_guidance := CompanionHostileJourneyGuidance.new()
+var _silt_hound_guidance := SiltHoundJourneyGuidance.new()
 
 
 func objective_text(world, player, profile, sortie_runtime, day_state) -> String:
@@ -16,6 +18,9 @@ func objective_text(world, player, profile, sortie_runtime, day_state) -> String
 		return ""
 	if str(day_state.phase) != ACTIVE_PHASE:
 		return ""
+	var silt_hound: Dictionary = _silt_hound_guidance.evaluate(world, player, profile, sortie_runtime)
+	if bool(silt_hound.get("handled", false)):
+		return str(silt_hound.get("text", ""))
 
 	var profile_report: Dictionary = profile.companion_report()
 	if not bool(profile_report.get("rescue_committed", false)):

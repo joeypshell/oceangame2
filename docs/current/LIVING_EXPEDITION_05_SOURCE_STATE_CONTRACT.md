@@ -221,9 +221,11 @@ reveals it for the live day/world state:
   it cannot persist partial dig or reveal state accidentally.
 - Map/day transition clears action-local state. Fresh-day source selection then
   decides availability again.
-- Review checkpoints use isolated in-memory profiles and cannot write normal
-  progress. The excavation-ready checkpoint commits/selects Marl and supplies a
-  relevant uncompleted project state only as an isolated review fixture.
+- `living_expedition_05_start` uses an isolated in-memory profile and canonical-
+  boat start before Marl's rescue. `living_expedition_05_excavate_ready`
+  commits/selects Marl, starts beside the mound with review oxygen headroom,
+  and leaves the existing Rebreather recipe one titanium short. Neither writes
+  normal progress.
 
 ## Presentation Boundary
 

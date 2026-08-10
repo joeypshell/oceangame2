@@ -24,13 +24,14 @@ func _run() -> void:
 	_test_living_expedition_02_boundary()
 	_test_living_expedition_03_boundary()
 	_test_living_expedition_04_boundary()
+	_test_living_expedition_05_boundaries()
 	_test_unknown_checkpoint_fallback()
 	if not _failures.is_empty():
 		for failure in _failures:
 			push_error("Review checkpoint smoke failed: %s" % failure)
 		quit(1)
 		return
-	print("Review checkpoint smoke passed: expansion14=Ti2+Coil1 expansion16=Ti1+Rubber1+Coil1+Gel1 expansion17=two_fragments_unresolved expansion18=triangulated_before_entry living_expedition_01=pre_rescue living_expedition_02=Kite_committed+Mica_unrescued living_expedition_03=Day2+Kite+Mica+Scanner+Mica_selected living_expedition_04=Day3+Mica_Drift_Lens+Kite_Guardian_Pulse+Shock_Prod persistence=false unknown=fresh.")
+	print("Review checkpoint smoke passed: expansion14=Ti2+Coil1 expansion16=Ti1+Rubber1+Coil1+Gel1 expansion17=two_fragments_unresolved expansion18=triangulated_before_entry living_expedition_01=pre_rescue living_expedition_02=Kite_committed+Mica_unrescued living_expedition_03=Day2+Kite+Mica+Scanner+Mica_selected living_expedition_04=Day3+adapted_pair living_expedition_05=Day4+fresh_rescue/excavate_ready persistence=false unknown=fresh.")
 	quit(0)
 
 
@@ -54,6 +55,10 @@ func _test_argument_contract() -> void:
 	_expect(ReviewProfileMode.checkpoint_from_web_query("?checkpoint=LIVING_EXPEDITION_03_START") == ReviewCheckpointFixture.LIVING_EXPEDITION_03_START, "Living Expedition 03 Web checkpoint was not normalized")
 	_expect(ReviewProfileMode.checkpoint_id(PackedStringArray(["--review-checkpoint=living_expedition_04_start"]), PackedStringArray()) == ReviewCheckpointFixture.LIVING_EXPEDITION_04_START, "Living Expedition 04 local checkpoint was not parsed")
 	_expect(ReviewProfileMode.checkpoint_from_web_query("?checkpoint=LIVING_EXPEDITION_04_START") == ReviewCheckpointFixture.LIVING_EXPEDITION_04_START, "Living Expedition 04 Web checkpoint was not normalized")
+	_expect(ReviewProfileMode.checkpoint_id(PackedStringArray(["--review-checkpoint=living_expedition_05_start"]), PackedStringArray()) == ReviewCheckpointFixture.LIVING_EXPEDITION_05_START, "Living Expedition 05 rescue checkpoint was not parsed")
+	_expect(ReviewProfileMode.checkpoint_from_web_query("?checkpoint=LIVING_EXPEDITION_05_START") == ReviewCheckpointFixture.LIVING_EXPEDITION_05_START, "Living Expedition 05 rescue Web checkpoint was not normalized")
+	_expect(ReviewProfileMode.checkpoint_id(PackedStringArray(["--review-checkpoint=living_expedition_05_excavate_ready"]), PackedStringArray()) == ReviewCheckpointFixture.LIVING_EXPEDITION_05_EXCAVATE_READY, "Living Expedition 05 excavation checkpoint was not parsed")
+	_expect(ReviewProfileMode.checkpoint_from_web_query("?checkpoint=LIVING_EXPEDITION_05_EXCAVATE_READY") == ReviewCheckpointFixture.LIVING_EXPEDITION_05_EXCAVATE_READY, "Living Expedition 05 excavation Web checkpoint was not normalized")
 	_expect(ReviewProfileMode.requested(local_args, PackedStringArray()), "checkpoint did not imply isolated review mode")
 	_expect(not ReviewProfileMode.persistence_enabled(false, true), "isolated review mode enabled persistence")
 
@@ -217,6 +222,44 @@ func _test_living_expedition_04_boundary() -> void:
 	_expect(profile.has_capability(ExpansionProfileState.PROPULSION_FINS_CAPABILITY_ID), "Living Expedition 04 checkpoint omitted route fins")
 	_expect(profile.material_inventory().is_empty(), "Living Expedition 04 checkpoint retained unrelated materials")
 	_expect(applied.get("active_objective_id") == "companion_shaped_eel_encounter", "Living Expedition 04 checkpoint omitted the encounter focus")
+
+
+func _test_living_expedition_05_boundaries() -> void:
+	var fresh_profile := ExpansionProfileState.new("", false)
+	fresh_profile.load_profile()
+	var fresh: Dictionary = ReviewCheckpointFixture.apply(ReviewCheckpointFixture.LIVING_EXPEDITION_05_START, fresh_profile)
+	var fresh_companions: Dictionary = fresh_profile.companion_report()
+	_expect(bool(fresh.get("ready", false)), "Living Expedition 05 rescue checkpoint did not apply: %s" % fresh)
+	_expect(int(fresh.get("day_number", 0)) == 4 and fresh.get("active_objective_id") == "silt_hound_rescue", "Living Expedition 05 rescue checkpoint omitted its Day 4 objective")
+	_expect(not fresh.has("review_start_tile"), "Living Expedition 05 rescue checkpoint did not preserve canonical-boat startup")
+	_expect((fresh_companions.get("individuals", []) as Array).size() == 2, "Living Expedition 05 rescue checkpoint pre-committed Marl")
+	_expect(str(fresh_companions.get("active_individual_id", "")) == ReviewCheckpointFixture.MICA_INDIVIDUAL_ID, "Living Expedition 05 rescue checkpoint did not preserve Mica selection")
+	_expect(fresh_profile.material_inventory() == {"rubber_sheet": 1, "conductive_coil": 1, "insulating_gel": 1}, "Living Expedition 05 rescue checkpoint has the wrong Rebreather support materials")
+	_expect(fresh_profile.has_capability(ExpansionProfileState.SALVAGE_CUTTER_CAPABILITY_ID) and fresh_profile.has_capability(ExpansionProfileState.CURRENT_STABILIZER_CAPABILITY_ID), "Living Expedition 05 rescue checkpoint omitted traversal/rescue tools")
+	_expect(fresh_profile.has_banked_tool_target(ExpansionProfileState.FAR_WEST_WRECK_RECORDER_ID), "Living Expedition 05 rescue checkpoint regressed prior banked progression")
+	_expect(not fresh_profile.has_completed_project(ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_PROJECT_ID) and not fresh_profile.has_capability(ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_CAPABILITY_ID), "Living Expedition 05 rescue checkpoint prebuilt the Rebreather")
+
+	var ready_profile := ExpansionProfileState.new("", false)
+	ready_profile.load_profile()
+	var ready: Dictionary = ReviewCheckpointFixture.apply(ReviewCheckpointFixture.LIVING_EXPEDITION_05_EXCAVATE_READY, ready_profile)
+	var ready_companions: Dictionary = ready_profile.companion_report()
+	var marl: Dictionary = ready_companions.get("individual", {})
+	_expect(bool(ready.get("ready", false)), "Living Expedition 05 excavation checkpoint did not apply: %s" % ready)
+	_expect(int(ready.get("day_number", 0)) == 4 and ready.get("active_objective_id") == "silt_hound_excavation", "Living Expedition 05 excavation checkpoint omitted its Day 4 objective")
+	_expect(ready.has("review_start_tile") and is_equal_approx(float(ready.get("review_oxygen_seconds", 0.0)), 180.0), "Living Expedition 05 excavation checkpoint omitted its bounded review start")
+	_expect((ready_companions.get("individuals", []) as Array).size() == 3 and str(ready_companions.get("active_individual_id", "")) == "silt_hound_juvenile_01", "Living Expedition 05 excavation checkpoint did not select Marl")
+	_expect(str(marl.get("species_id", "")) == "silt_hound" and (marl.get("earned_memory_ids", []) as Array).is_empty() and str(marl.get("selected_adaptation_id", "")).is_empty(), "Living Expedition 05 excavation checkpoint gave Marl premature progression")
+	_expect(ready_profile.material_inventory() == {"rubber_sheet": 1, "conductive_coil": 1, "insulating_gel": 1}, "Living Expedition 05 excavation checkpoint has the wrong Rebreather support materials")
+	_expect(not ready_profile.has_completed_project(ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_PROJECT_ID), "Living Expedition 05 excavation checkpoint prebuilt the Rebreather")
+	_expect(bool(ready_profile.deposit_materials({"titanium_scrap": 1}, false).get("changed", false)), "Living Expedition 05 excavation payoff could not bank titanium")
+	var world = WORLD_SCENE.instantiate()
+	world.map_path = ReviewCheckpointFixture.required_map_path(ReviewCheckpointFixture.LIVING_EXPEDITION_05_EXCAVATE_READY)
+	get_root().add_child(world)
+	world.load_greybox()
+	var project_runtime := MaterialProjectRuntime.new(ready_profile)
+	var project: Dictionary = project_runtime.on_map_loaded(world)
+	_expect(project.get("project_id") == ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_PROJECT_ID and project_runtime.status() == "ready", "Marl's titanium did not complete the existing Rebreather recipe")
+	world.queue_free()
 
 
 func _test_expansion_16_boundary() -> void:
