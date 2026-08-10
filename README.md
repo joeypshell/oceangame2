@@ -2,7 +2,7 @@
 
 `oceangame2` is a side-view underwater expedition-raising game built on a controlled diver-expedition foundation.
 
-The existing runtime proves contiguous authored exploration, oxygen/daylight pressure, equipment progression, limited combat, night projects, and stable validation/deployment. Expansion 18 is technically complete but closes with a strategic player-experience HOLD: extending the old clue, recipe, gate, and scan cadence would not solve its generic motivation. Living Expeditions 01-03 have owner GO and establish the active direction: one bonded creature can support or be ridden in real time, while meaningful shared memories become deliberate visible adaptations at night. Living Expedition 04 is closed on owner HOLD: Mica's eel prediction failed its usefulness test and is retired, Mica remains an ecology reader, Guardian-Pulse Kite is the eel's sole active companion response, and BOND now pauses the whole simulation while commands are selected. Living Expedition 05 is the selected next bounded proof: rescue and choose one Silt Hound whose deliberate excavation visibly uncovers one authored optional material deposit.
+The existing runtime proves contiguous authored exploration, oxygen/daylight pressure, equipment progression, limited combat, night projects, and stable validation/deployment. Expansion 18 is technically complete but closes with a strategic player-experience HOLD: extending the old clue, recipe, gate, and scan cadence would not solve its generic motivation. Living Expeditions 01-03 have owner GO and establish the active direction: one bonded creature can support or be ridden in real time, while meaningful shared memories become deliberate visible adaptations at night. Living Expedition 04 is closed on owner HOLD: Mica's eel prediction failed its usefulness test and is retired, Mica remains an ecology reader, Guardian-Pulse Kite is the eel's sole active companion response, and BOND now pauses the whole simulation while commands are selected. Living Expedition 05 is technically complete at exact Web runtime `267c5e1`: one rescued and selected Silt Hound deliberately excavates an authored optional material deposit; the owner verdict remains pending.
 
 ## Project Goal
 
@@ -22,11 +22,11 @@ Build a distinctive side-view ocean game in which:
 - Current map: one contiguous source-authored production cave
 - Current core loop: choose and prepare, make multiple oxygen sorties under daylight, bank and learn at the boat, build at night, and return changed
 - Target signature loop: rescue, bond, command or ride, share meaningful experience, consolidate at night, and feel a visible next-day adaptation
-- Latest completed proof: Mica reads one real jellyfish migration, returns the observation to the boat, and develops a deliberate hazard-reading field skill without becoming a key
+- Latest technical proof: Marl is rescued and selected, then deliberately excavates one physical optional material deposit; owner review remains pending
 
 ## Planning Docs
 
-The Simple Diver and Phase 2 expansion roadmaps describe the completed runtime foundation. Living Expeditions 01-03 are implemented and owner-approved: Kite and Mica prove distinct mounted and sensing roles, one active next-sortie selection, an inhabited canonical boat, and one source-authored ecological observation that becomes Mica's useful next-day Drift Lens adaptation. Living Expedition 04 is technically complete and closed on HOLD: Guardian Pulse remains, Mica's eel prediction is retired, and corrected runtime `bbcc255` uses a whole-simulation BOND tactical pause. Living Expedition 05 is now committed as a bounded Silt Hound excavation proof, not a broad roster, economy, or map expansion.
+The Simple Diver and Phase 2 expansion roadmaps describe the completed runtime foundation. Living Expeditions 01-03 are implemented and owner-approved: Kite and Mica prove distinct mounted and sensing roles, one active next-sortie selection, an inhabited canonical boat, and one source-authored ecological observation that becomes Mica's useful next-day Drift Lens adaptation. Living Expedition 04 is technically complete and closed on HOLD: Guardian Pulse remains, Mica's eel prediction is retired, and corrected runtime `bbcc255` uses a whole-simulation BOND tactical pause. Living Expedition 05 is technically complete at `267c5e1` as a bounded Silt Hound excavation proof, not a broad roster, economy, or map expansion; #1351 and milestone #49 remain open for the owner verdict.
 
 Core sources and operating docs:
 
@@ -61,6 +61,9 @@ Core sources and operating docs:
 - [Living Expedition 04 Closeout](docs/current/LIVING_EXPEDITION_04_CLOSEOUT.md)
 - [Living Expedition 05 Plan](docs/current/LIVING_EXPEDITION_05_PLAN.md)
 - [Living Expedition 05 Source And State Contract](docs/current/LIVING_EXPEDITION_05_SOURCE_STATE_CONTRACT.md)
+- [Living Expedition 05 Visual Decision](docs/current/LIVING_EXPEDITION_05_VISUAL_DECISION.md)
+- [Living Expedition 05 Web Verification](docs/current/LIVING_EXPEDITION_05_WEB_VERIFICATION.md)
+- [Living Expedition 05 Closeout](docs/current/LIVING_EXPEDITION_05_CLOSEOUT.md)
 - [Historical OceanGame Phase 2 Foundation Roadmap](docs/planning/OCEANGAME_PHASE_2_ROADMAP.md)
 - [Expedition Adaptation Direction](docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md)
 - [Capability And Resource Progression Framework](docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md)

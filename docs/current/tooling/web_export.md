@@ -8,7 +8,7 @@ python tools/write_build_info.py
 
 This writes ignored `build_info.json`. The web export workflow generates that file from `GITHUB_SHA` before export, so the public preview can identify the deployed commit.
 
-The latest exact-SHA Pages and checkpoint verification is recorded in [Living Expedition 04 Web Verification](../LIVING_EXPEDITION_04_WEB_VERIFICATION.md). The [Living Expedition 04 Visual Decision](../LIVING_EXPEDITION_04_VISUAL_DECISION.md) records the current focused capture review; accepted production-slice baselines remain unchanged. The older [Simple Diver Game 08 Web Export Handoff](../SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md) remains the release-candidate foundation.
+The latest exact-SHA Pages and checkpoint verification is recorded in [Living Expedition 05 Web Verification](../LIVING_EXPEDITION_05_WEB_VERIFICATION.md). The [Living Expedition 05 Visual Decision](../LIVING_EXPEDITION_05_VISUAL_DECISION.md) records the current focused capture review; accepted production baselines remain unchanged. The older [Simple Diver Game 08 Web Export Handoff](../SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md) remains the release-candidate foundation.
 
 Build a local Web export preview:
 
@@ -96,5 +96,13 @@ companions adapted, Mica selected, and the Shock Prod available. It is the
 current regression path for selecting Kite's non-damaging Guardian Pulse
 opening, ordinary retreat, Shock-Prod defeat/harvest, and corrected BOND timing.
 Mica remains available for her moving-ecology role but is not an eel solution.
+
+For focused Living Expedition 05 review, use either
+`https://joeypshell.github.io/oceangame2/?review=<sha>&checkpoint=living_expedition_05_start`
+for Marl's unresolved rescue and boat commitment, or
+`https://joeypshell.github.io/oceangame2/?review=<sha>&checkpoint=living_expedition_05_excavate_ready`
+for the selected-Marl handoff beside the closed mound. The latter preserves
+deliberate BOND Excavate, physical reveal, and normal material pickup as
+incomplete owner-review steps.
 
 The public root and `https://joeypshell.github.io/oceangame2/?review=<sha>` now load `production_level_01`; the review query still isolates profile state. To review a retained slice fixture, add an explicit supported map, for example `?review=<sha>&map=production_slice_01`. A bare `map` query without `review` does not override the default. The Web checker verifies the full-level default and explicit slice-01 fallback at desktop and mobile browser sizes.
