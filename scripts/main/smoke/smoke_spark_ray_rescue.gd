@@ -77,7 +77,7 @@ func _run() -> void:
 	await physics_frame
 
 	var rescues: Array = world.get_creature_rescues()
-	_expect(rescues.size() == 2, "full-level source did not expose the bounded two-rescue set")
+	_expect(rescues.size() == 3, "full-level source did not expose the bounded three-rescue set")
 	var rescue := {}
 	for candidate in rescues:
 		if str(candidate.get("id", "")) == RESCUE_ID:

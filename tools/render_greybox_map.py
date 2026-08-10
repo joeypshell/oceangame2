@@ -167,7 +167,19 @@ def render_svg(map_data: dict) -> str:
             point_text = " ".join(f"{x:.1f},{y:.1f}" for x, y in points)
             parts.append(f'<polygon points="{point_text}" fill="{COLORS["salvage"]}" stroke="#7f5b00" stroke-width="5"/>')
         elif entity_type == "material_candidate":
-            parts.append(f'<circle cx="{cx}" cy="{cy}" r="15" fill="{COLORS["material"]}" stroke="#07584f" stroke-width="5"/>')
+            if entity.get("buried_deposit") is True:
+                parts.append(
+                    f'<path d="M {cx - 27} {cy + 13} Q {cx - 19} {cy - 9} {cx - 5} {cy - 5} '
+                    f'Q {cx + 8} {cy - 18} {cx + 27} {cy + 13} Z" '
+                    'fill="#89623d" stroke="#3d3028" stroke-width="5"/>'
+                )
+                parts.append(
+                    f'<path d="M {cx - 13} {cy + 2} q 7 -9 14 0 q 7 -9 14 0" '
+                    'fill="none" stroke="#ffd142" stroke-width="4" stroke-dasharray="6 4"/>'
+                )
+                parts.append(text(cx + 32, cy - 18, entity["id"], 20))
+            else:
+                parts.append(f'<circle cx="{cx}" cy="{cy}" r="15" fill="{COLORS["material"]}" stroke="#07584f" stroke-width="5"/>')
         elif entity_type == "tool_target":
             parts.append(f'<rect x="{cx - 17}" y="{cy - 17}" width="34" height="34" fill="{COLORS["tool_target"]}" stroke="#6e4210" stroke-width="5"/>')
             if entity.get("tool_affordance_id") == "chain_seal":

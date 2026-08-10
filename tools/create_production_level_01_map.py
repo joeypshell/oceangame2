@@ -16,6 +16,7 @@ import production_level_01_living_expedition_01 as living_expedition_01
 import production_level_01_living_expedition_02 as living_expedition_02
 import production_level_01_living_expedition_03 as living_expedition_03
 import production_level_01_living_expedition_04 as living_expedition_04
+import production_level_01_living_expedition_05 as living_expedition_05
 from production_level_01_expansion_15 import author_expedition_leads
 from production_level_01_gameplay_transform import (
     LOCAL_TO_GLOBAL_OFFSET,
@@ -55,7 +56,6 @@ GAMEPLAY_CLEARANCE_OPEN_LOCAL_CELLS = {
     },
     "deep_cache_evade_lane": {(60, 78)},
 }
-
 GAMEPLAY_CLEARANCE_INTENTS = {
     "southwest_return_pocket": (
         "Preserve the proven southwest cache approach and Pass 08 migration lane."
@@ -328,7 +328,7 @@ def build_map_data(source_map: dict) -> dict:
 
     gameplay, gameplay_provenance = transform_gameplay_sections()
 
-    return living_expedition_04.author(living_expedition_03.author(living_expedition_02.author(living_expedition_01.author(expansion_18.author(expansion_17.author(expansion_16.author(author_expedition_leads({
+    return living_expedition_05.author(living_expedition_04.author(living_expedition_03.author(living_expedition_02.author(living_expedition_01.author(expansion_18.author(expansion_17.author(expansion_16.author(author_expedition_leads({
         "id": "production_level_01",
         "version": 1,
         "purpose": (
@@ -479,7 +479,7 @@ def build_map_data(source_map: dict) -> dict:
             *expansion_13.review_questions(),
             *expansion_14.review_questions(),
         ],
-    }))))))))
+    })))))))))
 
 
 def main() -> int:

@@ -85,7 +85,11 @@ def validate_daily_condition_schema(map_data: dict[str, Any]) -> list[str]:
     if not isinstance(raw_conditions, list):
         return [*failures, "daily_conditions must be a list when present."]
 
-    linked_pools = [pool for pool in _items(map_data, "material_candidate_pools") if "daily_condition_id" in pool or "pool_role" in pool]
+    linked_pools = [
+        pool
+        for pool in _items(map_data, "material_candidate_pools")
+        if "daily_condition_id" in pool
+    ]
     linked_hazards = [hazard for hazard in _items(map_data, "moving_hazards") if "daily_condition_id" in hazard]
     if not raw_conditions:
         if linked_pools or linked_hazards:

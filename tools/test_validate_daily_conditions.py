@@ -85,6 +85,18 @@ class DailyConditionValidationTests(unittest.TestCase):
         self.assertEqual([], validate_daily_condition_schema(data))
         self.assertEqual([], validate_material_source_schema(data))
 
+    def test_unconditioned_optional_pool_is_not_a_daily_condition_link(self) -> None:
+        data = with_condition()
+        data["material_candidate_pools"].append({
+            "id": "companion_optional_pool",
+            "material_id": "titanium_scrap",
+            "selection_strategy": "day_rotation_v1",
+            "select_count": 1,
+            "candidate_ids": ["companion_optional_candidate"],
+            "pool_role": "optional_bonus",
+        })
+        self.assertEqual([], validate_daily_condition_schema(data))
+
     def test_rejects_invalid_schedule_and_runtime_state(self) -> None:
         data = with_condition()
         data["daily_conditions"][0]["schedule"] = "random_weighted"

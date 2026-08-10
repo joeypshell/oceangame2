@@ -424,6 +424,11 @@ func _regional_gate_contacts() -> Array[String]:
 
 
 func _active_recipe_candidates() -> Array:
+	var base_candidate_ids := {}
+	for pool in _world.get_material_candidate_pools():
+		if str(pool.get("pool_role", "")) != "optional_bonus":
+			for source_id in pool.get("candidate_ids", []):
+				base_candidate_ids[str(source_id)] = true
 	var active_ids: Array = _world.get_material_candidate_report().get("active_ids", [])
 	var values := []
 	var counts := {
@@ -433,7 +438,7 @@ func _active_recipe_candidates() -> Array:
 	for candidate in _world.get_material_candidates():
 		var candidate_id := str(candidate.get("id", ""))
 		var material_id := str(candidate.get("material_id", ""))
-		if not active_ids.has(candidate_id) or not counts.has(material_id):
+		if not active_ids.has(candidate_id) or not base_candidate_ids.has(candidate_id) or not counts.has(material_id):
 			continue
 		values.append(candidate)
 		counts[material_id] = int(counts[material_id]) + int(candidate.get("material_quantity", 0))
