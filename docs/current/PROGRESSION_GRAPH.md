@@ -10,7 +10,7 @@ Status: **PASS**
 | View | Sources | Status | Graph |
 | --- | --- | --- | --- |
 | `slice_provenance` (Production slice provenance) | `maps/production_slice_01.greybox.json`, `maps/production_slice_02.greybox.json`, `maps/production_slice_03.greybox.json`, `maps/production_slice_04.greybox.json` | **PASS** | 95 nodes / 301 edges |
-| `promoted_full_level` (Promoted production level) | `maps/production_level_01.greybox.json`, `maps/transfer_hub_interior_01.greybox.json` | **PASS** | 147 nodes / 579 edges |
+| `promoted_full_level` (Promoted production level) | `maps/production_level_01.greybox.json`, `maps/transfer_hub_interior_01.greybox.json` | **PASS** | 155 nodes / 606 edges |
 
 ## Detailed Canonical View
 
@@ -69,6 +69,7 @@ The table and dependency diagram below describe the promoted full-level view.
 | 13 | `Salvage Cutter` | global | Salvage Cutter Project | Salvage Cutter Project | state/payoff | stage 13 |
 | 13 | `Shock prod project` | production_level_01 | Salvage Cutter Project, Lower Right Anomaly Discovery, Titanium Scrap, Conductive Coil | production_level_01, Salvage Cutter Project, Lower Right Anomaly Discovery | Shock Prod | stage 13 |
 | 14 | `Shock Prod` | global | Shock prod project | Shock prod project | state/payoff | stage 14 |
+| 14 | `[proposed] Silt Hound Rescue 01` | production_level_01 | Salvage Cutter, Surface Boat Entry | production_level_01, Salvage Cutter, Surface Boat Entry | [proposed] Silt Hound Juvenile 01 | stage 14 |
 | 14 | `[proposed] Spark Ray Rescue 01` | production_level_01 | Salvage Cutter, Surface Boat Entry | production_level_01, Salvage Cutter, Surface Boat Entry | [proposed] Spark Ray Juvenile 01 | stage 14 |
 | 14 | `[proposed] Veil Cuttle Rescue 01` | production_level_01 | Salvage Cutter, Surface Boat Entry | production_level_01, Salvage Cutter, Surface Boat Entry | [proposed] Veil Cuttle Juvenile 01 | stage 14 |
 | 14 | `Survey deep harmonic` | production_level_01 / east_current_signal_reef_route | Survey Scanner 1, Dive Light 1, Signal Reef route | production_level_01, Survey Scanner 1, Dive Light 1 | Signal Reef Deep Harmonic Discovery | stage 14 |
@@ -77,11 +78,14 @@ The table and dependency diagram below describe the promoted full-level view.
 | 14 | `wreck recorder` | production_level_01 | Salvage Cutter | production_level_01, Salvage Cutter | Survey wreck archive | stage 14 |
 | 15 | `[proposed] Spark Ray Juvenile 01` | global | [proposed] Spark Ray Rescue 01 | [proposed] Spark Ray Rescue 01 | state/payoff | stage 15 |
 | 15 | `[proposed] Veil Cuttle Juvenile 01` | global | [proposed] Veil Cuttle Rescue 01 | [proposed] Veil Cuttle Rescue 01 | state/payoff | stage 15 |
+| 15 | `[proposed] Commit Marl At Boat` | production_level_01 | [proposed] Silt Hound Rescue 01, Surface Boat Entry | [proposed] Silt Hound Rescue 01, Surface Boat Entry | state/payoff | stage 15 |
 | 15 | `Defeat Deep Cache Territorial Eel` | production_level_01 / deep_cache_pressure | Deep Cache Territorial Eel, Shock Prod | Deep Cache Territorial Eel, Shock Prod | state/payoff | stage 15 |
 | 15 | `Signal Reef Deep Harmonic Discovery` | production_level_01 / east_current_signal_reef_route | Survey deep harmonic, Surface Boat Entry | Survey deep harmonic, production_level_01, Surface Boat Entry | state/payoff | stage 15 |
 | 15 | `Southeast Wreck Navigation Data` | production_level_01 | sealed wreck, Surface Boat Entry | sealed wreck, production_level_01, Surface Boat Entry | state/payoff | stage 15 |
+| 16 | `[proposed] Silt Hound Juvenile 01` | global | [proposed] Silt Hound Rescue 01, [proposed] Commit Marl At Boat | [proposed] Silt Hound Rescue 01, [proposed] Commit Marl At Boat | state/payoff | stage 16 |
 | 16 | `Eel electrocyte` | production_level_01 / deep_cache_pressure | Defeat Deep Cache Territorial Eel | production_level_01, Defeat Deep Cache Territorial Eel | Eel Electrocyte | stage 16 |
 | 16 | `[proposed] Spark Ray Riding Review 01` | production_level_01 | [proposed] Spark Ray Juvenile 01 | production_level_01, [proposed] Spark Ray Juvenile 01 | state/payoff | stage 16 |
+| 16 | `[proposed] Select Marl For Sortie` | production_level_01 | [proposed] Commit Marl At Boat, [proposed] Companion Habitat 01 | [proposed] Commit Marl At Boat, [proposed] Companion Habitat 01 | state/payoff | stage 16 |
 | 16 | `[proposed] Spark Ray Current Memory 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, Propulsion Fins, Signal Reef current | production_level_01, [proposed] Spark Ray Juvenile 01, Propulsion Fins | [proposed] Held The Flow, [proposed] Anchor Fins | stage 16 |
 | 16 | `[proposed] Spark Ray Eel Memory 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, Shock Prod, Deep Cache Territorial Eel | production_level_01, [proposed] Spark Ray Juvenile 01, Shock Prod | [proposed] Stood Ground, [proposed] Guardian Pulse | stage 16 |
 | 16 | `[proposed] Southwest Bloom Migration Trace` | production_level_01 | [proposed] Veil Cuttle Juvenile 01, Survey Scanner 1 | production_level_01, [proposed] Veil Cuttle Juvenile 01, Survey Scanner 1 | state/payoff | stage 16 |
@@ -91,6 +95,7 @@ The table and dependency diagram below describe the promoted full-level view.
 | 17 | `[proposed] Held The Flow` | global | [proposed] Spark Ray Current Memory 01 | [proposed] Spark Ray Current Memory 01 | state/payoff | stage 17 |
 | 17 | `[proposed] Stood Ground` | global | [proposed] Spark Ray Eel Memory 01 | [proposed] Spark Ray Eel Memory 01 | state/payoff | stage 17 |
 | 17 | `Eel Electrocyte` | global | none | Eel electrocyte | state/payoff | stage 17 |
+| 17 | `[proposed] Silt Hound Excavate Context 01` | production_level_01 | [proposed] Silt Hound Juvenile 01, [proposed] Select Marl For Sortie | production_level_01, [proposed] Silt Hound Juvenile 01, [proposed] Select Marl For Sortie | state/payoff | stage 17 |
 | 17 | `[proposed] Veil Cuttle Bloom Memory 01` | production_level_01 | [proposed] Veil Cuttle Juvenile 01, [proposed] Southwest Bloom Migration Trace | production_level_01, [proposed] Veil Cuttle Juvenile 01, [proposed] Southwest Bloom Migration Trace | [proposed] Followed The Bloom, [proposed] Drift Lens | stage 17 |
 | 18 | `[proposed] Anchor Fins` | global | [proposed] Held The Flow | [proposed] Held The Flow | state/payoff | stage 18 |
 | 18 | `[proposed] Guardian Pulse` | global | [proposed] Stood Ground | [proposed] Stood Ground | state/payoff | stage 18 |
@@ -107,6 +112,7 @@ The table and dependency diagram below describe the promoted full-level view.
 | 19 | `[proposed] Spark Ray Guardian Independent Review 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Guardian Mounted Review 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | state/payoff | stage 19 |
 | 19 | `[proposed] Deep Cache Eel Companion Response` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse, Shock Prod | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | state/payoff | stage 19 |
+| 19 | `[proposed] Bank Marl Excavation Material` | production_level_01 | Silt Hound Buried Titanium 01, Surface Boat Entry | Silt Hound Buried Titanium 01, Surface Boat Entry | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Anchor Current 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, Propulsion Fins, Signal Reef current, [proposed] Anchor Fins | production_level_01, [proposed] Spark Ray Juvenile 01, Propulsion Fins | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Guardian Eel 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, Shock Prod, Deep Cache Territorial Eel, [proposed] Guardian Pulse | production_level_01, [proposed] Spark Ray Juvenile 01, Shock Prod | state/payoff | stage 19 |
 | 19 | `Survey abyssal source` | production_level_01 / deep_harmonic_abyssal_basin_route | Survey Scanner 1, Pressure Suit 1, Abyssal basin route | production_level_01, Survey Scanner 1, Pressure Suit 1 | Abyssal Basin Harmonic Source Discovery | stage 19 |

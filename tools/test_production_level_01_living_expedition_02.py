@@ -75,7 +75,7 @@ class ProductionLevelLivingExpedition02Tests(unittest.TestCase):
         self.assertEqual("canonical_boat", habitat["habitat_kind"])
         self.assertEqual("surface_boat_entry", habitat["entry_id"])
         self.assertEqual(
-            ["spark_ray_juvenile_01", INDIVIDUAL_ID],
+            ["spark_ray_juvenile_01", INDIVIDUAL_ID, "silt_hound_juvenile_01"],
             habitat["individual_ids"],
         )
         for forbidden in ("active_individual_id", "selected", "committed", "position"):

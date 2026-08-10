@@ -510,6 +510,9 @@
 <rect x="511.0" y="3071.0" width="34" height="34" fill="#ffad42" stroke="#6e4210" stroke-width="5"/>
 <circle cx="2832.0" cy="4880.0" r="18" fill="#29d66f" stroke="#08351c" stroke-width="5"/>
 <text x="2856.0" y="4890.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">START</text>
+<path d="M 3093.0 2589.0 Q 3101.0 2567.0 3115.0 2571.0 Q 3128.0 2558.0 3147.0 2589.0 Z" fill="#89623d" stroke="#3d3028" stroke-width="5"/>
+<path d="M 3107.0 2578.0 q 7 -9 14 0 q 7 -9 14 0" fill="none" stroke="#ffd142" stroke-width="4" stroke-dasharray="6 4"/>
+<text x="3152.0" y="2558.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="20" paint-order="stroke" stroke="#10384a" stroke-width="4">silt_hound_buried_titanium_01</text>
 <rect x="2432" y="2304" width="64" height="64" rx="8" fill="#d68cff" stroke="#5b236b" stroke-width="5"/>
 <text x="2440.0" y="2294.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">lower_loop_upgrade_chest</text>
 <rect x="4000" y="1280" width="64" height="64" rx="8" fill="#d68cff" stroke="#5b236b" stroke-width="5"/>
@@ -575,6 +578,9 @@
 <circle cx="1232.0" cy="1584.0" r="27" fill="#66f5ff" fill-opacity="0.24" stroke="#075d68" stroke-width="6"/>
 <path d="M 1214.0 1584.0 Q 1232.0 1566.0 1250.0 1584.0 Q 1232.0 1602.0 1214.0 1584.0" fill="none" stroke="#66f5ff" stroke-width="5"/>
 <text x="1266.0" y="1564.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">veil_cuttle_rescue_01</text>
+<circle cx="1680.0" cy="2416.0" r="27" fill="#66f5ff" fill-opacity="0.24" stroke="#075d68" stroke-width="6"/>
+<path d="M 1662.0 2416.0 Q 1680.0 2398.0 1698.0 2416.0 Q 1680.0 2434.0 1662.0 2416.0" fill="none" stroke="#66f5ff" stroke-width="5"/>
+<text x="1714.0" y="2396.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">silt_hound_rescue_01</text>
 <rect x="3032.0" y="128.0" width="48" height="32" fill="none" stroke="#ffd76a" stroke-width="6"/>
 <text x="3086.0" y="126.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">companion_habitat_01</text>
 <circle cx="2320.0" cy="2512.0" r="192.0" fill="none" stroke="#66f5ff" stroke-width="5" stroke-dasharray="12 10"/>

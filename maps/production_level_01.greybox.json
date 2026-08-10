@@ -1751,6 +1751,36 @@
       "availability": "all_supported_seeds",
       "terrain_changes": [],
       "intent": "Reference existing encounter owners without copying geometry or mutable state."
+    },
+    "living_expedition_05": {
+      "source": "tools/production_level_01_living_expedition_05.py",
+      "rescue_ids": [
+        "silt_hound_rescue_01"
+      ],
+      "habitat_ids": [
+        "companion_habitat_01"
+      ],
+      "companion_context_ids": [
+        "silt_hound_excavate_context_01"
+      ],
+      "material_candidate_ids": [
+        "silt_hound_buried_titanium_01"
+      ],
+      "material_pool_ids": [
+        "silt_hound_excavation_pool"
+      ],
+      "camera_test_ids": [
+        "living_expedition_05_rescue_review_01",
+        "living_expedition_05_excavate_review_01"
+      ],
+      "target_ids": [
+        "surface_boat_entry",
+        "silt_hound_rescue_01",
+        "silt_hound_buried_titanium_01"
+      ],
+      "availability": "all_supported_seeds",
+      "terrain_changes": [],
+      "intent": "One Silt Hound rescue and one optional authored excavation payoff in existing lower-loop topology."
     }
   },
   "units": {
@@ -5889,6 +5919,20 @@
       ],
       "pool_role": "optional_bonus",
       "daily_condition_id": "southwest_jellyfish_bloom"
+    },
+    {
+      "id": "silt_hound_excavation_pool",
+      "material_id": "titanium_scrap",
+      "selection_strategy": "day_rotation_v1",
+      "select_count": 1,
+      "candidate_ids": [
+        "silt_hound_buried_titanium_01"
+      ],
+      "guaranteed_candidate_ids": [
+        "silt_hound_buried_titanium_01"
+      ],
+      "pool_role": "optional_bonus",
+      "intent": "Keep Marl's proof available every day while excluding it from mandatory recipe guarantees."
     }
   ],
   "material_projects": [
@@ -6464,6 +6508,22 @@
       "x": 88,
       "y": 152,
       "intent": "Paired return entry beside the original doorway; never an extraction, oxygen-refill, banking, or night owner."
+    },
+    {
+      "id": "silt_hound_buried_titanium_01",
+      "type": "material_candidate",
+      "x": 97,
+      "y": 80,
+      "kind": "buried_titanium",
+      "interaction": "material_collect",
+      "material_id": "titanium_scrap",
+      "material_quantity": 1,
+      "candidate_pool_id": "silt_hound_excavation_pool",
+      "buried_deposit": true,
+      "required_companion_action_id": "excavate",
+      "companion_context_id": "silt_hound_excavate_context_01",
+      "presentation_kind": "buried_mineral_mound",
+      "intent": "Visible optional mound revisited with Marl; excavation exposes one normal titanium pickup."
     }
   ],
   "camera_tests": [
@@ -6893,6 +6953,20 @@
       "center_y": 75.0,
       "zoom": 0.64,
       "intent": "Existing eel, guarded cache, diver, and active companion response review."
+    },
+    {
+      "id": "living_expedition_05_rescue_review_01",
+      "center_x": 52,
+      "center_y": 74,
+      "zoom": 0.62,
+      "intent": "Marl's physical cable rescue and lower-loop approach review."
+    },
+    {
+      "id": "living_expedition_05_excavate_review_01",
+      "center_x": 97,
+      "center_y": 78,
+      "zoom": 0.62,
+      "intent": "Closed mound, deliberate excavation, and exposed pickup review."
     }
   ],
   "review_questions": [
@@ -6931,7 +7005,10 @@
     "Does the migration trace read as evidence connected to the moving southwest bloom?",
     "Does the relationship remain optional, rewardless, reachable, and separate from hazard authority?",
     "Does Guardian Pulse create a clear zero-damage opening while Shock Prod remains defeat authority?",
-    "Can the player still evade, attempt the cache, and understand that harvest requires defeat?"
+    "Can the player still evade, attempt the cache, and understand that harvest requires defeat?",
+    "Does Marl's cable rescue read as physical aid rather than collection?",
+    "Is the buried mound visible before excavation and clearly optional afterward?",
+    "Does returning with Marl make this lower-loop revisit feel intentional?"
   ],
   "wreck_network_investigations": [
     {
@@ -6981,6 +7058,24 @@
       "optional": true,
       "availability": "all_supported_seeds",
       "intent": "Cut Mica free from a discarded survey net in the accessible upper-west chamber, then return together to the surface boat."
+    },
+    {
+      "id": "silt_hound_rescue_01",
+      "species_id": "silt_hound",
+      "individual_id": "silt_hound_juvenile_01",
+      "x": 52,
+      "y": 75,
+      "rescue_kind": "physical_aid",
+      "required_capability_id": "salvage_cutter",
+      "commit_map_id": "production_level_01",
+      "commit_entry_id": "surface_boat_entry",
+      "habitat_id": "companion_habitat_01",
+      "excavation_context_id": "silt_hound_excavate_context_01",
+      "buried_candidate_id": "silt_hound_buried_titanium_01",
+      "review_camera_id": "living_expedition_05_rescue_review_01",
+      "optional": true,
+      "availability": "all_supported_seeds",
+      "intent": "Cut Marl free from discarded dredge cable beside a disturbed brood stone, then return together to the surface boat."
     }
   ],
   "companion_contexts": [
@@ -7061,6 +7156,18 @@
       "target_id": "deep_route_jellyfish_patrol",
       "availability": "all_supported_seeds",
       "intent": "Review deliberate Read Drift against an existing moving jellyfish patrol."
+    },
+    {
+      "id": "silt_hound_excavate_context_01",
+      "context_kind": "material_excavation_review",
+      "species_id": "silt_hound",
+      "individual_id": "silt_hound_juvenile_01",
+      "action_id": "excavate",
+      "target_id": "silt_hound_buried_titanium_01",
+      "commit_entry_id": "surface_boat_entry",
+      "required_access_ids": [],
+      "availability": "all_supported_seeds",
+      "intent": "Return with active Marl to deliberately excavate the visible lower-loop mound."
     }
   ],
   "creature_memory_opportunities": [
@@ -7161,10 +7268,11 @@
       "entry_id": "surface_boat_entry",
       "individual_ids": [
         "spark_ray_juvenile_01",
-        "veil_cuttle_juvenile_01"
+        "veil_cuttle_juvenile_01",
+        "silt_hound_juvenile_01"
       ],
       "availability": "all_supported_seeds",
-      "intent": "Project both committed individuals beside the canonical boat; the active choice remains profile-owned."
+      "intent": "Project up to three committed individuals beside the canonical boat; the active choice remains profile-owned."
     }
   ],
   "ecological_traces": [
