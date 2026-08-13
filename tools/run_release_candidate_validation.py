@@ -207,6 +207,12 @@ def godot_gates(godot: str) -> list[Gate]:
             fail_on_godot_error=True,
         ),
         Gate(
+            "smoke: Signal Reef journey profile state",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_signal_reef_journey_profile_state.gd"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
             "smoke: companion ecology observation",
             [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_companion_ecology_observation.gd"],
             godot_backed=True,

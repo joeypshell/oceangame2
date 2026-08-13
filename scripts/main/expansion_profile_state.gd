@@ -2,15 +2,17 @@ extends RefCounted
 
 const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
 const CompanionProfileState := preload("res://scripts/main/companion_profile_state.gd")
+const SignalReefJourneyProfileState := preload("res://scripts/main/signal_reef_journey_profile_state.gd")
 const ExpansionProfileMigrations := preload("res://scripts/main/expansion_profile_migrations.gd")
 const ExpansionProfileProjectRules := preload("res://scripts/main/expansion_profile_project_rules.gd")
+const ExpansionProfileSchema := preload("res://scripts/main/expansion_profile_schema.gd")
 const ExpansionProfileStorage := preload("res://scripts/main/expansion_profile_storage.gd")
-const ExpansionProfileValidator := preload("res://scripts/main/expansion_profile_validator.gd")
-const SCHEMA_VERSION := 5
-const TOOL_TARGET_SCHEMA_VERSION := 4
-const PROJECT_SCHEMA_VERSION := 3
-const MATERIAL_SCHEMA_VERSION := 2
-const LEGACY_SCHEMA_VERSION := 1
+const SCHEMA_VERSION := ExpansionProfileSchema.SCHEMA_VERSION
+const COMPANION_SCHEMA_VERSION := ExpansionProfileSchema.COMPANION_SCHEMA_VERSION
+const TOOL_TARGET_SCHEMA_VERSION := ExpansionProfileSchema.TOOL_TARGET_SCHEMA_VERSION
+const PROJECT_SCHEMA_VERSION := ExpansionProfileSchema.PROJECT_SCHEMA_VERSION
+const MATERIAL_SCHEMA_VERSION := ExpansionProfileSchema.MATERIAL_SCHEMA_VERSION
+const LEGACY_SCHEMA_VERSION := ExpansionProfileSchema.LEGACY_SCHEMA_VERSION
 const SURVEY_SCANNER_CAPABILITY_ID := ProgressionContract.SCANNER_CAPABILITY_ID
 const SURVEY_SCANNER_PROJECT_ID := "survey_scanner_project"
 const SURVEY_SCANNER_BLUEPRINT_ID := "survey_scanner_blueprint"
@@ -59,31 +61,6 @@ const COIL_MATERIAL_ID := "conductive_coil"
 const INSULATING_GEL_MATERIAL_ID := "insulating_gel"
 const EEL_ELECTROCYTE_MATERIAL_ID := "eel_electrocyte"
 const DEFAULT_STORAGE_PATH := "user://oceangame2_profile.json"
-const LEGACY_PROFILE_KEYS := {"schema_version": true, "completed_discoveries": true, "unlocked_capabilities": true}
-const PROJECT_PROFILE_KEYS := {
-	"schema_version": true,
-	"completed_discoveries": true,
-	"unlocked_capabilities": true,
-	"material_inventory": true,
-	"completed_projects": true,
-}
-const TOOL_TARGET_PROFILE_KEYS := {
-	"schema_version": true,
-	"completed_discoveries": true,
-	"unlocked_capabilities": true,
-	"material_inventory": true,
-	"completed_projects": true,
-	"banked_tool_target_ids": true,
-}
-const PROFILE_KEYS := {
-	"schema_version": true,
-	"completed_discoveries": true,
-	"unlocked_capabilities": true,
-	"material_inventory": true,
-	"completed_projects": true,
-	"banked_tool_target_ids": true,
-	"companion_profile": true,
-}
 const LEGACY_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true}
 const MATERIAL_SCHEMA_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true}
 const SUPPORTED_CAPABILITY_IDS := {SURVEY_SCANNER_CAPABILITY_ID: true, PROPULSION_FINS_CAPABILITY_ID: true, SALVAGE_CUTTER_CAPABILITY_ID: true, CURRENT_STABILIZER_CAPABILITY_ID: true, SHOCK_PROD_CAPABILITY_ID: true, SHOCK_PROD_CAPACITOR_CAPABILITY_ID: true, DIVE_LIGHT_CAPABILITY_ID: true, PRESSURE_SUIT_CAPABILITY_ID: true, CLOSED_CIRCUIT_REBREATHER_CAPABILITY_ID: true}
@@ -102,6 +79,7 @@ var _material_inventory := {}
 var _completed_projects := {}
 var _banked_tool_target_ids := {}
 var _companion_profile := CompanionProfileState.new()
+var _regional_journey_profile := SignalReefJourneyProfileState.new()
 var _last_storage_report := {"status": "not_loaded"}
 func _init(storage_path := DEFAULT_STORAGE_PATH, persistence_enabled := true) -> void:
 	_storage_path = str(storage_path)
@@ -140,12 +118,17 @@ func load_profile() -> Dictionary:
 		for material_id in payload["material_inventory"]:
 			_material_inventory[str(material_id)] = int(payload["material_inventory"][material_id])
 		_load_ids(payload["completed_projects"], _completed_projects)
-	if loaded_version >= SCHEMA_VERSION:
+	if loaded_version >= COMPANION_SCHEMA_VERSION:
 		_load_ids(payload["banked_tool_target_ids"], _banked_tool_target_ids)
 		var companion_failures: Array[String] = _companion_profile.load_payload(payload["companion_profile"])
 		if not companion_failures.is_empty():
 			_last_storage_report = _report("invalid_schema", {"failures": companion_failures})
 			return _last_storage_report.duplicate(true)
+		if loaded_version >= SCHEMA_VERSION:
+			var journey_failures: Array[String] = _regional_journey_profile.load_payload(payload["regional_journey_profile"])
+			if not journey_failures.is_empty():
+				_last_storage_report = _report("invalid_schema", {"failures": journey_failures})
+				return _last_storage_report.duplicate(true)
 	elif loaded_version >= TOOL_TARGET_SCHEMA_VERSION:
 		_load_ids(payload["banked_tool_target_ids"], _banked_tool_target_ids)
 	if has_capability(SURVEY_SCANNER_CAPABILITY_ID):
@@ -162,13 +145,15 @@ func load_profile() -> Dictionary:
 		status = "migrated_v3"
 	elif loaded_version == TOOL_TARGET_SCHEMA_VERSION:
 		status = "migrated_v4"
+	elif loaded_version == COMPANION_SCHEMA_VERSION:
+		status = "migrated_companion_v%d_to_v3" % loaded_companion_version if loaded_companion_version != CompanionProfileState.PROFILE_SCHEMA_VERSION else "migrated_v5"
 	elif loaded_version == SCHEMA_VERSION and loaded_companion_version != CompanionProfileState.PROFILE_SCHEMA_VERSION:
 		status = "migrated_companion_v%d_to_v3" % loaded_companion_version
 	elif bool(migrations.get("scanner_purchase", false)):
 		status = "migrated_scanner_purchase"
 	elif bool(migrations.get("wreck_navigation", false)):
 		status = "migrated_wreck_navigation"
-	var migration_changed: bool = loaded_version == TOOL_TARGET_SCHEMA_VERSION or (loaded_version == SCHEMA_VERSION and loaded_companion_version != CompanionProfileState.PROFILE_SCHEMA_VERSION) or bool(migrations.get("cutter_blueprint", false)) or bool(migrations.get("scanner_purchase", false)) or bool(migrations.get("wreck_navigation", false))
+	var migration_changed: bool = loaded_version in [TOOL_TARGET_SCHEMA_VERSION, COMPANION_SCHEMA_VERSION] or (loaded_version == SCHEMA_VERSION and loaded_companion_version != CompanionProfileState.PROFILE_SCHEMA_VERSION) or bool(migrations.get("cutter_blueprint", false)) or bool(migrations.get("scanner_purchase", false)) or bool(migrations.get("wreck_navigation", false))
 	if migration_changed and not save_profile():
 		_last_storage_report = _report("migration_write_error")
 		return _last_storage_report.duplicate(true)
@@ -362,6 +347,18 @@ func has_committed_companion() -> bool:
 func active_companion_available_on_sortie_launch() -> bool:
 	return _companion_profile.has_launchable_active_companion()
 
+func signal_reef_journey_report() -> Dictionary:
+	return _regional_journey_profile.report()
+func commit_signal_reef_journey(adaptation_id: String, map_id: String, entry_id: String, day_number: int, persist := true) -> Dictionary:
+	var kite := _companion_individual(SignalReefJourneyProfileState.INDIVIDUAL_ID)
+	if kite.is_empty():
+		return {"changed": false, "reason": "companion_not_committed"}
+	if str(kite.get("selected_adaptation_id", "")) != adaptation_id:
+		return {"changed": false, "reason": "adaptation_not_selected"}
+	return _apply_journey_change("commit", [SignalReefJourneyProfileState.JOURNEY_ID, SignalReefJourneyProfileState.COMMITMENT_EVENT_ID, SignalReefJourneyProfileState.INDIVIDUAL_ID, adaptation_id, map_id, entry_id, day_number], persist)
+func advance_signal_reef_journey_day(day_number: int, persist := true) -> Dictionary:
+	return _apply_journey_change("advance_day", [day_number], persist)
+
 func report() -> Dictionary:
 	return _report(str(_last_storage_report.get("status", "not_loaded")))
 
@@ -379,6 +376,7 @@ func _profile_payload() -> Dictionary:
 		"completed_projects": _sorted_ids(_completed_projects),
 		"banked_tool_target_ids": _sorted_ids(_banked_tool_target_ids),
 		"companion_profile": _companion_profile.payload(),
+		"regional_journey_profile": _regional_journey_profile.payload(),
 	}
 
 
@@ -407,47 +405,18 @@ func _sorted_materials() -> Dictionary:
 
 
 func _validate_payload(payload: Dictionary) -> Array[String]:
-	var schema = payload.get("schema_version")
-	if schema == LEGACY_SCHEMA_VERSION:
-		return _validate_version(payload, LEGACY_PROFILE_KEYS, LEGACY_CAPABILITY_IDS, {}, false)
-	if schema == MATERIAL_SCHEMA_VERSION:
-		return _validate_version(
-			payload,
-			PROJECT_PROFILE_KEYS,
-			MATERIAL_SCHEMA_CAPABILITY_IDS,
-			MATERIAL_SCHEMA_PROJECT_IDS,
-			true
-		)
-	if schema == PROJECT_SCHEMA_VERSION:
-		return _validate_version(payload, PROJECT_PROFILE_KEYS, SUPPORTED_CAPABILITY_IDS, SUPPORTED_PROJECT_IDS, true)
-	if schema == TOOL_TARGET_SCHEMA_VERSION or schema == SCHEMA_VERSION:
-		var allowed_keys := PROFILE_KEYS if schema == SCHEMA_VERSION else TOOL_TARGET_PROFILE_KEYS
-		var failures := _validate_version(payload, allowed_keys, SUPPORTED_CAPABILITY_IDS, SUPPORTED_PROJECT_IDS, true)
-		failures.append_array(ExpansionProfileValidator.validate_id_array(payload.get("banked_tool_target_ids"), SUPPORTED_BANKED_TOOL_TARGET_IDS, "banked_tool_target_ids"))
-		if schema == SCHEMA_VERSION:
-			if typeof(payload.get("companion_profile")) != TYPE_DICTIONARY: failures.append("companion_profile must be an object")
-			else: failures.append_array(_companion_profile.validate_payload(payload["companion_profile"]))
-		return failures
-	return ["unsupported schema_version"]
-
-
-func _validate_version(
-	payload: Dictionary,
-	allowed_keys: Dictionary,
-	capabilities: Dictionary,
-	projects: Dictionary,
-	include_materials: bool
-) -> Array[String]:
-	return ExpansionProfileValidator.validate_version(
-		payload,
-		allowed_keys,
-		SUPPORTED_DISCOVERY_IDS,
-		capabilities,
-		SUPPORTED_MATERIAL_IDS,
-		projects,
-		PROJECT_RULES,
-		include_materials
-	)
+	return ExpansionProfileSchema.validate_payload(payload, {
+		"discoveries": SUPPORTED_DISCOVERY_IDS,
+		"legacy_capabilities": LEGACY_CAPABILITY_IDS,
+		"material_capabilities": MATERIAL_SCHEMA_CAPABILITY_IDS,
+		"capabilities": SUPPORTED_CAPABILITY_IDS,
+		"materials": SUPPORTED_MATERIAL_IDS,
+		"empty_projects": {},
+		"material_projects": MATERIAL_SCHEMA_PROJECT_IDS,
+		"projects": SUPPORTED_PROJECT_IDS,
+		"banked_targets": SUPPORTED_BANKED_TOOL_TARGET_IDS,
+		"project_rules": PROJECT_RULES,
+	}, _companion_profile, _regional_journey_profile)
 
 
 func _validate_material_delta(value: Dictionary) -> Array[String]:
@@ -488,6 +457,7 @@ func _reset_memory() -> void:
 	_completed_projects = {}
 	_banked_tool_target_ids = {}
 	_companion_profile.reset()
+	_regional_journey_profile.reset()
 
 func _apply_companion_change(method: String, arguments: Array, persist: bool) -> Dictionary:
 	var snapshot := _companion_profile.payload()
@@ -497,4 +467,16 @@ func _apply_companion_change(method: String, arguments: Array, persist: bool) ->
 	if save_profile():
 		return result
 	_companion_profile.load_payload(snapshot)
+	return {"changed": false, "reason": "storage_error"}
+
+func _companion_individual(individual_id: String) -> Dictionary:
+	for item in _companion_profile.individuals():
+		if str(item.get("individual_id", "")) == individual_id: return item
+	return {}
+func _apply_journey_change(method: String, arguments: Array, persist: bool) -> Dictionary:
+	var snapshot := _regional_journey_profile.payload()
+	var result: Dictionary = _regional_journey_profile.callv(method, arguments)
+	if not bool(result.get("changed", false)) or not persist: return result
+	if save_profile(): return result
+	_regional_journey_profile.load_payload(snapshot)
 	return {"changed": false, "reason": "storage_error"}
