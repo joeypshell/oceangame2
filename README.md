@@ -26,7 +26,7 @@ Build a distinctive side-view ocean game in which:
 
 ## Planning Docs
 
-The Simple Diver and Phase 2 expansion roadmaps describe the completed runtime foundation. Living Expeditions 01-03 are implemented and owner-approved: Kite and Mica prove distinct mounted and sensing roles, one active next-sortie selection, an inhabited canonical boat, and one source-authored ecological observation that becomes Mica's useful next-day Drift Lens adaptation. Living Expedition 04 is technically complete and closed on HOLD: Guardian Pulse remains, Mica's eel prediction is retired, and corrected runtime `bbcc255` uses a whole-simulation BOND tactical pause. Living Expedition 05 is complete with owner GO at corrected runtime `7792a08` as a bounded Silt Hound excavation proof, not a broad roster, economy, or map expansion. Correction #1362 moved the focused checkpoint out of solid terrain and added exact-scene spawn, movement, command, and dispatch coverage. The selected Living Expedition 06 plan returns adapted Kite to Signal Reef for one source-authored nursery relationship; implementation has not begun.
+The Simple Diver and Phase 2 expansion roadmaps describe the completed runtime foundation. Living Expeditions 01-03 are implemented and owner-approved: Kite and Mica prove distinct mounted and sensing roles, one active next-sortie selection, an inhabited canonical boat, and one source-authored ecological observation that becomes Mica's useful next-day Drift Lens adaptation. Living Expedition 04 is technically complete and closed on HOLD: Guardian Pulse remains, Mica's eel prediction is retired, and corrected runtime `bbcc255` uses a whole-simulation BOND tactical pause. Living Expedition 05 is complete with owner GO at corrected runtime `7792a08` as a bounded Silt Hound excavation proof, not a broad roster, economy, or map expansion. Correction #1362 moved the focused checkpoint out of solid terrain and added exact-scene spawn, movement, command, and dispatch coverage. Active Living Expedition 06 returns adapted Kite to Signal Reef for one source-authored nursery relationship; its source/state contract is locked before schema and runtime work.
 
 Core sources and operating docs:
 
@@ -65,6 +65,7 @@ Core sources and operating docs:
 - [Living Expedition 05 Web Verification](docs/current/LIVING_EXPEDITION_05_WEB_VERIFICATION.md)
 - [Living Expedition 05 Closeout](docs/current/LIVING_EXPEDITION_05_CLOSEOUT.md)
 - [Living Expedition 06 Plan](docs/current/LIVING_EXPEDITION_06_PLAN.md)
+- [Living Expedition 06 Source And State Contract](docs/current/LIVING_EXPEDITION_06_SOURCE_STATE_CONTRACT.md)
 - [Historical OceanGame Phase 2 Foundation Roadmap](docs/planning/OCEANGAME_PHASE_2_ROADMAP.md)
 - [Expedition Adaptation Direction](docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md)
 - [Capability And Resource Progression Framework](docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md)
