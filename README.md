@@ -2,7 +2,7 @@
 
 `oceangame2` is a side-view underwater expedition-raising game built on a controlled diver-expedition foundation.
 
-The existing runtime proves contiguous authored exploration, oxygen/daylight pressure, equipment progression, limited combat, night projects, and stable validation/deployment. Expansion 18 is technically complete but closes with a strategic player-experience HOLD: extending the old clue, recipe, gate, and scan cadence would not solve its generic motivation. Living Expeditions 01-03 have owner GO and establish the active direction: one bonded creature can support or be ridden in real time, while meaningful shared memories become deliberate visible adaptations at night. Living Expedition 04 is closed on owner HOLD: Mica's eel prediction failed its usefulness test and is retired, Mica remains an ecology reader, Guardian-Pulse Kite is the eel's sole active companion response, and BOND now pauses the whole simulation while commands are selected. Living Expedition 05 is complete with owner GO at corrected exact Web runtime `7792a08`: one rescued and selected Silt Hound deliberately excavates an authored optional material deposit.
+The existing runtime proves contiguous authored exploration, oxygen/daylight pressure, equipment progression, limited combat, night projects, and stable validation/deployment. Expansion 18 is technically complete but closes with a strategic player-experience HOLD: extending the old clue, recipe, gate, and scan cadence would not solve its generic motivation. Living Expeditions 01-03 have owner GO and establish the active direction: one bonded creature can support or be ridden in real time, while meaningful shared memories become deliberate visible adaptations at night. Living Expedition 04 is closed on owner HOLD: Mica's eel prediction failed its usefulness test and is retired, Mica remains an ecology reader, Guardian-Pulse Kite is the eel's sole active companion response, and BOND now pauses the whole simulation while commands are selected. Living Expedition 05 is complete with owner GO at corrected exact Web runtime `7792a08`: one rescued and selected Silt Hound deliberately excavates an authored optional material deposit. Living Expedition 06 is selected in planning as a bounded Signal Reef nursery return where Kite's existing adaptation changes a visible ecological outcome without replacing equipment access.
 
 ## Project Goal
 
@@ -26,7 +26,7 @@ Build a distinctive side-view ocean game in which:
 
 ## Planning Docs
 
-The Simple Diver and Phase 2 expansion roadmaps describe the completed runtime foundation. Living Expeditions 01-03 are implemented and owner-approved: Kite and Mica prove distinct mounted and sensing roles, one active next-sortie selection, an inhabited canonical boat, and one source-authored ecological observation that becomes Mica's useful next-day Drift Lens adaptation. Living Expedition 04 is technically complete and closed on HOLD: Guardian Pulse remains, Mica's eel prediction is retired, and corrected runtime `bbcc255` uses a whole-simulation BOND tactical pause. Living Expedition 05 is complete with owner GO at corrected runtime `7792a08` as a bounded Silt Hound excavation proof, not a broad roster, economy, or map expansion. Correction #1362 moved the focused checkpoint out of solid terrain and added exact-scene spawn, movement, command, and dispatch coverage.
+The Simple Diver and Phase 2 expansion roadmaps describe the completed runtime foundation. Living Expeditions 01-03 are implemented and owner-approved: Kite and Mica prove distinct mounted and sensing roles, one active next-sortie selection, an inhabited canonical boat, and one source-authored ecological observation that becomes Mica's useful next-day Drift Lens adaptation. Living Expedition 04 is technically complete and closed on HOLD: Guardian Pulse remains, Mica's eel prediction is retired, and corrected runtime `bbcc255` uses a whole-simulation BOND tactical pause. Living Expedition 05 is complete with owner GO at corrected runtime `7792a08` as a bounded Silt Hound excavation proof, not a broad roster, economy, or map expansion. Correction #1362 moved the focused checkpoint out of solid terrain and added exact-scene spawn, movement, command, and dispatch coverage. The selected Living Expedition 06 plan returns adapted Kite to Signal Reef for one source-authored nursery relationship; implementation has not begun.
 
 Core sources and operating docs:
 
@@ -64,6 +64,7 @@ Core sources and operating docs:
 - [Living Expedition 05 Visual Decision](docs/current/LIVING_EXPEDITION_05_VISUAL_DECISION.md)
 - [Living Expedition 05 Web Verification](docs/current/LIVING_EXPEDITION_05_WEB_VERIFICATION.md)
 - [Living Expedition 05 Closeout](docs/current/LIVING_EXPEDITION_05_CLOSEOUT.md)
+- [Living Expedition 06 Plan](docs/current/LIVING_EXPEDITION_06_PLAN.md)
 - [Historical OceanGame Phase 2 Foundation Roadmap](docs/planning/OCEANGAME_PHASE_2_ROADMAP.md)
 - [Expedition Adaptation Direction](docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md)
 - [Capability And Resource Progression Framework](docs/planning/CAPABILITY_RESOURCE_PROGRESSION_MATRIX.md)
