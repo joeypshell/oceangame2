@@ -103,7 +103,7 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 ## Planning Horizons
 
 - Completed: milestones #45-#49 prove one adapted Spark Ray, a bounded habitat and active species choice, one Mica ecology journey, one honestly rejected companion-combat experiment, and one owner-approved Silt Hound excavation journey.
-- Selected next: planning issue #1364 defines Living Expedition 06 as one Signal Reef nursery return where Kite's existing Anchor Fins or Guardian Pulse adaptation creates a distinct visible ecological outcome without bypassing Propulsion Fins or the Dive Light. Implementation remains unstarted until its scoped milestone batch is created.
+- Active milestone #50 is Living Expedition 06: one Signal Reef nursery return where Kite's existing Anchor Fins or Guardian Pulse adaptation creates a distinct visible ecological outcome without bypassing Propulsion Fins or the Dive Light. Its frozen implementation and review batch is #1366-#1375.
 - Directional: later habitat legacy/release remains a milestone-level goal only.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 

@@ -402,7 +402,7 @@ Current issue state as of 2026-08-13:
 
 ## Recommended Next Work
 
-Living Expeditions 01-03 and 05 are complete with owner GO. Living Expedition 04 is technically complete and closed on owner HOLD: Mica's eel prediction is retired, Guardian-Pulse Kite remains the only active companion response, and BOND uses a whole-simulation tactical pause. `LIVING_EXPEDITION_06_PLAN.md` selects one bounded Signal Reef nursery return for adapted Kite. Implementation has not begun; create and resolve only its scoped milestone batch after planning gate #1364 merges. Keep #52/#53 deferred.
+Living Expeditions 01-03 and 05 are complete with owner GO. Living Expedition 04 is technically complete and closed on owner HOLD: Mica's eel prediction is retired, Guardian-Pulse Kite remains the only active companion response, and BOND uses a whole-simulation tactical pause. Active milestone #50 is the bounded Signal Reef nursery return for adapted Kite; its source/state contract is locked and #1366-#1375 are the frozen implementation, evidence, and owner-review batch. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 
