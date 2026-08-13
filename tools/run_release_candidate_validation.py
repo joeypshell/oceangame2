@@ -65,6 +65,7 @@ def base_gates() -> list[Gate]:
         Gate("creatures: living expedition schema fixtures", python_command("tools/test_validate_living_expedition_schema.py")),
         Gate("creatures: Living Expedition 04 relationship fixtures", python_command("tools/test_living_expedition_04_contract.py")),
         Gate("creatures: Living Expedition 05 schema fixtures", python_command("tools/test_living_expedition_05_contract.py")),
+        Gate("creatures: Living Expedition 06 schema fixtures", python_command("tools/test_living_expedition_06_contract.py")),
         Gate("creatures: progression graph fixtures", python_command("tools/test_progression_graph_creatures.py")),
         Gate("creatures: Living Expedition 03 source", python_command("tools/test_production_level_01_living_expedition_03.py")),
         Gate("creatures: Living Expedition 04 source", python_command("tools/test_production_level_01_living_expedition_04.py")),

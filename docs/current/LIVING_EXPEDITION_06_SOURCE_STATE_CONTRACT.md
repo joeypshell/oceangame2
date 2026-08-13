@@ -84,6 +84,42 @@ a source of score, materials, blueprints, discoveries, or hidden rewards.
 Map JSON must not contain mutable journey phase, action progress, selected
 branch, commitment, restoration, companion state, cooldown, or day state.
 
+## Regional Creature Journey Source Shape
+
+LE06 introduces four optional top-level immutable collections:
+
+- `regional_creature_journeys`: the complete relationship and authority links;
+- `passive_wildlife_groups`: school anchor, path, and passive boundaries;
+- `creature_nurseries`: the destination area and landmark relationship; and
+- `ecological_pressures`: one non-damaging displacement cycle and path.
+
+The journey record uses `journey_kind: regional_habitat_restoration`, the
+contracted species/individual, `school_id`, `nursery_id`, `pressure_id`, both
+ordered `adaptation_context_ids`, existing `route_id`, ordered `gate_ids`,
+`landmark_zone_id`, `dark_zone_id`, source map and boat ids,
+`commitment_event_id`, all five ordered `review_camera_ids`, and
+`required_access_ids: [propulsion_fins, dive_light_1]`. It must also declare
+`optional: true`, `reward_ids: []`, `progression_effect: none`, and guaranteed
+availability.
+
+The school declares tile anchor and path, nursery and pressure links, and false
+`bondable`, `harvestable`, and `collectible` boundaries. The nursery declares a
+positive tile rectangle and landmark link. The pressure declares a positive
+tile rectangle and path, the school link, `damaging: false`, and no rewards.
+
+Both entries in `companion_contexts` use
+`context_kind: regional_journey_action`, matching Kite identity, journey,
+school, nursery, access ids, and guaranteed availability. The Anchor branch
+uses `branch_kind: current_lee`, existing `anchor_brace`, selected
+`anchor_fins`, and the east current gate target. The Guardian branch uses
+`branch_kind: pressure_interrupt`, existing `guardian_pulse_action`, selected
+`guardian_pulse`, and the ecological-pressure target.
+
+Source provenance lists the exact journey, school, nursery, pressure, context,
+and camera ids plus `terrain_changes: []`. Seed weights/chances and all profile,
+runtime, pending, committed, restored, progress, cooldown, or day fields are
+invalid in these records.
+
 ## Review IDs And States
 
 The source owns these focused cameras:
