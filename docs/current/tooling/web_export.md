@@ -8,7 +8,7 @@ python tools/write_build_info.py
 
 This writes ignored `build_info.json`. The web export workflow generates that file from `GITHUB_SHA` before export, so the public preview can identify the deployed commit.
 
-The latest exact-SHA Pages and checkpoint verification is recorded in [Living Expedition 04 Web Verification](../LIVING_EXPEDITION_04_WEB_VERIFICATION.md). The [Living Expedition 04 Visual Decision](../LIVING_EXPEDITION_04_VISUAL_DECISION.md) records the current focused capture review; accepted production-slice baselines remain unchanged. The older [Simple Diver Game 08 Web Export Handoff](../SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md) remains the release-candidate foundation.
+The latest exact-SHA Pages and checkpoint verification is recorded in [Living Expedition 05 Web Verification](../LIVING_EXPEDITION_05_WEB_VERIFICATION.md). The [Living Expedition 05 Visual Decision](../LIVING_EXPEDITION_05_VISUAL_DECISION.md) records the current focused capture review; accepted production baselines remain unchanged. The older [Simple Diver Game 08 Web Export Handoff](../SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md) remains the release-candidate foundation.
 
 Build a local Web export preview:
 
@@ -35,7 +35,7 @@ node tools/check_web_preview.cjs http://127.0.0.1:8060/ --expected-sha (git rev-
 ```
 
 The checker retains `living_expedition_02_start` as its historical default.
-Pass `--checkpoint living_expedition_04_start` for the current owner checkpoint,
+Pass `--checkpoint living_expedition_05_excavate_ready` for the current owner checkpoint,
 or `--checkpoint <id>` for another retained checkpoint.
 
 The check fails if the web preview logs missing texture warnings such as `Unable to open texture asset`, `Unable to create cave TileSet`, `SCRIPT ERROR`, `ERROR:`, failed resource requests, a missing Godot canvas, a framing/readability mismatch between 1280x720 and 1920x1080 browser viewports, a touch-enabled 844x390 canvas that is not top anchored or does not cover the visual viewport, visible mobile controls that do not respond at their rendered touch positions, or an external `build_info.json` whose `git_sha` does not match the expected commit. Omit `--expected-sha` when checking an older export that does not include external build metadata.
@@ -96,5 +96,13 @@ companions adapted, Mica selected, and the Shock Prod available. It is the
 current regression path for selecting Kite's non-damaging Guardian Pulse
 opening, ordinary retreat, Shock-Prod defeat/harvest, and corrected BOND timing.
 Mica remains available for her moving-ecology role but is not an eel solution.
+
+For focused Living Expedition 05 review, use either
+`https://joeypshell.github.io/oceangame2/?review=<sha>&checkpoint=living_expedition_05_start`
+for Marl's unresolved rescue and boat commitment, or
+`https://joeypshell.github.io/oceangame2/?review=<sha>&checkpoint=living_expedition_05_excavate_ready`
+for the selected-Marl handoff beside the closed mound. The latter preserves
+deliberate BOND Excavate, physical reveal, and normal material pickup as
+incomplete owner-review steps.
 
 The public root and `https://joeypshell.github.io/oceangame2/?review=<sha>` now load `production_level_01`; the review query still isolates profile state. To review a retained slice fixture, add an explicit supported map, for example `?review=<sha>&map=production_slice_01`. A bare `map` query without `review` does not override the default. The Web checker verifies the full-level default and explicit slice-01 fallback at desktop and mobile browser sizes.

@@ -1,6 +1,6 @@
 # Playtest Checkpoints
 
-Last updated: 2026-08-09
+Last updated: 2026-08-13
 
 ## Purpose
 
@@ -17,6 +17,8 @@ the routine end-to-end regression layer.
 
 | ID | Starts with | Deliberately incomplete |
 | --- | --- | --- |
+| `living_expedition_05_start` | Day 4 at the canonical boat; Kite and Mica committed; prior required progression available; empty cargo | Marl's Cutter rescue, boat commitment, three-partner selection, and Silt Hound sortie |
+| `living_expedition_05_excavate_ready` | Day 4 beside the closed lower-loop mound; Kite, Mica, and Marl committed; Marl active; empty cargo | Deliberate BOND Excavate, physical reveal, typed-material pickup, and optional return |
 | `living_expedition_04_start` | Day 3 at the canonical boat; Kite and Mica committed and adapted; Mica active; Shock Prod and prior required progression available; empty cargo | Select Kite for the Guardian-Pulse eel opening, compare ordinary evade and defeat-only harvest, and verify Mica has no eel response |
 | `living_expedition_03_start` | Kite and Mica committed; Mica active; prior required progression available | Mica migration observation, night consolidation, and next-sortie Read Drift |
 | `living_expedition_02_start` | Prior required projects/discoveries committed; Cutter and Scanner available; Kite committed and selected; empty cargo | Mica rescue/commitment, two-partner habitat selection, Mica Reveal Trace sortie, and return to Kite |
@@ -25,7 +27,8 @@ the routine end-to-end regression layer.
 Local:
 
 ```powershell
-& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=living_expedition_04_start
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=living_expedition_05_start
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=living_expedition_05_excavate_ready
 ```
 
 The checkpoint forces `production_level_01` and identifies itself in the
@@ -35,15 +38,45 @@ isolated profile.
 Exact public Web closeout build:
 
 ```text
-https://joeypshell.github.io/oceangame2/?review=bbcc255fb35339bb62aa5b2626526490b33d596b&checkpoint=living_expedition_04_start
+https://joeypshell.github.io/oceangame2/?review=7792a087c4f685b104846430e9aecb90e2c2bd71&checkpoint=living_expedition_05_start
+https://joeypshell.github.io/oceangame2/?review=7792a087c4f685b104846430e9aecb90e2c2bd71&checkpoint=living_expedition_05_excavate_ready
 ```
 
-The Pages workflow and independent desktop/mobile checker passed for exact SHA
-`bbcc255fb35339bb62aa5b2626526490b33d596b`. Technical evidence is recorded in
-[Living Expedition 04 Web Verification](LIVING_EXPEDITION_04_WEB_VERIFICATION.md).
-The owner verdict is HOLD: Mica's eel prediction was not useful and is retired.
-This checkpoint remains a focused regression path for Kite, ordinary evade,
-Shock-Prod defeat/harvest, and complete-simulation BOND timing.
+The Pages workflow, merge smoke suite, and focused desktop/mobile inspection
+passed for corrected exact SHA `7792a087c4f685b104846430e9aecb90e2c2bd71`.
+The earlier `267c5e1` checkpoint URL is superseded: owner review found its
+excavation-ready start intersected solid terrain and suppressed Excavate.
+Correction #1362 fixes that boundary and protects it with an actual-scene smoke.
+Technical evidence is recorded in
+[Living Expedition 05 Web Verification](LIVING_EXPEDITION_05_WEB_VERIFICATION.md).
+The corrected owner retest received GO; the links remain as regression fixtures.
+
+## Living Expedition 05 Replay
+
+Fresh rescue:
+
+1. Open `living_expedition_05_start`; close or leave the boat habitat, then swim
+   into the lower loop to the orange-cabled juvenile Silt Hound.
+2. Select the Cutter and hold `Space/USE` until Marl is free. Return together to
+   the canonical surface boat to commit the rescue.
+3. At the boat, press `B/BOND`, use `Tab/TOOL` to highlight Marl, and confirm
+   with `Space/USE`. Leave the boat and confirm Marl follows as the active
+   partner.
+
+Excavate payoff:
+
+1. Open `living_expedition_05_excavate_ready`; Marl and the closed mound are
+   already framed together.
+2. Desktop: press `B`, then `2` for Excavate. Mobile: tap `BOND`, use `TOOL` to
+   select Excavate, then tap `USE`.
+3. Watch whether Marl's approach, anticipation, impact, and material reveal are
+   understandable without relying only on the status panel.
+4. Move into the exposed titanium and confirm it becomes held cargo. Return to
+   the boat only if you also want to verify normal banking.
+
+Then answer: Did rescuing and choosing the Silt Hound make the material run
+feel like a distinct partnership, and was the Excavate payoff clear and useful
+enough to choose that individual for another day?
 
 ## Living Expedition 01 Replay
 

@@ -332,14 +332,14 @@ wildlife or waiting for a random spawn.
 
 ## Recommended Production Order
 
-1. Keep Kite and Mica as the complete implemented roster until Living Expedition
-   05 migrates the profile and commits one named Silt Hound.
+1. Keep Kite, Mica, and Marl as the complete implemented roster after Living
+   Expedition 05's owner GO.
 2. Preserve the HOLD lesson: a companion action must create an immediately
    legible option or outcome, not merely describe visible hostile behavior.
 3. Review monochrome concept sheets only as directional planning evidence.
-4. The separate #1340 direction audit selects one bounded Silt Hound excavation
-   proof because it creates a visible physical material payoff and map-revisit
-   reason. It does not authorize generic prospecting or another detector.
+4. Living Expedition 05's bounded Silt Hound excavation proof is complete; it
+   does not authorize generic prospecting, another detector, or a fourth
+   species.
 5. Add Breaker Mantis only after real-time combat, enemy health feedback,
    resource outcomes, and nonlethal/defeat rules have a stable owner.
 6. Keep Rivetback, Lumenjaw, Ribbon Drake, and Choir Bloom directional until the
