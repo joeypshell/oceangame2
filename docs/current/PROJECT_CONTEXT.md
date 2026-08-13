@@ -402,15 +402,16 @@ Current issue state as of 2026-08-13:
 
 ## Recommended Next Work
 
-Living Expeditions 01-03 and 05 are complete with owner GO. Living Expedition 04 is technically complete and closed on owner HOLD: Mica's eel prediction is retired, Guardian-Pulse Kite remains the only active companion response, and BOND uses a whole-simulation tactical pause. No new active milestone is selected yet. Keep #52/#53 deferred and audit direction before creating Living Expedition 06.
+Living Expeditions 01-03 and 05 are complete with owner GO. Living Expedition 04 is technically complete and closed on owner HOLD: Mica's eel prediction is retired, Guardian-Pulse Kite remains the only active companion response, and BOND uses a whole-simulation tactical pause. `LIVING_EXPEDITION_06_PLAN.md` selects one bounded Signal Reef nursery return for adapted Kite. Implementation has not begun; create and resolve only its scoped milestone batch after planning gate #1364 merges. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 
 - Treat Living Expedition as the active product direction and a bounded current runtime proof. Preserve one active companion, species-plus-experience roles, deliberate real-time commands, committed-bond riding, meaningful experience rather than XP grinding, night consolidation, visible adaptation, and the equipment-versus-companion boundary.
+- Use `LIVING_EXPEDITION_06_PLAN.md` for next implementation: one guaranteed filter-skate nursery relationship at existing Signal Reef, one of Kite's already-selected adaptations, one exact-once boat commitment, and one visible next-day ecological payoff. Propulsion Fins and Dive Light retain access authority; do not turn Kite into a gate key or award score, cargo, a recipe, or a blueprint.
 - Keep Living Expedition 04 to the existing eel: Guardian-Pulse Kite creates the only active companion opening, ordinary evade remains valid, the Shock Prod owns damage, and only defeat exposes the existing electrocyte harvest. Preserve generic hostile-reading code as dormant future material, but do not present Mica as an eel solution.
 - Use toggle `B/BOND` and a maximum-three-action whole-simulation tactical-pause palette. Desktop `1`-`3` directly activates the matching labeled command; `B` or `Esc` closes. Touch uses sequential `BOND`, `TOOL`, and `USE` taps. Mounted play transfers movement and hotbar ownership to creature actions; dismount restores diver tools. Do not reuse `Q` or `E/ACT` for the companion.
 - Riding cannot bypass fins, darkness, pressure, collision, oxygen, daylight, health, cargo, boat, or failure authority.
-- Add a third companion only through `LIVING_EXPEDITION_05_PLAN.md`: explicit profile migration, one Silt Hound rescue, one compact habitat row, and one deliberate excavation payoff. Do not add a fourth species, broad stable UI, turn-based or broad combat framework, creature health/death, or ecosystem simulation.
+- Preserve the implemented third-companion boundary from `LIVING_EXPEDITION_05_PLAN.md`: profile v3, one Silt Hound rescue, one compact habitat row, and one deliberate excavation payoff. Do not add a fourth species, broad stable UI, turn-based or broad combat framework, creature health/death, or ecosystem simulation.
 - Keep the implemented held-cargo strip, selectable active tools, persistent vitals/objectives, and temporary prompts as distinct HUD responsibilities; a broad production HUD replacement remains directional.
 - Keep `production_level_01` as the default preview map unless a separate reviewed decision changes it.
 - Preserve `maps/full_cave_sketch_01.greybox.json` as the generated topology draft and source for a separately named `production_level_01` output.

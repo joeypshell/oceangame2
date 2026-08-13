@@ -1,6 +1,6 @@
 # OceanGame Living Expedition Roadmap
 
-Date: 2026-08-10
+Date: 2026-08-13
 
 Status: Active product roadmap. The completed diver-expedition work remains the
 runtime foundation; this roadmap owns future product direction.
@@ -136,24 +136,29 @@ checkpoint before the accepted retest.
 
 ### Committed
 
-No next milestone is committed. The next audit must select one bounded proof
-from the directional horizon without automatically adding a fourth species.
+**Living Expedition 06: Signal Reef Nursery** is selected as the next bounded
+proof. Return already-adapted Kite to the existing Signal Reef route, where
+Anchor Fins or Guardian Pulse creates a distinct deliberate way to shelter one
+source-authored filter-skate school. Propulsion Fins and the Dive Light retain
+hard access, the shared result commits at the boat, and the following day shows
+a visible restored nursery. No fourth species, new adaptation, topology change,
+score/cache reward, or broad ecosystem simulation enters this milestone.
+
+Detailed planning contract:
+`docs/current/LIVING_EXPEDITION_06_PLAN.md`.
 
 ### Directional
 
 Only milestone-level goals are selected beyond the committed proof:
 
-1. **Living Expedition 06: Regional Creature Journeys**
-   Add memorable regions whose equipment access, species ecology, mysteries,
-   and return reasons are planned together through the JSON map pipeline.
-2. **Later: Growth, Release, And Habitat Legacy**
+1. **Later: Growth, Release, And Habitat Legacy**
    Test voluntary retirement or release, one bounded legacy trait, and visible
    habitat consequences only after enough individuals have reviewed history for
    the choice to carry emotional weight, without forced death or a simulation
    rewrite.
 
-These directions do not receive detailed issue inventories until a later audit
-selects one bounded proof after Living Expedition 05's closeout.
+This direction does not receive a detailed issue inventory until a later audit
+selects one bounded proof after Living Expedition 06's closeout.
 
 ### Vision
 

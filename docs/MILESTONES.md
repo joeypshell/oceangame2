@@ -1,6 +1,6 @@
 # Milestones
 
-Last updated: 2026-08-08
+Last updated: 2026-08-13
 
 This is the compact milestone index. Detailed direction lives in:
 
@@ -70,6 +70,7 @@ This is the compact milestone index. Detailed direction lives in:
 - `docs/current/LIVING_EXPEDITION_03_VISUAL_DECISION.md`
 - `docs/current/LIVING_EXPEDITION_03_WEB_VERIFICATION.md`
 - `docs/current/LIVING_EXPEDITION_03_CLOSEOUT.md`
+- `docs/current/LIVING_EXPEDITION_06_PLAN.md`
 
 ## Current State
 
@@ -102,7 +103,8 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 ## Planning Horizons
 
 - Completed: milestones #45-#49 prove one adapted Spark Ray, a bounded habitat and active species choice, one Mica ecology journey, one honestly rejected companion-combat experiment, and one owner-approved Silt Hound excavation journey.
-- Directional: regional creature journeys and later habitat legacy/release remain milestone-level goals only.
+- Selected next: planning issue #1364 defines Living Expedition 06 as one Signal Reef nursery return where Kite's existing Anchor Fins or Guardian Pulse adaptation creates a distinct visible ecological outcome without bypassing Propulsion Fins or the Dive Light. Implementation remains unstarted until its scoped milestone batch is created.
+- Directional: later habitat legacy/release remains a milestone-level goal only.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
@@ -169,7 +171,7 @@ Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 mileston
 
 - Do not reopen completed expansion batches merely to keep the queue full.
 - Preserve Living Expedition 04's HOLD lesson: a companion action must create an immediately legible choice or outcome, not merely describe visible hostile behavior.
-- Keep Kite, Mica, and Marl as the complete implemented roster while Living Expedition 05 awaits its owner verdict. Do not add a fourth species.
+- Keep Kite, Mica, and Marl as the complete implemented roster through the selected Living Expedition 06 Signal Reef nursery proof. Do not add a fourth species.
 - Do not replace real-time exploration with party battles. Adapt build synergy through one companion's independent, support, and mounted roles.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.
