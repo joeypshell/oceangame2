@@ -27,6 +27,7 @@ const GreyboxHostileRenderer := preload("res://scripts/world/greybox_hostile_ren
 const GreyboxBiologicalResources := preload("res://scripts/world/greybox_biological_resources.gd")
 const GreyboxCreatureRescues := preload("res://scripts/world/greybox_creature_rescues.gd")
 const GreyboxEcologicalTraces := preload("res://scripts/world/greybox_ecological_traces.gd")
+const GreyboxSignalReefNursery := preload("res://scripts/world/greybox_signal_reef_nursery.gd")
 const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
 
 const SALVAGE_TIER_SCORES := ProgressionContract.SALVAGE_SCORE_BY_TIER
@@ -89,6 +90,7 @@ var _hostile_renderer
 var _biological_resource_runtime
 var _creature_rescue_runtime
 var _ecological_trace_runtime
+var _signal_reef_nursery_runtime
 
 
 func _ready() -> void:
@@ -181,6 +183,18 @@ func load_greybox() -> void:
 		tile_size,
 		show_debug_overlay
 	)
+	if not (map_data.get("regional_creature_journeys", []) as Array).is_empty():
+		_signal_reef_nursery_runtime = GreyboxSignalReefNursery.new()
+		_signal_reef_nursery_runtime.build(
+			_marker_root,
+			map_data.get("regional_creature_journeys", []),
+			map_data.get("passive_wildlife_groups", []),
+			map_data.get("creature_nurseries", []),
+			map_data.get("ecological_pressures", []),
+			map_data.get("companion_contexts", []),
+			tile_size,
+			show_debug_overlay
+		)
 	_survey_target_runtime.build(_marker_root, map_data.get("survey_targets", []), tile_size, show_debug_overlay)
 	_material_candidate_runtime.build(
 		_marker_root,
@@ -268,6 +282,38 @@ func get_final_dive_objective_seeds() -> Array:
 
 func get_regional_journeys() -> Array:
 	return _duplicate_dictionary_array(_map_data.get("regional_journeys", []))
+
+
+func get_regional_creature_journeys() -> Array:
+	return _duplicate_dictionary_array(_map_data.get("regional_creature_journeys", []))
+
+
+func get_passive_wildlife_groups() -> Array:
+	return _duplicate_dictionary_array(_map_data.get("passive_wildlife_groups", []))
+
+
+func get_creature_nurseries() -> Array:
+	return _duplicate_dictionary_array(_map_data.get("creature_nurseries", []))
+
+
+func get_ecological_pressures() -> Array:
+	return _duplicate_dictionary_array(_map_data.get("ecological_pressures", []))
+
+
+func set_signal_reef_nursery_state(state: String, shelter_progress := 0.0) -> bool:
+	return false if _signal_reef_nursery_runtime == null else _signal_reef_nursery_runtime.set_state(state, shelter_progress)
+
+
+func advance_signal_reef_nursery(delta: float) -> Dictionary:
+	return {"configured": false} if _signal_reef_nursery_runtime == null else _signal_reef_nursery_runtime.advance(delta)
+
+
+func reset_signal_reef_nursery_uncommitted() -> bool:
+	return false if _signal_reef_nursery_runtime == null else _signal_reef_nursery_runtime.reset_uncommitted()
+
+
+func get_signal_reef_nursery_report() -> Dictionary:
+	return {"configured": false} if _signal_reef_nursery_runtime == null else _signal_reef_nursery_runtime.report()
 
 
 func get_creature_memory_opportunities() -> Array:
