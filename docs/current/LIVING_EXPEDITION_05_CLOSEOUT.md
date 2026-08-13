@@ -1,6 +1,6 @@
 # Living Expedition 05 Closeout
 
-Date: 2026-08-10
+Date: 2026-08-12
 
 Issue: #1351 `Verify Living Expedition 05 Web build and run owner closeout`
 
@@ -8,8 +8,8 @@ Status: **TECHNICAL PASS; OWNER VERDICT PENDING**
 
 ## Technical Result
 
-Living Expedition 05 is technically complete at exact reviewed runtime
-`267c5e1e16503355ce63416e08c181d31bca793d`.
+Living Expedition 05 is technically complete at corrected exact reviewed
+runtime `7792a087c4f685b104846430e9aecb90e2c2bd71`.
 
 - Source/profile/runtime ownership remains bounded to one named Silt Hound,
   one rescue, one optional mound, one deliberate action, and one existing typed
@@ -21,13 +21,22 @@ Living Expedition 05 is technically complete at exact reviewed runtime
 - GitHub Actions, Pages deployment, and two independent public checkpoint
   browser matrices pass at the exact SHA.
 
+The first owner attempt on `267c5e1` exposed a real checkpoint defect: the
+excavation-ready start intersected solid terrain, leaving the diver stuck and
+removing Excavate from the BOND palette. Correction #1362 moved the start to an
+open tile without changing map topology or gameplay and added an actual-scene
+regression for spawn clearance, movement, command availability, and dispatch.
+The corrected public checkpoint visibly exposes `Recall` and `Excavate`, and
+activating `2` opens the mound and reveals titanium.
+
 See `LIVING_EXPEDITION_05_VISUAL_DECISION.md` and
 `LIVING_EXPEDITION_05_WEB_VERIFICATION.md` for the detailed evidence.
 
 ## Owner Gate
 
-No owner verdict has been supplied yet. Automation must not fill this section
-with an inferred result.
+The initial owner run supplied a technical HOLD that is resolved by #1362. A
+product verdict on the corrected runtime has not been supplied yet. Automation
+must not fill this section with an inferred result.
 
 The required question is:
 

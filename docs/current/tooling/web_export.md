@@ -35,7 +35,7 @@ node tools/check_web_preview.cjs http://127.0.0.1:8060/ --expected-sha (git rev-
 ```
 
 The checker retains `living_expedition_02_start` as its historical default.
-Pass `--checkpoint living_expedition_04_start` for the current owner checkpoint,
+Pass `--checkpoint living_expedition_05_excavate_ready` for the current owner checkpoint,
 or `--checkpoint <id>` for another retained checkpoint.
 
 The check fails if the web preview logs missing texture warnings such as `Unable to open texture asset`, `Unable to create cave TileSet`, `SCRIPT ERROR`, `ERROR:`, failed resource requests, a missing Godot canvas, a framing/readability mismatch between 1280x720 and 1920x1080 browser viewports, a touch-enabled 844x390 canvas that is not top anchored or does not cover the visual viewport, visible mobile controls that do not respond at their rendered touch positions, or an external `build_info.json` whose `git_sha` does not match the expected commit. Omit `--expected-sha` when checking an older export that does not include external build metadata.

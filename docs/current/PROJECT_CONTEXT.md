@@ -109,15 +109,15 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
 - Latest owner decision: Living Expedition 04 received HOLD; Mica's eel prediction is non-useful, Guardian Pulse remains valid, and the reported BOND timing defect is corrected through whole-simulation tactical pause
 - Latest completed direction: milestone #48 Living Expedition 04 closed on owner HOLD; #1335 retired Mica's active eel response, #1336 corrected BOND timing, and #1323 records the verdict
-- Current closeout: `docs/current/LIVING_EXPEDITION_04_CLOSEOUT.md`; corrected exact-Web runtime `bbcc255` is technically green without claiming player GO
-- Current implementation contract: `docs/current/LIVING_EXPEDITION_04_SOURCE_STATE_CONTRACT.md`; Kite interruption, Shock Prod damage, harvest authority, dormant hostile reading, and Mica ecology remain regression boundaries
+- Current closeout: `docs/current/LIVING_EXPEDITION_05_CLOSEOUT.md`; corrected exact-Web runtime `7792a08` is technically green without claiming player GO
+- Current implementation contract: `docs/current/LIVING_EXPEDITION_05_SOURCE_STATE_CONTRACT.md`; Marl rescue, deliberate excavation, normal material ownership, and hard equipment gates remain regression boundaries
 - Living Expedition 03 evidence: `docs/current/LIVING_EXPEDITION_03_VISUAL_DECISION.md`, `docs/current/LIVING_EXPEDITION_03_WEB_VERIFICATION.md`, and `docs/current/LIVING_EXPEDITION_03_CLOSEOUT.md`; exact runtime `0e92dd7` passed focused visual, responsive Web, touch, deterministic journey, and owner review
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
-- Latest source contract: `docs/current/LIVING_EXPEDITION_04_SOURCE_STATE_CONTRACT.md`
+- Latest source contract: `docs/current/LIVING_EXPEDITION_05_SOURCE_STATE_CONTRACT.md`
 - Latest visual decision: Living Expedition focused captures are generated review evidence only; all six configured accepted baseline sheets remain pixel-stable
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: corrected Living Expedition 04 HOLD runtime `bbcc255`, recorded in `docs/current/LIVING_EXPEDITION_04_WEB_VERIFICATION.md`; #1323 records the owner verdict.
+- Latest Web verification: corrected Living Expedition 05 runtime `7792a08`, recorded in `docs/current/LIVING_EXPEDITION_05_WEB_VERIFICATION.md`; #1351 remains open for the owner verdict.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -233,7 +233,7 @@ For map changes, run the relevant generator, SVG renderer, validator, parity che
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Each issue needs acceptance criteria, relevant files, implementation notes, and verification steps.
 
-Current issue state as of 2026-08-10:
+Current issue state as of 2026-08-12:
 
 - Closed: #662-#671 completed Expansion 01 with a GO.
 - Closed: #685-#694 completed Expansion 02 with a GO.
@@ -264,7 +264,7 @@ Current issue state as of 2026-08-10:
 - Closed: milestone #46 and #1253-#1262 implement the bounded Kite/Mica habitat, active selection, Mica sensing role, deterministic evidence, exact Web checkpoint, and owner GO.
 - Closed: milestone #47 and #1276-#1285 plus bounded corrections #1301/#1303/#1305/#1307/#1308 implement Mica's ecology journey, exact-Web runtime `0e92dd7`, and owner GO.
 - Closed on owner HOLD: milestone #48 and #1314-#1323 plus bounded corrections #1333/#1335/#1336 retain Kite's eel opening, retire Mica's non-useful prediction, and verify corrected runtime `bbcc255`.
-- Active batch: Living Expedition 05 implementation, deterministic rescue-to-bank coverage, focused visual review, and exact-SHA public Web verification are complete at `267c5e1`. The explicit owner GO/HOLD/correction remains under #1351; milestone #49 stays open.
+- Active batch: Living Expedition 05 implementation, deterministic rescue-to-bank coverage, focused visual review, and corrected exact-SHA public Web verification are complete at `7792a08`. The first owner review exposed a collision-invalid excavation-ready checkpoint; #1362 repaired its start and added exact-scene spawn, movement, palette, and dispatch coverage. The explicit owner GO/HOLD verdict remains under #1351; milestone #49 stays open.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -402,7 +402,7 @@ Current issue state as of 2026-08-10:
 
 ## Recommended Next Work
 
-Living Expeditions 01-03 are complete with owner GO. Living Expedition 04 is technically complete and closed on owner HOLD: Mica's eel prediction is retired, Guardian-Pulse Kite remains the only active companion response, and BOND uses a whole-simulation tactical pause. Living Expedition 05 is technically complete at exact public runtime `267c5e1`; only the explicit owner playtest verdict remains under #1351. Keep #52/#53 deferred.
+Living Expeditions 01-03 are complete with owner GO. Living Expedition 04 is technically complete and closed on owner HOLD: Mica's eel prediction is retired, Guardian-Pulse Kite remains the only active companion response, and BOND uses a whole-simulation tactical pause. Living Expedition 05 is technically complete at corrected exact public runtime `7792a08`; only the explicit owner playtest verdict remains under #1351. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 

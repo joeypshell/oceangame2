@@ -1,6 +1,6 @@
 # Playtest Checkpoints
 
-Last updated: 2026-08-10
+Last updated: 2026-08-12
 
 ## Purpose
 
@@ -38,12 +38,15 @@ isolated profile.
 Exact public Web closeout build:
 
 ```text
-https://joeypshell.github.io/oceangame2/?review=267c5e1e16503355ce63416e08c181d31bca793d&checkpoint=living_expedition_05_start
-https://joeypshell.github.io/oceangame2/?review=267c5e1e16503355ce63416e08c181d31bca793d&checkpoint=living_expedition_05_excavate_ready
+https://joeypshell.github.io/oceangame2/?review=7792a087c4f685b104846430e9aecb90e2c2bd71&checkpoint=living_expedition_05_start
+https://joeypshell.github.io/oceangame2/?review=7792a087c4f685b104846430e9aecb90e2c2bd71&checkpoint=living_expedition_05_excavate_ready
 ```
 
-The Pages workflow and independent desktop/mobile checker passed both
-checkpoints for exact SHA `267c5e1e16503355ce63416e08c181d31bca793d`.
+The Pages workflow, merge smoke suite, and focused desktop/mobile inspection
+passed for corrected exact SHA `7792a087c4f685b104846430e9aecb90e2c2bd71`.
+The earlier `267c5e1` checkpoint URL is superseded: owner review found its
+excavation-ready start intersected solid terrain and suppressed Excavate.
+Correction #1362 fixes that boundary and protects it with an actual-scene smoke.
 Technical evidence is recorded in
 [Living Expedition 05 Web Verification](LIVING_EXPEDITION_05_WEB_VERIFICATION.md).
 The owner verdict remains pending.
