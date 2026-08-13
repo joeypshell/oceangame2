@@ -1781,6 +1781,35 @@
       "availability": "all_supported_seeds",
       "terrain_changes": [],
       "intent": "One Silt Hound rescue and one optional authored excavation payoff in existing lower-loop topology."
+    },
+    "living_expedition_06": {
+      "source": "tools/production_level_01_living_expedition_06.py",
+      "journey_ids": [
+        "signal_reef_nursery_journey_01"
+      ],
+      "passive_wildlife_ids": [
+        "signal_reef_filter_skate_school_01"
+      ],
+      "nursery_ids": [
+        "signal_reef_filter_skate_nursery_01"
+      ],
+      "ecological_pressure_ids": [
+        "signal_reef_jellyfish_pressure_01"
+      ],
+      "companion_context_ids": [
+        "spark_ray_anchor_nursery_context_01",
+        "spark_ray_guardian_nursery_context_01"
+      ],
+      "camera_test_ids": [
+        "living_expedition_06_approach_review_01",
+        "living_expedition_06_anchor_review_01",
+        "living_expedition_06_guardian_review_01",
+        "living_expedition_06_pending_return_review_01",
+        "living_expedition_06_restored_review_01"
+      ],
+      "availability": "all_supported_seeds",
+      "terrain_changes": [],
+      "intent": "One guaranteed optional Signal Reef nursery journey using existing topology, access gates, Kite adaptations, and canonical boat return."
     }
   },
   "units": {
@@ -6967,6 +6996,41 @@
       "center_y": 78,
       "zoom": 0.62,
       "intent": "Closed mound, deliberate excavation, and exposed pickup review."
+    },
+    {
+      "id": "living_expedition_06_approach_review_01",
+      "center_x": 132,
+      "center_y": 104,
+      "zoom": 0.45,
+      "intent": "School, pressure, and nursery approach relationship."
+    },
+    {
+      "id": "living_expedition_06_anchor_review_01",
+      "center_x": 146,
+      "center_y": 82,
+      "zoom": 0.52,
+      "intent": "Anchor Fins action beside the existing east current gate."
+    },
+    {
+      "id": "living_expedition_06_guardian_review_01",
+      "center_x": 130,
+      "center_y": 104,
+      "zoom": 0.54,
+      "intent": "Guardian Pulse interruption on the western approach."
+    },
+    {
+      "id": "living_expedition_06_pending_return_review_01",
+      "center_x": 140,
+      "center_y": 111,
+      "zoom": 0.58,
+      "intent": "Pending nursery state before canonical boat return."
+    },
+    {
+      "id": "living_expedition_06_restored_review_01",
+      "center_x": 140,
+      "center_y": 111,
+      "zoom": 0.58,
+      "intent": "Visible restored nursery state on the next day."
     }
   ],
   "review_questions": [
@@ -7008,7 +7072,10 @@
     "Can the player still evade, attempt the cache, and understand that harvest requires defeat?",
     "Does Marl's cable rescue read as physical aid rather than collection?",
     "Is the buried mound visible before excavation and clearly optional afterward?",
-    "Does returning with Marl make this lower-loop revisit feel intentional?"
+    "Does returning with Marl make this lower-loop revisit feel intentional?",
+    "Does the passive filter-skate school read as wildlife rather than loot?",
+    "Do both Kite adaptations offer distinct optional responses in existing water?",
+    "Does the next-day nursery change make Signal Reef worth revisiting?"
   ],
   "wreck_network_investigations": [
     {
@@ -7168,6 +7235,44 @@
       "required_access_ids": [],
       "availability": "all_supported_seeds",
       "intent": "Return with active Marl to deliberately excavate the visible lower-loop mound."
+    },
+    {
+      "id": "spark_ray_anchor_nursery_context_01",
+      "context_kind": "regional_journey_action",
+      "species_id": "spark_ray",
+      "individual_id": "spark_ray_juvenile_01",
+      "journey_id": "signal_reef_nursery_journey_01",
+      "school_id": "signal_reef_filter_skate_school_01",
+      "nursery_id": "signal_reef_filter_skate_nursery_01",
+      "required_access_ids": [
+        "propulsion_fins",
+        "dive_light_1"
+      ],
+      "availability": "all_supported_seeds",
+      "branch_kind": "current_lee",
+      "action_id": "anchor_brace",
+      "required_adaptation_id": "anchor_fins",
+      "target_id": "lower_right_east_current_gate",
+      "intent": "Anchor-adapted Kite braces beside the existing east current gate to form a temporary lee for the school."
+    },
+    {
+      "id": "spark_ray_guardian_nursery_context_01",
+      "context_kind": "regional_journey_action",
+      "species_id": "spark_ray",
+      "individual_id": "spark_ray_juvenile_01",
+      "journey_id": "signal_reef_nursery_journey_01",
+      "school_id": "signal_reef_filter_skate_school_01",
+      "nursery_id": "signal_reef_filter_skate_nursery_01",
+      "required_access_ids": [
+        "propulsion_fins",
+        "dive_light_1"
+      ],
+      "availability": "all_supported_seeds",
+      "branch_kind": "pressure_interrupt",
+      "action_id": "guardian_pulse_action",
+      "required_adaptation_id": "guardian_pulse",
+      "target_id": "signal_reef_jellyfish_pressure_01",
+      "intent": "Guardian-adapted Kite deliberately interrupts the western jellyfish displacement cycle without damaging wildlife."
     }
   ],
   "creature_memory_opportunities": [
@@ -7323,6 +7428,124 @@
       ],
       "availability": "all_supported_seeds",
       "intent": "Guardian-Pulse Kite may create a zero-damage opening while Shock Prod remains defeat authority."
+    }
+  ],
+  "regional_creature_journeys": [
+    {
+      "id": "signal_reef_nursery_journey_01",
+      "journey_kind": "regional_habitat_restoration",
+      "species_id": "spark_ray",
+      "individual_id": "spark_ray_juvenile_01",
+      "school_id": "signal_reef_filter_skate_school_01",
+      "nursery_id": "signal_reef_filter_skate_nursery_01",
+      "pressure_id": "signal_reef_jellyfish_pressure_01",
+      "adaptation_context_ids": [
+        "spark_ray_anchor_nursery_context_01",
+        "spark_ray_guardian_nursery_context_01"
+      ],
+      "route_id": "east_current_signal_reef_route",
+      "gate_ids": [
+        "lower_right_west_current_gate",
+        "lower_right_east_current_gate"
+      ],
+      "landmark_zone_id": "lower_right_signal_reef_landmark",
+      "dark_zone_id": "signal_reef_deep_harmonic_dark_zone",
+      "commit_map_id": "production_level_01",
+      "commit_entry_id": "surface_boat_entry",
+      "commitment_event_id": "signal_reef_nursery_commit_01",
+      "review_camera_ids": [
+        "living_expedition_06_approach_review_01",
+        "living_expedition_06_anchor_review_01",
+        "living_expedition_06_guardian_review_01",
+        "living_expedition_06_pending_return_review_01",
+        "living_expedition_06_restored_review_01"
+      ],
+      "required_access_ids": [
+        "propulsion_fins",
+        "dive_light_1"
+      ],
+      "optional": true,
+      "reward_ids": [],
+      "progression_effect": "none",
+      "availability": "all_supported_seeds",
+      "intent": "Return to Signal Reef with adapted Kite, shelter one guaranteed filter-skate school, and commit the shared history at the boat."
+    }
+  ],
+  "passive_wildlife_groups": [
+    {
+      "id": "signal_reef_filter_skate_school_01",
+      "wildlife_kind": "juvenile_filter_skate_school",
+      "x": 134,
+      "y": 104,
+      "path": [
+        {
+          "x": 134,
+          "y": 104
+        },
+        {
+          "x": 136,
+          "y": 106
+        },
+        {
+          "x": 138,
+          "y": 108
+        },
+        {
+          "x": 140,
+          "y": 111
+        }
+      ],
+      "nursery_id": "signal_reef_filter_skate_nursery_01",
+      "pressure_id": "signal_reef_jellyfish_pressure_01",
+      "bondable": false,
+      "harvestable": false,
+      "collectible": false,
+      "reward_ids": [],
+      "availability": "all_supported_seeds",
+      "intent": "A passive, uncollectible school crosses the existing western approach and settles in the Signal Reef nursery pocket."
+    }
+  ],
+  "creature_nurseries": [
+    {
+      "id": "signal_reef_filter_skate_nursery_01",
+      "nursery_kind": "filter_skate_nursery",
+      "x": 139,
+      "y": 110,
+      "w": 3,
+      "h": 3,
+      "school_id": "signal_reef_filter_skate_school_01",
+      "landmark_zone_id": "lower_right_signal_reef_landmark",
+      "availability": "all_supported_seeds",
+      "intent": "Existing open water inside the Signal Reef landmark becomes the school's visible next-day nursery destination."
+    }
+  ],
+  "ecological_pressures": [
+    {
+      "id": "signal_reef_jellyfish_pressure_01",
+      "pressure_kind": "jellyfish_displacement_cycle",
+      "x": 126,
+      "y": 102,
+      "w": 6,
+      "h": 5,
+      "path": [
+        {
+          "x": 127,
+          "y": 104
+        },
+        {
+          "x": 130,
+          "y": 104
+        },
+        {
+          "x": 131,
+          "y": 105
+        }
+      ],
+      "school_id": "signal_reef_filter_skate_school_01",
+      "damaging": false,
+      "reward_ids": [],
+      "availability": "all_supported_seeds",
+      "intent": "A non-damaging jellyfish drift displaces the school on Signal Reef's western approach without blocking either current gate."
     }
   ]
 }

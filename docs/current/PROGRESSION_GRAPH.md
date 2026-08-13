@@ -10,7 +10,7 @@ Status: **PASS**
 | View | Sources | Status | Graph |
 | --- | --- | --- | --- |
 | `slice_provenance` (Production slice provenance) | `maps/production_slice_01.greybox.json`, `maps/production_slice_02.greybox.json`, `maps/production_slice_03.greybox.json`, `maps/production_slice_04.greybox.json` | **PASS** | 95 nodes / 301 edges |
-| `promoted_full_level` (Promoted production level) | `maps/production_level_01.greybox.json`, `maps/transfer_hub_interior_01.greybox.json` | **PASS** | 155 nodes / 606 edges |
+| `promoted_full_level` (Promoted production level) | `maps/production_level_01.greybox.json`, `maps/transfer_hub_interior_01.greybox.json` | **PASS** | 163 nodes / 653 edges |
 
 ## Detailed Canonical View
 
@@ -22,6 +22,8 @@ The table and dependency diagram below describe the promoted full-level view.
 | ---: | --- | --- | --- | --- | --- | --- |
 | 0 | `production_level_01` | production_level_01 | none | source-authored | state/payoff | stage 0 |
 | 1 | `Fins blueprint chest` | production_level_01 / lower_loop_reward | none | production_level_01 | Propulsion Fins Blueprint | stage 1 |
+| 1 | `[proposed] Signal Reef Filter Skate Nursery 01` | production_level_01 | none | production_level_01 | state/payoff | stage 1 |
+| 1 | `[proposed] Signal Reef Jellyfish Pressure 01` | production_level_01 | none | production_level_01 | state/payoff | stage 1 |
 | 1 | `Surface Boat Entry` | production_level_01 | none | production_level_01 | state/payoff | stage 1 |
 | 1 | `Deep Cache Territorial Eel` | production_level_01 / deep_cache_pressure | none | production_level_01 | deep cache | stage 1 |
 | 1 | `Abyssal Basin Landmark` | production_level_01 | none | production_level_01 | state/payoff | stage 1 |
@@ -31,6 +33,7 @@ The table and dependency diagram below describe the promoted full-level view.
 | 1 | `Southeast Wreck Archive Landmark` | production_level_01 | none | production_level_01 | state/payoff | stage 1 |
 | 1 | `Upper Left Wreck Relay Landmark` | production_level_01 | none | production_level_01 | state/payoff | stage 1 |
 | 1 | `Western Chasm Relay Landmark` | production_level_01 | none | production_level_01 | state/payoff | stage 1 |
+| 1 | `[proposed] Signal Reef Filter Skate School 01` | production_level_01 | none | production_level_01 | state/payoff | stage 1 |
 | 1 | `Dark pocket` | production_level_01 / deep_cache_pressure | none | production_level_01 | state/payoff | stage 1 |
 | 1 | `Far West Confined Wreck Oxygen Zone` | production_level_01 / far_west_deeper_wreck_route | none | production_level_01 | state/payoff | stage 1 |
 | 1 | `Deep harmonic dark water` | production_level_01 / east_current_signal_reef_route | none | production_level_01 | state/payoff | stage 1 |
@@ -90,6 +93,7 @@ The table and dependency diagram below describe the promoted full-level view.
 | 16 | `[proposed] Spark Ray Eel Memory 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, Shock Prod, Deep Cache Territorial Eel | production_level_01, [proposed] Spark Ray Juvenile 01, Shock Prod | [proposed] Stood Ground, [proposed] Guardian Pulse | stage 16 |
 | 16 | `[proposed] Southwest Bloom Migration Trace` | production_level_01 | [proposed] Veil Cuttle Juvenile 01, Survey Scanner 1 | production_level_01, [proposed] Veil Cuttle Juvenile 01, Survey Scanner 1 | state/payoff | stage 16 |
 | 16 | `Pressure suit project` | production_level_01 | Signal Reef Deep Harmonic Discovery, Titanium Scrap, Rubber Sheet, Insulating Gel | production_level_01, Signal Reef Deep Harmonic Discovery, Titanium Scrap | Pressure Suit 1 | stage 16 |
+| 16 | `[proposed] Signal Reef Nursery Journey 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, Signal Reef route, Propulsion Fins, Dive Light 1, [proposed] Signal Reef Filter Skate School 01, [proposed] Signal Reef Filter Skate Nursery 01 | production_level_01, [proposed] Spark Ray Juvenile 01, Signal Reef route | [proposed] Commit Signal Reef Nursery At Boat | stage 16 |
 | 16 | `deep cache` | production_level_01 | Defeat Deep Cache Territorial Eel | production_level_01, Defeat Deep Cache Territorial Eel | state/payoff | stage 16 |
 | 17 | `Pressure Suit 1` | global | Pressure suit project | Pressure suit project | Abyssal Basin Pressure Zone, Abyssal Shelf Pressure Seam | stage 17 |
 | 17 | `[proposed] Held The Flow` | global | [proposed] Spark Ray Current Memory 01 | [proposed] Spark Ray Current Memory 01 | state/payoff | stage 17 |
@@ -97,6 +101,7 @@ The table and dependency diagram below describe the promoted full-level view.
 | 17 | `Eel Electrocyte` | global | none | Eel electrocyte | state/payoff | stage 17 |
 | 17 | `[proposed] Silt Hound Excavate Context 01` | production_level_01 | [proposed] Silt Hound Juvenile 01, [proposed] Select Marl For Sortie | production_level_01, [proposed] Silt Hound Juvenile 01, [proposed] Select Marl For Sortie | state/payoff | stage 17 |
 | 17 | `[proposed] Veil Cuttle Bloom Memory 01` | production_level_01 | [proposed] Veil Cuttle Juvenile 01, [proposed] Southwest Bloom Migration Trace | production_level_01, [proposed] Veil Cuttle Juvenile 01, [proposed] Southwest Bloom Migration Trace | [proposed] Followed The Bloom, [proposed] Drift Lens | stage 17 |
+| 17 | `[proposed] Commit Signal Reef Nursery At Boat` | production_level_01 | [proposed] Signal Reef Nursery Journey 01, Surface Boat Entry | [proposed] Signal Reef Nursery Journey 01, Surface Boat Entry | [proposed] Restored Signal Reef Nursery | stage 17 |
 | 18 | `[proposed] Anchor Fins` | global | [proposed] Held The Flow | [proposed] Held The Flow | state/payoff | stage 18 |
 | 18 | `[proposed] Guardian Pulse` | global | [proposed] Stood Ground | [proposed] Stood Ground | state/payoff | stage 18 |
 | 18 | `[proposed] Followed The Bloom` | global | [proposed] Veil Cuttle Bloom Memory 01 | [proposed] Veil Cuttle Bloom Memory 01 | state/payoff | stage 18 |
@@ -105,12 +110,15 @@ The table and dependency diagram below describe the promoted full-level view.
 | 18 | `Shock-prod capacitor project` | production_level_01 | Shock prod project, Lower Right Anomaly Discovery, Conductive Coil, Insulating Gel, Eel Electrocyte | production_level_01, Shock prod project, Lower Right Anomaly Discovery | Shock Prod Capacitor | stage 18 |
 | 18 | `Abyssal basin route` | production_level_01 / deep_harmonic_abyssal_basin_route | Pressure Suit 1 | production_level_01, Pressure Suit 1 | Survey abyssal source | stage 18 |
 | 18 | `Southeast wreck archive route` | production_level_01 / southeast_wreck_archive_route | Pressure Suit 1, Southeast Wreck Navigation Data | production_level_01, Pressure Suit 1, Southeast Wreck Navigation Data | Survey wreck archive | stage 18 |
+| 18 | `[proposed] Restored Signal Reef Nursery` | production_level_01 | [proposed] Commit Signal Reef Nursery At Boat | [proposed] Commit Signal Reef Nursery At Boat | state/payoff | stage 18 |
 | 19 | `Shock Prod Capacitor` | global | Shock-prod capacitor project | Shock-prod capacitor project | state/payoff | stage 19 |
 | 19 | `[proposed] Drift Lens` | global | [proposed] Followed The Bloom | [proposed] Followed The Bloom | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Anchor Independent Review 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Anchor Fins | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Anchor Fins | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Anchor Mounted Review 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Anchor Fins | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Anchor Fins | state/payoff | stage 19 |
+| 19 | `[proposed] Spark Ray Anchor Nursery Context 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Signal Reef Nursery Journey 01, Propulsion Fins, Dive Light 1, [proposed] Anchor Fins | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Signal Reef Nursery Journey 01 | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Guardian Independent Review 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Guardian Mounted Review 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | state/payoff | stage 19 |
+| 19 | `[proposed] Spark Ray Guardian Nursery Context 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Signal Reef Nursery Journey 01, Propulsion Fins, Dive Light 1, [proposed] Guardian Pulse | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Signal Reef Nursery Journey 01 | state/payoff | stage 19 |
 | 19 | `[proposed] Deep Cache Eel Companion Response` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse, Shock Prod | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Guardian Pulse | state/payoff | stage 19 |
 | 19 | `[proposed] Bank Marl Excavation Material` | production_level_01 | Silt Hound Buried Titanium 01, Surface Boat Entry | Silt Hound Buried Titanium 01, Surface Boat Entry | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Anchor Current 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, Propulsion Fins, Signal Reef current, [proposed] Anchor Fins | production_level_01, [proposed] Spark Ray Juvenile 01, Propulsion Fins | state/payoff | stage 19 |
@@ -152,6 +160,8 @@ The table and dependency diagram below describe the promoted full-level view.
 - Dark pocket -> Dive Light 1: soft pressure
 - Deep harmonic dark water -> Dive Light 1: soft pressure
 - Far West Confined Wreck Oxygen Zone -> Closed Circuit Rebreather: soft pressure
+- [proposed] Commit Signal Reef Nursery At Boat -> [proposed] Spark Ray Anchor Nursery Context 01: one valid adaptation response
+- [proposed] Commit Signal Reef Nursery At Boat -> [proposed] Spark Ray Guardian Nursery Context 01: one valid adaptation response
 
 ## Dependency View
 

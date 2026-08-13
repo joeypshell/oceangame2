@@ -69,6 +69,7 @@ def base_gates() -> list[Gate]:
         Gate("creatures: progression graph fixtures", python_command("tools/test_progression_graph_creatures.py")),
         Gate("creatures: Living Expedition 03 source", python_command("tools/test_production_level_01_living_expedition_03.py")),
         Gate("creatures: Living Expedition 04 source", python_command("tools/test_production_level_01_living_expedition_04.py")),
+        Gate("creatures: Living Expedition 06 source", python_command("tools/test_production_level_01_living_expedition_06.py")),
         Gate("assets: manifest paths", python_command("tools/check_asset_manifest.py")),
         Gate("maps: current gate validator tests", python_command("tools/test_validate_current_gates.py")),
         Gate("maps: hostile encounter validator tests", python_command("tools/test_validate_hostile_encounters.py")),

@@ -8,6 +8,8 @@ import html
 import json
 from pathlib import Path
 
+from render_living_expedition_06 import render_living_expedition_06
+
 
 COLORS = {
     "water": "#16b9ee",
@@ -412,6 +414,8 @@ def render_svg(map_data: dict) -> str:
             f'stroke="{COLORS["adaptation"]}" stroke-width="6"/>'
         )
         parts.append(text(cx + 54, cy - 50, payoff["id"], 20))
+
+    parts.extend(render_living_expedition_06(map_data, tile_size))
 
     parts.extend(
         [
