@@ -3,7 +3,8 @@ extends RefCounted
 const MATERIAL_SCHEMA_VERSION := 2
 const PROJECT_SCHEMA_VERSION := 3
 const TOOL_TARGET_SCHEMA_VERSION := 4
-const SCHEMA_VERSION := 5
+const COMPANION_SCHEMA_VERSION := 5
+const SCHEMA_VERSION := 6
 
 
 static func apply(payload: Dictionary, ids: Dictionary) -> Dictionary:
@@ -21,7 +22,7 @@ static func _migrate_scanner_purchase_payload(payload: Dictionary, ids: Dictiona
 	if not _has_project_arrays(payload):
 		return false
 	var schema_version := int(payload.get("schema_version", 0))
-	if schema_version not in [PROJECT_SCHEMA_VERSION, TOOL_TARGET_SCHEMA_VERSION, SCHEMA_VERSION]:
+	if schema_version != PROJECT_SCHEMA_VERSION and schema_version != TOOL_TARGET_SCHEMA_VERSION and schema_version != COMPANION_SCHEMA_VERSION and schema_version != SCHEMA_VERSION:
 		return false
 	if not payload.get("unlocked_capabilities", []).has(str(ids["survey_scanner_capability_id"])):
 		return false
@@ -37,7 +38,7 @@ static func _migrate_cutter_blueprint_payload(payload: Dictionary, ids: Dictiona
 	if not _has_project_arrays(payload):
 		return false
 	var schema_version := int(payload.get("schema_version", 0))
-	if schema_version not in [MATERIAL_SCHEMA_VERSION, PROJECT_SCHEMA_VERSION, TOOL_TARGET_SCHEMA_VERSION, SCHEMA_VERSION]:
+	if schema_version != MATERIAL_SCHEMA_VERSION and schema_version != PROJECT_SCHEMA_VERSION and schema_version != TOOL_TARGET_SCHEMA_VERSION and schema_version != COMPANION_SCHEMA_VERSION and schema_version != SCHEMA_VERSION:
 		return false
 	var discoveries: Array = payload.get("completed_discoveries", [])
 	var has_old_anomaly: bool = discoveries.has(str(ids["anomaly_discovery_id"]))

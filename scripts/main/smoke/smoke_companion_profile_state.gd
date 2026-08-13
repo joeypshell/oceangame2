@@ -2,6 +2,7 @@ extends SceneTree
 
 const CompanionProfileState := preload("res://scripts/main/companion_profile_state.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
+const SignalReefJourneyProfileState := preload("res://scripts/main/signal_reef_journey_profile_state.gd")
 
 const PROFILE_PATH := "user://oceangame2_companion_profile_smoke.json"
 const LEGACY_PATH := "user://oceangame2_companion_profile_v4_smoke.json"
@@ -312,6 +313,7 @@ func _outer_payload_with_companion_v1() -> Dictionary:
 			"individual": kite,
 			"active_individual_id": "",
 		},
+		"regional_journey_profile": SignalReefJourneyProfileState.new().payload(),
 	}
 
 
@@ -334,6 +336,7 @@ func _outer_payload_with_companion_v2() -> Dictionary:
 			"individuals": [kite, mica],
 			"active_individual_id": CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID,
 		},
+		"regional_journey_profile": SignalReefJourneyProfileState.new().payload(),
 	}
 
 
