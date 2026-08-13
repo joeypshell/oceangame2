@@ -196,8 +196,8 @@ Before accepting source changes:
 - Do not use mounted speed, size, or collision to bypass a diver capability gate.
 - Do not use a companion ability as an unexplained colored lock.
 - Do not add random required spawns.
-- Keep Kite and Mica as the complete implemented roster until Living Expedition
-  05 adds exactly one source-authored Silt Hound rescue and optional excavation
-  payoff through versioned profile migration. Do not infer a fourth species.
+- Keep Kite, Mica, and Marl as the complete implemented roster after Living
+  Expedition 05's owner GO. Do not infer a fourth species before a later
+  reviewed plan selects one.
 - Do not change terrain merely to make the creature system easier to stage.
 - Keep #52/#53 deferred unless slice-03 presentation is deliberately selected.

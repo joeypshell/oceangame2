@@ -4,7 +4,7 @@ Date: 2026-08-10
 
 Issue: #1350
 
-Status: **FOCUSED EVIDENCE ACCEPTED; BASELINES UNCHANGED; OWNER GATE PENDING**
+Status: **FOCUSED EVIDENCE ACCEPTED; BASELINES UNCHANGED; OWNER GO RECORDED**
 
 ## Decision
 
@@ -66,5 +66,6 @@ python tools/check_file_lengths.py
 git diff --check
 ```
 
-Issue #1351 remains the exact-Web verification and player-experience closeout.
-This decision does not claim owner GO.
+Issue #1351 records the corrected exact-Web verification and owner GO. This
+visual decision remains limited to evidence review and does not accept a
+production baseline change.

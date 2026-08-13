@@ -1,6 +1,6 @@
 # Playtest Checkpoints
 
-Last updated: 2026-08-12
+Last updated: 2026-08-13
 
 ## Purpose
 
@@ -49,7 +49,7 @@ excavation-ready start intersected solid terrain and suppressed Excavate.
 Correction #1362 fixes that boundary and protects it with an actual-scene smoke.
 Technical evidence is recorded in
 [Living Expedition 05 Web Verification](LIVING_EXPEDITION_05_WEB_VERIFICATION.md).
-The owner verdict remains pending.
+The corrected owner retest received GO; the links remain as regression fixtures.
 
 ## Living Expedition 05 Replay
 

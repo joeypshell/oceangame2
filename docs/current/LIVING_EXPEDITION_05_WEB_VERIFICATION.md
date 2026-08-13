@@ -4,7 +4,7 @@ Date: 2026-08-12
 
 Issue: #1351
 
-Status: **CORRECTED TECHNICAL PASS; OWNER VERDICT PENDING**
+Status: **CORRECTED TECHNICAL PASS; OWNER GO RECORDED IN CLOSEOUT**
 
 ## Result
 
@@ -100,4 +100,5 @@ python tools/check_file_lengths.py
 git diff --check
 ```
 
-Issue #1351 and milestone #49 remain open for the corrected owner verdict.
+The corrected owner verdict is GO; final disposition is recorded in
+`LIVING_EXPEDITION_05_CLOSEOUT.md` and issue #1351.

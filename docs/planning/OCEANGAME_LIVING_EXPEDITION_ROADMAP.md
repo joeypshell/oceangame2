@@ -122,15 +122,22 @@ Mica-revealed jellyfish migration, held Scanner identification, exact-once boat
 commitment, deliberate night consolidation, and next-sortie Drift Lens without
 changing topology, hard access, hazard authority, or rewards.
 
+**Living Expedition 04: Companion-Shaped Wildlife Encounter** is technically
+complete and closed on owner HOLD. Guardian-Pulse Kite remains a useful eel
+opening, Mica's non-useful eel prediction is retired, and BOND now pauses the
+whole simulation during command selection.
+
+**Living Expedition 05: Silt Hound Excavation Proof** is implemented and closed
+with owner GO on corrected exact-Web runtime `7792a08`. It proves one third
+individual, schema-v3 migration, compact habitat selection, and one deliberately
+commanded physical excavation that exposes an existing typed material through
+normal cargo and boat-banking owners. Correction #1362 repaired the focused
+checkpoint before the accepted retest.
+
 ### Committed
 
-**Living Expedition 05: Silt Hound Excavation Proof** is the next bounded
-milestone. It will rescue and commit one third individual, migrate the compact
-profile/habitat deliberately, and prove one commanded physical excavation that
-reveals an existing typed material through existing cargo and boat-banking
-owners. It does not authorize generic digging, passive detection, new economy,
-terrain expansion, release/legacy, or a fourth species. The detailed boundary
-is `docs/current/LIVING_EXPEDITION_05_PLAN.md`.
+No next milestone is committed. The next audit must select one bounded proof
+from the directional horizon without automatically adding a fourth species.
 
 ### Directional
 
@@ -146,7 +153,7 @@ Only milestone-level goals are selected beyond the committed proof:
    rewrite.
 
 These directions do not receive detailed issue inventories until a later audit
-selects one bounded proof after Living Expedition 05's owner verdict.
+selects one bounded proof after Living Expedition 05's closeout.
 
 ### Vision
 
@@ -157,21 +164,12 @@ unticketed.
 
 ## Latest Completed Milestone Batch
 
-Living Expedition 04 completed its bounded eel encounter batch and then closed
-on owner HOLD. The retained result is ordinary evade, Guardian-Pulse Kite's
-non-damaging opening, Shock-Prod defeat, and defeat-only harvest. One clarity
-correction did not make Mica's prediction useful, so #1335 retired it and #1336
-corrected BOND to a complete-simulation tactical pause before exact-Web
-closeout. `docs/current/LIVING_EXPEDITION_04_CLOSEOUT.md` records the verdict.
-
-## Next Committed Milestone Batch
-
-Living Expedition 05 uses one dependency-ordered batch: contract, schema and
-progression validation, profile migration and three-row habitat, source-first
-rescue/deposit authoring, Silt Hound follow/presentation, deliberate Excavate
-runtime, integrated journey, deterministic evidence, focused visual decision,
-and exact-Web owner closeout. It stops at the owner's explicit GO, HOLD, or
-bounded correction and does not create the next milestone automatically.
+Living Expedition 05 completed one dependency-ordered batch: contract, schema
+and progression validation, profile migration and three-row habitat,
+source-first rescue/deposit authoring, Silt Hound follow/presentation,
+deliberate Excavate runtime, integrated journey, deterministic evidence,
+focused visual decision, corrected exact-Web checkpoint, and owner GO.
+`docs/current/LIVING_EXPEDITION_05_CLOSEOUT.md` records the verdict.
 
 ## Prior Completed Milestone Batch
 
@@ -233,8 +231,9 @@ Control/combat decision:
 - Keep current-runtime truth separate from target-game plans.
 - Historical Phase 2 docs remain implementation records, not active direction.
 - Use one focused issue batch and close with GO, HOLD, or bounded correction.
-- Living Expeditions 01-03 received GO; keep Kite and Mica as the complete
-  current roster until a later reviewed plan selects another species.
+- Living Expeditions 01-03 and 05 received GO; Living Expedition 04 closed on
+  HOLD. Keep Kite, Mica, and Marl as the complete current roster until a later
+  reviewed plan selects another species.
 - Do not use automation to claim fun, attachment, or replay motivation.
 - Keep #52/#53 deferred unless slice-03 presentation becomes the selected goal.
 - Preserve the 500-line agent-efficiency target without harmful runtime splits.

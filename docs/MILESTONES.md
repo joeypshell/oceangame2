@@ -95,22 +95,21 @@ Living Expedition is the active product phase. It retains real-time daylight sor
 
 **[Living Expedition 04: Companion-Shaped Wildlife Encounter](https://github.com/joeypshell/oceangame2/milestone/48)** is technically complete and closed on owner HOLD. Guardian-Pulse Kite, ordinary evade, Shock-Prod defeat, and explicit harvest remain valid; Mica's non-useful eel prediction is retired, and corrected runtime `bbcc255` makes BOND a whole-simulation tactical pause.
 
-**[Living Expedition 05: Silt Hound Excavation Proof](https://github.com/joeypshell/oceangame2/milestone/49)** is technically complete at corrected exact Web runtime `7792a08`. It adds one third companion whose deliberate `Excavate` command visibly uncovers one source-authored optional typed-material deposit in existing geography. Correction #1362 repaired the focused checkpoint's collision-invalid start and added exact-scene coverage. The owner GO/HOLD verdict remains pending under #1351, so the milestone stays open.
+**[Living Expedition 05: Silt Hound Excavation Proof](https://github.com/joeypshell/oceangame2/milestone/49)** is complete with owner GO at corrected exact Web runtime `7792a08`. It adds one third companion whose deliberate `Excavate` command visibly uncovers one source-authored optional typed-material deposit in existing geography. Correction #1362 repaired the focused checkpoint's collision-invalid start and added exact-scene coverage before the accepted owner retest.
 
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
-- Completed: milestones #45-#48 prove one adapted Spark Ray, a bounded two-individual habitat and active species choice, one Mica ecology journey, and one honestly rejected companion-combat experiment.
-- Owner gate: Living Expedition 05 is technically complete at corrected runtime `7792a08`; #1351 asks whether Marl's excavation creates a distinct, useful partnership.
+- Completed: milestones #45-#49 prove one adapted Spark Ray, a bounded habitat and active species choice, one Mica ecology journey, one honestly rejected companion-combat experiment, and one owner-approved Silt Hound excavation journey.
 - Directional: regional creature journeys and later habitat legacy/release remain milestone-level goals only.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Living Expedition milestones #45-#47 are complete with owner GO. Living Expedition 04 milestone #48 is technically complete and closed on HOLD after its Mica-response retirement and BOND timing correction. Living Expedition 05 milestone #49 is technically complete at corrected exact Web runtime `7792a08` and remains open only for #1351's owner verdict.
+Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Living Expedition milestones #45-#47 and #49 are complete with owner GO. Living Expedition 04 milestone #48 is technically complete and closed on HOLD after its Mica-response retirement and BOND timing correction.
 
-1. [Living Expedition 05: Silt Hound Excavation Proof](https://github.com/joeypshell/oceangame2/milestone/49) - technically complete through #1342-#1350 plus checkpoint correction #1362 at exact-Web runtime `7792a08`; #1351 owner verdict pending.
+1. [Living Expedition 05: Silt Hound Excavation Proof](https://github.com/joeypshell/oceangame2/milestone/49) - complete through #1342-#1351 plus checkpoint correction #1362, owner GO, and exact-Web runtime `7792a08`.
 2. [Living Expedition 04: Companion-Shaped Wildlife Encounter](https://github.com/joeypshell/oceangame2/milestone/48) - technically complete through #1314-#1323 plus corrections #1333/#1335/#1336, exact-Web runtime `bbcc255`, and owner HOLD.
 3. [Living Expedition 03: Field Roles And Ecological Discovery](https://github.com/joeypshell/oceangame2/milestone/47) - complete through #1276-#1285 plus bounded corrections #1301/#1303/#1305/#1307/#1308, exact-Web runtime `0e92dd7`, and owner GO.
 4. [Living Expedition 02: Small Stable And Species Identity](https://github.com/joeypshell/oceangame2/milestone/46) - complete through #1253-#1262 with focused visual evidence, exact-Web runtime `b639dcf`, and owner GO.
