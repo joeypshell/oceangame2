@@ -5,6 +5,7 @@ const ExpansionProfileState := preload("res://scripts/main/expansion_profile_sta
 
 const FRESH_RESCUE_ID := "living_expedition_05_start"
 const EXCAVATE_READY_ID := "living_expedition_05_excavate_ready"
+const EXCAVATE_READY_START_TILE := Vector2i(99, 78)
 const MARL_ID := CompanionProfileState.THIRD_PROOF_INDIVIDUAL_ID
 const MICA_ID := CompanionProfileState.SECOND_PROOF_INDIVIDUAL_ID
 const SUPPORT_MATERIALS := {
@@ -50,7 +51,10 @@ static func decorate_result(checkpoint_id: String, result: Dictionary) -> Dictio
 	value["active_objective_id"] = "silt_hound_rescue" if checkpoint_id == FRESH_RESCUE_ID else "silt_hound_excavation"
 	value["active_objective_label"] = "Silt Hound rescue" if checkpoint_id == FRESH_RESCUE_ID else "Marl excavation"
 	if checkpoint_id == EXCAVATE_READY_ID:
-		value["review_start_tile"] = {"x": 95.0, "y": 80.0}
+		value["review_start_tile"] = {
+			"x": float(EXCAVATE_READY_START_TILE.x),
+			"y": float(EXCAVATE_READY_START_TILE.y),
+		}
 		value["review_target_id"] = "silt_hound_buried_titanium_01"
 	return value
 
