@@ -23,6 +23,11 @@ from living_expedition_05_contract import (
     uses_living_expedition_05,
     validate_living_expedition_05_relationship,
 )
+from living_expedition_06_contract import (
+    uses_living_expedition_06,
+    validate_living_expedition_06_reachability,
+    validate_living_expedition_06_relationship,
+)
 from validate_full_level_traversal import CollisionField, PlayerBody, map_point, rect_cells, solid_cells
 
 ID_PATTERN = re.compile(r"^[a-z][a-z0-9_]*$")
@@ -36,7 +41,7 @@ COLLECTIONS = (
     "companion_hostile_responses",
 )
 CONTEXT_KINDS = {
-    "mounted_route_review", "independent_action_review", "mounted_action_review", SILT_CONTEXT_KIND,
+    "mounted_route_review", "independent_action_review", "mounted_action_review", SILT_CONTEXT_KIND, "regional_journey_action",
 }
 GUARANTEED = "all_supported_seeds"
 SPECIES_ID = "spark_ray"
@@ -141,6 +146,7 @@ def _map_index(map_data: dict[str, Any]) -> dict[str, dict[str, Any]]:
         "regional_journeys",
         "daily_conditions",
         "moving_hazards",
+        "ecological_pressures",
     )
     return {str(item.get("id", "")): item for field in fields for item in _items(map_data, field)}
 
@@ -212,7 +218,7 @@ def validate_living_expedition_schema(
     if catalog is None:
         catalog = load_creature_catalog()
     failures = validate_creature_catalog(catalog)
-    if not any(field in map_data for field in COLLECTIONS) and not uses_living_expedition_05(map_data):
+    if not any(field in map_data for field in COLLECTIONS) and not uses_living_expedition_05(map_data) and not uses_living_expedition_06(map_data):
         return failures
     records, shape_failures = _validate_collection_shapes(map_data)
     failures.extend(shape_failures)
@@ -426,6 +432,7 @@ def validate_living_expedition_schema(
     failures.extend(validate_living_expedition_03_relationship(map_data))
     failures.extend(validate_living_expedition_04_relationship(map_data, catalog))
     failures.extend(validate_living_expedition_05_relationship(map_data, catalog))
+    failures.extend(validate_living_expedition_06_relationship(map_data, catalog))
     return failures
 
 
@@ -441,7 +448,7 @@ def _record_cells(item: dict[str, Any]) -> set[tuple[int, int]]:
 def validate_living_expedition_reachability(
     map_data: dict[str, Any], _solid: set[tuple[int, int]], reachable: set[tuple[int, int]]
 ) -> list[str]:
-    if not any(field in map_data for field in COLLECTIONS) and not uses_living_expedition_05(map_data):
+    if not any(field in map_data for field in COLLECTIONS) and not uses_living_expedition_05(map_data) and not uses_living_expedition_06(map_data):
         return []
     failures: list[str] = []
     map_items = _map_index(map_data)
@@ -475,4 +482,5 @@ def validate_living_expedition_reachability(
         boat_point = (boat.get("entry_x", boat.get("x")), boat.get("entry_y", boat.get("y")))
         if not boat or boat_point not in reachable:
             failures.append("Living Expedition 05 canonical boat return is unreachable.")
+    failures.extend(validate_living_expedition_06_reachability(map_data, reachable))
     return failures

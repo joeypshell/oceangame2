@@ -13,6 +13,10 @@ from living_expedition_05_contract import (
     MATERIAL_ID as SILT_MATERIAL_ID,
     RESCUE_ID as SILT_RESCUE_ID,
 )
+from living_expedition_06_contract import (
+    COMMITMENT_EVENT_ID as REEF_COMMITMENT_ID,
+    JOURNEY_ID as REEF_JOURNEY_ID,
+)
 
 
 COLLECTION_KINDS = {
@@ -23,6 +27,10 @@ COLLECTION_KINDS = {
     "creature_memory_opportunities": "creature_memory",
     "creature_adaptation_payoffs": "creature_payoff",
     "companion_hostile_responses": "companion_hostile_response",
+    "regional_creature_journeys": "regional_creature_journey",
+    "passive_wildlife_groups": "passive_wildlife",
+    "creature_nurseries": "creature_nursery",
+    "ecological_pressures": "ecological_pressure",
 }
 
 
@@ -53,6 +61,14 @@ def _silt_selection_key(map_id: str) -> str:
 
 def _silt_bank_key(map_id: str) -> str:
     return _key("companion_material_bank", map_id, SILT_CANDIDATE_ID)
+
+
+def _reef_commitment_key(map_id: str) -> str:
+    return _key("regional_journey_commitment", map_id, REEF_COMMITMENT_ID)
+
+
+def _reef_restoration_key(map_id: str) -> str:
+    return _key("regional_journey_restoration", map_id, f"{REEF_JOURNEY_ID}_restored")
 
 
 def add_creature_nodes(graph: Any, map_data: dict[str, Any], node_type: Any) -> None:
@@ -108,6 +124,21 @@ def add_creature_nodes(graph: Any, map_data: dict[str, Any], node_type: Any) -> 
                         "material_id": SILT_MATERIAL_ID,
                     },
                 ), f"{SILT_CANDIDATE_ID}_banked")
+            if kind == "regional_creature_journey" and item_id == REEF_JOURNEY_ID:
+                graph.add_node(node_type(
+                    _reef_commitment_key(map_id),
+                    "[proposed] Commit Signal Reef Nursery At Boat",
+                    "regional_journey_commitment",
+                    map_id,
+                    attrs={"implementation_status": "proposed", "journey_id": item_id},
+                ), REEF_COMMITMENT_ID)
+                graph.add_node(node_type(
+                    _reef_restoration_key(map_id),
+                    "[proposed] Restored Signal Reef Nursery",
+                    "regional_journey_restoration",
+                    map_id,
+                    attrs={"implementation_status": "proposed", "journey_id": item_id},
+                ), f"{item_id}_restored")
             if kind == "creature_memory":
                 memory_id = str(item.get("memory_id", ""))
                 graph.add_node(node_type(
@@ -173,6 +204,42 @@ def add_creature_edges(graph: Any, map_data: dict[str, Any]) -> None:
             if kind == "companion_hostile_response":
                 _companion_hostile_response_edges(graph, key, item, map_id)
                 continue
+            if kind == "regional_creature_journey":
+                _requires(graph, key, str(item.get("individual_id", "")), note="active companion")
+                _requires(graph, key, str(item.get("route_id", "")), map_id, "existing regional route")
+                for access_id in _ids(item.get("required_access_ids")):
+                    _requires(graph, key, access_id, note="equipment authority")
+                for source_id in (str(item.get("school_id", "")), str(item.get("nursery_id", ""))):
+                    _requires(graph, key, source_id, map_id, "source-authored habitat")
+                for target_id in [*_ids(item.get("gate_ids")), str(item.get("landmark_zone_id", ""))]:
+                    if target_id:
+                        graph.add_edge(key, graph.resolve(target_id, map_id), "reviews")
+                commitment = _reef_commitment_key(map_id)
+                restoration = _reef_restoration_key(map_id)
+                graph.add_edge(commitment, key, "requires", hard=True, note="field result")
+                _requires(graph, commitment, str(item.get("commit_entry_id", "")), map_id, "canonical boat")
+                for context_id in _ids(item.get("adaptation_context_ids")):
+                    graph.add_edge(commitment, graph.resolve(context_id, map_id), "requires", note="one valid adaptation response")
+                    graph.add_edge(key, graph.resolve(context_id, map_id), "reviews")
+                graph.add_edge(key, commitment, "unlocks")
+                graph.add_edge(restoration, commitment, "requires", hard=True, note="later-day restoration")
+                graph.add_edge(commitment, restoration, "unlocks")
+                continue
+            if kind == "passive_wildlife":
+                for target_id in (str(item.get("nursery_id", "")), str(item.get("pressure_id", ""))):
+                    if target_id:
+                        graph.add_edge(key, graph.resolve(target_id, map_id), "reviews")
+                continue
+            if kind == "creature_nursery":
+                for target_id in (str(item.get("school_id", "")), str(item.get("landmark_zone_id", ""))):
+                    if target_id:
+                        graph.add_edge(key, graph.resolve(target_id, map_id), "reviews")
+                continue
+            if kind == "ecological_pressure":
+                target_id = str(item.get("school_id", ""))
+                if target_id:
+                    graph.add_edge(key, graph.resolve(target_id, map_id), "targets")
+                continue
             individual_id = str(item.get("individual_id", ""))
             species_individuals = rescue_ids_by_species.get(str(item.get("species_id", "")), [])
             if not individual_id and len(species_individuals) == 1:
@@ -186,6 +253,8 @@ def add_creature_edges(graph: Any, map_data: dict[str, Any]) -> None:
                     hard=True,
                     note="active sortie selection",
                 )
+            if kind == "companion_context" and item.get("context_kind") == "regional_journey_action":
+                _requires(graph, key, str(item.get("journey_id", "")), map_id, "regional journey")
             if kind == "ecological_trace":
                 _requires(
                     graph,
