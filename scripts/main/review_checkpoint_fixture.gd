@@ -3,6 +3,7 @@ extends RefCounted
 const CompanionProfileState := preload("res://scripts/main/companion_profile_state.gd")
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const LivingExpedition05Checkpoint := preload("res://scripts/main/review_checkpoint_living_expedition_05.gd")
+const LivingExpedition06Checkpoint := preload("res://scripts/main/review_checkpoint_living_expedition_06.gd")
 
 const EXPANSION_14_START := "expansion_14_start"
 const EXPANSION_16_START := "expansion_16_start"
@@ -14,6 +15,9 @@ const LIVING_EXPEDITION_03_START := "living_expedition_03_start"
 const LIVING_EXPEDITION_04_START := "living_expedition_04_start"
 const LIVING_EXPEDITION_05_START := LivingExpedition05Checkpoint.FRESH_RESCUE_ID
 const LIVING_EXPEDITION_05_EXCAVATE_READY := LivingExpedition05Checkpoint.EXCAVATE_READY_ID
+const LIVING_EXPEDITION_06_ANCHOR_READY := LivingExpedition06Checkpoint.ANCHOR_READY_ID
+const LIVING_EXPEDITION_06_GUARDIAN_READY := LivingExpedition06Checkpoint.GUARDIAN_READY_ID
+const LIVING_EXPEDITION_06_RESTORED_NURSERY := LivingExpedition06Checkpoint.RESTORED_NURSERY_ID
 const EXPANSION_14_MAP_PATH := "res://maps/production_level_01.greybox.json"
 const EXPANSION_16_MAP_PATH := EXPANSION_14_MAP_PATH
 const EXPANSION_17_MAP_PATH := EXPANSION_14_MAP_PATH
@@ -136,7 +140,7 @@ static func is_supported(checkpoint_id: String) -> bool:
 		LIVING_EXPEDITION_04_START,
 		LIVING_EXPEDITION_05_START,
 		LIVING_EXPEDITION_05_EXCAVATE_READY,
-	]
+	] or LivingExpedition06Checkpoint.is_supported(checkpoint_id)
 
 
 static func required_map_path(checkpoint_id: String) -> String:
@@ -150,6 +154,8 @@ static func apply(checkpoint_id: String, profile) -> Dictionary:
 		return _result(false, checkpoint_id, "missing_profile")
 	if not _profile_is_empty(profile):
 		return _result(false, checkpoint_id, "profile_not_empty")
+	if LivingExpedition06Checkpoint.is_supported(checkpoint_id):
+		return LivingExpedition06Checkpoint.apply(checkpoint_id, profile, EXPANSION_14_MAP_PATH)
 
 	var source := _load_project_source(required_map_path(checkpoint_id))
 	if not bool(source.get("ready", false)):

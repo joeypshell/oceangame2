@@ -42,7 +42,9 @@ func update(delta: float) -> void:
 	var rescue_commit: Dictionary = _main._companion_rescue.commit_at_boat()
 	if rescue_commit.has("note") and not str(rescue_commit.get("note", "")).is_empty():
 		_main._last_status_note = str(rescue_commit["note"])
-	var memory_commit: Dictionary = _main._companion_sortie.commit_memories_at_boat()
+	var memory_commit: Dictionary = _main._companion_sortie.commit_memories_at_boat(
+		_main._expedition_day_state.day_number
+	)
 	if memory_commit.has("note") and not str(memory_commit.get("note", "")).is_empty():
 		_main._last_status_note = str(memory_commit["note"])
 

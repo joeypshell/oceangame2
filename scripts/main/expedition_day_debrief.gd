@@ -66,6 +66,14 @@ static func handle_day_key(main) -> Dictionary:
 		}
 
 	var restart_map_path := _restart_map_path(main)
+	if companion_sortie != null:
+		var nursery_day: Dictionary = companion_sortie.advance_signal_reef_journey_day(
+			main._expedition_day_state.day_number + 1
+		)
+		if str(nursery_day.get("reason", "")) == "storage_error":
+			main._last_status_note = "Signal Reef history could not be saved"
+			main._update_status_label()
+			return nursery_day
 	main._expedition_day_state.begin_next_day()
 	if companion_sortie != null:
 		companion_sortie.end_debrief()
@@ -358,7 +366,7 @@ static func _enter_debrief(main, reason: String) -> void:
 		_commit_boat_materials(main)
 	var companion_sortie = _companion_sortie_for(main)
 	if companion_sortie != null:
-		companion_sortie.commit_memories_at_boat()
+		companion_sortie.commit_memories_at_boat(main._expedition_day_state.day_number)
 	main._expedition_day_state.end_day(reason)
 	if companion_sortie != null:
 		companion_sortie.begin_debrief()

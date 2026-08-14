@@ -149,7 +149,7 @@ func recover_to_player(reason := "recovery") -> void:
 func reset_control(reason := "reset") -> void:
 	_anchor_fins.reset(reason)
 	_guardian_pulse.reset(reason)
-	if reason in ["retry", "failure", "oxygen_failure", "combat_defeat", "hazard", "boat_habitat", "map_clear"]:
+	if reason in ["retry", "failure", "oxygen_failure", "combat_defeat", "hazard", "map_clear"]:
 		_signal_reef_nursery.reset_uncommitted(reason)
 		_reset_species_transient(reason)
 	if _control != null:
@@ -182,7 +182,7 @@ func observe_hostiles(hostiles, event: Dictionary) -> Dictionary:
 	)
 
 
-func commit_memories_at_boat() -> Dictionary:
+func commit_memories_at_boat(day_number := 0) -> Dictionary:
 	var at_boat: bool = (
 		_world != null
 		and _player != null
@@ -191,11 +191,16 @@ func commit_memories_at_boat() -> Dictionary:
 	)
 	var memory: Dictionary = _memory_runtime.commit_at_boat(at_boat)
 	var ecology: Dictionary = _ecology_observation.commit_at_boat(at_boat)
-	var result: Dictionary = (ecology if str(ecology.get("reason", "")) != "nothing_pending" else memory).duplicate(true)
+	var nursery: Dictionary = _signal_reef_nursery.commit_at_boat(at_boat, day_number)
+	var result: Dictionary = (nursery if bool(nursery.get("changed", false)) else ecology if str(ecology.get("reason", "")) != "nothing_pending" else memory).duplicate(true)
 	result["companion_memory"] = memory
 	result["ecology"] = ecology
+	result["signal_reef_nursery"] = nursery
 	return result
 
+
+func advance_signal_reef_journey_day(day_number: int) -> Dictionary:
+	return _signal_reef_nursery.advance_day(day_number)
 
 func discard_uncommitted_memories(reason := "failure") -> Dictionary:
 	var memory: Dictionary = _memory_runtime.discard_uncommitted(reason)
@@ -213,8 +218,6 @@ func observe_ecological_identification(trace_id: String) -> Dictionary:
 func begin_debrief() -> void:
 	reset_control("debrief")
 	_adaptation_debrief.begin()
-
-
 func end_debrief() -> void:
 	_adaptation_debrief.end()
 
@@ -258,6 +261,7 @@ func release_to_habitat() -> bool:
 	if _companion == null or not is_instance_valid(_companion):
 		return false
 	reset_control("boat_habitat")
+	_reset_species_transient("boat_habitat")
 	if _control != null:
 		_control.clear_map()
 	_anchor_fins.bind_companion(null)
@@ -283,15 +287,12 @@ func set_adaptation_hooks(action_provider: Callable, action_dispatch: Callable) 
 
 func control_runtime():
 	return _control
-
-
 func adaptation_runtime():
 	return _anchor_fins
 
 
 func guardian_pulse_runtime():
 	return _guardian_pulse
-
 func signal_reef_nursery_runtime():
 	return _signal_reef_nursery
 

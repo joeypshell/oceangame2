@@ -2,6 +2,7 @@ extends RefCounted
 
 const CompanionHostileJourneyGuidance := preload("res://scripts/companion/companion_hostile_journey_guidance.gd")
 const SiltHoundJourneyGuidance := preload("res://scripts/companion/silt_hound_journey_guidance.gd")
+const SignalReefNurseryGuidance := preload("res://scripts/companion/signal_reef_nursery_guidance.gd")
 
 const ACTIVE_PHASE := "active"
 const ANCHOR_FINS := "anchor_fins"
@@ -11,6 +12,7 @@ const VEIL_CUTTLE_TRACE_ID := "southwest_bloom_migration_trace"
 
 var _hostile_guidance := CompanionHostileJourneyGuidance.new()
 var _silt_hound_guidance := SiltHoundJourneyGuidance.new()
+var _signal_reef_guidance := SignalReefNurseryGuidance.new()
 
 
 func objective_text(world, player, profile, sortie_runtime, day_state) -> String:
@@ -18,6 +20,9 @@ func objective_text(world, player, profile, sortie_runtime, day_state) -> String
 		return ""
 	if str(day_state.phase) != ACTIVE_PHASE:
 		return ""
+	var signal_reef: Dictionary = _signal_reef_guidance.evaluate(world, player, profile, sortie_runtime)
+	if bool(signal_reef.get("handled", false)):
+		return str(signal_reef.get("text", ""))
 	var silt_hound: Dictionary = _silt_hound_guidance.evaluate(world, player, profile, sortie_runtime)
 	if bool(silt_hound.get("handled", false)):
 		return str(silt_hound.get("text", ""))
