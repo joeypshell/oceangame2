@@ -205,11 +205,11 @@ func advance_signal_reef_journey_day(day_number: int) -> Dictionary:
 func discard_uncommitted_memories(reason := "failure") -> Dictionary:
 	var memory: Dictionary = _memory_runtime.discard_uncommitted(reason)
 	var ecology: Dictionary = _ecology_observation.discard_uncommitted(reason)
+	_signal_reef_nursery.reset_uncommitted(reason)
 	var result: Dictionary = (ecology if bool(ecology.get("changed", false)) else memory).duplicate(true)
 	result["companion_memory"] = memory
 	result["ecology"] = ecology
 	return result
-
 
 func observe_ecological_identification(trace_id: String) -> Dictionary:
 	return _ecology_observation.record_scanner_identification(trace_id)

@@ -18,6 +18,13 @@ Run the actual-main-scene checkpoint checks headlessly:
 & $godot --headless --path . --script res://scripts/main/smoke/smoke_living_expedition_06_checkpoint_runtime.gd --review-checkpoint=living_expedition_06_restored_nursery
 ```
 
+Run both complete branch journeys:
+
+```powershell
+& $godot --headless --path . --script res://scripts/main/smoke/smoke_living_expedition_06_journey.gd --smoke-living-expedition-06 --review-checkpoint=living_expedition_06_anchor_ready
+& $godot --headless --path . --script res://scripts/main/smoke/smoke_living_expedition_06_journey.gd --smoke-living-expedition-06 --review-checkpoint=living_expedition_06_guardian_ready
+```
+
 These checks prove isolated fixture selection, collision-clear diver and Kite
 starts, four-direction movement, adaptation-owned BOND actions, and restored
 nursery projection. Run the integrated LE06 journey smoke for boat commitment,
