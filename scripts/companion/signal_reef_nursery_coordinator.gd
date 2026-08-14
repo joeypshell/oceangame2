@@ -9,6 +9,10 @@ const GUARDIAN_ACTION_ID := "guardian_pulse_action"
 const ANCHOR_ACTIVE := "anchor_active"
 const GUARDIAN_ACTIVE := "guardian_active"
 const UNRESOLVED := "unresolved"
+const SHELTERED_PENDING_RETURN := "sheltered_pending_return"
+const COMMITTED_WAITING_NEXT_DAY := "committed_waiting_next_day"
+const RESTORED := "restored"
+const COMMIT_ENTRY_ID := "surface_boat_entry"
 const ANCHOR_RANGE_PX := 180.0
 const GUARDIAN_RANGE_PX := 224.0
 
@@ -48,6 +52,7 @@ func bind_map(world, player, profile, anchor_runtime, guardian_runtime, has_upgr
 		ANCHOR_ACTION_ID: int(_anchor_runtime.report().get("success_count", 0)),
 		GUARDIAN_ACTION_ID: int(_guardian_runtime.report().get("success_count", 0)),
 	}
+	_sync_profile_state()
 
 
 func clear_map() -> void:
@@ -75,6 +80,43 @@ func reset_uncommitted(reason := "reset") -> void:
 	_sync_success_counts()
 
 
+func commit_at_boat(at_boat: bool, day_number: int) -> Dictionary:
+	if _profile == null or not _profile.has_method("commit_signal_reef_journey"):
+		return _result(false, "profile_unavailable")
+	if not at_boat:
+		return _result(false, "not_at_boat")
+	var profile_state := str(_profile_report().get("state", UNRESOLVED))
+	if profile_state in [COMMITTED_WAITING_NEXT_DAY, RESTORED]:
+		_sync_profile_state()
+		return _result(false, "already_committed")
+	if _pending_adaptation_id.is_empty() or _nursery_state() != SHELTERED_PENDING_RETURN:
+		return _result(false, "nothing_pending")
+	var result: Dictionary = _profile.commit_signal_reef_journey(
+		_pending_adaptation_id,
+		str(_world.map_id) if _world != null else "",
+		COMMIT_ENTRY_ID,
+		day_number
+	)
+	if bool(result.get("changed", false)) or str(result.get("reason", "")) == "already_committed":
+		_pending_adaptation_id = ""
+		_sync_profile_state()
+	if bool(result.get("changed", false)):
+		result["note"] = "Signal Reef nursery remembered | Return after nightfall"
+		_notify(str(result["note"]))
+	return result
+
+
+func advance_day(day_number: int) -> Dictionary:
+	if _profile == null or not _profile.has_method("advance_signal_reef_journey_day"):
+		return _result(false, "profile_unavailable")
+	var result: Dictionary = _profile.advance_signal_reef_journey_day(day_number)
+	_sync_profile_state()
+	if bool(result.get("changed", false)):
+		result["note"] = "Signal Reef nursery restored | Revisit with Kite"
+		_notify(str(result["note"]))
+	return result
+
+
 func context_for_action(action_id: String) -> Dictionary:
 	var context: Dictionary = _contexts.get(action_id, {})
 	if context.is_empty() or not _matches_active_kite(context):
@@ -97,6 +139,7 @@ func advance(_delta := 0.0) -> Dictionary:
 
 func report() -> Dictionary:
 	var nursery := _nursery_report()
+	var profile_journey := _profile_report()
 	return {
 		"configured": not _contexts.is_empty() and bool(nursery.get("configured", false)),
 		"journey_id": JOURNEY_ID,
@@ -105,6 +148,9 @@ func report() -> Dictionary:
 		"pending": not _pending_adaptation_id.is_empty(),
 		"pending_adaptation_id": _pending_adaptation_id,
 		"last_result": _last_result,
+		"profile_state": str(profile_journey.get("state", UNRESOLVED)),
+		"committed_day_number": int(profile_journey.get("committed_day_number", 0)),
+		"restoration_day_number": int(profile_journey.get("restoration_day_number", 0)),
 		"noncompletion_reason": _noncompletion_reason(),
 		"active_context_id": str((_contexts.get(_action_for_adaptation(_pending_adaptation_id), {}) as Dictionary).get("id", "")),
 	}
@@ -226,6 +272,28 @@ func _nursery_report() -> Dictionary:
 
 func _nursery_state() -> String:
 	return str(_nursery_report().get("state", "unavailable"))
+
+
+func _profile_report() -> Dictionary:
+	if _profile == null or not _profile.has_method("signal_reef_journey_report"):
+		return {"state": UNRESOLVED}
+	return _profile.signal_reef_journey_report()
+
+
+func _sync_profile_state() -> void:
+	if _world == null or not _world.has_method("set_signal_reef_nursery_state"):
+		return
+	var state := str(_profile_report().get("state", UNRESOLVED))
+	if state in [COMMITTED_WAITING_NEXT_DAY, RESTORED]:
+		_world.set_signal_reef_nursery_state(state)
+		_last_result = "profile_%s" % state
+
+
+func _result(changed: bool, reason: String) -> Dictionary:
+	var value := report()
+	value["changed"] = changed
+	value["reason"] = reason
+	return value
 
 
 func _sync_success_counts() -> void:

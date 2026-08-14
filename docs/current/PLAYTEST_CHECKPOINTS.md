@@ -17,6 +17,9 @@ the routine end-to-end regression layer.
 
 | ID | Starts with | Deliberately incomplete |
 | --- | --- | --- |
+| `living_expedition_06_anchor_ready` | Day 4 at Signal Reef with adapted Kite, Propulsion Fins, and Dive Light; empty cargo | Anchor Fins shelter action, canonical-boat commitment, night transition, and restored-nursery revisit |
+| `living_expedition_06_guardian_ready` | Day 4 at the displaced filter-skate school with Guardian Pulse Kite, required access, and empty cargo | Guardian Pulse shelter action, canonical-boat commitment, night transition, and restored-nursery revisit |
+| `living_expedition_06_restored_nursery` | Day 5 beside the restored Signal Reef nursery with Anchor Fins Kite and committed shared history | Visual confirmation that seven filter skates occupy the nursery and no field action remains |
 | `living_expedition_05_start` | Day 4 at the canonical boat; Kite and Mica committed; prior required progression available; empty cargo | Marl's Cutter rescue, boat commitment, three-partner selection, and Silt Hound sortie |
 | `living_expedition_05_excavate_ready` | Day 4 beside the closed lower-loop mound; Kite, Mica, and Marl committed; Marl active; empty cargo | Deliberate BOND Excavate, physical reveal, typed-material pickup, and optional return |
 | `living_expedition_04_start` | Day 3 at the canonical boat; Kite and Mica committed and adapted; Mica active; Shock Prod and prior required progression available; empty cargo | Select Kite for the Guardian-Pulse eel opening, compare ordinary evade and defeat-only harvest, and verify Mica has no eel response |
@@ -27,6 +30,9 @@ the routine end-to-end regression layer.
 Local:
 
 ```powershell
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=living_expedition_06_anchor_ready
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=living_expedition_06_guardian_ready
+& 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=living_expedition_06_restored_nursery
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=living_expedition_05_start
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=living_expedition_05_excavate_ready
 ```
@@ -50,6 +56,25 @@ Correction #1362 fixes that boundary and protects it with an actual-scene smoke.
 Technical evidence is recorded in
 [Living Expedition 05 Web Verification](LIVING_EXPEDITION_05_WEB_VERIFICATION.md).
 The corrected owner retest received GO; the links remain as regression fixtures.
+
+Living Expedition 06 public review URLs are intentionally deferred until its
+exact deployed SHA is verified. Use the local commands above meanwhile.
+
+## Living Expedition 06 Replay
+
+1. Open either branch-ready checkpoint and let the moving filter-skate school
+   and local reef pressure establish the problem before using the BOND action.
+2. Anchor branch: press `B`, then choose Brace Flow. Guardian branch: press `B`,
+   then choose Guardian Pulse. Confirm the school becomes sheltered without a
+   reward or cargo mutation.
+3. Return with Kite to the canonical surface boat. Confirm the shared event is
+   committed once, then press `N` at the boat to begin the next day.
+4. Revisit Signal Reef, or open `living_expedition_06_restored_nursery`, and
+   confirm seven filter skates occupy the nursery with no repeat field action.
+
+The three checkpoints are isolated review accelerators. The deterministic
+journey smoke remains responsible for the complete persistence and failure
+matrix.
 
 ## Living Expedition 05 Replay
 
