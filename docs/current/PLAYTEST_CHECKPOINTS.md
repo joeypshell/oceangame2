@@ -41,7 +41,7 @@ The checkpoint forces `production_level_01` and identifies itself in the
 review overlay. The ordinary `?review=<sha>` URL remains a completely empty,
 isolated profile.
 
-Exact public Web closeout build:
+Prior accepted Living Expedition 05 build:
 
 ```text
 https://joeypshell.github.io/oceangame2/?review=7792a087c4f685b104846430e9aecb90e2c2bd71&checkpoint=living_expedition_05_start
@@ -57,8 +57,19 @@ Technical evidence is recorded in
 [Living Expedition 05 Web Verification](LIVING_EXPEDITION_05_WEB_VERIFICATION.md).
 The corrected owner retest received GO; the links remain as regression fixtures.
 
-Living Expedition 06 public review URLs are intentionally deferred until its
-exact deployed SHA is verified. Use the local commands above meanwhile.
+Current Living Expedition 06 owner-review build:
+
+```text
+https://joeypshell.github.io/oceangame2/?review=16300a9ca4cbe93b5e4ab74ffa6707cf049646a0&checkpoint=living_expedition_06_anchor_ready
+https://joeypshell.github.io/oceangame2/?review=16300a9ca4cbe93b5e4ab74ffa6707cf049646a0&checkpoint=living_expedition_06_guardian_ready
+https://joeypshell.github.io/oceangame2/?review=16300a9ca4cbe93b5e4ab74ffa6707cf049646a0&checkpoint=living_expedition_06_restored_nursery
+```
+
+Pages, merge CI, exact-SHA metadata, desktop/wide framing, touch-mobile
+controls, and all three named checkpoint initializations passed at
+`16300a9ca4cbe93b5e4ab74ffa6707cf049646a0`. Technical evidence is recorded in
+[Living Expedition 06 Web Verification](LIVING_EXPEDITION_06_WEB_VERIFICATION.md).
+These links are ready for the #1375 owner verdict; they do not imply GO.
 
 ## Living Expedition 06 Replay
 
