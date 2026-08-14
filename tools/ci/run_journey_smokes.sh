@@ -24,6 +24,8 @@ run_godot living-expedition-05-checkpoint-runtime 180 --headless --path . --scri
 run_godot living-expedition-06-anchor-checkpoint 180 --headless --path . --script res://scripts/main/smoke/smoke_living_expedition_06_checkpoint_runtime.gd --review-checkpoint=living_expedition_06_anchor_ready
 run_godot living-expedition-06-guardian-checkpoint 180 --headless --path . --script res://scripts/main/smoke/smoke_living_expedition_06_checkpoint_runtime.gd --review-checkpoint=living_expedition_06_guardian_ready
 run_godot living-expedition-06-restored-checkpoint 180 --headless --path . --script res://scripts/main/smoke/smoke_living_expedition_06_checkpoint_runtime.gd --review-checkpoint=living_expedition_06_restored_nursery
+run_godot living-expedition-06-anchor-journey 240 --headless --path . --script res://scripts/main/smoke/smoke_living_expedition_06_journey.gd --smoke-living-expedition-06 --review-checkpoint=living_expedition_06_anchor_ready
+run_godot living-expedition-06-guardian-journey 240 --headless --path . --script res://scripts/main/smoke/smoke_living_expedition_06_journey.gd --smoke-living-expedition-06 --review-checkpoint=living_expedition_06_guardian_ready
 run_godot companion-command-tactical-pause 180 --headless --path . --script res://scripts/main/smoke/smoke_companion_command_tactical_pause.gd --review-checkpoint=living_expedition_04_start
 run_godot active-tool-selection 60 --headless --path . --smoke-active-tool-selection
 run_godot cutter-salvage-state 60 --headless --path . --script res://scripts/main/smoke/smoke_cutter_salvage_state.gd

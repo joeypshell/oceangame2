@@ -219,6 +219,42 @@ def godot_gates(godot: str) -> list[Gate]:
             fail_on_godot_error=True,
         ),
         Gate(
+            "smoke: Signal Reef nursery adaptations",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_signal_reef_nursery_adaptations.gd"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
+            "smoke: Living Expedition 06 Anchor checkpoint",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_living_expedition_06_checkpoint_runtime.gd", "--review-checkpoint=living_expedition_06_anchor_ready"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
+            "smoke: Living Expedition 06 Guardian checkpoint",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_living_expedition_06_checkpoint_runtime.gd", "--review-checkpoint=living_expedition_06_guardian_ready"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
+            "smoke: Living Expedition 06 restored checkpoint",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_living_expedition_06_checkpoint_runtime.gd", "--review-checkpoint=living_expedition_06_restored_nursery"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
+            "smoke: Living Expedition 06 Anchor journey",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_living_expedition_06_journey.gd", "--smoke-living-expedition-06", "--review-checkpoint=living_expedition_06_anchor_ready"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
+            "smoke: Living Expedition 06 Guardian journey",
+            [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_living_expedition_06_journey.gd", "--smoke-living-expedition-06", "--review-checkpoint=living_expedition_06_guardian_ready"],
+            godot_backed=True,
+            fail_on_godot_error=True,
+        ),
+        Gate(
             "smoke: companion ecology observation",
             [godot, "--headless", "--path", ".", "--script", "res://scripts/main/smoke/smoke_companion_ecology_observation.gd"],
             godot_backed=True,
