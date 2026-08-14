@@ -25,6 +25,22 @@ Run both complete branch journeys:
 & $godot --headless --path . --script res://scripts/main/smoke/smoke_living_expedition_06_journey.gd --smoke-living-expedition-06 --review-checkpoint=living_expedition_06_guardian_ready
 ```
 
+Generate the focused desktop and landscape-mobile review set in this order:
+
+```powershell
+& $godot --path . --script res://scripts/main/captures/living_expedition_06_capture_runner.gd --review-checkpoint=living_expedition_06_anchor_ready
+& $godot --path . --script res://scripts/main/captures/living_expedition_06_capture_runner.gd --review-checkpoint=living_expedition_06_guardian_ready
+& $godot --path . --script res://scripts/main/captures/living_expedition_06_capture_runner.gd --review-checkpoint=living_expedition_06_restored_nursery
+python tools/check_living_expedition_06_captures.py
+```
+
+The first command clears only the ignored LE06 evidence directory. Together
+the commands write approach, Anchor action, Guardian action, immediate
+sheltering, pending return, and restored-next-day frames under
+`visual_captures/living_expedition_06/`. They do not accept or replace a
+production baseline. Do not use `--headless` for these screenshot commands on
+the current local setup.
+
 These checks prove isolated fixture selection, collision-clear diver and Kite
 starts, four-direction movement, adaptation-owned BOND actions, and restored
 nursery projection. Run the integrated LE06 journey smoke for boat commitment,
