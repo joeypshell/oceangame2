@@ -7,6 +7,7 @@ const CompanionGuardianPulseRuntime := preload("res://scripts/companion/companio
 const CompanionHabitatSelection := preload("res://scripts/companion/companion_habitat_selection.gd")
 const CompanionMemoryRuntime := preload("res://scripts/companion/companion_memory_runtime.gd")
 const CompanionSpeciesRuntimeFactory := preload("res://scripts/companion/companion_species_runtime_factory.gd")
+const SignalReefNurseryCoordinator := preload("res://scripts/companion/signal_reef_nursery_coordinator.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
 const SHARED_EVENT_DISTANCE_PX := 240.0
 
@@ -31,6 +32,7 @@ var _habitat
 var _memory_runtime := CompanionMemoryRuntime.new()
 var _ecology_observation := CompanionEcologyObservationState.new()
 var _adaptation_debrief := CompanionAdaptationDebrief.new()
+var _signal_reef_nursery := SignalReefNurseryCoordinator.new()
 
 
 func _ready() -> void:
@@ -38,6 +40,7 @@ func _ready() -> void:
 	_ensure_control(CompanionSpeciesRuntimeFactory.SPARK_RAY)
 	_habitat = CompanionHabitatSelection.new()
 	add_child(_habitat)
+	add_child(_signal_reef_nursery)
 
 
 func bind_interface(active_tool_hud, status_sink: Callable, cancel_diver_tool: Callable, control_allowed: Callable) -> void:
@@ -49,6 +52,7 @@ func bind_interface(active_tool_hud, status_sink: Callable, cancel_diver_tool: C
 	_bind_control_interface()
 	_anchor_fins.bind_status_sink(status_sink)
 	_guardian_pulse.bind_status_sink(status_sink)
+	_signal_reef_nursery.bind_status_sink(status_sink)
 	_habitat.bind_interface(status_sink, control_allowed)
 
 
@@ -81,6 +85,7 @@ func bind_map(
 	else:
 		_anchor_fins.clear_map()
 		_guardian_pulse.clear_map()
+	_signal_reef_nursery.bind_map(world, player, profile, _anchor_fins, _guardian_pulse, has_upgrade)
 	_adaptation_debrief.bind_profile(profile)
 	_adaptation_debrief.end()
 	return sync_spawn() if sortie_active else {"spawned": false, "reason": "sortie_not_launched"}
@@ -115,6 +120,7 @@ func clear_map() -> void:
 	_reset_species_transient("map_clear")
 	_anchor_fins.clear_map()
 	_guardian_pulse.clear_map()
+	_signal_reef_nursery.clear_map()
 	_ecology_observation.clear_map()
 	if _control != null:
 		_control.clear_map()
@@ -132,6 +138,7 @@ func clear_map() -> void:
 func recover_to_player(reason := "recovery") -> void:
 	_anchor_fins.reset("recovery")
 	_guardian_pulse.reset("recovery")
+	_signal_reef_nursery.reset_uncommitted(reason)
 	_reset_species_transient(reason)
 	if _control != null:
 		_control.reset_control(reason)
@@ -143,6 +150,7 @@ func reset_control(reason := "reset") -> void:
 	_anchor_fins.reset(reason)
 	_guardian_pulse.reset(reason)
 	if reason in ["retry", "failure", "oxygen_failure", "combat_defeat", "hazard", "boat_habitat", "map_clear"]:
+		_signal_reef_nursery.reset_uncommitted(reason)
 		_reset_species_transient(reason)
 	if _control != null:
 		_control.reset_control(reason)
@@ -284,6 +292,8 @@ func adaptation_runtime():
 func guardian_pulse_runtime():
 	return _guardian_pulse
 
+func signal_reef_nursery_runtime():
+	return _signal_reef_nursery
 
 func set_external_control_active(active: bool) -> bool:
 	if _companion == null or not is_instance_valid(_companion) or not _companion.has_method("set_external_control_active"):
@@ -311,6 +321,7 @@ func report() -> Dictionary:
 			"memory": memory_report(),
 			"adaptation": _selected_adaptation_report(),
 			"adaptations": _adaptation_reports(),
+			"signal_reef_nursery": _signal_reef_nursery.report(),
 			"habitat": _habitat.report() if _habitat != null else {},
 		}
 	var value: Dictionary = _companion.report()
@@ -320,6 +331,7 @@ func report() -> Dictionary:
 	value["memory"] = memory_report()
 	value["adaptation"] = _selected_adaptation_report()
 	value["adaptations"] = _adaptation_reports()
+	value["signal_reef_nursery"] = _signal_reef_nursery.report()
 	value["habitat"] = _habitat.report() if _habitat != null else {}
 	return value
 

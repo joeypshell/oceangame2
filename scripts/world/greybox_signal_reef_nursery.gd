@@ -216,7 +216,8 @@ func _pressure_center() -> Vector2:
 	if _pressure_path.is_empty():
 		return Vector2(float(_pressure.get("x", 0)) + 0.5, float(_pressure.get("y", 0)) + 0.5) * _tile_size
 	var progress := (sin(_elapsed * 0.55) + 1.0) * 0.5
-	return _path_lerp(_pressure_path, progress)
+	var center := _path_lerp(_pressure_path, progress)
+	return center + Vector2(-120.0, -36.0) * _shelter_progress if _state == GUARDIAN_ACTIVE else center
 
 
 func _path_lerp(path: Array[Vector2], progress: float) -> Vector2:

@@ -16,6 +16,7 @@ run_godot expansion-16-integration-state 180 --headless --path . --script res://
 run_godot companion-profile-state 120 --headless --path . --script res://scripts/main/smoke/smoke_companion_profile_state.gd
 run_godot signal-reef-journey-profile-state 120 --headless --path . --script res://scripts/main/smoke/smoke_signal_reef_journey_profile_state.gd
 run_godot signal-reef-nursery-presentation 120 --headless --path . --script res://scripts/main/smoke/smoke_signal_reef_nursery_presentation.gd
+run_godot signal-reef-nursery-adaptations 180 --headless --path . --script res://scripts/main/smoke/smoke_signal_reef_nursery_adaptations.gd
 run_godot companion-memory-night 180 --headless --path . --script res://scripts/main/smoke/smoke_companion_memory_night.gd
 run_godot companion-ecology-observation 180 --headless --path . --script res://scripts/main/smoke/smoke_companion_ecology_observation.gd
 run_godot spark-ray-follow 180 --headless --path . --script res://scripts/main/smoke/smoke_spark_ray_follow.gd
