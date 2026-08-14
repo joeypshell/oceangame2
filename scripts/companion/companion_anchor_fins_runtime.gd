@@ -17,6 +17,7 @@ var _profile
 var _companion
 var _has_upgrade := Callable()
 var _has_capability := Callable()
+var _context_provider := Callable()
 var _status_sink := Callable()
 var _active := false
 var _role := ""
@@ -25,6 +26,7 @@ var _cooldown_seconds := 0.0
 var _direction := Vector2.UP
 var _player_anchor := Vector2.ZERO
 var _companion_anchor := Vector2.ZERO
+var _active_payoff := {}
 var _progress_bucket := -1
 var _completed_this_sortie := false
 var _success_count := 0
@@ -34,6 +36,10 @@ var _last_denial := ""
 
 func bind_status_sink(status_sink: Callable) -> void:
 	_status_sink = status_sink
+
+
+func bind_context_provider(context_provider: Callable) -> void:
+	_context_provider = context_provider
 
 
 func bind_map(
@@ -66,6 +72,7 @@ func clear_map() -> void:
 	_companion = null
 	_has_upgrade = Callable()
 	_has_capability = Callable()
+	_context_provider = Callable()
 
 
 func reset(reason := "reset") -> void:
@@ -94,6 +101,7 @@ func dispatch(role: String, action_id: String) -> Dictionary:
 	var availability := _availability(role)
 	if not bool(availability.get("allowed", false)):
 		return _deny(str(availability.get("reason", "action_unavailable")))
+	_active_payoff = _payoff()
 	_active = true
 	_role = role
 	_elapsed_seconds = 0.0
@@ -112,6 +120,8 @@ func dispatch(role: String, action_id: String) -> Dictionary:
 func advance(delta: float, mounted: bool) -> Dictionary:
 	_cooldown_seconds = maxf(0.0, _cooldown_seconds - maxf(0.0, delta))
 	if not _active:
+		if is_zero_approx(_cooldown_seconds):
+			_active_payoff.clear()
 		return report()
 	var cancellation := _active_cancellation_reason(mounted)
 	if not cancellation.is_empty():
@@ -167,7 +177,7 @@ func _availability(role: String) -> Dictionary:
 	if payoff.is_empty():
 		return {"allowed": false, "reason": "payoff_source_missing"}
 	if not _has_required_access(payoff):
-		return {"allowed": false, "reason": "need_propulsion_fins"}
+		return {"allowed": false, "reason": str(payoff.get("access_denial_reason", "need_propulsion_fins"))}
 	if str(_target_gate().get("id", "")) != str(payoff.get("target_id", "")):
 		return {"allowed": false, "reason": "reach_target_current"}
 	if role == "independent" and not _independent_pair_ready():
@@ -208,6 +218,7 @@ func _cancel(reason: String, notify: bool) -> void:
 	_active = false
 	_last_result = "cancelled:%s" % reason
 	_set_companion_brace(false, _progress(), "cancelled")
+	_active_payoff.clear()
 	if notify:
 		_notify("Anchor brace cancelled | hold position in the marked current")
 
@@ -234,6 +245,12 @@ func _action_record(availability: Dictionary) -> Dictionary:
 
 
 func _payoff() -> Dictionary:
+	if not _active_payoff.is_empty():
+		return _active_payoff
+	if _context_provider.is_valid():
+		var regional = _context_provider.call(ACTION_ID)
+		if regional is Dictionary and not (regional as Dictionary).is_empty():
+			return (regional as Dictionary).duplicate(true)
 	if _world == null or not _world.has_method("get_creature_adaptation_payoffs"):
 		return {}
 	for payoff in _world.get_creature_adaptation_payoffs():
@@ -329,6 +346,7 @@ func _reset_transient(reason: String) -> void:
 	_success_count = 0
 	_last_result = reason
 	_last_denial = ""
+	_active_payoff.clear()
 
 
 func _dependencies_valid() -> bool:
@@ -367,6 +385,8 @@ func _denial_label(reason: String) -> String:
 	match reason:
 		"need_propulsion_fins":
 			return "propulsion fins required"
+		"need_dive_light":
+			return "Dive Light required"
 		"reach_target_current":
 			return "reach east current"
 		"companion_not_in_current":
@@ -382,6 +402,8 @@ func _denial_note(reason: String) -> String:
 	match reason:
 		"need_propulsion_fins":
 			return "Anchor Fins cannot replace diver propulsion fins"
+		"need_dive_light":
+			return "Anchor Fins cannot replace the diver's Dive Light"
 		"reach_target_current":
 			return "Anchor brace needs the marked east Signal Reef current"
 		"companion_not_in_current":

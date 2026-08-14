@@ -4,6 +4,7 @@ const INDIVIDUAL_ID := "spark_ray_juvenile_01"
 const ADAPTATION_ID := "guardian_pulse"
 const ACTION_ID := "guardian_pulse_action"
 const PAYOFF_ID := "spark_ray_guardian_eel_01"
+const NURSERY_JOURNEY_ID := "signal_reef_nursery_journey_01"
 const CHARGE_DURATION := 0.45
 const COOLDOWN_DURATION := 2.4
 const PULSE_RANGE_PX := 156.0
@@ -19,6 +20,7 @@ var _hostiles
 var _has_upgrade := Callable()
 var _has_capability := Callable()
 var _aim_provider := Callable()
+var _context_provider := Callable()
 var _status_sink := Callable()
 var _active := false
 var _role := ""
@@ -28,6 +30,7 @@ var _direction := Vector2.RIGHT
 var _origin := Vector2.ZERO
 var _target_id := ""
 var _target_position := Vector2.ZERO
+var _active_payoff := {}
 var _completed_this_sortie := false
 var _success_count := 0
 var _last_result := "idle"
@@ -41,10 +44,11 @@ var _last_opening_seconds := 0.0
 func bind_status_sink(status_sink: Callable) -> void:
 	_status_sink = status_sink
 
-
 func bind_aim_provider(aim_provider: Callable) -> void:
 	_aim_provider = aim_provider
 
+func bind_context_provider(context_provider: Callable) -> void:
+	_context_provider = context_provider
 
 func bind_map(
 	world,
@@ -69,7 +73,6 @@ func bind_companion(companion) -> void:
 	_companion = companion
 	_sync_companion_adaptation()
 
-
 func clear_map() -> void:
 	_reset_transient("map_clear")
 	_world = null
@@ -79,11 +82,11 @@ func clear_map() -> void:
 	_hostiles = null
 	_has_upgrade = Callable()
 	_has_capability = Callable()
+	_context_provider = Callable()
 
 
 func reset(reason := "reset") -> void:
 	_reset_transient(reason)
-
 
 func actions(context: String) -> Array:
 	if not _has_guardian_pulse():
@@ -102,6 +105,7 @@ func dispatch(role: String, action_id: String) -> Dictionary:
 	var availability := _availability(role)
 	if not bool(availability.get("allowed", false)):
 		return _deny(str(availability.get("reason", "action_unavailable")))
+	_active_payoff = _payoff()
 	_active = true
 	_role = role
 	_elapsed_seconds = 0.0
@@ -124,6 +128,8 @@ func advance(delta: float, mounted: bool) -> Dictionary:
 	var safe_delta := maxf(0.0, delta)
 	_cooldown_seconds = maxf(0.0, _cooldown_seconds - safe_delta)
 	if not _active:
+		if is_zero_approx(_cooldown_seconds):
+			_active_payoff.clear()
 		return report()
 	var cancellation := _cancellation_reason(mounted)
 	if not cancellation.is_empty():
@@ -162,7 +168,6 @@ func report() -> Dictionary:
 		"last_opening_seconds": _last_opening_seconds,
 	}
 
-
 func _availability(role: String) -> Dictionary:
 	if role not in ["independent", "mounted"]:
 		return {"allowed": false, "reason": "invalid_role"}
@@ -178,7 +183,7 @@ func _availability(role: String) -> Dictionary:
 	if payoff.is_empty():
 		return {"allowed": false, "reason": "payoff_source_missing"}
 	if not _has_required_access(payoff):
-		return {"allowed": false, "reason": "need_shock_prod"}
+		return {"allowed": false, "reason": str(payoff.get("access_denial_reason", "need_shock_prod"))}
 	var target := _target_state()
 	if target.is_empty():
 		return {"allowed": false, "reason": "target_unavailable"}
@@ -203,6 +208,14 @@ func _discharge() -> void:
 	_active = false
 	_elapsed_seconds = CHARGE_DURATION
 	_cooldown_seconds = COOLDOWN_DURATION
+	if _is_nursery_context():
+		var pressure := _target_state()
+		if pressure.is_empty() or not _target_in_cone(pressure):
+			_finish_miss(_targeting_miss_reason())
+			return
+		_target_position = pressure.get("position", _target_position)
+		_finish_hit({"damage": 0, "recoil_distance": 0.0, "recovery_seconds": 2.4, "recoil_position": _target_position}, true)
+		return
 	var target: Dictionary = _hostiles.directional_target(
 		_origin,
 		_direction,
@@ -218,6 +231,10 @@ func _discharge() -> void:
 	if not bool(interruption.get("changed", false)):
 		_finish_miss(str(interruption.get("reason", "miss")))
 		return
+	_finish_hit(interruption, false)
+
+
+func _finish_hit(interruption: Dictionary, nursery_pressure: bool) -> void:
 	_completed_this_sortie = true
 	_success_count += 1
 	_last_result = "hit"
@@ -227,12 +244,13 @@ func _discharge() -> void:
 	_last_opening_seconds = float(interruption.get("recovery_seconds", 0.0))
 	_target_position = interruption.get("recoil_position", _target_position)
 	_set_companion_pulse(false, 1.0, "opening", _last_opening_seconds)
-	_notify(
-		"Guardian Pulse opening | eel knocked back %.0fpx | %.1fs to act | no damage" % [
+	if nursery_pressure:
+		_notify("Guardian Pulse opening | jellyfish pressure displaced | %.1fs to shelter | no damage" % _last_opening_seconds)
+	else:
+		_notify("Guardian Pulse opening | eel knocked back %.0fpx | %.1fs to act | no damage" % [
 			_last_recoil_distance,
 			_last_opening_seconds,
-		]
-	)
+		])
 
 
 func _finish_miss(reason: String) -> void:
@@ -251,6 +269,7 @@ func _cancel(reason: String, notify: bool) -> void:
 	_active = false
 	_last_result = "cancelled:%s" % reason
 	_set_companion_pulse(false, _progress(), "cancelled")
+	_active_payoff.clear()
 	if notify:
 		_notify("Guardian Pulse cancelled | %s" % _reason_label(reason))
 
@@ -277,6 +296,12 @@ func _action_record(availability: Dictionary) -> Dictionary:
 
 
 func _payoff() -> Dictionary:
+	if not _active_payoff.is_empty():
+		return _active_payoff
+	if _context_provider.is_valid():
+		var regional = _context_provider.call(ACTION_ID)
+		if regional is Dictionary and not (regional as Dictionary).is_empty():
+			return (regional as Dictionary).duplicate(true)
 	if _world == null or not _world.has_method("get_creature_adaptation_payoffs"):
 		return {}
 	for payoff in _world.get_creature_adaptation_payoffs():
@@ -286,12 +311,18 @@ func _payoff() -> Dictionary:
 
 
 func _target_state() -> Dictionary:
+	if _is_nursery_context() and _world != null and _world.has_method("get_signal_reef_nursery_report"):
+		var nursery: Dictionary = _world.get_signal_reef_nursery_report()
+		return {"id": str(_payoff().get("target_id", "")), "phase": "pressure", "position": nursery.get("pressure_center", Vector2.ZERO)}
 	if _hostiles == null or not _hostiles.has_method("state_for"):
 		return {}
 	return _hostiles.state_for(str(_payoff().get("target_id", "")))
 
 
 func _near_authored_target(maximum_distance: float) -> bool:
+	if _is_nursery_context():
+		var position: Vector2 = _target_state().get("position", Vector2.ZERO)
+		return position != Vector2.ZERO and position.distance_to(_player.global_position) <= maximum_distance
 	if _world == null or _player == null or not _world.has_method("get_hostile_encounters"):
 		return false
 	var target_id := str(_payoff().get("target_id", ""))
@@ -318,6 +349,15 @@ func _targeting_miss_reason() -> String:
 		if offset.normalized().dot(_direction) < minimum_dot:
 			return "wrong_direction"
 	return "no_target"
+
+
+func _target_in_cone(state: Dictionary) -> bool:
+	var offset: Vector2 = state.get("position", Vector2.ZERO) - _origin
+	return offset.length() <= PULSE_RANGE_PX and (offset.length() <= 0.01 or offset.normalized().dot(_direction) >= cos(deg_to_rad(PULSE_HALF_ANGLE_DEGREES)))
+
+
+func _is_nursery_context() -> bool:
+	return str(_payoff().get("journey_id", "")) == NURSERY_JOURNEY_ID
 
 
 func _has_required_access(payoff: Dictionary) -> bool:
@@ -404,6 +444,7 @@ func _reset_transient(reason: String) -> void:
 	_last_recoil_distance = 0.0
 	_last_damage = -1
 	_last_opening_seconds = 0.0
+	_active_payoff.clear()
 
 
 func _dependencies_valid() -> bool:
@@ -418,7 +459,6 @@ func _dependencies_valid() -> bool:
 func _progress() -> float:
 	return clampf(_elapsed_seconds / CHARGE_DURATION, 0.0, 1.0)
 
-
 func _direction_label(direction: Vector2) -> String:
 	if absf(direction.x) >= absf(direction.y):
 		return "east" if direction.x >= 0.0 else "west"
@@ -429,12 +469,14 @@ func _reason_label(reason: String) -> String:
 	match reason:
 		"need_shock_prod":
 			return "Shock Prod required"
+		"need_dive_light":
+			return "Dive Light required"
 		"pulse_cooling_down":
 			return "recovering %.1fs" % _cooldown_seconds
 		"out_of_range":
 			return "target out of range"
 		"wrong_direction":
-			return "face the territorial eel"
+			return "face the nursery pressure" if _is_nursery_context() else "face the territorial eel"
 		"not_threatening":
 			return "wait for warning or lunge"
 		"pair_separated":
