@@ -2,7 +2,8 @@
 
 Date: 2026-08-13
 
-Status: Selected planning contract for the next implementation milestone.
+Status: Completed with owner GO on 2026-09-06; retained as the implemented
+contract. See [closeout](LIVING_EXPEDITION_06_CLOSEOUT.md).
 
 Planning issue: #1364
 
@@ -166,7 +167,7 @@ action, immediate sheltering, and the restored nursery. Compare affected views
 before any baseline decision and verify the exact public Web SHA. Existing
 terrain, diver, boat, other companions, and unrelated regions must not drift.
 
-## Planned Issue Batch
+## Completed Issue Batch
 
 1. Lock the LE06 Signal Reef source and state contract.
 2. Add regional creature-journey schema and progression validation.
@@ -179,9 +180,9 @@ terrain, diver, boat, other companions, and unrelated regions must not drift.
 9. Capture and review focused desktop/mobile evidence and verify the exact Web build.
 10. Run the owner experience closeout and record GO, HOLD, or bounded correction.
 
-The implementation issues are created only after this planning gate merges and
-are resolved in dependency order. The final closeout remains open for player
-review after technical evidence is available.
+The dependency-ordered #1366-#1375 batch is complete. Exact Web runtime
+`16300a9` received owner GO through #1375 after technical evidence and the
+three-checkpoint comparison handoff. No next milestone is selected here.
 
 ## Non-Goals
 

@@ -4,8 +4,9 @@ Date: 2026-08-13
 
 Issue: #1366 `Lock Living Expedition 06 Signal Reef source and state contract`
 
-Status: implementation contract for milestone #50. Schema, source, profile,
-runtime, evidence, and owner review land separately through #1367-#1375.
+Status: implemented contract for completed milestone #50. Schema, source,
+profile, runtime, evidence, and owner review completed through #1367-#1375;
+see the [owner-GO closeout](LIVING_EXPEDITION_06_CLOSEOUT.md).
 
 ## Purpose
 

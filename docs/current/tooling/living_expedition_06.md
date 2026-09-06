@@ -49,7 +49,7 @@ failure cleanup, next-day restoration, cargo independence, and reload coverage.
 Do not use a checkpoint as evidence that the full journey is clear or
 motivating.
 
-Exact public owner-review URLs verified at
+Accepted public review URLs retained for replay, verified at
 `16300a9ca4cbe93b5e4ab74ffa6707cf049646a0`:
 
 ```text
@@ -58,6 +58,6 @@ https://joeypshell.github.io/oceangame2/?review=16300a9ca4cbe93b5e4ab74ffa6707cf
 https://joeypshell.github.io/oceangame2/?review=16300a9ca4cbe93b5e4ab74ffa6707cf049646a0&checkpoint=living_expedition_06_restored_nursery
 ```
 
-The exact-SHA Web matrix passed for all three links. See
-`docs/current/LIVING_EXPEDITION_06_WEB_VERIFICATION.md`; owner experience review
-remains #1375.
+The exact-SHA Web matrix passed for all three links. See the
+[Web verification](../LIVING_EXPEDITION_06_WEB_VERIFICATION.md) and separate
+[owner-GO closeout](../LIVING_EXPEDITION_06_CLOSEOUT.md) through #1375.
