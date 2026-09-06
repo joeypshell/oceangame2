@@ -1,13 +1,13 @@
 # Creature System Spec
 
-Date: 2026-08-08
+Date: 2026-09-06
 
-Status: Active planning contract. Living Expeditions 01-04 implement the focused
-Spark Ray and Veil Cuttle runtimes, bounded two-individual profile, compact
-habitat, active next-sortie selection, Mica's ecology adaptation, and one closed
-HOLD experiment that retains Kite as the eel's sole companion response. Living
-Expedition 05 selects one versioned Silt Hound excavation proof; it is not yet
-implemented runtime truth.
+Status: Active source/planning contract. LE01-06 implement Kite, Mica, and Marl,
+the schema-v3 three-individual habitat with one active companion, Kite/Mica
+adaptations, Marl's rescue/excavation, and Kite's remembered Signal Reef nursery.
+LE04's rejected Mica eel prediction stays retired. LE07 selects Marl's first
+memory and Root Claws in `docs/current/LIVING_EXPEDITION_07_PLAN.md`; that growth
+and Ground Pin are planned, not current runtime behavior.
 
 ## Purpose
 
@@ -21,14 +21,14 @@ into tools, quest rewards, or unvalidated state inside `main.gd`.
 
 The provisional roster, species-review template, and regional ecology-cluster
 direction live in `docs/planning/MONSTER_SPECIES_DESIGN_BIBLE.md`. That planning
-document authorizes a third species only through the boundaries and owner gate
-in `docs/current/LIVING_EXPEDITION_05_PLAN.md`.
+document distinguishes the three implemented species from future concepts.
+LE05's owner GO approved Marl's base proof, not a fourth species or every
+directional adaptation.
 
 ## Foundational Rules
 
-- The implemented roster has exactly two rescued individuals today. Living
-  Expedition 05 may migrate that same compact habitat to exactly three named
-  individuals while retaining one active companion slot per launched sortie.
+- The implemented catalog/habitat supports exactly three named individuals.
+  Rescue commitment determines availability; each sortie has one active slot.
 - The current eel proof retains Guardian-Pulse Kite as its sole useful companion
   response. Mica's rejected eel prediction is retired while her moving-ecology
   role remains intact; the proof adds no individual or habitat growth.
@@ -282,6 +282,14 @@ Anchor-Fins Kite receives no invented combat action. The proof adds no new
 memory, adaptation, individual, hostile, resource, or hard-access capability.
 Detailed boundaries live in `docs/current/LIVING_EXPEDITION_04_PLAN.md`.
 
+LE07 plans a separate Marl growth proof: a physical refuge dig under existing
+eel pressure earns `guarded_the_nest`, canonical-boat return secures it, and
+deliberate night consolidation offers Root Claws or deferral. Only that Marl
+branch is offered; Vein Whiskers stays directional. Planned Ground Pin provides
+a short grounded, non-damaging hold rather than Kite's recoil, with hostile
+state/health still owned by the existing controller. See
+[LE07 plan](../current/LIVING_EXPEDITION_07_PLAN.md). None of this is live yet.
+
 ## Validation Surface
 
 Deterministic checks should prove:
@@ -310,8 +318,8 @@ close those questions.
 
 ## Deferred Systems
 
-- third and later species or broad stable management before the selected Living
-  Expedition 04 encounter receives a player verdict
+- a fourth species or broad stable management without a later reviewed plan;
+  LE07 keeps the current three-individual roster and one active companion
 - free-form naming UI
 - feeding, care schedules, bond meters, and personality conflicts
 - eggs, breeding, fusion, genes, and inherited techniques

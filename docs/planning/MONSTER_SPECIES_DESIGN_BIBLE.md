@@ -1,11 +1,12 @@
 # Monster Species Design Bible
 
-Date: 2026-08-06
+Date: 2026-09-06
 
-Status: Directional planning draft. Spark Ray and Veil Cuttle are implemented.
-All other names, ids, abilities, habitats, and branches remain provisional until
-a later reviewed milestone selects one. Living Expedition 04 closed on HOLD and
-does not authorize a third-species implementation.
+Status: Mixed current/directional reference. Spark Ray, Veil Cuttle, and Silt
+Hound are implemented; LE05 and LE06 have owner GO. LE07 selects Marl's Root
+Claws growth proof, not implemented yet. Other species and unselected abilities,
+habitats, and branches remain provisional. LE04's rejected Mica eel prediction
+does not return through this roster plan.
 
 ## Purpose
 
@@ -144,25 +145,30 @@ water before the diver knows where to look.
 listens through the seafloor, and digs with sudden whole-body bursts.
 
 - Silhouette: low wedge head, six walking rays, whisker fans, whip tail.
-- Wild behavior: follows mineral seepage and buried prey, leaving readable dig
-  fans and false starts instead of glowing resource markers.
-- Bond path: the diver protects a nesting route during a silt surge and returns
-  a displaced brood stone rather than capturing the animal.
-- Selected base proof: `excavate`, a deliberate physical dig at one visibly
+- Directional wild behavior: follows mineral seepage and buried prey, leaving
+  readable dig fans and false starts instead of glowing resource markers.
+- Implemented bond path: Cutter frees Marl from a dredge cable beside a brood
+  stone in the lower loop; canonical-boat return commits his rescue.
+- Implemented base proof: `excavate`, a deliberate physical dig at one visibly
   authored buried deposit that exposes a normal typed-material pickup.
 - Future role space: `silt_read` may later interpret nearby authored buried
   candidates or underground movement, but it is not part of the first proof.
-- Memory branch A: Followed the Seep -> **Vein Whiskers**, improving direction
-  and confidence when prospecting guaranteed and daily material candidates.
-- Memory branch B: Guarded the Nest -> **Root Claws**, enabling one aimed pin or
-  trip against a small mobile threat without hidden damage.
-- Resource relationship: titanium-bearing nodules, rubber-producing burrow
-  organisms, shell fragments, and rare tool-grade seams.
+- Deferred branch concept: Followed the Seep -> **Vein Whiskers**. Direction and
+  confidence alone risk another subtle detector; LE07 does not offer it.
+- Selected LE07 plan: Guarded the Nest -> **Root Claws**. Open a burrow refuge
+  under existing eel pressure, secure the memory at the boat, and choose at
+  night. Broader fin hooks enable a visible stationary Ground Pin, giving the
+  diver a short weapon/retreat opening without damage. It requires nearby floor
+  and prevents Marl travelling/digging during the hold, unlike Kite's pulse.
+  Root Claws or deferral is the only offered choice in this planned first growth
+  proof; see [LE07 plan](../current/LIVING_EXPEDITION_07_PLAN.md).
+- Directional resource relationships: titanium-bearing nodules, rubber-producing
+  burrow organisms, shell fragments, and rare tool-grade seams.
 - Limits: does not create resources, reveal the whole map, bypass a tool, or make
   required materials depend on an unlucky spawn.
-- Choice identity: the best first new species because it connects exploration,
-  random authored materials, recipes, and living behavior without duplicating
-  Kite or Mica.
+- Choice identity: the current third companion physically excavates optional
+  material. Planned ground protection gives a reason to develop the same
+  individual without duplicating Kite's movement or Mica's ecology reading.
 
 ### Breaker Mantis
 
@@ -321,7 +327,8 @@ wildlife or waiting for a random spawn.
 - Begin with monochrome silhouette sheets at diver gameplay scale.
 - Review the base, follow, separated, action, and adaptation silhouettes before
   color or texture work.
-- Every species needs a movement rhythm different from the existing two.
+- Every species needs a movement rhythm distinct from the other implemented
+  species.
 - Mounted species need rider placement, clearance, facing, action direction,
   forced separation, and dismount review.
 - Each permanent branch changes anatomy, posture, markings, or a persistent
@@ -337,9 +344,9 @@ wildlife or waiting for a random spawn.
 2. Preserve the HOLD lesson: a companion action must create an immediately
    legible option or outcome, not merely describe visible hostile behavior.
 3. Review monochrome concept sheets only as directional planning evidence.
-4. Living Expedition 05's bounded Silt Hound excavation proof is complete; it
-   does not authorize generic prospecting, another detector, or a fourth
-   species.
+4. LE05's base excavation and LE06's nursery are complete. LE07 selects Marl's
+   first Root Claws adaptation before habitat release/legacy, not generic
+   prospecting, another detector, or a fourth species.
 5. Add Breaker Mantis only after real-time combat, enemy health feedback,
    resource outcomes, and nonlethal/defeat rules have a stable owner.
 6. Keep Rivetback, Lumenjaw, Ribbon Drake, and Choir Bloom directional until the

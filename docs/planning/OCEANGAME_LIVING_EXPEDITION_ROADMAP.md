@@ -145,13 +145,18 @@ or broad ecosystem simulation was added. See the
 
 ### Committed
 
-No next implementation batch is selected. The next audit must evaluate the
-current individuals' shared history against the directional goal below before
-committing one bounded proof; LE06 closeout does not begin that work.
+**Living Expedition 07: Marl's Root Claws** is selected by planning issue #1387,
+not implemented. A shared refuge excavation under existing eel pressure earns
+Guarded the Nest; boat return secures it, deliberate night consolidation changes
+Marl's fin grip, and next-sortie Ground Pin creates a short physical opening.
+This develops the third individual's first adaptation before release/legacy.
+See the [plan](../current/LIVING_EXPEDITION_07_PLAN.md) for source, ownership,
+tradeoff, and review boundaries. Its nine-issue outline is not a numbered active
+batch; create the implementation milestone/issues after the planning PR merges.
 
 ### Directional
 
-Only milestone-level direction is recorded beyond the completed proofs:
+Only milestone-level direction is recorded beyond the selected LE07 proof:
 
 1. **Later: Growth, Release, And Habitat Legacy**
    Test voluntary retirement or release, one bounded legacy trait, and visible
@@ -159,9 +164,9 @@ Only milestone-level direction is recorded beyond the completed proofs:
    the choice to carry emotional weight, without forced death or a simulation
    rewrite.
 
-This direction does not receive a detailed issue inventory until the next audit
-finds enough evidence for one bounded proof. LE06's GO is not approval of release
-or legacy mechanics by itself.
+This direction does not receive a detailed issue inventory until a later audit
+finds enough evidence for one bounded proof. Neither LE06's GO nor LE07's Marl
+growth plan approves release or legacy mechanics by itself.
 
 ### Vision
 
