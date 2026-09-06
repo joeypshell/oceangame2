@@ -145,14 +145,16 @@ or broad ecosystem simulation was added. See the
 
 ### Committed
 
-**Living Expedition 07: Marl's Root Claws** is selected by planning issue #1387,
-not implemented. A shared refuge excavation under existing eel pressure earns
+**[Living Expedition 07: Marl's Root Claws](https://github.com/joeypshell/oceangame2/milestone/51)**
+is active through #1389-#1397 after planning #1387. Catalog/schema validation is
+established by #1389; gameplay is not implemented. A shared refuge excavation earns
 Guarded the Nest; boat return secures it, deliberate night consolidation changes
 Marl's fin grip, and next-sortie Ground Pin creates a short physical opening.
 This develops the third individual's first adaptation before release/legacy.
-See the [plan](../current/LIVING_EXPEDITION_07_PLAN.md) for source, ownership,
-tradeoff, and review boundaries. Its nine-issue outline is not a numbered active
-batch; create the implementation milestone/issues after the planning PR merges.
+See the [ordered issue batch](../current/LIVING_EXPEDITION_07_PLAN.md#ordered-active-issues)
+and [source/state contract](../current/LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md).
+Next is #1390 source authoring, then event, boat/night, pin, presentation,
+integration, visual/Web, and owner verdict. Do not begin a second milestone here.
 
 ### Directional
 

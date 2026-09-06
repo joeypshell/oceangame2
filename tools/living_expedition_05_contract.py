@@ -159,7 +159,6 @@ def validate_living_expedition_05_relationship(
     action = _catalog_index(catalog, "actions").get(ACTION_ID, {})
     failures.extend(_expect(species, {
         "roles": ["independent"], "ride_capable": False, "base_action_ids": [ACTION_ID],
-        "memory_ids": [], "adaptation_ids": [],
     }, SPECIES_ID))
     failures.extend(_expect(individual, {"species_id": SPECIES_ID, "default_callsign": "Marl"}, INDIVIDUAL_ID))
     failures.extend(_expect(action, {

@@ -20,10 +20,10 @@ INDIVIDUAL_VALUES = {
 }
 CATALOG_IDS = {
     "actions": {
-        "glide_surge", "anchor_brace", "guardian_pulse_action", "reveal_trace", "read_drift", "excavate",
+        "glide_surge", "anchor_brace", "guardian_pulse_action", "reveal_trace", "read_drift", "excavate", "ground_pin",
     },
-    "memories": {"held_the_flow", "stood_ground", "followed_the_bloom"},
-    "adaptations": {"anchor_fins", "guardian_pulse", "drift_lens"},
+    "memories": {"held_the_flow", "stood_ground", "followed_the_bloom", "guarded_the_nest"},
+    "adaptations": {"anchor_fins", "guardian_pulse", "drift_lens", "root_claws"},
 }
 SPECIES_VALUES = {
     "spark_ray": {
@@ -44,8 +44,8 @@ SPECIES_VALUES = {
         "roles": ["independent"],
         "ride_capable": False,
         "base_action_ids": ["excavate"],
-        "memory_ids": [],
-        "adaptation_ids": [],
+        "memory_ids": ["guarded_the_nest"],
+        "adaptation_ids": ["root_claws"],
     },
 }
 ACTION_VALUES = {
@@ -59,6 +59,7 @@ ACTION_VALUES = {
     "reveal_trace": {"roles": ["independent"], "effect_kind": "trace_reveal", "damaging": False},
     "read_drift": {"roles": ["independent"], "effect_kind": "moving_hazard_read", "damaging": False},
     "excavate": {"roles": ["independent"], "effect_kind": "material_reveal", "damaging": False},
+    "ground_pin": {"roles": ["independent"], "effect_kind": "grounded_hold", "damaging": False},
 }
 MEMORY_VALUES = {
     "held_the_flow": {"event_kind": "current_cycle_completed", "adaptation_ids": ["anchor_fins"]},
@@ -70,6 +71,7 @@ MEMORY_VALUES = {
         "event_kind": "ecological_observation_committed",
         "adaptation_ids": ["drift_lens"],
     },
+    "guarded_the_nest": {"event_kind": "burrow_refuge_sheltered", "adaptation_ids": ["root_claws"]},
 }
 ADAPTATION_VALUES = {
     "anchor_fins": {
@@ -87,6 +89,11 @@ ADAPTATION_VALUES = {
     "drift_lens": {
         "required_memory_id": "followed_the_bloom",
         "independent_action_id": "read_drift",
+        "mutually_exclusive_with": [],
+    },
+    "root_claws": {
+        "required_memory_id": "guarded_the_nest",
+        "independent_action_id": "ground_pin",
         "mutually_exclusive_with": [],
     },
 }

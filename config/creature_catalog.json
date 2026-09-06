@@ -57,8 +57,8 @@
       "base_action_ids": [
         "excavate"
       ],
-      "memory_ids": [],
-      "adaptation_ids": []
+      "memory_ids": ["guarded_the_nest"],
+      "adaptation_ids": ["root_claws"]
     }
   ],
   "individuals": [
@@ -128,6 +128,12 @@
       ],
       "effect_kind": "material_reveal",
       "damaging": false
+    },
+    {
+      "id": "ground_pin",
+      "roles": ["independent"],
+      "effect_kind": "grounded_hold",
+      "damaging": false
     }
   ],
   "memories": [
@@ -151,6 +157,11 @@
       "adaptation_ids": [
         "drift_lens"
       ]
+    },
+    {
+      "id": "guarded_the_nest",
+      "event_kind": "burrow_refuge_sheltered",
+      "adaptation_ids": ["root_claws"]
     }
   ],
   "adaptations": [
@@ -176,6 +187,12 @@
       "id": "drift_lens",
       "required_memory_id": "followed_the_bloom",
       "independent_action_id": "read_drift",
+      "mutually_exclusive_with": []
+    },
+    {
+      "id": "root_claws",
+      "required_memory_id": "guarded_the_nest",
+      "independent_action_id": "ground_pin",
       "mutually_exclusive_with": []
     }
   ]

@@ -5,7 +5,8 @@ Last updated: 2026-09-06
 This is the compact milestone index. Detailed direction lives in:
 
 - `docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md`
-- `docs/current/LIVING_EXPEDITION_07_PLAN.md` (selected contract; implementation batch not yet created)
+- [Living Expedition 07 plan and ordered issues](current/LIVING_EXPEDITION_07_PLAN.md#ordered-active-issues) (active milestone #51, #1389-#1397)
+- [Living Expedition 07 source/state contract](current/LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md)
 - `docs/planning/CREATURE_SYSTEM_SPEC.md`
 - `docs/planning/CREATURE_MAP_PROGRESSION_SPEC.md`
 - `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
@@ -107,7 +108,7 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 ## Planning Horizons
 
 - Completed: milestones #45-#50 cover one adapted Spark Ray, a bounded habitat and active species choice, one Mica ecology journey, one honestly rejected companion-combat experiment, one Silt Hound excavation journey, and Kite's Signal Reef nursery return. #1366-#1375 complete the latest batch with owner GO.
-- Committed direction: #1387 selects Living Expedition 07: Marl's Root Claws. The plan outlines a shared refuge event, boat-secured memory, deliberate night adaptation, and a physical ground-pin payoff. No LE07 GitHub implementation milestone or numbered batch exists yet; create that scoped batch after the planning PR merges.
+- Active: [milestone #51, Living Expedition 07: Marl's Root Claws](https://github.com/joeypshell/oceangame2/milestone/51), #1389-#1397. #1389 establishes catalog/schema validation; gameplay remains planned. Next is #1390 source authoring, then refuge event, boat/night growth, Ground Pin, presentation/checkpoints, integrated evidence, visual/Web, and owner verdict. The linked plan owns exact issue dependencies.
 - Directional: later habitat legacy/release remains a milestone-level goal only.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
