@@ -5,6 +5,7 @@ Last updated: 2026-09-06
 This is the compact milestone index. Detailed direction lives in:
 
 - `docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md`
+- `docs/current/LIVING_EXPEDITION_07_PLAN.md` (selected contract; implementation batch not yet created)
 - `docs/planning/CREATURE_SYSTEM_SPEC.md`
 - `docs/planning/CREATURE_MAP_PROGRESSION_SPEC.md`
 - `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
@@ -106,7 +107,7 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 ## Planning Horizons
 
 - Completed: milestones #45-#50 cover one adapted Spark Ray, a bounded habitat and active species choice, one Mica ecology journey, one honestly rejected companion-combat experiment, one Silt Hound excavation journey, and Kite's Signal Reef nursery return. #1366-#1375 complete the latest batch with owner GO.
-- Committed: no next implementation batch is selected. The next audit must evaluate whether the current individuals' shared history supports the directional habitat-legacy choice before committing a bounded proof.
+- Committed direction: #1387 selects Living Expedition 07: Marl's Root Claws. The plan outlines a shared refuge event, boat-secured memory, deliberate night adaptation, and a physical ground-pin payoff. No LE07 GitHub implementation milestone or numbered batch exists yet; create that scoped batch after the planning PR merges.
 - Directional: later habitat legacy/release remains a milestone-level goal only.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
