@@ -4,7 +4,7 @@ Date: 2026-08-13
 
 Issue: #1374
 
-Status: **TECHNICAL PASS; OWNER EXPERIENCE GATE PENDING**
+Status: **TECHNICAL PASS; OWNER GO RECORDED IN CLOSEOUT**
 
 ## Result
 
@@ -15,7 +15,8 @@ Kite as the active companion, and responsive desktop/mobile framing.
 
 This proves deployment and review readiness. It does not decide whether the
 adaptation feels satisfying or whether the changed nursery motivates another
-visit; issue #1375 owns that player verdict.
+visit. The owner's separate 2026-09-06 GO through #1375 is recorded in the
+[closeout](LIVING_EXPEDITION_06_CLOSEOUT.md).
 
 - exact runtime SHA: `16300a9ca4cbe93b5e4ab74ffa6707cf049646a0`
 - build version: `16300a9`
@@ -80,5 +81,7 @@ python tools/check_file_lengths.py
 git diff --check
 ```
 
-The next action is the explicit owner comparison in #1375. Do not infer GO
-from this technical pass or start the next milestone in this resolver cycle.
+The owner comparison closed with GO through #1375. Public metadata was
+rechecked on 2026-09-06 and still matched the exact runtime above; the browser
+evidence remains the original technical pass, not a new matrix run. No next
+milestone is started by this closeout.

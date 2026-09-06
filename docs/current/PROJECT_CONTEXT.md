@@ -1,12 +1,12 @@
 # Project Context
 
-Last updated: 2026-08-13
+Last updated: 2026-09-06
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
 ## Current Goal
 
-`oceangame2` has a stable diver-expedition runtime foundation and seventeen completed bounded Phase 2 expansions. Expansion 18 Transfer Hub Interior Expedition is technically complete but closes with a strategic player-experience HOLD: another clue/recipe/gate/scan correction would not solve the owner's finding that the wider loop feels boring and generic. Living Expedition is now the active product direction; milestones 01-03 and 05 have owner GO, 04 closed on an informative HOLD, and 06 is technically ready for its owner experience gate at exact Web runtime `16300a9`. OceanGame Expansion 01 proved:
+`oceangame2` has a stable diver-expedition runtime foundation and seventeen completed bounded Phase 2 expansions. Expansion 18 Transfer Hub Interior Expedition is technically complete but closes with a strategic player-experience HOLD: another clue/recipe/gate/scan correction would not solve the owner's finding that the wider loop feels boring and generic. Living Expedition is now the active product direction; milestones 01-03 and 05-06 have owner GO, while 04 closed on an informative HOLD. The latest accepted Web runtime is `16300a9`; no next implementation milestone is selected. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -50,7 +50,7 @@ Expansion 17 Wreck Network Triangulation is complete with owner GO through #1167
 
 Expansion 18 implements one exceptional `transfer_hub_interior_01` destination reached by swimming through the normal full level to a physical entrance. Its source/state contract, generated maps, continuous sortie, existing-cutter core recovery, deterministic evidence, and exact public build remain valid regression surfaces. It receives no player-experience GO and no further bounded correction pass.
 
-The active direction is one bonded active companion whose credible species roles and meaningful expedition experiences shape real-time independent or mounted play. Living Expeditions 01-03 have owner GO: Kite proves rescue, riding, memory, and adaptation; Kite and Mica occupy one compact canonical-boat habitat with one active sortie selection; and Mica turns one source-authored jellyfish migration observation into the next-day Drift Lens field skill. Living Expedition 04 is technically complete and closed on HOLD: Mica's eel prediction was not useful, so Drift Lens remains moving-ecology-only and Guardian-Pulse Kite is the eel's sole active companion response. Living Expedition 05 has owner GO: Silt Hound Marl, profile-v3 migration, a compact three-row habitat, one lower-loop rescue, one source-authored optional excavation mound, Marl's distinct six-fin rescue/follow/recovery presentation, and a deliberate approach/dig/reveal handoff into the existing material-cargo path are complete. Living Expedition 06 now has complete runtime, persistence, deterministic journey, focused visual, and exact-Web evidence for adapted Kite sheltering one remembered Signal Reef nursery; only owner gate #1375 remains. Diver equipment retains hard geographic access; companions cannot bypass it.
+The active direction is one bonded active companion whose credible species roles and meaningful expedition experiences shape real-time independent or mounted play. Living Expeditions 01-03 have owner GO: Kite proves rescue, riding, memory, and adaptation; Kite and Mica occupy one compact canonical-boat habitat with one active sortie selection; and Mica turns one source-authored jellyfish migration observation into the next-day Drift Lens field skill. Living Expedition 04 is technically complete and closed on HOLD: Mica's eel prediction was not useful, so Drift Lens remains moving-ecology-only and Guardian-Pulse Kite is the eel's sole active companion response. Living Expedition 05 has owner GO: Silt Hound Marl, profile-v3 migration, a compact three-row habitat, one lower-loop rescue, one source-authored optional excavation mound, Marl's distinct six-fin rescue/follow/recovery presentation, and a deliberate approach/dig/reveal handoff into the existing material-cargo path are complete. Living Expedition 06 has owner GO through #1375 after runtime, persistence, deterministic journey, focused visual, and exact-Web evidence for adapted Kite sheltering one remembered Signal Reef nursery. Diver equipment retains hard geographic access; companions cannot bypass it.
 
 Emergency Week and Food/Water/Power overnight survival taxes are rejected. Shortcut and fast-travel networks are also rejected; remembered geography remains part of expedition pressure.
 
@@ -89,7 +89,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Living Expedition 03 owner-GO closeout: `docs/current/LIVING_EXPEDITION_03_CLOSEOUT.md`
 - Selected Living Expedition 04 plan: `docs/current/LIVING_EXPEDITION_04_PLAN.md`
 - Living Expedition 04 HOLD closeout: `docs/current/LIVING_EXPEDITION_04_CLOSEOUT.md`
-- Living Expedition 06 technical review: `docs/current/LIVING_EXPEDITION_06_VISUAL_DECISION.md` and `docs/current/LIVING_EXPEDITION_06_WEB_VERIFICATION.md`; #1375 owns the player verdict
+- Living Expedition 06 owner-GO closeout: `docs/current/LIVING_EXPEDITION_06_CLOSEOUT.md`, with linked source/state, visual, and exact-Web evidence
 - Foundation history: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - First adaptation proof: `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
@@ -108,8 +108,8 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Tooling: `docs/current/TOOLING.md`
 - Focused player-review workflow: `docs/current/PLAYTEST_CHECKPOINTS.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest owner decision: Living Expedition 05 received GO after #1362 corrected the excavation-ready checkpoint; Marl's deliberate physical excavation is accepted as a distinct useful partnership payoff
-- Current direction gate: Living Expedition 06 exact runtime `16300a9` is technically verified; #1375 must decide whether Kite's distinct shelter action and next-day nursery change earn GO, HOLD, or one bounded correction
+- Latest owner decision: Living Expedition 06 received explicit GO on 2026-09-06 for exact runtime `16300a9`; #1375 records the bounded Signal Reef nursery closeout
+- Next direction decision: no active implementation batch; the next audit evaluates directional Growth, Release, And Habitat Legacy against the current individuals' shared history before selecting one bounded proof
 - Current implementation contract: `docs/current/LIVING_EXPEDITION_06_SOURCE_STATE_CONTRACT.md`; existing Kite adaptation, canonical-boat commitment, passive wildlife, and hard equipment gates remain regression boundaries
 - Living Expedition 03 evidence: `docs/current/LIVING_EXPEDITION_03_VISUAL_DECISION.md`, `docs/current/LIVING_EXPEDITION_03_WEB_VERIFICATION.md`, and `docs/current/LIVING_EXPEDITION_03_CLOSEOUT.md`; exact runtime `0e92dd7` passed focused visual, responsive Web, touch, deterministic journey, and owner review
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
@@ -117,7 +117,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Latest visual decision: `docs/current/LIVING_EXPEDITION_06_VISUAL_DECISION.md`; 12 generated review frames are evidence only and all six configured accepted baseline sheets remain pixel-stable
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: Living Expedition 06 runtime `16300a9`, recorded in `docs/current/LIVING_EXPEDITION_06_WEB_VERIFICATION.md`; #1375 remains the owner experience gate.
+- Latest Web verification: Living Expedition 06 runtime `16300a9`, recorded in `docs/current/LIVING_EXPEDITION_06_WEB_VERIFICATION.md`; the separate owner GO is recorded in its closeout.
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -233,7 +233,7 @@ For map changes, run the relevant generator, SVG renderer, validator, parity che
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Each issue needs acceptance criteria, relevant files, implementation notes, and verification steps.
 
-Current issue state as of 2026-08-13:
+Current issue state as of 2026-09-06:
 
 - Closed: #662-#671 completed Expansion 01 with a GO.
 - Closed: #685-#694 completed Expansion 02 with a GO.
@@ -265,6 +265,8 @@ Current issue state as of 2026-08-13:
 - Closed: milestone #47 and #1276-#1285 plus bounded corrections #1301/#1303/#1305/#1307/#1308 implement Mica's ecology journey, exact-Web runtime `0e92dd7`, and owner GO.
 - Closed on owner HOLD: milestone #48 and #1314-#1323 plus bounded corrections #1333/#1335/#1336 retain Kite's eel opening, retire Mica's non-useful prediction, and verify corrected runtime `bbcc255`.
 - Closed: milestone #49 and #1342-#1351 plus checkpoint correction #1362 complete Living Expedition 05 with owner GO at corrected runtime `7792a08`. The first owner review exposed a collision-invalid excavation-ready checkpoint; #1362 repaired its start and added exact-scene spawn, movement, palette, and dispatch coverage before the accepted retest.
+- Closed: milestone #50 and #1366-#1375 complete Living Expedition 06 with owner GO at runtime `16300a9`; adapted Kite shelters Signal Reef's nursery and leaves boat-committed next-day history.
+- Active implementation: none selected. The next audit must choose a bounded proof from the roadmap rather than reopening this completed batch.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -402,12 +404,12 @@ Current issue state as of 2026-08-13:
 
 ## Recommended Next Work
 
-Living Expeditions 01-03 and 05 are complete with owner GO. Living Expedition 04 is technically complete and closed on owner HOLD: Mica's eel prediction is retired, Guardian-Pulse Kite remains the only active companion response, and BOND uses a whole-simulation tactical pause. Active milestone #50 is the bounded Signal Reef nursery return for adapted Kite; its source/state contract is locked and #1366-#1375 are the frozen implementation, evidence, and owner-review batch. Keep #52/#53 deferred.
+Living Expeditions 01-03 and 05-06 are complete with owner GO. Living Expedition 04 is technically complete and closed on owner HOLD: Mica's eel prediction is retired, Guardian-Pulse Kite remains the only active companion response, and BOND uses a whole-simulation tactical pause. Milestone #50 and #1366-#1375 close the bounded Signal Reef nursery return for adapted Kite at runtime `16300a9`. No next batch is selected; a later audit must evaluate the roadmap's directional habitat-legacy work before committing it. Keep #52/#53 deferred.
 
 Accepted constraints for next work:
 
 - Treat Living Expedition as the active product direction and a bounded current runtime proof. Preserve one active companion, species-plus-experience roles, deliberate real-time commands, committed-bond riding, meaningful experience rather than XP grinding, night consolidation, visible adaptation, and the equipment-versus-companion boundary.
-- Use `LIVING_EXPEDITION_06_PLAN.md` for next implementation: one guaranteed filter-skate nursery relationship at existing Signal Reef, one of Kite's already-selected adaptations, one exact-once boat commitment, and one visible next-day ecological payoff. Propulsion Fins and Dive Light retain access authority; do not turn Kite into a gate key or award score, cargo, a recipe, or a blueprint.
+- Preserve the completed `LIVING_EXPEDITION_06_PLAN.md` contract: one guaranteed filter-skate nursery relationship at existing Signal Reef, one of Kite's already-selected adaptations, one exact-once boat commitment, and one visible next-day ecological payoff. Propulsion Fins and Dive Light retain access authority; do not turn Kite into a gate key or award score, cargo, a recipe, or a blueprint.
 - Keep Living Expedition 04 to the existing eel: Guardian-Pulse Kite creates the only active companion opening, ordinary evade remains valid, the Shock Prod owns damage, and only defeat exposes the existing electrocyte harvest. Preserve generic hostile-reading code as dormant future material, but do not present Mica as an eel solution.
 - Use toggle `B/BOND` and a maximum-three-action whole-simulation tactical-pause palette. Desktop `1`-`3` directly activates the matching labeled command; `B` or `Esc` closes. Touch uses sequential `BOND`, `TOOL`, and `USE` taps. Mounted play transfers movement and hotbar ownership to creature actions; dismount restores diver tools. Do not reuse `Q` or `E/ACT` for the companion.
 - Riding cannot bypass fins, darkness, pressure, collision, oxygen, daylight, health, cargo, boat, or failure authority.

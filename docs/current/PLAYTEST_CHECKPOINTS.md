@@ -1,6 +1,6 @@
 # Playtest Checkpoints
 
-Last updated: 2026-08-13
+Last updated: 2026-09-06
 
 ## Purpose
 
@@ -57,7 +57,7 @@ Technical evidence is recorded in
 [Living Expedition 05 Web Verification](LIVING_EXPEDITION_05_WEB_VERIFICATION.md).
 The corrected owner retest received GO; the links remain as regression fixtures.
 
-Current Living Expedition 06 owner-review build:
+Accepted Living Expedition 06 review build (retained for replay):
 
 ```text
 https://joeypshell.github.io/oceangame2/?review=16300a9ca4cbe93b5e4ab74ffa6707cf049646a0&checkpoint=living_expedition_06_anchor_ready
@@ -69,7 +69,9 @@ Pages, merge CI, exact-SHA metadata, desktop/wide framing, touch-mobile
 controls, and all three named checkpoint initializations passed at
 `16300a9ca4cbe93b5e4ab74ffa6707cf049646a0`. Technical evidence is recorded in
 [Living Expedition 06 Web Verification](LIVING_EXPEDITION_06_WEB_VERIFICATION.md).
-These links are ready for the #1375 owner verdict; they do not imply GO.
+The owner supplied GO through #1375 on 2026-09-06; see the
+[closeout](LIVING_EXPEDITION_06_CLOSEOUT.md). The links remain regression fixtures,
+not a pending review request.
 
 ## Living Expedition 06 Replay
 
