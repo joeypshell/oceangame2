@@ -6,7 +6,7 @@ This file is the compact handoff for new Codex or ChatGPT Project sessions. It c
 
 ## Current Goal
 
-`oceangame2` has a stable diver-expedition runtime foundation and seventeen completed bounded Phase 2 expansions. Expansion 18 Transfer Hub Interior Expedition is technically complete but closes with a strategic player-experience HOLD: another clue/recipe/gate/scan correction would not solve the owner's finding that the wider loop feels boring and generic. Living Expedition is now the active product direction; milestones 01-03 and 05-06 have owner GO, while 04 closed on an informative HOLD. The latest accepted Web runtime is `16300a9`. #1387 selects LE07's Marl growth plan; its implementation milestone/batch has not been created. OceanGame Expansion 01 proved:
+`oceangame2` has a stable diver-expedition runtime foundation and seventeen completed bounded Phase 2 expansions. Expansion 18 Transfer Hub Interior Expedition is technically complete but closes with a strategic player-experience HOLD: another clue/recipe/gate/scan correction would not solve the owner's finding that the wider loop feels boring and generic. Living Expedition is now the active product direction; milestones 01-03 and 05-06 have owner GO, while 04 closed on an informative HOLD. The latest accepted Web runtime is `16300a9`. LE07 milestone #51 is active through #1389-#1397: #1389 establishes catalog/source validation, #1390 source authoring is next, and gameplay remains planned. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -90,7 +90,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Selected Living Expedition 04 plan: `docs/current/LIVING_EXPEDITION_04_PLAN.md`
 - Living Expedition 04 HOLD closeout: `docs/current/LIVING_EXPEDITION_04_CLOSEOUT.md`
 - Living Expedition 06 owner-GO closeout: `docs/current/LIVING_EXPEDITION_06_CLOSEOUT.md`, with linked source/state, visual, and exact-Web evidence
-- Selected next plan: `docs/current/LIVING_EXPEDITION_07_PLAN.md`; Marl's memory/Root Claws/Ground Pin are not implemented yet
+- Active plan/ordered issues: [LE07](LIVING_EXPEDITION_07_PLAN.md#ordered-active-issues), milestone #51 / #1389-#1397; [source/state contract](LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md) is established, gameplay is not implemented yet
 - Foundation history: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - First adaptation proof: `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
@@ -110,11 +110,11 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Focused player-review workflow: `docs/current/PLAYTEST_CHECKPOINTS.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
 - Latest owner decision: Living Expedition 06 received explicit GO on 2026-09-06 for exact runtime `16300a9`; #1375 records the bounded Signal Reef nursery closeout
-- Next direction decision: #1387 selects Marl's first adaptation before habitat legacy/release. Create the plan's scoped implementation batch after its PR merges; no numbered LE07 implementation queue exists yet
+- Next issue: #1390 authors Marl's refuge/anchors through the generator after schema #1389. Milestone #51 then proceeds through #1391-#1397; habitat legacy/release remains directional
 - Current implementation contract: `docs/current/LIVING_EXPEDITION_06_SOURCE_STATE_CONTRACT.md`; existing Kite adaptation, canonical-boat commitment, passive wildlife, and hard equipment gates remain regression boundaries
 - Living Expedition 03 evidence: `docs/current/LIVING_EXPEDITION_03_VISUAL_DECISION.md`, `docs/current/LIVING_EXPEDITION_03_WEB_VERIFICATION.md`, and `docs/current/LIVING_EXPEDITION_03_CLOSEOUT.md`; exact runtime `0e92dd7` passed focused visual, responsive Web, touch, deterministic journey, and owner review
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
-- Latest source contract: `docs/current/LIVING_EXPEDITION_06_SOURCE_STATE_CONTRACT.md`
+- Latest source contract: `docs/current/LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md`; LE06 remains the latest implemented gameplay contract
 - Latest visual decision: `docs/current/LIVING_EXPEDITION_06_VISUAL_DECISION.md`; 12 generated review frames are evidence only and all six configured accepted baseline sheets remain pixel-stable
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
@@ -267,7 +267,7 @@ Current issue state as of 2026-09-06:
 - Closed on owner HOLD: milestone #48 and #1314-#1323 plus bounded corrections #1333/#1335/#1336 retain Kite's eel opening, retire Mica's non-useful prediction, and verify corrected runtime `bbcc255`.
 - Closed: milestone #49 and #1342-#1351 plus checkpoint correction #1362 complete Living Expedition 05 with owner GO at corrected runtime `7792a08`. The first owner review exposed a collision-invalid excavation-ready checkpoint; #1362 repaired its start and added exact-scene spawn, movement, palette, and dispatch coverage before the accepted retest.
 - Closed: milestone #50 and #1366-#1375 complete Living Expedition 06 with owner GO at runtime `16300a9`; adapted Kite shelters Signal Reef's nursery and leaves boat-committed next-day history.
-- Selected planning: #1387 defines Living Expedition 07, Marl's Root Claws. Implementation remains unstarted; the plan's ordered outline becomes a numbered milestone batch only after the planning PR merges.
+- Active: [milestone #51](https://github.com/joeypshell/oceangame2/milestone/51), LE07 Marl's Root Claws, #1389-#1397. Schema #1389 is established; #1390-#1397 remain source/runtime/review work, ending at the owner gate. Do not create another batch.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -405,7 +405,7 @@ Current issue state as of 2026-09-06:
 
 ## Recommended Next Work
 
-Living Expeditions 01-03 and 05-06 are complete with owner GO. Living Expedition 04 is technically complete and closed on owner HOLD: Mica's eel prediction is retired, Guardian-Pulse Kite remains the only active companion eel response, and BOND uses a whole-simulation tactical pause. Milestone #50 and #1366-#1375 close the Signal Reef nursery return at runtime `16300a9`. #1387 selects `LIVING_EXPEDITION_07_PLAN.md`: a meaningful refuge dig becomes Marl's boat-secured memory, deliberate night Root Claws, and next-sortie Ground Pin. That behavior is planned, not live. The next batch boundary should create only its scoped implementation issues; habitat legacy/release and #52/#53 remain deferred.
+Living Expeditions 01-03 and 05-06 are complete with owner GO. Living Expedition 04 is technically complete and closed on owner HOLD: Mica's eel prediction is retired, Guardian-Pulse Kite remains the only active companion eel response, and BOND uses a whole-simulation tactical pause. Milestone #50 and #1366-#1375 close the Signal Reef nursery return at runtime `16300a9`. #1387 selects `LIVING_EXPEDITION_07_PLAN.md`: a meaningful refuge dig becomes Marl's boat-secured memory, deliberate night Root Claws, and next-sortie Ground Pin. That behavior is planned, not live. Milestone #51 already contains #1389-#1397. After schema #1389, continue with #1390 source authoring, then event, boat/night, pin, presentation, integrated checks, visual/Web, and owner verdict. See the plan's ordered links; habitat legacy/release and #52/#53 remain deferred.
 
 Accepted constraints for next work:
 

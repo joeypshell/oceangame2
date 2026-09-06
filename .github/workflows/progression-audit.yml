@@ -26,5 +26,7 @@ jobs:
         run: python tools/test_progression_graph_creatures.py
       - name: Run Living Expedition 05 schema and progression fixtures
         run: python tools/test_living_expedition_05_contract.py
+      - name: Run Living Expedition 07 schema and progression fixtures
+        run: python tools/test_living_expedition_07_contract.py
       - name: Audit source-derived progression graph
         run: python tools/audit_progression_graph.py

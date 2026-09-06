@@ -8,8 +8,10 @@ The active product roadmap is `docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP
 
 Living Expedition 06 has owner GO at `16300a9`: focused nursery coordination,
 profile history, and world presentation add a boat-committed next-day habitat
-outcome for adapted Kite. LE07's Marl memory/Root Claws/Ground Pin contract is
-[planned only](LIVING_EXPEDITION_07_PLAN.md); it adds no runtime owner yet.
+outcome for adapted Kite. LE07's [source/state contract](LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md)
+adds catalog declarations, focused source validation, and proposed graph ordering
+through #1389. Refuge/memory/Root Claws/Ground Pin runtime remains planned in
+milestone #51; no new runtime owner or production map record is added yet.
 
 ## Source Of Truth
 

@@ -2,9 +2,11 @@
 
 Date: 2026-09-06
 
-Status: Selected planning contract from #1387, not implemented. The latest
-owner-approved runtime remains LE06 at `16300a9`. The implementation milestone
-and numbered batch have not been created; the outline below is not an active queue.
+Status: Active [milestone #51](https://github.com/joeypshell/oceangame2/milestone/51),
+issues #1389-#1397, following planning #1387. #1389 adds catalog/source validation
+and the [source/state contract](LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md).
+Gameplay is not implemented yet; #1390 source authoring is next. The latest
+owner-approved runtime remains LE06 at `16300a9`.
 
 ## Decision
 
@@ -14,7 +16,7 @@ deliberate **Ground Pin** on the next sortie. Marl remains independent-only.
 
 | Candidate | Evidence and decision |
 | --- | --- |
-| Marl's first adaptation | Selected. Kite and Mica already grow; Marl's implemented catalog has no memories/adaptations. A physical dig-to-protection arc advances raising the same individual. |
+| Marl's first adaptation | Selected. At planning base, Kite and Mica grew while Marl had no memories/adaptations. #1389 adds declarations only; the physical dig-to-protection arc remains to be implemented. |
 | Growth, Release, And Habitat Legacy | Keep directional. LE06 proves remembered habitat change, but does not establish that surrendering an individual is meaningful. First develop the third companion; this is sequencing, not an in-game release prerequisite. |
 | Vein Whiskers | Defer. Better direction/confidence risks another subtle detector, repeating the Mica readability and usefulness failures. No passive yield/stat bonus substitutes for a tangible action. |
 | Root Claws | Select one bounded ground-control branch. Walking/digging fins become a visible planted grip, not a magic stun or Kite pulse recolor. Reject the proof if existing geometry cannot support physical contact without a combat rewrite. |
@@ -73,9 +75,9 @@ approved collider placement. Source authoring must prove full actor footprints,
 eel contact reach, a real swim approach, and a return route before runtime work.
 Do not carve terrain or teleport the eel to make a fixture pass.
 
-Proposed immutable ids, to be locked by the source/state issue:
+Immutable ids locked by #1389's source/state contract; production placement remains #1390:
 
-| Relationship | Proposed id / responsibility |
+| Relationship | Id / responsibility |
 | --- | --- |
 | Burrow group and refuge | `deep_cache_burrow_refuge_01`: bounded passive burrow scallops, closed/open shelter presentation, clear approach and grounded interaction point |
 | Shared event | `marl_guarded_nest_opportunity_01`: links that refuge, existing eel, Marl, qualifying cycle, memory, and return promise |
@@ -165,24 +167,24 @@ Only Marl's named adaptation/action visuals and the small refuge group may
 change. Terrain, diver, boat, Kite, Mica, materials, and LE06 nursery stay stable.
 No broad art generation or baseline acceptance is authorized by this plan alone.
 
-## Ordered Issue Outline
+## Ordered Active Issues
 
-Create these scoped issues only after #1387's planning PR merges, at the next
-batch boundary. Numbers and a GitHub milestone must be recorded then.
+Frozen milestone #51 batch, created after #1387 / PR #1388 merged. #1389 supplies
+the schema/ownership contract; continue with #1390-#1397 in dependency order.
 
-| Order | Deliverable | Dependencies / focused evidence |
+| Issue | Deliverable | Dependencies / focused evidence |
 | --- | --- | --- |
-| 1 | Lock and validate catalog/event/ground-response schema and source/state contract | Plan; negative schema and non-circular progression fixtures |
-| 2 | Author refuge, event, floor anchors, and review cameras through the generator | 1; seed guarantees, unchanged terrain, clearance/reachability/parity |
-| 3 | Implement refuge Excavate outcome and meaningful pending event | 2; actual dig + live threat + sheltered group, cancellation, no farming; retain LE05 material path |
-| 4 | Commit Marl memory and offer deliberate Root Claws at night | 3; exact-once boat/night/reload, full cargo, wrong-individual and failure tests |
-| 5 | Implement physical Ground Pin and bounded hostile hold lifecycle | 2,4; contact/denial/release/cooldown, weapon interruption, no damage or gate bypass |
-| 6 | Make refuge/growth/pin legible and add real-scene isolated checkpoints | 3-5; existing controls, spawn/follow/command clearance, short before/after route |
-| 7 | Add deterministic full Marl growth journey and integrate regression coverage | 1-6; one combined integration/release run, not a full suite per prior issue |
-| 8 | Review focused desktop/mobile visuals and exact deployed Web build | 7; compare baseline sheets, inspect actual checkpoint/input, record exact SHA |
-| 9 | Record owner experience verdict and next-step evaluation | 8 plus owner test; no automatic GO from automation, no next milestone in resolver run |
+| [#1389](https://github.com/joeypshell/oceangame2/issues/1389) | Catalog/event/ground-response schema and source/state contract | #1387; negative schema and non-circular progression fixtures |
+| [#1390](https://github.com/joeypshell/oceangame2/issues/1390) | Author refuge, event, floor anchors, and review cameras through the generator | #1389; seed guarantees, unchanged terrain, clearance/reachability/parity |
+| [#1391](https://github.com/joeypshell/oceangame2/issues/1391) | Refuge Excavate outcome and meaningful pending event | #1390; actual dig + live threat + sheltered group, cancellation, no farming; retain LE05 material path |
+| [#1392](https://github.com/joeypshell/oceangame2/issues/1392) | Commit Marl memory and offer deliberate Root Claws at night | #1391; exact-once boat/night/reload, full cargo, wrong-individual and failure tests |
+| [#1393](https://github.com/joeypshell/oceangame2/issues/1393) | Physical Ground Pin and bounded hostile hold lifecycle | #1390, #1392; contact/denial/release/cooldown, weapon interruption, no damage or gate bypass |
+| [#1394](https://github.com/joeypshell/oceangame2/issues/1394) | Readable refuge/growth/pin and real-scene isolated checkpoints | #1391-#1393; existing controls, spawn/follow/command clearance, short before/after route |
+| [#1395](https://github.com/joeypshell/oceangame2/issues/1395) | Deterministic full Marl growth journey and regression coverage | #1389-#1394; one combined integration/release run, not a full suite per prior issue |
+| [#1396](https://github.com/joeypshell/oceangame2/issues/1396) | Focused desktop/mobile visuals and exact deployed Web build | #1395; compare baseline sheets, inspect actual checkpoint/input, record exact SHA |
+| [#1397](https://github.com/joeypshell/oceangame2/issues/1397) | Owner experience verdict and next-step evaluation | #1396 plus owner test; no automatic GO from automation, no next milestone in resolver run |
 
-The highest-risk split is issue 5: interrupt/cancel ownership across a moving
+The highest-risk split is #1393: interrupt/cancel ownership across a moving
 hostile and a planted companion. Keep one authoritative hostile state machine
 and a focused hold lifecycle, not a generalized status-effect/combat framework.
 

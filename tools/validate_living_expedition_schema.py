@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import re
 from typing import Any
+import living_expedition_07_contract as marl_growth
 
 from creature_catalog_contract import STATE_FIELDS, load_creature_catalog, validate_creature_catalog
 from living_expedition_03_contract import (
@@ -39,6 +40,7 @@ COLLECTIONS = (
     "creature_memory_opportunities",
     "creature_adaptation_payoffs",
     "companion_hostile_responses",
+    "burrow_refuges",
 )
 CONTEXT_KINDS = {
     "mounted_route_review", "independent_action_review", "mounted_action_review", SILT_CONTEXT_KIND, "regional_journey_action",
@@ -147,6 +149,7 @@ def _map_index(map_data: dict[str, Any]) -> dict[str, dict[str, Any]]:
         "daily_conditions",
         "moving_hazards",
         "ecological_pressures",
+        "burrow_refuges",
     )
     return {str(item.get("id", "")): item for field in fields for item in _items(map_data, field)}
 
@@ -218,7 +221,7 @@ def validate_living_expedition_schema(
     if catalog is None:
         catalog = load_creature_catalog()
     failures = validate_creature_catalog(catalog)
-    if not any(field in map_data for field in COLLECTIONS) and not uses_living_expedition_05(map_data) and not uses_living_expedition_06(map_data):
+    if not any(field in map_data for field in COLLECTIONS) and not uses_living_expedition_05(map_data) and not uses_living_expedition_06(map_data) and not marl_growth.uses_living_expedition_07(map_data):
         return failures
     records, shape_failures = _validate_collection_shapes(map_data)
     failures.extend(shape_failures)
@@ -237,6 +240,8 @@ def validate_living_expedition_schema(
     trace_id = expected_trace_id(map_data)
     memory_records = expected_memory_records(map_data)
     payoff_records = expected_payoff_records(map_data)
+    memory_records.update(marl_growth.expected_memory_records(map_data))
+    payoff_records.update(marl_growth.expected_payoff_records(map_data))
     includes_silt_hound = uses_living_expedition_05(map_data)
     expected_rescues = dict(RESCUE_IDENTITIES)
     if includes_silt_hound:
@@ -433,6 +438,7 @@ def validate_living_expedition_schema(
     failures.extend(validate_living_expedition_04_relationship(map_data, catalog))
     failures.extend(validate_living_expedition_05_relationship(map_data, catalog))
     failures.extend(validate_living_expedition_06_relationship(map_data, catalog))
+    failures.extend(marl_growth.validate_living_expedition_07_relationship(map_data, catalog))
     return failures
 
 
@@ -448,7 +454,7 @@ def _record_cells(item: dict[str, Any]) -> set[tuple[int, int]]:
 def validate_living_expedition_reachability(
     map_data: dict[str, Any], _solid: set[tuple[int, int]], reachable: set[tuple[int, int]]
 ) -> list[str]:
-    if not any(field in map_data for field in COLLECTIONS) and not uses_living_expedition_05(map_data) and not uses_living_expedition_06(map_data):
+    if not any(field in map_data for field in COLLECTIONS) and not uses_living_expedition_05(map_data) and not uses_living_expedition_06(map_data) and not marl_growth.uses_living_expedition_07(map_data):
         return []
     failures: list[str] = []
     map_items = _map_index(map_data)
@@ -483,4 +489,5 @@ def validate_living_expedition_reachability(
         if not boat or boat_point not in reachable:
             failures.append("Living Expedition 05 canonical boat return is unreachable.")
     failures.extend(validate_living_expedition_06_reachability(map_data, reachable))
+    failures.extend(marl_growth.validate_living_expedition_07_reachability(map_data, reachable))
     return failures

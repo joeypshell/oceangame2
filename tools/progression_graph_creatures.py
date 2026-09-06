@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from typing import Any
+from progression_graph_marl import add_marl_growth_edges, add_marl_growth_nodes
 
 from living_expedition_05_contract import (
     BOAT_ENTRY_ID as SILT_BOAT_ENTRY_ID,
@@ -31,6 +32,7 @@ COLLECTION_KINDS = {
     "passive_wildlife_groups": "passive_wildlife",
     "creature_nurseries": "creature_nursery",
     "ecological_pressures": "ecological_pressure",
+    "burrow_refuges": "burrow_refuge",
 }
 
 
@@ -158,6 +160,7 @@ def add_creature_nodes(graph: Any, map_data: dict[str, Any], node_type: Any) -> 
                         "creature_adaptation",
                         attrs={"implementation_status": "proposed"},
                     ), adaptation_id)
+    add_marl_growth_nodes(graph, map_data, node_type)
 
 
 def _requires(graph: Any, source: str, raw_id: str, preferred_map: str = "", note: str = "") -> None:
@@ -291,6 +294,7 @@ def add_creature_edges(graph: Any, map_data: dict[str, Any]) -> None:
                     context_id = str(item.get(field, ""))
                     if context_id:
                         graph.add_edge(key, graph.resolve(context_id, map_id), "reviews")
+    add_marl_growth_edges(graph, map_data)
 
 
 def _companion_hostile_response_edges(graph: Any, key: str, item: dict[str, Any], map_id: str) -> None:
