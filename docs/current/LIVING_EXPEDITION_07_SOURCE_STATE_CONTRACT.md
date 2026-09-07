@@ -6,11 +6,12 @@ ordered batch and experience decision: [LE07 plan](LIVING_EXPEDITION_07_PLAN.md)
 
 ## Implemented Boundary
 
-Catalog declarations, Python source validation, proposed progression graph, and
-negative fixtures are implemented. Production source authoring is #1390; refuge
-runtime, memory commitment/night UI, and Ground Pin are #1391-#1393. None of those
-behaviors is live merely because its catalog id exists. No map, collider,
-profile version, runtime script, art, capture, or accepted baseline changes here.
+Catalog declarations, Python source validation, proposed progression graph,
+negative fixtures, and #1390 production source authoring are implemented. See
+[placement evidence](LIVING_EXPEDITION_07_SOURCE_VERIFICATION.md). Refuge runtime,
+memory commitment/night UI, and Ground Pin remain #1391-#1393; none is live merely
+because its source record exists. Terrain, gameplay, profile version, art, and
+accepted baselines are unchanged.
 
 The catalog remains version 3 / `partial_runtime`. Marl is the existing
 `silt_hound_juvenile_01`, species `silt_hound`, independent-only, base `excavate`.
@@ -50,7 +51,7 @@ the full-level generator in #1390. `source.living_expedition_07` records that
 source path, exact refuge/opportunity/context/payoff lists, review camera ids,
 the availability guarantee, and empty `terrain_changes`.
 Review camera ids are `living_expedition_07_refuge_review_01` and
-`living_expedition_07_pin_review_01`. No transform is implemented in #1389.
+`living_expedition_07_pin_review_01`. #1390 implements the transform and placement tests.
 
 Bounds and points use integer tile coordinates, excluding booleans. Refuge
 bounds must be positive, in bounds, and non-solid; dig point ends inside shelter.
@@ -60,10 +61,10 @@ All source points and canonical boat entry must be reachable. Unknown fields,
 duplicate relationships, wrong species/ids, malformed timing, random availability,
 mutable state, unsupported links, and circular prerequisites fail validation.
 
-Tile-valid fixtures are not approved gameplay placement. #1390 must additionally
-prove real diver/Marl/eel footprints, swept approach/contact clearance, live eel
-reach, and return accessibility in the unchanged topology. Do not copy synthetic
-test positions into production without that evidence or teleport an actor to pass.
+Tile-valid fixtures are not approved gameplay placement. #1390 separately proves
+real diver/Marl/eel footprints, swept approach/contact clearance, live eel reach,
+and return accessibility in unchanged topology. Preserve those tests; do not copy
+synthetic positions or teleport an actor to make future gameplay checks pass.
 LE05 rescue/deposit and LE06 nursery source relationships remain unchanged.
 
 ## Event And Commitment
@@ -146,7 +147,7 @@ The proposed graph retains Cutter -> physical rescue -> canonical boat commitmen
 night (`root_claws_night`) -> adaptation -> next-sortie action -> armed context.
 The night/action graph nodes are audit concepts, not new save fields. Graph labels
 remain `[proposed]` and expose seed guarantees; automation cannot prove fun or a
-physical event occurred. Production graph output remains unchanged until #1390.
+physical event occurred. #1390 projects the authored chain into production graph output.
 
 ```powershell
 python tools/test_living_expedition_07_contract.py

@@ -9,6 +9,7 @@ import json
 from pathlib import Path
 
 from render_living_expedition_06 import render_living_expedition_06
+from render_living_expedition_07 import render_living_expedition_07
 
 
 COLORS = {
@@ -405,6 +406,8 @@ def render_svg(map_data: dict) -> str:
         parts.append(text(cx + 40, cy - 34, memory["id"], 20))
 
     for payoff in map_data.get("creature_adaptation_payoffs", []):
+        if payoff.get("adaptation_id") == "root_claws":
+            continue  # The focused LE07 projection labels the floor anchors.
         target = map_items.get(str(payoff.get("target_id", "")))
         if target is None:
             continue
@@ -416,6 +419,7 @@ def render_svg(map_data: dict) -> str:
         parts.append(text(cx + 54, cy - 50, payoff["id"], 20))
 
     parts.extend(render_living_expedition_06(map_data, tile_size))
+    parts.extend(render_living_expedition_07(map_data, tile_size))
 
     parts.extend(
         [

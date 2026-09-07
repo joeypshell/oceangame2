@@ -10,7 +10,7 @@ Status: **PASS**
 | View | Sources | Status | Graph |
 | --- | --- | --- | --- |
 | `slice_provenance` (Production slice provenance) | `maps/production_slice_01.greybox.json`, `maps/production_slice_02.greybox.json`, `maps/production_slice_03.greybox.json`, `maps/production_slice_04.greybox.json` | **PASS** | 95 nodes / 301 edges |
-| `promoted_full_level` (Promoted production level) | `maps/production_level_01.greybox.json`, `maps/transfer_hub_interior_01.greybox.json` | **PASS** | 163 nodes / 653 edges |
+| `promoted_full_level` (Promoted production level) | `maps/production_level_01.greybox.json`, `maps/transfer_hub_interior_01.greybox.json` | **PASS** | 171 nodes / 691 edges |
 
 ## Detailed Canonical View
 
@@ -99,12 +99,14 @@ The table and dependency diagram below describe the promoted full-level view.
 | 17 | `[proposed] Held The Flow` | global | [proposed] Spark Ray Current Memory 01 | [proposed] Spark Ray Current Memory 01 | state/payoff | stage 17 |
 | 17 | `[proposed] Stood Ground` | global | [proposed] Spark Ray Eel Memory 01 | [proposed] Spark Ray Eel Memory 01 | state/payoff | stage 17 |
 | 17 | `Eel Electrocyte` | global | none | Eel electrocyte | state/payoff | stage 17 |
+| 17 | `[proposed] Deep Cache Burrow Refuge 01` | production_level_01 | [proposed] Silt Hound Juvenile 01, Dive Light 1, [proposed] Select Marl For Sortie | production_level_01, [proposed] Silt Hound Juvenile 01, Dive Light 1 | state/payoff | stage 17 |
 | 17 | `[proposed] Silt Hound Excavate Context 01` | production_level_01 | [proposed] Silt Hound Juvenile 01, [proposed] Select Marl For Sortie | production_level_01, [proposed] Silt Hound Juvenile 01, [proposed] Select Marl For Sortie | state/payoff | stage 17 |
 | 17 | `[proposed] Veil Cuttle Bloom Memory 01` | production_level_01 | [proposed] Veil Cuttle Juvenile 01, [proposed] Southwest Bloom Migration Trace | production_level_01, [proposed] Veil Cuttle Juvenile 01, [proposed] Southwest Bloom Migration Trace | [proposed] Followed The Bloom, [proposed] Drift Lens | stage 17 |
 | 17 | `[proposed] Commit Signal Reef Nursery At Boat` | production_level_01 | [proposed] Signal Reef Nursery Journey 01, Surface Boat Entry | [proposed] Signal Reef Nursery Journey 01, Surface Boat Entry | [proposed] Restored Signal Reef Nursery | stage 17 |
 | 18 | `[proposed] Anchor Fins` | global | [proposed] Held The Flow | [proposed] Held The Flow | state/payoff | stage 18 |
 | 18 | `[proposed] Guardian Pulse` | global | [proposed] Stood Ground | [proposed] Stood Ground | state/payoff | stage 18 |
 | 18 | `[proposed] Followed The Bloom` | global | [proposed] Veil Cuttle Bloom Memory 01 | [proposed] Veil Cuttle Bloom Memory 01 | state/payoff | stage 18 |
+| 18 | `[proposed] Marl Guarded Nest Opportunity 01` | production_level_01 | [proposed] Silt Hound Juvenile 01, Dive Light 1, [proposed] Deep Cache Burrow Refuge 01, [proposed] Select Marl For Sortie, Deep Cache Territorial Eel | production_level_01, [proposed] Silt Hound Juvenile 01, Dive Light 1 | [proposed] Guarded The Nest, [proposed] Root Claws | stage 18 |
 | 18 | `Abyssal Basin Pressure Zone` | production_level_01 / deep_harmonic_abyssal_basin_route | Pressure Suit 1 | production_level_01, Pressure Suit 1 | state/payoff | stage 18 |
 | 18 | `Abyssal Shelf Pressure Seam` | production_level_01 / abyssal_shelf_wreck_fragment_journey | Pressure Suit 1 | production_level_01, Pressure Suit 1 | state/payoff | stage 18 |
 | 18 | `Shock-prod capacitor project` | production_level_01 | Shock prod project, Lower Right Anomaly Discovery, Conductive Coil, Insulating Gel, Eel Electrocyte | production_level_01, Shock prod project, Lower Right Anomaly Discovery | Shock Prod Capacitor | stage 18 |
@@ -113,6 +115,7 @@ The table and dependency diagram below describe the promoted full-level view.
 | 18 | `[proposed] Restored Signal Reef Nursery` | production_level_01 | [proposed] Commit Signal Reef Nursery At Boat | [proposed] Commit Signal Reef Nursery At Boat | state/payoff | stage 18 |
 | 19 | `Shock Prod Capacitor` | global | Shock-prod capacitor project | Shock-prod capacitor project | state/payoff | stage 19 |
 | 19 | `[proposed] Drift Lens` | global | [proposed] Followed The Bloom | [proposed] Followed The Bloom | state/payoff | stage 19 |
+| 19 | `[proposed] Guarded The Nest` | global | [proposed] Marl Guarded Nest Opportunity 01, Surface Boat Entry | [proposed] Marl Guarded Nest Opportunity 01, Surface Boat Entry | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Anchor Independent Review 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Anchor Fins | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Anchor Fins | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Anchor Mounted Review 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Anchor Fins | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Anchor Fins | state/payoff | stage 19 |
 | 19 | `[proposed] Spark Ray Anchor Nursery Context 01` | production_level_01 | [proposed] Spark Ray Juvenile 01, [proposed] Signal Reef Nursery Journey 01, Propulsion Fins, Dive Light 1, [proposed] Anchor Fins | production_level_01, [proposed] Spark Ray Juvenile 01, [proposed] Signal Reef Nursery Journey 01 | state/payoff | stage 19 |
@@ -126,11 +129,16 @@ The table and dependency diagram below describe the promoted full-level view.
 | 19 | `Survey abyssal source` | production_level_01 / deep_harmonic_abyssal_basin_route | Survey Scanner 1, Pressure Suit 1, Abyssal basin route | production_level_01, Survey Scanner 1, Pressure Suit 1 | Abyssal Basin Harmonic Source Discovery | stage 19 |
 | 19 | `Survey wreck archive` | production_level_01 / southeast_wreck_archive_route | wreck recorder, Survey Scanner 1, Pressure Suit 1, Southeast wreck archive route | wreck recorder, production_level_01, Survey Scanner 1 | Southeast Wreck Archive Discovery | stage 19 |
 | 20 | `[proposed] Veil Cuttle Drift Review 01` | production_level_01 | [proposed] Veil Cuttle Juvenile 01, [proposed] Drift Lens | production_level_01, [proposed] Veil Cuttle Juvenile 01, [proposed] Drift Lens | state/payoff | stage 20 |
+| 20 | `[proposed] Deliberately Consolidate Root Claws At Night` | production_level_01 | [proposed] Guarded The Nest | [proposed] Guarded The Nest | state/payoff | stage 20 |
 | 20 | `[proposed] Veil Cuttle Drift Lens Payoff 01` | production_level_01 | [proposed] Veil Cuttle Juvenile 01, Jellyfish patrol, [proposed] Drift Lens | production_level_01, [proposed] Veil Cuttle Juvenile 01, Jellyfish patrol | state/payoff | stage 20 |
 | 20 | `Abyssal Basin Harmonic Source Discovery` | production_level_01 / deep_harmonic_abyssal_basin_route | Survey abyssal source, Surface Boat Entry | Survey abyssal source, production_level_01, Surface Boat Entry | state/payoff | stage 20 |
 | 20 | `Southeast Wreck Archive Discovery` | production_level_01 / southeast_wreck_archive_route | Survey wreck archive, Surface Boat Entry | Survey wreck archive, production_level_01, Surface Boat Entry | state/payoff | stage 20 |
+| 21 | `[proposed] Root Claws` | global | [proposed] Guarded The Nest, [proposed] Deliberately Consolidate Root Claws At Night | [proposed] Guarded The Nest, [proposed] Deliberately Consolidate Root Claws At Night | state/payoff | stage 21 |
 | 21 | `Current Stabilizer Project` | production_level_01 | Salvage Cutter Project, Southeast Wreck Archive Discovery, Titanium Scrap, Conductive Coil | production_level_01, Salvage Cutter Project, Southeast Wreck Archive Discovery | Current Stabilizer | stage 21 |
 | 22 | `Current Stabilizer` | global | Current Stabilizer Project | Current Stabilizer Project | Ripping relay current, Western chasm current | stage 22 |
+| 22 | `[proposed] Ground Pin On Next Sortie` | production_level_01 | [proposed] Root Claws | [proposed] Root Claws | state/payoff | stage 22 |
+| 22 | `[proposed] Silt Hound Root Claws Payoff 01` | production_level_01 | [proposed] Silt Hound Juvenile 01, Dive Light 1, Shock Prod, Deep Cache Territorial Eel, [proposed] Root Claws | production_level_01, [proposed] Silt Hound Juvenile 01, Dive Light 1 | state/payoff | stage 22 |
+| 23 | `[proposed] Deep Cache Eel Marl Ground Pin` | production_level_01 | [proposed] Silt Hound Juvenile 01, Dive Light 1, Shock Prod, [proposed] Root Claws, [proposed] Ground Pin On Next Sortie | production_level_01, [proposed] Silt Hound Juvenile 01, Dive Light 1 | state/payoff | stage 23 |
 | 23 | `Ripping relay current` | production_level_01 / upper_left_wreck_relay_route | Current Stabilizer | production_level_01, Current Stabilizer | state/payoff | stage 23 |
 | 23 | `Western chasm current` | production_level_01 / western_chasm_wreck_fragment_journey | Current Stabilizer | production_level_01, Current Stabilizer | state/payoff | stage 23 |
 | 23 | `Northwest wreck relay route` | production_level_01 / upper_left_wreck_relay_route | Current Stabilizer, Southeast Wreck Archive Discovery | production_level_01, Current Stabilizer, Southeast Wreck Archive Discovery | Survey wreck relay | stage 23 |

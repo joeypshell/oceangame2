@@ -1810,6 +1810,27 @@
       "availability": "all_supported_seeds",
       "terrain_changes": [],
       "intent": "One guaranteed optional Signal Reef nursery journey using existing topology, access gates, Kite adaptations, and canonical boat return."
+    },
+    "living_expedition_07": {
+      "source": "tools/production_level_01_living_expedition_07.py",
+      "refuge_ids": [
+        "deep_cache_burrow_refuge_01"
+      ],
+      "memory_opportunity_ids": [
+        "marl_guarded_nest_opportunity_01"
+      ],
+      "companion_context_ids": [
+        "deep_cache_eel_marl_ground_pin"
+      ],
+      "adaptation_payoff_ids": [
+        "silt_hound_root_claws_payoff_01"
+      ],
+      "camera_test_ids": [
+        "living_expedition_07_refuge_review_01",
+        "living_expedition_07_pin_review_01"
+      ],
+      "availability": "all_supported_seeds",
+      "terrain_changes": []
     }
   },
   "units": {
@@ -7031,6 +7052,20 @@
       "center_y": 111,
       "zoom": 0.58,
       "intent": "Visible restored nursery state on the next day."
+    },
+    {
+      "id": "living_expedition_07_refuge_review_01",
+      "center_x": 121,
+      "center_y": 77,
+      "zoom": 0.7,
+      "intent": "Refuge, wildlife approach, dig footprint, and existing eel territory."
+    },
+    {
+      "id": "living_expedition_07_pin_review_01",
+      "center_x": 123,
+      "center_y": 77,
+      "zoom": 0.7,
+      "intent": "Floor-supported Marl and eel's physical low-contact opening."
     }
   ],
   "review_questions": [
@@ -7273,6 +7308,35 @@
       "required_adaptation_id": "guardian_pulse",
       "target_id": "signal_reef_jellyfish_pressure_01",
       "intent": "Guardian-adapted Kite deliberately interrupts the western jellyfish displacement cycle without damaging wildlife."
+    },
+    {
+      "id": "deep_cache_eel_marl_ground_pin",
+      "species_id": "silt_hound",
+      "individual_id": "silt_hound_juvenile_01",
+      "availability": "all_supported_seeds",
+      "context_kind": "independent_action_review",
+      "action_id": "ground_pin",
+      "required_adaptation_id": "root_claws",
+      "target_id": "deep_cache_territorial_eel",
+      "required_access_ids": [
+        "dive_light_1",
+        "shock_prod"
+      ],
+      "effect_kind": "grounded_hold",
+      "max_hold_seconds": 1.75,
+      "cooldown_seconds": 8.0,
+      "damage": 0,
+      "ground_anchors": [
+        {
+          "x": 121,
+          "y": 78
+        },
+        {
+          "x": 122,
+          "y": 78
+        }
+      ],
+      "intent": "Draw the unchanged eel low through normal repeated lunges. Marl approaches a floor-supported anchor for physical contact; never teleport the eel down or apply a ranged hold from its home."
     }
   ],
   "creature_memory_opportunities": [
@@ -7324,6 +7388,35 @@
       "required_access_ids": [],
       "availability": "all_supported_seeds",
       "intent": "Commit the identified bloom migration only at the canonical boat."
+    },
+    {
+      "id": "marl_guarded_nest_opportunity_01",
+      "species_id": "silt_hound",
+      "individual_id": "silt_hound_juvenile_01",
+      "availability": "all_supported_seeds",
+      "memory_id": "guarded_the_nest",
+      "event_kind": "burrow_refuge_sheltered",
+      "action_id": "excavate",
+      "target_id": "deep_cache_burrow_refuge_01",
+      "hostile_id": "deep_cache_territorial_eel",
+      "required_rescue_id": "silt_hound_rescue_01",
+      "adaptation_ids": [
+        "root_claws"
+      ],
+      "payoff_id": "silt_hound_root_claws_payoff_01",
+      "required_observations": [
+        "physical_dig_complete",
+        "live_warning_lunge",
+        "group_sheltered",
+        "pair_present"
+      ],
+      "required_access_ids": [
+        "dive_light_1"
+      ],
+      "commit_map_id": "production_level_01",
+      "commit_entry_id": "surface_boat_entry",
+      "optional": true,
+      "reward_ids": []
     }
   ],
   "creature_adaptation_payoffs": [
@@ -7362,6 +7455,19 @@
       "independent_context_id": "veil_cuttle_drift_review_01",
       "availability": "all_supported_seeds",
       "intent": "Read a jellyfish patrol's existing path and direction without changing it."
+    },
+    {
+      "id": "silt_hound_root_claws_payoff_01",
+      "species_id": "silt_hound",
+      "individual_id": "silt_hound_juvenile_01",
+      "availability": "all_supported_seeds",
+      "adaptation_id": "root_claws",
+      "target_id": "deep_cache_territorial_eel",
+      "independent_context_id": "deep_cache_eel_marl_ground_pin",
+      "required_access_ids": [
+        "dive_light_1",
+        "shock_prod"
+      ]
     }
   ],
   "companion_habitats": [
@@ -7546,6 +7652,54 @@
       "reward_ids": [],
       "availability": "all_supported_seeds",
       "intent": "A non-damaging jellyfish drift displaces the school on Signal Reef's western approach without blocking either current gate."
+    }
+  ],
+  "burrow_refuges": [
+    {
+      "id": "deep_cache_burrow_refuge_01",
+      "species_id": "silt_hound",
+      "individual_id": "silt_hound_juvenile_01",
+      "availability": "all_supported_seeds",
+      "refuge_kind": "soft_silt_burrow",
+      "wildlife_kind": "burrow_scallop_group",
+      "action_id": "excavate",
+      "hostile_id": "deep_cache_territorial_eel",
+      "region_zone_id": "lower_loop_to_deep_cache_pressure",
+      "dark_zone_id": "deep_cache_dark_pocket",
+      "required_access_ids": [
+        "dive_light_1"
+      ],
+      "bondable": false,
+      "harvestable": false,
+      "optional": true,
+      "reward_ids": [],
+      "x": 120,
+      "y": 77,
+      "w": 3,
+      "h": 2,
+      "approach_point": {
+        "x": 119,
+        "y": 77
+      },
+      "dig_point": {
+        "x": 121,
+        "y": 78
+      },
+      "wildlife_path": [
+        {
+          "x": 119,
+          "y": 78
+        },
+        {
+          "x": 120,
+          "y": 78
+        },
+        {
+          "x": 121,
+          "y": 78
+        }
+      ],
+      "intent": "Open soft silt above the existing deep-cache floor for a passive scallop group. A live eel warning/lunge makes this a shared event, not a material pickup or a new geographic gate."
     }
   ]
 }

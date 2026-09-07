@@ -616,6 +616,15 @@
 <text x="4722.0" y="2446.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="20" paint-order="stroke" stroke="#10384a" stroke-width="4">spark_ray_anchor_nursery_context_01</text>
 <path d="M 4128.0 3324.0 L 4148.0 3344.0 L 4128.0 3364.0 L 4108.0 3344.0 Z" fill="none" stroke="#ffd76a" stroke-width="5"/>
 <text x="4146.0" y="3326.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="20" paint-order="stroke" stroke="#10384a" stroke-width="4">spark_ray_guardian_nursery_context_01</text>
+<rect x="3840" y="2464" width="96" height="64" fill="#d7c17d" fill-opacity="0.25" stroke="#ffd76a" stroke-width="4"/>
+<polyline points="3824.0,2512.0 3856.0,2512.0 3888.0,2512.0" fill="none" stroke="#78f0b1" stroke-width="5" stroke-dasharray="6 4"/>
+<circle cx="3824.0" cy="2480.0" r="6" fill="#66f5ff"/>
+<circle cx="3888.0" cy="2512.0" r="6" fill="#ffd76a"/>
+<text x="3690" y="2452" fill="#eaffff" font-family="Arial,sans-serif" font-size="16" paint-order="stroke" stroke="#10384a" stroke-width="4">deep_cache_burrow_refuge_01</text>
+<text x="3690" y="2562" fill="#eaffff" font-family="Arial,sans-serif" font-size="16" paint-order="stroke" stroke="#10384a" stroke-width="4">cyan: approach / gold: dig / green: scallops</text>
+<path d="M 3876.0 2521.0 L 3876.0 2528.0 L 3900.0 2528.0 L 3900.0 2521.0" fill="none" stroke="#ff96b0" stroke-width="4"/>
+<path d="M 3908.0 2521.0 L 3908.0 2528.0 L 3932.0 2528.0 L 3932.0 2521.0" fill="none" stroke="#ff96b0" stroke-width="4"/>
+<text x="3958.0" y="2527.0" fill="#eaffff" font-family="Arial,sans-serif" font-size="16" paint-order="stroke" stroke="#10384a" stroke-width="4">Ground Pin anchors</text>
 <rect x="0" y="0" width="5056" height="5152" fill="url(#grid)"/>
 <text x="24.0" y="42.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="30" paint-order="stroke" stroke="#10384a" stroke-width="4">production_level_01 - greybox source preview</text>
 <text x="24.0" y="5110.0" fill="#eaffff" font-family="Arial, sans-serif" font-size="22" paint-order="stroke" stroke="#10384a" stroke-width="4">cyan=open | gray=solid | tan=extraction | orange=boat/tool | green=start | yellow=salvage | teal=material/survey</text>

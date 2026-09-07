@@ -5,7 +5,8 @@ Date: 2026-09-06
 Status: Active [milestone #51](https://github.com/joeypshell/oceangame2/milestone/51),
 issues #1389-#1397, following planning #1387. #1389 adds catalog/source validation
 and the [source/state contract](LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md).
-Gameplay is not implemented yet; #1390 source authoring is next. The latest
+Source authoring #1390 is implemented with [placement evidence](LIVING_EXPEDITION_07_SOURCE_VERIFICATION.md).
+Gameplay is not implemented yet; #1391 refuge runtime is next. The latest
 owner-approved runtime remains LE06 at `16300a9`.
 
 ## Decision
@@ -75,7 +76,7 @@ approved collider placement. Source authoring must prove full actor footprints,
 eel contact reach, a real swim approach, and a return route before runtime work.
 Do not carve terrain or teleport the eel to make a fixture pass.
 
-Immutable ids locked by #1389's source/state contract; production placement remains #1390:
+Immutable ids are locked by #1389; #1390 authors and verifies their production placement:
 
 | Relationship | Id / responsibility |
 | --- | --- |
@@ -170,7 +171,7 @@ No broad art generation or baseline acceptance is authorized by this plan alone.
 ## Ordered Active Issues
 
 Frozen milestone #51 batch, created after #1387 / PR #1388 merged. #1389 supplies
-the schema/ownership contract; continue with #1390-#1397 in dependency order.
+the schema/ownership contract and #1390 the source proof; continue with #1391-#1397.
 
 | Issue | Deliverable | Dependencies / focused evidence |
 | --- | --- | --- |
