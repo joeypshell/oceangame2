@@ -34,6 +34,9 @@ var _excavate_active := false
 var _excavate_target := Vector2.ZERO
 var _excavate_state := "idle"
 var _excavate_progress := 0.0
+var _pin_phase := "idle"
+var _pin_anchor := Vector2.ZERO
+var _pin_grip := Vector2.ZERO
 
 
 func configure(world, player, position_allowed: Callable, identity: Dictionary) -> void:
@@ -54,6 +57,8 @@ func _physics_process(delta: float) -> void:
 
 
 func advance(delta: float) -> void:
+	if is_inside_tree() and get_tree().paused:
+		return
 	if not _dependencies_valid():
 		velocity = Vector2.ZERO
 		return
@@ -67,12 +72,14 @@ func advance(delta: float) -> void:
 
 
 func request_recall() -> void:
+	finish_ground_pin()
 	cancel_excavate_action()
 	_follow.request_recall()
 	_sync_presentation()
 
 
 func force_readable_separation(direction: Vector2) -> void:
+	finish_ground_pin()
 	_follow.force_readable_separation()
 	velocity = Vector2.ZERO
 	if _presentation != null:
@@ -84,6 +91,7 @@ func recover_to_player() -> void:
 	if not _dependencies_valid():
 		return
 	_follow.reset()
+	finish_ground_pin()
 	cancel_excavate_action()
 	velocity = Vector2.ZERO
 	global_position = _spawn_position()
@@ -104,7 +112,7 @@ func show_context_response(context_kind: String, source_position: Vector2) -> bo
 
 
 func begin_excavate_approach(target: Vector2) -> bool:
-	if not excavate_path_allowed(target):
+	if ground_pin_active() or not excavate_path_allowed(target):
 		return false
 	_excavate_active = true
 	_excavate_target = target
@@ -159,6 +167,54 @@ func excavate_path_allowed(target: Vector2) -> bool:
 	return true
 
 
+func begin_ground_pin_approach(anchor: Vector2) -> bool:
+	if ground_pin_active() or _excavate_active or not excavate_path_allowed(anchor):
+		return false
+	_pin_anchor = anchor
+	_pin_phase = "approaching"
+	_follow.reset()
+	velocity = Vector2.ZERO
+	return true
+
+
+func ground_pin_active() -> bool:
+	return _pin_phase != "idle"
+
+
+func set_ground_pin_phase(phase: String, grip: Vector2) -> void:
+	if not ground_pin_active():
+		return
+	_pin_phase = phase
+	_pin_grip = grip
+	if absf(grip.x - global_position.x) > 1.0:
+		_facing_sign = signf(grip.x - global_position.x)
+	velocity = Vector2.ZERO
+	_sync_presentation()
+
+
+func finish_ground_pin() -> void:
+	if not ground_pin_active():
+		return
+	_pin_phase = "idle"
+	velocity = Vector2.ZERO
+	_follow.reset()
+	_sync_presentation()
+
+
+func _advance_pin_step(delta: float) -> void:
+	var before := global_position
+	velocity = Vector2.ZERO
+	if _pin_phase == "approaching":
+		var motion := global_position.direction_to(_pin_anchor) * minf(EXCAVATE_APPROACH_SPEED * delta, global_position.distance_to(_pin_anchor))
+		if excavate_path_allowed(global_position + motion):
+			move_and_collide(motion)
+			velocity = motion / delta if delta > 0.0 else Vector2.ZERO
+	_maximum_step_distance = maxf(_maximum_step_distance, before.distance_to(global_position))
+	_update_facing(delta)
+	_presentation.advance(delta)
+	_sync_presentation()
+
+
 func report() -> Dictionary:
 	var value := _follow.report()
 	value["identity"] = _identity.duplicate(true)
@@ -171,6 +227,7 @@ func report() -> Dictionary:
 	value["can_receive_command"] = can_receive_command()
 	value["mounted"] = false
 	value["floor_probe_distance"] = _floor_probe_distance()
+	value["ground_pin"] = {"phase": _pin_phase, "anchor": _pin_anchor}
 	value["excavate"] = {
 		"active": _excavate_active,
 		"target": _excavate_target,
@@ -183,6 +240,9 @@ func report() -> Dictionary:
 
 
 func _advance_step(delta: float) -> void:
+	if ground_pin_active():
+		_advance_pin_step(delta)
+		return
 	if _excavate_active:
 		_advance_excavate_step(delta)
 		return
@@ -325,6 +385,7 @@ func _sync_presentation() -> void:
 		velocity.length()
 	)
 	_presentation.set_excavate_state(_excavate_state, _excavate_progress)
+	_presentation.set_ground_pin(_pin_phase, _pin_grip - global_position)
 
 
 func _dependencies_valid() -> bool:

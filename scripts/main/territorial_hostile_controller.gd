@@ -6,6 +6,8 @@ const PHASE_LUNGE := "lunge"
 const PHASE_RECOVERY := "recovery"
 const PHASE_RETURNING := "returning"
 const PHASE_DEFEATED := "defeated"
+const PHASE_SUPPORT_HELD := "support_held"
+const SUPPORT_HOLD_SECONDS := 1.75
 const RETURN_SPEED_FACTOR := 0.75
 const CONTACT_KNOCKBACK_FORCE := 325.0
 const CONTACT_DISRUPTION_SECONDS := 0.45
@@ -30,6 +32,8 @@ func reset_for_failure(world) -> void:
 
 
 func update(world, player_position: Vector2, delta: float) -> Dictionary:
+	if world is Node and is_instance_valid(world) and world.is_inside_tree() and world.get_tree().paused:
+		return {}
 	_current_prompt = ""
 	var event := {}
 	for hostile_id in _sorted_state_ids():
@@ -115,6 +119,9 @@ func apply_weapon_hit(
 		return {"changed": false, "reason": "already_defeated", "defeated": true}
 	var pre_hit_phase := str(state.get("phase", PHASE_HOME))
 	var pre_hit_position: Vector2 = state.get("position", Vector2.ZERO)
+	var hold_released := pre_hit_phase == PHASE_SUPPORT_HELD
+	if hold_released:
+		_release_hold(state, "weapon_hit")
 	state["health"] = maxi(0, int(state.get("health", 0)) - damage)
 	if attacker_position is Vector2:
 		var recoil_direction := pre_hit_position - (attacker_position as Vector2)
@@ -154,6 +161,7 @@ func apply_weapon_hit(
 		"health": int(state["health"]),
 		"defeated": defeated,
 		"interrupted": interrupted,
+		"hold_released_before_damage": hold_released,
 		"pre_hit_phase": pre_hit_phase,
 		"pre_hit_position": pre_hit_position,
 		"recoil_position": state.get("position", pre_hit_position),
@@ -220,6 +228,40 @@ func apply_support_interrupt(world, hostile_id: String, attacker_position: Vecto
 	}
 
 
+func request_support_hold(world, hostile_id: String, owner: RefCounted) -> bool:
+	if not _states.has(hostile_id) or owner == null:
+		return false
+	var state: Dictionary = _states[hostile_id]
+	if state["phase"] not in [PHASE_WARNING, PHASE_LUNGE] or not owner.support_hold_valid():
+		return false
+	state["support_owner"] = weakref(owner)
+	state["phase"] = PHASE_SUPPORT_HELD
+	state["phase_seconds"] = SUPPORT_HOLD_SECONDS
+	state["contact_consumed"] = true
+	_sync_visual(world, state)
+	return true
+
+
+func release_support_hold(world, hostile_id: String, owner: RefCounted, reason: String) -> bool:
+	var state: Dictionary = _states.get(hostile_id, {})
+	if state.get("phase") != PHASE_SUPPORT_HELD or state["support_owner"].get_ref() != owner:
+		return false
+	_release_hold(state, reason)
+	_sync_visual(world, state)
+	return true
+
+
+func _release_hold(state: Dictionary, reason: String) -> void:
+	var owner = state["support_owner"].get_ref()
+	state.erase("support_owner")
+	state["phase"] = PHASE_RECOVERY
+	state["phase_seconds"] = float(state.get("recovery_seconds", 1.25))
+	state["lunge_target"] = state["position"]
+	state["contact_consumed"] = true
+	if owner != null:
+		owner.on_support_hold_released(reason)
+
+
 func report() -> Dictionary:
 	var state_reports := []
 	for hostile_id in _sorted_state_ids():
@@ -272,6 +314,9 @@ func intent_snapshot_for(hostile_id: String, projected_target = null) -> Diction
 
 
 func _load_sources(world) -> void:
+	for state in _states.values():
+		if state.get("phase") == PHASE_SUPPORT_HELD:
+			_release_hold(state, "hostile_reset")
 	_states = {}
 	_current_prompt = ""
 	if world == null or not world.has_method("get_hostile_encounters"):
@@ -297,6 +342,15 @@ func _load_sources(world) -> void:
 
 func _update_state(state: Dictionary, player_position: Vector2, delta: float) -> Dictionary:
 	match str(state.get("phase", PHASE_HOME)):
+		PHASE_SUPPORT_HELD:
+			var owner = state["support_owner"].get_ref()
+			if owner == null or not owner.support_hold_valid():
+				_release_hold(state, "hold_invalid")
+				return _event(state, "support_released")
+			state["phase_seconds"] = maxf(0.0, float(state["phase_seconds"]) - delta)
+			if float(state["phase_seconds"]) <= 0.0:
+				_release_hold(state, "timeout")
+				return _event(state, "support_released")
 		PHASE_HOME:
 			if _player_threatens(state, player_position):
 				return _begin_warning(state)
@@ -362,6 +416,8 @@ func _player_threatens(state: Dictionary, player_position: Vector2) -> bool:
 
 func _prompt_for_state(state: Dictionary, player_position: Vector2) -> String:
 	var phase := str(state.get("phase", PHASE_HOME))
+	if phase == PHASE_SUPPORT_HELD:
+		return "Marl holds eel %.1fs - strike or retreat" % float(state["phase_seconds"])
 	if phase == PHASE_WARNING:
 		return "WARNING %.1fs - %s" % [float(state.get("phase_seconds", 0.0)), str(state.get("warning_label", "Territorial eel - watch the lunge"))]
 	if phase == PHASE_LUNGE:

@@ -9,7 +9,7 @@ const OPTIONS := [
 		"memory_label": "Guarded the Nest - dug a refuge under a live eel threat",
 		"visible_change": "Broader hooked fin tips and a low planted posture",
 		"payoff": "Ground Pin: hold a near-floor eel; Marl must stop moving or digging",
-		"availability_note": "Ground Pin and changed fins are not available in this build yet",
+		"availability_note": "Ground Pin follows confirmation; permanent changed-fin art is not available yet",
 		"exclusive_label": "",
 	},
 	{

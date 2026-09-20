@@ -4,6 +4,7 @@ const CompanionCommandPalette := preload("res://scripts/companion/companion_comm
 const CompanionCommandPause := preload("res://scripts/companion/companion_command_pause.gd")
 const SiltHoundExcavateRuntime := preload("res://scripts/companion/silt_hound_excavate_runtime.gd")
 const SiltHoundRefugeRuntime := preload("res://scripts/companion/silt_hound_refuge_runtime.gd")
+const GroundPin := preload("res://scripts/companion/silt_hound_ground_pin_runtime.gd")
 
 var _world
 var _player
@@ -18,6 +19,7 @@ var _palette_feedback := ""
 var _last_denial := ""
 var _excavate := SiltHoundExcavateRuntime.new()
 var _refuge := SiltHoundRefugeRuntime.new()
+var _ground_pin := GroundPin.new()
 
 
 func _ready() -> void:
@@ -28,6 +30,7 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
+	_ground_pin.clear_map()
 	_excavate.clear_map()
 	_command_mode = false
 	_command_pause.end()
@@ -47,10 +50,12 @@ func bind_map(world, player, companion, _moving_hazards = null, hostiles = null)
 	_refuge = SiltHoundRefugeRuntime.new()
 	_refuge.bind_map(world, player, companion, hostiles, _status_sink)
 	_excavate.bind_map(world, player, companion, _refuge)
+	_ground_pin.bind_map(world, player, companion, hostiles, _status_sink)
 	_refresh_presentation()
 
 
 func clear_map() -> void:
+	_ground_pin.clear_map()
 	reset_control("map_clear")
 	_excavate.clear_map()
 	_world = null
@@ -143,7 +148,8 @@ func activate_context_command(index: int) -> Dictionary:
 	return confirm_context_command()
 
 
-func reset_control(_reason := "reset") -> void:
+func reset_control(reason := "reset") -> void:
+	_ground_pin.cancel(reason)
 	end_command_mode()
 	_selected_command_index = 0
 	_palette_feedback = ""
@@ -152,6 +158,7 @@ func reset_control(_reason := "reset") -> void:
 
 func reset_transient(reason := "reset") -> void:
 	reset_control(reason)
+	_ground_pin.reset_transient(reason)
 	_excavate.reset_transient(reason)
 
 
@@ -169,6 +176,11 @@ func excavate_runtime():
 
 func bind_refuge_context(profile, has_upgrade: Callable) -> void:
 	_refuge.bind_profile(profile, has_upgrade)
+	_ground_pin.bind_profile(profile, has_upgrade)
+
+
+func ground_pin_runtime():
+	return _ground_pin
 
 
 func refuge_runtime():
@@ -187,27 +199,35 @@ func report() -> Dictionary:
 		"last_denial": _last_denial,
 		"excavate": _excavate.report(),
 		"refuge": _refuge.report(),
+		"ground_pin": _ground_pin.report(),
 		"palette": _palette.get_test_report() if _palette != null else {},
 	}
 
 
 func _process(delta: float) -> void:
 	if not _control_is_allowed() or not _dependencies_valid():
+		_ground_pin.cancel("inactive")
 		if _command_mode:
 			reset_control("inactive")
 		return
 	if not _command_mode and not get_tree().paused:
 		_excavate.advance(delta)
+		_ground_pin.advance(delta)
 
 
 func _execute_command(command_id: String, command: Dictionary) -> Dictionary:
 	if not _dependencies_valid() or not bool(command.get("enabled", true)):
 		return _deny(str(command.get("reason", "command_unavailable")), command)
 	if command_id == SiltHoundExcavateRuntime.ACTION_ID:
+		if _ground_pin.busy():
+			return _deny("busy", {"denial": "Marl is pinning"})
 		return _excavate.dispatch(command_id)
+	if command_id == GroundPin.ACTION_ID:
+		return _ground_pin.dispatch()
 	if command_id != "recall":
 		return _deny("command_unavailable")
 	_excavate.cancel_active("recall")
+	_ground_pin.cancel("recall")
 	if _companion.has_method("request_recall"):
 		_companion.request_recall()
 	_notify("Marl recalled")
@@ -220,7 +240,12 @@ func _context_commands() -> Array:
 	var commands := [{"id": "recall", "label": "Recall", "enabled": true, "reason": "ready"}]
 	var excavate_command := _excavate.command()
 	if not excavate_command.is_empty():
+		if _ground_pin.busy():
+			excavate_command.merge({"enabled": false, "reason": "busy", "denial": "Marl is pinning"}, true)
 		commands.append(excavate_command)
+	var pin_command := _ground_pin.command()
+	if not pin_command.is_empty():
+		commands.append(pin_command)
 	return commands
 
 
