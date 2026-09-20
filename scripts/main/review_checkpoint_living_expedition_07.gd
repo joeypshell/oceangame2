@@ -50,6 +50,6 @@ static func apply(id: String, profile, map_path: String) -> Dictionary:
 		"active_objective_id": "marl_guarded_nest_opportunity_01",
 		"active_objective_label": "Marl's Root Claws"}
 	if id != NIGHT_ID:
-		# Same source-relative open-water starting point for the before/after pair.
-		result["review_start_tile"] = {"x": float(refuge["x"]) + 2.0, "y": float(refuge["y"])}
+		# The authored approach lets the player read before deliberately drawing the eel.
+		result["review_start_tile"] = refuge["approach_point"].duplicate()
 	return result

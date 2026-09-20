@@ -30,12 +30,18 @@ immutable host for this SHA after a later deployment.
 
 ## Short Owner Review
 
+Arrival correction #1408 supersedes the original refuge-entry instruction:
+the field starts now use the source approach outside the eel's warning range.
+See [current steps and live regression](tooling/living_expedition_07.md#isolated-starts).
+The evidence and exact SHA below remain historical #1396 results.
+
 These independent shortcuts avoid repeating the equipment chain. Each resets
 only its own in-memory review session; it does not touch the normal save.
 
 1. [Refuge, before growth](https://joeypshell.github.io/oceangame2/?review=5819f1d46425a5c6b0e3c4c5f2e0448b915816f3&checkpoint=living_expedition_07_refuge):
-   press `B`, then `2` for Excavate. Dodge the eel while staying beside the
-   scallops. Look for their retreat and the instruction to return to the boat.
+   swim a short distance right until the eel warns, then press `B`, `2` for
+   Excavate. When it lunges, swim left back past the starting spot while staying
+   near the arch. Look for the scallops' retreat and the boat-return instruction.
 2. [Night choice at the boat](https://joeypshell.github.io/oceangame2/?review=5819f1d46425a5c6b0e3c4c5f2e0448b915816f3&checkpoint=living_expedition_07_night):
    press `N`. `B` switches Root Claws / Not tonight; `Space` confirms the visible
    choice. This start already has the memory committed, not the adaptation.

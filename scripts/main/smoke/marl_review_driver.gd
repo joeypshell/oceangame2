@@ -83,6 +83,7 @@ func tick() -> Dictionary:
 func refuge() -> void:
 	expect(command_index("ground_pin") == -1, "unadapted Marl has Ground Pin")
 	await snap("unadapted_ready")
+	await lure_eel()
 	await dispatch("excavate", false)
 	var digging_captured := false
 	var retreat_captured := false
@@ -106,6 +107,7 @@ func refuge() -> void:
 
 
 func ground_pin() -> void:
+	await lure_eel()
 	var lunges := 0
 	var low_warning := false
 	for frame in range(240):
@@ -139,6 +141,16 @@ func ground_pin() -> void:
 	expect(main._companion_sortie.companion().get_node("Presentation").report()["release_visible"], "release lift absent")
 	expect("recovering" in guidance(), "release has no cooldown guidance")
 	await snap("pin_released")
+
+
+func lure_eel() -> void:
+	var refuge = main._world.burrow_refuge_presentation()
+	var approach: Vector2 = refuge.target + Vector2(32, -32)
+	for frame in range(90):
+		move_player(approach)
+		await tick()
+		if main._player.global_position.distance_to(approach) < 1.0 and main._hostiles.state_for(EEL)["phase"] == "warning": return
+	expect(false, "approaching the refuge did not draw a real eel warning")
 
 
 func recovery() -> void:

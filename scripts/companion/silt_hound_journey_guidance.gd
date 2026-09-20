@@ -59,6 +59,8 @@ func _growth_text(world, player, marl: Dictionary, profile: Dictionary, sortie) 
 	if not bool(dig.get("busy", false)):
 		for command in control.get("context_commands", []):
 			if command.get("id") == "excavate" and command.get("target_id") == "deep_cache_burrow_refuge_01":
+				if command.get("enabled", false) and not refuge.get("group", {}).get("threatened", false):
+					return "PARTNER: Protect the scallops | Approach the eel; when it warns, BOND > Excavate"
 				return "PARTNER: Scallops need shelter from the eel | " + ("BOND > Excavate to clear their silt arch" if command.get("enabled", false) else str(command.get("denial", "")))
 	return "PARTNER: Scallops wait beside the silt-blocked arch | Bring Marl close to clear their refuge"
 
