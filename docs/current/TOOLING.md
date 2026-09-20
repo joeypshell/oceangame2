@@ -21,6 +21,7 @@ This is the compact index for current project commands. Keep detailed command bl
 - [Living Expedition 07 Source Evidence](LIVING_EXPEDITION_07_SOURCE_VERIFICATION.md): generator, footprint/return tests, real eel lure, and source-only capture.
 - [Marl Refuge Evidence](LIVING_EXPEDITION_07_REFUGE_VERIFICATION.md): focused field-event smoke and unaccepted working-state captures.
 - [Marl Boat/Night Evidence](LIVING_EXPEDITION_07_MEMORY_NIGHT_VERIFICATION.md): identity-bound saves, deferral, persistence, and mobile night controls.
+- [Marl Ground Pin Evidence](LIVING_EXPEDITION_07_GROUND_PIN_VERIFICATION.md): physical acquisition, hostile hold/release, cooldown/pause, and working captures.
 
 ## Critical Warnings
 

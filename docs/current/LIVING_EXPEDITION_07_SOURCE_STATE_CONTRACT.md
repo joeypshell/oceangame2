@@ -119,7 +119,7 @@ action state or move responsibilities into `main.gd`.
 
 ## Ground Pin Runtime Interface
 
-This is the required #1393 implementation boundary, not a new API implemented here.
+Implemented by #1393; see [focused evidence](LIVING_EXPEDITION_07_GROUND_PIN_VERIFICATION.md).
 The companion requests one bounded hold only after physically reaching a valid
 floor/contact anchor near the source-bound live eel in warning/lunge. No snapping
 the eel down, wall homing, or remote freeze. Marl cannot dig and pin concurrently.
@@ -140,6 +140,11 @@ Keep `B/BOND` toggle, desktop `1`-`3`, and sequential mobile `BOND/TOOL/USE`.
 At most Recall, contextual Excavate, and learned Ground Pin appear. Show compact
 denial reasons such as too high, blocked approach, or cooldown. No held chord,
 new key, riding, or creature action in the diver's tool hotbar.
+
+Acquisition allows up to 1.5s to approach and plant, with 0.12s of planted contact
+preparation. A missed/canceled attempt also starts the 8s cooldown. Normal
+failure/map/day reset clears transient cooldown; Recall does not bypass it.
+Permanent changed-fin presentation remains #1394, separate from the action pose.
 
 ## Progression And Verification
 

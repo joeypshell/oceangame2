@@ -70,7 +70,7 @@ func _run() -> void:
 			push_error("Marl memory/night smoke: %s" % failure)
 		quit(1)
 		return
-	print("PASS: Marl memory/night real_event=true canonical_boat=true full_cargo=true identity_bound=true save_retry=true defer=true root_claws_exact_once=true reload_sheltered=true ground_pin_available=false")
+	print("PASS: Marl memory/night real_event=true canonical_boat=true full_cargo=true identity_bound=true save_retry=true defer=true root_claws_exact_once=true reload_sheltered=true ground_pin_available=true")
 	quit(0)
 
 
@@ -215,7 +215,7 @@ func _night_choice() -> void:
 	_profile.load_profile()
 	await _new_world()
 	_expect(_individual(MARL)["selected_adaptation_id"] == "root_claws", "confirmed adaptation lost on failure/reload")
-	_expect(_sortie.report()["adaptation"] == {"adaptation_id": "root_claws", "ground_pin_available": false}, "basic adaptation projection missing or claimed action exists")
+	_expect(_sortie.report()["adaptation"] == {"adaptation_id": "root_claws", "ground_pin_available": true}, "learned Ground Pin projection missing")
 	_expect(_world.burrow_refuge_presentation().report()["sheltered"], "grown Marl forgot refuge")
 	var payload: Dictionary = JSON.parse_string(FileAccess.get_file_as_string(PATH))
 	var companion: Dictionary = payload["companion_profile"]

@@ -28,6 +28,14 @@ var _context_direction := Vector2.RIGHT
 var _context_seconds := 0.0
 var _excavate_state := "idle"
 var _excavate_progress := 0.0
+var _pin_phase := "idle"
+var _pin_grip := Vector2.ZERO
+
+
+func set_ground_pin(phase: String, grip: Vector2) -> void:
+	_pin_phase = phase
+	_pin_grip = grip
+	queue_redraw()
 
 
 func sync(state: String, facing_sign: float, path_points: Array, floor_distance: float, movement_speed: float) -> void:
@@ -86,6 +94,7 @@ func report() -> Dictionary:
 		"excavate_state": _excavate_state,
 		"excavate_progress": _excavate_progress,
 		"excavate_visible": _excavate_state not in ["idle", "revealed"],
+		"ground_pin_pose": _pin_phase,
 	}
 
 
@@ -97,12 +106,16 @@ func _draw() -> void:
 	_draw_separation_cue()
 	_draw_context_cue()
 	_draw_excavate_cue()
+	_draw_ground_pin()
 
 
 func _draw_hound() -> void:
 	var direction := _facing_sign
 	var gait := _pulse_seconds * TAU * (1.0 + minf(2.0, _movement_speed / 90.0))
 	var body_y := sin(gait) * (0.7 if _movement_speed > 8.0 else 1.3)
+	if _pin_phase in ["planted", "holding"]:
+		gait = 0.0
+		body_y = 0.0
 	var body := PackedVector2Array([
 		Vector2(24.0 * direction, -3.0 + body_y),
 		Vector2(16.0 * direction, -11.0 + body_y),
@@ -158,12 +171,26 @@ func _draw_whiskers(direction: float, body_y: float) -> void:
 
 
 func _draw_floor_attention() -> void:
-	if _state != STATE_FLOOR_ATTENTION:
+	if _state != STATE_FLOOR_ATTENTION or _pin_phase != "idle":
 		return
 	var pulse := 4.0 + sin(_pulse_seconds * TAU) * 1.5
 	var center := Vector2(24.0 * _facing_sign, minf(34.0, _floor_distance))
 	draw_arc(center, pulse, 0.0, TAU, 18, Color(COLOR_WHISKER, 0.72), 1.5, true)
 	draw_line(center + Vector2(-7.0, 0.0), center + Vector2(7.0, 0.0), Color(COLOR_SILT, 0.58), 2.0, true)
+
+
+func _draw_ground_pin() -> void:
+	if _pin_phase not in ["planted", "holding"]:
+		return
+	for x in [-16.0, -3.0, 10.0]:
+		var foot := Vector2(x * _facing_sign, 24.0)
+		draw_polyline(PackedVector2Array([Vector2(x * _facing_sign, 8), foot, foot + Vector2(5 * _facing_sign, -3)]), COLOR_FIN, 4.0, true)
+	if _pin_phase == "holding":
+		var grip := _pin_grip * 0.65
+		for side in [-1.0, 1.0]:
+			var start := Vector2(10 * _facing_sign, side * 8)
+			var tip := grip + Vector2(0, side * 5)
+			draw_polyline(PackedVector2Array([start, tip, tip + Vector2(-4 * _facing_sign, -side * 4)]), COLOR_FIN, 4.0, true)
 
 
 func _draw_silt_wake() -> void:

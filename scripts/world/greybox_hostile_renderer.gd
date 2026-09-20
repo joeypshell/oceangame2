@@ -54,7 +54,7 @@ func set_state(hostile_id: String, center: Vector2, phase: String, health: int) 
 	var health_bar := root.get_node("HealthBar") as Node2D
 	var max_health := maxi(1, int(root.get_meta("max_health", 3)))
 	var health_ratio := clampf(float(health) / float(max_health), 0.0, 1.0)
-	health_bar.visible = phase in ["warning", "lunge", "recovery", "defeated"] or health < max_health
+	health_bar.visible = phase in ["warning", "lunge", "recovery", "support_held", "defeated"] or health < max_health
 	health_bar.scale.x = root.scale.x
 	_set_health_fill(health_bar.get_node("Fill") as Polygon2D, health, max_health)
 	warning_ring.visible = phase in ["warning", "lunge"]

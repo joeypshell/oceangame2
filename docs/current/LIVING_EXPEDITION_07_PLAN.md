@@ -6,7 +6,8 @@ Status: Active [milestone #51](https://github.com/joeypshell/oceangame2/mileston
 issues #1389-#1397, following planning #1387. #1389 adds catalog/source validation
 and the [source/state contract](LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md).
 Source authoring #1390 is implemented with [placement evidence](LIVING_EXPEDITION_07_SOURCE_VERIFICATION.md).
-The #1391 field event and #1392 boat/night growth are implemented; #1393 Ground Pin is next. The latest
+The #1391 field event, #1392 boat/night growth, and #1393 Ground Pin are implemented;
+#1394 presentation/checkpoints are next. The latest
 owner-approved runtime remains LE06 at `16300a9`.
 
 ## Decision
@@ -17,7 +18,7 @@ deliberate **Ground Pin** on the next sortie. Marl remains independent-only.
 
 | Candidate | Evidence and decision |
 | --- | --- |
-| Marl's first adaptation | Selected. At planning base, Kite and Mica grew while Marl had no memories/adaptations. #1389 adds declarations, #1391 the field event, and #1392 boat/night growth; physical Ground Pin remains to be implemented. |
+| Marl's first adaptation | Selected. #1389 adds declarations, #1391 the field event, #1392 boat/night growth, and #1393 physical Ground Pin. Growth presentation and integrated review remain. |
 | Growth, Release, And Habitat Legacy | Keep directional. LE06 proves remembered habitat change, but does not establish that surrendering an individual is meaningful. First develop the third companion; this is sequencing, not an in-game release prerequisite. |
 | Vein Whiskers | Defer. Better direction/confidence risks another subtle detector, repeating the Mica readability and usefulness failures. No passive yield/stat bonus substitutes for a tangible action. |
 | Root Claws | Select one bounded ground-control branch. Walking/digging fins become a visible planted grip, not a magic stun or Kite pulse recolor. Reject the proof if existing geometry cannot support physical contact without a combat rewrite. |
@@ -171,7 +172,7 @@ No broad art generation or baseline acceptance is authorized by this plan alone.
 ## Ordered Active Issues
 
 Frozen milestone #51 batch, created after #1387 / PR #1388 merged. #1389 supplies
-the schema/ownership contract, #1390 the source proof, #1391 the field event, and #1392 boat/night; continue with #1393-#1397.
+the schema/ownership contract, #1390 the source proof, #1391 the field event, #1392 boat/night, and #1393 physical Pin; continue with #1394-#1397.
 
 | Issue | Deliverable | Dependencies / focused evidence |
 | --- | --- | --- |

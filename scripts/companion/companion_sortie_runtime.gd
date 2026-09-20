@@ -495,6 +495,6 @@ func _adaptation_reports() -> Dictionary:
 
 func _selected_adaptation_report() -> Dictionary:
 	if _selected_species_id() == "silt_hound":
-		return {"adaptation_id": _selected_individual().get("selected_adaptation_id", ""), "ground_pin_available": false}
+		return {"adaptation_id": _selected_individual().get("selected_adaptation_id", ""), "ground_pin_available": _selected_individual().get("selected_adaptation_id", "") == "root_claws"}
 	var guardian := _guardian_pulse.report()
 	return guardian if not str(guardian.get("adaptation_id", "")).is_empty() else _anchor_fins.report()
