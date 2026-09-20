@@ -117,7 +117,11 @@ func _run() -> void:
 	var debrief_rects: Dictionary = debrief_report.get("command_rects", {})
 	_expect(str(debrief_report.get("context_mode", "")) == "debrief", "debrief context was not reported")
 	_expect(not (debrief_report.get("stick_rect", Rect2()) as Rect2).has_area(), "debrief retained the movement stick")
-	_expect(debrief_rects.keys() == [&"tool", &"project", &"day", &"use"], "debrief exposed the wrong command set: %s" % [debrief_rects.keys()])
+	_expect(debrief_rects.keys() == [&"tool", &"project", &"day", &"use", &"bond"], "debrief exposed the wrong command set: %s" % [debrief_rects.keys()])
+	var night_bond_count := int(_dispatch_counts.get(&"bond", 0))
+	controls._input(_touch(31, (debrief_rects.get(&"bond", Rect2()) as Rect2).get_center(), true))
+	controls._input(_touch(31, (debrief_rects.get(&"bond", Rect2()) as Rect2).get_center(), false))
+	_expect(int(_dispatch_counts.get(&"bond", 0)) == night_bond_count + 1, "night BOND choice did not dispatch once")
 	for command_rect in debrief_rects.values():
 		_expect((command_rect as Rect2).end.y <= reachable_bottom, "debrief command escaped the interaction region")
 	controls.set_context_mode(MobileTestControls.CONTEXT_DIVE)
@@ -166,7 +170,7 @@ func _run() -> void:
 			push_error(failure)
 		quit(1)
 		return
-	print("PASS: mobile test controls auto_hidden=headless dive=stick+9_commands debrief=TOOL+BUILD+DAY+USE down_reachable=true bottom_inset=104 simultaneous_input=true BOND=tap+tactical_pause USE=hold active_tool_hotbar=bottom_icons+desktop+844x390.")
+	print("PASS: mobile test controls auto_hidden=headless dive=stick+9_commands debrief=TOOL+BUILD+DAY+USE+BOND down_reachable=true bottom_inset=104 simultaneous_input=true BOND=tap+tactical_pause+night_choice USE=hold active_tool_hotbar=bottom_icons+desktop+844x390.")
 	quit(0)
 
 

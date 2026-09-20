@@ -47,6 +47,13 @@ func advance(delta: float, threatened: bool) -> void:
 	queue_redraw()
 
 
+func project_secured() -> void:
+	open_shelter()
+	_travel = TRAVEL_SECONDS
+	_threatened = false
+	queue_redraw()
+
+
 func reset_closed() -> void:
 	_opened = false
 	_travel = 0.0

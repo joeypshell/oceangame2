@@ -335,6 +335,8 @@ func select_active_companion(individual_id: String, persist := true) -> Dictiona
 
 func earn_companion_memory(memory_id: String, persist := true) -> Dictionary:
 	return _apply_companion_change("earn_memory", [memory_id], persist)
+func earn_companion_memory_for(individual_id: String, memory_id: String, persist := true) -> Dictionary:
+	return _apply_companion_change("earn_memory_for", [individual_id, memory_id], persist)
 func select_companion_adaptation(adaptation_id: String, persist := true) -> Dictionary:
 	return _apply_companion_change("select_adaptation", [adaptation_id], persist)
 

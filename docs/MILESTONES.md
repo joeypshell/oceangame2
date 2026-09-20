@@ -108,7 +108,7 @@ Emergency Week and overnight Food/Water/Power survival taxes are rejected. Short
 ## Planning Horizons
 
 - Completed: milestones #45-#50 cover one adapted Spark Ray, a bounded habitat and active species choice, one Mica ecology journey, one honestly rejected companion-combat experiment, one Silt Hound excavation journey, and Kite's Signal Reef nursery return. #1366-#1375 complete the latest batch with owner GO.
-- Active: [milestone #51, Living Expedition 07: Marl's Root Claws](https://github.com/joeypshell/oceangame2/milestone/51), #1389-#1397. #1389 establishes catalog/schema validation, #1390 source placement, and #1391 physical refuge excavation with pending memory. Next is #1392 boat/night growth, then Ground Pin, presentation/checkpoints, integrated evidence, visual/Web, and owner verdict. The linked plan owns exact issue dependencies.
+- Active: [milestone #51, Living Expedition 07: Marl's Root Claws](https://github.com/joeypshell/oceangame2/milestone/51), #1389-#1397. #1389-#1392 establish source validation/placement, physical refuge excavation, exact-once boat memory, and deliberate night Root Claws or deferral. Next is #1393 Ground Pin, then presentation/checkpoints, integrated evidence, visual/Web, and owner verdict. The linked plan owns exact issue dependencies.
 - Directional: later habitat legacy/release remains a milestone-level goal only.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
