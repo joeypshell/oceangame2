@@ -200,7 +200,11 @@ func _live_valid() -> bool:
 
 func _access_allowed() -> bool:
 	for id in _context.get("required_access_ids", []):
-		if not _has_upgrade.is_valid() or not _has_upgrade.call(str(id)):
+		# Main projects traversal upgrades separately from crafted tools. Match
+		# Guardian Pulse's ownership lookup; neither callback alone covers both.
+		var upgrade := _has_upgrade.is_valid() and bool(_has_upgrade.call(str(id)))
+		var capability: bool = _profile != null and _profile.has_capability(str(id))
+		if not upgrade and not capability:
 			return false
 	return true
 

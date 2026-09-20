@@ -4,7 +4,7 @@ const CompanionProfileState := preload("res://scripts/main/companion_profile_sta
 const ExpansionProfileState := preload("res://scripts/main/expansion_profile_state.gd")
 const LivingExpedition05Checkpoint := preload("res://scripts/main/review_checkpoint_living_expedition_05.gd")
 const LivingExpedition06Checkpoint := preload("res://scripts/main/review_checkpoint_living_expedition_06.gd")
-
+const LivingExpedition07Checkpoint := preload("res://scripts/main/review_checkpoint_living_expedition_07.gd")
 const EXPANSION_14_START := "expansion_14_start"
 const EXPANSION_16_START := "expansion_16_start"
 const EXPANSION_17_START := "expansion_17_start"
@@ -130,21 +130,19 @@ const REBREATHER_RECIPE := {
 
 static func is_supported(checkpoint_id: String) -> bool:
 	return checkpoint_id in [
-		EXPANSION_14_START,
-		EXPANSION_16_START,
-		EXPANSION_17_START,
-		EXPANSION_18_START,
-		LIVING_EXPEDITION_01_START,
-		LIVING_EXPEDITION_02_START,
-		LIVING_EXPEDITION_03_START,
-		LIVING_EXPEDITION_04_START,
-		LIVING_EXPEDITION_05_START,
-		LIVING_EXPEDITION_05_EXCAVATE_READY,
-	] or LivingExpedition06Checkpoint.is_supported(checkpoint_id)
+		EXPANSION_14_START, EXPANSION_16_START, EXPANSION_17_START, EXPANSION_18_START,
+		LIVING_EXPEDITION_01_START, LIVING_EXPEDITION_02_START, LIVING_EXPEDITION_03_START,
+		LIVING_EXPEDITION_04_START, LIVING_EXPEDITION_05_START, LIVING_EXPEDITION_05_EXCAVATE_READY,
+	] or LivingExpedition06Checkpoint.is_supported(checkpoint_id) or LivingExpedition07Checkpoint.is_supported(checkpoint_id)
 
 
 static func required_map_path(checkpoint_id: String) -> String:
 	return EXPANSION_14_MAP_PATH if is_supported(checkpoint_id) else ""
+
+
+static func snap_camera(player, checkpoint_id: String) -> void:
+	LivingExpedition07Checkpoint.frame_player(player, checkpoint_id)
+	player.snap_camera()
 
 
 static func apply(checkpoint_id: String, profile) -> Dictionary:
@@ -154,6 +152,8 @@ static func apply(checkpoint_id: String, profile) -> Dictionary:
 		return _result(false, checkpoint_id, "missing_profile")
 	if not _profile_is_empty(profile):
 		return _result(false, checkpoint_id, "profile_not_empty")
+	if LivingExpedition07Checkpoint.is_supported(checkpoint_id):
+		return LivingExpedition07Checkpoint.apply(checkpoint_id, profile, EXPANSION_14_MAP_PATH)
 	if LivingExpedition06Checkpoint.is_supported(checkpoint_id):
 		return LivingExpedition06Checkpoint.apply(checkpoint_id, profile, EXPANSION_14_MAP_PATH)
 

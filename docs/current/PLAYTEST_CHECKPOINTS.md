@@ -1,6 +1,6 @@
 # Playtest Checkpoints
 
-Last updated: 2026-09-06
+Last updated: 2026-09-20
 
 ## Purpose
 
@@ -17,6 +17,9 @@ the routine end-to-end regression layer.
 
 | ID | Starts with | Deliberately incomplete |
 | --- | --- | --- |
+| `living_expedition_07_refuge` | Day 4 beside the blocked deep-cache refuge; unadapted Marl selected, required equipment, empty cargo | Real Excavate under eel pressure, scallop retreat, pending memory and boat return |
+| `living_expedition_07_night` | Day 4 at the canonical boat; Marl's Guarded the Nest committed, no adaptation | `N` opens night; deliberately choose Root Claws or Not tonight |
+| `living_expedition_07_pin` | Day 5 at the same refuge approach; Root Claws Marl and required equipment | Lure the unchanged eel low, command Ground Pin, strike or retreat, and observe release |
 | `living_expedition_06_anchor_ready` | Day 4 at Signal Reef with adapted Kite, Propulsion Fins, and Dive Light; empty cargo | Anchor Fins shelter action, canonical-boat commitment, night transition, and restored-nursery revisit |
 | `living_expedition_06_guardian_ready` | Day 4 at the displaced filter-skate school with Guardian Pulse Kite, required access, and empty cargo | Guardian Pulse shelter action, canonical-boat commitment, night transition, and restored-nursery revisit |
 | `living_expedition_06_restored_nursery` | Day 5 beside the restored Signal Reef nursery with Anchor Fins Kite and committed shared history | Visual confirmation that seven filter skates occupy the nursery and no field action remains |
@@ -27,7 +30,11 @@ the routine end-to-end regression layer.
 | `living_expedition_02_start` | Prior required projects/discoveries committed; Cutter and Scanner available; Kite committed and selected; empty cargo | Mica rescue/commitment, two-partner habitat selection, Mica Reveal Trace sortie, and return to Kite |
 | `living_expedition_01_start` | Prior required projects/discoveries committed; Cutter, Fins, and Shock Prod available; empty cargo; no companion | Spark Ray rescue, boat commitment, command/riding proof, shared memory, night adaptation, and Day 3 payoff |
 
-Local:
+LE07 commands, candidate URLs, touch sequence, and short owner route:
+[Marl review tooling](tooling/living_expedition_07.md). These starts are locally
+verified; #1396 still owns exact-SHA Web verification, and #1397 the owner gate.
+
+Local retained regression starts:
 
 ```powershell
 & 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_win64_console.exe' --path . --review-checkpoint=living_expedition_06_anchor_ready

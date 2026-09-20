@@ -7,7 +7,7 @@ issues #1389-#1397, following planning #1387. #1389 adds catalog/source validati
 and the [source/state contract](LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md).
 Source authoring #1390 is implemented with [placement evidence](LIVING_EXPEDITION_07_SOURCE_VERIFICATION.md).
 The #1391 field event, #1392 boat/night growth, and #1393 Ground Pin are implemented;
-#1394 presentation/checkpoints are next. The latest
+#1394 adds readable growth and isolated checkpoints; #1395 integrated evidence is next. The latest
 owner-approved runtime remains LE06 at `16300a9`.
 
 ## Decision
@@ -18,7 +18,7 @@ deliberate **Ground Pin** on the next sortie. Marl remains independent-only.
 
 | Candidate | Evidence and decision |
 | --- | --- |
-| Marl's first adaptation | Selected. #1389 adds declarations, #1391 the field event, #1392 boat/night growth, and #1393 physical Ground Pin. Growth presentation and integrated review remain. |
+| Marl's first adaptation | Selected. #1389 adds declarations, #1391 the field event, #1392 boat/night growth, and #1393 physical Ground Pin. Growth presentation/checkpoints (#1394) are implemented; integrated review remains. |
 | Growth, Release, And Habitat Legacy | Keep directional. LE06 proves remembered habitat change, but does not establish that surrendering an individual is meaningful. First develop the third companion; this is sequencing, not an in-game release prerequisite. |
 | Vein Whiskers | Defer. Better direction/confidence risks another subtle detector, repeating the Mica readability and usefulness failures. No passive yield/stat bonus substitutes for a tangible action. |
 | Root Claws | Select one bounded ground-control branch. Walking/digging fins become a visible planted grip, not a magic stun or Kite pulse recolor. Reject the proof if existing geometry cannot support physical contact without a combat rewrite. |
@@ -172,7 +172,7 @@ No broad art generation or baseline acceptance is authorized by this plan alone.
 ## Ordered Active Issues
 
 Frozen milestone #51 batch, created after #1387 / PR #1388 merged. #1389 supplies
-the schema/ownership contract, #1390 the source proof, #1391 the field event, #1392 boat/night, and #1393 physical Pin; continue with #1394-#1397.
+the schema/ownership contract, #1390 the source proof, #1391 the field event, #1392 boat/night, and #1393 physical Pin; continue with #1395-#1397.
 
 | Issue | Deliverable | Dependencies / focused evidence |
 | --- | --- | --- |

@@ -33,6 +33,9 @@ run_godot silt-hound-excavate 180 --headless --path . --script res://scripts/mai
 run_godot marl-refuge 180 --headless --path . --script res://scripts/main/smoke/smoke_marl_refuge.gd --fixed-fps 60
 run_godot marl-memory-night 180 --headless --path . --script res://scripts/main/smoke/smoke_marl_memory_night.gd --fixed-fps 60
 run_godot marl-ground-pin 180 --headless --path . --script res://scripts/main/smoke/smoke_marl_ground_pin.gd --fixed-fps 60
+for checkpoint in refuge night pin; do
+  run_godot "marl-checkpoint-$checkpoint" 120 --headless --path . --fixed-fps 60 --script res://scripts/main/smoke/smoke_living_expedition_07_checkpoint_runtime.gd -- --review-checkpoint="living_expedition_07_$checkpoint" --show-mobile-controls
+done
 run_godot silt-hound-journey-guidance 180 --headless --path . --script res://scripts/main/smoke/smoke_silt_hound_journey_guidance.gd
 run_godot anchor-fins-payoff 180 --headless --path . --script res://scripts/main/smoke/smoke_anchor_fins_payoff.gd
 run_godot guardian-pulse-payoff 180 --headless --path . --script res://scripts/main/smoke/smoke_guardian_pulse_payoff.gd

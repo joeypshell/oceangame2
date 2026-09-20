@@ -1394,7 +1394,7 @@ func _load_playable_map(
 	if player.has_method("set_camera_limits"):
 		player.set_camera_limits(Rect2(Vector2.ZERO, world.map_pixel_size))
 	if player.has_method("snap_camera"):
-		player.snap_camera()
+		ReviewCheckpointFixture.snap_camera(player, _review_checkpoint_id)
 
 	if not continuous_sortie:
 		_banked_salvage = 0

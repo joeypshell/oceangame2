@@ -66,15 +66,17 @@ func reset_closed() -> void:
 func report() -> Dictionary:
 	return {"opened": _opened, "sheltered": _opened and _travel >= TRAVEL_SECONDS,
 		"travel_seconds": _travel, "phase": _phase, "threatened": _threatened,
-		"target_id": source.get("id", "")}
+		"target_id": source.get("id", ""), "group_count": 3, "appearance": "silt_arch_and_scallops"}
 
 
 func _draw() -> void:
 	# A low, physically open arch differs from the old material-bearing mound.
-	draw_circle(Vector2(0, -1), 18, Color("45666a"))
-	draw_circle(Vector2(0, 3), 12, Color("132e37") if _opened else Color("bbad79"))
-	draw_line(Vector2(-22, 12), Vector2(22, 12), Color("dfce92"), 3)
+	draw_colored_polygon(PackedVector2Array([Vector2(-26, 14), Vector2(-25, -5), Vector2(-16, -22), Vector2(9, -24), Vector2(24, -10), Vector2(26, 14)]), Color("45666a"))
+	draw_arc(Vector2(0, 3), 21, PI, TAU, 16, Color("98a879"), 4, true)
+	draw_circle(Vector2(0, 3), 16, Color("132e37"))
+	draw_line(Vector2(-27, 14), Vector2(27, 14), Color("dfce92"), 3)
 	if not _opened:
+		draw_colored_polygon(PackedVector2Array([Vector2(-19, 13), Vector2(-16, -4), Vector2(-6, -12), Vector2(5, -9), Vector2(17, 0), Vector2(21, 13)]), Color("bbad79"))
 		for offset in [-10, 0, 10]:
 			draw_line(Vector2(offset - 3, 6), Vector2(offset + 3, 0), Color("706845"), 2)
 		if _phase in ["digging", "anticipating"]:
@@ -88,8 +90,8 @@ func _draw() -> void:
 		var distance := fraction * float(_path.size() - 1)
 		var segment := mini(int(distance), _path.size() - 2)
 		var center := _path[segment].lerp(_path[segment + 1], distance - segment)
-		center += Vector2(index * 7 - 7, -4 + abs(index - 1) * 4)
-		var size := 7.0 * (1.0 - fraction * 0.6)
+		center += Vector2(index * 14 - 14, -4 + abs(index - 1) * 4)
+		var size := 10.0 * (1.0 - fraction * 0.65)
 		var tint := Color("e8b0a2") if _threatened and not _opened else Color("afe0cb")
 		draw_circle(center, size, Color("254b55"))
 		draw_arc(center, size, PI, TAU, 12, tint, 3)

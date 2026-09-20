@@ -64,7 +64,7 @@ func availability() -> Dictionary:
 		elif not _companion.excavate_path_allowed(_visual.target):
 			reason = "path_blocked"
 	return {"reason": "ready" if reason.is_empty() else reason,
-		"in_context": in_context() and reason != "refuge_opened", "target": _visual.target}
+		"in_context": in_context() and reason not in ["refuge_opened", "memory_secured"], "target": _visual.target}
 
 
 func start() -> bool:

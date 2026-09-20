@@ -9,7 +9,7 @@ const OPTIONS := [
 		"memory_label": "Guarded the Nest - dug a refuge under a live eel threat",
 		"visible_change": "Broader hooked fin tips and a low planted posture",
 		"payoff": "Ground Pin: hold a near-floor eel; Marl must stop moving or digging",
-		"availability_note": "Ground Pin follows confirmation; permanent changed-fin art is not available yet",
+		"availability_note": "Next dive: draw the eel low, then BOND > Ground Pin; strike or retreat during the grip",
 		"exclusive_label": "",
 	},
 	{
@@ -104,6 +104,15 @@ func debrief_lines() -> Array[String]:
 	var option: Dictionary = eligible[clampi(_highlighted_index, 0, eligible.size() - 1)]
 	if str(option["adaptation_id"]).is_empty():
 		return ["Marl: Not tonight", "Keep Guarded the Nest for a later night", "B: Choose | Space/USE: Confirm"]
+	if str(option["species_id"]) == "silt_hound":
+		return [
+			"Marl: Root Claws",
+			"Guarded the Nest: refuge under eel threat",
+			"Hooked fin tips; low planted posture",
+			"Ground Pin: stop to grip a low eel",
+			"Strike releases it. Use next dive.",
+			"B: Choose | Space/USE: Confirm",
+		]
 	var lines: Array[String] = [
 		"%s adaptation %d/%d" % [_active_callsign(), _highlighted_index + 1, eligible.size()],
 		"Memory: %s" % option["memory_label"],

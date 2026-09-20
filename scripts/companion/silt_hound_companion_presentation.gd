@@ -30,9 +30,13 @@ var _excavate_state := "idle"
 var _excavate_progress := 0.0
 var _pin_phase := "idle"
 var _pin_grip := Vector2.ZERO
+var _root_claws := false
+var _release_seconds := 0.0
 
 
 func set_ground_pin(phase: String, grip: Vector2) -> void:
+	if _pin_phase in ["planted", "holding"] and phase == "idle":
+		_release_seconds = 0.45
 	_pin_phase = phase
 	_pin_grip = grip
 	queue_redraw()
@@ -47,8 +51,9 @@ func sync(state: String, facing_sign: float, path_points: Array, floor_distance:
 	queue_redraw()
 
 
-func set_identity(callsign: String) -> void:
+func set_identity(callsign: String, adaptation_id := "") -> void:
 	_callsign = callsign.strip_edges() if not callsign.strip_edges().is_empty() else "Marl"
+	_root_claws = adaptation_id == "root_claws"
 	queue_redraw()
 
 
@@ -69,6 +74,7 @@ func set_excavate_state(state: String, progress: float) -> void:
 
 
 func advance(delta: float) -> void:
+	_release_seconds = maxf(0.0, _release_seconds - maxf(0.0, delta))
 	_pulse_seconds = fmod(_pulse_seconds + maxf(0.0, delta), 1.0)
 	if _context_seconds > 0.0:
 		_context_seconds = maxf(0.0, _context_seconds - maxf(0.0, delta))
@@ -95,6 +101,8 @@ func report() -> Dictionary:
 		"excavate_progress": _excavate_progress,
 		"excavate_visible": _excavate_state not in ["idle", "revealed"],
 		"ground_pin_pose": _pin_phase,
+		"root_claws_visible": _root_claws,
+		"release_visible": _release_seconds > 0.0,
 	}
 
 
@@ -115,7 +123,7 @@ func _draw_hound() -> void:
 	var body_y := sin(gait) * (0.7 if _movement_speed > 8.0 else 1.3)
 	if _pin_phase in ["planted", "holding"]:
 		gait = 0.0
-		body_y = 0.0
+		body_y = 3.0
 	var body := PackedVector2Array([
 		Vector2(24.0 * direction, -3.0 + body_y),
 		Vector2(16.0 * direction, -11.0 + body_y),
@@ -147,6 +155,20 @@ func _draw_hound() -> void:
 		])
 		draw_colored_polygon(upper, Color(COLOR_FIN, 0.9))
 		draw_colored_polygon(lower, COLOR_FIN)
+		if _root_claws:
+			# Broader, hooked tips remain visible between actions, not a color swap.
+			for side in [-1.0, 1.0]:
+				var tip := Vector2(root_x - 7.0 * direction, side * (18.0 + kick) + body_y)
+				tip.y = clampf(tip.y, -20.0, 20.0)
+				if _pin_phase in ["planted", "holding"] and side > 0:
+					tip.y = 20.0
+				var hook := PackedVector2Array([
+					tip + Vector2(-6 * direction, -side * 5), tip + Vector2(5 * direction, -side * 5),
+					tip + Vector2(8 * direction, side * 1), tip + Vector2(5 * direction, side * 4),
+					tip + Vector2(1 * direction, 0), tip + Vector2(-6 * direction, side * 2),
+				])
+				draw_colored_polygon(hook, COLOR_FIN)
+				draw_polyline(PackedVector2Array([hook[2], hook[3], hook[4]]), COLOR_BELLY, 2.0, true)
 	draw_colored_polygon(PackedVector2Array([
 		Vector2(-25.0 * direction, -3.0 + body_y),
 		Vector2(-43.0 * direction, -10.0 + body_y),
@@ -180,11 +202,14 @@ func _draw_floor_attention() -> void:
 
 
 func _draw_ground_pin() -> void:
-	if _pin_phase not in ["planted", "holding"]:
+	if _pin_phase not in ["planted", "holding"] and _release_seconds <= 0.0:
 		return
+	var lift := (1.0 - _release_seconds / 0.45) * 10.0 if _release_seconds > 0.0 else 0.0
 	for x in [-16.0, -3.0, 10.0]:
-		var foot := Vector2(x * _facing_sign, 24.0)
+		var foot := Vector2(x * _facing_sign, 24.0 - lift)
 		draw_polyline(PackedVector2Array([Vector2(x * _facing_sign, 8), foot, foot + Vector2(5 * _facing_sign, -3)]), COLOR_FIN, 4.0, true)
+		if _release_seconds > 0.0:
+			draw_circle(foot + Vector2(-8 * _facing_sign, lift), 2.0, Color(COLOR_SILT, _release_seconds / 0.45))
 	if _pin_phase == "holding":
 		var grip := _pin_grip * 0.65
 		for side in [-1.0, 1.0]:
