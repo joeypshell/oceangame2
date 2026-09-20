@@ -184,7 +184,7 @@ func _night_choice() -> void:
 	var report: Dictionary = _sortie.memory_report()["debrief"]
 	_expect(report["eligible_adaptation_ids"] == ["root_claws"] and report["choice_count"] == 2, "night added fake branch or omitted deferral")
 	var text := "\n".join(_sortie.debrief_lines())
-	for phrase in ["Guarded the Nest", "hooked fin tips", "planted posture", "Ground Pin", "stop moving or digging", "not available"]:
+	for phrase in ["Guarded the Nest", "Hooked fin tips", "planted posture", "Ground Pin", "stop to grip", "next dive"]:
 		_expect(phrase in text, "night explanation omitted %s" % phrase)
 	var before: Dictionary = _profile.companion_report()
 	var saves := _profile.saves

@@ -48,7 +48,7 @@ func configure(world, player, position_allowed: Callable, identity: Dictionary) 
 	global_position = _spawn_position()
 	velocity = Vector2.ZERO
 	if _presentation != null:
-		_presentation.set_identity(str(_identity.get("callsign", "Marl")))
+		_presentation.set_identity(str(_identity.get("callsign", "Marl")), str(_identity.get("selected_adaptation_id", "")))
 	_sync_presentation()
 
 

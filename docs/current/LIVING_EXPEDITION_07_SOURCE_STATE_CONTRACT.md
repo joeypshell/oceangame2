@@ -144,7 +144,9 @@ new key, riding, or creature action in the diver's tool hotbar.
 Acquisition allows up to 1.5s to approach and plant, with 0.12s of planted contact
 preparation. A missed/canceled attempt also starts the 8s cooldown. Normal
 failure/map/day reset clears transient cooldown; Recall does not bypass it.
-Permanent changed-fin presentation remains #1394, separate from the action pose.
+#1394 projects permanent hooked fin tips from the profile identity and a bounded
+release lift from the action pose. Its real-scene checkpoints/captures are local
+review evidence, not baseline or player acceptance; #1395-#1397 remain.
 
 ## Progression And Verification
 

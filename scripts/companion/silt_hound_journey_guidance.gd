@@ -19,7 +19,48 @@ func evaluate(world, player, profile, sortie_runtime) -> Dictionary:
 	var marl := _marl_record(companion_profile)
 	if marl.is_empty():
 		return _result(false) if rescue.is_empty() else _uncommitted_text(rescue, player)
+	var growth := _growth_text(world, player, marl, companion_profile, sortie_runtime)
+	if not growth.is_empty():
+		return _result(true, growth)
 	return _committed_text(world, player, companion_profile, sortie_runtime, source)
+
+
+func _growth_text(world, player, marl: Dictionary, profile: Dictionary, sortie) -> String:
+	if str(profile.get("active_individual_id", "")) != MARL_ID:
+		return ""
+	var control: Dictionary = sortie.report().get("control", {})
+	var refuge: Dictionary = control.get("refuge", {})
+	if not (refuge.get("pending", {}) as Dictionary).is_empty():
+		return "PARTNER: Marl sheltered the scallops | Return together to the surface boat to secure Guarded the Nest"
+	var learned := str(marl.get("selected_adaptation_id", "")) == "root_claws"
+	var secured := (marl.get("earned_memory_ids", []) as Array).has("guarded_the_nest")
+	if secured and not learned:
+		return "PARTNER: Guarded the Nest secured | At the boat, end the day to choose Root Claws or Not tonight"
+	if world.is_inside_boat(player.global_position) and learned:
+		return "PARTNER: Marl has Root Claws | Revisit the deep-cache floor; draw the eel low for Ground Pin"
+	var visual = world.burrow_refuge_presentation() if world.has_method("burrow_refuge_presentation") else null
+	if not is_instance_valid(visual) or player.global_position.distance_to(visual.target) > 192.0:
+		return ""
+	if learned:
+		var pin: Dictionary = control.get("ground_pin", {})
+		match str(pin.get("state", "idle")):
+			"approaching": return "PARTNER: Marl is approaching the floor anchor | Stay close and dodge the eel"
+			"holding": return "PARTNER: Marl is gripping the eel | Strike with Shock Prod or swim clear"
+		if float(pin.get("cooldown_seconds", 0)) > 0:
+			return "PARTNER: Marl released the eel | Ground Pin recovering %.1fs" % float(pin["cooldown_seconds"])
+		for command in control.get("context_commands", []):
+			if command.get("id") == "ground_pin":
+				return "PARTNER: Ground Pin on the deep-cache eel | " + ("BOND > Ground Pin, then dodge aside" if command.get("enabled", false) else str(command.get("denial", "")))
+	var dig: Dictionary = control.get("excavate", {})
+	if bool(refuge.get("attempt_active", false)):
+		return "PARTNER: Marl is opening the scallop refuge | Dodge the eel and stay beside the group"
+	if bool(refuge.get("group", {}).get("opened", false)):
+		return "PARTNER: Scallops sheltered | A quiet rescue gives no threat memory; try another day"
+	if not bool(dig.get("busy", false)):
+		for command in control.get("context_commands", []):
+			if command.get("id") == "excavate" and command.get("target_id") == "deep_cache_burrow_refuge_01":
+				return "PARTNER: Scallops need shelter from the eel | " + ("BOND > Excavate to clear their silt arch" if command.get("enabled", false) else str(command.get("denial", "")))
+	return "PARTNER: Scallops wait beside the silt-blocked arch | Bring Marl close to clear their refuge"
 
 
 func _uncommitted_text(rescue: Dictionary, player) -> Dictionary:
