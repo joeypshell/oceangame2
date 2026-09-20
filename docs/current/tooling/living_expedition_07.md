@@ -1,8 +1,8 @@
 # Living Expedition 07 Review
 
 Issue #1394 adds local presentation/checkpoint evidence, not visual baseline
-acceptance or an owner GO. Integrated release validation is #1395, exact Web and
-baseline review #1396, and the owner verdict #1397.
+acceptance or an owner GO. [Integrated evidence](../LIVING_EXPEDITION_07_INTEGRATED_VERIFICATION.md)
+is recorded under #1395; exact Web/baseline review is #1396, then owner verdict #1397.
 
 ## Isolated Starts
 
