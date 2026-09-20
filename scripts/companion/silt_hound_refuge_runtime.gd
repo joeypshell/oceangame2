@@ -1,5 +1,7 @@
 extends RefCounted
 
+const MemoryReturn := preload("res://scripts/companion/silt_hound_memory_return.gd")
+
 const INDIVIDUAL_ID := "silt_hound_juvenile_01"
 const MEMORY_ID := "guarded_the_nest"
 const REFUGE_ID := "deep_cache_burrow_refuge_01"
@@ -39,6 +41,7 @@ func bind_map(world, player, companion, hostiles, status_sink: Callable) -> void
 func bind_profile(profile, has_upgrade: Callable) -> void:
 	_profile = profile
 	_has_upgrade = has_upgrade
+	MemoryReturn.project_secured(_world, _profile)
 
 
 func in_context() -> bool:
@@ -143,6 +146,13 @@ func reset(reason: String) -> void:
 	# A normal new-day/reload creates a fresh world; failure/retry explicitly reset.
 	if _valid_nodes() and reason not in ["boat_habitat", "map_clear"]:
 		_visual.reset_closed()
+	MemoryReturn.project_secured(_world, _profile)
+
+
+func take_pending_memory() -> Dictionary:
+	var event := _pending.duplicate(true)
+	_pending.clear()
+	return event
 
 
 func live_invalid_reason() -> String:

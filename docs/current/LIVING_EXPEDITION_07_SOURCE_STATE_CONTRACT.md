@@ -8,9 +8,8 @@ ordered batch and experience decision: [LE07 plan](LIVING_EXPEDITION_07_PLAN.md)
 
 Catalog declarations, Python source validation, proposed progression graph,
 negative fixtures, #1390 source authoring, and #1391 refuge/pending event are implemented. See
-[placement evidence](LIVING_EXPEDITION_07_SOURCE_VERIFICATION.md) and [runtime evidence](LIVING_EXPEDITION_07_REFUGE_VERIFICATION.md). Persistent
-memory commitment/night UI and Ground Pin remain #1392-#1393; none is live merely
-because its source record exists. Terrain, profile version, existing assets, and
+[placement evidence](LIVING_EXPEDITION_07_SOURCE_VERIFICATION.md) and [runtime evidence](LIVING_EXPEDITION_07_REFUGE_VERIFICATION.md). #1392 adds [boat/night evidence](LIVING_EXPEDITION_07_MEMORY_NIGHT_VERIFICATION.md).
+Ground Pin remains #1393; its source record does not make the action live. Terrain, profile version, existing assets, and
 accepted baselines are unchanged.
 
 The catalog remains version 3 / `partial_runtime`. Marl is the existing
@@ -80,7 +79,7 @@ attempt with its individual id, never whichever companion becomes selected later
    observations produce one pending `guarded_the_nest`, not permanent growth.
 4. Canonical `production_level_01` / `surface_boat_entry` return commits the
    captured individual's memory through existing profile/save ownership once.
-5. Night deliberately selects Root Claws or defers. The next sortie may use Pin.
+5. Night deliberately selects Root Claws or defers. Pin becomes usable only after #1393.
 
 | Situation | Required outcome |
 | --- | --- |
@@ -102,10 +101,12 @@ snapshots; no prey-target AI, wildlife damage/death, or ecosystem state is added
 selection, one `selected_adaptation_id` per individual. Existing identity,
 committed rescue, `earned_memory_ids`, and selected adaptation own lasting growth.
 Root Claws requires this individual's secured memory and an empty adaptation slot.
-The existing runtime has no Marl night option until #1392; catalog membership
-does not automatically select it or grant the memory.
+#1392 offers Root Claws or Not tonight; catalog membership never grants memory
+or selects growth. Deferral is transient to that night, not a second adaptation.
 
-Derive the lasting sheltered refuge from the committed Marl memory. Do not add
+`silt_hound_memory_return.gd` transfers the captured event before habitat dismissal
+and retries the identity-targeted atomic profile save without changing active selection.
+It derives the lasting sheltered refuge from committed Marl memory. Do not add
 a second nursery-history store. Source JSON stays immutable. Dig/attempt flags,
 pending memory, group travel, positions, command selection, pin target, approach,
 hold, and cooldown are transient and must clear through normal lifecycle hooks.

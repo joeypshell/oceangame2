@@ -8,6 +8,7 @@ const CompanionHabitatSelection := preload("res://scripts/companion/companion_ha
 const CompanionMemoryRuntime := preload("res://scripts/companion/companion_memory_runtime.gd")
 const CompanionSpeciesRuntimeFactory := preload("res://scripts/companion/companion_species_runtime_factory.gd")
 const SignalReefNurseryCoordinator := preload("res://scripts/companion/signal_reef_nursery_coordinator.gd")
+const SiltHoundMemoryReturn := preload("res://scripts/companion/silt_hound_memory_return.gd")
 const CurrentGateController := preload("res://scripts/main/current_gate_controller.gd")
 const SHARED_EVENT_DISTANCE_PX := 240.0
 
@@ -33,6 +34,7 @@ var _memory_runtime := CompanionMemoryRuntime.new()
 var _ecology_observation := CompanionEcologyObservationState.new()
 var _adaptation_debrief := CompanionAdaptationDebrief.new()
 var _signal_reef_nursery := SignalReefNurseryCoordinator.new()
+var _marl_memory := SiltHoundMemoryReturn.new()
 
 
 func _ready() -> void:
@@ -74,6 +76,7 @@ func bind_map(
 	_moving_hazards = moving_hazards
 	_hostiles = hostiles
 	_has_upgrade = has_upgrade
+	_marl_memory.bind_map(world, player, profile)
 	_ecology_observation.bind_map(world, profile, preserve_sortie, active_condition_ids)
 	_ensure_control(_selected_species_id())
 	_habitat.bind_map(world, player, profile, Callable(self, "release_to_habitat"))
@@ -118,6 +121,7 @@ func sync_spawn() -> Dictionary:
 
 func clear_map() -> void:
 	_reset_species_transient("map_clear")
+	_marl_memory.clear_map()
 	_anchor_fins.clear_map()
 	_guardian_pulse.clear_map()
 	_signal_reef_nursery.clear_map()
@@ -183,16 +187,15 @@ func observe_hostiles(hostiles, event: Dictionary) -> Dictionary:
 
 
 func commit_memories_at_boat(day_number := 0) -> Dictionary:
-	var at_boat: bool = (
-		_world != null
-		and _player != null
-		and _world.has_method("is_inside_boat")
-		and _world.is_inside_boat(_player.global_position)
-	)
+	var at_boat := SiltHoundMemoryReturn.is_at_boat(_world, _player)
 	var memory: Dictionary = _memory_runtime.commit_at_boat(at_boat)
 	var ecology: Dictionary = _ecology_observation.commit_at_boat(at_boat)
 	var nursery: Dictionary = _signal_reef_nursery.commit_at_boat(at_boat, day_number)
+	var marl: Dictionary = _marl_memory.commit_at_boat(_control)
 	var result: Dictionary = (nursery if bool(nursery.get("changed", false)) else ecology if str(ecology.get("reason", "")) != "nothing_pending" else memory).duplicate(true)
+	if bool(marl.get("changed", false)) or marl.has("note"):
+		result = marl.duplicate(true)
+	result["marl_memory"] = marl
 	result["companion_memory"] = memory
 	result["ecology"] = ecology
 	result["signal_reef_nursery"] = nursery
@@ -237,6 +240,7 @@ func debrief_lines() -> Array[String]:
 
 func memory_report() -> Dictionary:
 	var value := _memory_runtime.report()
+	value["marl"] = _marl_memory.report()
 	value["ecology"] = _ecology_observation.report()
 	value["debrief"] = _adaptation_debrief.report()
 	return value
@@ -261,6 +265,9 @@ func _unhandled_input(event: InputEvent) -> void:
 func release_to_habitat() -> bool:
 	if _companion == null or not is_instance_valid(_companion):
 		return false
+	var marl_return: Dictionary = _marl_memory.commit_at_boat(_control)
+	if _status_sink.is_valid() and marl_return.has("note"):
+		_status_sink.call(str(marl_return["note"]))
 	reset_control("boat_habitat")
 	_reset_species_transient("boat_habitat")
 	if _control != null:
@@ -312,19 +319,9 @@ func companion():
 	return _companion if _companion != null and is_instance_valid(_companion) else null
 
 func report() -> Dictionary:
-	if _companion == null or not is_instance_valid(_companion):
-		return {
-			"spawned": false,
-			"active_species_id": _active_species_id,
-			"control": _control.report() if _control != null else {},
-			"memory": memory_report(),
-			"adaptation": _selected_adaptation_report(),
-			"adaptations": _adaptation_reports(),
-			"signal_reef_nursery": _signal_reef_nursery.report(),
-			"habitat": _habitat.report() if _habitat != null else {},
-		}
-	var value: Dictionary = _companion.report()
-	value["spawned"] = true
+	var spawned := is_instance_valid(_companion)
+	var value: Dictionary = _companion.report() if spawned else {}
+	value["spawned"] = spawned
 	value["active_species_id"] = _active_species_id
 	value["control"] = _control.report() if _control != null else {}
 	value["memory"] = memory_report()
@@ -445,6 +442,8 @@ func _bind_species_companion() -> void:
 
 
 func _reset_species_transient(reason: String) -> void:
+	if reason not in ["boat_habitat"]:
+		_marl_memory.discard_uncommitted()
 	if _control != null and _control.has_method("reset_transient"):
 		_control.reset_transient(reason)
 
@@ -461,7 +460,6 @@ func _selected_species_id() -> String:
 
 func _spark_active() -> bool:
 	return _active_species_id == CompanionSpeciesRuntimeFactory.SPARK_RAY
-
 
 func _adaptation_actions(context: String) -> Array:
 	var actions: Array = []
@@ -496,5 +494,7 @@ func _adaptation_reports() -> Dictionary:
 
 
 func _selected_adaptation_report() -> Dictionary:
+	if _selected_species_id() == "silt_hound":
+		return {"adaptation_id": _selected_individual().get("selected_adaptation_id", ""), "ground_pin_available": false}
 	var guardian := _guardian_pulse.report()
 	return guardian if not str(guardian.get("adaptation_id", "")).is_empty() else _anchor_fins.report()

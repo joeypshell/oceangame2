@@ -14,7 +14,7 @@ const GRID_COLUMNS := 3
 const DEBRIEF_GRID_COLUMNS := 2
 const CONTEXT_DIVE := "dive"
 const CONTEXT_DEBRIEF := "debrief"
-const DEBRIEF_COMMAND_IDS := [&"tool", &"project", &"day", &"use"]
+const DEBRIEF_COMMAND_IDS := [&"tool", &"project", &"day", &"use", &"bond"]
 const COMMANDS := [
 	{"id": &"oxygen", "label": "O2", "keycode": KEY_U},
 	{"id": &"cargo", "label": "BAG", "keycode": KEY_C},

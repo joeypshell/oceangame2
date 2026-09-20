@@ -109,9 +109,15 @@ func select_active(individual_id: String) -> Dictionary:
 
 
 func earn_memory(memory_id: String) -> Dictionary:
-	var individual := active_individual()
-	if individual.is_empty():
+	if active_individual().is_empty():
 		return _result(false, "active_companion_not_selected", {"memory_id": memory_id})
+	return earn_memory_for(_active_individual_id, memory_id)
+
+
+func earn_memory_for(individual_id: String, memory_id: String) -> Dictionary:
+	if not _individuals.has(individual_id):
+		return _result(false, "companion_not_committed", {"individual_id": individual_id})
+	var individual: Dictionary = _individuals[individual_id].duplicate(true)
 	if not _species_id_list(str(individual["species_id"]), "memory_ids").has(memory_id):
 		return _result(false, "unsupported_memory", {"memory_id": memory_id})
 	var earned: Array = individual["earned_memory_ids"]
@@ -120,7 +126,7 @@ func earn_memory(memory_id: String) -> Dictionary:
 	earned.append(memory_id)
 	earned.sort()
 	individual["earned_memory_ids"] = earned
-	_individuals[_active_individual_id] = individual
+	_individuals[individual_id] = individual
 	return _result(true, "earned", {"memory_id": memory_id})
 
 
