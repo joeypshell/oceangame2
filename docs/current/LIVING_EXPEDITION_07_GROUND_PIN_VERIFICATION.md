@@ -40,12 +40,12 @@ python tools/check_file_lengths.py
 git diff --check
 ```
 
-The new smoke is in the core CI lane. Nineteen actual acquisitions use unchanged
+The new smoke is in the core CI lane. Twenty actual acquisitions use unchanged
 source eel warning/lunge/recovery and collision-driven actor motion. Initial
 fixture placement is explicit; no hostile position/phase or successful hold is
 injected. It checks high/blocked/missing-source/unlearned/defeated targets,
 equipment checks, whiff, action exclusion, no refresh/stack, maximum hold,
-cooldown and pause, weapon/lethal release, all lifecycle cancellations, safe
+cooldown and pause, weapon/lethal release, both teardown orders, safe
 follow recovery, unchanged source/profile/cache, and hidden defeat-only harvest.
 
 Passing focused regressions: Guardian Pulse payoff, Marl memory/night and refuge,

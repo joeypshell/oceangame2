@@ -62,10 +62,15 @@ func _run() -> void:
 	await _release_paths()
 	_expect(world._map_data == source_before, "runtime mutated source map")
 	_expect(profile.companion_report() == profile_before, "pin changed permanent profile")
+	if await _acquire():
+		world.free()
+		pin.cancel("world_teardown")
+		_expect(not pin.busy() and hostiles.state_for(EEL)["phase"] != "support_held", "world-first teardown retained hold")
 	sortie.clear_map()
 	sortie.free()
 	player.free()
-	world.free()
+	if is_instance_valid(world):
+		world.free()
 	await process_frame
 	for failure in failures:
 		push_error("Marl Ground Pin: " + failure)
