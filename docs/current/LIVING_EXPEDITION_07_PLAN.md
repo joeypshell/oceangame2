@@ -8,8 +8,10 @@ and the [source/state contract](LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md).
 Source authoring #1390 is implemented with [placement evidence](LIVING_EXPEDITION_07_SOURCE_VERIFICATION.md).
 The #1391 field event, #1392 boat/night growth, and #1393 Ground Pin are implemented;
 #1394 adds readable growth and isolated checkpoints; #1395 adds [integrated evidence](LIVING_EXPEDITION_07_INTEGRATED_VERIFICATION.md).
-#1396 visual/Web review is next, followed by #1397's owner verdict. The latest
-owner-approved runtime remains LE06 at `16300a9`.
+#1396 records [visual review](LIVING_EXPEDITION_07_VISUAL_DECISION.md) and
+[exact-Web evidence](LIVING_EXPEDITION_07_WEB_VERIFICATION.md) at `5819f1d`.
+Next is #1397's owner playtest/verdict. The latest owner-approved runtime remains
+LE06 at `16300a9`; technical verification is not an LE07 owner GO.
 
 ## Decision
 
@@ -19,7 +21,7 @@ deliberate **Ground Pin** on the next sortie. Marl remains independent-only.
 
 | Candidate | Evidence and decision |
 | --- | --- |
-| Marl's first adaptation | Selected. #1389-#1395 implement and integrate declarations, field event, boat/night growth, physical Ground Pin, and readable review checkpoints. Visual/Web and owner review remain. |
+| Marl's first adaptation | Selected. #1389-#1396 implement, integrate, and technically review declarations, field event, boat/night growth, physical Ground Pin, and readable checkpoints. Owner review remains. |
 | Growth, Release, And Habitat Legacy | Keep directional. LE06 proves remembered habitat change, but does not establish that surrendering an individual is meaningful. First develop the third companion; this is sequencing, not an in-game release prerequisite. |
 | Vein Whiskers | Defer. Better direction/confidence risks another subtle detector, repeating the Mica readability and usefulness failures. No passive yield/stat bonus substitutes for a tangible action. |
 | Root Claws | Select one bounded ground-control branch. Walking/digging fins become a visible planted grip, not a magic stun or Kite pulse recolor. Reject the proof if existing geometry cannot support physical contact without a combat rewrite. |
@@ -173,7 +175,7 @@ No broad art generation or baseline acceptance is authorized by this plan alone.
 ## Ordered Active Issues
 
 Frozen milestone #51 batch, created after #1387 / PR #1388 merged. #1389 supplies
-the schema/ownership contract, #1390 the source proof, #1391 the field event, #1392 boat/night, #1393 physical Pin, #1394 presentation, and #1395 integrated evidence; continue with #1396-#1397.
+the schema/ownership contract, #1390 the source proof, #1391 the field event, #1392 boat/night, #1393 physical Pin, #1394 presentation, #1395 integrated evidence, and #1396 visual/Web evidence. Only #1397's owner gate remains; do not start another milestone before the verdict.
 
 | Issue | Deliverable | Dependencies / focused evidence |
 | --- | --- | --- |
