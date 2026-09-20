@@ -2,7 +2,9 @@
 
 Issue #1394 adds local presentation/checkpoint evidence, not visual baseline
 acceptance or an owner GO. [Integrated evidence](../LIVING_EXPEDITION_07_INTEGRATED_VERIFICATION.md)
-is recorded under #1395; exact Web/baseline review is #1396, then owner verdict #1397.
+is recorded under #1395. [Visual](../LIVING_EXPEDITION_07_VISUAL_DECISION.md) and
+[exact-Web evidence](../LIVING_EXPEDITION_07_WEB_VERIFICATION.md) under #1396 are
+ready at `5819f1d`; #1397 remains the separate owner verdict.
 
 ## Isolated Starts
 
@@ -39,13 +41,9 @@ Only the two LE07 field checkpoints offset their camera away from the debug
 panel, preserving the existing 0.7 zoom. Normal play, older checkpoints, terrain,
 and broad HUD layout are unchanged. Review offsets live/die with the player.
 
-Candidate Web entry points after deployment (not yet exact-SHA verified here):
-
-- https://joeypshell.github.io/oceangame2/?checkpoint=living_expedition_07_refuge
-- https://joeypshell.github.io/oceangame2/?checkpoint=living_expedition_07_night
-- https://joeypshell.github.io/oceangame2/?checkpoint=living_expedition_07_pin
-
-#1396 must record the verified deployment SHA before requesting owner acceptance.
+Use the [three verified Web starts](../LIVING_EXPEDITION_07_WEB_VERIFICATION.md#short-owner-review)
+for refuge, night, and Pin instead of replaying the equipment chain. The review
+query isolates state; it does not pin GitHub Pages to an immutable old build.
 Serve Godot Web exports over HTTP; do not open exported HTML with `file://`.
 
 ## Focused Checks

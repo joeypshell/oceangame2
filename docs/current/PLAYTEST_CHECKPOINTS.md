@@ -30,9 +30,9 @@ the routine end-to-end regression layer.
 | `living_expedition_02_start` | Prior required projects/discoveries committed; Cutter and Scanner available; Kite committed and selected; empty cargo | Mica rescue/commitment, two-partner habitat selection, Mica Reveal Trace sortie, and return to Kite |
 | `living_expedition_01_start` | Prior required projects/discoveries committed; Cutter, Fins, and Shock Prod available; empty cargo; no companion | Spark Ray rescue, boat commitment, command/riding proof, shared memory, night adaptation, and Day 3 payoff |
 
-LE07 commands, candidate URLs, touch sequence, and short owner route:
-[Marl review tooling](tooling/living_expedition_07.md). These starts are locally
-verified; #1396 still owns exact-SHA Web verification, and #1397 the owner gate.
+LE07 local commands and touch sequence: [Marl review tooling](tooling/living_expedition_07.md).
+[Exact-Web evidence and short owner route](LIVING_EXPEDITION_07_WEB_VERIFICATION.md#short-owner-review)
+record runtime `5819f1d` through #1396. #1397 remains open for the owner's verdict.
 
 Local retained regression starts:
 

@@ -8,7 +8,7 @@ python tools/write_build_info.py
 
 This writes ignored `build_info.json`. The web export workflow generates that file from `GITHUB_SHA` before export, so the public preview can identify the deployed commit.
 
-The latest exact-SHA Pages and checkpoint verification is recorded in [Living Expedition 05 Web Verification](../LIVING_EXPEDITION_05_WEB_VERIFICATION.md). The [Living Expedition 05 Visual Decision](../LIVING_EXPEDITION_05_VISUAL_DECISION.md) records the current focused capture review; accepted production baselines remain unchanged. The older [Simple Diver Game 08 Web Export Handoff](../SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md) remains the release-candidate foundation.
+The latest exact-SHA Pages and checkpoint verification is recorded in [Living Expedition 07 Web Verification](../LIVING_EXPEDITION_07_WEB_VERIFICATION.md). The [Living Expedition 07 Visual Decision](../LIVING_EXPEDITION_07_VISUAL_DECISION.md) records the current focused capture review; accepted production baselines remain unchanged. LE07 awaits owner review through #1397. The older [Simple Diver Game 08 Web Export Handoff](../SIMPLE_DIVER_GAME_08_WEB_EXPORT_HANDOFF.md) remains the release-candidate foundation.
 
 Build a local Web export preview:
 
@@ -35,8 +35,10 @@ node tools/check_web_preview.cjs http://127.0.0.1:8060/ --expected-sha (git rev-
 ```
 
 The checker retains `living_expedition_02_start` as its historical default.
-Pass `--checkpoint living_expedition_05_excavate_ready` for the current owner checkpoint,
-or `--checkpoint <id>` for another retained checkpoint.
+Pass `--checkpoint living_expedition_07_refuge`, `living_expedition_07_night`, or
+`living_expedition_07_pin` for current owner review (one invocation each).
+See [Marl review tooling](living_expedition_07.md) for controls and exact links;
+older checkpoint ids remain regression paths.
 
 The check fails if the web preview logs missing texture warnings such as `Unable to open texture asset`, `Unable to create cave TileSet`, `SCRIPT ERROR`, `ERROR:`, failed resource requests, a missing Godot canvas, a framing/readability mismatch between 1280x720 and 1920x1080 browser viewports, a touch-enabled 844x390 canvas that is not top anchored or does not cover the visual viewport, visible mobile controls that do not respond at their rendered touch positions, or an external `build_info.json` whose `git_sha` does not match the expected commit. Omit `--expected-sha` when checking an older export that does not include external build metadata.
 
