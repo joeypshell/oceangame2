@@ -22,6 +22,7 @@ func _run() -> void:
 	await process_frame
 
 	_test_input_boundary()
+	_test_health_fill_geometry()
 	_test_world_boundary(world)
 	_test_warning_retreat_and_contact(world)
 	await _test_weapon_and_day_state(world)
@@ -43,6 +44,36 @@ func _test_input_boundary() -> void:
 	_expect(events.size() == 1, "combat_attack should have one bounded keyboard event")
 	if not events.is_empty() and events[0] is InputEventKey:
 		_expect((events[0] as InputEventKey).physical_keycode == KEY_SPACE, "combat_attack is not bound to physical Space")
+
+
+func _test_health_fill_geometry() -> void:
+	var parent := Node2D.new()
+	get_root().add_child(parent)
+	var renderer := GreyboxHostileRenderer.new()
+	renderer.build(parent, [{"id": "test_eel", "health": 3}], 32, false)
+	var eel := parent.get_node("test_eel") as Node2D
+	var bar := eel.get_node("HealthBar") as Node2D
+	var fill := bar.get_node("Fill") as ColorRect
+	var back := bar.get_node("Back") as ColorRect
+	_expect(back.position == Vector2(-24, -4) and back.size == Vector2(48, 8), "health backdrop geometry drifted")
+	_expect(back.color == GreyboxHostileRenderer.COLOR_HEALTH_BACK, "health backdrop color drifted")
+	_expect(fill.mouse_filter == Control.MOUSE_FILTER_IGNORE and back.mouse_filter == Control.MOUSE_FILTER_IGNORE, "world health bar intercepted pointer input")
+	for facing in [-1.0, 1.0]:
+		eel.scale.x = facing
+		for health in [3, 2, 1, 0, 3]:
+			for _repeat in range(3):
+				renderer.set_state("test_eel", Vector2(160, 100), "support_held", health)
+			_expect(fill.visible == (health > 0), "zero-health fill visibility drifted")
+			_expect(bar.visible and int(bar.get_meta("health")) == health, "health reporting drifted")
+			_expect(is_equal_approx(bar.scale.x * eel.scale.x, 1.0), "health bar mirrored with eel")
+			var expected_color := GreyboxHostileRenderer.COLOR_HEALTH_LOW if health <= 1 else GreyboxHostileRenderer.COLOR_HEALTH_FILL
+			_expect(fill.color == expected_color, "health fill color drifted")
+			if health > 0:
+				var left := fill.get_global_transform() * Vector2.ZERO - eel.global_position
+				var right := fill.get_global_transform() * fill.size - eel.global_position
+				_expect(left.is_equal_approx(Vector2(-21, -32)), "health fill lost left anchor")
+				_expect(right.is_equal_approx(Vector2(-21 + 14 * health, -28)), "health fill dimensions drifted")
+	parent.free()
 
 
 func _test_world_boundary(world) -> void:

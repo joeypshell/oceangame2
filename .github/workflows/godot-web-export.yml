@@ -94,7 +94,7 @@ jobs:
             sleep 1
           done
 
-          node tools/check_web_preview.cjs http://127.0.0.1:8060/ --expected-sha "${GITHUB_SHA}"
+          node tools/check_web_preview.cjs http://127.0.0.1:8060/ --expected-sha "${GITHUB_SHA}" --checkpoint living_expedition_07_pin
 
       - name: Upload web preview check artifact
         if: always()

@@ -24,6 +24,7 @@ const failurePatterns = [
 	/Unable to decode texture asset/,
 	/Unable to create cave TileSet/,
 	/Failed loading resource/i,
+	/INVALID_(?:OPERATION|ENUM|VALUE):\s*(?:bindBuffer|bufferSubData)\b/i,
 ];
 
 async function checkBuildMetadata() {

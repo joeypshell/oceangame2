@@ -4,7 +4,11 @@ Date: 2026-09-20
 
 Issue: #1396
 
-Status: **REVIEW READY WITH RECORDED WARNINGS; OWNER VERDICT PENDING**
+Status: **HISTORICAL #1396 WEB EVIDENCE; OWNER VERDICT PENDING**
+
+The warnings below describe `5819f1d`, before the bounded #1405 health-bar
+repair. See [diagnosis and regression evidence](LE07_WEBGL_BUFFER_DIAGNOSTIC.md)
+and #1405's completion comment for the subsequent exact deployed build.
 
 ## Exact Build
 
@@ -96,9 +100,8 @@ warnings for `bindBuffer` (element-array target mismatch) and `bufferSubData`
 The inspected field subjects and controls rendered and worked, but this is
 **not** a claim of a warning-free console or proof that all rendering operations
 succeeded. [Diagnostic follow-up #1405](https://github.com/joeypshell/oceangame2/issues/1405)
-must isolate the draw path/environment and determine impact; no runtime repair
-or warning suppression was folded into this review. A demonstrated visual or
-gameplay defect must be repaired before final owner GO.
+isolated the eel health-bar draw path and supplied a bounded repair; no runtime
+repair or warning suppression was folded into this original #1396 review.
 
 Chromium touch emulation is not an iPhone Safari device test. The dense inherited
 diagnostic HUD, small mobile text, and subtle fin detail remain presentation
