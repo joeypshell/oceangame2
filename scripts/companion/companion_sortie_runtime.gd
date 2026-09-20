@@ -203,6 +203,7 @@ func advance_signal_reef_journey_day(day_number: int) -> Dictionary:
 	return _signal_reef_nursery.advance_day(day_number)
 
 func discard_uncommitted_memories(reason := "failure") -> Dictionary:
+	_reset_species_transient(reason)
 	var memory: Dictionary = _memory_runtime.discard_uncommitted(reason)
 	var ecology: Dictionary = _ecology_observation.discard_uncommitted(reason)
 	_signal_reef_nursery.reset_uncommitted(reason)
@@ -273,7 +274,6 @@ func release_to_habitat() -> bool:
 func hides_diver_hotbar() -> bool:
 	return _control != null and bool(_control.hides_diver_hotbar())
 
-
 func force_dismount_for_hit(source_position: Vector2) -> Dictionary:
 	_anchor_fins.reset("hostile_hit")
 	_guardian_pulse.reset("hostile_hit")
@@ -289,7 +289,6 @@ func control_runtime():
 	return _control
 func adaptation_runtime():
 	return _anchor_fins
-
 
 func guardian_pulse_runtime():
 	return _guardian_pulse
@@ -311,7 +310,6 @@ func show_context_response(context_kind: String, source_position: Vector2) -> bo
 
 func companion():
 	return _companion if _companion != null and is_instance_valid(_companion) else null
-
 
 func report() -> Dictionary:
 	if _companion == null or not is_instance_valid(_companion):
@@ -422,6 +420,8 @@ func _bind_control_map() -> void:
 		_control.bind_map(_world, _player, _companion, Callable(self, "_position_allowed"))
 	else:
 		_control.bind_map(_world, _player, _companion, _moving_hazards, _hostiles)
+		if _control.has_method("bind_refuge_context"):
+			_control.bind_refuge_context(_profile, _has_upgrade)
 
 
 func _bind_control_interface() -> void:

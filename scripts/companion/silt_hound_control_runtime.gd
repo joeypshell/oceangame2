@@ -3,6 +3,7 @@ extends Node
 const CompanionCommandPalette := preload("res://scripts/companion/companion_command_palette.gd")
 const CompanionCommandPause := preload("res://scripts/companion/companion_command_pause.gd")
 const SiltHoundExcavateRuntime := preload("res://scripts/companion/silt_hound_excavate_runtime.gd")
+const SiltHoundRefugeRuntime := preload("res://scripts/companion/silt_hound_refuge_runtime.gd")
 
 var _world
 var _player
@@ -16,6 +17,7 @@ var _selected_command_index := 0
 var _palette_feedback := ""
 var _last_denial := ""
 var _excavate := SiltHoundExcavateRuntime.new()
+var _refuge := SiltHoundRefugeRuntime.new()
 
 
 func _ready() -> void:
@@ -26,6 +28,7 @@ func _ready() -> void:
 
 
 func _exit_tree() -> void:
+	_excavate.clear_map()
 	_command_mode = false
 	_command_pause.end()
 
@@ -36,12 +39,14 @@ func bind_interface(status_sink: Callable, control_allowed: Callable) -> void:
 	_excavate.bind_interface(status_sink)
 
 
-func bind_map(world, player, companion, _moving_hazards = null, _hostiles = null) -> void:
+func bind_map(world, player, companion, _moving_hazards = null, hostiles = null) -> void:
 	clear_map()
 	_world = world
 	_player = player
 	_companion = companion
-	_excavate.bind_map(world, player, companion)
+	_refuge = SiltHoundRefugeRuntime.new()
+	_refuge.bind_map(world, player, companion, hostiles, _status_sink)
+	_excavate.bind_map(world, player, companion, _refuge)
 	_refresh_presentation()
 
 
@@ -162,6 +167,14 @@ func excavate_runtime():
 	return _excavate
 
 
+func bind_refuge_context(profile, has_upgrade: Callable) -> void:
+	_refuge.bind_profile(profile, has_upgrade)
+
+
+func refuge_runtime():
+	return _refuge
+
+
 func report() -> Dictionary:
 	return {
 		"command_mode": _command_mode,
@@ -173,6 +186,7 @@ func report() -> Dictionary:
 		"context_commands": _context_commands(),
 		"last_denial": _last_denial,
 		"excavate": _excavate.report(),
+		"refuge": _refuge.report(),
 		"palette": _palette.get_test_report() if _palette != null else {},
 	}
 

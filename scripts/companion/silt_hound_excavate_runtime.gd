@@ -34,17 +34,20 @@ var _completion_guard := false
 var _reveal_count := 0
 var _last_reason := "ready"
 var _visited_states: Array[String] = []
+var _refuge
+var _using_refuge := false
 
 
 func bind_interface(status_sink: Callable) -> void:
 	_status_sink = status_sink
 
 
-func bind_map(world, player, companion) -> void:
+func bind_map(world, player, companion, refuge = null) -> void:
 	clear_map()
 	_world = world
 	_player = player
 	_companion = companion
+	_refuge = refuge
 	_state = STATE_IDLE
 	_last_reason = "ready"
 
@@ -54,6 +57,7 @@ func clear_map() -> void:
 	_world = null
 	_player = null
 	_companion = null
+	_refuge = null
 
 
 func command() -> Dictionary:
@@ -67,7 +71,7 @@ func command() -> Dictionary:
 		"enabled": enabled,
 		"reason": availability.get("reason", "command_unavailable"),
 		"denial": _denial_text(str(availability.get("reason", "command_unavailable"))),
-		"target_id": TARGET_ID,
+		"target_id": _target_id(),
 	}
 
 
@@ -80,10 +84,15 @@ func dispatch(command_id: String) -> Dictionary:
 		_last_reason = reason
 		_notify("Excavate unavailable | %s" % _denial_text(reason))
 		return _result(false, reason)
+	_using_refuge = _refuge != null and _refuge.in_context()
+	if _using_refuge and not _refuge.start():
+		return _result(false, "context_invalid")
 	var target: Vector2 = availability.get("target", Vector2.ZERO)
 	if not _companion.has_method("begin_excavate_approach") or not bool(_companion.begin_excavate_approach(target)):
 		_last_reason = "path_blocked"
 		_notify("Excavate unavailable | %s" % _denial_text(_last_reason))
+		if _using_refuge:
+			_refuge.cancel(_last_reason)
 		return _result(false, _last_reason)
 	_busy = true
 	_completion_guard = false
@@ -91,11 +100,15 @@ func dispatch(command_id: String) -> Dictionary:
 	_progress = 0.0
 	_visited_states = []
 	_set_phase(STATE_APPROACHING, 0.0)
-	_notify("Marl moves to the buried deposit")
+	_notify("Marl moves to the blocked refuge" if _using_refuge else "Marl moves to the buried deposit")
 	return _result(true, "started")
 
 
 func advance(delta: float) -> Dictionary:
+	if _world != null and is_instance_valid(_world) and _world.get_tree().paused:
+		return report()
+	if _refuge != null:
+		_refuge.advance(delta)
 	if not _busy:
 		return report()
 	var live_reason := _live_invalid_reason()
@@ -117,7 +130,7 @@ func advance(delta: float) -> Dictionary:
 		STATE_DIGGING:
 			_update_phase_progress(DIG_SECONDS)
 			if _phase_seconds >= DIG_SECONDS:
-				if _completion_guard or not _world.reveal_buried_material_candidate(TARGET_ID):
+				if _completion_guard or not _complete_dig():
 					return cancel_active(_source_failure_reason())
 				_completion_guard = true
 				_reveal_count += 1
@@ -130,14 +143,18 @@ func advance(delta: float) -> Dictionary:
 				_progress = 1.0
 				_last_reason = "revealed"
 				_record_state(STATE_REVEALED)
-				_world.set_buried_material_state(TARGET_ID, "opened", 1.0)
+				if not _using_refuge:
+					_world.set_buried_material_state(TARGET_ID, "opened", 1.0)
 				if _companion.has_method("complete_excavate_action"):
 					_companion.complete_excavate_action()
-				_notify("Marl uncovered titanium scrap")
+				if not _using_refuge:
+					_notify("Marl uncovered titanium scrap")
 	return report()
 
 
 func cancel_active(reason := "canceled") -> Dictionary:
+	if _refuge != null and (_using_refuge or reason == "recall"):
+		_refuge.cancel(reason)
 	if not _busy:
 		return _result(false, "not_busy")
 	_busy = false
@@ -147,7 +164,7 @@ func cancel_active(reason := "canceled") -> Dictionary:
 	_completion_guard = false
 	_last_reason = reason
 	_record_state(STATE_CANCELED)
-	if _world != null and is_instance_valid(_world) and _world.has_method("conceal_buried_material_candidate"):
+	if not _using_refuge and _world != null and is_instance_valid(_world) and _world.has_method("conceal_buried_material_candidate"):
 		_world.conceal_buried_material_candidate(TARGET_ID)
 	if _companion != null and is_instance_valid(_companion) and _companion.has_method("cancel_excavate_action"):
 		_companion.cancel_excavate_action()
@@ -168,13 +185,16 @@ func reset_transient(reason := "reset") -> void:
 	_busy = false
 	_completion_guard = false
 	_last_reason = reason
+	_using_refuge = false
+	if _refuge != null:
+		_refuge.reset(reason)
 
 
 func report() -> Dictionary:
 	return {
 		"action_id": ACTION_ID,
-		"context_id": CONTEXT_ID,
-		"target_id": TARGET_ID,
+		"context_id": _target_id() if _using_refuge else CONTEXT_ID,
+		"target_id": _target_id(),
 		"state": _state,
 		"busy": _busy,
 		"progress": _progress,
@@ -190,6 +210,8 @@ func report() -> Dictionary:
 func _availability() -> Dictionary:
 	if not _dependencies_valid():
 		return {"reason": "companion_unavailable", "in_context": false}
+	if _refuge != null and ((_busy and _using_refuge) or (not _busy and _refuge.in_context())):
+		return _refuge.availability()
 	if not _context_matches_source():
 		return {"reason": "context_missing", "in_context": false}
 	var companion_report: Dictionary = _companion.report()
@@ -203,7 +225,7 @@ func _availability() -> Dictionary:
 		return {"reason": "target_inactive", "in_context": false}
 	if bool(source.get("depleted", false)):
 		return {"reason": "target_depleted", "in_context": false}
-	if bool(source.get("revealed", false)) or _state == STATE_REVEALED:
+	if bool(source.get("revealed", false)) or (_state == STATE_REVEALED and not _using_refuge):
 		return {"reason": "target_revealed", "in_context": false}
 	var target: Vector2 = source.get("candidate", {}).get("center", Vector2.ZERO)
 	if _player.global_position.distance_to(target) > PLAYER_CONTEXT_RADIUS_PX:
@@ -220,6 +242,13 @@ func _availability() -> Dictionary:
 
 
 func _live_invalid_reason() -> String:
+	if _using_refuge:
+		var reason: String = _refuge.live_invalid_reason()
+		if not reason.is_empty():
+			return reason
+		if not bool(_refuge.report().get("attempt_active", false)) or not bool(_companion.report().get("excavate", {}).get("active", false)):
+			return "companion_unavailable"
+		return "path_blocked" if _state == STATE_APPROACHING and not _companion.excavate_path_allowed(_refuge.availability()["target"]) else ""
 	if not _dependencies_valid() or not _context_matches_source():
 		return "context_invalid"
 	if not bool(_companion.report().get("excavate", {}).get("active", false)):
@@ -270,6 +299,9 @@ func _update_phase_progress(duration: float) -> void:
 func _project_phase() -> void:
 	if _companion != null and is_instance_valid(_companion) and _companion.has_method("set_excavate_phase"):
 		_companion.set_excavate_phase(_state, _progress)
+	if _using_refuge:
+		_refuge.project_phase(_state, _progress)
+		return
 	if _world == null or not is_instance_valid(_world) or not _world.has_method("set_buried_material_state"):
 		return
 	var mound_state := "disturbed" if _state == STATE_APPROACHING else _state
@@ -277,6 +309,8 @@ func _project_phase() -> void:
 
 
 func _source_failure_reason() -> String:
+	if _using_refuge:
+		return "refuge_opened"
 	var source: Dictionary = _world.get_material_candidate_state(TARGET_ID) if _world != null else {}
 	if bool(source.get("depleted", false)):
 		return "target_depleted"
@@ -299,6 +333,10 @@ func _result(changed: bool, reason: String) -> Dictionary:
 
 func _denial_text(reason: String) -> String:
 	match reason:
+		"refuge_opened", "memory_secured":
+			return "burrow group already sheltered"
+		"light_required":
+			return "Dive Light required in this dark pocket"
 		"busy":
 			return "already digging"
 		"companion_out_of_range", "companion_unavailable":
@@ -345,3 +383,11 @@ func _dependencies_valid() -> bool:
 		and _companion != null
 		and is_instance_valid(_companion)
 	)
+
+
+func _complete_dig() -> bool:
+	return _refuge.complete_dig() if _using_refuge else _world.reveal_buried_material_candidate(TARGET_ID)
+
+
+func _target_id() -> String:
+	return str(_refuge.REFUGE_ID) if _refuge != null and (_using_refuge or (not _busy and _refuge.in_context())) else TARGET_ID

@@ -7,10 +7,10 @@ ordered batch and experience decision: [LE07 plan](LIVING_EXPEDITION_07_PLAN.md)
 ## Implemented Boundary
 
 Catalog declarations, Python source validation, proposed progression graph,
-negative fixtures, and #1390 production source authoring are implemented. See
-[placement evidence](LIVING_EXPEDITION_07_SOURCE_VERIFICATION.md). Refuge runtime,
-memory commitment/night UI, and Ground Pin remain #1391-#1393; none is live merely
-because its source record exists. Terrain, gameplay, profile version, art, and
+negative fixtures, #1390 source authoring, and #1391 refuge/pending event are implemented. See
+[placement evidence](LIVING_EXPEDITION_07_SOURCE_VERIFICATION.md) and [runtime evidence](LIVING_EXPEDITION_07_REFUGE_VERIFICATION.md). Persistent
+memory commitment/night UI and Ground Pin remain #1392-#1393; none is live merely
+because its source record exists. Terrain, profile version, existing assets, and
 accepted baselines are unchanged.
 
 The catalog remains version 3 / `partial_runtime`. Marl is the existing
@@ -69,7 +69,7 @@ LE05 rescue/deposit and LE06 nursery source relationships remain unchanged.
 
 ## Event And Commitment
 
-The future focused Marl event owner must receive source ids and authoritative
+The focused `silt_hound_refuge_runtime.gd` event owner uses source ids and authoritative
 physical-action, hostile-phase, and group-shelter observations. It tracks one
 attempt with its individual id, never whichever companion becomes selected later.
 
