@@ -53,10 +53,9 @@ func set_state(hostile_id: String, center: Vector2, phase: String, health: int) 
 	var attack_streak := root.get_node("AttackStreak") as Line2D
 	var health_bar := root.get_node("HealthBar") as Node2D
 	var max_health := maxi(1, int(root.get_meta("max_health", 3)))
-	var health_ratio := clampf(float(health) / float(max_health), 0.0, 1.0)
 	health_bar.visible = phase in ["warning", "lunge", "recovery", "support_held", "defeated"] or health < max_health
 	health_bar.scale.x = root.scale.x
-	_set_health_fill(health_bar.get_node("Fill") as Polygon2D, health, max_health)
+	_set_health_fill(health_bar.get_node("Fill") as ColorRect, health, max_health)
 	warning_ring.visible = phase in ["warning", "lunge"]
 	warning_ring.default_color = COLOR_LUNGE if phase == "lunge" else COLOR_WARNING
 	attack_streak.visible = phase == "lunge"
@@ -136,23 +135,30 @@ func _add_health_bar(root: Node2D, max_health: int) -> void:
 	bar.visible = false
 	bar.set_meta("health", max_health)
 	root.add_child(bar)
-	_add_polygon(bar, "Back", PackedVector2Array([
-		Vector2(-24, -4), Vector2(24, -4), Vector2(24, 4), Vector2(-24, 4),
-	]), COLOR_HEALTH_BACK)
-	_add_polygon(bar, "Fill", PackedVector2Array(), COLOR_HEALTH_FILL)
-	_set_health_fill(bar.get_node("Fill") as Polygon2D, max_health, max_health)
+	# Rectangles avoid Godot 4.7's invalid GLES index-buffer updates on WebGL (#1405).
+	_add_health_rect(bar, "Back", Rect2(-24, -4, 48, 8), COLOR_HEALTH_BACK)
+	var fill := _add_health_rect(bar, "Fill", Rect2(-21, -2, 42, 4), COLOR_HEALTH_FILL)
+	_set_health_fill(fill, max_health, max_health)
 
 
-func _set_health_fill(fill: Polygon2D, health: int, max_health: int) -> void:
+func _set_health_fill(fill: ColorRect, health: int, max_health: int) -> void:
 	var clamped := clampf(float(health) / float(maxi(1, max_health)), 0.0, 1.0)
-	var right_edge := lerpf(-21.0, 21.0, clamped)
-	fill.polygon = PackedVector2Array([
-		Vector2(-21, -2), Vector2(right_edge, -2),
-		Vector2(right_edge, 2), Vector2(-21, 2),
-	])
+	fill.visible = clamped > 0.0
+	fill.size.x = 42.0 * clamped
 	fill.color = COLOR_HEALTH_LOW if clamped <= 0.34 else COLOR_HEALTH_FILL
 	var bar := fill.get_parent() as Node2D
 	bar.set_meta("health", maxi(0, health))
+
+
+func _add_health_rect(parent: Node2D, node_name: String, rect: Rect2, color: Color) -> ColorRect:
+	var fill := ColorRect.new()
+	fill.name = node_name
+	fill.position = rect.position
+	fill.size = rect.size
+	fill.color = color
+	fill.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	parent.add_child(fill)
+	return fill
 
 
 func _add_defeat_timer(root: Node2D) -> void:

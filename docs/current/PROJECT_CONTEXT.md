@@ -267,7 +267,7 @@ Current issue state as of 2026-09-06:
 - Closed on owner HOLD: milestone #48 and #1314-#1323 plus bounded corrections #1333/#1335/#1336 retain Kite's eel opening, retire Mica's non-useful prediction, and verify corrected runtime `bbcc255`.
 - Closed: milestone #49 and #1342-#1351 plus checkpoint correction #1362 complete Living Expedition 05 with owner GO at corrected runtime `7792a08`. The first owner review exposed a collision-invalid excavation-ready checkpoint; #1362 repaired its start and added exact-scene spawn, movement, palette, and dispatch coverage before the accepted retest.
 - Closed: milestone #50 and #1366-#1375 complete Living Expedition 06 with owner GO at runtime `16300a9`; adapted Kite shelters Signal Reef's nursery and leaves boat-committed next-day history.
-- Active: [milestone #51](https://github.com/joeypshell/oceangame2/milestone/51), LE07 Marl's Root Claws, #1389-#1397. Implementation/integration #1389-#1395 are complete; #1396 visual/Web and #1397 owner gate remain. Do not create another batch.
+- Active: [milestone #51](https://github.com/joeypshell/oceangame2/milestone/51), LE07 Marl's Root Claws. #1389-#1396 are complete; #1397 owner verdict remains. Bounded #1405 [WebGL repair](LE07_WEBGL_BUFFER_DIAGNOSTIC.md) preserves that gate. Do not create another batch.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -405,7 +405,7 @@ Current issue state as of 2026-09-06:
 
 ## Recommended Next Work
 
-Living Expeditions 01-03 and 05-06 have owner GO; LE04 closed on HOLD and retired Mica's eel prediction. BOND pauses the whole simulation. LE06 closed at accepted runtime `16300a9`. LE07 implements Marl's boat-secured refuge memory, deliberate night Root Claws, and physical Ground Pin as a non-damaging grounded alternative to Kite's recoil. Integrated evidence is recorded under #1395. Continue milestone #51 with #1396 visual/Web review, then #1397 owner verdict. Habitat legacy/release and #52/#53 remain deferred.
+Living Expeditions 01-03 and 05-06 have owner GO; LE04 closed on HOLD and retired Mica's eel prediction. BOND pauses the whole simulation. LE06 closed at accepted runtime `16300a9`. LE07 implements Marl's boat-secured refuge memory, deliberate night Root Claws, and physical Ground Pin as a non-damaging grounded alternative to Kite's recoil. #1395/#1396 record integration and visual/Web evidence; #1405 repairs the isolated health-bar WebGL warning. Next is #1397 owner verdict, not another batch. Habitat legacy/release and #52/#53 remain deferred.
 
 Accepted constraints for next work:
 
