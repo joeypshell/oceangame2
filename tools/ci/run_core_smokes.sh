@@ -30,6 +30,7 @@ run_godot veil-cuttle-hostile-intent 120 --headless --path . --script res://scri
 run_godot silt-hound-companion 180 --headless --path . --script res://scripts/main/smoke/smoke_silt_hound_companion.gd
 run_godot living-expedition-07-source 60 --headless --path . --script res://scripts/main/smoke/smoke_living_expedition_07_source.gd
 run_godot silt-hound-excavate 180 --headless --path . --script res://scripts/main/smoke/smoke_silt_hound_excavate.gd
+run_godot marl-refuge 180 --headless --path . --script res://scripts/main/smoke/smoke_marl_refuge.gd --fixed-fps 60
 run_godot silt-hound-journey-guidance 180 --headless --path . --script res://scripts/main/smoke/smoke_silt_hound_journey_guidance.gd
 run_godot anchor-fins-payoff 180 --headless --path . --script res://scripts/main/smoke/smoke_anchor_fins_payoff.gd
 run_godot guardian-pulse-payoff 180 --headless --path . --script res://scripts/main/smoke/smoke_guardian_pulse_payoff.gd

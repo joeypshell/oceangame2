@@ -19,6 +19,7 @@ This is the compact index for current project commands. Keep detailed command bl
 - [Living Expedition 05 Evidence](tooling/living_expedition_05.md): Silt Hound rescue, three-partner selection, deliberate Excavate journey, and desktop/mobile evidence.
 - [Living Expedition 06 Evidence](tooling/living_expedition_06.md): Signal Reef branch checkpoints, focused runtime checks, and exact journey-review commands.
 - [Living Expedition 07 Source Evidence](LIVING_EXPEDITION_07_SOURCE_VERIFICATION.md): generator, footprint/return tests, real eel lure, and source-only capture.
+- [Marl Refuge Evidence](LIVING_EXPEDITION_07_REFUGE_VERIFICATION.md): focused field-event smoke and unaccepted working-state captures.
 
 ## Critical Warnings
 

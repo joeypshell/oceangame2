@@ -28,6 +28,7 @@ const GreyboxBiologicalResources := preload("res://scripts/world/greybox_biologi
 const GreyboxCreatureRescues := preload("res://scripts/world/greybox_creature_rescues.gd")
 const GreyboxEcologicalTraces := preload("res://scripts/world/greybox_ecological_traces.gd")
 const GreyboxSignalReefNursery := preload("res://scripts/world/greybox_signal_reef_nursery.gd")
+const BurrowRefugePresentation := preload("res://scripts/world/burrow_refuge_presentation.gd")
 const ProgressionContract := preload("res://scripts/main/progression_contract.gd")
 
 const SALVAGE_TIER_SCORES := ProgressionContract.SALVAGE_SCORE_BY_TIER
@@ -91,6 +92,7 @@ var _biological_resource_runtime
 var _creature_rescue_runtime
 var _ecological_trace_runtime
 var _signal_reef_nursery_runtime
+var _burrow_refuge
 
 
 func _ready() -> void:
@@ -170,6 +172,10 @@ func load_greybox() -> void:
 	_marker_root = Node2D.new()
 	_marker_root.name = "Markers"
 	add_child(_marker_root)
+	for refuge in map_data.get("burrow_refuges", []):
+		_burrow_refuge = BurrowRefugePresentation.new()
+		_marker_root.add_child(_burrow_refuge)
+		_burrow_refuge.configure(refuge, tile_size)
 	_creature_rescue_helper().build(
 		_marker_root,
 		map_data.get("creature_rescues", []),
@@ -318,6 +324,10 @@ func get_signal_reef_nursery_report() -> Dictionary:
 
 func get_creature_memory_opportunities() -> Array:
 	return _duplicate_dictionary_array(_map_data.get("creature_memory_opportunities", []))
+
+
+func burrow_refuge_presentation():
+	return _burrow_refuge
 
 
 func get_creature_adaptation_payoffs() -> Array:
