@@ -4,7 +4,9 @@ Issue #1394 adds local presentation/checkpoint evidence, not visual baseline
 acceptance or an owner GO. [Integrated evidence](../LIVING_EXPEDITION_07_INTEGRATED_VERIFICATION.md)
 is recorded under #1395. [Visual](../LIVING_EXPEDITION_07_VISUAL_DECISION.md) and
 [exact-Web evidence](../LIVING_EXPEDITION_07_WEB_VERIFICATION.md) under #1396 are
-ready at `5819f1d`; #1397 remains the separate owner verdict.
+recorded at `5819f1d`; #1397 remains the separate owner verdict. Subsequent
+#1405 fixes WebGL health-bar warnings; #1408 corrects the unsafe field arrival
+and adds a live, delayed-input regression. Use the steps below on the current build.
 
 ## Isolated Starts
 
@@ -17,12 +19,17 @@ $godot = 'C:\Program Files\Godot\Godot_v4.7-stable_win64.exe\Godot_v4.7-stable_w
 & $godot --path . -- --review-checkpoint=living_expedition_07_pin
 ```
 
-- `refuge`: Day 4, unadapted Marl in open water beside the source-authored arch.
-  Press `B`, then `2` for Excavate. Dodge the eel's lunge while staying nearby;
-  watch the scallops retreat and the pending boat-return message appear.
+- `refuge`: Day 4, unadapted Marl at the source-authored approach west of the
+  arch, outside the eel's warning range. `B` offers `2 Excavate` immediately,
+  including after reading. Close with `B`, swim a short distance right until
+  the eel warns, then press `B`, `2`. When it lunges, swim left back past your
+  starting spot, staying near the arch. Watch the scallops retreat and the
+  pending boat-return message appear. Excavating before drawing the eel is a
+  quiet rescue, not Guarded the Nest; do not use it for this memory review.
 - `night`: Day 4 at the canonical boat with only Guarded the Nest secured.
   Press `N`. `B` switches Root Claws / Not tonight; `Space` confirms deliberately.
-- `pin`: Day 5, adapted Marl at the same field start. Let the first lunge bring
+- `pin`: Day 5, adapted Marl at the same safe field start. Swim right to draw
+  the eel's warning. Let the first lunge bring
   the eel down, swim just above the floor, then press `B` and choose Ground Pin
   when enabled. Dodge aside after the next warning. During the grip, strike with
   the selected Shock Prod or retreat. A strike releases the grip before damage.
@@ -64,6 +71,11 @@ real-scene checkpoints also run in core smoke CI. They check isolated profile,
 clear bodies, four-way movement clearance, correct selection, pause, numbered
 keyboard dispatch, sequential actual touch events, follow recovery, and normal
 hotbar ownership. The night shortcut uses real `N` / `B` / `Space` input.
+The refuge check first runs a separate live arrival: immediate menu, twelve
+seconds of normal simulation, delayed keyboard/touch menus, then ordinary
+movement/action inputs through warning, dig, dodge and pending memory. No owner
+is frozen or manually stepped during that probe; damage/knockback, oxygen and
+daylight remain active. The existing deterministic driver then runs on a fresh scene.
 
 ## Integrated Journey
 
