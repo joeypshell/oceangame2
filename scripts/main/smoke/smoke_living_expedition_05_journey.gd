@@ -152,6 +152,7 @@ func _run() -> void:
 	_expect(materials.try_commit_at_boat(world, player.global_position).is_empty() and bool(world.get_material_candidate_state(TARGET_ID).get("depleted", false)), "banking duplicated or respawned the deposit")
 	_expect(not profile.has_completed_project(ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_PROJECT_ID) and not profile.has_capability(ExpansionProfileState.CLOSED_CIRCUIT_REBREATHER_CAPABILITY_ID), "material pickup silently built or granted the Rebreather")
 	_expect(_prior_companions_unchanged(profile), "Marl journey changed Kite or Mica history")
+	_expect(_individual(profile, MARL_ID).get("earned_memory_ids", []).is_empty() and control.refuge_runtime().report().get("pending", {}).is_empty(), "ordinary titanium dig/pickup/bank fabricated Guarded the Nest")
 	_expect(oxygen.oxygen_seconds > 0.0 and oxygen.oxygen_seconds < oxygen_start and day.daylight_remaining_seconds > 0.0 and day.daylight_remaining_seconds < daylight_start, "oxygen/daylight pressure did not continue through the journey")
 	_finish(world, player, rescue, sortie, migration, profile, oxygen, day, final_reveal)
 
