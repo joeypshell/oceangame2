@@ -10,6 +10,7 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
+import release_candidate_living_expedition_07 as le07
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -100,7 +101,7 @@ def base_gates() -> list[Gate]:
                 python_command("tools/validate_greybox_map.py", map_path),
             )
         )
-    return gates
+    return gates + le07.source_gates(Gate, python_command)
 
 
 def godot_gates(godot: str) -> list[Gate]:
@@ -401,7 +402,7 @@ def godot_gates(godot: str) -> list[Gate]:
                 fail_on_godot_error=True,
             )
         )
-    return gates
+    return gates + le07.runtime_gates(Gate, godot)
 
 
 def display_command(command: list[str]) -> str:

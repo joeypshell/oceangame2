@@ -2,7 +2,7 @@
 
 `oceangame2` is a side-view underwater expedition-raising game built on a controlled diver-expedition foundation.
 
-The existing runtime proves contiguous authored exploration, oxygen/daylight pressure, equipment progression, limited combat, night projects, and stable validation/deployment. Expansion 18 closed on a strategic player-experience HOLD; Living Expedition is the active direction. Living Expeditions 01-03 and 05-06 have owner GO. LE04 retired Mica's unhelpful eel prediction and established whole-simulation BOND pause. LE05 proves Marl's physical excavation; LE06 proves adapted Kite's nursery return, with latest accepted Web runtime `16300a9`. [LE07 milestone #51](https://github.com/joeypshell/oceangame2/milestone/51) is active through #1389-#1397. Source placement, refuge excavation, boat-secured memory, deliberate night Root Claws, and physical Ground Pin (#1393) are implemented. #1394 adds readable fin growth, refuge/night guidance, and isolated checkpoints. Next is #1395 integrated evidence, then visual/Web review and owner verdict.
+The existing runtime proves contiguous authored exploration, oxygen/daylight pressure, equipment progression, limited combat, night projects, and stable validation/deployment. Expansion 18 closed on a strategic player-experience HOLD; Living Expedition is the active direction. Living Expeditions 01-03 and 05-06 have owner GO. LE04 retired Mica's unhelpful eel prediction and established whole-simulation BOND pause. LE05 proves Marl's physical excavation; LE06 proves adapted Kite's nursery return, with latest accepted Web runtime `16300a9`. [LE07 milestone #51](https://github.com/joeypshell/oceangame2/milestone/51) implements source-authored refuge excavation, boat-secured memory, deliberate night Root Claws, physical Ground Pin, readable growth, and isolated checkpoints. #1395 connects the actual Main journey and integrated regressions. Next: #1396 visual/Web review, then #1397 owner verdict.
 
 ## Project Goal
 
@@ -26,7 +26,7 @@ Build a distinctive side-view ocean game in which:
 
 ## Planning Docs
 
-The Simple Diver and Phase 2 roadmaps describe the completed foundation. Living Expedition now develops distinct species, shared memories, and deliberate adaptation rather than a broad roster, economy, or map expansion. LE07 Ground Pin opens a short, non-damaging weapon/retreat window through physical floor contact; [implementation evidence](docs/current/LIVING_EXPEDITION_07_GROUND_PIN_VERIFICATION.md) records its limits. [Review checkpoints and local captures](docs/current/tooling/living_expedition_07.md) are ready; continue with #1395-#1397 in the linked plan. Habitat legacy/release stays directional, and #52/#53 remain deferred polish.
+The Simple Diver and Phase 2 roadmaps describe the completed foundation. Living Expedition now develops distinct species, shared memories, and deliberate adaptation rather than a broad roster, economy, or map expansion. LE07 Ground Pin opens a short, non-damaging weapon/retreat window through physical floor contact; [implementation evidence](docs/current/LIVING_EXPEDITION_07_GROUND_PIN_VERIFICATION.md) records its limits. [Review checkpoints](docs/current/tooling/living_expedition_07.md) and [integrated journey evidence](docs/current/LIVING_EXPEDITION_07_INTEGRATED_VERIFICATION.md) are ready; continue with #1396-#1397 in the linked plan. Habitat legacy/release stays directional, and #52/#53 remain deferred polish.
 
 Core sources and operating docs:
 

@@ -1,8 +1,8 @@
 # Living Expedition 07 Review
 
 Issue #1394 adds local presentation/checkpoint evidence, not visual baseline
-acceptance or an owner GO. Integrated release validation is #1395, exact Web and
-baseline review #1396, and the owner verdict #1397.
+acceptance or an owner GO. [Integrated evidence](../LIVING_EXPEDITION_07_INTEGRATED_VERIFICATION.md)
+is recorded under #1395; exact Web/baseline review is #1396, then owner verdict #1397.
 
 ## Isolated Starts
 
@@ -66,6 +66,26 @@ real-scene checkpoints also run in core smoke CI. They check isolated profile,
 clear bodies, four-way movement clearance, correct selection, pause, numbered
 keyboard dispatch, sequential actual touch events, follow recovery, and normal
 hotbar ownership. The night shortcut uses real `N` / `B` / `Space` input.
+
+## Integrated Journey
+
+```powershell
+& $godot --headless --path . --fixed-fps 60 --script scripts/main/smoke/smoke_living_expedition_07_journey.gd -- --smoke-living-expedition-07 --review-checkpoint=living_expedition_07_refuge --show-mobile-controls
+python tools/run_release_candidate_validation.py --require-godot
+```
+
+The journey starts unadapted in actual Main, earns the refuge event, loses it on
+failure, retries with full cargo, banks at the canonical boat, defers growth,
+then chooses it on a later night. A fresh sortie proves visible Root Claws,
+physical Ground Pin/retreat, released follow, and survival of committed growth
+across failure/reload. Oxygen/daylight run during deterministic field stepping.
+Travel between source-authored field/boat boundaries is elided; this is not a
+continuous route playthrough. Checkpoint and source tests retain clearance and
+return-path coverage. The isolated profile never writes the normal save.
+
+Regional journey CI runs this command. The release runner retains earlier
+journeys and adds LE07 source, owner, checkpoint, and journey gates. Run the full
+suite once at integration; after repairs rerun only impacted checks.
 
 ## Captures
 

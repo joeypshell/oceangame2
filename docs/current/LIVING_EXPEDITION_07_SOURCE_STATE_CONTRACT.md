@@ -9,7 +9,7 @@ ordered batch and experience decision: [LE07 plan](LIVING_EXPEDITION_07_PLAN.md)
 Catalog declarations, Python source validation, proposed progression graph,
 negative fixtures, #1390 source authoring, and #1391 refuge/pending event are implemented. See
 [placement evidence](LIVING_EXPEDITION_07_SOURCE_VERIFICATION.md) and [runtime evidence](LIVING_EXPEDITION_07_REFUGE_VERIFICATION.md). #1392 adds [boat/night evidence](LIVING_EXPEDITION_07_MEMORY_NIGHT_VERIFICATION.md).
-Ground Pin remains #1393; its source record does not make the action live. Terrain, profile version, existing assets, and
+#1393 implements physical Ground Pin; #1394 adds growth presentation/checkpoints. Terrain, profile version, existing assets, and
 accepted baselines are unchanged.
 
 The catalog remains version 3 / `partial_runtime`. Marl is the existing
@@ -79,7 +79,7 @@ attempt with its individual id, never whichever companion becomes selected later
    observations produce one pending `guarded_the_nest`, not permanent growth.
 4. Canonical `production_level_01` / `surface_boat_entry` return commits the
    captured individual's memory through existing profile/save ownership once.
-5. Night deliberately selects Root Claws or defers. Pin becomes usable only after #1393.
+5. Night deliberately selects Root Claws or defers. Pin requires the committed adaptation; the memory alone does not enable it.
 
 | Situation | Required outcome |
 | --- | --- |
@@ -146,7 +146,8 @@ preparation. A missed/canceled attempt also starts the 8s cooldown. Normal
 failure/map/day reset clears transient cooldown; Recall does not bypass it.
 #1394 projects permanent hooked fin tips from the profile identity and a bounded
 release lift from the action pose. Its real-scene checkpoints/captures are local
-review evidence, not baseline or player acceptance; #1395-#1397 remain.
+review evidence, not baseline or player acceptance. #1395 connects the full journey;
+#1396 visual/Web and #1397 owner review remain.
 
 ## Progression And Verification
 
@@ -168,6 +169,6 @@ git diff --check
 ```
 
 The Progression Audit workflow runs the new schema/graph fixtures. Integrated
-runtime/real-input coverage belongs to #1395, focused visual/Web review to #1396,
+runtime/real-input coverage is recorded in [#1395 evidence](LIVING_EXPEDITION_07_INTEGRATED_VERIFICATION.md), focused visual/Web review belongs to #1396,
 and the owner GO/HOLD to #1397. #52/#53, Vein Whiskers, release/legacy, a fourth
 species, and broad combat/ecosystem work remain deferred.
