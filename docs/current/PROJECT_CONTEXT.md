@@ -1,12 +1,12 @@
 # Project Context
 
-Last updated: 2026-09-20
+Last updated: 2026-09-23
 
 This file is the compact handoff for new Codex or ChatGPT Project sessions. It captures the useful context from the initial planning and implementation chat without preserving the whole conversation.
 
 ## Current Goal
 
-`oceangame2` has a stable diver-expedition foundation and seventeen completed Phase 2 expansions. Expansion 18 is technically complete but closed on a strategic player-experience HOLD: more clue/recipe/gate/scan work would not solve the generic loop. Living Expedition is the active direction; milestones 01-03 and 05-06 have owner GO, while 04 closed on an informative HOLD. Latest owner-accepted Web runtime: `16300a9`. LE07 milestone #51 implements source-authored refuge excavation, boat memory, deliberate night Root Claws, physical Ground Pin, readable growth, and isolated real-scene checkpoints. Integrated, focused visual, and exact-Web evidence is recorded at `5819f1d`. Only #1397 owner playtest/verdict remains; LE07 has no owner GO yet. OceanGame Expansion 01 proved:
+`oceangame2` has a stable diver-expedition foundation and seventeen completed Phase 2 expansions. Expansion 18 is technically complete but closed on a strategic player-experience HOLD: more clue/recipe/gate/scan work would not solve the generic loop. Living Expedition is the active direction; milestones 01-03 and 05-07 have owner GO, while 04 closed on an informative HOLD. Latest owner-accepted Web runtime: `7a78592`. [LE07 closeout](LIVING_EXPEDITION_07_CLOSEOUT.md) records Marl's source-authored refuge, boat memory, deliberate night Root Claws, physical Ground Pin, and corrected isolated review. No next milestone is selected by this closeout. OceanGame Expansion 01 proved:
 
 - authored map data as the source of truth
 - generated-but-controlled terrain art
@@ -90,7 +90,7 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Selected Living Expedition 04 plan: `docs/current/LIVING_EXPEDITION_04_PLAN.md`
 - Living Expedition 04 HOLD closeout: `docs/current/LIVING_EXPEDITION_04_CLOSEOUT.md`
 - Living Expedition 06 owner-GO closeout: `docs/current/LIVING_EXPEDITION_06_CLOSEOUT.md`, with linked source/state, visual, and exact-Web evidence
-- Active plan/ordered issues: [LE07](LIVING_EXPEDITION_07_PLAN.md#ordered-active-issues), milestone #51 / #1389-#1397; [source/state contract](LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md), [placement](LIVING_EXPEDITION_07_SOURCE_VERIFICATION.md), [memory/night](LIVING_EXPEDITION_07_MEMORY_NIGHT_VERIFICATION.md), [Ground Pin](LIVING_EXPEDITION_07_GROUND_PIN_VERIFICATION.md), and [integrated evidence](LIVING_EXPEDITION_07_INTEGRATED_VERIFICATION.md). Next is #1397 using the [verified owner links](LIVING_EXPEDITION_07_WEB_VERIFICATION.md#short-owner-review)
+- Latest completed batch: [LE07 closeout](LIVING_EXPEDITION_07_CLOSEOUT.md), milestone #51 / #1389-#1397 plus #1405/#1408 corrections; [source/state contract](LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md), [placement](LIVING_EXPEDITION_07_SOURCE_VERIFICATION.md), [memory/night](LIVING_EXPEDITION_07_MEMORY_NIGHT_VERIFICATION.md), [Ground Pin](LIVING_EXPEDITION_07_GROUND_PIN_VERIFICATION.md), and [integrated evidence](LIVING_EXPEDITION_07_INTEGRATED_VERIFICATION.md). No active batch is selected here
 - Foundation history: `docs/planning/OCEANGAME_PHASE_2_ROADMAP.md`
 - First adaptation proof: `docs/planning/EXPEDITION_ADAPTATION_DIRECTION.md`
 - Completed Expansion 09 handoff: `docs/current/OCEANGAME_EXPANSION_09_CLOSEOUT.md` plus its linked plan, source contract, visual decision, and exact-SHA promotion evidence
@@ -109,16 +109,16 @@ Controlled gameplay/visual passes are now a validation lane inside the roadmap, 
 - Tooling: `docs/current/TOOLING.md`
 - Focused player-review workflow: `docs/current/PLAYTEST_CHECKPOINTS.md`
 - Production-slice status: `docs/current/PRODUCTION_SLICE_INDEX.md`
-- Latest owner decision: Living Expedition 06 received explicit GO on 2026-09-06 for exact runtime `16300a9`; #1375 records the bounded Signal Reef nursery closeout
-- Next issue: #1397 owner playtest/verdict, awaiting the user. #1389-#1396 cover implementation, integration, focused visual review, and exact-Web evidence. Do not start a new batch; habitat legacy/release remains directional
+- Latest owner decision: LE07 received bounded GO on 2026-09-23 for runtime `7a78592`: "Right it seemed to work fine". #1397 records acceptance, not measured attachment or replay value
+- Next boundary: a separate audit evaluates the current three companions' meaningful choice/history before selecting another bounded proof. Habitat legacy/release remains directional; this closeout does not create a batch
 - Current implementation contract: `docs/current/LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md`; existing Kite adaptation, canonical-boat commitment, passive wildlife, and hard equipment gates remain regression boundaries
 - Living Expedition 03 evidence: `docs/current/LIVING_EXPEDITION_03_VISUAL_DECISION.md`, `docs/current/LIVING_EXPEDITION_03_WEB_VERIFICATION.md`, and `docs/current/LIVING_EXPEDITION_03_CLOSEOUT.md`; exact runtime `0e92dd7` passed focused visual, responsive Web, touch, deterministic journey, and owner review
 - Latest completed expansion plan: `docs/current/OCEANGAME_EXPANSION_17_PLAN.md`, corrected after owner HOLD without changing its progression boundaries
-- Latest source contract: `docs/current/LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md`; LE06 remains the latest owner-accepted milestone, not the latest implemented runtime
+- Latest source contract: `docs/current/LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md`; LE07 is implemented and owner-accepted at corrected runtime `7a78592`
 - Latest visual decision: [LE07](LIVING_EXPEDITION_07_VISUAL_DECISION.md); 18 new review frames, no baseline acceptance. All 41 retained configured baseline views remain pixel-stable; this is not a fresh full-map parity claim
 - Current expansion gates: `docs/current/SIMPLE_DIVER_GAME_09_ARCHITECTURE_VALIDATION_GATES.md`
 - Release-candidate closeout: `docs/current/SIMPLE_DIVER_GAME_08_RELEASE_CANDIDATE_CLOSEOUT.md` (GO; regression foundation for Expansion 01).
-- Latest Web verification: [LE07 runtime `5819f1d`](LIVING_EXPEDITION_07_WEB_VERIFICATION.md), with isolated refuge/night/pin links and browser limitations. LE06 `16300a9` remains the latest owner GO, not the latest deployed build
+- Latest accepted Web runtime: `7a78592`, after #1405 renderer and #1408 live-arrival repairs. The [closeout](LIVING_EXPEDITION_07_CLOSEOUT.md#evidence) links exact public/CI evidence; the [original `5819f1d` review](LIVING_EXPEDITION_07_WEB_VERIFICATION.md) remains historical
 
 Start every new coding session by reading `AGENTS.md`, this file, `README.md`, and the relevant docs under `docs/current/`.
 
@@ -234,7 +234,7 @@ For map changes, run the relevant generator, SVG renderer, validator, parity che
 
 Use GitHub Issues for meaningful feature, bug, workflow, tooling, and demo work. Each issue needs acceptance criteria, relevant files, implementation notes, and verification steps.
 
-Current issue state as of 2026-09-06:
+Current issue state as of 2026-09-23:
 
 - Closed: #662-#671 completed Expansion 01 with a GO.
 - Closed: #685-#694 completed Expansion 02 with a GO.
@@ -267,7 +267,7 @@ Current issue state as of 2026-09-06:
 - Closed on owner HOLD: milestone #48 and #1314-#1323 plus bounded corrections #1333/#1335/#1336 retain Kite's eel opening, retire Mica's non-useful prediction, and verify corrected runtime `bbcc255`.
 - Closed: milestone #49 and #1342-#1351 plus checkpoint correction #1362 complete Living Expedition 05 with owner GO at corrected runtime `7792a08`. The first owner review exposed a collision-invalid excavation-ready checkpoint; #1362 repaired its start and added exact-scene spawn, movement, palette, and dispatch coverage before the accepted retest.
 - Closed: milestone #50 and #1366-#1375 complete Living Expedition 06 with owner GO at runtime `16300a9`; adapted Kite shelters Signal Reef's nursery and leaves boat-committed next-day history.
-- Active: [milestone #51](https://github.com/joeypshell/oceangame2/milestone/51), LE07 Marl's Root Claws. #1389-#1396 are complete; #1397 owner verdict remains. Bounded #1405 [WebGL repair](LE07_WEBGL_BUFFER_DIAGNOSTIC.md) preserves that gate. Do not create another batch.
+- Closed: [milestone #51](https://github.com/joeypshell/oceangame2/milestone/51), LE07 Marl's Root Claws. #1389-#1397 plus #1405/#1408 corrections complete the bounded proof with owner GO at `7a78592`. No next batch is selected by this closeout.
 - Closed bookkeeping: #849 was already fixed by `e825c88`; two repeat imports confirmed all three UID sidecars stable.
 - Deferred: #52/#53 remain optional slice-03 presentation polish.
 - Completed pass ranges and historical closeouts are indexed in `docs/MILESTONES.md`; do not duplicate that history here.
@@ -405,7 +405,7 @@ Current issue state as of 2026-09-06:
 
 ## Recommended Next Work
 
-Living Expeditions 01-03 and 05-06 have owner GO; LE04 closed on HOLD and retired Mica's eel prediction. BOND pauses the whole simulation. LE06 closed at accepted runtime `16300a9`. LE07 implements Marl's boat-secured refuge memory, deliberate night Root Claws, and physical Ground Pin as a non-damaging grounded alternative to Kite's recoil. #1395/#1396 record integration and visual/Web evidence; #1405 repairs the isolated health-bar WebGL warning. Next is #1397 owner verdict, not another batch. Habitat legacy/release and #52/#53 remain deferred.
+Living Expeditions 01-03 and 05-07 have owner GO; LE04 closed on HOLD and retired Mica's eel prediction. BOND pauses the whole simulation. LE07's [closeout](LIVING_EXPEDITION_07_CLOSEOUT.md) records owner acceptance at `7a78592`, after health-bar and live-arrival repairs. Marl's boat-secured refuge memory, deliberate night Root Claws, and physical Ground Pin are implemented. A separate audit selects the next bounded proof; habitat legacy/release, Vein Whiskers, a fourth species, and #52/#53 remain deferred.
 
 Accepted constraints for next work:
 

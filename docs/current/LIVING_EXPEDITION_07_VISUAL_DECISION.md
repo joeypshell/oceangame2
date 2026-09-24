@@ -4,7 +4,10 @@ Date: 2026-09-20
 
 Issue: #1396
 
-Status: **FOCUSED EVIDENCE REVIEWED; BASELINES UNCHANGED; OWNER VERDICT PENDING**
+Status: **HISTORICAL FOCUSED EVIDENCE REVIEWED; BASELINES UNCHANGED**
+
+The later [#1397 closeout](LIVING_EXPEDITION_07_CLOSEOUT.md) records owner GO at
+corrected runtime `7a78592`. The visual evidence below retains its original SHA.
 
 ## Decision
 

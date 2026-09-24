@@ -1,11 +1,11 @@
 # Milestones
 
-Last updated: 2026-09-06
+Last updated: 2026-09-23
 
 This is the compact milestone index. Detailed direction lives in:
 
 - `docs/planning/OCEANGAME_LIVING_EXPEDITION_ROADMAP.md`
-- [Living Expedition 07 plan and ordered issues](current/LIVING_EXPEDITION_07_PLAN.md#ordered-active-issues) (active milestone #51, #1389-#1397)
+- [Living Expedition 07 closeout](current/LIVING_EXPEDITION_07_CLOSEOUT.md) and [completed issue order](current/LIVING_EXPEDITION_07_PLAN.md#ordered-active-issues) (milestone #51, #1389-#1397)
 - [Living Expedition 07 source/state contract](current/LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md)
 - `docs/planning/CREATURE_SYSTEM_SPEC.md`
 - `docs/planning/CREATURE_MAP_PROGRESSION_SPEC.md`
@@ -103,27 +103,30 @@ Living Expedition is the active product phase. It retains real-time daylight sor
 
 **[Living Expedition 06: Signal Reef Nursery](https://github.com/joeypshell/oceangame2/milestone/50)** is complete with owner GO on exact Web runtime `16300a9`. Kite's Anchor Fins or Guardian Pulse deliberately shelters one guaranteed filter-skate school, commits the shared history at the canonical boat, and produces a larger next-day nursery without changing topology, hard access, or rewards. #1375 records the verdict.
 
+**[Living Expedition 07: Marl's Root Claws](https://github.com/joeypshell/oceangame2/milestone/51)** is complete with bounded owner GO at exact runtime `7a78592`. Refuge excavation under eel pressure becomes a boat-secured memory, deliberate night growth, and a physical non-damaging Ground Pin. #1405/#1408 repaired Web rendering and unsafe review arrival before acceptance. [#1397 closeout](current/LIVING_EXPEDITION_07_CLOSEOUT.md) preserves the owner's actual words and evidence limits.
+
 Emergency Week and overnight Food/Water/Power survival taxes are rejected. Shortcut and fast-travel networks are also rejected; the player continues to travel through remembered geography.
 
 ## Planning Horizons
 
-- Completed: milestones #45-#50 cover one adapted Spark Ray, a bounded habitat and active species choice, one Mica ecology journey, one honestly rejected companion-combat experiment, one Silt Hound excavation journey, and Kite's Signal Reef nursery return. #1366-#1375 complete the latest batch with owner GO.
-- Active: [milestone #51, Living Expedition 07: Marl's Root Claws](https://github.com/joeypshell/oceangame2/milestone/51), #1389-#1397. Source placement, refuge excavation, boat/night growth, physical Ground Pin, readable checkpoints, and [integrated coverage](current/LIVING_EXPEDITION_07_INTEGRATED_VERIFICATION.md) are implemented. #1396 records [visual](current/LIVING_EXPEDITION_07_VISUAL_DECISION.md) and [exact-Web evidence](current/LIVING_EXPEDITION_07_WEB_VERIFICATION.md) at `5819f1d`. Only #1397 owner playtest/verdict remains; technical review is not player acceptance. The linked plan owns dependencies; #52/#53 remain deferred.
+- Completed: milestones #45-#51 cover Kite's rescue/adaptation, a compact habitat, Mica ecology, the rejected LE04 combat experiment, Marl excavation, Kite's nursery return, and Marl's Root Claws. #1389-#1397 plus bounded corrections complete the latest owner-approved batch.
+- Committed: none selected by the LE07 closeout. A separate audit assesses meaningful choice/history among the current three companions before selecting the next bounded proof. #52/#53 remain deferred.
 - Directional: later habitat legacy/release remains a milestone-level goal only.
 - Vision: production content, vehicles, broad crafting, final art/audio, accessibility, input support, balance, save hardening, and release work remain intentionally un-ticketed.
 
 ## Recent GitHub Milestone State
 
-Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Living Expedition milestones #45-#47 and #49-#50 are complete with owner GO. Living Expedition 04 milestone #48 is technically complete and closed on HOLD after its Mica-response retirement and BOND timing correction.
+Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 milestone #44 is closed with a strategic player-experience HOLD recorded in its closeout; its technical regression surfaces remain active. Living Expedition milestones #45-#47 and #49-#51 are complete with owner GO. Living Expedition 04 milestone #48 is technically complete and closed on HOLD after its Mica-response retirement and BOND timing correction.
 
-1. [Living Expedition 06: Signal Reef Nursery](https://github.com/joeypshell/oceangame2/milestone/50) - complete through #1366-#1375, owner GO, and exact-Web runtime `16300a9`.
-2. [Living Expedition 05: Silt Hound Excavation Proof](https://github.com/joeypshell/oceangame2/milestone/49) - complete through #1342-#1351 plus checkpoint correction #1362, owner GO, and exact-Web runtime `7792a08`.
-3. [Living Expedition 04: Companion-Shaped Wildlife Encounter](https://github.com/joeypshell/oceangame2/milestone/48) - technically complete through #1314-#1323 plus corrections #1333/#1335/#1336, exact-Web runtime `bbcc255`, and owner HOLD.
-4. [Living Expedition 03: Field Roles And Ecological Discovery](https://github.com/joeypshell/oceangame2/milestone/47) - complete through #1276-#1285 plus bounded corrections #1301/#1303/#1305/#1307/#1308, exact-Web runtime `0e92dd7`, and owner GO.
-5. [Living Expedition 02: Small Stable And Species Identity](https://github.com/joeypshell/oceangame2/milestone/46) - complete through #1253-#1262 with focused visual evidence, exact-Web runtime `b639dcf`, and owner GO.
-6. [Living Expedition 01: Spark Ray Adaptation Proof](https://github.com/joeypshell/oceangame2/milestone/45) - complete through #1232/#1235 with exact-Web evidence, bounded guidance correction #1249, and owner GO on corrected gameplay build `c0c7b4e`.
-7. [Expansion 17: Wreck Network Triangulation](https://github.com/joeypshell/oceangame2/milestone/43) - complete with owner GO through #1167 after technical corrections #1175/#1178 and bounded HOLD corrections #1181-#1184; exact reviewed runtime `075a450`.
-8. [Expansion 16: Deeper Wreck Oxygen Return](https://github.com/joeypshell/oceangame2/milestone/42) - complete with owner GO after corrections #1143/#1144/#1151/#1153; exact reviewed runtime `05b482e`.
+1. [Living Expedition 07: Marl's Root Claws](https://github.com/joeypshell/oceangame2/milestone/51) - complete through #1389-#1397 plus #1405/#1408 corrections, owner GO, and exact-Web runtime `7a78592`.
+2. [Living Expedition 06: Signal Reef Nursery](https://github.com/joeypshell/oceangame2/milestone/50) - complete through #1366-#1375, owner GO, and exact-Web runtime `16300a9`.
+3. [Living Expedition 05: Silt Hound Excavation Proof](https://github.com/joeypshell/oceangame2/milestone/49) - complete through #1342-#1351 plus checkpoint correction #1362, owner GO, and exact-Web runtime `7792a08`.
+4. [Living Expedition 04: Companion-Shaped Wildlife Encounter](https://github.com/joeypshell/oceangame2/milestone/48) - technically complete through #1314-#1323 plus corrections #1333/#1335/#1336, exact-Web runtime `bbcc255`, and owner HOLD.
+5. [Living Expedition 03: Field Roles And Ecological Discovery](https://github.com/joeypshell/oceangame2/milestone/47) - complete through #1276-#1285 plus bounded corrections #1301/#1303/#1305/#1307/#1308, exact-Web runtime `0e92dd7`, and owner GO.
+6. [Living Expedition 02: Small Stable And Species Identity](https://github.com/joeypshell/oceangame2/milestone/46) - complete through #1253-#1262 with focused visual evidence, exact-Web runtime `b639dcf`, and owner GO.
+7. [Living Expedition 01: Spark Ray Adaptation Proof](https://github.com/joeypshell/oceangame2/milestone/45) - complete through #1232/#1235 with exact-Web evidence, bounded guidance correction #1249, and owner GO on corrected gameplay build `c0c7b4e`.
+8. [Expansion 17: Wreck Network Triangulation](https://github.com/joeypshell/oceangame2/milestone/43) - complete with owner GO through #1167 after technical corrections #1175/#1178 and bounded HOLD corrections #1181-#1184; exact reviewed runtime `075a450`.
+9. [Expansion 16: Deeper Wreck Oxygen Return](https://github.com/joeypshell/oceangame2/milestone/42) - complete with owner GO after corrections #1143/#1144/#1151/#1153; exact reviewed runtime `05b482e`.
 
 ## Completed Expansion 04
 
@@ -177,7 +180,7 @@ Expansion 17 and milestone #43 are complete with owner GO. Expansion 18 mileston
 
 - Do not reopen completed expansion batches merely to keep the queue full.
 - Preserve Living Expedition 04's HOLD lesson: a companion action must create an immediately legible choice or outcome, not merely describe visible hostile behavior.
-- Keep Kite, Mica, and Marl as the complete implemented roster after Living Expedition 06. Do not add a fourth species without a later reviewed plan.
+- Keep Kite, Mica, and Marl as the complete implemented roster after Living Expedition 07. Do not add a fourth species without a later reviewed plan.
 - Do not replace real-time exploration with party battles. Adapt build synergy through one companion's independent, support, and mounted roles.
 - Keep controlled passes as validation/review structure, not as the product roadmap.
 - Keep `production_level_01` as the default map unless a separate reviewed decision changes it.

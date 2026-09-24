@@ -4,7 +4,8 @@ Issue #1394 adds local presentation/checkpoint evidence, not visual baseline
 acceptance or an owner GO. [Integrated evidence](../LIVING_EXPEDITION_07_INTEGRATED_VERIFICATION.md)
 is recorded under #1395. [Visual](../LIVING_EXPEDITION_07_VISUAL_DECISION.md) and
 [exact-Web evidence](../LIVING_EXPEDITION_07_WEB_VERIFICATION.md) under #1396 are
-recorded at `5819f1d`; #1397 remains the separate owner verdict. Subsequent
+recorded at `5819f1d`. [#1397 closeout](../LIVING_EXPEDITION_07_CLOSEOUT.md)
+records owner GO on corrected runtime `7a78592`. Subsequent
 #1405 fixes WebGL health-bar warnings; #1408 corrects the unsafe field arrival
 and adds a live, delayed-input regression. Use the steps below on the current build.
 

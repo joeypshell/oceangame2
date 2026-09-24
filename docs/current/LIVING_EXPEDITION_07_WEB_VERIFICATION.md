@@ -4,7 +4,11 @@ Date: 2026-09-20
 
 Issue: #1396
 
-Status: **HISTORICAL #1396 WEB EVIDENCE; OWNER VERDICT PENDING**
+Status: **HISTORICAL #1396 WEB EVIDENCE**
+
+Current verdict: [#1397 closeout](LIVING_EXPEDITION_07_CLOSEOUT.md) records owner
+GO on 2026-09-23 at corrected runtime `7a78592`, after #1405/#1408. The dated
+results below remain historical and are not fresh runs against that runtime.
 
 The warnings below describe `5819f1d`, before the bounded #1405 health-bar
 repair. See [diagnosis and regression evidence](LE07_WEBGL_BUFFER_DIAGNOSTIC.md)
@@ -12,7 +16,7 @@ and #1405's completion comment for the subsequent exact deployed build.
 
 ## Exact Build
 
-The public preview serves the #1395 integration merge, not an old local build:
+At this review, the public preview served the #1395 integration merge:
 
 - full SHA: `5819f1d46425a5c6b0e3c4c5f2e0448b915816f3`
 - version: `5819f1d`; `git_ref=main`; `dirty=false`
@@ -54,10 +58,10 @@ Mobile uses sequential `BOND`, `TOOL`, `USE`, not a held chord. At night use
 `DAY`, `BOND` to choose, and `USE` to confirm. Local launch commands and the
 same short route are in [review tooling](tooling/living_expedition_07.md).
 
-#1397 stays open: **Does helping the group and growing Root Claws make Marl
-understandable and useful enough to choose tomorrow, or is the pin too fiddly
-or redundant?** Automation cannot supply that verdict. LE06 remains the latest
-owner-approved milestone; no fourth species or release/legacy batch begins here.
+The owner review asked whether growing Root Claws made Marl understandable and
+useful, or the pin remained fiddly/redundant. The later [closeout](LIVING_EXPEDITION_07_CLOSEOUT.md)
+records "Right it seemed to work fine" as bounded owner GO, not automation-based
+acceptance or measured replay motivation. No fourth species or release batch begins here.
 
 ## Browser Evidence
 

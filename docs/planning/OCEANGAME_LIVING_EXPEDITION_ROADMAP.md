@@ -1,6 +1,6 @@
 # OceanGame Living Expedition Roadmap
 
-Date: 2026-09-06
+Date: 2026-09-23
 
 Status: Active product roadmap. The completed diver-expedition work remains the
 runtime foundation; this roadmap owns future product direction.
@@ -143,22 +143,25 @@ restored nursery. No fourth species, new adaptation, topology change, reward,
 or broad ecosystem simulation was added. See the
 [closeout](../current/LIVING_EXPEDITION_06_CLOSEOUT.md).
 
-### Committed
-
 **[Living Expedition 07: Marl's Root Claws](https://github.com/joeypshell/oceangame2/milestone/51)**
-is active through #1389-#1397 after planning #1387. Catalog/schema validation is
-established by #1389; gameplay is not implemented. A shared refuge excavation earns
+is implemented and closed with owner GO at `7a78592` through #1389-#1397 and
+bounded corrections #1405/#1408. A shared refuge excavation earns
 Guarded the Nest; boat return secures it, deliberate night consolidation changes
 Marl's fin grip, and next-sortie Ground Pin creates a short physical opening.
-This develops the third individual's first adaptation before release/legacy.
-See the [ordered issue batch](../current/LIVING_EXPEDITION_07_PLAN.md#ordered-active-issues)
+See the [closeout](../current/LIVING_EXPEDITION_07_CLOSEOUT.md),
+[completed issue batch](../current/LIVING_EXPEDITION_07_PLAN.md#ordered-active-issues),
 and [source/state contract](../current/LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md).
-Next is #1390 source authoring, then event, boat/night, pin, presentation,
-integration, visual/Web, and owner verdict. Do not begin a second milestone here.
+
+### Committed
+
+None selected by the LE07 closeout. A separate audit should assess meaningful
+choice and shared history among the current three companions before selecting
+another bounded proof. Functional acceptance does not automatically authorize
+release/legacy mechanics or a fourth species.
 
 ### Directional
 
-Only milestone-level direction is recorded beyond the selected LE07 proof:
+Only milestone-level direction is recorded beyond the completed LE07 proof:
 
 1. **Later: Growth, Release, And Habitat Legacy**
    Test voluntary retirement or release, one bounded legacy trait, and visible
@@ -167,8 +170,8 @@ Only milestone-level direction is recorded beyond the selected LE07 proof:
    rewrite.
 
 This direction does not receive a detailed issue inventory until a later audit
-finds enough evidence for one bounded proof. Neither LE06's GO nor LE07's Marl
-growth plan approves release or legacy mechanics by itself.
+finds enough evidence for one bounded proof. Neither LE06's GO nor LE07's bounded
+owner approval establishes readiness for release or legacy mechanics by itself.
 
 ### Vision
 
@@ -179,12 +182,13 @@ unticketed.
 
 ## Latest Completed Milestone Batch
 
-Living Expedition 06 completed #1366-#1375 in dependency order: source/state
-contract, schema and progression validation, source-first nursery authoring,
-exact-once profile history, school/pressure presentation, distinct adaptation
-responses, guidance/checkpoints, deterministic journeys, focused visual/Web
-evidence, and owner GO. `docs/current/LIVING_EXPEDITION_06_CLOSEOUT.md` records
-the verdict; no next milestone is included in that resolver cycle.
+Living Expedition 07 completed #1389-#1397: source/state contract and placement,
+refuge event, boat/night growth, physical Ground Pin, readable checkpoints,
+integrated journey, focused visual/Web evidence, and owner GO. #1405/#1408 fixed
+rendering and review arrival before acceptance at `7a78592`. The owner said,
+"Right it seemed to work fine"; the [closeout](../current/LIVING_EXPEDITION_07_CLOSEOUT.md)
+records the bounded verdict without claiming measured attachment or replay value.
+No next milestone is included in that resolver cycle.
 
 ## Prior Completed Milestone Batch
 
@@ -246,7 +250,7 @@ Control/combat decision:
 - Keep current-runtime truth separate from target-game plans.
 - Historical Phase 2 docs remain implementation records, not active direction.
 - Use one focused issue batch and close with GO, HOLD, or bounded correction.
-- Living Expeditions 01-03 and 05-06 received GO; Living Expedition 04 closed on
+- Living Expeditions 01-03 and 05-07 received GO; Living Expedition 04 closed on
   HOLD. Keep Kite, Mica, and Marl as the complete current roster until a later
   reviewed plan selects another species.
 - Do not use automation to claim fun, attachment, or replay motivation.
