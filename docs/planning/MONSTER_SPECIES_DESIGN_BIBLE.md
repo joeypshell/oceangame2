@@ -1,10 +1,10 @@
 # Monster Species Design Bible
 
-Date: 2026-09-06
+Date: 2026-09-23
 
 Status: Mixed current/directional reference. Spark Ray, Veil Cuttle, and Silt
-Hound are implemented; LE05 and LE06 have owner GO. LE07 selects Marl's Root
-Claws growth proof, not implemented yet. Other species and unselected abilities,
+Hound are implemented; LE05-LE07 have owner GO. Marl's Root Claws growth and
+physical Ground Pin are implemented. Other species and unselected abilities,
 habitats, and branches remain provisional. LE04's rejected Mica eel prediction
 does not return through this roster plan.
 
@@ -155,19 +155,19 @@ listens through the seafloor, and digs with sudden whole-body bursts.
   candidates or underground movement, but it is not part of the first proof.
 - Deferred branch concept: Followed the Seep -> **Vein Whiskers**. Direction and
   confidence alone risk another subtle detector; LE07 does not offer it.
-- Selected LE07 plan: Guarded the Nest -> **Root Claws**. Open a burrow refuge
+- Implemented LE07 branch: Guarded the Nest -> **Root Claws**. Open a burrow refuge
   under existing eel pressure, secure the memory at the boat, and choose at
   night. Broader fin hooks enable a visible stationary Ground Pin, giving the
   diver a short weapon/retreat opening without damage. It requires nearby floor
   and prevents Marl travelling/digging during the hold, unlike Kite's pulse.
-  Root Claws or deferral is the only offered choice in this planned first growth
-  proof; see [LE07 plan](../current/LIVING_EXPEDITION_07_PLAN.md).
+  Root Claws or deferral is the only offered choice in this first growth
+  proof; see the [owner closeout](../current/LIVING_EXPEDITION_07_CLOSEOUT.md).
 - Directional resource relationships: titanium-bearing nodules, rubber-producing
   burrow organisms, shell fragments, and rare tool-grade seams.
 - Limits: does not create resources, reveal the whole map, bypass a tool, or make
   required materials depend on an unlucky spawn.
 - Choice identity: the current third companion physically excavates optional
-  material. Planned ground protection gives a reason to develop the same
+  material. Learned Ground Pin offers ground protection with the same
   individual without duplicating Kite's movement or Mica's ecology reading.
 
 ### Breaker Mantis
@@ -340,14 +340,14 @@ wildlife or waiting for a random spawn.
 ## Recommended Production Order
 
 1. Keep Kite, Mica, and Marl as the complete implemented roster after Living
-   Expedition 05's owner GO.
+   Expedition 07's owner GO.
 2. Preserve the HOLD lesson: a companion action must create an immediately
    legible option or outcome, not merely describe visible hostile behavior.
 3. Review monochrome concept sheets only as directional planning evidence.
-4. LE05's base excavation and LE06's nursery are complete. LE07 selects Marl's
-   first Root Claws adaptation before habitat release/legacy, not generic
-   prospecting, another detector, or a fourth species.
-5. Add Breaker Mantis only after real-time combat, enemy health feedback,
+4. LE05's excavation, LE06's nursery, and LE07's Root Claws are complete. Assess
+   meaningful choice/history before selecting a bounded next proof; habitat
+   release/legacy, generic prospecting, and a fourth species are not committed.
+5. Directional only: add Breaker Mantis after real-time combat, enemy health feedback,
    resource outcomes, and nonlethal/defeat rules have a stable owner.
 6. Keep Rivetback, Lumenjaw, Ribbon Drake, and Choir Bloom directional until the
    four-species core proves daily selection remains understandable and useful.

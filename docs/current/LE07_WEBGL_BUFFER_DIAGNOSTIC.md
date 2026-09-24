@@ -1,6 +1,7 @@
 # LE07 WebGL Buffer Diagnostic
 
-Date: 2026-09-20. Issue: #1405. Owner verdict #1397 remains open.
+Date: 2026-09-20. Issue: #1405. Later [#1397 closeout](LIVING_EXPEDITION_07_CLOSEOUT.md)
+records owner GO after this repair and the #1408 arrival correction.
 
 ## Cause And Scope
 

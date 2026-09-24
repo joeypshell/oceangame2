@@ -147,7 +147,8 @@ failure/map/day reset clears transient cooldown; Recall does not bypass it.
 #1394 projects permanent hooked fin tips from the profile identity and a bounded
 release lift from the action pose. Its real-scene checkpoints/captures are local
 review evidence, not baseline or player acceptance. #1395 connects the full journey;
-#1396 visual/Web and #1397 owner review remain.
+#1396 completed visual/Web review. [#1397 closeout](LIVING_EXPEDITION_07_CLOSEOUT.md)
+records owner GO at `7a78592` after #1405/#1408 corrections.
 
 ## Progression And Verification
 

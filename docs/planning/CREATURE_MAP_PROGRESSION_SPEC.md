@@ -1,12 +1,13 @@
 # Creature Map Progression Spec
 
-Date: 2026-09-06
+Date: 2026-09-23
 
-Status: Active source/planning contract. LE01-06 implement three rescues, one
+Status: Active source/planning contract. LE01-07 implement three rescues, one
 compact habitat, Kite/Mica growth relationships, Marl's optional excavation,
 and Kite's remembered Signal Reef nursery. The rejected Mica eel response stays
-retired. LE07's Marl memory/refuge/ground-pin relationships are selected planning
-only; no new source records or runtime behavior have been authored yet.
+retired. LE07's source-authored Marl memory/refuge/ground-pin relationships and
+runtime are implemented; the [closeout](../current/LIVING_EXPEDITION_07_CLOSEOUT.md)
+records bounded owner GO at `7a78592`.
 
 ## Purpose
 
@@ -155,18 +156,18 @@ Source authoring should add only:
 The proof should not change accepted terrain topology or populate the entire map
 with creatures.
 
-## Planned Marl Growth Proof
+## Implemented Marl Growth Proof
 
-[LE07](../current/LIVING_EXPEDITION_07_PLAN.md) selects the existing
+[LE07](../current/LIVING_EXPEDITION_07_PLAN.md) uses the existing
 `lower_loop_to_deep_cache_pressure` / `deep_cache_dark_pocket` region and
 `deep_cache_territorial_eel`, with source-validated floor anchors and a small
-passive burrow refuge. Its graph must connect Marl's existing Cutter rescue,
+passive burrow refuge. Its graph connects Marl's existing Cutter rescue,
 boat selection, Dive Light/armed review access, a real dig-and-shelter event,
 boat-secured `guarded_the_nest`, night Root Claws, and a next-sortie Ground Pin.
 The current darkness marker remains visual-only; this adds no terrain gate.
 
 Required opportunity placement is seed-guaranteed and non-circular. Preserve
-LE05's rescue/deposit and LE06's nursery. New immutable records may locate the
+LE05's rescue/deposit and LE06's nursery. Immutable records locate the
 event and eligible grounded response; memory, adaptation, pin timers, and
 attempt completion belong to profile/runtime owners, not JSON. Do not carve
 terrain, lock the guarded cache, or bypass equipment to stage this proof.

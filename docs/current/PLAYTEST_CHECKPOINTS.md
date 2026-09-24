@@ -1,6 +1,6 @@
 # Playtest Checkpoints
 
-Last updated: 2026-09-20
+Last updated: 2026-09-23
 
 ## Purpose
 
@@ -32,7 +32,9 @@ the routine end-to-end regression layer.
 
 LE07 local commands and touch sequence: [Marl review tooling](tooling/living_expedition_07.md).
 [Exact-Web evidence and short owner route](LIVING_EXPEDITION_07_WEB_VERIFICATION.md#short-owner-review)
-record runtime `5819f1d` through #1396. #1397 remains open for the owner's verdict.
+record historical runtime `5819f1d` through #1396. The [#1397 closeout](LIVING_EXPEDITION_07_CLOSEOUT.md)
+records owner GO at `7a78592`, after #1405/#1408 corrections. These checkpoints
+remain available as regression/review shortcuts, not an outstanding owner gate.
 
 Local retained regression starts:
 

@@ -1,13 +1,13 @@
 # Creature System Spec
 
-Date: 2026-09-06
+Date: 2026-09-23
 
-Status: Active source/planning contract. LE01-06 implement Kite, Mica, and Marl,
+Status: Active source/planning contract. LE01-07 implement Kite, Mica, and Marl,
 the schema-v3 three-individual habitat with one active companion, Kite/Mica
 adaptations, Marl's rescue/excavation, and Kite's remembered Signal Reef nursery.
-LE04's rejected Mica eel prediction stays retired. LE07 selects Marl's first
-memory and Root Claws in `docs/current/LIVING_EXPEDITION_07_PLAN.md`; that growth
-and Ground Pin are planned, not current runtime behavior.
+LE04's rejected Mica eel prediction stays retired. LE07 implements Marl's refuge
+memory, night Root Claws, and physical Ground Pin, with bounded owner GO at
+`7a78592`; see the [closeout](../current/LIVING_EXPEDITION_07_CLOSEOUT.md).
 
 ## Purpose
 
@@ -282,13 +282,14 @@ Anchor-Fins Kite receives no invented combat action. The proof adds no new
 memory, adaptation, individual, hostile, resource, or hard-access capability.
 Detailed boundaries live in `docs/current/LIVING_EXPEDITION_04_PLAN.md`.
 
-LE07 plans a separate Marl growth proof: a physical refuge dig under existing
+LE07 implements Marl's growth proof: a physical refuge dig under existing
 eel pressure earns `guarded_the_nest`, canonical-boat return secures it, and
 deliberate night consolidation offers Root Claws or deferral. Only that Marl
-branch is offered; Vein Whiskers stays directional. Planned Ground Pin provides
-a short grounded, non-damaging hold rather than Kite's recoil, with hostile
-state/health still owned by the existing controller. See
-[LE07 plan](../current/LIVING_EXPEDITION_07_PLAN.md). None of this is live yet.
+branch is offered; Vein Whiskers stays directional. Ground Pin provides a physical,
+non-damaging hold of at most 1.75 seconds with an 8-second cooldown, rather than
+Kite's recoil. Hostile state/health remains owned by the existing controller.
+The [LE07 closeout](../current/LIVING_EXPEDITION_07_CLOSEOUT.md) records owner GO
+after rendering and live-arrival corrections; no new profile schema was needed.
 
 ## Validation Surface
 

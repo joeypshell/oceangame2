@@ -2,7 +2,7 @@
 
 `oceangame2` is a side-view underwater expedition-raising game built on a controlled diver-expedition foundation.
 
-The existing runtime proves contiguous authored exploration, oxygen/daylight pressure, equipment progression, limited combat, night projects, and stable validation/deployment. Expansion 18 closed on a strategic player-experience HOLD; Living Expedition is the active direction. Living Expeditions 01-03 and 05-06 have owner GO. LE04 retired Mica's unhelpful eel prediction and established whole-simulation BOND pause. LE05 proves Marl's physical excavation; LE06 proves adapted Kite's nursery return, with latest owner-accepted Web runtime `16300a9`. [LE07 milestone #51](https://github.com/joeypshell/oceangame2/milestone/51) implements source-authored refuge excavation, boat-secured memory, deliberate night Root Claws, physical Ground Pin, readable growth, and isolated checkpoints. Integrated, focused visual, and exact-Web evidence is recorded for runtime `5819f1d`. Next: #1397 owner playtest and verdict; LE07 has no owner GO yet.
+The existing runtime proves contiguous authored exploration, oxygen/daylight pressure, equipment progression, limited combat, night projects, and stable validation/deployment. Expansion 18 closed on a strategic player-experience HOLD; Living Expedition is the active direction. Living Expeditions 01-03 and 05-07 have owner GO. LE04 retired Mica's unhelpful eel prediction and established whole-simulation BOND pause. LE07 completes Marl's refuge excavation, boat-secured memory, deliberate night Root Claws, and physical Ground Pin. Latest owner-accepted Web runtime: `7a78592`; the [closeout](docs/current/LIVING_EXPEDITION_07_CLOSEOUT.md) records the bounded verdict and evidence. No next milestone is selected by this closeout.
 
 ## Project Goal
 
@@ -22,11 +22,11 @@ Build a distinctive side-view ocean game in which:
 - Current map: one contiguous source-authored production cave
 - Current core loop: choose and prepare, make multiple oxygen sorties under daylight, bank and learn at the boat, build at night, and return changed
 - Target signature loop: rescue, bond, command or ride, share meaningful experience, consolidate at night, and feel a visible next-day adaptation
-- Latest completed proof: adapted Kite shelters Signal Reef's nursery, secures the event at the boat, and returns to a larger next-day school
+- Latest completed proof: Marl shelters a burrow group, secures the memory at the boat, grows Root Claws at night, and returns with a physical Ground Pin
 
 ## Planning Docs
 
-The Simple Diver and Phase 2 roadmaps describe the completed foundation. Living Expedition now develops distinct species, shared memories, and deliberate adaptation rather than a broad roster, economy, or map expansion. LE07 Ground Pin opens a short, non-damaging weapon/retreat window through physical floor contact; [implementation evidence](docs/current/LIVING_EXPEDITION_07_GROUND_PIN_VERIFICATION.md) records its limits. [Verified review links](docs/current/LIVING_EXPEDITION_07_WEB_VERIFICATION.md#short-owner-review) avoid replaying prior progression; [integrated journey evidence](docs/current/LIVING_EXPEDITION_07_INTEGRATED_VERIFICATION.md) supports the separate #1397 owner gate. Habitat legacy/release stays directional, and #52/#53 remain deferred polish.
+The Simple Diver and Phase 2 roadmaps describe the completed foundation. Living Expedition now develops distinct species, shared memories, and deliberate adaptation rather than a broad roster, economy, or map expansion. LE07 Ground Pin opens a short, non-damaging weapon/retreat window through physical floor contact; [implementation evidence](docs/current/LIVING_EXPEDITION_07_GROUND_PIN_VERIFICATION.md) records its limits. [Review shortcuts](docs/current/tooling/living_expedition_07.md) avoid replaying prior progression. #1397 records owner approval, not measured attachment or replay value. A separate audit selects the next bounded proof; habitat legacy/release stays directional, and #52/#53 remain deferred polish.
 
 Core sources and operating docs:
 
@@ -69,7 +69,8 @@ Core sources and operating docs:
 - [Living Expedition 06 Visual Decision](docs/current/LIVING_EXPEDITION_06_VISUAL_DECISION.md)
 - [Living Expedition 06 Web Verification](docs/current/LIVING_EXPEDITION_06_WEB_VERIFICATION.md)
 - [Living Expedition 06 Closeout](docs/current/LIVING_EXPEDITION_06_CLOSEOUT.md)
-- [Active Living Expedition 07 Plan And Issue Order](docs/current/LIVING_EXPEDITION_07_PLAN.md)
+- [Completed Living Expedition 07 Plan And Issue Order](docs/current/LIVING_EXPEDITION_07_PLAN.md)
+- [Living Expedition 07 Owner Closeout](docs/current/LIVING_EXPEDITION_07_CLOSEOUT.md)
 - [Living Expedition 07 Source And State Contract](docs/current/LIVING_EXPEDITION_07_SOURCE_STATE_CONTRACT.md)
 - [Living Expedition 07 Visual Decision](docs/current/LIVING_EXPEDITION_07_VISUAL_DECISION.md)
 - [Living Expedition 07 Web Verification And Owner Links](docs/current/LIVING_EXPEDITION_07_WEB_VERIFICATION.md)

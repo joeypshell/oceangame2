@@ -78,10 +78,10 @@ state, hostile phase/health, hold/cooldown, cargo, health, oxygen and daylight.
 The journey runs in regional Smoke CI; focused owners/checkpoints remain in core
 CI, and source/graph fixtures remain in Source/Progression CI. No checks removed.
 
-## Remaining Gates
+## Subsequent Closeout
 
-#1396 owns affected desktop/mobile visual review, baseline comparison, and exact
-deployed Web verification. #1397 requires the owner's growth/attachment verdict.
-No captures, assets, map data, accepted baselines, or gameplay rules change here.
-LE06 `16300a9` remains the latest owner-accepted Web runtime; #52/#53, Vein
-Whiskers, release/legacy, a fourth species, and broad combat remain deferred.
+#1396 completed focused visual/Web review. After #1405 renderer and #1408 live
+arrival corrections, [#1397 closeout](LIVING_EXPEDITION_07_CLOSEOUT.md) records
+bounded owner GO at `7a78592`. The integration results above retain their original
+tested commit; no full suite was rerun for the documentation-only closeout.
+#52/#53, Vein Whiskers, release/legacy, a fourth species, and broad combat remain deferred.
